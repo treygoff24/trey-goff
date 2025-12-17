@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { MobileNav } from './MobileNav'
+import { useCommandPalette } from '@/components/command'
 
 const navItems = [
   { href: '/writing', label: 'Writing' },
@@ -15,6 +16,7 @@ const navItems = [
 export function TopNav() {
   const pathname = usePathname()
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
+  const { setOpen } = useCommandPalette()
 
   return (
     <>
@@ -44,6 +46,7 @@ export function TopNav() {
             ))}
 
             <button
+              onClick={() => setOpen(true)}
               className="flex items-center gap-2 rounded-md border border-border-1 px-3 py-1.5 text-sm text-text-3 transition-colors hover:border-border-2 hover:text-text-2"
               aria-label="Open search (Command K)"
             >
@@ -58,6 +61,7 @@ export function TopNav() {
           <div className="flex items-center gap-2 md:hidden">
             {/* Search button - opens command palette */}
             <button
+              onClick={() => setOpen(true)}
               className="flex h-10 w-10 items-center justify-center rounded-md text-text-2 transition-colors hover:bg-surface-1 hover:text-text-1"
               aria-label="Search"
             >

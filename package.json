@@ -4,16 +4,22 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "prebuild": "tsx scripts/generate-search-index.ts",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "generate-search": "tsx scripts/generate-search-index.ts"
   },
   "dependencies": {
     "@content-collections/core": "^0.13.0",
     "@content-collections/next": "^0.2.10",
+    "@orama/orama": "^3.1.17",
+    "@radix-ui/react-dialog": "^1.1.15",
     "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
     "feed": "^5.1.0",
+    "lucide-react": "^0.561.0",
     "next": "^15.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -29,6 +35,7 @@
     "eslint": "^9.17.0",
     "eslint-config-next": "^15.1.0",
     "tailwindcss": "^4.0.0",
+    "tsx": "^4.21.0",
     "typescript": "^5.7.2"
   },
   "packageManager": "pnpm@9.15.1"

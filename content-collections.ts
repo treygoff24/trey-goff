@@ -12,6 +12,7 @@ const essays = defineCollection({
     tags: z.array(z.string()).default([]),
     status: z.enum(['draft', 'published', 'evergreen']).default('draft'),
     featured: z.boolean().default(false),
+    content: z.string(),
   }),
   transform: (document) => {
     const slug = document._meta.path.replace(/\.mdx$/, '')
@@ -40,6 +41,7 @@ const notes = defineCollection({
     tags: z.array(z.string()).default([]),
     source: z.string().optional(),
     sourceTitle: z.string().optional(),
+    content: z.string(),
   }),
   transform: (document) => {
     const slug = document._meta.path.replace(/\.mdx$/, '')

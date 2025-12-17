@@ -2,6 +2,10 @@ import type { Metadata } from 'next'
 import { satoshi, newsreader, monaspace } from '@/lib/fonts'
 import { TopNav } from '@/components/layout/TopNav'
 import { Footer } from '@/components/layout/Footer'
+import {
+  CommandPaletteProvider,
+  CommandPalette,
+} from '@/components/command'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -39,9 +43,12 @@ export default function RootLayout({
       className={`${satoshi.variable} ${newsreader.variable} ${monaspace.variable}`}
     >
       <body className="flex min-h-screen flex-col">
-        <TopNav />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <CommandPaletteProvider>
+          <TopNav />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <CommandPalette />
+        </CommandPaletteProvider>
       </body>
     </html>
   )

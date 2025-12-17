@@ -1,6 +1,6 @@
 # The Control Room - Build Context
 
-**Last Updated**: Phase 1 - Foundation + Design System (IN PROGRESS)
+**Last Updated**: Phase 3 - Command Palette + Search (IN PROGRESS)
 
 ## Protocol Reminder (Re-read on every phase start)
 
@@ -63,12 +63,12 @@ pnpm typecheck  # TypeScript check
 
 ## Current Phase
 
-Phase 1: Foundation + Design System
+Phase 3: Command Palette + Search
 
 ## Implementation Progress
 
-- [ ] Phase 1: Foundation + Design System
-- [ ] Phase 2: Content Pipeline + Writing
+- [x] Phase 1: Foundation + Design System
+- [x] Phase 2: Content Pipeline + Writing
 - [ ] Phase 3: Command Palette + Search
 - [ ] Phase 4: Library
 - [ ] Phase 5: Newsletter + Polish
@@ -81,6 +81,11 @@ Phase 1: Foundation + Design System
 - `/lib/fonts.ts` - Font configuration
 - `/lib/motion.ts` - Animation utilities and reduced motion policy
 - `/lib/utils.ts` - Shared utility functions
+- `/content-collections.ts` - Content Collections configuration
+- `/components/writing/EssayCard.tsx` - Essay card component
+- `/components/writing/TableOfContents.tsx` - TOC for essays
+- `/components/notes/NoteCard.tsx` - Note card component
+- `/components/mdx/` - MDX components (Callout, CodeBlock)
 
 ## Hook Signatures
 
@@ -97,6 +102,7 @@ Returns: boolean
 - `cn(...inputs: ClassValue[]): string` → `/lib/utils.ts`
 - `formatDate(date: string | Date): string` → `/lib/utils.ts`
 - `formatDateShort(date: string | Date): string` → `/lib/utils.ts`
+- `formatDateRelative(date: string | Date): string` → `/lib/utils.ts`
 
 ## Import Locations
 
@@ -105,6 +111,10 @@ Returns: boolean
 - `cn` → `@/lib/utils`
 - `satoshi`, `newsreader`, `monaspace` → `@/lib/fonts`
 - `useReducedMotion` → `@/hooks/useReducedMotion`
+- `allEssays`, `allNotes` → `content-collections`
+- `TagPill` → `@/components/ui/TagPill`
+- `EssayCard` → `@/components/writing/EssayCard`
+- `NoteCard` → `@/components/notes/NoteCard`
 
 ## Design Decisions
 
