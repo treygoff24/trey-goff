@@ -1,26 +1,27 @@
-import { Prose } from '@/components/content/Prose'
+import { GraphClient } from '@/components/graph/GraphClient'
+import { generateGraphData } from '@/lib/graph/generate'
 
 export const metadata = {
   title: 'Graph',
-  description: 'Explore connected ideas.',
+  description: 'Explore how ideas connect across essays, books, and notes.',
 }
 
 export default function GraphPage() {
-  return (
-    <div className="mx-auto max-w-4xl px-4 py-16">
-      <Prose>
-        <h1>Knowledge Graph</h1>
-        <p>
-          An interactive visualization of how ideas connect across essays, books,
-          and notes.
-        </p>
-      </Prose>
+  const graphData = generateGraphData()
 
-      <div className="mt-8 rounded-lg border border-border-1 bg-surface-1 p-8 text-center">
-        <p className="text-text-3">
-          Knowledge graph visualization coming in Phase 6.
+  return (
+    <div className="mx-auto max-w-7xl px-4 py-16">
+      <header className="mb-8">
+        <h1 className="mb-4 font-satoshi text-4xl font-medium text-text-1">
+          Knowledge Graph
+        </h1>
+        <p className="text-lg text-text-2">
+          An interactive visualization of how ideas connect across essays,
+          books, and notes. Click on nodes to explore, hover to see connections.
         </p>
-      </div>
+      </header>
+
+      <GraphClient data={graphData} />
     </div>
   )
 }

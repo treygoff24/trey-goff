@@ -1,6 +1,6 @@
 # The Control Room - Build Context
 
-**Last Updated**: Phase 5 - Newsletter + Polish (IN PROGRESS)
+**Last Updated**: Phase 6 - Knowledge Graph (COMPLETE)
 
 ## Protocol Reminder (Re-read on every phase start)
 
@@ -63,7 +63,7 @@ pnpm typecheck  # TypeScript check
 
 ## Current Phase
 
-Phase 5: Newsletter + Polish
+All phases complete! Final verification and polish.
 
 ## Implementation Progress
 
@@ -71,8 +71,8 @@ Phase 5: Newsletter + Polish
 - [x] Phase 2: Content Pipeline + Writing
 - [x] Phase 3: Command Palette + Search
 - [x] Phase 4: Library
-- [ ] Phase 5: Newsletter + Polish
-- [ ] Phase 6: Knowledge Graph (stretch)
+- [x] Phase 5: Newsletter + Polish
+- [x] Phase 6: Knowledge Graph (stretch)
 
 ## Key Files
 
@@ -89,6 +89,8 @@ Phase 5: Newsletter + Polish
 - `/components/command/` - Command palette components
 - `/lib/search/` - Orama search integration
 - `/hooks/useSearch.ts` - Search hook
+- `/components/graph/` - Knowledge graph visualization
+- `/lib/graph/` - Graph data generation and types
 
 ## Hook Signatures
 
