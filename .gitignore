@@ -45,3 +45,6 @@ coverage
 
 # Build cache
 .cover-cache.json
+
+# Content Collections
+.content-collections
