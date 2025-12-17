@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "prebuild": "tsx scripts/generate-search-index.ts",
+    "covers": "tsx scripts/resolve-book-covers.ts",
+    "prebuild": "tsx scripts/resolve-book-covers.ts && tsx scripts/generate-search-index.ts",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

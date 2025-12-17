@@ -1,0 +1,106 @@
+{
+  "lastUpdated": "2024-01-15",
+  "books": [
+    {
+      "id": "progress-and-poverty",
+      "title": "Progress and Poverty",
+      "author": "Henry George",
+      "year": 1879,
+      "isbn13": "9780911312584",
+      "status": "read",
+      "rating": 5,
+      "dateRead": "2023-06-15",
+      "topics": ["economics", "land", "governance", "classical-liberalism"],
+      "genre": "economics",
+      "whyILoveIt": "The most important book on political economy ever written. George's diagnosis of why progress creates poverty remains devastatingly relevant."
+    },
+    {
+      "id": "the-problem-of-political-authority",
+      "title": "The Problem of Political Authority",
+      "author": "Michael Huemer",
+      "year": 2012,
+      "isbn13": "9781137281654",
+      "status": "read",
+      "rating": 5,
+      "dateRead": "2023-08-20",
+      "topics": ["philosophy", "governance", "libertarianism", "ethics"],
+      "genre": "philosophy",
+      "whyILoveIt": "A rigorous philosophical examination of why governments claim authority and whether those claims are justified. Changed how I think about legitimacy."
+    },
+    {
+      "id": "the-machinery-of-freedom",
+      "title": "The Machinery of Freedom",
+      "author": "David Friedman",
+      "year": 1973,
+      "isbn13": "9780812690699",
+      "status": "read",
+      "rating": 4,
+      "dateRead": "2022-11-10",
+      "topics": ["economics", "governance", "anarcho-capitalism"],
+      "genre": "political-theory",
+      "whyILoveIt": "A practical exploration of how a stateless society might function. Friedman's economic approach to anarchism is uniquely compelling."
+    },
+    {
+      "id": "seeing-like-a-state",
+      "title": "Seeing Like a State",
+      "author": "James C. Scott",
+      "year": 1998,
+      "isbn13": "9780300078152",
+      "status": "read",
+      "rating": 5,
+      "dateRead": "2023-02-28",
+      "topics": ["governance", "planning", "local-knowledge"],
+      "genre": "political-science",
+      "whyILoveIt": "Essential reading for anyone interested in governance. Scott's concept of 'metis' and critique of high-modernist planning is profound."
+    },
+    {
+      "id": "antifragile",
+      "title": "Antifragile",
+      "author": "Nassim Nicholas Taleb",
+      "year": 2012,
+      "isbn13": "9780812979688",
+      "status": "read",
+      "rating": 4,
+      "dateRead": "2022-05-12",
+      "topics": ["risk", "systems", "philosophy"],
+      "genre": "non-fiction",
+      "whyILoveIt": "Taleb's framework for things that gain from disorder. The concept of antifragility has shaped how I think about building resilient systems."
+    },
+    {
+      "id": "the-sovereign-individual",
+      "title": "The Sovereign Individual",
+      "author": "James Dale Davidson & Lord William Rees-Mogg",
+      "year": 1997,
+      "isbn13": "9780684832722",
+      "status": "read",
+      "rating": 4,
+      "dateRead": "2021-09-05",
+      "topics": ["technology", "governance", "future"],
+      "genre": "futurism",
+      "whyILoveIt": "Prescient predictions about how information technology would reshape sovereignty and governance. Written before the internet age but eerily accurate."
+    },
+    {
+      "id": "stubborn-attachments",
+      "title": "Stubborn Attachments",
+      "author": "Tyler Cowen",
+      "year": 2018,
+      "isbn13": "9781732265134",
+      "status": "reading",
+      "dateStarted": "2024-01-10",
+      "topics": ["economics", "ethics", "growth"],
+      "genre": "philosophy",
+      "whyILoveIt": "A compelling case for sustainable economic growth as a moral imperative. Cowen's 'Crusonia plant' thought experiment is memorable."
+    },
+    {
+      "id": "the-beginning-of-infinity",
+      "title": "The Beginning of Infinity",
+      "author": "David Deutsch",
+      "year": 2011,
+      "isbn13": "9780143121350",
+      "status": "want",
+      "topics": ["philosophy", "science", "knowledge"],
+      "genre": "philosophy",
+      "whyILoveIt": "On my list because of its exploration of the power of explanatory knowledge. Deutsch's optimism about human potential is inspiring."
+    }
+  ]
+}

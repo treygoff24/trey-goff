@@ -1,6 +1,6 @@
 # The Control Room - Build Context
 
-**Last Updated**: Phase 3 - Command Palette + Search (IN PROGRESS)
+**Last Updated**: Phase 4 - Library (IN PROGRESS)
 
 ## Protocol Reminder (Re-read on every phase start)
 
@@ -63,13 +63,13 @@ pnpm typecheck  # TypeScript check
 
 ## Current Phase
 
-Phase 3: Command Palette + Search
+Phase 4: Library
 
 ## Implementation Progress
 
 - [x] Phase 1: Foundation + Design System
 - [x] Phase 2: Content Pipeline + Writing
-- [ ] Phase 3: Command Palette + Search
+- [x] Phase 3: Command Palette + Search
 - [ ] Phase 4: Library
 - [ ] Phase 5: Newsletter + Polish
 - [ ] Phase 6: Knowledge Graph (stretch)
@@ -86,6 +86,9 @@ Phase 3: Command Palette + Search
 - `/components/writing/TableOfContents.tsx` - TOC for essays
 - `/components/notes/NoteCard.tsx` - Note card component
 - `/components/mdx/` - MDX components (Callout, CodeBlock)
+- `/components/command/` - Command palette components
+- `/lib/search/` - Orama search integration
+- `/hooks/useSearch.ts` - Search hook
 
 ## Hook Signatures
 
@@ -95,6 +98,29 @@ Phase 3: Command Palette + Search
 
 ```typescript
 Returns: boolean
+```
+
+### useSearch()
+
+```typescript
+Returns: {
+  query: string
+  setQuery: (query: string) => void
+  results: SearchResult[]
+  isLoading: boolean
+  isInitialized: boolean
+  initialize: () => Promise<void>
+}
+```
+
+### useCommandPalette()
+
+```typescript
+Returns: {
+  open: boolean
+  setOpen: (open: boolean) => void
+  toggle: () => void
+}
 ```
 
 ## Utility Functions

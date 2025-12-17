@@ -1,5 +1,19 @@
 import { allEssays, allNotes } from 'content-collections'
+import { readFileSync } from 'fs'
 import type { SearchDocument, SearchIndex } from './types'
+import type { BooksData } from '@/lib/books/types'
+
+// Load books data
+function loadBooks(): BooksData['books'] {
+  try {
+    const booksData: BooksData = JSON.parse(
+      readFileSync('./content/library/books.json', 'utf-8')
+    )
+    return booksData.books
+  } catch {
+    return []
+  }
+}
 
 // Navigation pages (static)
 const navigationPages: SearchDocument[] = [
@@ -153,6 +167,22 @@ export function generateSearchIndex(): SearchIndex {
       tags: note.tags,
       url: `/notes#${note.slug}`,
       priority: 4,
+    })
+  }
+
+  // Add books
+  const books = loadBooks()
+  for (const book of books) {
+    documents.push({
+      id: `book-${book.id}`,
+      type: 'book',
+      title: book.title,
+      description: `by ${book.author} (${book.year})`,
+      content: book.whyILoveIt.slice(0, 200),
+      tags: book.topics,
+      keywords: [book.author, book.genre || ''].filter(Boolean),
+      url: `/library#${book.id}`,
+      priority: book.rating === 5 ? 7 : 5,
     })
   }
 
