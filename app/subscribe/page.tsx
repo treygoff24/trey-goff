@@ -1,23 +1,49 @@
-import { Prose } from '@/components/content/Prose'
+import { SubscribeForm } from '@/components/newsletter/SubscribeForm'
 
 export const metadata = {
   title: 'Subscribe',
-  description: 'Get updates when I publish new essays.',
+  description:
+    'Get essays on governance, technology, and institutional innovation delivered to your inbox.',
 }
 
 export default function SubscribePage() {
   return (
-    <div className="mx-auto max-w-xl px-4 py-16">
-      <Prose>
-        <h1>Subscribe</h1>
-        <p>
-          Get notified when I publish new essays. No spam, unsubscribe anytime.
+    <main className="mx-auto max-w-xl px-4 py-24">
+      <div className="mb-12 text-center">
+        <h1 className="mb-4 font-satoshi text-4xl font-medium text-text-1">
+          Subscribe
+        </h1>
+        <p className="text-lg text-text-2">
+          Get new essays delivered to your inbox. No spam, unsubscribe anytime.
         </p>
-      </Prose>
-
-      <div className="mt-8 rounded-lg border border-border-1 bg-surface-1 p-8 text-center">
-        <p className="text-text-3">Newsletter signup coming soon.</p>
       </div>
-    </div>
+
+      <SubscribeForm />
+
+      <div className="mt-12 text-center">
+        <h2 className="mb-4 font-satoshi text-sm font-medium uppercase tracking-wider text-text-3">
+          What you&apos;ll get
+        </h2>
+        <ul className="space-y-3 text-text-2">
+          <li>New essays on governance and institutional innovation</li>
+          <li>Occasional notes and dispatches</li>
+          <li>Early access to projects and ideas</li>
+        </ul>
+      </div>
+
+      <p className="mt-12 text-center text-sm text-text-3">
+        Your email is safe. I never share subscriber data and you can
+        unsubscribe with one click. Powered by{' '}
+        <a
+          href="https://buttondown.email"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-text-2 hover:text-warm"
+        >
+          Buttondown
+        </a>
+        .
+      </p>
+    </main>
   )
 }

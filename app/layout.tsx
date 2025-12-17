@@ -44,8 +44,17 @@ export default function RootLayout({
     >
       <body className="flex min-h-screen flex-col">
         <CommandPaletteProvider>
+          {/* Skip link for accessibility */}
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-warm focus:px-4 focus:py-2 focus:text-bg-1"
+          >
+            Skip to main content
+          </a>
           <TopNav />
-          <main className="flex-1">{children}</main>
+          <main id="main-content" className="flex-1">
+            {children}
+          </main>
           <Footer />
           <CommandPalette />
         </CommandPaletteProvider>

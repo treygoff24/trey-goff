@@ -7,6 +7,7 @@ import {
   MobileTableOfContents,
 } from '@/components/writing/TableOfContents'
 import { Prose } from '@/components/content/Prose'
+import { SubscribeForm } from '@/components/newsletter/SubscribeForm'
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -85,8 +86,19 @@ export default async function EssayPage({ params }: PageProps) {
         <TableOfContents content={essay.content} />
       </div>
 
+      {/* Newsletter CTA */}
+      <div className="mt-16 rounded-lg border border-border-1 bg-surface-1 p-6">
+        <h3 className="mb-2 font-satoshi text-lg font-medium text-text-1">
+          Enjoyed this essay?
+        </h3>
+        <p className="mb-4 text-sm text-text-2">
+          Subscribe to get new essays delivered to your inbox.
+        </p>
+        <SubscribeForm compact />
+      </div>
+
       {/* Footer */}
-      <footer className="mt-16 border-t border-border-1 pt-8">
+      <footer className="mt-8 border-t border-border-1 pt-8">
         <p className="text-sm text-text-3">
           Last updated: {formatDate(essay.date)}
         </p>
