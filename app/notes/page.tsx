@@ -1,14 +1,25 @@
 import { allNotes } from 'content-collections'
 import { NoteCard } from '@/components/notes/NoteCard'
+import { markdownToHtml } from '@/lib/markdown'
 
 export const metadata = {
   title: 'Notes',
   description: 'Quick thoughts, dispatches, and interesting links.',
 }
 
-export default function NotesPage() {
+export default async function NotesPage() {
   const sortedNotes = allNotes.sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  )
+
+  // Convert raw markdown to HTML. This runs at build time (static generation)
+  // since the page has no dynamic segments or revalidation config.
+  // Content-collections returns raw markdown, so we process it here.
+  const notesWithHtml = await Promise.all(
+    sortedNotes.map(async (note) => ({
+      ...note,
+      html: await markdownToHtml(note.content),
+    }))
   )
 
   return (
@@ -28,14 +39,14 @@ export default function NotesPage() {
         </div>
       ) : (
         <div className="space-y-6">
-          {sortedNotes.map((note) => (
+          {notesWithHtml.map((note) => (
             <NoteCard
               key={note.slug}
               slug={note.slug}
               date={note.date}
               type={note.type}
               title={note.title}
-              content={note.content}
+              content={note.html}
               tags={note.tags}
               source={note.source}
               sourceTitle={note.sourceTitle}

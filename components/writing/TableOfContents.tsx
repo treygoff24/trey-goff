@@ -10,33 +10,38 @@ interface TocItem {
 }
 
 interface TableOfContentsProps {
-  content: string
+  contentSelector: string
+  sourceId?: string
 }
 
-export function TableOfContents({ content }: TableOfContentsProps) {
+function parseHeadingsFromDom(contentSelector: string): TocItem[] {
+  const container = document.querySelector(contentSelector)
+  if (!container) return []
+
+  const headingElements = Array.from(
+    container.querySelectorAll('h1, h2, h3')
+  ) as HTMLElement[]
+
+  return headingElements
+    .map((heading) => {
+      const level = Number(heading.tagName.replace('H', ''))
+      const text = heading.textContent?.trim() || ''
+      const id = heading.id
+      if (!id || !text || !level) return null
+      return { id, text, level }
+    })
+    .filter(Boolean) as TocItem[]
+}
+
+export function TableOfContents({ contentSelector, sourceId }: TableOfContentsProps) {
   const [activeId, setActiveId] = useState<string>('')
   const [items, setItems] = useState<TocItem[]>([])
 
-  // Parse headings from content
+  // Parse headings from rendered DOM
   useEffect(() => {
-    const headingRegex = /^(#{1,3})\s+(.+)$/gm
-    const matches = [...content.matchAll(headingRegex)]
-
-    const tocItems: TocItem[] = matches
-      .filter((match) => match[1] && match[2])
-      .map((match) => {
-        const level = match[1]!.length
-        const text = match[2]!.replace(/[*_`]/g, '') // Remove markdown formatting
-        const id = text
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-|-$/g, '')
-
-        return { id, text, level }
-      })
-
-    setItems(tocItems)
-  }, [content])
+    setItems(parseHeadingsFromDom(contentSelector))
+    setActiveId('')
+  }, [contentSelector, sourceId])
 
   // Track active heading on scroll
   useEffect(() => {
@@ -107,30 +112,19 @@ export function TableOfContents({ content }: TableOfContentsProps) {
   )
 }
 
-// Mobile TOC dropdown
-export function MobileTableOfContents({ content }: TableOfContentsProps) {
+// Mobile TOC dropdown - intentionally simpler than desktop version.
+// No active heading tracking since mobile uses a collapsible dropdown
+// that closes on selection, making scroll-based highlighting unnecessary.
+export function MobileTableOfContents({
+  contentSelector,
+  sourceId,
+}: TableOfContentsProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [items, setItems] = useState<TocItem[]>([])
 
   useEffect(() => {
-    const headingRegex = /^(#{1,3})\s+(.+)$/gm
-    const matches = [...content.matchAll(headingRegex)]
-
-    const tocItems: TocItem[] = matches
-      .filter((match) => match[1] && match[2])
-      .map((match) => {
-        const level = match[1]!.length
-        const text = match[2]!.replace(/[*_`]/g, '')
-        const id = text
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-|-$/g, '')
-
-        return { id, text, level }
-      })
-
-    setItems(tocItems)
-  }, [content])
+    setItems(parseHeadingsFromDom(contentSelector))
+  }, [contentSelector, sourceId])
 
   if (items.length < 2) {
     return null

@@ -86,7 +86,7 @@ export function generateGraphData(): GraphData {
     const nodeId = `note-${note.slug}`
     const label = note.title || `Note: ${note.date}`
     nodes.push(
-      createNode(nodeId, label, 'note', `/notes/${note.slug}`, {
+      createNode(nodeId, label, 'note', `/notes#${encodeURIComponent(note.slug)}`, {
         date: note.date,
       })
     )

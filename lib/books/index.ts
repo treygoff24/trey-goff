@@ -35,9 +35,9 @@ export function getAllGenres(): string[] {
 }
 
 // Get reading statistics
-export function getReadingStats() {
-  const books = getAllBooks()
+export function calculateReadingStats(books: Book[]) {
   const readBooks = books.filter((b) => b.status === 'read')
+  const ratedReadBooks = readBooks.filter((b) => typeof b.rating === 'number')
 
   return {
     total: books.length,
@@ -46,12 +46,16 @@ export function getReadingStats() {
     want: books.filter((b) => b.status === 'want').length,
     abandoned: books.filter((b) => b.status === 'abandoned').length,
     averageRating:
-      readBooks.length > 0
-        ? readBooks.reduce((sum, b) => sum + (b.rating || 0), 0) /
-          readBooks.filter((b) => b.rating).length
+      ratedReadBooks.length > 0
+        ? ratedReadBooks.reduce((sum, b) => sum + b.rating!, 0) /
+          ratedReadBooks.length
         : 0,
     fiveStarBooks: readBooks.filter((b) => b.rating === 5).length,
   }
+}
+
+export function getReadingStats() {
+  return calculateReadingStats(getAllBooks())
 }
 
 // Sort books

@@ -8,6 +8,7 @@ import {
 } from '@/components/writing/TableOfContents'
 import { Prose } from '@/components/content/Prose'
 import { SubscribeForm } from '@/components/newsletter/SubscribeForm'
+import { markdownToHtml } from '@/lib/markdown'
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -40,6 +41,8 @@ export default async function EssayPage({ params }: PageProps) {
   if (!essay) {
     notFound()
   }
+
+  const contentHtml = await markdownToHtml(essay.content)
 
   return (
     <article className="mx-auto max-w-4xl px-4 py-16">
@@ -75,15 +78,15 @@ export default async function EssayPage({ params }: PageProps) {
       </header>
 
       {/* Mobile TOC */}
-      <MobileTableOfContents content={essay.content} />
+      <MobileTableOfContents contentSelector="#essay-content" sourceId={essay.slug} />
 
       {/* Content with desktop TOC */}
       <div className="grid gap-12 lg:grid-cols-[1fr_200px]">
         <Prose>
-          <div dangerouslySetInnerHTML={{ __html: essay.content }} />
+          <div id="essay-content" dangerouslySetInnerHTML={{ __html: contentHtml }} />
         </Prose>
 
-        <TableOfContents content={essay.content} />
+        <TableOfContents contentSelector="#essay-content" sourceId={essay.slug} />
       </div>
 
       {/* Newsletter CTA */}
