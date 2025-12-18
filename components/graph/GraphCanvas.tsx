@@ -47,7 +47,7 @@ export function GraphCanvas({ data, onNodeClick, className }: GraphCanvasProps) 
       try {
         graph.addEdge(edge.source, edge.target, {
           weight: edge.weight,
-          type: edge.type,
+          edgeType: edge.type, // Store as edgeType to avoid Sigma's reserved 'type' attribute
           color: 'rgba(255, 255, 255, 0.15)',
         })
       } catch {
