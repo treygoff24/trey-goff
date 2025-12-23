@@ -82,13 +82,13 @@ describe('graph node types', () => {
     }
   })
 
-  test('tag nodes link to /writing?tag=<tag>', () => {
+  test('tag nodes link to /topics/<tag>', () => {
     const { nodes } = generateGraphData()
     const tagNodes = nodes.filter((node) => node.type === 'tag')
 
     // Tags are created when content has tags
     for (const node of tagNodes) {
-      assert.ok(node.url.startsWith('/writing?tag='))
+      assert.ok(node.url.startsWith('/topics/'))
     }
   })
 
@@ -300,4 +300,3 @@ describe('graph data integrity', () => {
     }
   })
 })
-

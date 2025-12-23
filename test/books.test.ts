@@ -8,6 +8,9 @@ import {
   getBookById,
   getAllTopics,
   getAllGenres,
+  getBooksReadByYear,
+  getRatingDistribution,
+  getTopicBreakdown,
 } from '@/lib/books'
 import type { Book } from '@/lib/books/types'
 
@@ -259,5 +262,61 @@ describe('book data access functions', () => {
     const reading = getBooksByStatus('reading')
     assert.ok(Array.isArray(reading))
     assert.ok(reading.every(b => b.status === 'reading'))
+  })
+})
+
+// ============================================
+// Reading breakdown helpers
+// ============================================
+
+describe('reading breakdown helpers', () => {
+  test('getBooksReadByYear counts only read books by year', () => {
+    const data = getBooksReadByYear([
+      book({ id: 'a', status: 'read', dateRead: '2022-01-15' }),
+      book({ id: 'b', status: 'read', dateStarted: '2023-05-01' }),
+      book({ id: 'c', status: 'reading', dateRead: '2024-01-01' }),
+    ])
+
+    assert.deepEqual(data, [
+      { year: 2022, count: 1 },
+      { year: 2023, count: 1 },
+    ])
+  })
+
+  test('getRatingDistribution ignores non-read books', () => {
+    const distribution = getRatingDistribution([
+      book({ id: 'a', status: 'read', rating: 5 }),
+      book({ id: 'b', status: 'read', rating: 4 }),
+      book({ id: 'c', status: 'reading', rating: 5 }),
+      book({ id: 'd', status: 'read' }),
+    ])
+
+    const ratingFive = distribution.find((entry) => entry.rating === 5)
+    const ratingFour = distribution.find((entry) => entry.rating === 4)
+    const total = distribution.reduce((sum, entry) => sum + entry.count, 0)
+
+    assert.equal(ratingFive?.count, 1)
+    assert.equal(ratingFour?.count, 1)
+    assert.equal(total, 2)
+  })
+
+  test('getTopicBreakdown aggregates topics and buckets other', () => {
+    const breakdown = getTopicBreakdown(
+      [
+        book({ id: 'a', status: 'read', topics: ['economics'] }),
+        book({ id: 'b', status: 'read', topics: ['governance'] }),
+        book({ id: 'c', status: 'read', topics: ['philosophy'] }),
+        book({ id: 'd', status: 'read', topics: ['technology'] }),
+        book({ id: 'e', status: 'reading', topics: ['economics'] }),
+      ],
+      3
+    )
+
+    const other = breakdown.find((entry) => entry.topic === 'Other')
+    const total = breakdown.reduce((sum, entry) => sum + entry.count, 0)
+
+    assert.equal(breakdown.length, 3)
+    assert.equal(other?.count, 2)
+    assert.equal(total, 4)
   })
 })

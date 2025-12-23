@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import type { Book } from '@/lib/books/types'
 import { RatingStars } from './BookCard'
@@ -74,12 +75,13 @@ export function BookDetail({ book, coverUrl, onClose }: BookDetailProps) {
             {book.topics.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {book.topics.map((topic) => (
-                  <span
+                  <Link
                     key={topic}
-                    className="rounded-full bg-surface-1 px-2 py-0.5 text-xs text-text-2"
+                    href={`/topics/${encodeURIComponent(topic)}`}
+                    className="rounded-full border border-border-1 bg-surface-1 px-2 py-0.5 text-xs text-text-2 transition-colors hover:border-border-2 hover:text-text-1"
                   >
                     {topic}
-                  </span>
+                  </Link>
                 ))}
               </div>
             )}

@@ -57,7 +57,7 @@ export function generateGraphData(): GraphData {
     const id = `tag-${tag}`
     tagNodes.set(tag, id)
     nodes.push(
-      createNode(id, tag, 'tag', `/writing?tag=${encodeURIComponent(tag)}`)
+      createNode(id, tag, 'tag', `/topics/${encodeURIComponent(tag)}`)
     )
     return id
   }
