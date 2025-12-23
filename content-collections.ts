@@ -53,6 +53,37 @@ const notes = defineCollection({
   },
 })
 
+const projects = defineCollection({
+  name: 'projects',
+  directory: 'content/projects',
+  include: '**/*.mdx',
+  schema: z.object({
+    name: z.string(),
+    oneLiner: z.string(),
+    problem: z.string(),
+    approach: z.string(),
+    status: z.enum(['active', 'shipped', 'on-hold', 'archived', 'idea']),
+    type: z.enum(['software', 'policy', 'professional', 'experiment']),
+    roles: z.array(z.string()).default([]),
+    links: z
+      .array(z.object({ label: z.string(), url: z.string() }))
+      .default([]),
+    images: z.array(z.string()).default([]),
+    tags: z.array(z.string()).default([]),
+    featuredRank: z.number().optional(),
+    content: z.string(),
+  }),
+  transform: (document) => {
+    const slug = document._meta.path.replace(/\.mdx$/, '')
+
+    return {
+      ...document,
+      slug,
+      featuredRank: document.featuredRank ?? 999,
+    }
+  },
+})
+
 export default defineConfig({
-  collections: [essays, notes],
+  collections: [essays, notes, projects],
 })

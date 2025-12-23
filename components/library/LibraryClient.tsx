@@ -7,11 +7,15 @@ import {
   sortBooks,
   filterBooks,
   getReadingStats,
+  getBooksReadByYear,
+  getRatingDistribution,
+  getTopicBreakdown,
 } from '@/lib/books'
 import type { Book, BookStatus } from '@/lib/books/types'
 import { BookCard } from './BookCard'
 import { BookDetail } from './BookDetail'
 import { LibraryFilters } from './LibraryFilters'
+import { ReadingStatsCharts } from './ReadingStatsCharts'
 import { Book as BookIcon, Star, TrendingUp } from 'lucide-react'
 
 interface CoverMap {
@@ -40,6 +44,12 @@ export function LibraryClient() {
   const allBooks = useMemo(() => getAllBooks(), [])
   const allTopics = useMemo(() => getAllTopics(), [])
   const stats = useMemo(() => getReadingStats(), [])
+  const booksPerYear = useMemo(() => getBooksReadByYear(allBooks), [allBooks])
+  const ratingDistribution = useMemo(
+    () => getRatingDistribution(allBooks),
+    [allBooks]
+  )
+  const topicBreakdown = useMemo(() => getTopicBreakdown(allBooks), [allBooks])
 
   const filteredBooks = useMemo(() => {
     let books = allBooks
@@ -81,6 +91,12 @@ export function LibraryClient() {
           value={stats.averageRating.toFixed(1)}
         />
       </div>
+
+      <ReadingStatsCharts
+        booksPerYear={booksPerYear}
+        ratingDistribution={ratingDistribution}
+        topicBreakdown={topicBreakdown}
+      />
 
       <div className="flex flex-col gap-8 lg:flex-row">
         {/* Sidebar filters */}

@@ -58,6 +58,66 @@ export function getReadingStats() {
   return calculateReadingStats(getAllBooks())
 }
 
+// Books read per year (based on dateRead)
+export function getBooksReadByYear(books: Book[]) {
+  const counts = new Map<number, number>()
+  for (const book of books) {
+    if (book.status !== 'read') continue
+    const dateValue = book.dateRead || book.dateStarted
+    if (!dateValue) continue
+    const year = new Date(dateValue).getFullYear()
+    if (Number.isNaN(year)) continue
+    counts.set(year, (counts.get(year) ?? 0) + 1)
+  }
+
+  return Array.from(counts.entries())
+    .map(([year, count]) => ({ year, count }))
+    .sort((a, b) => a.year - b.year)
+}
+
+// Rating distribution for read books
+export function getRatingDistribution(books: Book[]) {
+  const counts = new Map<number, number>()
+  for (let rating = 1; rating <= 5; rating += 1) {
+    counts.set(rating, 0)
+  }
+
+  for (const book of books) {
+    if (book.status !== 'read') continue
+    if (typeof book.rating !== 'number') continue
+    const rating = Math.max(1, Math.min(5, Math.round(book.rating)))
+    counts.set(rating, (counts.get(rating) ?? 0) + 1)
+  }
+
+  return Array.from(counts.entries())
+    .map(([rating, count]) => ({ rating, count }))
+    .sort((a, b) => b.rating - a.rating)
+}
+
+// Topic breakdown for read books
+export function getTopicBreakdown(books: Book[], limit = 6) {
+  const counts = new Map<string, number>()
+  for (const book of books) {
+    if (book.status !== 'read') continue
+    for (const topic of book.topics) {
+      counts.set(topic, (counts.get(topic) ?? 0) + 1)
+    }
+  }
+
+  const entries = Array.from(counts.entries())
+    .map(([topic, count]) => ({ topic, count }))
+    .sort((a, b) => b.count - a.count || a.topic.localeCompare(b.topic))
+
+  if (entries.length <= limit) return entries
+
+  const topEntries = entries.slice(0, limit - 1)
+  const otherCount = entries
+    .slice(limit - 1)
+    .reduce((sum, entry) => sum + entry.count, 0)
+
+  return [...topEntries, { topic: 'Other', count: otherCount }]
+}
+
 // Sort books
 export function sortBooks(
   books: Book[],

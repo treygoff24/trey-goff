@@ -1,6 +1,7 @@
 import { allNotes } from 'content-collections'
 import { NoteCard } from '@/components/notes/NoteCard'
 import { markdownToHtml } from '@/lib/markdown'
+import { getBacklinksForNote, getOutgoingLinksForNote } from '@/lib/backlinks'
 
 export const metadata = {
   title: 'Notes',
@@ -19,6 +20,8 @@ export default async function NotesPage() {
     sortedNotes.map(async (note) => ({
       ...note,
       html: await markdownToHtml(note.content),
+      backlinks: getBacklinksForNote(note.slug),
+      outgoing: getOutgoingLinksForNote(note.slug),
     }))
   )
 
@@ -40,20 +43,22 @@ export default async function NotesPage() {
       ) : (
         <div className="space-y-6">
           {notesWithHtml.map((note) => (
-            <NoteCard
-              key={note.slug}
-              slug={note.slug}
-              date={note.date}
-              type={note.type}
-              title={note.title}
-              content={note.html}
-              tags={note.tags}
-              source={note.source}
-              sourceTitle={note.sourceTitle}
-            />
-          ))}
-        </div>
-      )}
+              <NoteCard
+                key={note.slug}
+                slug={note.slug}
+                date={note.date}
+                type={note.type}
+                title={note.title}
+                content={note.html}
+                tags={note.tags}
+                source={note.source}
+                sourceTitle={note.sourceTitle}
+                backlinks={note.backlinks}
+                outgoing={note.outgoing}
+              />
+            ))}
+          </div>
+        )}
     </div>
   )
 }

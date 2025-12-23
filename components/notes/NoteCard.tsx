@@ -1,5 +1,6 @@
 import { formatDateRelative } from '@/lib/utils'
 import { TagPill } from '@/components/ui/TagPill'
+import { RelatedLinks } from '@/components/content/RelatedLinks'
 
 interface NoteCardProps {
   slug: string
@@ -10,6 +11,8 @@ interface NoteCardProps {
   tags: string[]
   source?: string
   sourceTitle?: string
+  backlinks?: { id: string; title: string; url: string; type: string }[]
+  outgoing?: { id: string; title: string; url: string; type: string }[]
 }
 
 const typeIcons = {
@@ -33,6 +36,8 @@ export function NoteCard({
   tags,
   source,
   sourceTitle,
+  backlinks = [],
+  outgoing = [],
 }: NoteCardProps) {
   return (
     <article
@@ -99,8 +104,19 @@ export function NoteCard({
       {tags.length > 0 && (
         <div className="mt-4 flex flex-wrap gap-2">
           {tags.map((tag) => (
-            <TagPill key={tag} tag={tag} />
+            <TagPill
+              key={tag}
+              tag={tag}
+              href={`/topics/${encodeURIComponent(tag)}`}
+            />
           ))}
+        </div>
+      )}
+
+      {(outgoing.length > 0 || backlinks.length > 0) && (
+        <div className="mt-4 border-t border-border-1 pt-4">
+          <RelatedLinks title="Links out" links={outgoing} size="sm" />
+          <RelatedLinks title="Backlinks" links={backlinks} size="sm" className="mt-3" />
         </div>
       )}
     </article>

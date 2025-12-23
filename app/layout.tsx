@@ -3,6 +3,7 @@ import { satoshi, newsreader, monaspace } from "@/lib/fonts";
 import { TopNav } from "@/components/layout/TopNav";
 import { Footer } from "@/components/layout/Footer";
 import { CommandPaletteProvider, CommandPalette } from "@/components/command";
+import { EasterEggs } from "@/components/easter-eggs/EasterEggs";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -54,6 +55,7 @@ export default function RootLayout({
 					</main>
 					<Footer />
 					<CommandPalette />
+					<EasterEggs />
 				</CommandPaletteProvider>
 			</body>
 		</html>

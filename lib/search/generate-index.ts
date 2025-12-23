@@ -1,4 +1,4 @@
-import { allEssays, allNotes } from 'content-collections'
+import { allEssays, allNotes, allProjects } from 'content-collections'
 import { readFileSync } from 'fs'
 import type { SearchDocument, SearchIndex } from './types'
 import type { BooksData } from '@/lib/books/types'
@@ -48,6 +48,14 @@ const navigationPages: SearchDocument[] = [
     description: 'Books and reading',
     url: '/library',
     priority: 10,
+  },
+  {
+    id: 'nav-topics',
+    type: 'page',
+    title: 'Topics',
+    description: 'Signals across essays, notes, and books',
+    url: '/topics',
+    priority: 9,
   },
   {
     id: 'nav-projects',
@@ -183,6 +191,20 @@ export function generateSearchIndex(): SearchIndex {
       keywords: [book.author, book.genre || ''].filter(Boolean),
       url: `/library#${book.id}`,
       priority: book.rating === 5 ? 7 : 5,
+    })
+  }
+
+  // Add projects
+  for (const project of allProjects) {
+    documents.push({
+      id: `project-${project.slug}`,
+      type: 'project',
+      title: project.name,
+      description: project.oneLiner,
+      content: `${project.problem} ${project.approach}`.slice(0, 200),
+      tags: project.tags,
+      url: `/projects#${project.slug}`,
+      priority: project.status === 'active' ? 7 : 5,
     })
   }
 
