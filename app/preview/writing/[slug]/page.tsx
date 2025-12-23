@@ -7,41 +7,41 @@ import {
   MobileTableOfContents,
 } from '@/components/writing/TableOfContents'
 import { Prose } from '@/components/content/Prose'
-import { SubscribeForm } from '@/components/newsletter/SubscribeForm'
 import { markdownToHtml } from '@/lib/markdown'
 
-const isProduction = process.env.NODE_ENV === 'production'
-const visibleEssays = isProduction
-  ? allEssays.filter((essay) => essay.status !== 'draft')
-  : allEssays
+export const dynamic = 'force-dynamic'
+
+export const metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+}
 
 interface PageProps {
   params: Promise<{ slug: string }>
+  searchParams?: { secret?: string | string[] }
 }
 
-export async function generateStaticParams() {
-  return visibleEssays.map((essay) => ({
-    slug: essay.slug,
-  }))
-}
-
-export async function generateMetadata({ params }: PageProps) {
+export default async function EssayPreviewPage({
+  params,
+  searchParams,
+}: PageProps) {
   const { slug } = await params
-  const essay = visibleEssays.find((e) => e.slug === slug)
+  const secretParam = Array.isArray(searchParams?.secret)
+    ? searchParams?.secret[0]
+    : searchParams?.secret
 
-  if (!essay) {
-    return { title: 'Essay Not Found' }
+  const isProduction = process.env.NODE_ENV === 'production'
+  const previewSecret = process.env.DRAFT_PREVIEW_SECRET
+  const canPreview =
+    !isProduction || (previewSecret && secretParam === previewSecret)
+
+  if (!canPreview) {
+    notFound()
   }
 
-  return {
-    title: essay.title,
-    description: essay.summary,
-  }
-}
-
-export default async function EssayPage({ params }: PageProps) {
-  const { slug } = await params
-  const essay = visibleEssays.find((e) => e.slug === slug)
+  const essay = allEssays.find((e) => e.slug === slug)
 
   if (!essay) {
     notFound()
@@ -51,8 +51,19 @@ export default async function EssayPage({ params }: PageProps) {
 
   return (
     <article className="mx-auto max-w-4xl px-4 py-16">
+      {/* Preview banner */}
+      <div className="mb-8 rounded-lg border border-warm/40 bg-warm/10 px-4 py-3 text-sm text-warm">
+        Draft preview
+      </div>
+
       {/* Header */}
       <header className="mb-12">
+        {essay.status === 'draft' && (
+          <span className="mb-4 inline-block rounded-full bg-error/10 px-3 py-1 text-sm font-medium text-error">
+            Draft
+          </span>
+        )}
+
         {essay.status === 'evergreen' && (
           <span className="mb-4 inline-block rounded-full bg-warm/10 px-3 py-1 text-sm font-medium text-warm">
             Evergreen
@@ -97,24 +108,6 @@ export default async function EssayPage({ params }: PageProps) {
 
         <TableOfContents contentSelector="#essay-content" sourceId={essay.slug} />
       </div>
-
-      {/* Newsletter CTA */}
-      <div className="mt-16 rounded-lg border border-border-1 bg-surface-1 p-6">
-        <h3 className="mb-2 font-satoshi text-lg font-medium text-text-1">
-          Enjoyed this essay?
-        </h3>
-        <p className="mb-4 text-sm text-text-2">
-          Subscribe to get new essays delivered to your inbox.
-        </p>
-        <SubscribeForm compact />
-      </div>
-
-      {/* Footer */}
-      <footer className="mt-8 border-t border-border-1 pt-8">
-        <p className="text-sm text-text-3">
-          Last updated: {formatDate(essay.date)}
-        </p>
-      </footer>
     </article>
   )
 }
