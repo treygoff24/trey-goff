@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import test, { describe, mock } from 'node:test'
+import test, { describe } from 'node:test'
 import { cn, formatDate, formatDateShort, formatDateRelative } from '@/lib/utils'
 
 describe('cn (class name merger)', () => {
@@ -79,9 +79,6 @@ describe('formatDateShort', () => {
 })
 
 describe('formatDateRelative', () => {
-  // Mock Date.now for consistent testing
-  const realDate = Date
-
   test('returns "Today" for current date', () => {
     const today = new Date()
     const result = formatDateRelative(today)

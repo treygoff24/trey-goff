@@ -9,7 +9,7 @@ import {
   getAllTopics,
   getAllGenres,
 } from '@/lib/books'
-import type { Book, BookStatus } from '@/lib/books/types'
+import type { Book } from '@/lib/books/types'
 
 function book(overrides: Partial<Book> = {}): Book {
   return {
@@ -261,4 +261,3 @@ describe('book data access functions', () => {
     assert.ok(reading.every(b => b.status === 'reading'))
   })
 })
-

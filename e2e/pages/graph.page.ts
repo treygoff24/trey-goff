@@ -79,7 +79,6 @@ export class GraphPage extends BasePage {
 
   async expectNodeInspectorHasContent() {
     // When a node is selected, the inspector shows its details
-    const inspector = this.nodeInspector
     // Should not show the empty state message
     await expect(this.page.getByText('Select a node to see details')).not.toBeVisible()
   }

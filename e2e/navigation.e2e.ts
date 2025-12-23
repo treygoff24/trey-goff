@@ -22,7 +22,7 @@ test.describe('Navigation - Desktop', () => {
       await expect(page).toHaveURL('/')
     })
 
-    test('should display navigation links', async ({ page }) => {
+    test('should display navigation links', async () => {
       // Use exact match to avoid matching homepage feature cards
       await expect(basePage.topNav.getByRole('link', { name: 'Writing', exact: true })).toBeVisible()
       await expect(basePage.topNav.getByRole('link', { name: 'Library', exact: true })).toBeVisible()
@@ -58,7 +58,7 @@ test.describe('Navigation - Desktop', () => {
       await expect(writingLink).toHaveClass(/font-medium/)
     })
 
-    test('should display search button with keyboard hint', async ({ page }) => {
+    test('should display search button with keyboard hint', async () => {
       // Scope to the header nav to avoid matching homepage search button
       const searchButton = basePage.topNav.getByRole('button', { name: /search|command k/i })
       await expect(searchButton).toBeVisible()
@@ -73,7 +73,7 @@ test.describe('Navigation - Desktop', () => {
       await expect(basePage.footer).toBeVisible()
     })
 
-    test('should have footer links', async ({ page }) => {
+    test('should have footer links', async () => {
       // Footer typically has social links, RSS, etc.
       const footerLinks = basePage.footer.locator('a')
       const linkCount = await footerLinks.count()
@@ -121,7 +121,7 @@ test.describe('Navigation - Mobile', () => {
       await expect(basePage.mobileNav).not.toBeVisible()
     })
 
-    test('should display nav links in mobile drawer', async ({ page }) => {
+    test('should display nav links in mobile drawer', async () => {
       await basePage.openMobileNav()
 
       await expect(basePage.mobileNav.getByRole('link', { name: 'Writing' })).toBeVisible()
@@ -141,7 +141,7 @@ test.describe('Navigation - Mobile', () => {
       await expect(page).toHaveURL('/writing')
     })
 
-    test('should display secondary links in mobile drawer', async ({ page }) => {
+    test('should display secondary links in mobile drawer', async () => {
       await basePage.openMobileNav()
 
       await expect(basePage.mobileNav.getByRole('link', { name: 'Now' })).toBeVisible()
@@ -183,7 +183,7 @@ test.describe('Skip Link - Accessibility', () => {
     await basePage.goto('/')
   })
 
-  test('should have skip link for keyboard navigation', async ({ page }) => {
+  test('should have skip link for keyboard navigation', async () => {
     // Skip link should exist but be visually hidden
     await expect(basePage.skipLink).toBeAttached()
   })

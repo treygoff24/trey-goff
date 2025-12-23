@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import test, { describe, mock } from 'node:test'
+import test, { describe } from 'node:test'
 
 /**
  * Tests for the subscribe API route validation logic.

@@ -47,7 +47,7 @@ test.describe('Knowledge Graph Page', () => {
       await expect(page.getByRole('button', { name: /Tags/ })).toBeVisible()
     })
 
-    test('should toggle node type visibility when clicking filter', async ({ page }) => {
+    test('should toggle node type visibility when clicking filter', async () => {
       await graphPage.expectGraphRendered()
 
       const initialNodeCount = await graphPage.getNodeCount()
@@ -63,7 +63,7 @@ test.describe('Knowledge Graph Page', () => {
       await graphPage.expectFilterInactive('Essays')
     })
 
-    test('should re-enable node type when clicking filter again', async ({ page }) => {
+    test('should re-enable node type when clicking filter again', async () => {
       await graphPage.expectGraphRendered()
 
       const initialNodeCount = await graphPage.getNodeCount()
@@ -77,7 +77,7 @@ test.describe('Knowledge Graph Page', () => {
       expect(finalNodeCount).toBe(initialNodeCount)
     })
 
-    test('should update connection count when filtering', async ({ page }) => {
+    test('should update connection count when filtering', async () => {
       await graphPage.expectGraphRendered()
 
       const initialConnectionCount = await graphPage.getConnectionCount()
@@ -124,7 +124,7 @@ test.describe('Knowledge Graph Page', () => {
   })
 
   test.describe('Graph canvas interactions', () => {
-    test('should have interactive canvas', async ({ page }) => {
+    test('should have interactive canvas', async () => {
       await graphPage.expectGraphRendered()
 
       // Canvas should be clickable

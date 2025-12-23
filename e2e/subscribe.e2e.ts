@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { SubscribePage, EssayDetailPage } from './pages'
+import { SubscribePage } from './pages'
 
 test.describe('Newsletter Subscribe Form - Subscribe Page', () => {
   let subscribePage: SubscribePage
@@ -166,10 +166,7 @@ test.describe('Newsletter Subscribe Form - Subscribe Page', () => {
 })
 
 test.describe('Newsletter Subscribe Form - Essay Footer', () => {
-  let essayPage: EssayDetailPage
-
   test.beforeEach(async ({ page }) => {
-    essayPage = new EssayDetailPage(page)
     // We need an actual essay to test. Let's go to writing first to find one.
     await page.goto('/writing')
   })

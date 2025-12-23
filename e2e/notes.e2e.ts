@@ -32,7 +32,7 @@ test.describe('Notes Page', () => {
   })
 
   test.describe('Note cards', () => {
-    test('should display note type indicator', async ({ page }) => {
+    test('should display note type indicator', async () => {
       const cardCount = await notesPage.noteCards.count()
 
       if (cardCount > 0) {
@@ -55,7 +55,7 @@ test.describe('Notes Page', () => {
       }
     })
 
-    test('should display note content', async ({ page }) => {
+    test('should display note content', async () => {
       const cardCount = await notesPage.noteCards.count()
 
       if (cardCount > 0) {
@@ -70,7 +70,7 @@ test.describe('Notes Page', () => {
   })
 
   test.describe('Anchor IDs', () => {
-    test('should have anchor ID on note cards', async ({ page }) => {
+    test('should have anchor ID on note cards', async () => {
       const cardCount = await notesPage.noteCards.count()
 
       if (cardCount > 0) {
@@ -125,7 +125,7 @@ test.describe('Notes Page', () => {
   })
 
   test.describe('Note types', () => {
-    test('should display thought type with emoji', async ({ page }) => {
+    test('should display thought type with emoji', async () => {
       const thoughtNotes = notesPage.noteCards.filter({ hasText: 'Thought' })
       const count = await thoughtNotes.count()
 
@@ -136,7 +136,7 @@ test.describe('Notes Page', () => {
       }
     })
 
-    test('should display dispatch type with emoji', async ({ page }) => {
+    test('should display dispatch type with emoji', async () => {
       const dispatchNotes = notesPage.noteCards.filter({ hasText: 'Dispatch' })
       const count = await dispatchNotes.count()
 
@@ -146,7 +146,7 @@ test.describe('Notes Page', () => {
       }
     })
 
-    test('should display link type with source URL', async ({ page }) => {
+    test('should display link type with source URL', async () => {
       const linkNotes = notesPage.noteCards.filter({ hasText: 'Link' })
       const count = await linkNotes.count()
 
@@ -166,7 +166,7 @@ test.describe('Notes Page', () => {
   })
 
   test.describe('Tags', () => {
-    test('should display tags on notes', async ({ page }) => {
+    test('should display tags on notes', async () => {
       const cardCount = await notesPage.noteCards.count()
 
       if (cardCount > 0) {
@@ -190,7 +190,7 @@ test.describe('Notes Page', () => {
   })
 
   test.describe('Note titles', () => {
-    test('should display title when present', async ({ page }) => {
+    test('should display title when present', async () => {
       const cardCount = await notesPage.noteCards.count()
 
       if (cardCount > 0) {

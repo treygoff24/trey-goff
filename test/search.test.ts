@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict'
 import test, { describe } from 'node:test'
 import { generateSearchIndex } from '@/lib/search/generate-index'
-import type { SearchDocument, SearchIndex } from '@/lib/search/types'
 
 // ============================================
 // Search index structure tests

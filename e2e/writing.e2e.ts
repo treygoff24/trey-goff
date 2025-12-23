@@ -32,7 +32,7 @@ test.describe('Writing Page', () => {
   })
 
   test.describe('Essay cards', () => {
-    test('should display essay title in cards', async ({ page }) => {
+    test('should display essay title in cards', async () => {
       const cardCount = await writingPage.essayCards.count()
 
       if (cardCount > 0) {
@@ -42,7 +42,7 @@ test.describe('Writing Page', () => {
       }
     })
 
-    test('should display essay date', async ({ page }) => {
+    test('should display essay date', async () => {
       const cardCount = await writingPage.essayCards.count()
 
       if (cardCount > 0) {
@@ -52,7 +52,7 @@ test.describe('Writing Page', () => {
       }
     })
 
-    test('should display reading time', async ({ page }) => {
+    test('should display reading time', async () => {
       const cardCount = await writingPage.essayCards.count()
 
       if (cardCount > 0) {
@@ -77,7 +77,7 @@ test.describe('Writing Page', () => {
   })
 
   test.describe('Essay tags', () => {
-    test('should display tags on essay cards', async ({ page }) => {
+    test('should display tags on essay cards', async () => {
       const cardCount = await writingPage.essayCards.count()
 
       if (cardCount > 0) {
