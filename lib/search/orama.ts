@@ -10,38 +10,48 @@ export async function initializeSearch(): Promise<void> {
   if (initPromise) return initPromise
 
   initPromise = (async () => {
-    // Fetch the pre-built index
-    const response = await fetch('/search-index.json')
-    const index: SearchIndex = await response.json()
+    try {
+      // Fetch the pre-built index
+      const response = await fetch('/search-index.json')
+      if (!response.ok) {
+        throw new Error(`Search index request failed: ${response.status}`)
+      }
 
-    // Create Orama database
-    db = await create({
-      schema: {
-        id: 'string',
-        type: 'string',
-        title: 'string',
-        description: 'string',
-        content: 'string',
-        tags: 'string[]',
-        url: 'string',
-        keywords: 'string[]',
-        priority: 'number',
-      },
-    })
+      const index: SearchIndex = await response.json()
 
-    // Insert all documents
-    for (const doc of index.documents) {
-      await insert(db, {
-        id: doc.id,
-        type: doc.type,
-        title: doc.title,
-        description: doc.description || '',
-        content: doc.content || '',
-        tags: doc.tags || [],
-        url: doc.url,
-        keywords: doc.keywords || [],
-        priority: doc.priority || 5,
+      // Create Orama database
+      db = await create({
+        schema: {
+          id: 'string',
+          type: 'string',
+          title: 'string',
+          description: 'string',
+          content: 'string',
+          tags: 'string[]',
+          url: 'string',
+          keywords: 'string[]',
+          priority: 'number',
+        },
       })
+
+      // Insert all documents
+      for (const doc of index.documents) {
+        await insert(db, {
+          id: doc.id,
+          type: doc.type,
+          title: doc.title,
+          description: doc.description || '',
+          content: doc.content || '',
+          tags: doc.tags || [],
+          url: doc.url,
+          keywords: doc.keywords || [],
+          priority: doc.priority || 5,
+        })
+      }
+    } catch (error) {
+      db = null
+      initPromise = null
+      throw error
     }
   })()
 

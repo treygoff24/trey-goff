@@ -10,19 +10,21 @@ import { Prose } from '@/components/content/Prose'
 import { SubscribeForm } from '@/components/newsletter/SubscribeForm'
 import { markdownToHtml } from '@/lib/markdown'
 
+const publishedEssays = allEssays.filter((essay) => essay.status !== 'draft')
+
 interface PageProps {
   params: Promise<{ slug: string }>
 }
 
 export async function generateStaticParams() {
-  return allEssays.map((essay) => ({
+  return publishedEssays.map((essay) => ({
     slug: essay.slug,
   }))
 }
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params
-  const essay = allEssays.find((e) => e.slug === slug)
+  const essay = publishedEssays.find((e) => e.slug === slug)
 
   if (!essay) {
     return { title: 'Essay Not Found' }
@@ -36,7 +38,7 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function EssayPage({ params }: PageProps) {
   const { slug } = await params
-  const essay = allEssays.find((e) => e.slug === slug)
+  const essay = publishedEssays.find((e) => e.slug === slug)
 
   if (!essay) {
     notFound()

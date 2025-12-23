@@ -41,12 +41,14 @@ export function BookCard({
   const badge = statusBadges[book.status]
 
   return (
-    <div
+    <button
+      type="button"
       className={cn(
-        'group cursor-pointer transition-transform hover:-translate-y-1',
+        'group cursor-pointer bg-transparent text-left transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warm focus-visible:ring-offset-2 focus-visible:ring-offset-bg-1',
         sizeClasses[size]
       )}
       onClick={onClick}
+      aria-label={`View details for ${book.title}`}
     >
       {/* Cover */}
       <div className="relative mb-3 overflow-hidden rounded-lg shadow-lg">
@@ -100,7 +102,7 @@ export function BookCard({
           <p className="text-xs text-text-3">{book.year}</p>
         )}
       </div>
-    </div>
+    </button>
   )
 }
 

@@ -1,6 +1,8 @@
 import { ImageResponse } from 'next/og'
 import { allEssays } from 'content-collections'
 
+const publishedEssays = allEssays.filter((essay) => essay.status !== 'draft')
+
 export const runtime = 'edge'
 export const alt = 'Essay preview'
 export const size = { width: 1200, height: 630 }
@@ -12,7 +14,7 @@ export default async function OGImage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const essay = allEssays.find((e) => e.slug === slug)
+  const essay = publishedEssays.find((e) => e.slug === slug)
 
   if (!essay) {
     return new ImageResponse(

@@ -51,9 +51,9 @@
   --radius-full: 9999px;
 
   /* Fonts */
-  --font-satoshi: var(--font-satoshi), system-ui, sans-serif;
-  --font-newsreader: var(--font-newsreader), Georgia, serif;
-  --font-mono: var(--font-mono), ui-monospace, monospace;
+  --font-satoshi: var(--font-satoshi-font), system-ui, sans-serif;
+  --font-newsreader: var(--font-newsreader-font), Georgia, serif;
+  --font-mono: var(--font-mono-font), ui-monospace, monospace;
 }
 
 /* Base styles */

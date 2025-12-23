@@ -37,10 +37,10 @@ test('markdownToHtml renders GFM tables', async () => {
   assert.match(html, /<td>Alice<\/td>/)
 })
 
-test('markdownToHtml passes through raw HTML', async () => {
+test('markdownToHtml escapes raw HTML', async () => {
   const markdown = '<div class="custom">Raw HTML</div>'
   const html = await markdownToHtml(markdown)
 
-  assert.match(html, /<div class="custom">Raw HTML<\/div>/)
+  assert.match(html, /&lt;div class="custom"&gt;Raw HTML&lt;\/div&gt;/)
+  assert.doesNotMatch(html, /<div class="custom">Raw HTML<\/div>/)
 })
-

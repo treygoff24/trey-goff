@@ -30,7 +30,7 @@ import {
 export function CommandPalette() {
   const router = useRouter()
   const { open, setOpen } = useCommandPalette()
-  const { query, setQuery, results, isLoading, initialize } = useSearch()
+  const { query, setQuery, results, isLoading, initialize, error } = useSearch()
 
   // Initialize search when palette opens
   useEffect(() => {
@@ -73,13 +73,17 @@ export function CommandPalette() {
           </div>
         )}
 
-        {!isLoading && query && results.length === 0 && (
+        {error && (
+          <div className="py-6 text-center text-sm text-error">{error}</div>
+        )}
+
+        {!isLoading && query && results.length === 0 && !error && (
           <CommandEmpty>No results found.</CommandEmpty>
         )}
 
         {!isLoading && !query && <QuickActions onSelect={handleSelect} />}
 
-        {!isLoading && query && results.length > 0 && (
+        {!isLoading && query && results.length > 0 && !error && (
           <CommandResults results={results} onSelect={handleSelect} />
         )}
       </CommandList>

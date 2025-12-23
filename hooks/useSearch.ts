@@ -12,14 +12,23 @@ export function useSearch() {
   const [results, setResults] = useState<SearchResult[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isInitialized, setIsInitialized] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   // Initialize search on first use (lazy load)
   const initialize = useCallback(async () => {
-    if (isInitialized) return
+    if (isInitialized) return true
     setIsLoading(true)
-    await initializeSearch()
-    setIsInitialized(true)
-    setIsLoading(false)
+    setError(null)
+    try {
+      await initializeSearch()
+      setIsInitialized(true)
+      return true
+    } catch {
+      setError('Search is unavailable right now.')
+      return false
+    } finally {
+      setIsLoading(false)
+    }
   }, [isInitialized])
 
   // Search when query changes
@@ -30,9 +39,16 @@ export function useSearch() {
     }
 
     const searchAsync = async () => {
-      await initialize()
-      const searchResults = await searchDocuments(query)
-      setResults(searchResults)
+      try {
+        const initialized = await initialize()
+        if (!initialized) return
+        const searchResults = await searchDocuments(query)
+        setResults(searchResults)
+        setError(null)
+      } catch {
+        setResults([])
+        setError('Search is unavailable right now.')
+      }
     }
 
     // Debounce search
@@ -47,5 +63,6 @@ export function useSearch() {
     isLoading,
     isInitialized,
     initialize,
+    error,
   }
 }

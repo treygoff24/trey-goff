@@ -4,7 +4,8 @@ import Image from 'next/image'
 import { cn } from '@/lib/utils'
 import type { Book } from '@/lib/books/types'
 import { RatingStars } from './BookCard'
-import { X, ExternalLink, Calendar, BookOpen } from 'lucide-react'
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
+import { ExternalLink, Calendar, BookOpen } from 'lucide-react'
 
 interface BookDetailProps {
   book: Book
@@ -14,23 +15,8 @@ interface BookDetailProps {
 
 export function BookDetail({ book, coverUrl, onClose }: BookDetailProps) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/80"
-        onClick={onClose}
-      />
-
-      {/* Modal */}
-      <div className="relative z-10 max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg border border-border-1 bg-bg-1 p-6">
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute right-4 top-4 rounded-md p-1 text-text-3 transition-colors hover:bg-surface-1 hover:text-text-1"
-        >
-          <X className="h-5 w-5" />
-        </button>
-
+    <Dialog open onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="max-h-[90vh] w-full max-w-2xl overflow-y-auto p-6">
         <div className="flex flex-col gap-6 sm:flex-row">
           {/* Cover */}
           <div className="shrink-0">
@@ -53,9 +39,9 @@ export function BookDetail({ book, coverUrl, onClose }: BookDetailProps) {
           {/* Info */}
           <div className="flex-1 space-y-4">
             <div>
-              <h2 className="font-satoshi text-2xl font-bold text-text-1">
+              <DialogTitle className="font-satoshi text-2xl font-bold text-text-1">
                 {book.title}
-              </h2>
+              </DialogTitle>
               <p className="mt-1 text-lg text-text-2">{book.author}</p>
               <p className="text-sm text-text-3">{book.year}</p>
             </div>
@@ -130,8 +116,8 @@ export function BookDetail({ book, coverUrl, onClose }: BookDetailProps) {
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   )
 }
 

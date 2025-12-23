@@ -1,4 +1,4 @@
-import { Newsreader, Inter } from 'next/font/google'
+import { Newsreader, Inter, JetBrains_Mono } from 'next/font/google'
 
 // Using Inter as a fallback for Satoshi until font files are added
 // To use Satoshi: download from https://www.fontshare.com/fonts/satoshi
@@ -25,14 +25,14 @@ export const satoshi = localFont({
       style: 'normal',
     },
   ],
-  variable: '--font-satoshi',
+  variable: '--font-satoshi-font',
   display: 'swap',
   fallback: ['system-ui', 'sans-serif'],
 })
 
 export const monaspace = localFont({
   src: '../public/fonts/MonaspaceNeon-Regular.woff2',
-  variable: '--font-mono',
+  variable: '--font-mono-font',
   display: 'swap',
   fallback: ['ui-monospace', 'monospace'],
 })
@@ -41,20 +41,23 @@ export const monaspace = localFont({
 // Temporary: Using Google Fonts until local fonts are added
 export const satoshi = Inter({
   subsets: ['latin'],
-  variable: '--font-satoshi',
+  variable: '--font-satoshi-font',
   display: 'swap',
   weight: ['400', '500', '700'],
 })
 
 export const newsreader = Newsreader({
   subsets: ['latin'],
-  variable: '--font-newsreader',
+  variable: '--font-newsreader-font',
   display: 'swap',
   weight: ['400', '500', '600'],
   style: ['normal', 'italic'],
 })
 
-// Using system monospace until Monaspace is added
-export const monaspace = {
-  variable: '--font-mono',
-}
+// Temporary: Using Google Fonts until Monaspace is added
+export const monaspace = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono-font',
+  display: 'swap',
+  weight: ['400', '500', '600'],
+})
