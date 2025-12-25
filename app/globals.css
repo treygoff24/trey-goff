@@ -76,6 +76,10 @@ body {
   outline-offset: 2px;
 }
 
+[cmdk-input]:focus-visible {
+  outline: none;
+}
+
 /* Selection */
 ::selection {
   background-color: var(--color-warm);

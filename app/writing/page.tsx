@@ -8,18 +8,19 @@ export const metadata = {
 }
 
 interface WritingPageProps {
-  searchParams?: { tag?: string | string[] }
+  searchParams: Promise<{ tag?: string | string[] }>
 }
 
-export default function WritingPage({ searchParams }: WritingPageProps) {
+export default async function WritingPage({ searchParams }: WritingPageProps) {
+  const params = await searchParams
   const isProduction = process.env.NODE_ENV === 'production'
   const visibleEssays = isProduction
     ? allEssays.filter((essay) => essay.status !== 'draft')
     : allEssays
 
-  const activeTag = Array.isArray(searchParams?.tag)
-    ? searchParams?.tag[0]
-    : searchParams?.tag
+  const activeTag = Array.isArray(params?.tag)
+    ? params?.tag[0]
+    : params?.tag
 
   const allTags = Array.from(
     new Set(visibleEssays.flatMap((essay) => essay.tags))

@@ -20,7 +20,7 @@ export const metadata = {
 
 interface PageProps {
   params: Promise<{ slug: string }>
-  searchParams?: { secret?: string | string[] }
+  searchParams: Promise<{ secret?: string | string[] }>
 }
 
 export default async function EssayPreviewPage({
@@ -28,9 +28,10 @@ export default async function EssayPreviewPage({
   searchParams,
 }: PageProps) {
   const { slug } = await params
-  const secretParam = Array.isArray(searchParams?.secret)
-    ? searchParams?.secret[0]
-    : searchParams?.secret
+  const searchParamsResolved = await searchParams
+  const secretParam = Array.isArray(searchParamsResolved?.secret)
+    ? searchParamsResolved?.secret[0]
+    : searchParamsResolved?.secret
 
   const isProduction = process.env.NODE_ENV === 'production'
   const previewSecret = process.env.DRAFT_PREVIEW_SECRET
