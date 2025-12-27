@@ -168,7 +168,7 @@ export function InteractionSystem({
 	maxDistance = DEFAULT_MAX_DISTANCE,
 	isMobile,
 }: InteractionSystemProps) {
-	const { camera } = useThree();
+	const { camera, gl } = useThree();
 	const [hovered, setHovered] = useState<HoveredState>({ interactable: null, point: null });
 
 	// Own raycaster to avoid mutating useThree's raycaster
@@ -204,13 +204,15 @@ export function InteractionSystem({
 		if (isMobile) return; // Mobile uses tap, not hover
 
 		const handleMouseMove = (e: MouseEvent) => {
-			mousePos.current.x = (e.clientX / window.innerWidth) * 2 - 1;
-			mousePos.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
+			// Use canvas rect for proper coordinate calculation
+			const rect = gl.domElement.getBoundingClientRect();
+			mousePos.current.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+			mousePos.current.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
 		};
 
-		window.addEventListener("mousemove", handleMouseMove);
-		return () => window.removeEventListener("mousemove", handleMouseMove);
-	}, [isMobile]);
+		gl.domElement.addEventListener("mousemove", handleMouseMove);
+		return () => gl.domElement.removeEventListener("mousemove", handleMouseMove);
+	}, [isMobile, gl.domElement]);
 
 	// Raycast for hover detection and E key interaction
 	useFrame(() => {
@@ -253,8 +255,10 @@ export function InteractionSystem({
 			const touch = e.touches.item(0);
 			if (!touch) return;
 
-			mousePos.current.x = (touch.clientX / window.innerWidth) * 2 - 1;
-			mousePos.current.y = -(touch.clientY / window.innerHeight) * 2 + 1;
+			// Use canvas rect for proper coordinate calculation
+			const rect = gl.domElement.getBoundingClientRect();
+			mousePos.current.x = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
+			mousePos.current.y = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
 
 			// Immediate raycast on tap
 			raycaster.current.setFromCamera(mousePos.current, camera);
@@ -276,9 +280,9 @@ export function InteractionSystem({
 			}
 		};
 
-		window.addEventListener("touchstart", handleTouchStart);
-		return () => window.removeEventListener("touchstart", handleTouchStart);
-	}, [isMobile, camera, interactables, interactableMap, maxDistance, recordInteraction]);
+		gl.domElement.addEventListener("touchstart", handleTouchStart, { passive: true });
+		return () => gl.domElement.removeEventListener("touchstart", handleTouchStart);
+	}, [isMobile, camera, gl.domElement, interactables, interactableMap, maxDistance, recordInteraction]);
 
 	return (
 		<>
@@ -308,8 +312,14 @@ export function InteractionSystem({
 // Hook to register interactables
 // =============================================================================
 
+/**
+ * Placeholder hook for room components to register their interactables.
+ * The actual implementation will connect to a context or store in later phases.
+ */
 export function useInteractable(
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	_ref: React.RefObject<THREE.Object3D>,
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	_config: Omit<Interactable, "object">
 ): void {
 	// This hook would be used by room components to register their interactables

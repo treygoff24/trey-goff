@@ -267,6 +267,8 @@ const STORE_UPDATE_INTERVAL = 100;
  * Simplified player controller without full Rapier physics.
  * Uses basic position updates for Phase 4 MVP.
  * Full ecctrl integration will be added when rooms have collision meshes.
+ * 
+ * Note: Camera positioning is handled by CameraController, not here.
  */
 export function PlayerController({
 	spawnPosition = [0, 0, 5],
@@ -277,7 +279,6 @@ export function PlayerController({
 	onInteract,
 }: PlayerControllerProps) {
 	const groupRef = useRef<THREE.Group>(null);
-	const { camera } = useThree();
 
 	// Reusable vectors - allocated once to avoid GC pressure
 	const velocity = useRef(new THREE.Vector3());
@@ -285,10 +286,8 @@ export function PlayerController({
 	const yaw = useRef(spawnRotation);
 	const moveDir = useRef(new THREE.Vector3());
 	const rotatedDir = useRef(new THREE.Vector3());
-	const cameraOffset = useRef(new THREE.Vector3());
 	const diffVec = useRef(new THREE.Vector3());
 	const zeroVec = useRef(new THREE.Vector3());
-	const upAxis = useRef(new THREE.Vector3(0, 1, 0));
 
 	// Store update throttling
 	const lastStoreUpdate = useRef(0);
@@ -384,21 +383,14 @@ export function PlayerController({
 		groupRef.current.position.copy(position.current);
 		groupRef.current.rotation.y = yaw.current;
 
-		// Update camera for third-person view
-		cameraOffset.current.set(0, PLAYER_HEIGHT + 1, 4);
-		cameraOffset.current.applyAxisAngle(upAxis.current, yaw.current);
-		camera.position.copy(position.current).add(cameraOffset.current);
-		camera.lookAt(
-			position.current.x,
-			position.current.y + PLAYER_HEIGHT * 0.75,
-			position.current.z
-		);
+		// Camera is now handled by CameraController reading from store
+		// Position/rotation updated every frame for smooth camera following
+		setPlayerPosition([position.current.x, position.current.y, position.current.z]);
+		setPlayerRotation([0, yaw.current, 0]);
 
-		// Throttled store updates
+		// Throttled store updates for telemetry only (not camera-critical)
 		const now = state.clock.elapsedTime * 1000;
 		if (now - lastStoreUpdate.current > STORE_UPDATE_INTERVAL) {
-			setPlayerPosition([position.current.x, position.current.y, position.current.z]);
-			setPlayerRotation([0, yaw.current, 0]);
 			setIsMoving(isMoving);
 			if (isMoving) {
 				recordInteraction();
@@ -413,7 +405,7 @@ export function PlayerController({
 	});
 
 	return (
-		<group ref={groupRef} position={spawnPosition}>
+		<group ref={groupRef} position={spawnPosition} name="player">
 			<PlayerCapsule reducedMotion={reducedMotion} />
 		</group>
 	);

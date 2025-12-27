@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useRef, useState, useCallback, useMemo } from "react";
+import { Suspense, useRef, useState, useCallback, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import { KeyboardControls } from "@react-three/drei";
 import Link from "next/link";
@@ -61,18 +61,31 @@ function CameraIntegration({
 /**
  * Animated cube for visual feedback during development.
  * Will be replaced by actual scene content in later phases.
+ * This cube is also used as a demo interactable.
  */
-function PlaceholderCube({ reducedMotion }: { reducedMotion: boolean }) {
-	const meshRef = useRef<THREE.Mesh>(null);
+function PlaceholderCube({
+	reducedMotion,
+	meshRef,
+}: {
+	reducedMotion: boolean;
+	meshRef: (node: THREE.Mesh | null) => void;
+}) {
+	const internalRef = useRef<THREE.Mesh>(null);
+
+	// Call the callback ref when the mesh mounts/unmounts
+	useEffect(() => {
+		meshRef(internalRef.current);
+		return () => meshRef(null);
+	}, [meshRef]);
 
 	useFrame((_, delta) => {
-		if (!meshRef.current || reducedMotion) return;
-		meshRef.current.rotation.x += delta * 0.3;
-		meshRef.current.rotation.y += delta * 0.5;
+		if (!internalRef.current || reducedMotion) return;
+		internalRef.current.rotation.x += delta * 0.3;
+		internalRef.current.rotation.y += delta * 0.5;
 	});
 
 	return (
-		<mesh ref={meshRef} position={[0, 1, 0]}>
+		<mesh ref={internalRef} position={[0, 1, 0]} name="demo-cube">
 			<boxGeometry args={[1.5, 1.5, 1.5]} />
 			<meshStandardMaterial
 				color="#FFB86B"
@@ -87,10 +100,11 @@ function PlaceholderCube({ reducedMotion }: { reducedMotion: boolean }) {
 
 /**
  * Ground plane for reference.
+ * Named "ground" so camera collision skips it.
  */
 function Ground() {
 	return (
-		<mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
+		<mesh name="ground" rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
 			<planeGeometry args={[20, 20]} />
 			<meshStandardMaterial
 				color="#1a1a2e"
@@ -103,10 +117,12 @@ function Ground() {
 
 /**
  * Grid helper for spatial reference.
+ * Named "grid" so camera collision skips it.
  */
 function Grid() {
 	return (
 		<gridHelper
+			name="grid"
 			args={[20, 20, "#333355", "#222244"]}
 			position={[0, 0.01, 0]}
 		/>
@@ -210,18 +226,55 @@ function SceneContent({
 	qualityTier,
 	reducedMotion,
 	isMobile,
-	interactables,
+	onInteract,
 }: {
 	qualityTier: QualityTier;
 	reducedMotion: boolean;
 	isMobile: boolean;
-	interactables: Interactable[];
+	onInteract: (content: { type: "generic"; title: string; description: string }) => void;
 }) {
+	// State for demo interactable cube (using state instead of ref for proper effect triggering)
+	const [cubeObject, setCubeObject] = useState<THREE.Mesh | null>(null);
+	const cubeRef = useRef<THREE.Mesh | null>(null);
+
+	// Callback ref to capture cube mesh and trigger state update
+	const handleCubeRef = useCallback((node: THREE.Mesh | null) => {
+		cubeRef.current = node;
+		setCubeObject(node);
+	}, []);
+
+	// Interactables list built from scene objects
+	const [interactables, setInteractables] = useState<Interactable[]>([]);
+
+	// Build interactables when cube is available
+	useEffect(() => {
+		if (!cubeObject) {
+			setInteractables([]);
+			return;
+		}
+		
+		setInteractables([
+			{
+				id: "demo-cube",
+				object: cubeObject,
+				type: "generic",
+				label: "Demo Cube",
+				onInteract: () => {
+					onInteract({
+						type: "generic",
+						title: "Interactive Demo",
+						description: "This is a demo interactable. In the full experience, books, projects, and doors will trigger content overlays like this one.",
+					});
+				},
+			},
+		]);
+	}, [cubeObject, onInteract]);
+
 	return (
 		<Suspense fallback={null}>
 			<Ground />
 			<Grid />
-			<PlaceholderCube reducedMotion={reducedMotion} />
+			<PlaceholderCube reducedMotion={reducedMotion} meshRef={handleCubeRef} />
 			<FloatingOrbs reducedMotion={reducedMotion} />
 			<StatusDisplay qualityTier={qualityTier} reducedMotion={reducedMotion} />
 
@@ -275,11 +328,15 @@ export function InteractiveWorld({
 	const [isWorldReady, setIsWorldReady] = useState(false);
 
 	// Content overlay state
-	// Content overlay - openOverlay will be used by room components to show content
-	const { content: overlayContent, openOverlay: _openOverlay, closeOverlay } = useContentOverlay();
+	const { content: overlayContent, openOverlay, closeOverlay } = useContentOverlay();
 
-	// Placeholder interactables (empty for now, will be populated by rooms)
-	const interactables = useMemo<Interactable[]>(() => [], []);
+	// Memoized callback for scene interactions to prevent effect re-runs
+	const handleSceneInteract = useCallback(
+		(content: { type: "generic"; title: string; description: string }) => {
+			openOverlay(content);
+		},
+		[openOverlay]
+	);
 
 	const handleRendererReady = useCallback(() => {
 		setLoadingPhase("loading-assets");
@@ -340,7 +397,7 @@ export function InteractiveWorld({
 							qualityTier={qualityTier}
 							reducedMotion={reducedMotion}
 							isMobile={isMobile}
-							interactables={interactables}
+							onInteract={handleSceneInteract}
 						/>
 					</RendererRoot>
 				</div>

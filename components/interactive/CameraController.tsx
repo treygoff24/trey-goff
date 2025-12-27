@@ -48,6 +48,7 @@ const COLLISION_OFFSET = 0.3;
 /**
  * Check for obstacles between camera and target.
  * Returns the safe distance to avoid clipping through geometry.
+ * Skips objects tagged with userData.cameraIgnore = true.
  */
 function checkCameraCollision(
 	raycaster: THREE.Raycaster,
@@ -63,9 +64,25 @@ function checkCameraCollision(
 	const intersects = raycaster.intersectObjects(scene.children, true);
 
 	for (const intersection of intersects) {
-		// Skip transparent objects and specific layers
-		const material = (intersection.object as THREE.Mesh).material;
-		if (material && (material as THREE.Material).transparent) continue;
+		const obj = intersection.object;
+		
+		// Skip objects tagged to ignore camera collision
+		if (obj.userData?.cameraIgnore) continue;
+		
+		// Skip transparent objects (handle both single and multi-material)
+		const material = (obj as THREE.Mesh).material;
+		if (material) {
+			if (Array.isArray(material)) {
+				// Multi-material: skip if all materials are transparent
+				if (material.every((m) => m.transparent)) continue;
+			} else if ((material as THREE.Material).transparent) {
+				continue;
+			}
+		}
+		
+		// Skip ground planes (check by geometry type or name)
+		if (obj.name === 'ground' || obj.name === 'grid') continue;
+		if (obj.parent?.name === 'player') continue;
 
 		// Found a collision - return safe distance
 		return Math.max(MIN_DISTANCE, intersection.distance - COLLISION_OFFSET);
@@ -114,10 +131,11 @@ export function CameraController({
 			currentPosition.current.y += lookAtHeight;
 		} else {
 			// Third-person: position behind and above target
+			// Use same +sin/+cos as per-frame update for consistency
 			currentPosition.current.set(
-				targetVec.current.x - Math.sin(targetYaw) * actualDistance,
+				targetVec.current.x + Math.sin(targetYaw) * actualDistance,
 				targetVec.current.y + heightOffset,
-				targetVec.current.z - Math.cos(targetYaw) * actualDistance
+				targetVec.current.z + Math.cos(targetYaw) * actualDistance
 			);
 		}
 		camera.position.copy(currentPosition.current);
