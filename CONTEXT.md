@@ -1,6 +1,6 @@
 # Interactive World - Build Context
 
-**Last Updated**: Phase 2 - Asset Pipeline + CI Gates (STARTING)
+**Last Updated**: Phase 4 - Loading UX + Character Controller (STARTING)
 
 ## Protocol Reminder (Re-read on every phase start)
 
@@ -70,7 +70,7 @@ Interactive 3D "secret level" at `/interactive` - a mansion with rooms mapping t
 
 ## Current Phase
 
-Phase 2 - Asset Pipeline + CI Gates: Building compression scripts and budget validation.
+Phase 4 - Loading UX + Character Controller: Implementing loading sequence and player movement.
 
 ---
 
@@ -78,8 +78,8 @@ Phase 2 - Asset Pipeline + CI Gates: Building compression scripts and budget val
 
 - [x] Phase 0: Route Isolation + Entry Flow
 - [x] Phase 1: R3F Infrastructure
-- [ ] Phase 2: Asset Pipeline + CI Gates
-- [ ] Phase 3: State Management + Telemetry
+- [x] Phase 2: Asset Pipeline + CI Gates
+- [x] Phase 3: State Management + Telemetry
 - [ ] Phase 4: Loading UX + Character Controller
 - [ ] Phase 5: Camera + Interaction System
 - [ ] Phase 6: Chunk Streaming State Machine
@@ -231,3 +231,16 @@ Returns: {
 - Updated InteractiveWorld.tsx with actual R3F scene (placeholder content)
 - Renderer config must be in onCreated callback (not useEffect) to satisfy strict ESLint rules
 - Auto-tune state initialized in useEffect to avoid purity violations
+
+### Phase 2 Notes
+- Asset compression pipeline with KTX2 + Meshopt
+- Budget validation enforces per-chunk and scene-wide limits
+- Bundle isolation check confirms Three.js only loads for /interactive
+- Empty manifest creation when no source assets (for CI)
+
+### Phase 3 Notes
+- Zustand store with chunk states, player position, settings
+- State persistence to localStorage with URL room param support
+- Telemetry for load milestones, engagement events, performance sampling
+- Error classes with recovery strategies
+- Memory monitoring and tab suspension detection
