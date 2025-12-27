@@ -1,6 +1,6 @@
 # Interactive World - Build Context
 
-**Last Updated**: Phase 4 - Loading UX + Character Controller (STARTING)
+**Last Updated**: Phase 4 - Loading UX + Character Controller (COMPLETE)
 
 ## Protocol Reminder (Re-read on every phase start)
 
@@ -70,7 +70,7 @@ Interactive 3D "secret level" at `/interactive` - a mansion with rooms mapping t
 
 ## Current Phase
 
-Phase 4 - Loading UX + Character Controller: Implementing loading sequence and player movement.
+Phase 5 - Camera + Interaction System: Building camera behavior and interaction feedback.
 
 ---
 
@@ -80,7 +80,7 @@ Phase 4 - Loading UX + Character Controller: Implementing loading sequence and p
 - [x] Phase 1: R3F Infrastructure
 - [x] Phase 2: Asset Pipeline + CI Gates
 - [x] Phase 3: State Management + Telemetry
-- [ ] Phase 4: Loading UX + Character Controller
+- [x] Phase 4: Loading UX + Character Controller
 - [ ] Phase 5: Camera + Interaction System
 - [ ] Phase 6: Chunk Streaming State Machine
 - [ ] Phase 7: Exterior + Main Hall
@@ -244,3 +244,13 @@ Returns: {
 - Telemetry for load milestones, engagement events, performance sampling
 - Error classes with recovery strategies
 - Memory monitoring and tab suspension detection
+
+### Phase 4 Notes
+- **Pathfinding decision:** Using `three-pathfinding` over `recast-navigation-js`
+  - Simpler integration, no WASM dependency
+  - Better Safari stability (no WebAssembly edge cases)
+  - Lighter weight for mobile bundle
+  - Sufficient for mansion-scale navigation mesh
+- LoadingSequence.tsx created with progress bar, phase messages, hints
+- Using ecctrl for character controller (capsule-based physics)
+- @react-three/rapier for collision detection

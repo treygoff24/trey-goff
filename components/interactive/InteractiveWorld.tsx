@@ -1,10 +1,14 @@
 "use client";
 
-import { Suspense, useRef } from "react";
+import { Suspense, useRef, useState, useCallback } from "react";
 import { useFrame } from "@react-three/fiber";
+import { KeyboardControls } from "@react-three/drei";
+import Link from "next/link";
 import * as THREE from "three";
 import type { QualityTier } from "@/lib/interactive/capabilities";
 import { RendererRoot } from "./RendererRoot";
+import { PlayerController, keyboardControlsMap } from "./PlayerController";
+import { LoadingSequence, type LoadingPhase } from "./LoadingSequence";
 
 // =============================================================================
 // Types
@@ -174,9 +178,11 @@ function StatusDisplay({
 function SceneContent({
 	qualityTier,
 	reducedMotion,
+	isMobile,
 }: {
 	qualityTier: QualityTier;
 	reducedMotion: boolean;
+	isMobile: boolean;
 }) {
 	return (
 		<Suspense fallback={null}>
@@ -185,6 +191,13 @@ function SceneContent({
 			<PlaceholderCube reducedMotion={reducedMotion} />
 			<FloatingOrbs reducedMotion={reducedMotion} />
 			<StatusDisplay qualityTier={qualityTier} reducedMotion={reducedMotion} />
+
+			{/* Player Controller */}
+			<PlayerController
+				spawnPosition={[0, 0, 5]}
+				isMobile={isMobile}
+				reducedMotion={reducedMotion}
+			/>
 
 			{/* Fog for depth */}
 			<fog attach="fog" args={["#070A0F", 10, 50]} />
@@ -200,8 +213,8 @@ function SceneContent({
  * InteractiveWorld - The main 3D world component.
  *
  * Phase 1: Sets up R3F canvas with quality tiers and shader warmup.
+ * Phase 4: Adds character controller and loading sequence.
  * Future phases will add:
- * - Phase 4: Character controller
  * - Phase 6: Chunk streaming
  * - Phase 7+: Actual room content
  */
@@ -213,18 +226,87 @@ export function InteractiveWorld({
 	onError,
 	onTierChange,
 }: InteractiveWorldProps) {
+	const [loadingPhase, setLoadingPhase] = useState<LoadingPhase>("initializing");
+	const [loadingProgress, setLoadingProgress] = useState(0);
+	const [loadingStatus, setLoadingStatus] = useState("Initializing...");
+	const [isWorldReady, setIsWorldReady] = useState(false);
+
+	const handleRendererReady = useCallback(() => {
+		setLoadingPhase("loading-assets");
+		setLoadingProgress(40);
+		setLoadingStatus("Loading assets...");
+
+		// Simulate asset loading (will be replaced with real chunk loading)
+		setTimeout(() => {
+			setLoadingPhase("warming-shaders");
+			setLoadingProgress(70);
+			setLoadingStatus("Preparing graphics...");
+
+			setTimeout(() => {
+				setLoadingPhase("ready");
+				setLoadingProgress(100);
+				setLoadingStatus("Ready to explore");
+			}, 500);
+		}, 300);
+	}, []);
+
+	const handleEnterWorld = useCallback(() => {
+		setLoadingPhase("complete");
+		setIsWorldReady(true);
+		onReady();
+	}, [onReady]);
+
 	return (
-		<div className="h-full w-full">
-			<RendererRoot
-				qualityTier={qualityTier}
-				reducedMotion={reducedMotion}
-				isMobile={isMobile}
-				onReady={onReady}
-				onError={onError}
-				onTierChange={onTierChange}
-			>
-				<SceneContent qualityTier={qualityTier} reducedMotion={reducedMotion} />
-			</RendererRoot>
-		</div>
+		<KeyboardControls map={keyboardControlsMap}>
+			<div className="relative h-full w-full">
+				{/* Loading overlay */}
+				{loadingPhase !== "complete" && (
+					<LoadingSequence
+						phase={loadingPhase}
+						progress={loadingProgress}
+						status={loadingStatus}
+						onComplete={handleEnterWorld}
+						reducedMotion={reducedMotion}
+					/>
+				)}
+
+				{/* 3D Canvas */}
+				<div
+					className={
+						loadingPhase === "complete"
+							? "h-full w-full"
+							: "pointer-events-none h-full w-full opacity-0"
+					}
+				>
+					<RendererRoot
+						qualityTier={qualityTier}
+						reducedMotion={reducedMotion}
+						isMobile={isMobile}
+						onReady={handleRendererReady}
+						onError={onError}
+						onTierChange={onTierChange}
+					>
+						<SceneContent
+							qualityTier={qualityTier}
+							reducedMotion={reducedMotion}
+							isMobile={isMobile}
+						/>
+					</RendererRoot>
+				</div>
+
+				{/* World Ready UI - return button etc */}
+				{isWorldReady && (
+					<div className="pointer-events-auto absolute left-4 top-4 z-10">
+						<Link
+							href="/"
+							className="rounded-lg bg-surface-1 px-4 py-2 text-sm text-text-2 transition-colors hover:bg-surface-2 hover:text-text-1"
+							aria-label="Return to main website"
+						>
+							← Return to Normal
+						</Link>
+					</div>
+				)}
+			</div>
+		</KeyboardControls>
 	);
 }
