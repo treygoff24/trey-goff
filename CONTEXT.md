@@ -1,6 +1,6 @@
 # Interactive World - Build Context
 
-**Last Updated**: Phase 4 - Loading UX + Character Controller (COMPLETE)
+**Last Updated**: Phase 5 - Camera + Interaction System (COMPLETE)
 
 ## Protocol Reminder (Re-read on every phase start)
 
@@ -70,7 +70,7 @@ Interactive 3D "secret level" at `/interactive` - a mansion with rooms mapping t
 
 ## Current Phase
 
-Phase 5 - Camera + Interaction System: Building camera behavior and interaction feedback.
+Phase 6 - Chunk Streaming State Machine: Implementing room loading and memory management.
 
 ---
 
@@ -81,7 +81,7 @@ Phase 5 - Camera + Interaction System: Building camera behavior and interaction 
 - [x] Phase 2: Asset Pipeline + CI Gates
 - [x] Phase 3: State Management + Telemetry
 - [x] Phase 4: Loading UX + Character Controller
-- [ ] Phase 5: Camera + Interaction System
+- [x] Phase 5: Camera + Interaction System
 - [ ] Phase 6: Chunk Streaming State Machine
 - [ ] Phase 7: Exterior + Main Hall
 - [ ] Phase 8: Content Manifests
@@ -254,3 +254,20 @@ Returns: {
 - LoadingSequence.tsx created with progress bar, phase messages, hints
 - Using ecctrl for character controller (capsule-based physics)
 - @react-three/rapier for collision detection
+
+### Phase 5 Notes
+- **CameraController.tsx:** Third-person and first-person modes with collision detection
+  - Tuple-based position input for stable React dependencies
+  - Lerp-based smooth following with reduced motion support
+  - Camera collision to prevent clipping through geometry
+- **InteractionSystem.tsx:** Hover highlights and E key/tap interaction
+  - Own raycaster ref to avoid mutating R3F's shared raycaster
+  - useKeyboardControls for E key with edge detection
+  - Touch handler for mobile tap-to-interact
+- **ContentOverlay.tsx:** DOM-based modal for content display
+  - Focus trap with Escape key handling
+  - aria-labelledby for screen reader accessibility
+  - Next.js Image with unoptimized for external URLs
+- **Integration:** CameraIntegration reads player position from store
+  - InteractionSystem wired with empty interactables (placeholder)
+  - ContentOverlay ready for room components to populate

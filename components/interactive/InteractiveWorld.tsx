@@ -1,14 +1,18 @@
 "use client";
 
-import { Suspense, useRef, useState, useCallback } from "react";
+import { Suspense, useRef, useState, useCallback, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import { KeyboardControls } from "@react-three/drei";
 import Link from "next/link";
 import * as THREE from "three";
 import type { QualityTier } from "@/lib/interactive/capabilities";
+import { useInteractiveStore } from "@/lib/interactive/store";
 import { RendererRoot } from "./RendererRoot";
 import { PlayerController, keyboardControlsMap } from "./PlayerController";
 import { LoadingSequence, type LoadingPhase } from "./LoadingSequence";
+import { CameraController } from "./CameraController";
+import { InteractionSystem, type Interactable } from "./InteractionSystem";
+import { ContentOverlay, useContentOverlay } from "./ContentOverlay";
 
 // =============================================================================
 // Types
@@ -21,6 +25,33 @@ interface InteractiveWorldProps {
 	onReady: () => void;
 	onError: (error: Error) => void;
 	onTierChange?: (tier: Exclude<QualityTier, "auto">) => void;
+}
+
+// =============================================================================
+// Camera Integration
+// =============================================================================
+
+/**
+ * Connects the camera to the player position from the store.
+ * Reads position/rotation tuples and passes them to CameraController.
+ */
+function CameraIntegration({
+	reducedMotion,
+}: {
+	reducedMotion: boolean;
+}) {
+	const playerPosition = useInteractiveStore((s) => s.player.position);
+	const playerRotation = useInteractiveStore((s) => s.player.rotation);
+	const cameraMode = useInteractiveStore((s) => s.settings.cameraMode);
+
+	return (
+		<CameraController
+			targetPosition={playerPosition}
+			targetYaw={playerRotation[1]}
+			mode={cameraMode ?? "third-person"}
+			reducedMotion={reducedMotion}
+		/>
+	);
 }
 
 // =============================================================================
@@ -179,10 +210,12 @@ function SceneContent({
 	qualityTier,
 	reducedMotion,
 	isMobile,
+	interactables,
 }: {
 	qualityTier: QualityTier;
 	reducedMotion: boolean;
 	isMobile: boolean;
+	interactables: Interactable[];
 }) {
 	return (
 		<Suspense fallback={null}>
@@ -195,6 +228,16 @@ function SceneContent({
 			{/* Player Controller */}
 			<PlayerController
 				spawnPosition={[0, 0, 5]}
+				isMobile={isMobile}
+				reducedMotion={reducedMotion}
+			/>
+
+			{/* Camera System */}
+			<CameraIntegration reducedMotion={reducedMotion} />
+
+			{/* Interaction System */}
+			<InteractionSystem
+				interactables={interactables}
 				isMobile={isMobile}
 				reducedMotion={reducedMotion}
 			/>
@@ -230,6 +273,13 @@ export function InteractiveWorld({
 	const [loadingProgress, setLoadingProgress] = useState(0);
 	const [loadingStatus, setLoadingStatus] = useState("Initializing...");
 	const [isWorldReady, setIsWorldReady] = useState(false);
+
+	// Content overlay state
+	// Content overlay - openOverlay will be used by room components to show content
+	const { content: overlayContent, openOverlay: _openOverlay, closeOverlay } = useContentOverlay();
+
+	// Placeholder interactables (empty for now, will be populated by rooms)
+	const interactables = useMemo<Interactable[]>(() => [], []);
 
 	const handleRendererReady = useCallback(() => {
 		setLoadingPhase("loading-assets");
@@ -290,9 +340,17 @@ export function InteractiveWorld({
 							qualityTier={qualityTier}
 							reducedMotion={reducedMotion}
 							isMobile={isMobile}
+							interactables={interactables}
 						/>
 					</RendererRoot>
 				</div>
+
+				{/* Content Overlay (DOM-based modal) */}
+				<ContentOverlay
+					content={overlayContent}
+					onClose={closeOverlay}
+					reducedMotion={reducedMotion}
+				/>
 
 				{/* World Ready UI - return button etc */}
 				{isWorldReady && (
