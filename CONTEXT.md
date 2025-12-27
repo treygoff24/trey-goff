@@ -1,6 +1,6 @@
 # Interactive World - Build Context
 
-**Last Updated**: Phase 5 - Camera + Interaction System (COMPLETE)
+**Last Updated**: Phase 5 - Camera + Interaction System (COMPLETE + REVISED)
 
 ## Protocol Reminder (Re-read on every phase start)
 
@@ -70,7 +70,7 @@ Interactive 3D "secret level" at `/interactive` - a mansion with rooms mapping t
 
 ## Current Phase
 
-Phase 6 - Chunk Streaming State Machine: Implementing room loading and memory management.
+Phase 7 - Exterior + Main Hall: Building the first actual rooms.
 
 ---
 
@@ -82,7 +82,7 @@ Phase 6 - Chunk Streaming State Machine: Implementing room loading and memory ma
 - [x] Phase 3: State Management + Telemetry
 - [x] Phase 4: Loading UX + Character Controller
 - [x] Phase 5: Camera + Interaction System
-- [ ] Phase 6: Chunk Streaming State Machine
+- [x] Phase 6: Chunk Streaming State Machine
 - [ ] Phase 7: Exterior + Main Hall
 - [ ] Phase 8: Content Manifests
 - [ ] Phase 9: Library Room
@@ -269,5 +269,37 @@ Returns: {
   - aria-labelledby for screen reader accessibility
   - Next.js Image with unoptimized for external URLs
 - **Integration:** CameraIntegration reads player position from store
-  - InteractionSystem wired with empty interactables (placeholder)
-  - ContentOverlay ready for room components to populate
+  - Demo interactable cube wired to ContentOverlay
+  - Callback ref pattern for proper effect triggering
+
+### Phase 5 Revision Notes (Codex Review Fixes)
+- PlayerController no longer controls camera (CameraController handles it)
+- Position/rotation updated every frame (not throttled) for smooth camera
+- Camera collision skips ground/grid by name, player by parent name
+- Multi-material transparent check for camera collision
+- Touch/mouse coords use canvas rect, not window dimensions
+- Player group named 'player' for collision filtering
+
+### Phase 6 Notes
+- **ChunkManager.tsx:** State machine for room loading/unloading
+  - States: unloaded → preloading → loaded → active → dormant → disposed
+  - Effect watches preloading state and triggers loadChunk
+  - Abort in-flight loads on dispose (before checking chunk existence)
+  - Check abort signal after load to dispose orphaned assets
+  - Memory pressure monitoring in debug mode
+- **DoorTrigger.tsx:** Proximity-based preloading
+  - 15m preload distance, 3m activation distance (configurable)
+  - Reusable Vector3 ref to avoid per-frame allocation
+  - Hysteresis on preload reset (1.2x distance)
+- **TransitionOverlay.tsx:** Fade to black for room transitions
+  - Timeline: fading-out → black → fading-in → idle
+  - onSwap callback for chunk swap during black frame
+  - Reduced motion support (instant transitions)
+- **Store fixes:** Fresh state for dormant eviction (fixes max 2 limit)
+- **PlayerController:** disableInput prop for transitions
+- **Codex review issues fixed:**
+  - Preloading state didn't trigger actual loads
+  - Dispose didn't abort in-flight loads
+  - handleFadeOutComplete was no-op
+  - Dormant eviction used stale snapshot
+  - Vector allocation in useFrame

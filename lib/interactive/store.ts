@@ -194,20 +194,21 @@ export const useInteractiveStore = create<InteractiveStore>()(
 		},
 
 		activateChunk: (room: RoomId) => {
-			const state = get();
+			const initialState = get();
 
 			// Mark previous active chunk as dormant
-			if (state.activeChunk && state.activeChunk !== room) {
-				get().setChunkState(state.activeChunk, "dormant");
+			if (initialState.activeChunk && initialState.activeChunk !== room) {
+				get().setChunkState(initialState.activeChunk, "dormant");
 			}
 
 			// Activate new chunk
 			get().setChunkState(room, "active");
 			set({ activeChunk: room });
 
-			// Enforce dormant limit
+			// Enforce dormant limit - use fresh state after updates
+			const freshState = get();
 			const dormantChunks: { id: RoomId; lastActiveAt: number }[] = [];
-			for (const [id, info] of state.chunkStates) {
+			for (const [id, info] of freshState.chunkStates) {
 				if (info.state === "dormant" && info.lastActiveAt) {
 					dormantChunks.push({ id, lastActiveAt: info.lastActiveAt });
 				}

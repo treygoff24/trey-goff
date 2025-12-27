@@ -13,6 +13,8 @@ import { LoadingSequence, type LoadingPhase } from "./LoadingSequence";
 import { CameraController } from "./CameraController";
 import { InteractionSystem, type Interactable } from "./InteractionSystem";
 import { ContentOverlay, useContentOverlay } from "./ContentOverlay";
+import { ChunkManager } from "./ChunkManager";
+import { TransitionOverlay, useRoomTransition } from "./TransitionOverlay";
 
 // =============================================================================
 // Types
@@ -227,11 +229,13 @@ function SceneContent({
 	reducedMotion,
 	isMobile,
 	onInteract,
+	disableInput = false,
 }: {
 	qualityTier: QualityTier;
 	reducedMotion: boolean;
 	isMobile: boolean;
 	onInteract: (content: { type: "generic"; title: string; description: string }) => void;
+	disableInput?: boolean;
 }) {
 	// State for demo interactable cube (using state instead of ref for proper effect triggering)
 	const [cubeObject, setCubeObject] = useState<THREE.Mesh | null>(null);
@@ -283,6 +287,7 @@ function SceneContent({
 				spawnPosition={[0, 0, 5]}
 				isMobile={isMobile}
 				reducedMotion={reducedMotion}
+				disableInput={disableInput}
 			/>
 
 			{/* Camera System */}
@@ -294,6 +299,9 @@ function SceneContent({
 				isMobile={isMobile}
 				reducedMotion={reducedMotion}
 			/>
+
+			{/* Chunk Manager - handles room loading/unloading */}
+			<ChunkManager debug={false} />
 
 			{/* Fog for depth */}
 			<fog attach="fog" args={["#070A0F", 10, 50]} />
@@ -310,9 +318,9 @@ function SceneContent({
  *
  * Phase 1: Sets up R3F canvas with quality tiers and shader warmup.
  * Phase 4: Adds character controller and loading sequence.
- * Future phases will add:
- * - Phase 6: Chunk streaming
- * - Phase 7+: Actual room content
+ * Phase 5: Camera and interaction system.
+ * Phase 6: Chunk streaming state machine.
+ * Future phases will add actual room content.
  */
 export function InteractiveWorld({
 	qualityTier,
@@ -329,6 +337,12 @@ export function InteractiveWorld({
 
 	// Content overlay state
 	const { content: overlayContent, openOverlay, closeOverlay } = useContentOverlay();
+
+	// Room transition state
+	const { isTransitioning, TransitionOverlayProps } = useRoomTransition({
+		duration: reducedMotion ? 0 : 300,
+		holdDuration: 200,
+	});
 
 	// Memoized callback for scene interactions to prevent effect re-runs
 	const handleSceneInteract = useCallback(
@@ -398,6 +412,7 @@ export function InteractiveWorld({
 							reducedMotion={reducedMotion}
 							isMobile={isMobile}
 							onInteract={handleSceneInteract}
+							disableInput={isTransitioning}
 						/>
 					</RendererRoot>
 				</div>
@@ -406,6 +421,12 @@ export function InteractiveWorld({
 				<ContentOverlay
 					content={overlayContent}
 					onClose={closeOverlay}
+					reducedMotion={reducedMotion}
+				/>
+
+				{/* Room Transition Overlay (fade to black) */}
+				<TransitionOverlay
+					{...TransitionOverlayProps}
 					reducedMotion={reducedMotion}
 				/>
 

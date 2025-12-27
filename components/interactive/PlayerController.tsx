@@ -29,6 +29,8 @@ interface PlayerControllerProps {
 	isMobile: boolean;
 	/** Reduced motion preference */
 	reducedMotion: boolean;
+	/** Disable all input (during room transitions) */
+	disableInput?: boolean;
 	/** Callback when player position updates */
 	onPositionUpdate?: (position: [number, number, number]) => void;
 	/** Callback when player attempts interaction */
@@ -275,6 +277,7 @@ export function PlayerController({
 	spawnRotation = 0,
 	isMobile,
 	reducedMotion,
+	disableInput = false,
 	onPositionUpdate,
 	onInteract,
 }: PlayerControllerProps) {
@@ -307,6 +310,14 @@ export function PlayerController({
 	// Update position on each frame
 	useFrame((state, delta) => {
 		if (!groupRef.current) return;
+
+		// Skip movement processing during transitions (but keep updating store for camera)
+		if (disableInput) {
+			// Still update store so camera stays synced
+			setPlayerPosition([position.current.x, position.current.y, position.current.z]);
+			setPlayerRotation([0, yaw.current, 0]);
+			return;
+		}
 
 		moveDir.current.set(0, 0, 0);
 		let isMoving = false;
