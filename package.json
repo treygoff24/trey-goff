@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "covers": "tsx scripts/resolve-book-covers.ts",
-    "prebuild": "tsx scripts/resolve-book-covers.ts && tsx scripts/generate-search-index.ts",
+    "prebuild": "tsx scripts/resolve-book-covers.ts && tsx scripts/generate-search-index.ts && tsx scripts/compress-assets.ts",
     "build": "next build",
+    "postbuild": "tsx scripts/validate-asset-budgets.ts && tsx scripts/check-bundle-isolation.ts",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
@@ -15,7 +16,10 @@
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:chromium": "playwright test --project=chromium",
-    "generate-search": "tsx scripts/generate-search-index.ts"
+    "generate-search": "tsx scripts/generate-search-index.ts",
+    "compress-assets": "tsx scripts/compress-assets.ts",
+    "validate-budgets": "tsx scripts/validate-asset-budgets.ts",
+    "check-bundle-isolation": "tsx scripts/check-bundle-isolation.ts"
   },
   "dependencies": {
     "@content-collections/core": "^0.13.0",
@@ -52,6 +56,9 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
+    "@gltf-transform/cli": "^4.2.1",
+    "@gltf-transform/extensions": "^4.2.1",
+    "@gltf-transform/functions": "^4.2.1",
     "@playwright/test": "^1.57.0",
     "@tailwindcss/postcss": "^4.0.0",
     "@types/node": "^22.10.2",
