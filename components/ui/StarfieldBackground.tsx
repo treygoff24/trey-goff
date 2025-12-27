@@ -7,7 +7,7 @@ import {
 	Vignette,
 	Noise,
 } from "@react-three/postprocessing";
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect } from "react";
 import * as THREE from "three";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
@@ -112,6 +112,19 @@ function resetSceneState() {
 	sceneState.warp.factor = 0;
 	sceneState.mouse.x = 0;
 	sceneState.mouse.y = 0;
+	sceneState.mouse.targetX = 0;
+	sceneState.mouse.targetY = 0;
+}
+
+const INTERACTIVE_SELECTOR =
+	"a, button, input, textarea, select, option, [role=\"button\"], [role=\"link\"], [data-warp-ignore]";
+
+function isInteractiveTarget(target: EventTarget | null) {
+	if (!(target instanceof Element)) return false;
+	return Boolean(target.closest(INTERACTIVE_SELECTOR));
+}
+
+function resetMouseTarget() {
 	sceneState.mouse.targetX = 0;
 	sceneState.mouse.targetY = 0;
 }
@@ -347,7 +360,8 @@ function ShootingStars() {
 				trailPositions.current[i] = pos;
 				mesh.position.set(pos.x, pos.y, pos.z);
 				mesh.visible = true;
-				mesh.scale.set(0.3, 0.3, 15 + Math.random() * 10);
+				const streakLength = 15 + Math.random() * 10;
+				mesh.scale.set(0.3, streakLength, 0.3);
 				// Angle downward
 				mesh.rotation.x = -0.3 - Math.random() * 0.4;
 				mesh.rotation.z = (Math.random() - 0.5) * 0.5;
@@ -418,8 +432,9 @@ function FloatingPlanet({
 		const warpFactor = 1 + sceneState.warp.factor * warpMultiplier;
 
 		ref.current.position.z += speed * moveSpeed * delta * warpFactor;
-		ref.current.rotation.y += rotSpeed.y;
-		ref.current.rotation.x += rotSpeed.x;
+		const rotationScale = delta * 60;
+		ref.current.rotation.y += rotSpeed.y * rotationScale;
+		ref.current.rotation.x += rotSpeed.x * rotationScale;
 
 		// Respawn at edges only (not center where content is)
 		if (ref.current.position.z > respawnThreshold) {
@@ -582,6 +597,10 @@ function WarpHint({ visible }: { visible: boolean }) {
 	const [dismissed, setDismissed] = useState(false);
 
 	useEffect(() => {
+		if (!visible) {
+			setShow(false);
+			return;
+		}
 		if (dismissed) return;
 		const { showDelay, autoDismiss } = CONFIG.warpHint;
 		// Show hint after a short delay
@@ -595,7 +614,7 @@ function WarpHint({ visible }: { visible: boolean }) {
 			clearTimeout(timer);
 			clearTimeout(hideTimer);
 		};
-	}, [dismissed]);
+	}, [dismissed, visible]);
 
 	// Hide when warp is activated - check periodically
 	useEffect(() => {
@@ -631,7 +650,6 @@ export function StarfieldBackground() {
 	const reducedMotion = useReducedMotion();
 	const [mounted, setMounted] = useState(false);
 	const [isWarping, setIsWarping] = useState(false);
-	const containerRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		setMounted(true);
@@ -641,36 +659,60 @@ export function StarfieldBackground() {
 		};
 	}, []);
 
-	// Mouse move handler for parallax (scoped to container)
-	const handleMouseMove = useCallback((e: React.MouseEvent) => {
-		if (!containerRef.current) return;
-		const rect = containerRef.current.getBoundingClientRect();
-		// Normalize to -1 to 1
-		sceneState.mouse.targetX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
-		sceneState.mouse.targetY = -((e.clientY - rect.top) / rect.height - 0.5) * 2;
-	}, []);
+	useEffect(() => {
+		if (reducedMotion) {
+			sceneState.warp.active = false;
+			setIsWarping(false);
+			return;
+		}
 
-	// Warp handlers (only trigger on background, not UI)
-	const handlePointerDown = useCallback((e: React.PointerEvent) => {
-		// Only activate if clicking directly on the canvas container
-		if (e.target === containerRef.current || (e.target as HTMLElement).tagName === "CANVAS") {
+		const handlePointerMove = (event: PointerEvent) => {
+			const width = window.innerWidth || 1;
+			const height = window.innerHeight || 1;
+			sceneState.mouse.targetX = (event.clientX / width - 0.5) * 2;
+			sceneState.mouse.targetY = -((event.clientY / height - 0.5) * 2);
+		};
+
+		const stopWarp = () => {
+			sceneState.warp.active = false;
+			setIsWarping(false);
+		};
+
+		const handlePointerDown = (event: PointerEvent) => {
+			if (!event.isPrimary) return;
+			if (event.pointerType === "mouse" && event.button !== 0) return;
+			if (isInteractiveTarget(event.target)) return;
 			sceneState.warp.active = true;
 			setIsWarping(true);
-		}
-	}, []);
+		};
 
-	const handlePointerUp = useCallback(() => {
-		sceneState.warp.active = false;
-		setIsWarping(false);
-	}, []);
+		const handlePointerOut = (event: PointerEvent) => {
+			if (event.relatedTarget) return;
+			stopWarp();
+			resetMouseTarget();
+		};
 
-	const handlePointerLeave = useCallback(() => {
-		sceneState.warp.active = false;
-		setIsWarping(false);
-		// Reset mouse position
-		sceneState.mouse.targetX = 0;
-		sceneState.mouse.targetY = 0;
-	}, []);
+		const handleWindowBlur = () => {
+			stopWarp();
+			resetMouseTarget();
+		};
+
+		window.addEventListener("pointermove", handlePointerMove, { passive: true });
+		window.addEventListener("pointerdown", handlePointerDown);
+		window.addEventListener("pointerup", stopWarp);
+		window.addEventListener("pointercancel", stopWarp);
+		window.addEventListener("pointerout", handlePointerOut);
+		window.addEventListener("blur", handleWindowBlur);
+
+		return () => {
+			window.removeEventListener("pointermove", handlePointerMove);
+			window.removeEventListener("pointerdown", handlePointerDown);
+			window.removeEventListener("pointerup", stopWarp);
+			window.removeEventListener("pointercancel", stopWarp);
+			window.removeEventListener("pointerout", handlePointerOut);
+			window.removeEventListener("blur", handleWindowBlur);
+		};
+	}, [reducedMotion]);
 
 	if (reducedMotion || !mounted) {
 		return (
@@ -681,14 +723,7 @@ export function StarfieldBackground() {
 	}
 
 	return (
-		<div
-			ref={containerRef}
-			className="fixed inset-0 -z-10 h-full w-full bg-bg-0"
-			onMouseMove={handleMouseMove}
-			onPointerDown={handlePointerDown}
-			onPointerUp={handlePointerUp}
-			onPointerLeave={handlePointerLeave}
-		>
+		<div className="fixed inset-0 -z-10 h-full w-full bg-bg-0">
 			<Canvas
 				camera={{ position: [0, 0, 10], fov: CONFIG.camera.baseFov }}
 				gl={{
