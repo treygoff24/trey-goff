@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 import { cn } from '@/lib/utils'
 
@@ -19,6 +19,7 @@ export function MobileNav({
   currentPath,
 }: MobileNavProps) {
   const prefersReducedMotion = useReducedMotion()
+  const previousPath = useRef(currentPath)
 
   // Close on escape key
   useEffect(() => {
@@ -37,12 +38,21 @@ export function MobileNav({
 
   // Close when navigating
   useEffect(() => {
-    if (isOpen) {
+    if (!isOpen) {
+      previousPath.current = currentPath
+      return
+    }
+
+    if (
+      previousPath.current &&
+      currentPath &&
+      previousPath.current !== currentPath
+    ) {
       onClose()
     }
-    // Only close on path change, not on initial mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPath])
+
+    previousPath.current = currentPath
+  }, [currentPath, isOpen, onClose])
 
   if (!isOpen) return null
 

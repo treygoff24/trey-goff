@@ -1,8 +1,17 @@
 "use client";
 
-import { AtmosphericBackground } from "@/components/ui/AtmosphericBackground";
+import dynamic from "next/dynamic";
 import { CommandHero } from "@/components/home/CommandHero";
 import { HolographicTile } from "@/components/home/HolographicTile";
+
+// Lazy load the heavy Three.js starfield to reduce initial bundle size (~600KB)
+const StarfieldBackground = dynamic(
+	() => import("@/components/ui/StarfieldBackground").then((m) => m.StarfieldBackground),
+	{
+		ssr: false,
+		loading: () => <div className="fixed inset-0 -z-10 bg-bg-0" />,
+	}
+);
 
 const modes = [
 	{
@@ -12,7 +21,7 @@ const modes = [
 		icon: (
 			<svg
 				aria-hidden="true"
-				className="w-6 h-6"
+				className="h-6 w-6"
 				fill="none"
 				viewBox="0 0 24 24"
 				stroke="currentColor"
@@ -33,7 +42,7 @@ const modes = [
 		icon: (
 			<svg
 				aria-hidden="true"
-				className="w-6 h-6"
+				className="h-6 w-6"
 				fill="none"
 				viewBox="0 0 24 24"
 				stroke="currentColor"
@@ -54,7 +63,7 @@ const modes = [
 		icon: (
 			<svg
 				aria-hidden="true"
-				className="w-6 h-6"
+				className="h-6 w-6"
 				fill="none"
 				viewBox="0 0 24 24"
 				stroke="currentColor"
@@ -75,7 +84,7 @@ const modes = [
 		icon: (
 			<svg
 				aria-hidden="true"
-				className="w-6 h-6"
+				className="h-6 w-6"
 				fill="none"
 				viewBox="0 0 24 24"
 				stroke="currentColor"
@@ -94,29 +103,25 @@ const modes = [
 export default function HomePage() {
 	return (
 		<>
-			<AtmosphericBackground />
+			<StarfieldBackground />
 
-			<div className="relative min-h-[calc(100vh-4rem)] flex flex-col justify-center">
-				{/* Content */}
-				<div className="mx-auto max-w-4xl px-4 py-24 sm:py-32 w-full">
-					{/* Identity section with entrance animation */}
-					<div className="text-center mb-16 animate-fade-in-up">
-						<h1 className="font-satoshi text-6xl sm:text-7xl font-medium text-text-1 mb-6 tracking-tight">
+			<div className="relative flex min-h-[calc(100vh-4rem)] flex-col justify-center">
+				<div className="mx-auto w-full max-w-4xl px-4 py-24 sm:py-32">
+					<div className="mb-16 animate-fade-in-up text-center">
+						<h1 className="mb-6 font-satoshi text-6xl font-medium tracking-tight text-text-1 sm:text-7xl">
 							Trey Goff
 						</h1>
-						<p className="text-xl sm:text-2xl text-text-2 max-w-2xl mx-auto leading-relaxed font-light">
+						<p className="mx-auto max-w-2xl text-xl font-light leading-relaxed text-text-2 sm:text-2xl">
 							Building better governance through acceleration zones and
 							institutional innovation.
 						</p>
 					</div>
 
-					{/* Command hero */}
-					<div className="animate-fade-in-up animation-delay-100 flex justify-center">
+					<div className="flex justify-center animate-fade-in-up animation-delay-100">
 						<CommandHero />
 					</div>
 
-					{/* Mode tiles */}
-					<div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 animate-fade-in-up animation-delay-200">
+					<div className="grid grid-cols-1 gap-6 animate-fade-in-up animation-delay-200 sm:grid-cols-2 lg:grid-cols-4">
 						{modes.map((mode, index) => (
 							<HolographicTile key={mode.href} {...mode} index={index} />
 						))}
