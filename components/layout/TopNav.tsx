@@ -9,6 +9,7 @@ import { useCommandPalette } from '@/components/command'
 const navItems = [
   { href: '/writing', label: 'Writing' },
   { href: '/library', label: 'Library' },
+  { href: '/media', label: 'Media' },
   { href: '/topics', label: 'Topics' },
   { href: '/projects', label: 'Projects' },
   { href: '/about', label: 'About' },

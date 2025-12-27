@@ -26,6 +26,7 @@ import {
   BookOpen,
   Network,
   Hash,
+  Video,
 } from 'lucide-react'
 
 export function CommandPalette() {
@@ -112,6 +113,10 @@ function QuickActions({ onSelect }: { onSelect: (url: string) => void }) {
         <CommandItem onSelect={() => onSelect('/library')}>
           <Book className="mr-2 h-4 w-4" />
           Library
+        </CommandItem>
+        <CommandItem onSelect={() => onSelect('/media')}>
+          <Video className="mr-2 h-4 w-4" />
+          Media
         </CommandItem>
         <CommandItem onSelect={() => onSelect('/topics')}>
           <Hash className="mr-2 h-4 w-4" />

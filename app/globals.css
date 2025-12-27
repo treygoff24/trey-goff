@@ -141,6 +141,19 @@ body {
   opacity: 0.8;
 }
 
+/* Download links - auto-styled when href contains /downloads/ */
+.prose a[href*="/downloads/"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.prose a[href*="/downloads/"]::before {
+  content: 'DL';
+  font-size: 0.75em;
+  letter-spacing: 0.08em;
+}
+
 .prose code {
   font-family: var(--font-mono);
   font-size: 0.9em;
