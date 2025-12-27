@@ -1,6 +1,9 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
 import { CommandHero } from "@/components/home/CommandHero";
 import { HolographicTile } from "@/components/home/HolographicTile";
 
@@ -101,6 +104,24 @@ const modes = [
 ];
 
 export default function HomePage() {
+	const router = useRouter();
+	const [hoverTimer, setHoverTimer] = useState<NodeJS.Timeout | null>(null);
+
+	// High-intent prefetch: start prefetching after 500ms hover
+	const handleInteractiveHover = useCallback(() => {
+		const timer = setTimeout(() => {
+			router.prefetch("/interactive");
+		}, 500);
+		setHoverTimer(timer);
+	}, [router]);
+
+	const handleInteractiveLeave = useCallback(() => {
+		if (hoverTimer) {
+			clearTimeout(hoverTimer);
+			setHoverTimer(null);
+		}
+	}, [hoverTimer]);
+
 	return (
 		<>
 			<StarfieldBackground />
@@ -125,6 +146,21 @@ export default function HomePage() {
 						{modes.map((mode, index) => (
 							<HolographicTile key={mode.href} {...mode} index={index} />
 						))}
+					</div>
+
+					{/* Interactive World entry link - discoverable "secret level" */}
+					<div className="mt-16 text-center animate-fade-in-up animation-delay-300">
+						<Link
+							href="/interactive"
+							prefetch={false}
+							onMouseEnter={handleInteractiveHover}
+							onMouseLeave={handleInteractiveLeave}
+							className="group inline-flex items-center gap-2 text-sm text-text-3 transition-colors hover:text-warm"
+						>
+							<span className="h-px w-8 bg-surface-2 transition-all group-hover:w-12 group-hover:bg-warm" />
+							<span>Explore Interactive World</span>
+							<span className="h-px w-8 bg-surface-2 transition-all group-hover:w-12 group-hover:bg-warm" />
+						</Link>
 					</div>
 				</div>
 			</div>
