@@ -48,6 +48,10 @@ const GymRoom = lazy(() =>
 	import("./GymRoom").then((m) => ({ default: m.GymRoom }))
 );
 
+const ProjectsRoom = lazy(() =>
+	import("./ProjectsRoom").then((m) => ({ default: m.ProjectsRoom }))
+);
+
 // Return door positions for each placeholder room (position in mainhall when returning)
 const PLACEHOLDER_RETURN_DOORS: Record<string, { doorPos: [number, number, number]; returnPos: [number, number, number]; returnRot: number }> = {
 	library: { doorPos: [6, 2, 0], doorRot: -Math.PI / 2, returnPos: [-7, 0, 0], returnRot: -Math.PI / 2 },
@@ -144,11 +148,11 @@ export const ROOM_REGISTRY: Record<RoomId, RoomConfig> = {
 		isPlaceholder: false,
 	},
 	projects: {
-		Component: (props: RoomProps) => <PlaceholderRoom roomId="projects" {...props} />,
-		defaultSpawn: [0, 0, 8],
+		Component: ProjectsRoom,
+		defaultSpawn: [0, 0, 6],
 		defaultRotation: Math.PI,
 		displayName: "Projects",
-		isPlaceholder: true,
+		isPlaceholder: false,
 	},
 	garage: {
 		Component: (props: RoomProps) => <PlaceholderRoom roomId="garage" {...props} />,
