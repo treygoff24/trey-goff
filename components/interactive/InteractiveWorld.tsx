@@ -14,6 +14,7 @@ import { ChunkManager } from "./ChunkManager";
 import { TransitionOverlay, useRoomTransition } from "./TransitionOverlay";
 import { RoomRenderer, getRoomSpawn, getRoomRotation } from "./rooms";
 import { ContentOverlay, useContentOverlay, type OverlayContent } from "./ContentOverlay";
+import { PostProcessing } from "./PostProcessing";
 
 // =============================================================================
 // Types
@@ -64,6 +65,7 @@ interface SceneContentProps {
 	reducedMotion: boolean;
 	isMobile: boolean;
 	disableInput?: boolean;
+	qualityTier: QualityTier;
 	onDoorActivate: (targetRoom: RoomId, spawnPosition: [number, number, number], spawnRotation: number) => void;
 	onContentSelect?: (content: OverlayContent) => void;
 }
@@ -72,6 +74,7 @@ function SceneContent({
 	reducedMotion,
 	isMobile,
 	disableInput = false,
+	qualityTier,
 	onDoorActivate,
 	onContentSelect,
 }: SceneContentProps) {
@@ -126,6 +129,9 @@ function SceneContent({
 
 			{/* Chunk Manager - handles room loading/unloading */}
 			<ChunkManager debug={false} />
+
+			{/* Post-processing effects */}
+			<PostProcessing qualityTier={qualityTier} reducedMotion={reducedMotion} />
 		</Suspense>
 	);
 }
@@ -283,6 +289,7 @@ export function InteractiveWorld({
 							reducedMotion={reducedMotion}
 							isMobile={isMobile}
 							disableInput={isTransitioning || overlayContent !== null}
+							qualityTier={qualityTier}
 							onDoorActivate={handleDoorActivate}
 							onContentSelect={handleContentSelect}
 						/>
