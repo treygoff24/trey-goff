@@ -1,0 +1,126 @@
+{
+  "version": "1.0.0",
+  "generated": "2025-12-28T17:48:19.185Z",
+  "entries": [
+    {
+      "id": "progress-and-poverty",
+      "title": "Progress and Poverty",
+      "author": "Henry George",
+      "rating": 5,
+      "tier": "favorites",
+      "blurb": "The most important book on political economy ever written. George's diagnosis of why progress creates poverty remains devastatingly relevant.",
+      "topics": [
+        "economics",
+        "land",
+        "governance",
+        "classical-liberalism"
+      ],
+      "year": 1879,
+      "coverImage": "/covers/progress-and-poverty.jpg"
+    },
+    {
+      "id": "seeing-like-a-state",
+      "title": "Seeing Like a State",
+      "author": "James C. Scott",
+      "rating": 5,
+      "tier": "favorites",
+      "blurb": "Essential reading for anyone interested in governance. Scott's concept of 'metis' and critique of high-modernist planning is profound.",
+      "topics": [
+        "governance",
+        "planning",
+        "local-knowledge"
+      ],
+      "year": 1998,
+      "coverImage": "/covers/seeing-like-a-state.jpg"
+    },
+    {
+      "id": "the-problem-of-political-authority",
+      "title": "The Problem of Political Authority",
+      "author": "Michael Huemer",
+      "rating": 5,
+      "tier": "favorites",
+      "blurb": "A rigorous philosophical examination of why governments claim authority and whether those claims are justified. Changed how I think about legitimacy.",
+      "topics": [
+        "philosophy",
+        "governance",
+        "libertarianism",
+        "ethics"
+      ],
+      "year": 2012,
+      "coverImage": "/covers/the-problem-of-political-authority.jpg"
+    },
+    {
+      "id": "antifragile",
+      "title": "Antifragile",
+      "author": "Nassim Nicholas Taleb",
+      "rating": 4,
+      "tier": "recommended",
+      "blurb": "Taleb's framework for things that gain from disorder. The concept of antifragility has shaped how I think about building resilient systems.",
+      "topics": [
+        "risk",
+        "systems",
+        "philosophy"
+      ],
+      "year": 2012,
+      "coverImage": "/covers/antifragile.jpg"
+    },
+    {
+      "id": "the-machinery-of-freedom",
+      "title": "The Machinery of Freedom",
+      "author": "David Friedman",
+      "rating": 4,
+      "tier": "recommended",
+      "blurb": "A practical exploration of how a stateless society might function. Friedman's economic approach to anarchism is uniquely compelling.",
+      "topics": [
+        "economics",
+        "governance",
+        "anarcho-capitalism"
+      ],
+      "year": 1973,
+      "coverImage": "/covers/the-machinery-of-freedom.jpg"
+    },
+    {
+      "id": "the-sovereign-individual",
+      "title": "The Sovereign Individual",
+      "author": "James Dale Davidson & Lord William Rees-Mogg",
+      "rating": 4,
+      "tier": "recommended",
+      "blurb": "Prescient predictions about how information technology would reshape sovereignty and governance. Written before the internet age but eerily accurate.",
+      "topics": [
+        "technology",
+        "governance",
+        "future"
+      ],
+      "year": 1997,
+      "coverImage": "/covers/the-sovereign-individual.jpg"
+    },
+    {
+      "id": "stubborn-attachments",
+      "title": "Stubborn Attachments",
+      "author": "Tyler Cowen",
+      "tier": "reading",
+      "blurb": "A compelling case for sustainable economic growth as a moral imperative. Cowen's 'Crusonia plant' thought experiment is memorable.",
+      "topics": [
+        "economics",
+        "ethics",
+        "growth"
+      ],
+      "year": 2018,
+      "coverImage": "/covers/stubborn-attachments.jpg"
+    },
+    {
+      "id": "the-beginning-of-infinity",
+      "title": "The Beginning of Infinity",
+      "author": "David Deutsch",
+      "tier": "want",
+      "blurb": "On my list because of its exploration of the power of explanatory knowledge. Deutsch's optimism about human potential is inspiring.",
+      "topics": [
+        "philosophy",
+        "science",
+        "knowledge"
+      ],
+      "year": 2011,
+      "coverImage": "/covers/the-beginning-of-infinity.jpg"
+    }
+  ]
+}

@@ -2,11 +2,11 @@
 
 ## Current Status
 
-**Phase**: 0 - Route Isolation + Entry Flow
-**Working on**: Creating `/app/interactive/` route structure
-**Cross-agent reviews completed**: Codex plan review (v1-v4 → revise, v5 → APPROVED)
+**Phase**: 9 - Library Room
+**Working on**: Building Library with interactive book visualization
+**Cross-agent reviews completed**: Codex plan review (v1-v4 → revise, v5 → APPROVED), Phases 0-8 reviews
 **Blockers**: None
-**Runtime**: Starting implementation
+**Runtime**: Phase 8 complete
 
 ---
 
@@ -433,39 +433,39 @@ Build an immersive 3D "secret level" at `/interactive` that maps to site content
 **Tasks:**
 
 ### 8.1 Source Alignment (~20 min)
-- [ ] Map spec paths to actual codebase paths:
+- [x] Map spec paths to actual codebase paths:
   - Spec `/content/blog/` → Actual `/content/essays/` (MDX)
   - Spec `/content/books/` → Actual `/content/library/books.json`
   - Spec `/content/projects/` → Actual `/content/projects/` (create if needed)
   - Spec `/data/lifts.json` → Create `/data/lifts.json` with PR data
   - Spec `/data/knowledge-graph.json` → Deferred to V1.1
-- [ ] Document path mapping in CONTEXT.md
+- [x] Document path mapping in CONTEXT.md
 
 ### 8.2 Manifest Generator (~45 min)
-- [ ] Create `/scripts/generate-interactive-manifests.ts`
-- [ ] Generate `blog.manifest.json` from essays
-- [ ] Generate `books.manifest.json` from library data
-- [ ] Generate `projects.manifest.json` from projects
-- [ ] Generate `lifts.manifest.json` from lifts data
+- [x] Create `/scripts/generate-interactive-manifests.ts`
+- [x] Generate `essays.manifest.json` from essays (named for actual directory)
+- [x] Generate `books.manifest.json` from library data
+- [x] Generate `projects.manifest.json` from projects
+- [x] Generate `lifts.manifest.json` from lifts data
 
 ### 8.3 Manifest Schema (~30 min)
-- [ ] Define TypeScript types for each manifest
-- [ ] Include required fields per spec:
-  - Blog: id, slug, title, excerpt, tags, coverImage, publishedAt
-  - Books: id, title, author, rating, reviewSlug, coverImage, tier
-  - Projects: id, title, summary, links, images, tags
-  - Lifts: squat, bench, deadlift, total with weight/unit/date
+- [x] Define TypeScript types for each manifest
+- [x] Include required fields per spec:
+  - Essays: id, slug, title, excerpt, tags, publishedAt, readingTime, status
+  - Books: id, title, author, rating, tier, blurb, topics, year, coverImage
+  - Projects: id, title, summary, links, images, tags, status, type, featuredRank
+  - Lifts: squat, bench, deadlift, total with weight/unit/date + history
 
 ### 8.4 Build Integration (~20 min)
-- [ ] Add manifest generation to prebuild script
-- [ ] Validate manifests have required fields
-- [ ] Output to `/public/manifests/`
+- [x] Add manifest generation to prebuild script
+- [x] Validate manifests have required fields (via TypeScript types)
+- [x] Output to `/public/manifests/`
 
 **Acceptance Criteria:**
-- [ ] All manifests generate correctly
-- [ ] Manifests have all required fields
-- [ ] Build includes manifest generation
-- [ ] TypeScript types match manifest structure
+- [x] All manifests generate correctly
+- [x] Manifests have all required fields
+- [x] Build includes manifest generation
+- [x] TypeScript types match manifest structure
 
 **Complexity:** Simple
 

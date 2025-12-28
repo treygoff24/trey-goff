@@ -1,0 +1,33 @@
+{
+  "version": "1.0.0",
+  "generated": "2025-12-28T17:48:19.180Z",
+  "entries": [
+    {
+      "id": "governance-innovation",
+      "slug": "governance-innovation",
+      "title": "The Case for Governance Innovation",
+      "excerpt": "Why we need new approaches to governance and how acceleration zones could help.",
+      "tags": [
+        "governance",
+        "innovation",
+        "policy"
+      ],
+      "publishedAt": "2024-01-20",
+      "readingTime": 1,
+      "status": "published"
+    },
+    {
+      "id": "hello-world",
+      "slug": "hello-world",
+      "title": "Hello World: Building The Control Room",
+      "excerpt": "An introduction to this site and what I hope to accomplish.",
+      "tags": [
+        "meta",
+        "personal"
+      ],
+      "publishedAt": "2024-01-15",
+      "readingTime": 1,
+      "status": "published"
+    }
+  ]
+}

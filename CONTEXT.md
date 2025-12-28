@@ -1,6 +1,6 @@
 # Interactive World - Build Context
 
-**Last Updated**: Phase 5 - Camera + Interaction System (COMPLETE + REVISED)
+**Last Updated**: Phase 7 - Exterior + Main Hall (COMPLETE)
 
 ## Protocol Reminder (Re-read on every phase start)
 
@@ -70,7 +70,7 @@ Interactive 3D "secret level" at `/interactive` - a mansion with rooms mapping t
 
 ## Current Phase
 
-Phase 7 - Exterior + Main Hall: Building the first actual rooms.
+Phase 9 - Library Room: Building the Library with interactive book visualization.
 
 ---
 
@@ -83,8 +83,8 @@ Phase 7 - Exterior + Main Hall: Building the first actual rooms.
 - [x] Phase 4: Loading UX + Character Controller
 - [x] Phase 5: Camera + Interaction System
 - [x] Phase 6: Chunk Streaming State Machine
-- [ ] Phase 7: Exterior + Main Hall
-- [ ] Phase 8: Content Manifests
+- [x] Phase 7: Exterior + Main Hall
+- [x] Phase 8: Content Manifests
 - [ ] Phase 9: Library Room
 - [ ] Phase 10: Gym Room
 - [ ] Phase 11: Projects Room
@@ -303,3 +303,49 @@ Returns: {
   - handleFadeOutComplete was no-op
   - Dormant eviction used stale snapshot
   - Vector allocation in useFrame
+
+### Phase 7 Notes
+- **ExteriorRoom.tsx:** Placeholder outdoor area
+  - Mansion facade with windows and door frame
+  - Sky dome with O'Neill cylinder sprites
+  - Mountain backdrop, ground plane with grid
+  - Goff Industries mech with idle animation
+  - DoorTrigger to Main Hall
+- **MainHallRoom.tsx:** Central hub connecting all rooms
+  - 20x25x8 units with pillars at corners
+  - Central pedestal with rotating holographic mansion
+  - Door frames with labels for Exterior/Library/Gym/Projects
+  - DoorTriggers for all connected rooms
+- **rooms/index.tsx:** Room registry and rendering
+  - Lazy-loaded components for code splitting
+  - RoomConfig with spawn position/rotation, display name
+  - PlaceholderRoom with return doors to Main Hall
+  - RoomRenderer with Suspense boundary
+- **PlayerController fixes:**
+  - Single source of truth for yaw (passed to hooks as ref)
+  - Per-frame allocation eliminated (only allocate on change)
+  - Mobile getTarget returns ref directly (no clone)
+- **Type safety:** Changed onDoorActivate to use RoomId instead of string
+- **Store additions:** spawnPosition, spawnRotation setters
+
+### Phase 8 Notes
+- **Source Alignment:**
+  - Spec `/content/blog/` → Actual `/content/essays/` (MDX via Content Collections)
+  - Spec `/content/books/` → Actual `/content/library/books.json`
+  - Spec `/content/projects/` → Actual `/content/projects/` (MDX via Content Collections)
+  - Created `/data/lifts.json` for powerlifting PR data
+- **lib/interactive/manifest-types.ts:** TypeScript types for 4 manifests
+  - EssaysManifest: id, slug, title, excerpt, tags, publishedAt, readingTime, status
+  - BooksManifest: id, title, author, rating, tier, blurb, topics, year, coverImage
+  - ProjectsManifest: id, title, summary, links, images, tags, status, type, featuredRank
+  - LiftsManifest: total + individual lift PRs with history
+- **scripts/generate-interactive-manifests.ts:** Build-time generator
+  - Reads from Content Collections and JSON sources
+  - Graceful degradation for missing/malformed files
+  - Type-safe sorting with explicit Record types
+  - Outputs to `/public/manifests/`
+- **Build integration:** Added to prebuild between search index and asset compression
+- **Key decisions:**
+  - BookTier derived from status + rating (favorites/recommended/read/reading/want)
+  - Essays named "essays" not "blog" to match actual content directory
+  - Cover images reference `/covers/{id}.jpg` (resolved by resolve-book-covers.ts)
