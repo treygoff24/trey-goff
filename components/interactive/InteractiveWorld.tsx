@@ -13,6 +13,7 @@ import { CameraController } from "./CameraController";
 import { ChunkManager } from "./ChunkManager";
 import { TransitionOverlay, useRoomTransition } from "./TransitionOverlay";
 import { RoomRenderer, getRoomSpawn, getRoomRotation } from "./rooms";
+import { ContentOverlay, useContentOverlay, type OverlayContent } from "./ContentOverlay";
 
 // =============================================================================
 // Types
@@ -64,6 +65,7 @@ interface SceneContentProps {
 	isMobile: boolean;
 	disableInput?: boolean;
 	onDoorActivate: (targetRoom: RoomId, spawnPosition: [number, number, number], spawnRotation: number) => void;
+	onContentSelect?: (content: OverlayContent) => void;
 }
 
 function SceneContent({
@@ -71,6 +73,7 @@ function SceneContent({
 	isMobile,
 	disableInput = false,
 	onDoorActivate,
+	onContentSelect,
 }: SceneContentProps) {
 	// Get current room and spawn from store
 	// spawnPosition/spawnRotation only change during room transitions, not every frame
@@ -105,6 +108,7 @@ function SceneContent({
 			<RoomRenderer
 				roomId={currentRoom as RoomId}
 				onDoorActivate={onDoorActivate}
+				onContentSelect={onContentSelect}
 			/>
 
 			{/* Player Controller - key forces remount on room change for spawn reset */}
@@ -152,6 +156,9 @@ export function InteractiveWorld({
 	const [loadingStatus, setLoadingStatus] = useState("Initializing...");
 	const [isWorldReady, setIsWorldReady] = useState(false);
 
+	// Content overlay state
+	const { content: overlayContent, openOverlay, closeOverlay } = useContentOverlay();
+
 	// Pending door transition info (stored until screen is black)
 	const pendingTransition = useRef<{
 		targetRoom: RoomId;
@@ -196,6 +203,14 @@ export function InteractiveWorld({
 			startTransition(targetRoom);
 		},
 		[startTransition]
+	);
+
+	// Handle content selection from rooms
+	const handleContentSelect = useCallback(
+		(content: OverlayContent) => {
+			openOverlay(content);
+		},
+		[openOverlay]
 	);
 
 	const handleRendererReady = useCallback(() => {
@@ -267,8 +282,9 @@ export function InteractiveWorld({
 						<SceneContent
 							reducedMotion={reducedMotion}
 							isMobile={isMobile}
-							disableInput={isTransitioning}
+							disableInput={isTransitioning || overlayContent !== null}
 							onDoorActivate={handleDoorActivate}
+							onContentSelect={handleContentSelect}
 						/>
 					</RendererRoot>
 				</div>
@@ -276,6 +292,13 @@ export function InteractiveWorld({
 				{/* Room Transition Overlay (fade to black) */}
 				<TransitionOverlay
 					{...TransitionOverlayProps}
+					reducedMotion={reducedMotion}
+				/>
+
+				{/* Content Overlay (book/project details) */}
+				<ContentOverlay
+					content={overlayContent}
+					onClose={closeOverlay}
 					reducedMotion={reducedMotion}
 				/>
 

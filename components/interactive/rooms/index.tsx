@@ -2,6 +2,7 @@
 
 import { Suspense, lazy, type ComponentType } from "react";
 import type { RoomId } from "@/lib/interactive/types";
+import type { OverlayContent } from "../ContentOverlay";
 import { DoorTrigger } from "../DoorTrigger";
 
 // =============================================================================
@@ -11,6 +12,7 @@ import { DoorTrigger } from "../DoorTrigger";
 export interface RoomProps {
 	debug?: boolean;
 	onDoorActivate?: (targetRoom: RoomId, spawnPosition: [number, number, number], spawnRotation: number) => void;
+	onContentSelect?: (content: OverlayContent) => void;
 }
 
 export interface RoomConfig {
@@ -36,6 +38,10 @@ const ExteriorRoom = lazy(() =>
 
 const MainHallRoom = lazy(() =>
 	import("./MainHallRoom").then((m) => ({ default: m.MainHallRoom }))
+);
+
+const LibraryRoom = lazy(() =>
+	import("./LibraryRoom").then((m) => ({ default: m.LibraryRoom }))
 );
 
 // Return door positions for each placeholder room (position in mainhall when returning)
@@ -120,11 +126,11 @@ export const ROOM_REGISTRY: Record<RoomId, RoomConfig> = {
 		isPlaceholder: false,
 	},
 	library: {
-		Component: (props: RoomProps) => <PlaceholderRoom roomId="library" {...props} />,
-		defaultSpawn: [8, 0, 0],
-		defaultRotation: Math.PI / 2,
+		Component: LibraryRoom,
+		defaultSpawn: [6, 0, 5],
+		defaultRotation: Math.PI,
 		displayName: "Library",
-		isPlaceholder: true,
+		isPlaceholder: false,
 	},
 	gym: {
 		Component: (props: RoomProps) => <PlaceholderRoom roomId="gym" {...props} />,
@@ -157,13 +163,14 @@ interface RoomRendererProps {
 	roomId: RoomId;
 	debug?: boolean;
 	onDoorActivate?: (targetRoom: RoomId, spawnPosition: [number, number, number], spawnRotation: number) => void;
+	onContentSelect?: (content: OverlayContent) => void;
 }
 
 /**
  * Renders a room by ID with Suspense boundary.
  * Used by the chunk system to render active rooms.
  */
-export function RoomRenderer({ roomId, debug, onDoorActivate }: RoomRendererProps) {
+export function RoomRenderer({ roomId, debug, onDoorActivate, onContentSelect }: RoomRendererProps) {
 	const config = ROOM_REGISTRY[roomId];
 
 	if (!config) {
@@ -175,7 +182,7 @@ export function RoomRenderer({ roomId, debug, onDoorActivate }: RoomRendererProp
 
 	return (
 		<Suspense fallback={null}>
-			<Component debug={debug} onDoorActivate={onDoorActivate} />
+			<Component debug={debug} onDoorActivate={onDoorActivate} onContentSelect={onContentSelect} />
 		</Suspense>
 	);
 }

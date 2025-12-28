@@ -39,8 +39,8 @@ const DOOR_CONFIGS: DoorConfig[] = [
 		id: "door-library",
 		position: [-9, 2, 0],
 		targetRoom: "library",
-		spawnPosition: [8, 0, 0],
-		spawnRotation: Math.PI / 2,
+		spawnPosition: [6, 0, 5],
+		spawnRotation: Math.PI,
 	},
 	{
 		id: "door-gym",
