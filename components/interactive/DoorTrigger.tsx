@@ -27,7 +27,7 @@ interface DoorTriggerProps {
 	/** Door dimensions [width, height] */
 	size?: [number, number];
 	/** Callback when door is activated */
-	onActivate?: (targetRoom: RoomId, spawnPosition: [number, number, number]) => void;
+	onActivate?: (targetRoom: RoomId, spawnPosition: [number, number, number], spawnRotation: number) => void;
 	/** Whether door is currently available */
 	enabled?: boolean;
 	/** Show debug visuals */
@@ -110,9 +110,22 @@ export function DoorTrigger({
 		const wasWithin = isWithinActivation.current;
 		isWithinActivation.current = distance <= activationDistance;
 
-		// Could emit events for UI updates
-		if (isWithinActivation.current !== wasWithin) {
-			// State changed
+		// Auto-activate when player enters activation zone
+		if (isWithinActivation.current && !wasWithin && enabled) {
+			const targetState = chunkStates.get(targetRoom)?.state;
+			// Allow transition if chunk is loaded, dormant, or if this is a placeholder room (unloaded)
+			// Placeholder rooms don't have GLB assets so they'll never reach 'loaded'
+			const canEnter =
+				targetState === "loaded" ||
+				targetState === "dormant" ||
+				targetState === "unloaded" ||
+				targetState === "preloading";
+
+			if (canEnter) {
+				onActivate?.(targetRoom, spawnPosition, spawnRotation);
+			} else if (debug) {
+				console.log(`[DoorTrigger] Cannot enter ${targetRoom} - state: ${targetState}`);
+			}
 		}
 	});
 
@@ -122,12 +135,16 @@ export function DoorTrigger({
 		if (!enabled || !isWithinActivation.current) return;
 
 		const targetState = chunkStates.get(targetRoom)?.state;
-		if (targetState === "loaded" || targetState === "dormant") {
-			onActivate?.(targetRoom, spawnPosition);
-		} else {
-			if (debug) {
-				console.log(`[DoorTrigger] Cannot enter ${targetRoom} - state: ${targetState}`);
-			}
+		const canEnter =
+			targetState === "loaded" ||
+			targetState === "dormant" ||
+			targetState === "unloaded" ||
+			targetState === "preloading";
+
+		if (canEnter) {
+			onActivate?.(targetRoom, spawnPosition, spawnRotation);
+		} else if (debug) {
+			console.log(`[DoorTrigger] Cannot enter ${targetRoom} - state: ${targetState}`);
 		}
 	};
 

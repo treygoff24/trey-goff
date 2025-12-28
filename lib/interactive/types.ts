@@ -105,6 +105,10 @@ export interface Door {
 export interface PlayerState {
 	position: THREE.Vector3Tuple;
 	rotation: THREE.Vector3Tuple;
+	/** Spawn position (only set during room transitions, not every frame) */
+	spawnPosition: THREE.Vector3Tuple;
+	/** Spawn rotation (yaw, only set during room transitions) */
+	spawnRotation: number;
 	currentRoom: RoomId | null;
 	isMoving: boolean;
 	isInteracting: boolean;
@@ -157,6 +161,8 @@ export interface InteractiveStoreActions {
 	// Player
 	setPlayerPosition: (position: THREE.Vector3Tuple) => void;
 	setPlayerRotation: (rotation: THREE.Vector3Tuple) => void;
+	setSpawnPosition: (spawnPosition: THREE.Vector3Tuple) => void;
+	setSpawnRotation: (spawnRotation: number) => void;
 	setCurrentRoom: (room: RoomId | null) => void;
 	setIsMoving: (isMoving: boolean) => void;
 	setIsInteracting: (isInteracting: boolean) => void;

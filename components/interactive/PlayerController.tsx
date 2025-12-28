@@ -54,10 +54,10 @@ const INTERACTION_DISTANCE = 3;
 
 function useDesktopControls(
 	isMobile: boolean,
+	yaw: React.MutableRefObject<number>,
 	onInteract?: (point: THREE.Vector3, direction: THREE.Vector3) => void
 ) {
 	const { camera, gl } = useThree();
-	const yaw = useRef(0);
 	const pitch = useRef(0);
 	const isLocked = useRef(false);
 
@@ -104,6 +104,8 @@ function useDesktopControls(
 				document.exitPointerLock();
 			}
 		};
+		// yaw is a ref passed as parameter - stable object, only .current mutates
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isMobile, gl.domElement]);
 
 	// Interaction raycast with debounce
@@ -131,7 +133,6 @@ function useDesktopControls(
 		right,
 		jump,
 		sprint,
-		yaw,
 		pitch,
 		isLocked,
 	};
@@ -141,20 +142,19 @@ function useDesktopControls(
 // Mobile Controls Hook
 // =============================================================================
 
-function useMobileControls(isMobile: boolean) {
+function useMobileControls(isMobile: boolean, yaw: React.MutableRefObject<number>) {
 	const { camera, gl, raycaster } = useThree();
 	const targetPosition = useRef<THREE.Vector3 | null>(null);
 	const touchStartPos = useRef<{ x: number; y: number } | null>(null);
-	const yaw = useRef(0);
 
 	// Function to clear target position
 	const clearTarget = () => {
 		targetPosition.current = null;
 	};
 
-	// Function to get current target (returns clone or null)
+	// Function to get current target (returns ref directly - do not mutate!)
 	const getTarget = (): THREE.Vector3 | null => {
-		return targetPosition.current ? targetPosition.current.clone() : null;
+		return targetPosition.current;
 	};
 
 	useEffect(() => {
@@ -214,9 +214,11 @@ function useMobileControls(isMobile: boolean) {
 			element.removeEventListener("touchmove", handleTouchMove);
 			element.removeEventListener("touchend", handleTouchEnd);
 		};
+		// yaw is a ref passed as parameter - stable object, only .current mutates
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isMobile, camera, gl.domElement, raycaster]);
 
-	return { getTarget, clearTarget, yaw };
+	return { getTarget, clearTarget };
 }
 
 // =============================================================================
@@ -294,6 +296,9 @@ export function PlayerController({
 
 	// Store update throttling
 	const lastStoreUpdate = useRef(0);
+	// Track last store values to avoid per-frame allocations
+	const lastStorePos = useRef<[number, number, number]>([...spawnPosition]);
+	const lastStoreRot = useRef<[number, number, number]>([0, spawnRotation, 0]);
 
 	// Store integration
 	const setPlayerPosition = useInteractiveStore((s) => s.setPlayerPosition);
@@ -302,10 +307,10 @@ export function PlayerController({
 	const recordInteraction = useInteractiveStore((s) => s.recordInteraction);
 
 	// Desktop controls
-	const desktopControls = useDesktopControls(isMobile, onInteract);
+	const desktopControls = useDesktopControls(isMobile, yaw, onInteract);
 
 	// Mobile controls
-	const mobileControls = useMobileControls(isMobile);
+	const mobileControls = useMobileControls(isMobile, yaw);
 
 	// Update position on each frame
 	useFrame((state, delta) => {
@@ -313,9 +318,22 @@ export function PlayerController({
 
 		// Skip movement processing during transitions (but keep updating store for camera)
 		if (disableInput) {
-			// Still update store so camera stays synced
-			setPlayerPosition([position.current.x, position.current.y, position.current.z]);
-			setPlayerRotation([0, yaw.current, 0]);
+			// Still update store so camera stays synced (reuse refs to avoid allocations)
+			const px = position.current.x;
+			const py = position.current.y;
+			const pz = position.current.z;
+			if (
+				lastStorePos.current[0] !== px ||
+				lastStorePos.current[1] !== py ||
+				lastStorePos.current[2] !== pz
+			) {
+				lastStorePos.current = [px, py, pz];
+				setPlayerPosition(lastStorePos.current);
+			}
+			if (lastStoreRot.current[1] !== yaw.current) {
+				lastStoreRot.current = [0, yaw.current, 0];
+				setPlayerRotation(lastStoreRot.current);
+			}
 			return;
 		}
 
@@ -340,9 +358,7 @@ export function PlayerController({
 				moveDir.current.x += 1;
 				isMoving = true;
 			}
-
-			// Apply rotation from mouse look
-			yaw.current = desktopControls.yaw.current;
+			// yaw is modified directly by useDesktopControls via passed ref
 		} else {
 			// Mobile movement - move toward target
 			const target = mobileControls.getTarget();
@@ -359,10 +375,8 @@ export function PlayerController({
 				} else {
 					mobileControls.clearTarget();
 				}
-			} else {
-				// Only apply touch rotation when not auto-moving toward target
-				yaw.current = mobileControls.yaw.current;
 			}
+			// Touch rotation is handled directly by useMobileControls via passed ref
 		}
 
 		// Normalize and apply movement
@@ -396,8 +410,23 @@ export function PlayerController({
 
 		// Camera is now handled by CameraController reading from store
 		// Position/rotation updated every frame for smooth camera following
-		setPlayerPosition([position.current.x, position.current.y, position.current.z]);
-		setPlayerRotation([0, yaw.current, 0]);
+		// Only allocate new arrays when values actually change
+		const px = position.current.x;
+		const py = position.current.y;
+		const pz = position.current.z;
+		const yawVal = yaw.current;
+		const posChanged =
+			lastStorePos.current[0] !== px ||
+			lastStorePos.current[1] !== py ||
+			lastStorePos.current[2] !== pz;
+		if (posChanged) {
+			lastStorePos.current = [px, py, pz];
+			setPlayerPosition(lastStorePos.current);
+		}
+		if (lastStoreRot.current[1] !== yawVal) {
+			lastStoreRot.current = [0, yawVal, 0];
+			setPlayerRotation(lastStoreRot.current);
+		}
 
 		// Throttled store updates for telemetry only (not camera-critical)
 		const now = state.clock.elapsedTime * 1000;
@@ -410,8 +439,8 @@ export function PlayerController({
 		}
 
 		// Callback (not throttled - let caller decide)
-		if (onPositionUpdate) {
-			onPositionUpdate([position.current.x, position.current.y, position.current.z]);
+		if (onPositionUpdate && posChanged) {
+			onPositionUpdate(lastStorePos.current);
 		}
 	});
 

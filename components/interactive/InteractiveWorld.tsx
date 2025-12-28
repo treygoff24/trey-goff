@@ -1,20 +1,18 @@
 "use client";
 
-import { Suspense, useRef, useState, useCallback, useEffect } from "react";
-import { useFrame } from "@react-three/fiber";
+import { Suspense, useState, useCallback, useRef, useEffect } from "react";
 import { KeyboardControls } from "@react-three/drei";
 import Link from "next/link";
-import * as THREE from "three";
 import type { QualityTier } from "@/lib/interactive/capabilities";
 import { useInteractiveStore } from "@/lib/interactive/store";
+import type { RoomId } from "@/lib/interactive/types";
 import { RendererRoot } from "./RendererRoot";
 import { PlayerController, keyboardControlsMap } from "./PlayerController";
 import { LoadingSequence, type LoadingPhase } from "./LoadingSequence";
 import { CameraController } from "./CameraController";
-import { InteractionSystem, type Interactable } from "./InteractionSystem";
-import { ContentOverlay, useContentOverlay } from "./ContentOverlay";
 import { ChunkManager } from "./ChunkManager";
 import { TransitionOverlay, useRoomTransition } from "./TransitionOverlay";
+import { RoomRenderer, getRoomSpawn, getRoomRotation } from "./rooms";
 
 // =============================================================================
 // Types
@@ -56,235 +54,64 @@ function CameraIntegration({
 	);
 }
 
-// =============================================================================
-// Placeholder Scene Components
-// =============================================================================
-
-/**
- * Animated cube for visual feedback during development.
- * Will be replaced by actual scene content in later phases.
- * This cube is also used as a demo interactable.
- */
-function PlaceholderCube({
-	reducedMotion,
-	meshRef,
-}: {
-	reducedMotion: boolean;
-	meshRef: (node: THREE.Mesh | null) => void;
-}) {
-	const internalRef = useRef<THREE.Mesh>(null);
-
-	// Call the callback ref when the mesh mounts/unmounts
-	useEffect(() => {
-		meshRef(internalRef.current);
-		return () => meshRef(null);
-	}, [meshRef]);
-
-	useFrame((_, delta) => {
-		if (!internalRef.current || reducedMotion) return;
-		internalRef.current.rotation.x += delta * 0.3;
-		internalRef.current.rotation.y += delta * 0.5;
-	});
-
-	return (
-		<mesh ref={internalRef} position={[0, 1, 0]} name="demo-cube">
-			<boxGeometry args={[1.5, 1.5, 1.5]} />
-			<meshStandardMaterial
-				color="#FFB86B"
-				roughness={0.3}
-				metalness={0.7}
-				emissive="#FFB86B"
-				emissiveIntensity={0.1}
-			/>
-		</mesh>
-	);
-}
-
-/**
- * Ground plane for reference.
- * Named "ground" so camera collision skips it.
- */
-function Ground() {
-	return (
-		<mesh name="ground" rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
-			<planeGeometry args={[20, 20]} />
-			<meshStandardMaterial
-				color="#1a1a2e"
-				roughness={0.8}
-				metalness={0.2}
-			/>
-		</mesh>
-	);
-}
-
-/**
- * Grid helper for spatial reference.
- * Named "grid" so camera collision skips it.
- */
-function Grid() {
-	return (
-		<gridHelper
-			name="grid"
-			args={[20, 20, "#333355", "#222244"]}
-			position={[0, 0.01, 0]}
-		/>
-	);
-}
-
-/**
- * Floating orbs to demonstrate shader warmup.
- */
-function FloatingOrbs({ reducedMotion }: { reducedMotion: boolean }) {
-	const group = useRef<THREE.Group>(null);
-
-	useFrame((state) => {
-		if (!group.current || reducedMotion) return;
-		group.current.rotation.y = state.clock.elapsedTime * 0.1;
-	});
-
-	const positions: [number, number, number][] = [
-		[-3, 2, -2],
-		[3, 1.5, -1],
-		[0, 3, -3],
-		[-2, 1, 2],
-		[2.5, 2.5, 1],
-	];
-
-	const colors = ["#7C5CFF", "#FFB86B", "#34d399", "#f472b6", "#60a5fa"];
-
-	return (
-		<group ref={group}>
-			{positions.map((pos, i) => (
-				<mesh key={i} position={pos} castShadow>
-					<sphereGeometry args={[0.3, 16, 16]} />
-					<meshPhysicalMaterial
-						color={colors[i]}
-						roughness={0.2}
-						metalness={0.8}
-						emissive={colors[i]}
-						emissiveIntensity={0.2}
-						clearcoat={0.5}
-					/>
-				</mesh>
-			))}
-		</group>
-	);
-}
-
-/**
- * Scene status display using 3D text.
- * Placeholder for actual wayfinding signage.
- */
-function StatusDisplay({
-	qualityTier,
-	reducedMotion,
-}: {
-	qualityTier: QualityTier;
-	reducedMotion: boolean;
-}) {
-	// In production, this would use drei's Text or Text3D
-	// For now, just a floating mesh indicator
-	return (
-		<group position={[0, 4, -5]}>
-			<mesh>
-				<planeGeometry args={[4, 1]} />
-				<meshBasicMaterial
-					color="#0B1020"
-					opacity={0.8}
-					transparent
-				/>
-			</mesh>
-			{/* Quality tier indicator lights */}
-			<group position={[-1.5, -0.7, 0.1]}>
-				{["low", "medium", "high"].map((tier, i) => (
-					<mesh key={tier} position={[i * 0.8, 0, 0]}>
-						<circleGeometry args={[0.1, 16]} />
-						<meshBasicMaterial
-							color={
-								qualityTier === tier || (qualityTier === "auto" && tier === "medium")
-									? "#FFB86B"
-									: "#333"
-							}
-						/>
-					</mesh>
-				))}
-			</group>
-			{/* Reduced motion indicator */}
-			{reducedMotion && (
-				<mesh position={[1.5, -0.7, 0.1]}>
-					<circleGeometry args={[0.1, 16]} />
-					<meshBasicMaterial color="#fbbf24" />
-				</mesh>
-			)}
-		</group>
-	);
-}
 
 // =============================================================================
 // Main Scene Content
 // =============================================================================
 
-function SceneContent({
-	qualityTier,
-	reducedMotion,
-	isMobile,
-	onInteract,
-	disableInput = false,
-}: {
-	qualityTier: QualityTier;
+interface SceneContentProps {
 	reducedMotion: boolean;
 	isMobile: boolean;
-	onInteract: (content: { type: "generic"; title: string; description: string }) => void;
 	disableInput?: boolean;
-}) {
-	// State for demo interactable cube (using state instead of ref for proper effect triggering)
-	const [cubeObject, setCubeObject] = useState<THREE.Mesh | null>(null);
-	const cubeRef = useRef<THREE.Mesh | null>(null);
+	onDoorActivate: (targetRoom: RoomId, spawnPosition: [number, number, number], spawnRotation: number) => void;
+}
 
-	// Callback ref to capture cube mesh and trigger state update
-	const handleCubeRef = useCallback((node: THREE.Mesh | null) => {
-		cubeRef.current = node;
-		setCubeObject(node);
-	}, []);
+function SceneContent({
+	reducedMotion,
+	isMobile,
+	disableInput = false,
+	onDoorActivate,
+}: SceneContentProps) {
+	// Get current room and spawn from store
+	// spawnPosition/spawnRotation only change during room transitions, not every frame
+	const currentRoom = useInteractiveStore((s) => s.player.currentRoom) ?? "exterior";
+	const spawnPosition = useInteractiveStore((s) => s.player.spawnPosition);
+	const spawnRotation = useInteractiveStore((s) => s.player.spawnRotation);
 
-	// Interactables list built from scene objects
-	const [interactables, setInteractables] = useState<Interactable[]>([]);
+	// Ref to track if we've set initial room
+	const hasSetInitialRoom = useRef(false);
 
-	// Build interactables when cube is available
+	// Set initial room on first render
 	useEffect(() => {
-		if (!cubeObject) {
-			setInteractables([]);
-			return;
+		if (!hasSetInitialRoom.current) {
+			hasSetInitialRoom.current = true;
+			const store = useInteractiveStore.getState();
+			if (!store.player.currentRoom) {
+				const spawn = getRoomSpawn("exterior");
+				const rotation = getRoomRotation("exterior");
+				store.setSpawnPosition(spawn);
+				store.setSpawnRotation(rotation);
+				store.setCurrentRoom("exterior");
+				store.setPlayerPosition(spawn);
+				store.setPlayerRotation([0, rotation, 0]);
+				store.activateChunk("exterior");
+			}
 		}
-		
-		setInteractables([
-			{
-				id: "demo-cube",
-				object: cubeObject,
-				type: "generic",
-				label: "Demo Cube",
-				onInteract: () => {
-					onInteract({
-						type: "generic",
-						title: "Interactive Demo",
-						description: "This is a demo interactable. In the full experience, books, projects, and doors will trigger content overlays like this one.",
-					});
-				},
-			},
-		]);
-	}, [cubeObject, onInteract]);
+	}, []);
 
 	return (
 		<Suspense fallback={null}>
-			<Ground />
-			<Grid />
-			<PlaceholderCube reducedMotion={reducedMotion} meshRef={handleCubeRef} />
-			<FloatingOrbs reducedMotion={reducedMotion} />
-			<StatusDisplay qualityTier={qualityTier} reducedMotion={reducedMotion} />
+			{/* Active Room */}
+			<RoomRenderer
+				roomId={currentRoom as RoomId}
+				onDoorActivate={onDoorActivate}
+			/>
 
-			{/* Player Controller */}
+			{/* Player Controller - key forces remount on room change for spawn reset */}
 			<PlayerController
-				spawnPosition={[0, 0, 5]}
+				key={currentRoom}
+				spawnPosition={spawnPosition as [number, number, number]}
+				spawnRotation={spawnRotation}
 				isMobile={isMobile}
 				reducedMotion={reducedMotion}
 				disableInput={disableInput}
@@ -293,18 +120,8 @@ function SceneContent({
 			{/* Camera System */}
 			<CameraIntegration reducedMotion={reducedMotion} />
 
-			{/* Interaction System */}
-			<InteractionSystem
-				interactables={interactables}
-				isMobile={isMobile}
-				reducedMotion={reducedMotion}
-			/>
-
 			{/* Chunk Manager - handles room loading/unloading */}
 			<ChunkManager debug={false} />
-
-			{/* Fog for depth */}
-			<fog attach="fog" args={["#070A0F", 10, 50]} />
 		</Suspense>
 	);
 }
@@ -335,21 +152,50 @@ export function InteractiveWorld({
 	const [loadingStatus, setLoadingStatus] = useState("Initializing...");
 	const [isWorldReady, setIsWorldReady] = useState(false);
 
-	// Content overlay state
-	const { content: overlayContent, openOverlay, closeOverlay } = useContentOverlay();
+	// Pending door transition info (stored until screen is black)
+	const pendingTransition = useRef<{
+		targetRoom: RoomId;
+		spawnPosition: [number, number, number];
+		spawnRotation: number;
+	} | null>(null);
 
-	// Room transition state
-	const { isTransitioning, TransitionOverlayProps } = useRoomTransition({
+	// Timeout refs for cleanup
+	const loadingTimeoutRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+	// Room transition state with swap callback
+	const { isTransitioning, startTransition, TransitionOverlayProps } = useRoomTransition({
 		duration: reducedMotion ? 0 : 300,
 		holdDuration: 200,
+		onSwap: (targetRoom) => {
+			// Screen is black - perform the room swap
+			const store = useInteractiveStore.getState();
+			const spawn = pendingTransition.current?.spawnPosition ?? getRoomSpawn(targetRoom as RoomId);
+			const rotation = pendingTransition.current?.spawnRotation ?? getRoomRotation(targetRoom as RoomId);
+
+			// Update spawn (stable, used by PlayerController on mount)
+			store.setSpawnPosition(spawn);
+			store.setSpawnRotation(rotation);
+
+			// Update room and player position/rotation
+			store.setCurrentRoom(targetRoom as RoomId);
+			store.setPlayerPosition(spawn);
+			store.setPlayerRotation([0, rotation, 0]);
+
+			// Activate the new chunk (marks previous as dormant)
+			store.activateChunk(targetRoom as RoomId);
+
+			pendingTransition.current = null;
+		},
 	});
 
-	// Memoized callback for scene interactions to prevent effect re-runs
-	const handleSceneInteract = useCallback(
-		(content: { type: "generic"; title: string; description: string }) => {
-			openOverlay(content);
+	// Handle door activation from rooms
+	const handleDoorActivate = useCallback(
+		(targetRoom: RoomId, spawnPosition: [number, number, number], spawnRotation: number) => {
+			// Store transition info and start the fade
+			pendingTransition.current = { targetRoom, spawnPosition, spawnRotation };
+			startTransition(targetRoom);
 		},
-		[openOverlay]
+		[startTransition]
 	);
 
 	const handleRendererReady = useCallback(() => {
@@ -358,17 +204,20 @@ export function InteractiveWorld({
 		setLoadingStatus("Loading assets...");
 
 		// Simulate asset loading (will be replaced with real chunk loading)
-		setTimeout(() => {
+		// Track timeouts for cleanup on unmount
+		const t1 = setTimeout(() => {
 			setLoadingPhase("warming-shaders");
 			setLoadingProgress(70);
 			setLoadingStatus("Preparing graphics...");
 
-			setTimeout(() => {
+			const t2 = setTimeout(() => {
 				setLoadingPhase("ready");
 				setLoadingProgress(100);
 				setLoadingStatus("Ready to explore");
 			}, 500);
+			loadingTimeoutRefs.current.push(t2);
 		}, 300);
+		loadingTimeoutRefs.current.push(t1);
 	}, []);
 
 	const handleEnterWorld = useCallback(() => {
@@ -376,6 +225,14 @@ export function InteractiveWorld({
 		setIsWorldReady(true);
 		onReady();
 	}, [onReady]);
+
+	// Cleanup timeouts on unmount
+	useEffect(() => {
+		const timeouts = loadingTimeoutRefs.current;
+		return () => {
+			timeouts.forEach(clearTimeout);
+		};
+	}, []);
 
 	return (
 		<KeyboardControls map={keyboardControlsMap}>
@@ -408,21 +265,13 @@ export function InteractiveWorld({
 						onTierChange={onTierChange}
 					>
 						<SceneContent
-							qualityTier={qualityTier}
 							reducedMotion={reducedMotion}
 							isMobile={isMobile}
-							onInteract={handleSceneInteract}
 							disableInput={isTransitioning}
+							onDoorActivate={handleDoorActivate}
 						/>
 					</RendererRoot>
 				</div>
-
-				{/* Content Overlay (DOM-based modal) */}
-				<ContentOverlay
-					content={overlayContent}
-					onClose={closeOverlay}
-					reducedMotion={reducedMotion}
-				/>
 
 				{/* Room Transition Overlay (fade to black) */}
 				<TransitionOverlay

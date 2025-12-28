@@ -64,6 +64,8 @@ const initialState: InteractiveStoreState = {
 	player: {
 		position: [0, 0, 0],
 		rotation: [0, 0, 0],
+		spawnPosition: [0, 0, 10], // exterior default
+		spawnRotation: Math.PI, // facing mansion
 		currentRoom: null,
 		isMoving: false,
 		isInteracting: false,
@@ -273,6 +275,18 @@ export const useInteractiveStore = create<InteractiveStore>()(
 		setPlayerRotation: (rotation) => {
 			set((s) => ({
 				player: { ...s.player, rotation },
+			}));
+		},
+
+		setSpawnPosition: (spawnPosition) => {
+			set((s) => ({
+				player: { ...s.player, spawnPosition },
+			}));
+		},
+
+		setSpawnRotation: (spawnRotation) => {
+			set((s) => ({
+				player: { ...s.player, spawnRotation },
 			}));
 		},
 
