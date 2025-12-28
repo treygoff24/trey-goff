@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useMemo } from "react";
+import { useRef, useEffect, useMemo, useCallback } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useInteractiveStore } from "@/lib/interactive/store";
@@ -131,7 +131,7 @@ export function DoorTrigger({
 
 	// Handle interaction (E key or tap)
 	// This is called by InteractionSystem when player interacts with door mesh
-	const handleInteract = () => {
+	const handleInteract = useCallback(() => {
 		if (!enabled || !isWithinActivation.current) return;
 
 		const targetState = chunkStates.get(targetRoom)?.state;
@@ -146,7 +146,7 @@ export function DoorTrigger({
 		} else if (debug) {
 			console.log(`[DoorTrigger] Cannot enter ${targetRoom} - state: ${targetState}`);
 		}
-	};
+	}, [enabled, chunkStates, targetRoom, spawnPosition, spawnRotation, onActivate, debug]);
 
 	// Store handle interact for external access
 	useEffect(() => {
@@ -156,7 +156,7 @@ export function DoorTrigger({
 			groupRef.current.userData.spawnPosition = spawnPosition;
 			groupRef.current.userData.spawnRotation = spawnRotation;
 		}
-	});
+	}, [handleInteract, targetRoom, spawnPosition, spawnRotation]);
 
 	return (
 		<group ref={groupRef} position={position} name={`door-${targetRoom}`}>
@@ -223,7 +223,7 @@ export function DoorTriggers({
 	debug = false,
 }: {
 	doors: DoorConfig[];
-	onActivate?: (targetRoom: RoomId, spawnPosition: [number, number, number]) => void;
+	onActivate?: (targetRoom: RoomId, spawnPosition: [number, number, number], spawnRotation: number) => void;
 	debug?: boolean;
 }) {
 	return (
