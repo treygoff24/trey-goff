@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
+import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import * as THREE from "three";
 import { THREE_COLORS } from "@/lib/interactive/colors";
 import { DoorTrigger, type DoorConfig } from "../DoorTrigger";
@@ -335,9 +336,67 @@ function CentralPedestal() {
 /**
  * MainHallRoom - The central hub connecting all other rooms.
  */
+/**
+ * Collision bodies for main hall - floor, walls, pillars, pedestal.
+ */
+function HallColliders() {
+	const wallThickness = 0.5;
+	const wallHeight = HALL_HEIGHT;
+	const pillarPositions: [number, number][] = [
+		[-HALL_WIDTH / 2 + 2, -HALL_DEPTH / 2 + 2],
+		[HALL_WIDTH / 2 - 2, -HALL_DEPTH / 2 + 2],
+		[-HALL_WIDTH / 2 + 2, HALL_DEPTH / 2 - 2],
+		[HALL_WIDTH / 2 - 2, HALL_DEPTH / 2 - 2],
+	];
+
+	return (
+		<>
+			{/* Floor */}
+			<RigidBody type="fixed" position={[0, -0.25, 0]}>
+				<CuboidCollider args={[HALL_WIDTH / 2, 0.25, HALL_DEPTH / 2]} />
+			</RigidBody>
+
+			{/* Back wall (negative Z) */}
+			<RigidBody type="fixed" position={[0, wallHeight / 2, -HALL_DEPTH / 2 - wallThickness / 2]}>
+				<CuboidCollider args={[HALL_WIDTH / 2, wallHeight / 2, wallThickness / 2]} />
+			</RigidBody>
+
+			{/* Front wall (positive Z) */}
+			<RigidBody type="fixed" position={[0, wallHeight / 2, HALL_DEPTH / 2 + wallThickness / 2]}>
+				<CuboidCollider args={[HALL_WIDTH / 2, wallHeight / 2, wallThickness / 2]} />
+			</RigidBody>
+
+			{/* Left wall (negative X) */}
+			<RigidBody type="fixed" position={[-HALL_WIDTH / 2 - wallThickness / 2, wallHeight / 2, 0]}>
+				<CuboidCollider args={[wallThickness / 2, wallHeight / 2, HALL_DEPTH / 2]} />
+			</RigidBody>
+
+			{/* Right wall (positive X) */}
+			<RigidBody type="fixed" position={[HALL_WIDTH / 2 + wallThickness / 2, wallHeight / 2, 0]}>
+				<CuboidCollider args={[wallThickness / 2, wallHeight / 2, HALL_DEPTH / 2]} />
+			</RigidBody>
+
+			{/* Pillars */}
+			{pillarPositions.map(([x, z], i) => (
+				<RigidBody key={i} type="fixed" position={[x, wallHeight / 2, z]}>
+					<CuboidCollider args={[0.4, wallHeight / 2, 0.4]} />
+				</RigidBody>
+			))}
+
+			{/* Central pedestal */}
+			<RigidBody type="fixed" position={[0, 0.75, 0]}>
+				<CuboidCollider args={[1.5, 0.75, 1.5]} />
+			</RigidBody>
+		</>
+	);
+}
+
 export function MainHallRoom({ debug = false, onDoorActivate }: MainHallRoomProps) {
 	return (
 		<group name="room-mainhall">
+			{/* Collision bodies */}
+			<HallColliders />
+
 			{/* Structure */}
 			<Floor />
 			<Walls />

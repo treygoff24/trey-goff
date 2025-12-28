@@ -16,6 +16,8 @@ interface CameraControllerProps {
 	targetPosition: [number, number, number];
 	/** Target rotation (yaw) */
 	targetYaw: number;
+	/** Target pitch (vertical look angle) */
+	targetPitch?: number;
 	/** Camera mode */
 	mode: CameraMode;
 	/** Reduced motion preference */
@@ -98,6 +100,7 @@ function checkCameraCollision(
 export function CameraController({
 	targetPosition,
 	targetYaw,
+	targetPitch,
 	mode,
 	reducedMotion,
 	distance = DEFAULT_DISTANCE,
@@ -145,6 +148,9 @@ export function CameraController({
 	useFrame(() => {
 		// Update target vector from tuple
 		targetVec.current.set(targetPosition[0], targetPosition[1], targetPosition[2]);
+		
+		// Get pitch value (default to 0 if not provided)
+		const pitch = targetPitch ?? 0;
 
 		if (actualMode === "first-person") {
 			// First-person: camera at eye level, looking forward
@@ -155,11 +161,13 @@ export function CameraController({
 			currentPosition.current.lerp(desiredPosition.current, lerpFactor);
 			camera.position.copy(currentPosition.current);
 
-			// Look direction from yaw
+			// Look direction from yaw and pitch
+			// Apply pitch to Y offset of look target
+			const lookDistance = 10;
 			lookAtPoint.current.set(
-				currentPosition.current.x - Math.sin(targetYaw) * 10,
-				currentPosition.current.y,
-				currentPosition.current.z - Math.cos(targetYaw) * 10
+				currentPosition.current.x - Math.sin(targetYaw) * lookDistance * Math.cos(pitch),
+				currentPosition.current.y + Math.sin(pitch) * lookDistance,
+				currentPosition.current.z - Math.cos(targetYaw) * lookDistance * Math.cos(pitch)
 			);
 			camera.lookAt(lookAtPoint.current);
 		} else {
@@ -194,9 +202,10 @@ export function CameraController({
 			currentPosition.current.lerp(desiredPosition.current, lerpFactor);
 			camera.position.copy(currentPosition.current);
 
-			// Look at target
+			// Look at target with pitch offset
+			// Pitch adjusts the look height relative to target
 			lookAtPoint.current.copy(targetVec.current);
-			lookAtPoint.current.y += lookAtHeight;
+			lookAtPoint.current.y += lookAtHeight + Math.sin(pitch) * 5;
 			camera.lookAt(lookAtPoint.current);
 		}
 	});

@@ -1,11 +1,16 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useMemo } from "react";
 import { useThree, useFrame } from "@react-three/fiber";
 import { useKeyboardControls } from "@react-three/drei";
+import { RigidBody, CapsuleCollider, useRapier } from "@react-three/rapier";
+import type { RapierRigidBody } from "@react-three/rapier";
 import * as THREE from "three";
 import { useInteractiveStore } from "@/lib/interactive/store";
 import { THREE_COLORS } from "@/lib/interactive/colors";
+
+// Character controller type - use ReturnType to avoid version mismatch
+type CharacterController = ReturnType<ReturnType<typeof useRapier>["world"]["createCharacterController"]>;
 
 // =============================================================================
 // Types
@@ -44,6 +49,7 @@ interface PlayerControllerProps {
 const MOVE_SPEED = 5;
 const SPRINT_MULTIPLIER = 1.5;
 const ROTATION_SPEED = 0.002;
+const MAX_PITCH = Math.PI / 2.5; // ~72 degrees, prevents looking straight up/down
 const PLAYER_HEIGHT = 1.8;
 const PLAYER_RADIUS = 0.4;
 const INTERACTION_DISTANCE = 3;
@@ -79,7 +85,7 @@ function useDesktopControls(
 
 			yaw.current -= e.movementX * ROTATION_SPEED;
 			pitch.current -= e.movementY * ROTATION_SPEED;
-			pitch.current = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, pitch.current));
+			pitch.current = Math.max(-MAX_PITCH, Math.min(MAX_PITCH, pitch.current));
 		};
 
 		const handlePointerLockChange = () => {
@@ -261,17 +267,16 @@ function PlayerCapsule({ reducedMotion }: PlayerCapsuleProps) {
 }
 
 // =============================================================================
-// Main Controller (No Physics Version - Placeholder)
+// Main Controller (Physics Version with Rapier)
 // =============================================================================
 
 // Store update throttle interval (ms)
 const STORE_UPDATE_INTERVAL = 100;
 
 /**
- * Simplified player controller without full Rapier physics.
- * Uses basic position updates for Phase 4 MVP.
- * Full ecctrl integration will be added when rooms have collision meshes.
- * 
+ * Physics-based player controller using Rapier.
+ * Uses kinematic character controller for responsive movement with collision.
+ *
  * Note: Camera positioning is handled by CameraController, not here.
  */
 export function PlayerController({
@@ -283,16 +288,21 @@ export function PlayerController({
 	onPositionUpdate,
 	onInteract,
 }: PlayerControllerProps) {
-	const groupRef = useRef<THREE.Group>(null);
+	const rigidBodyRef = useRef<RapierRigidBody>(null);
+	const characterControllerRef = useRef<CharacterController | null>(null);
+
+	// Rapier world access
+	const { world } = useRapier();
 
 	// Reusable vectors - allocated once to avoid GC pressure
 	const velocity = useRef(new THREE.Vector3());
-	const position = useRef(new THREE.Vector3(...spawnPosition));
 	const yaw = useRef(spawnRotation);
 	const moveDir = useRef(new THREE.Vector3());
 	const rotatedDir = useRef(new THREE.Vector3());
 	const diffVec = useRef(new THREE.Vector3());
 	const zeroVec = useRef(new THREE.Vector3());
+	const currentPosVec = useRef(new THREE.Vector3());
+	const desiredMovement = useRef({ x: 0, y: 0, z: 0 });
 
 	// Store update throttling
 	const lastStoreUpdate = useRef(0);
@@ -306,22 +316,61 @@ export function PlayerController({
 	const setIsMoving = useInteractiveStore((s) => s.setIsMoving);
 	const recordInteraction = useInteractiveStore((s) => s.recordInteraction);
 
-	// Desktop controls
+	// Desktop controls (includes pitch tracking)
 	const desktopControls = useDesktopControls(isMobile, yaw, onInteract);
 
 	// Mobile controls
 	const mobileControls = useMobileControls(isMobile, yaw);
 
+	// Create character controller once
+	useEffect(() => {
+		if (!world || characterControllerRef.current) return;
+
+		// Create character controller with small offset for numerical stability
+		const controller = world.createCharacterController(0.01);
+
+		// Configure controller behavior
+		controller.enableAutostep(0.3, 0.2, true); // max height, min width, include dynamic
+		controller.enableSnapToGround(0.3); // snap distance
+		controller.setMaxSlopeClimbAngle((45 * Math.PI) / 180); // 45 degrees
+		controller.setMinSlopeSlideAngle((30 * Math.PI) / 180); // 30 degrees
+
+		characterControllerRef.current = controller;
+
+		return () => {
+			if (characterControllerRef.current) {
+				world.removeCharacterController(characterControllerRef.current);
+				characterControllerRef.current = null;
+			}
+		};
+	}, [world]);
+
+	// Spawn position for RigidBody - slightly elevated so capsule lands on ground
+	const spawnWithOffset = useMemo(
+		() => [spawnPosition[0], spawnPosition[1] + PLAYER_HEIGHT / 2 + 0.1, spawnPosition[2]] as [
+			number,
+			number,
+			number,
+		],
+		[spawnPosition]
+	);
+
 	// Update position on each frame
 	useFrame((state, delta) => {
-		if (!groupRef.current) return;
+		const rigidBody = rigidBodyRef.current;
+		const controller = characterControllerRef.current;
+		if (!rigidBody || !controller) return;
+
+		// Get current position from physics (reuse vector to avoid GC pressure)
+		const translation = rigidBody.translation();
+		currentPosVec.current.set(translation.x, translation.y, translation.z);
 
 		// Skip movement processing during transitions (but keep updating store for camera)
 		if (disableInput) {
-			// Still update store so camera stays synced (reuse refs to avoid allocations)
-			const px = position.current.x;
-			const py = position.current.y;
-			const pz = position.current.z;
+			// Still update store so camera stays synced
+			const px = translation.x;
+			const py = translation.y - PLAYER_HEIGHT / 2; // Adjust for capsule center
+			const pz = translation.z;
 			if (
 				lastStorePos.current[0] !== px ||
 				lastStorePos.current[1] !== py ||
@@ -330,8 +379,10 @@ export function PlayerController({
 				lastStorePos.current = [px, py, pz];
 				setPlayerPosition(lastStorePos.current);
 			}
-			if (lastStoreRot.current[1] !== yaw.current) {
-				lastStoreRot.current = [0, yaw.current, 0];
+			// Include pitch (from desktop controls) in rotation
+			const pitchVal = isMobile ? 0 : desktopControls.pitch.current;
+			if (lastStoreRot.current[0] !== pitchVal || lastStoreRot.current[1] !== yaw.current) {
+				lastStoreRot.current = [pitchVal, yaw.current, 0];
 				setPlayerRotation(lastStoreRot.current);
 			}
 			return;
@@ -358,13 +409,11 @@ export function PlayerController({
 				moveDir.current.x += 1;
 				isMoving = true;
 			}
-			// yaw is modified directly by useDesktopControls via passed ref
 		} else {
 			// Mobile movement - move toward target
 			const target = mobileControls.getTarget();
 			if (target) {
-				diffVec.current.subVectors(target, position.current);
-				diffVec.current.y = 0;
+				diffVec.current.set(target.x - currentPosVec.current.x, 0, target.z - currentPosVec.current.z);
 
 				if (diffVec.current.length() > 0.5) {
 					moveDir.current.copy(diffVec.current.normalize());
@@ -376,7 +425,6 @@ export function PlayerController({
 					mobileControls.clearTarget();
 				}
 			}
-			// Touch rotation is handled directly by useMobileControls via passed ref
 		}
 
 		// Normalize and apply movement
@@ -398,37 +446,52 @@ export function PlayerController({
 			velocity.current.lerp(zeroVec.current, 0.1);
 		}
 
-		// Update position
-		position.current.addScaledVector(velocity.current, delta);
+		// Calculate desired movement for this frame
+		desiredMovement.current.x = velocity.current.x * delta;
+		desiredMovement.current.y = -9.81 * delta; // Gravity
+		desiredMovement.current.z = velocity.current.z * delta;
 
-		// Keep on ground (temporary - no physics yet)
-		position.current.y = 0;
+		// Get the collider from the rigid body
+		const collider = rigidBody.collider(0);
+		if (collider) {
+			// Compute movement with collision detection
+			controller.computeColliderMovement(collider, desiredMovement.current);
+			const correctedMovement = controller.computedMovement();
 
-		// Update group transform
-		groupRef.current.position.copy(position.current);
-		groupRef.current.rotation.y = yaw.current;
+			// Apply corrected movement
+			const newPos = {
+				x: translation.x + correctedMovement.x,
+				y: translation.y + correctedMovement.y,
+				z: translation.z + correctedMovement.z,
+			};
+			rigidBody.setNextKinematicTranslation(newPos);
+		}
 
-		// Camera is now handled by CameraController reading from store
-		// Position/rotation updated every frame for smooth camera following
-		// Only allocate new arrays when values actually change
-		const px = position.current.x;
-		const py = position.current.y;
-		const pz = position.current.z;
+		// Update rotation (yaw only - physics handles position)
+		rigidBody.setNextKinematicRotation({ x: 0, y: Math.sin(yaw.current / 2), z: 0, w: Math.cos(yaw.current / 2) });
+
+		// Get final position for store update
+		const finalTranslation = rigidBody.translation();
+		const px = finalTranslation.x;
+		const py = finalTranslation.y - PLAYER_HEIGHT / 2; // Adjust for capsule center
+		const pz = finalTranslation.z;
 		const yawVal = yaw.current;
 		const posChanged =
-			lastStorePos.current[0] !== px ||
-			lastStorePos.current[1] !== py ||
-			lastStorePos.current[2] !== pz;
+			Math.abs(lastStorePos.current[0] - px) > 0.001 ||
+			Math.abs(lastStorePos.current[1] - py) > 0.001 ||
+			Math.abs(lastStorePos.current[2] - pz) > 0.001;
 		if (posChanged) {
 			lastStorePos.current = [px, py, pz];
 			setPlayerPosition(lastStorePos.current);
 		}
-		if (lastStoreRot.current[1] !== yawVal) {
-			lastStoreRot.current = [0, yawVal, 0];
+		// Include pitch in rotation (rotation[0] = pitch, rotation[1] = yaw)
+		const pitchVal = isMobile ? 0 : desktopControls.pitch.current;
+		if (lastStoreRot.current[0] !== pitchVal || lastStoreRot.current[1] !== yawVal) {
+			lastStoreRot.current = [pitchVal, yawVal, 0];
 			setPlayerRotation(lastStoreRot.current);
 		}
 
-		// Throttled store updates for telemetry only (not camera-critical)
+		// Throttled store updates for telemetry only
 		const now = state.clock.elapsedTime * 1000;
 		if (now - lastStoreUpdate.current > STORE_UPDATE_INTERVAL) {
 			setIsMoving(isMoving);
@@ -438,16 +501,24 @@ export function PlayerController({
 			lastStoreUpdate.current = now;
 		}
 
-		// Callback (not throttled - let caller decide)
+		// Callback
 		if (onPositionUpdate && posChanged) {
 			onPositionUpdate(lastStorePos.current);
 		}
 	});
 
 	return (
-		<group ref={groupRef} position={spawnPosition} name="player">
+		<RigidBody
+			ref={rigidBodyRef}
+			position={spawnWithOffset}
+			rotation={[0, spawnRotation, 0]}
+			type="kinematicPosition"
+			colliders={false}
+			name="player"
+		>
+			<CapsuleCollider args={[PLAYER_HEIGHT / 2 - PLAYER_RADIUS, PLAYER_RADIUS]} />
 			<PlayerCapsule reducedMotion={reducedMotion} />
-		</group>
+		</RigidBody>
 	);
 }
 

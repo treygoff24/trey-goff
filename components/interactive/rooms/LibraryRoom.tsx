@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect, useMemo, useCallback } from "react";
 import { useFrame } from "@react-three/fiber";
+import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import * as THREE from "three";
 import { THREE_COLORS } from "@/lib/interactive/colors";
 import { DoorTrigger } from "../DoorTrigger";
@@ -206,6 +207,60 @@ function Ceiling() {
 			<planeGeometry args={[ROOM_WIDTH, ROOM_DEPTH]} />
 			<meshStandardMaterial color="#1a150f" roughness={0.9} metalness={0.1} />
 		</mesh>
+	);
+}
+
+/**
+ * Room collision bodies - floor, walls, and furniture.
+ */
+function RoomColliders() {
+	const wallThickness = 0.5;
+	const wallHeight = ROOM_HEIGHT;
+
+	return (
+		<>
+			{/* Floor */}
+			<RigidBody type="fixed" position={[0, -0.25, 0]}>
+				<CuboidCollider args={[ROOM_WIDTH / 2, 0.25, ROOM_DEPTH / 2]} />
+			</RigidBody>
+
+			{/* Back wall (negative Z) */}
+			<RigidBody type="fixed" position={[0, wallHeight / 2, -ROOM_DEPTH / 2 - wallThickness / 2]}>
+				<CuboidCollider args={[ROOM_WIDTH / 2, wallHeight / 2, wallThickness / 2]} />
+			</RigidBody>
+
+			{/* Front wall (positive Z) - with door opening */}
+			<RigidBody type="fixed" position={[-3, wallHeight / 2, ROOM_DEPTH / 2 + wallThickness / 2]}>
+				<CuboidCollider args={[6, wallHeight / 2, wallThickness / 2]} />
+			</RigidBody>
+
+			{/* Left wall (negative X) */}
+			<RigidBody type="fixed" position={[-ROOM_WIDTH / 2 - wallThickness / 2, wallHeight / 2, 0]}>
+				<CuboidCollider args={[wallThickness / 2, wallHeight / 2, ROOM_DEPTH / 2]} />
+			</RigidBody>
+
+			{/* Right wall (positive X) */}
+			<RigidBody type="fixed" position={[ROOM_WIDTH / 2 + wallThickness / 2, wallHeight / 2, 0]}>
+				<CuboidCollider args={[wallThickness / 2, wallHeight / 2, ROOM_DEPTH / 2]} />
+			</RigidBody>
+		</>
+	);
+}
+
+/**
+ * Bookshelf collision (separate from visual for simpler hitbox).
+ */
+function BookshelfCollider({
+	position,
+	rotation = 0,
+}: {
+	position: [number, number, number];
+	rotation?: number;
+}) {
+	return (
+		<RigidBody type="fixed" position={position} rotation={[0, rotation, 0]}>
+			<CuboidCollider args={[SHELF_WIDTH / 2, SHELF_HEIGHT / 2, SHELF_DEPTH / 2]} position={[0, SHELF_HEIGHT / 2, 0]} />
+		</RigidBody>
 	);
 }
 
@@ -472,6 +527,15 @@ export function LibraryRoom({ debug = false, onDoorActivate, onContentSelect }: 
 
 	return (
 		<group name="room-library">
+			{/* Collision bodies */}
+			<RoomColliders />
+			<BookshelfCollider position={[-5, 0, -ROOM_DEPTH / 2 + 0.5]} />
+			<BookshelfCollider position={[-1.5, 0, -ROOM_DEPTH / 2 + 0.5]} />
+			<BookshelfCollider position={[2, 0, -ROOM_DEPTH / 2 + 0.5]} />
+			<BookshelfCollider position={[5.5, 0, -ROOM_DEPTH / 2 + 0.5]} />
+			<BookshelfCollider position={[-ROOM_WIDTH / 2 + 0.5, 0, -3]} rotation={Math.PI / 2} />
+			<BookshelfCollider position={[-ROOM_WIDTH / 2 + 0.5, 0, 3]} rotation={Math.PI / 2} />
+
 			{/* Structure */}
 			<Floor />
 			<Walls />

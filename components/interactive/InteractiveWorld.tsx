@@ -2,6 +2,7 @@
 
 import { Suspense, useState, useCallback, useRef, useEffect } from "react";
 import { KeyboardControls } from "@react-three/drei";
+import { Physics } from "@react-three/rapier";
 import Link from "next/link";
 import type { QualityTier } from "@/lib/interactive/capabilities";
 import { useInteractiveStore } from "@/lib/interactive/store";
@@ -53,6 +54,7 @@ function CameraIntegration({
 		<CameraController
 			targetPosition={playerPosition}
 			targetYaw={playerRotation[1]}
+			targetPitch={playerRotation[0]}
 			mode={cameraMode ?? "third-person"}
 			reducedMotion={reducedMotion}
 		/>
@@ -110,24 +112,27 @@ function SceneContent({
 
 	return (
 		<Suspense fallback={null}>
-			{/* Active Room */}
-			<RoomRenderer
-				roomId={currentRoom as RoomId}
-				onDoorActivate={onDoorActivate}
-				onContentSelect={onContentSelect}
-			/>
+			{/* Physics World - wraps all collidable objects */}
+			<Physics gravity={[0, -20, 0]} debug={false}>
+				{/* Active Room */}
+				<RoomRenderer
+					roomId={currentRoom as RoomId}
+					onDoorActivate={onDoorActivate}
+					onContentSelect={onContentSelect}
+				/>
 
-			{/* Player Controller - key forces remount on room change for spawn reset */}
-			<PlayerController
-				key={currentRoom}
-				spawnPosition={spawnPosition as [number, number, number]}
-				spawnRotation={spawnRotation}
-				isMobile={isMobile}
-				reducedMotion={reducedMotion}
-				disableInput={disableInput}
-			/>
+				{/* Player Controller - key forces remount on room change for spawn reset */}
+				<PlayerController
+					key={currentRoom}
+					spawnPosition={spawnPosition as [number, number, number]}
+					spawnRotation={spawnRotation}
+					isMobile={isMobile}
+					reducedMotion={reducedMotion}
+					disableInput={disableInput}
+				/>
+			</Physics>
 
-			{/* Camera System */}
+			{/* Camera System - outside physics for performance */}
 			<CameraIntegration reducedMotion={reducedMotion} />
 
 			{/* Chunk Manager - handles room loading/unloading */}

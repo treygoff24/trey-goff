@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
+import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import * as THREE from "three";
 import { THREE_COLORS } from "@/lib/interactive/colors";
 import { DoorTrigger } from "../DoorTrigger";
@@ -481,6 +482,57 @@ function PlaqueWall({
 // =============================================================================
 
 /**
+ * Collision bodies for gym - floor, walls, and equipment.
+ */
+function GymColliders() {
+	const wallThickness = 0.5;
+	const wallHeight = ROOM_HEIGHT;
+
+	return (
+		<>
+			{/* Floor */}
+			<RigidBody type="fixed" position={[0, -0.25, 0]}>
+				<CuboidCollider args={[ROOM_WIDTH / 2, 0.25, ROOM_DEPTH / 2]} />
+			</RigidBody>
+
+			{/* Back wall (negative Z) */}
+			<RigidBody type="fixed" position={[0, wallHeight / 2, -ROOM_DEPTH / 2 - wallThickness / 2]}>
+				<CuboidCollider args={[ROOM_WIDTH / 2, wallHeight / 2, wallThickness / 2]} />
+			</RigidBody>
+
+			{/* Front wall (positive Z) */}
+			<RigidBody type="fixed" position={[0, wallHeight / 2, ROOM_DEPTH / 2 + wallThickness / 2]}>
+				<CuboidCollider args={[ROOM_WIDTH / 2, wallHeight / 2, wallThickness / 2]} />
+			</RigidBody>
+
+			{/* Left wall (negative X) */}
+			<RigidBody type="fixed" position={[-ROOM_WIDTH / 2 - wallThickness / 2, wallHeight / 2, 0]}>
+				<CuboidCollider args={[wallThickness / 2, wallHeight / 2, ROOM_DEPTH / 2]} />
+			</RigidBody>
+
+			{/* Right wall (positive X) */}
+			<RigidBody type="fixed" position={[ROOM_WIDTH / 2 + wallThickness / 2, wallHeight / 2, 0]}>
+				<CuboidCollider args={[wallThickness / 2, wallHeight / 2, ROOM_DEPTH / 2]} />
+			</RigidBody>
+
+			{/* Equipment colliders */}
+			{/* Squat rack */}
+			<RigidBody type="fixed" position={[-5, 1.5, 0]}>
+				<CuboidCollider args={[1.5, 1.5, 1]} />
+			</RigidBody>
+			{/* Bench station */}
+			<RigidBody type="fixed" position={[0, 0.5, 2]}>
+				<CuboidCollider args={[1, 0.5, 1.5]} />
+			</RigidBody>
+			{/* Deadlift platform */}
+			<RigidBody type="fixed" position={[5, 0.15, 0]}>
+				<CuboidCollider args={[1.5, 0.15, 2]} />
+			</RigidBody>
+		</>
+	);
+}
+
+/**
  * GymRoom - Displays powerlifting PRs with data-driven visualization.
  */
 export function GymRoom({ debug = false, onDoorActivate }: GymRoomProps) {
@@ -517,6 +569,9 @@ export function GymRoom({ debug = false, onDoorActivate }: GymRoomProps) {
 
 	return (
 		<group name="room-gym">
+			{/* Collision bodies */}
+			<GymColliders />
+
 			{/* Structure */}
 			<Floor />
 			<Walls />

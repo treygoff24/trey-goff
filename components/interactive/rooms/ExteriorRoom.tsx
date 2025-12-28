@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Stars } from "@react-three/drei";
+import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import * as THREE from "three";
 import { THREE_COLORS } from "@/lib/interactive/colors";
 import { DoorTrigger } from "../DoorTrigger";
@@ -325,9 +326,45 @@ function Garage() {
 /**
  * ExteriorRoom - The outdoor area with mansion facade, mech, and entry to main hall.
  */
+/**
+ * Collision bodies for exterior - ground and mansion wall.
+ */
+function ExteriorColliders() {
+	// Garage is at [-25, 0, -15], mesh is 10x6x8
+	const garagePos: [number, number, number] = [-25, 3, -15];
+	const garageSize: [number, number, number] = [5, 3, 4]; // half-extents
+
+	return (
+		<>
+			{/* Ground */}
+			<RigidBody type="fixed" position={[0, -0.25, 0]}>
+				<CuboidCollider args={[GROUND_SIZE / 2, 0.25, GROUND_SIZE / 2]} />
+			</RigidBody>
+
+			{/* Mansion building - full bounding box */}
+			<RigidBody type="fixed" position={[0, MANSION_HEIGHT / 2, -20]}>
+				<CuboidCollider args={[MANSION_WIDTH / 2, MANSION_HEIGHT / 2, MANSION_DEPTH / 2]} />
+			</RigidBody>
+
+			{/* Garage structure */}
+			<RigidBody type="fixed" position={garagePos}>
+				<CuboidCollider args={garageSize} />
+			</RigidBody>
+
+			{/* Mech (don't walk through it) */}
+			<RigidBody type="fixed" position={[25, 4, -10]}>
+				<CuboidCollider args={[4, 8, 3]} />
+			</RigidBody>
+		</>
+	);
+}
+
 export function ExteriorRoom({ debug = false, onDoorActivate }: ExteriorRoomProps) {
 	return (
 		<group name="room-exterior">
+			{/* Collision bodies */}
+			<ExteriorColliders />
+
 			{/* Environment */}
 			<Sky />
 			<Mountains />

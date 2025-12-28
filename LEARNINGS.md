@@ -30,6 +30,24 @@
 - Skip useFrame body when at target position
 - Use cursor cleanup effect on component unmount
 
+## 2025-12-28 - Core Mechanics (Physics & Camera)
+
+**What Worked:**
+- Rapier character controller provides smooth movement with collision
+- Kinematic RigidBody gives full control over player position while respecting collisions
+- Separating colliders from visual geometry (simple boxes for complex meshes)
+- Named constants (MAX_PITCH) improve code readability
+
+**What Failed:**
+- Initial collider positions didn't match visual geometry (mansion at z=-20 vs collider at z=0)
+- Per-frame Vector3 allocation in useFrame (fixed with reusable ref)
+- Type mismatch with `@dimforge/rapier3d-compat` (fixed with ReturnType inference)
+
+**Patterns:**
+- Use `ReturnType<typeof hook>["property"]` to infer types from library functions (avoids version mismatches)
+- Collider positions should be computed from visual geometry positions, not assumed
+- Character controller needs explicit gravity since kinematic bodies don't respond to Physics gravity
+
 ---
 
 ## 2025-12-27 - Downloads & Media
