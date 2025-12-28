@@ -49,6 +49,7 @@ export function InteractiveShell({ className }: InteractiveShellProps) {
 		null
 	);
 	const [selectedTier, setSelectedTier] = useState<QualityTier>("auto");
+	const [reducedMotion, setReducedMotion] = useState(false);
 	const [showWorld, setShowWorld] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
@@ -61,6 +62,7 @@ export function InteractiveShell({ className }: InteractiveShellProps) {
 			setPhase("no-webgl");
 		} else {
 			setSelectedTier(caps.suggestedTier);
+			setReducedMotion(caps.reducedMotion);
 			setPhase("ready");
 		}
 	}, []);
@@ -121,11 +123,13 @@ export function InteractiveShell({ className }: InteractiveShellProps) {
 			{showWorld && (
 				<InteractiveWorld
 					qualityTier={selectedTier}
-					reducedMotion={capabilities?.reducedMotion ?? false}
+					reducedMotion={reducedMotion}
 					isMobile={capabilities?.isMobile ?? false}
 					onReady={handleWorldReady}
 					onError={handleWorldError}
 					onTierChange={handleTierChange}
+					onQualityChange={setSelectedTier}
+					onReducedMotionChange={setReducedMotion}
 				/>
 			)}
 
