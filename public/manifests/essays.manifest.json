@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "generated": "2025-12-30T20:52:35.793Z",
+  "generated": "2025-12-30T21:00:16.453Z",
   "entries": [
     {
       "id": "how-i-became-a-christian",
@@ -70,6 +70,20 @@
       ],
       "publishedAt": "2020-02-18",
       "readingTime": 10,
+      "status": "published"
+    },
+    {
+      "id": "the-voluntaryist-constitution",
+      "slug": "the-voluntaryist-constitution",
+      "title": "The Voluntaryist Constitution",
+      "excerpt": "A theoretical framework for constitutional governance based on voluntary association, consent, and the protection of individual rights.",
+      "tags": [
+        "governance",
+        "philosophy",
+        "libertarianism"
+      ],
+      "publishedAt": "2017-10-01",
+      "readingTime": 1,
       "status": "published"
     }
   ]
