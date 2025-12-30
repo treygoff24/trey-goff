@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2024-12-27",
+  "lastUpdated": "2024-12-30",
   "appearances": [
     {
       "id": "prospera-perception-post-scarcity",
@@ -11,6 +11,77 @@
       "youtubeUrl": "https://www.youtube.com/watch?v=noFicZW7D18",
       "featured": true,
       "summary": "Deep dive into Prospera's governance model, how perception shapes policy outcomes, and why post-scarcity economics changes everything we think about incentives."
+    },
+    {
+      "id": "stranded-tech-network-state-part-2",
+      "title": "Debating 'The Network State' Part II, Balaji's Bet, Education in a Free Society & More",
+      "show": "Stranded Technologies Podcast",
+      "type": "podcast",
+      "date": "2023-03-15",
+      "url": "https://rss.com/podcasts/stranded-technologies-podcast/882687/",
+      "summary": "Follow-up discussion on Balaji Srinivasan's Network State thesis, his Bitcoin bet, thoughts on education in a free society, and wide-ranging riffs and rambles."
+    },
+    {
+      "id": "building-remotely-startup-city",
+      "title": "How to Build a Startup City",
+      "show": "Building Remotely Podcast",
+      "type": "podcast",
+      "date": "2022-11-15",
+      "url": "https://podcasts.apple.com/us/podcast/how-to-build-a-startup-city-with-trey-goff-from-prospera/id1523891857?i=1000587368373",
+      "appleUrl": "https://podcasts.apple.com/us/podcast/how-to-build-a-startup-city-with-trey-goff-from-prospera/id1523891857?i=1000587368373",
+      "spotifyUrl": "https://open.spotify.com/episode/5RehItjnKMuGbRuMpcJWYm",
+      "summary": "Discussion on the practical challenges and lessons learned from building Prospera as a startup city from the ground up."
+    },
+    {
+      "id": "stranded-tech-network-state",
+      "title": "Debating 'The Network State' by Balaji Srinivasan",
+      "show": "Stranded Technologies Podcast",
+      "type": "podcast",
+      "date": "2022-08-15",
+      "url": "https://podcasts.apple.com/us/podcast/ep-9-debating-the-network-state-by-balaji-srinivasan/id1629706707?i=1000575517904",
+      "appleUrl": "https://podcasts.apple.com/us/podcast/ep-9-debating-the-network-state-by-balaji-srinivasan/id1629706707?i=1000575517904",
+      "spotifyUrl": "https://open.spotify.com/show/5RuYhqSM3QayPz6I3X3PSm",
+      "summary": "Critical discussion of Balaji Srinivasan's Network State thesis from the perspective of someone actually building a special jurisdiction."
+    },
+    {
+      "id": "astral-codex-ten-prospera",
+      "title": "Prospectus On Próspera",
+      "show": "Astral Codex Ten",
+      "type": "interview",
+      "date": "2021-04-15",
+      "url": "https://www.astralcodexten.com/p/prospectus-on-prospera",
+      "featured": true,
+      "summary": "Extensive Q&A with Scott Alexander covering Prospera's founding, governance structure, legal framework, and vision for the future of charter cities."
+    },
+    {
+      "id": "epicenter-podcast-host",
+      "title": "The Epicenter Podcast (Co-Host)",
+      "show": "The Epicenter Podcast",
+      "type": "podcast",
+      "date": "2021-01-01",
+      "url": "https://podcasts.apple.com/us/podcast/the-epicenter-podcast/id1523548100",
+      "appleUrl": "https://podcasts.apple.com/us/podcast/the-epicenter-podcast/id1523548100",
+      "spotifyUrl": "https://open.spotify.com/show/0CWAOunXJWvdHbpTaHSWjk",
+      "summary": "Co-hosted with Max Medina (2020-2021). Conversations about innovation, governance, and building the future from Próspera."
+    },
+    {
+      "id": "libertarian-christian-voluntaryist-constitution",
+      "title": "The Voluntaryist Constitution",
+      "show": "Libertarian Christian Podcast",
+      "type": "podcast",
+      "date": "2018-01-15",
+      "url": "https://open.spotify.com/episode/782k5sF9BHEH5IFA5WB3mg",
+      "spotifyUrl": "https://open.spotify.com/episode/782k5sF9BHEH5IFA5WB3mg",
+      "summary": "Episode 50. Discussion of the theoretical framework for a constitution designed around voluntary association and consent-based governance."
+    },
+    {
+      "id": "human-action-constitution-free-society",
+      "title": "A Constitution for a Free Society",
+      "show": "Human Action Podcast (Mises Institute)",
+      "type": "podcast",
+      "date": "2017-10-15",
+      "url": "https://mises.org/podcasts/human-action-podcast/trey-goff-constitution-free-society",
+      "summary": "Discussing the principles and design of constitutional frameworks that maximize individual liberty and voluntary cooperation."
     }
   ]
 }
