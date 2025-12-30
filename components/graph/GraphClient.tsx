@@ -29,12 +29,13 @@ const TYPE_LABELS: Record<NodeType, string> = {
   book: 'Books',
   tag: 'Tags',
   idea: 'Ideas',
+  transmission: 'Transmissions',
 }
 
 export function GraphClient({ data }: GraphClientProps) {
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null)
   const [visibleTypes, setVisibleTypes] = useState<Set<NodeType>>(
-    new Set(['essay', 'note', 'book', 'tag', 'idea'])
+    new Set(['essay', 'note', 'book', 'tag', 'idea', 'transmission'])
   )
 
   // Filter data based on visible types
@@ -70,6 +71,7 @@ export function GraphClient({ data }: GraphClientProps) {
       book: 0,
       tag: 0,
       idea: 0,
+      transmission: 0,
     }
     for (const node of data.nodes) {
       counts[node.type]++

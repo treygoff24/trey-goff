@@ -1,13 +1,14 @@
 /**
  * Knowledge Graph Generation
  *
- * Builds a graph from essays, notes, and books.
+ * Builds a graph from essays, notes, books, and transmissions.
  * Nodes are content items and tags.
  * Edges connect content to tags, and content sharing tags.
  */
 
 import { allEssays, allNotes } from 'content-collections'
 import { getAllBooks } from '@/lib/books'
+import { getAllTransmissions } from '@/lib/transmissions'
 import type { GraphNode, GraphEdge, GraphData, NodeType } from './types'
 import { NODE_COLORS, NODE_SIZES } from './types'
 
@@ -113,6 +114,31 @@ export function generateGraphData(): GraphData {
     for (const topic of book.topics) {
       const tagId = getTagNode(topic)
       edges.push(createEdge(nodeId, tagId, 'topic'))
+    }
+  }
+
+  // Process transmissions (external publications)
+  const transmissions = getAllTransmissions()
+  for (const transmission of transmissions) {
+    const nodeId = `transmission-${transmission.id}`
+    nodes.push(
+      createNode(
+        nodeId,
+        transmission.title,
+        'transmission',
+        transmission.url,
+        {
+          date: transmission.date,
+          summary: transmission.summary,
+          author: transmission.publication,
+        }
+      )
+    )
+
+    // Connect to tags
+    for (const tag of transmission.tags) {
+      const tagId = getTagNode(tag)
+      edges.push(createEdge(nodeId, tagId, 'tag'))
     }
   }
 

@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "generated": "2025-12-30T21:00:16.453Z",
+  "generated": "2025-12-30T21:17:17.689Z",
   "entries": [
     {
       "id": "how-i-became-a-christian",
@@ -10,7 +10,8 @@
       "tags": [
         "philosophy",
         "personal",
-        "christianity"
+        "christianity",
+        "religion"
       ],
       "publishedAt": "2025-09-15",
       "readingTime": 16,
@@ -25,7 +26,8 @@
         "governance",
         "prospera",
         "economics",
-        "zede"
+        "zede",
+        "charter-cities"
       ],
       "publishedAt": "2024-04-05",
       "readingTime": 1,
@@ -66,7 +68,8 @@
       "tags": [
         "economics",
         "music",
-        "technology"
+        "technology",
+        "intellectual-property"
       ],
       "publishedAt": "2020-02-18",
       "readingTime": 10,
@@ -80,7 +83,8 @@
       "tags": [
         "governance",
         "philosophy",
-        "libertarianism"
+        "libertarianism",
+        "politics"
       ],
       "publishedAt": "2017-10-01",
       "readingTime": 1,

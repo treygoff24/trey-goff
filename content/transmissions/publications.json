@@ -1,0 +1,16 @@
+{
+  "lastUpdated": "2024-12-30",
+  "transmissions": [
+    {
+      "id": "acx-prospectus-prospera",
+      "title": "Prospectus On Próspera",
+      "publication": "Astral Codex Ten",
+      "channel": "ACX",
+      "date": "2021-04-12",
+      "url": "https://www.astralcodexten.com/p/prospectus-on-prospera",
+      "summary": "Scott Alexander's deep-dive into Próspera featuring extensive Q&A on governance structure, legal framework, and the vision for charter cities.",
+      "tags": ["governance", "prospera", "charter-cities", "zede"],
+      "featured": true
+    }
+  ]
+}

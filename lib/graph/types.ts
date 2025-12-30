@@ -5,7 +5,7 @@
  * Edges represent relationships between them.
  */
 
-export type NodeType = 'essay' | 'note' | 'book' | 'tag' | 'idea'
+export type NodeType = 'essay' | 'note' | 'book' | 'tag' | 'idea' | 'transmission'
 
 export interface GraphNode {
   id: string
@@ -44,6 +44,7 @@ export const NODE_COLORS: Record<NodeType, string> = {
   book: '#4ECDC4', // teal
   tag: 'rgba(255, 255, 255, 0.52)', // text-3
   idea: '#FF6B6B', // coral
+  transmission: '#34D399', // success/green - broadcast signal
 }
 
 /** Base sizes for each node type */
@@ -53,4 +54,5 @@ export const NODE_SIZES: Record<NodeType, number> = {
   book: 10,
   tag: 6,
   idea: 7,
+  transmission: 11,
 }
