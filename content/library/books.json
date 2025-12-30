@@ -1,15 +1,13 @@
 {
-  "lastUpdated": "2024-01-15",
+  "lastUpdated": "2024-12-30",
   "books": [
     {
       "id": "progress-and-poverty",
       "title": "Progress and Poverty",
       "author": "Henry George",
       "year": 1879,
-      "isbn13": "9780911312584",
       "status": "read",
       "rating": 5,
-      "dateRead": "2023-06-15",
       "topics": ["economics", "land", "governance", "classical-liberalism"],
       "genre": "economics",
       "whyILoveIt": "The most important book on political economy ever written. George's diagnosis of why progress creates poverty remains devastatingly relevant."
@@ -19,10 +17,8 @@
       "title": "The Problem of Political Authority",
       "author": "Michael Huemer",
       "year": 2012,
-      "isbn13": "9781137281654",
       "status": "read",
       "rating": 5,
-      "dateRead": "2023-08-20",
       "topics": ["philosophy", "governance", "libertarianism", "ethics"],
       "genre": "philosophy",
       "whyILoveIt": "A rigorous philosophical examination of why governments claim authority and whether those claims are justified. Changed how I think about legitimacy."
@@ -32,10 +28,8 @@
       "title": "The Machinery of Freedom",
       "author": "David Friedman",
       "year": 1973,
-      "isbn13": "9780812690699",
       "status": "read",
       "rating": 4,
-      "dateRead": "2022-11-10",
       "topics": ["economics", "governance", "anarcho-capitalism"],
       "genre": "political-theory",
       "whyILoveIt": "A practical exploration of how a stateless society might function. Friedman's economic approach to anarchism is uniquely compelling."
@@ -45,10 +39,8 @@
       "title": "Seeing Like a State",
       "author": "James C. Scott",
       "year": 1998,
-      "isbn13": "9780300078152",
       "status": "read",
       "rating": 5,
-      "dateRead": "2023-02-28",
       "topics": ["governance", "planning", "local-knowledge"],
       "genre": "political-science",
       "whyILoveIt": "Essential reading for anyone interested in governance. Scott's concept of 'metis' and critique of high-modernist planning is profound."
@@ -58,10 +50,8 @@
       "title": "Antifragile",
       "author": "Nassim Nicholas Taleb",
       "year": 2012,
-      "isbn13": "9780812979688",
       "status": "read",
       "rating": 4,
-      "dateRead": "2022-05-12",
       "topics": ["risk", "systems", "philosophy"],
       "genre": "non-fiction",
       "whyILoveIt": "Taleb's framework for things that gain from disorder. The concept of antifragility has shaped how I think about building resilient systems."
@@ -71,10 +61,8 @@
       "title": "The Sovereign Individual",
       "author": "James Dale Davidson & Lord William Rees-Mogg",
       "year": 1997,
-      "isbn13": "9780684832722",
       "status": "read",
       "rating": 4,
-      "dateRead": "2021-09-05",
       "topics": ["technology", "governance", "future"],
       "genre": "futurism",
       "whyILoveIt": "Prescient predictions about how information technology would reshape sovereignty and governance. Written before the internet age but eerily accurate."
@@ -84,9 +72,7 @@
       "title": "Stubborn Attachments",
       "author": "Tyler Cowen",
       "year": 2018,
-      "isbn13": "9781732265134",
-      "status": "reading",
-      "dateStarted": "2024-01-10",
+      "status": "read",
       "topics": ["economics", "ethics", "growth"],
       "genre": "philosophy",
       "whyILoveIt": "A compelling case for sustainable economic growth as a moral imperative. Cowen's 'Crusonia plant' thought experiment is memorable."
@@ -96,11 +82,2944 @@
       "title": "The Beginning of Infinity",
       "author": "David Deutsch",
       "year": 2011,
-      "isbn13": "9780143121350",
       "status": "want",
       "topics": ["philosophy", "science", "knowledge"],
       "genre": "philosophy",
       "whyILoveIt": "On my list because of its exploration of the power of explanatory knowledge. Deutsch's optimism about human potential is inspiring."
+    },
+    {
+      "id": "scientific-freedom",
+      "title": "Scientific Freedom: The Elixir of Civilization",
+      "author": "Donald W. Braben",
+      "year": 2008,
+      "status": "read",
+      "topics": ["science", "innovation", "policy"],
+      "genre": "science"
+    },
+    {
+      "id": "life-at-the-bottom",
+      "title": "Life At The Bottom",
+      "author": "Theodore Dalrymple",
+      "year": 2001,
+      "status": "read",
+      "topics": ["society", "culture", "poverty"],
+      "genre": "social-commentary"
+    },
+    {
+      "id": "the-journalist-and-the-murderer",
+      "title": "The Journalist and the Murderer",
+      "author": "Janet Malcolm",
+      "year": 1990,
+      "status": "read",
+      "topics": ["journalism", "ethics"],
+      "genre": "non-fiction"
+    },
+    {
+      "id": "against-the-machine",
+      "title": "Against the Machine: On the Unmaking of Humanity",
+      "author": "Paul Kingsnorth",
+      "year": 2023,
+      "status": "read",
+      "topics": ["technology", "philosophy", "society"],
+      "genre": "philosophy"
+    },
+    {
+      "id": "breakneck",
+      "title": "Breakneck: China's Quest to Engineer the Future",
+      "author": "Dan Wang",
+      "year": 2024,
+      "status": "read",
+      "topics": ["china", "technology", "geopolitics"],
+      "genre": "non-fiction"
+    },
+    {
+      "id": "on-grand-strategy",
+      "title": "On Grand Strategy",
+      "author": "John Lewis Gaddis",
+      "year": 2018,
+      "status": "read",
+      "topics": ["strategy", "history", "leadership"],
+      "genre": "history"
+    },
+    {
+      "id": "the-quantum-thief",
+      "title": "The Quantum Thief",
+      "author": "Hannu Rajaniemi",
+      "year": 2010,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "valuable-humans-in-transit",
+      "title": "Valuable Humans in Transit and Other Stories",
+      "author": "qntm",
+      "year": 2022,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "why-greatness-cannot-be-planned",
+      "title": "Why Greatness Cannot Be Planned: The Myth of the Objective",
+      "author": "Kenneth O. Stanley & Joel Lehman",
+      "year": 2015,
+      "status": "read",
+      "topics": ["innovation", "ai", "creativity"],
+      "genre": "science"
+    },
+    {
+      "id": "why-buddhism-is-true",
+      "title": "Why Buddhism is True",
+      "author": "Robert Wright",
+      "year": 2017,
+      "status": "read",
+      "topics": ["buddhism", "psychology", "meditation"],
+      "genre": "philosophy"
+    },
+    {
+      "id": "the-struggle-for-taiwan",
+      "title": "The Struggle for Taiwan",
+      "author": "Sulmaan Wasif Khan",
+      "year": 2024,
+      "status": "read",
+      "topics": ["geopolitics", "china", "history"],
+      "genre": "history"
+    },
+    {
+      "id": "its-good-to-be-a-man",
+      "title": "It's Good to Be a Man: A Handbook for Godly Masculinity",
+      "author": "Michael Foster & Dominic Bnonn Tennant",
+      "year": 2021,
+      "status": "read",
+      "topics": ["christianity", "masculinity"],
+      "genre": "religion"
+    },
+    {
+      "id": "chief-of-staff",
+      "title": "Chief Of Staff: The Strategic Partner Who Will Revolutionize Your Organization",
+      "author": "Tyler Parris",
+      "year": 2015,
+      "status": "read",
+      "topics": ["business", "leadership"],
+      "genre": "business"
+    },
+    {
+      "id": "atheism-the-case-against-god",
+      "title": "Atheism: The Case Against God",
+      "author": "George H. Smith",
+      "year": 1974,
+      "status": "read",
+      "topics": ["philosophy", "religion", "atheism"],
+      "genre": "philosophy"
+    },
+    {
+      "id": "when-all-else-fails",
+      "title": "When All Else Fails: The Ethics of Resistance to State Injustice",
+      "author": "Jason Brennan",
+      "year": 2018,
+      "status": "read",
+      "topics": ["philosophy", "politics", "ethics"],
+      "genre": "philosophy"
+    },
+    {
+      "id": "act-of-congress",
+      "title": "Act of Congress",
+      "author": "Robert G. Kaiser",
+      "year": 2013,
+      "status": "read",
+      "topics": ["politics", "government"],
+      "genre": "politics"
+    },
+    {
+      "id": "inside-congress",
+      "title": "Inside Congress",
+      "author": "Trevor Corning, Nolan Dolan & Ryan Strasser",
+      "year": 2017,
+      "status": "read",
+      "topics": ["politics", "government"],
+      "genre": "politics"
+    },
+    {
+      "id": "the-nvidia-way",
+      "title": "The Nvidia Way: Jensen Huang and the Making of a Tech Giant",
+      "author": "Tae Kim",
+      "year": 2024,
+      "status": "read",
+      "topics": ["technology", "business", "biography"],
+      "genre": "business"
+    },
+    {
+      "id": "zen-and-the-art-of-motorcycle-maintenance",
+      "title": "Zen and the Art of Motorcycle Maintenance",
+      "author": "Robert M. Pirsig",
+      "year": 1974,
+      "status": "read",
+      "topics": ["philosophy"],
+      "genre": "philosophy"
+    },
+    {
+      "id": "mistborn-the-final-empire",
+      "title": "Mistborn: The Final Empire",
+      "author": "Brandon Sanderson",
+      "year": 2006,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "the-well-of-ascension",
+      "title": "The Well of Ascension",
+      "author": "Brandon Sanderson",
+      "year": 2007,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "the-hero-of-ages",
+      "title": "The Hero of Ages",
+      "author": "Brandon Sanderson",
+      "year": 2008,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "the-alloy-of-law",
+      "title": "The Alloy of Law",
+      "author": "Brandon Sanderson",
+      "year": 2011,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "shadows-of-self",
+      "title": "Shadows of Self",
+      "author": "Brandon Sanderson",
+      "year": 2015,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "the-bands-of-mourning",
+      "title": "The Bands of Mourning",
+      "author": "Brandon Sanderson",
+      "year": 2016,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "the-lost-metal",
+      "title": "The Lost Metal",
+      "author": "Brandon Sanderson",
+      "year": 2022,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "the-science-of-free-will",
+      "title": "The Science of Free Will",
+      "author": "Samir Varma",
+      "year": 2023,
+      "status": "read",
+      "topics": ["philosophy", "neuroscience"],
+      "genre": "philosophy"
+    },
+    {
+      "id": "unreasonable-hospitality",
+      "title": "Unreasonable Hospitality",
+      "author": "Will Guidara",
+      "year": 2022,
+      "status": "read",
+      "topics": ["business", "hospitality"],
+      "genre": "business"
+    },
+    {
+      "id": "fine-structure",
+      "title": "Fine Structure",
+      "author": "qntm",
+      "year": 2021,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "reentry",
+      "title": "Reentry: SpaceX, Elon Musk, and the Reusable Rockets that Launched a Second Space Age",
+      "author": "Eric Berger",
+      "year": 2024,
+      "status": "read",
+      "topics": ["space", "technology", "biography"],
+      "genre": "science"
+    },
+    {
+      "id": "the-first-rule-of-mastery",
+      "title": "The First Rule of Mastery",
+      "author": "Michael Gervais",
+      "year": 2023,
+      "status": "read",
+      "topics": ["psychology", "performance"],
+      "genre": "self-help"
+    },
+    {
+      "id": "cloud-atlas",
+      "title": "Cloud Atlas",
+      "author": "David Mitchell",
+      "year": 2004,
+      "status": "read",
+      "topics": ["fiction"],
+      "genre": "literary-fiction"
+    },
+    {
+      "id": "cribsheet",
+      "title": "Cribsheet: A Data-Driven Guide to Better, More Relaxed Parenting",
+      "author": "Emily Oster",
+      "year": 2019,
+      "status": "read",
+      "topics": ["parenting", "data"],
+      "genre": "parenting"
+    },
+    {
+      "id": "polostan",
+      "title": "Polostan",
+      "author": "Neal Stephenson",
+      "year": 2024,
+      "status": "read",
+      "topics": ["science-fiction", "history"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "blame-vol-1",
+      "title": "BLAME! Vol. 1",
+      "author": "Tsutomu Nihei",
+      "year": 1998,
+      "status": "read",
+      "topics": ["manga", "science-fiction"],
+      "genre": "manga"
+    },
+    {
+      "id": "how-life-works",
+      "title": "How Life Works: A User's Guide to the New Biology",
+      "author": "Philip Ball",
+      "year": 2023,
+      "status": "read",
+      "topics": ["biology", "science"],
+      "genre": "science"
+    },
+    {
+      "id": "at-the-existentialist-cafe",
+      "title": "At the Existentialist Cafe",
+      "author": "Sarah Bakewell",
+      "year": 2016,
+      "status": "read",
+      "topics": ["philosophy", "history"],
+      "genre": "philosophy"
+    },
+    {
+      "id": "the-culture-transplant",
+      "title": "The Culture Transplant",
+      "author": "Garett Jones",
+      "year": 2022,
+      "status": "read",
+      "topics": ["economics", "culture", "immigration"],
+      "genre": "economics"
+    },
+    {
+      "id": "everything-is-predictable",
+      "title": "Everything Is Predictable: How Bayesian Statistics Explain Our World",
+      "author": "Tom Chivers",
+      "year": 2024,
+      "status": "read",
+      "topics": ["statistics", "probability"],
+      "genre": "science"
+    },
+    {
+      "id": "crossing-the-chasm",
+      "title": "Crossing the Chasm",
+      "author": "Geoffrey A. Moore",
+      "year": 1991,
+      "status": "read",
+      "topics": ["business", "marketing", "startups"],
+      "genre": "business"
+    },
+    {
+      "id": "the-case-for-christ",
+      "title": "The Case for Christ",
+      "author": "Lee Strobel",
+      "year": 1998,
+      "status": "read",
+      "topics": ["christianity", "apologetics"],
+      "genre": "religion"
+    },
+    {
+      "id": "theft-of-fire",
+      "title": "Theft of Fire",
+      "author": "Devon Eriksen",
+      "year": 2023,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "the-1-page-marketing-plan",
+      "title": "The 1-Page Marketing Plan",
+      "author": "Allan Dib",
+      "year": 2016,
+      "status": "read",
+      "topics": ["marketing", "business"],
+      "genre": "business"
+    },
+    {
+      "id": "murtagh",
+      "title": "Murtagh: The World of Eragon",
+      "author": "Christopher Paolini",
+      "year": 2023,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "the-warrior-poet-way",
+      "title": "The Warrior Poet Way",
+      "author": "John Lovell",
+      "year": 2021,
+      "status": "read",
+      "topics": ["masculinity", "philosophy"],
+      "genre": "self-help"
+    },
+    {
+      "id": "the-origins-of-woke",
+      "title": "The Origins of Woke",
+      "author": "Richard Hanania",
+      "year": 2023,
+      "status": "read",
+      "topics": ["politics", "law", "culture"],
+      "genre": "politics"
+    },
+    {
+      "id": "what-is-money",
+      "title": "What Is Money?",
+      "author": "Michael Saylor",
+      "year": 2022,
+      "status": "read",
+      "topics": ["bitcoin", "economics", "money"],
+      "genre": "economics"
+    },
+    {
+      "id": "elon-musk",
+      "title": "Elon Musk",
+      "author": "Walter Isaacson",
+      "year": 2023,
+      "status": "read",
+      "topics": ["biography", "technology", "business"],
+      "genre": "biography"
+    },
+    {
+      "id": "the-polymath",
+      "title": "The Polymath",
+      "author": "Peter Burke",
+      "year": 2020,
+      "status": "read",
+      "topics": ["history", "knowledge"],
+      "genre": "history"
+    },
+    {
+      "id": "americas-cultural-revolution",
+      "title": "America's Cultural Revolution",
+      "author": "Christopher F. Rufo",
+      "year": 2023,
+      "status": "read",
+      "topics": ["politics", "culture"],
+      "genre": "politics"
+    },
+    {
+      "id": "the-elegant-universe",
+      "title": "The Elegant Universe",
+      "author": "Brian Greene",
+      "year": 1999,
+      "status": "read",
+      "topics": ["physics", "string-theory"],
+      "genre": "science"
+    },
+    {
+      "id": "scaling-people",
+      "title": "Scaling People",
+      "author": "Claire Hughes Johnson",
+      "year": 2023,
+      "status": "read",
+      "topics": ["business", "management"],
+      "genre": "business"
+    },
+    {
+      "id": "life-3-0",
+      "title": "Life 3.0: Being Human in the Age of Artificial Intelligence",
+      "author": "Max Tegmark",
+      "year": 2017,
+      "status": "read",
+      "topics": ["ai", "future", "technology"],
+      "genre": "science"
+    },
+    {
+      "id": "whats-our-problem",
+      "title": "What's Our Problem?: A Self-Help Book for Societies",
+      "author": "Tim Urban",
+      "year": 2023,
+      "status": "read",
+      "topics": ["society", "politics", "psychology"],
+      "genre": "non-fiction"
+    },
+    {
+      "id": "science-of-muscle-hypertrophy",
+      "title": "Science and Development of Muscle Hypertrophy",
+      "author": "Brad Schoenfeld",
+      "year": 2016,
+      "status": "read",
+      "topics": ["fitness", "science"],
+      "genre": "fitness"
+    },
+    {
+      "id": "the-book-of-five-rings",
+      "title": "The Book of Five Rings",
+      "author": "Miyamoto Musashi",
+      "year": 1645,
+      "status": "read",
+      "topics": ["philosophy", "strategy"],
+      "genre": "philosophy"
+    },
+    {
+      "id": "the-white-pill",
+      "title": "The White Pill",
+      "author": "Michael Malice",
+      "year": 2022,
+      "status": "read",
+      "topics": ["history", "politics", "anarchism"],
+      "genre": "history"
+    },
+    {
+      "id": "red-famine",
+      "title": "Red Famine: Stalin's War on Ukraine",
+      "author": "Anne Applebaum",
+      "year": 2017,
+      "status": "read",
+      "topics": ["history", "ukraine", "communism"],
+      "genre": "history"
+    },
+    {
+      "id": "the-fifth-science",
+      "title": "The Fifth Science",
+      "author": "Exurb1a",
+      "year": 2018,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "100m-offers",
+      "title": "$100M Offers",
+      "author": "Alex Hormozi",
+      "year": 2021,
+      "status": "read",
+      "topics": ["business", "marketing", "entrepreneurship"],
+      "genre": "business"
+    },
+    {
+      "id": "meditations",
+      "title": "Meditations",
+      "author": "Marcus Aurelius",
+      "year": 180,
+      "status": "read",
+      "topics": ["philosophy", "stoicism"],
+      "genre": "philosophy"
+    },
+    {
+      "id": "the-2-hour-cocktail-party",
+      "title": "The 2-Hour Cocktail Party",
+      "author": "Nick Gray",
+      "year": 2022,
+      "status": "read",
+      "topics": ["networking", "social"],
+      "genre": "self-help"
+    },
+    {
+      "id": "ghost-in-the-shell",
+      "title": "The Ghost in the Shell",
+      "author": "Masamune Shirow",
+      "year": 1989,
+      "status": "read",
+      "topics": ["manga", "science-fiction", "cyberpunk"],
+      "genre": "manga"
+    },
+    {
+      "id": "the-launch-pad",
+      "title": "The Launch Pad: Inside Y Combinator",
+      "author": "Randall Stross",
+      "year": 2012,
+      "status": "read",
+      "topics": ["startups", "business"],
+      "genre": "business"
+    },
+    {
+      "id": "atlas-shrugged",
+      "title": "Atlas Shrugged",
+      "author": "Ayn Rand",
+      "year": 1957,
+      "status": "read",
+      "topics": ["philosophy", "libertarianism"],
+      "genre": "fiction"
+    },
+    {
+      "id": "stealing-fire",
+      "title": "Stealing Fire",
+      "author": "Steven Kotler & Jamie Wheal",
+      "year": 2017,
+      "status": "read",
+      "topics": ["psychology", "performance", "consciousness"],
+      "genre": "science"
+    },
+    {
+      "id": "fear-and-trembling",
+      "title": "Fear and Trembling",
+      "author": "Soren Kierkegaard",
+      "year": 1843,
+      "status": "read",
+      "topics": ["philosophy", "religion", "existentialism"],
+      "genre": "philosophy"
+    },
+    {
+      "id": "the-network-state",
+      "title": "The Network State",
+      "author": "Balaji Srinivasan",
+      "year": 2022,
+      "status": "read",
+      "topics": ["governance", "technology", "future"],
+      "genre": "non-fiction"
+    },
+    {
+      "id": "reality-is-broken",
+      "title": "Reality Is Broken",
+      "author": "Jane McGonigal",
+      "year": 2011,
+      "status": "read",
+      "topics": ["games", "psychology"],
+      "genre": "non-fiction"
+    },
+    {
+      "id": "the-three-body-problem",
+      "title": "The Three-Body Problem",
+      "author": "Liu Cixin",
+      "year": 2008,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "the-dark-forest",
+      "title": "The Dark Forest",
+      "author": "Liu Cixin",
+      "year": 2008,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "deaths-end",
+      "title": "Death's End",
+      "author": "Liu Cixin",
+      "year": 2010,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "a-lodging-of-wayfaring-men",
+      "title": "A Lodging of Wayfaring Men",
+      "author": "Paul Rosenberg",
+      "year": 2007,
+      "status": "read",
+      "topics": ["libertarianism", "fiction"],
+      "genre": "fiction"
+    },
+    {
+      "id": "the-fish-that-ate-the-whale",
+      "title": "The Fish That Ate the Whale",
+      "author": "Rich Cohen",
+      "year": 2012,
+      "status": "read",
+      "topics": ["history", "business", "biography"],
+      "genre": "biography"
+    },
+    {
+      "id": "the-reason-for-god",
+      "title": "The Reason for God",
+      "author": "Timothy Keller",
+      "year": 2008,
+      "status": "read",
+      "topics": ["christianity", "apologetics"],
+      "genre": "religion"
+    },
+    {
+      "id": "mating-in-captivity",
+      "title": "Mating in Captivity",
+      "author": "Esther Perel",
+      "year": 2006,
+      "status": "read",
+      "topics": ["relationships", "psychology"],
+      "genre": "psychology"
+    },
+    {
+      "id": "lion-city",
+      "title": "Lion City: Singapore and the Invention of Modern Asia",
+      "author": "Jeevan Vasagar",
+      "year": 2021,
+      "status": "read",
+      "topics": ["singapore", "history", "governance"],
+      "genre": "history"
+    },
+    {
+      "id": "amp-it-up",
+      "title": "Amp It Up",
+      "author": "Frank Slootman",
+      "year": 2022,
+      "status": "read",
+      "topics": ["business", "leadership"],
+      "genre": "business"
+    },
+    {
+      "id": "the-edge-of-the-world",
+      "title": "The Edge of the World",
+      "author": "Michael Pye",
+      "year": 2014,
+      "status": "read",
+      "topics": ["history", "europe"],
+      "genre": "history"
+    },
+    {
+      "id": "amazon-unbound",
+      "title": "Amazon Unbound",
+      "author": "Brad Stone",
+      "year": 2021,
+      "status": "read",
+      "topics": ["business", "technology", "biography"],
+      "genre": "business"
+    },
+    {
+      "id": "the-everything-store",
+      "title": "The Everything Store",
+      "author": "Brad Stone",
+      "year": 2013,
+      "status": "read",
+      "topics": ["business", "technology", "biography"],
+      "genre": "business"
+    },
+    {
+      "id": "the-cold-start-problem",
+      "title": "The Cold Start Problem",
+      "author": "Andrew Chen",
+      "year": 2021,
+      "status": "read",
+      "topics": ["startups", "networks", "business"],
+      "genre": "business"
+    },
+    {
+      "id": "termination-shock",
+      "title": "Termination Shock",
+      "author": "Neal Stephenson",
+      "year": 2021,
+      "status": "read",
+      "topics": ["science-fiction", "climate"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "the-sack-of-detroit",
+      "title": "The Sack of Detroit",
+      "author": "Kenneth Whyte",
+      "year": 2021,
+      "status": "read",
+      "topics": ["history", "business", "automotive"],
+      "genre": "history"
+    },
+    {
+      "id": "the-aristocracy-of-talent",
+      "title": "The Aristocracy of Talent",
+      "author": "Adrian Wooldridge",
+      "year": 2021,
+      "status": "read",
+      "topics": ["history", "meritocracy", "society"],
+      "genre": "history"
+    },
+    {
+      "id": "entrepreneurial-communities",
+      "title": "Entrepreneurial Communities",
+      "author": "Calvin Duke",
+      "year": 2021,
+      "status": "read",
+      "topics": ["governance", "libertarianism", "communities"],
+      "genre": "political-theory"
+    },
+    {
+      "id": "t-the-story-of-testosterone",
+      "title": "T: The Story of Testosterone",
+      "author": "Carole Hooven",
+      "year": 2021,
+      "status": "read",
+      "topics": ["biology", "science"],
+      "genre": "science"
+    },
+    {
+      "id": "cultish",
+      "title": "Cultish: The Language of Fanaticism",
+      "author": "Amanda Montell",
+      "year": 2021,
+      "status": "read",
+      "topics": ["language", "psychology", "cults"],
+      "genre": "non-fiction"
+    },
+    {
+      "id": "the-meaning-of-marriage",
+      "title": "The Meaning of Marriage",
+      "author": "Timothy Keller",
+      "year": 2011,
+      "status": "read",
+      "topics": ["christianity", "marriage"],
+      "genre": "religion"
+    },
+    {
+      "id": "wheel-of-time-1",
+      "title": "The Eye of the World",
+      "author": "Robert Jordan",
+      "year": 1990,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "wheel-of-time-2",
+      "title": "The Great Hunt",
+      "author": "Robert Jordan",
+      "year": 1990,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "wheel-of-time-3",
+      "title": "The Dragon Reborn",
+      "author": "Robert Jordan",
+      "year": 1991,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "wheel-of-time-4",
+      "title": "The Shadow Rising",
+      "author": "Robert Jordan",
+      "year": 1992,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "wheel-of-time-5",
+      "title": "The Fires of Heaven",
+      "author": "Robert Jordan",
+      "year": 1993,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "wheel-of-time-6",
+      "title": "Lord of Chaos",
+      "author": "Robert Jordan",
+      "year": 1994,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "wheel-of-time-7",
+      "title": "A Crown of Swords",
+      "author": "Robert Jordan",
+      "year": 1996,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "wheel-of-time-8",
+      "title": "The Path of Daggers",
+      "author": "Robert Jordan",
+      "year": 1998,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "wheel-of-time-9",
+      "title": "Winter's Heart",
+      "author": "Robert Jordan",
+      "year": 2000,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "wheel-of-time-10",
+      "title": "Crossroads of Twilight",
+      "author": "Robert Jordan",
+      "year": 2003,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "wheel-of-time-11",
+      "title": "Knife of Dreams",
+      "author": "Robert Jordan",
+      "year": 2005,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "wheel-of-time-12",
+      "title": "The Gathering Storm",
+      "author": "Robert Jordan & Brandon Sanderson",
+      "year": 2009,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "wheel-of-time-13",
+      "title": "Towers of Midnight",
+      "author": "Robert Jordan & Brandon Sanderson",
+      "year": 2010,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "wheel-of-time-14",
+      "title": "A Memory of Light",
+      "author": "Robert Jordan & Brandon Sanderson",
+      "year": 2013,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "working-backwards",
+      "title": "Working Backwards",
+      "author": "Colin Bryar & Bill Carr",
+      "year": 2021,
+      "status": "read",
+      "topics": ["business", "amazon"],
+      "genre": "business"
+    },
+    {
+      "id": "hacking-darwin",
+      "title": "Hacking Darwin",
+      "author": "Jamie Metzl",
+      "year": 2019,
+      "status": "read",
+      "topics": ["genetics", "future", "science"],
+      "genre": "science"
+    },
+    {
+      "id": "the-player-of-games",
+      "title": "The Player of Games",
+      "author": "Iain M. Banks",
+      "year": 1988,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "consider-phlebas",
+      "title": "Consider Phlebas",
+      "author": "Iain M. Banks",
+      "year": 1987,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "singapore-singapura",
+      "title": "Singapore, Singapura",
+      "author": "Nicholas Walton",
+      "year": 2018,
+      "status": "read",
+      "topics": ["singapore", "history"],
+      "genre": "history"
+    },
+    {
+      "id": "fools-errand",
+      "title": "Fool's Errand: Time to End the War in Afghanistan",
+      "author": "Scott Horton",
+      "year": 2017,
+      "status": "read",
+      "topics": ["foreign-policy", "war"],
+      "genre": "politics"
+    },
+    {
+      "id": "junk-to-gold",
+      "title": "Junk to Gold",
+      "author": "Willis Johnson",
+      "year": 2014,
+      "status": "read",
+      "topics": ["business", "entrepreneurship"],
+      "genre": "business"
+    },
+    {
+      "id": "the-case-against-education",
+      "title": "The Case against Education",
+      "author": "Bryan Caplan",
+      "year": 2018,
+      "status": "read",
+      "topics": ["economics", "education"],
+      "genre": "economics"
+    },
+    {
+      "id": "hacking-growth",
+      "title": "Hacking Growth",
+      "author": "Sean Ellis & Morgan Brown",
+      "year": 2017,
+      "status": "read",
+      "topics": ["marketing", "startups"],
+      "genre": "business"
+    },
+    {
+      "id": "liftoff",
+      "title": "Liftoff: Elon Musk and the Desperate Early Days That Launched SpaceX",
+      "author": "Eric Berger",
+      "year": 2021,
+      "status": "read",
+      "topics": ["space", "biography"],
+      "genre": "biography"
+    },
+    {
+      "id": "the-bitcoin-standard",
+      "title": "The Bitcoin Standard",
+      "author": "Saifedean Ammous",
+      "year": 2018,
+      "status": "read",
+      "topics": ["bitcoin", "economics", "money"],
+      "genre": "economics"
+    },
+    {
+      "id": "building-the-future",
+      "title": "Building the Future",
+      "author": "Amy C. Edmondson & Susan Salter Reynolds",
+      "year": 2016,
+      "status": "read",
+      "topics": ["innovation", "business"],
+      "genre": "business"
+    },
+    {
+      "id": "drug-use-for-grown-ups",
+      "title": "Drug Use for Grown-Ups",
+      "author": "Carl L. Hart",
+      "year": 2021,
+      "status": "read",
+      "topics": ["drugs", "policy", "science"],
+      "genre": "science"
+    },
+    {
+      "id": "dream-big",
+      "title": "Dream Big",
+      "author": "Cristiane Correa",
+      "year": 2014,
+      "status": "read",
+      "topics": ["business", "3g-capital"],
+      "genre": "business"
+    },
+    {
+      "id": "the-powers-of-the-earth",
+      "title": "The Powers of the Earth",
+      "author": "Travis J.I. Corcoran",
+      "year": 2017,
+      "status": "read",
+      "topics": ["science-fiction", "libertarianism"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "the-immortalists",
+      "title": "The Immortalists",
+      "author": "David M. Friedman",
+      "year": 2007,
+      "status": "read",
+      "topics": ["biography", "science"],
+      "genre": "biography"
+    },
+    {
+      "id": "the-weirdest-people",
+      "title": "The WEIRDest People in the World",
+      "author": "Joseph Henrich",
+      "year": 2020,
+      "status": "read",
+      "topics": ["psychology", "anthropology", "culture"],
+      "genre": "science"
+    },
+    {
+      "id": "your-next-government",
+      "title": "Your Next Government?",
+      "author": "Tom W. Bell",
+      "year": 2017,
+      "status": "read",
+      "topics": ["governance", "libertarianism", "charter-cities"],
+      "genre": "political-theory"
+    },
+    {
+      "id": "invent-and-wander",
+      "title": "Invent and Wander: The Collected Writings of Jeff Bezos",
+      "author": "Jeff Bezos & Walter Isaacson",
+      "year": 2020,
+      "status": "read",
+      "topics": ["business", "biography"],
+      "genre": "business"
+    },
+    {
+      "id": "how-to-decide",
+      "title": "How to Decide",
+      "author": "Annie Duke",
+      "year": 2020,
+      "status": "read",
+      "topics": ["decision-making", "psychology"],
+      "genre": "self-help"
+    },
+    {
+      "id": "flow",
+      "title": "Flow: The Psychology of Optimal Experience",
+      "author": "Mihaly Csikszentmihalyi",
+      "year": 1990,
+      "status": "read",
+      "topics": ["psychology", "performance"],
+      "genre": "psychology"
+    },
+    {
+      "id": "dune",
+      "title": "Dune",
+      "author": "Frank Herbert",
+      "year": 1965,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "dune-messiah",
+      "title": "Dune Messiah",
+      "author": "Frank Herbert",
+      "year": 1969,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "children-of-dune",
+      "title": "Children of Dune",
+      "author": "Frank Herbert",
+      "year": 1976,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "god-emperor-of-dune",
+      "title": "God Emperor of Dune",
+      "author": "Frank Herbert",
+      "year": 1981,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "where-is-my-flying-car",
+      "title": "Where Is My Flying Car?",
+      "author": "J. Storrs Hall",
+      "year": 2018,
+      "status": "read",
+      "topics": ["technology", "innovation", "future"],
+      "genre": "science"
+    },
+    {
+      "id": "the-hard-thing-about-hard-things",
+      "title": "The Hard Thing About Hard Things",
+      "author": "Ben Horowitz",
+      "year": 2014,
+      "status": "read",
+      "topics": ["business", "startups", "leadership"],
+      "genre": "business"
+    },
+    {
+      "id": "red-rising",
+      "title": "Red Rising",
+      "author": "Pierce Brown",
+      "year": 2014,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "golden-son",
+      "title": "Golden Son",
+      "author": "Pierce Brown",
+      "year": 2015,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "morning-star",
+      "title": "Morning Star",
+      "author": "Pierce Brown",
+      "year": 2016,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "iron-gold",
+      "title": "Iron Gold",
+      "author": "Pierce Brown",
+      "year": 2018,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "dark-age",
+      "title": "Dark Age",
+      "author": "Pierce Brown",
+      "year": 2019,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "word-by-word",
+      "title": "Word by Word: The Secret Life of Dictionaries",
+      "author": "Kory Stamper",
+      "year": 2017,
+      "status": "read",
+      "topics": ["language", "linguistics"],
+      "genre": "non-fiction"
+    },
+    {
+      "id": "order-without-design",
+      "title": "Order without Design: How Markets Shape Cities",
+      "author": "Alain Bertaud",
+      "year": 2018,
+      "status": "read",
+      "topics": ["urban-planning", "economics"],
+      "genre": "economics"
+    },
+    {
+      "id": "the-4-hour-workweek",
+      "title": "The 4-Hour Workweek",
+      "author": "Tim Ferriss",
+      "year": 2007,
+      "status": "read",
+      "topics": ["productivity", "business", "lifestyle"],
+      "genre": "self-help"
+    },
+    {
+      "id": "very-important-people",
+      "title": "Very Important People",
+      "author": "Ashley Mears",
+      "year": 2020,
+      "status": "read",
+      "topics": ["sociology", "nightlife"],
+      "genre": "sociology"
+    },
+    {
+      "id": "the-kill-chain",
+      "title": "The Kill Chain",
+      "author": "Christian Brose",
+      "year": 2020,
+      "status": "read",
+      "topics": ["military", "technology", "defense"],
+      "genre": "non-fiction"
+    },
+    {
+      "id": "provocations",
+      "title": "Provocations",
+      "author": "Camille Paglia",
+      "year": 2018,
+      "status": "read",
+      "topics": ["culture", "art", "politics"],
+      "genre": "essays"
+    },
+    {
+      "id": "good-to-great",
+      "title": "Good to Great",
+      "author": "Jim Collins",
+      "year": 2001,
+      "status": "read",
+      "topics": ["business", "management"],
+      "genre": "business"
+    },
+    {
+      "id": "it-doesnt-have-to-be-crazy-at-work",
+      "title": "It Doesn't Have to Be Crazy at Work",
+      "author": "Jason Fried & David Heinemeier Hansson",
+      "year": 2018,
+      "status": "read",
+      "topics": ["business", "productivity"],
+      "genre": "business"
+    },
+    {
+      "id": "foundations-of-a-free-society",
+      "title": "Foundations of a Free Society",
+      "author": "Gregory Salmieri & Robert Mayhew",
+      "year": 2019,
+      "status": "read",
+      "topics": ["philosophy", "libertarianism"],
+      "genre": "philosophy"
+    },
+    {
+      "id": "secrets-of-sand-hill-road",
+      "title": "Secrets of Sand Hill Road",
+      "author": "Scott Kupor",
+      "year": 2019,
+      "status": "read",
+      "topics": ["venture-capital", "startups"],
+      "genre": "business"
+    },
+    {
+      "id": "the-dirty-dozen",
+      "title": "The Dirty Dozen",
+      "author": "Robert A. Levy & William Mellor",
+      "year": 2008,
+      "status": "read",
+      "topics": ["law", "constitution", "libertarianism"],
+      "genre": "law"
+    },
+    {
+      "id": "the-entrepreneurial-bible-to-venture-capital",
+      "title": "The Entrepreneurial Bible to Venture Capital",
+      "author": "Andrew Romans",
+      "year": 2013,
+      "status": "read",
+      "topics": ["venture-capital", "startups"],
+      "genre": "business"
+    },
+    {
+      "id": "sleeping-giants",
+      "title": "Sleeping Giants",
+      "author": "Sylvain Neuvel",
+      "year": 2016,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "waking-gods",
+      "title": "Waking Gods",
+      "author": "Sylvain Neuvel",
+      "year": 2017,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "only-human",
+      "title": "Only Human",
+      "author": "Sylvain Neuvel",
+      "year": 2018,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "high-growth-handbook",
+      "title": "High Growth Handbook",
+      "author": "Elad Gil",
+      "year": 2018,
+      "status": "read",
+      "topics": ["startups", "business"],
+      "genre": "business"
+    },
+    {
+      "id": "red-sparrow",
+      "title": "Red Sparrow",
+      "author": "Jason Matthews",
+      "year": 2013,
+      "status": "read",
+      "topics": ["thriller", "espionage"],
+      "genre": "thriller"
+    },
+    {
+      "id": "palace-of-treason",
+      "title": "Palace of Treason",
+      "author": "Jason Matthews",
+      "year": 2015,
+      "status": "read",
+      "topics": ["thriller", "espionage"],
+      "genre": "thriller"
+    },
+    {
+      "id": "the-kremlins-candidate",
+      "title": "The Kremlin's Candidate",
+      "author": "Jason Matthews",
+      "year": 2018,
+      "status": "read",
+      "topics": ["thriller", "espionage"],
+      "genre": "thriller"
+    },
+    {
+      "id": "start-up-nation",
+      "title": "Start-up Nation",
+      "author": "Dan Senor & Saul Singer",
+      "year": 2009,
+      "status": "read",
+      "topics": ["israel", "startups", "innovation"],
+      "genre": "business"
+    },
+    {
+      "id": "new-city-upon-a-hill",
+      "title": "New City Upon a Hill: A History of Columbia, Maryland",
+      "author": "Joseph Rocco Mitchell & David L. Stebenne",
+      "year": 2017,
+      "status": "read",
+      "topics": ["urban-planning", "history"],
+      "genre": "history"
+    },
+    {
+      "id": "endure",
+      "title": "Endure",
+      "author": "Alex Hutchinson",
+      "year": 2018,
+      "status": "read",
+      "topics": ["sports", "performance", "science"],
+      "genre": "science"
+    },
+    {
+      "id": "the-elephant-in-the-brain",
+      "title": "The Elephant in the Brain",
+      "author": "Kevin Simler & Robin Hanson",
+      "year": 2018,
+      "status": "read",
+      "topics": ["psychology", "economics"],
+      "genre": "psychology"
+    },
+    {
+      "id": "real-dissent",
+      "title": "Real Dissent",
+      "author": "Tom Woods",
+      "year": 2014,
+      "status": "read",
+      "topics": ["libertarianism", "politics"],
+      "genre": "politics"
+    },
+    {
+      "id": "the-joy-of-x",
+      "title": "The Joy of x: A Guided Tour of Math",
+      "author": "Steven Strogatz",
+      "year": 2012,
+      "status": "read",
+      "topics": ["mathematics"],
+      "genre": "science"
+    },
+    {
+      "id": "in-ascension",
+      "title": "In Ascension",
+      "author": "Martin MacInnes",
+      "year": 2023,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "the-emperors-new-mind",
+      "title": "The Emperor's New Mind",
+      "author": "Roger Penrose",
+      "year": 1989,
+      "status": "read",
+      "topics": ["ai", "consciousness", "physics"],
+      "genre": "science"
+    },
+    {
+      "id": "days-of-rage",
+      "title": "Days of Rage",
+      "author": "Bryan Burrough",
+      "year": 2015,
+      "status": "read",
+      "topics": ["history", "terrorism", "politics"],
+      "genre": "history"
+    },
+    {
+      "id": "the-fruit-of-her-hands",
+      "title": "The Fruit of Her Hands",
+      "author": "Nancy Wilson",
+      "year": 1997,
+      "status": "read",
+      "topics": ["christianity", "women"],
+      "genre": "religion"
+    },
+    {
+      "id": "right-concentration",
+      "title": "Right Concentration",
+      "author": "Leigh Brasington",
+      "year": 2015,
+      "status": "read",
+      "topics": ["buddhism", "meditation"],
+      "genre": "religion"
+    },
+    {
+      "id": "letting-go",
+      "title": "Letting Go: The Pathway of Surrender",
+      "author": "David R. Hawkins",
+      "year": 2012,
+      "status": "read",
+      "topics": ["spirituality", "psychology"],
+      "genre": "self-help"
+    },
+    {
+      "id": "the-mind-illuminated",
+      "title": "The Mind Illuminated",
+      "author": "Culadasa",
+      "year": 2015,
+      "status": "read",
+      "topics": ["buddhism", "meditation", "neuroscience"],
+      "genre": "religion"
+    },
+    {
+      "id": "what-the-buddha-taught",
+      "title": "What the Buddha Taught",
+      "author": "Walpola Rahula",
+      "year": 1959,
+      "status": "read",
+      "topics": ["buddhism"],
+      "genre": "religion"
+    },
+    {
+      "id": "the-technological-republic",
+      "title": "The Technological Republic",
+      "author": "Alex Mayyasi",
+      "year": 2024,
+      "status": "read",
+      "topics": ["technology", "politics", "governance"],
+      "genre": "politics"
+    },
+    {
+      "id": "fourth-wing",
+      "title": "Fourth Wing",
+      "author": "Rebecca Yarros",
+      "year": 2023,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "iron-flame",
+      "title": "Iron Flame",
+      "author": "Rebecca Yarros",
+      "year": 2023,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "onyx-storm",
+      "title": "Onyx Storm",
+      "author": "Rebecca Yarros",
+      "year": 2025,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "expecting-better",
+      "title": "Expecting Better",
+      "author": "Emily Oster",
+      "year": 2013,
+      "status": "read",
+      "topics": ["parenting", "data"],
+      "genre": "parenting"
+    },
+    {
+      "id": "the-maniac",
+      "title": "The MANIAC",
+      "author": "Benjamin Labatut",
+      "year": 2023,
+      "status": "read",
+      "topics": ["science", "ai", "history"],
+      "genre": "literary-fiction"
+    },
+    {
+      "id": "love-and-respect",
+      "title": "Love and Respect",
+      "author": "Emerson Eggerichs",
+      "year": 2004,
+      "status": "read",
+      "topics": ["christianity", "marriage"],
+      "genre": "religion"
+    },
+    {
+      "id": "who-we-are-and-how-we-got-here",
+      "title": "Who We Are and How We Got Here",
+      "author": "David Reich",
+      "year": 2018,
+      "status": "read",
+      "topics": ["genetics", "history", "anthropology"],
+      "genre": "science"
+    },
+    {
+      "id": "alien-clay",
+      "title": "Alien Clay",
+      "author": "Adrian Tchaikovsky",
+      "year": 2024,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "the-mercy-of-gods",
+      "title": "The Mercy of Gods",
+      "author": "James S.A. Corey",
+      "year": 2024,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "a-confederacy-of-dunces",
+      "title": "A Confederacy of Dunces",
+      "author": "John Kennedy Toole",
+      "year": 1980,
+      "status": "read",
+      "topics": ["fiction", "humor"],
+      "genre": "literary-fiction"
+    },
+    {
+      "id": "what-i-learned-losing-a-million-dollars",
+      "title": "What I Learned Losing a Million Dollars",
+      "author": "Jim Paul & Brendan Moynihan",
+      "year": 1994,
+      "status": "read",
+      "topics": ["investing", "psychology"],
+      "genre": "finance"
+    },
+    {
+      "id": "the-10000-year-explosion",
+      "title": "The 10,000 Year Explosion",
+      "author": "Gregory Cochran & Henry Harpending",
+      "year": 2009,
+      "status": "read",
+      "topics": ["genetics", "evolution", "history"],
+      "genre": "science"
+    },
+    {
+      "id": "service-model",
+      "title": "Service Model",
+      "author": "Adrian Tchaikovsky",
+      "year": 2024,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "the-master-and-his-emissary",
+      "title": "The Master and His Emissary",
+      "author": "Iain McGilchrist",
+      "year": 2009,
+      "status": "read",
+      "topics": ["neuroscience", "philosophy", "culture"],
+      "genre": "science"
+    },
+    {
+      "id": "troubled",
+      "title": "Troubled: A Memoir of Foster Care, Family, and Social Class",
+      "author": "Rob Henderson",
+      "year": 2024,
+      "status": "read",
+      "topics": ["memoir", "sociology"],
+      "genre": "memoir"
+    },
+    {
+      "id": "the-ruthless-elimination-of-hurry",
+      "title": "The Ruthless Elimination of Hurry",
+      "author": "John Mark Comer",
+      "year": 2019,
+      "status": "read",
+      "topics": ["christianity", "spirituality"],
+      "genre": "religion"
+    },
+    {
+      "id": "the-individualists",
+      "title": "The Individualists",
+      "author": "Matt Zwolinski & John Tomasi",
+      "year": 2023,
+      "status": "read",
+      "topics": ["libertarianism", "philosophy", "history"],
+      "genre": "philosophy"
+    },
+    {
+      "id": "the-wandering-earth",
+      "title": "The Wandering Earth",
+      "author": "Liu Cixin",
+      "year": 2000,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "the-conservative-futurist",
+      "title": "The Conservative Futurist",
+      "author": "James Pethokoukis",
+      "year": 2023,
+      "status": "read",
+      "topics": ["politics", "technology", "future"],
+      "genre": "politics"
+    },
+    {
+      "id": "return-of-the-god-hypothesis",
+      "title": "Return of the God Hypothesis",
+      "author": "Stephen C. Meyer",
+      "year": 2021,
+      "status": "read",
+      "topics": ["science", "religion", "philosophy"],
+      "genre": "religion"
+    },
+    {
+      "id": "making-of-the-atomic-bomb",
+      "title": "The Making of the Atomic Bomb",
+      "author": "Richard Rhodes",
+      "year": 1986,
+      "status": "read",
+      "topics": ["history", "science", "war"],
+      "genre": "history"
+    },
+    {
+      "id": "leviathan-wakes",
+      "title": "Leviathan Wakes",
+      "author": "James S.A. Corey",
+      "year": 2011,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "calibans-war",
+      "title": "Caliban's War",
+      "author": "James S.A. Corey",
+      "year": 2012,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "abaddons-gate",
+      "title": "Abaddon's Gate",
+      "author": "James S.A. Corey",
+      "year": 2013,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "cibola-burn",
+      "title": "Cibola Burn",
+      "author": "James S.A. Corey",
+      "year": 2014,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "nemesis-games",
+      "title": "Nemesis Games",
+      "author": "James S.A. Corey",
+      "year": 2015,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "babylons-ashes",
+      "title": "Babylon's Ashes",
+      "author": "James S.A. Corey",
+      "year": 2016,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "persepolis-rising",
+      "title": "Persepolis Rising",
+      "author": "James S.A. Corey",
+      "year": 2017,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "tiamats-wrath",
+      "title": "Tiamat's Wrath",
+      "author": "James S.A. Corey",
+      "year": 2019,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "leviathan-falls",
+      "title": "Leviathan Falls",
+      "author": "James S.A. Corey",
+      "year": 2021,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "fairy-tale",
+      "title": "Fairy Tale",
+      "author": "Stephen King",
+      "year": 2022,
+      "status": "read",
+      "topics": ["fantasy", "horror"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "upgrade",
+      "title": "Upgrade",
+      "author": "Blake Crouch",
+      "year": 2022,
+      "status": "read",
+      "topics": ["science-fiction", "genetics"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "greenlights",
+      "title": "Greenlights",
+      "author": "Matthew McConaughey",
+      "year": 2020,
+      "status": "read",
+      "topics": ["memoir", "philosophy"],
+      "genre": "memoir"
+    },
+    {
+      "id": "the-moral-case-for-fossil-fuels",
+      "title": "The Moral Case for Fossil Fuels",
+      "author": "Alex Epstein",
+      "year": 2014,
+      "status": "read",
+      "topics": ["energy", "environment", "economics"],
+      "genre": "non-fiction"
+    },
+    {
+      "id": "children-of-ruin",
+      "title": "Children of Ruin",
+      "author": "Adrian Tchaikovsky",
+      "year": 2019,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "children-of-time",
+      "title": "Children of Time",
+      "author": "Adrian Tchaikovsky",
+      "year": 2015,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "the-redemption-of-time",
+      "title": "The Redemption of Time",
+      "author": "Baoshu",
+      "year": 2011,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "the-silent-patient",
+      "title": "The Silent Patient",
+      "author": "Alex Michaelides",
+      "year": 2019,
+      "status": "read",
+      "topics": ["thriller", "psychology"],
+      "genre": "thriller"
+    },
+    {
+      "id": "the-biggest-ideas-in-the-universe",
+      "title": "The Biggest Ideas in the Universe",
+      "author": "Sean Carroll",
+      "year": 2022,
+      "status": "read",
+      "topics": ["physics", "science"],
+      "genre": "science"
+    },
+    {
+      "id": "the-metaverse",
+      "title": "The Metaverse",
+      "author": "Matthew Ball",
+      "year": 2022,
+      "status": "read",
+      "topics": ["technology", "future"],
+      "genre": "technology"
+    },
+    {
+      "id": "the-terminal-list",
+      "title": "The Terminal List",
+      "author": "Jack Carr",
+      "year": 2018,
+      "status": "read",
+      "topics": ["thriller", "military"],
+      "genre": "thriller"
+    },
+    {
+      "id": "your-dog-is-your-mirror",
+      "title": "Your Dog Is Your Mirror",
+      "author": "Kevin Behan",
+      "year": 2011,
+      "status": "read",
+      "topics": ["dogs", "psychology"],
+      "genre": "non-fiction"
+    },
+    {
+      "id": "shadows-of-the-apt-1",
+      "title": "Empire in Black and Gold",
+      "author": "Adrian Tchaikovsky",
+      "year": 2008,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "a-thousand-brains",
+      "title": "A Thousand Brains",
+      "author": "Jeff Hawkins",
+      "year": 2021,
+      "status": "read",
+      "topics": ["neuroscience", "ai"],
+      "genre": "science"
+    },
+    {
+      "id": "the-doors-of-eden",
+      "title": "The Doors of Eden",
+      "author": "Adrian Tchaikovsky",
+      "year": 2020,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "helgoland",
+      "title": "Helgoland",
+      "author": "Carlo Rovelli",
+      "year": 2020,
+      "status": "read",
+      "topics": ["physics", "quantum"],
+      "genre": "science"
+    },
+    {
+      "id": "effortless",
+      "title": "Effortless",
+      "author": "Greg McKeown",
+      "year": 2021,
+      "status": "read",
+      "topics": ["productivity"],
+      "genre": "self-help"
+    },
+    {
+      "id": "project-hail-mary",
+      "title": "Project Hail Mary",
+      "author": "Andy Weir",
+      "year": 2021,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "hyperion",
+      "title": "Hyperion",
+      "author": "Dan Simmons",
+      "year": 1989,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "the-fall-of-hyperion",
+      "title": "The Fall of Hyperion",
+      "author": "Dan Simmons",
+      "year": 1990,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "the-midnight-library",
+      "title": "The Midnight Library",
+      "author": "Matt Haig",
+      "year": 2020,
+      "status": "read",
+      "topics": ["fiction"],
+      "genre": "literary-fiction"
+    },
+    {
+      "id": "anathem",
+      "title": "Anathem",
+      "author": "Neal Stephenson",
+      "year": 2008,
+      "status": "read",
+      "topics": ["science-fiction", "philosophy"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "to-sleep-in-a-sea-of-stars",
+      "title": "To Sleep in a Sea of Stars",
+      "author": "Christopher Paolini",
+      "year": 2020,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "the-molecule-of-more",
+      "title": "The Molecule of More",
+      "author": "Daniel Z. Lieberman & Michael E. Long",
+      "year": 2018,
+      "status": "read",
+      "topics": ["neuroscience", "dopamine"],
+      "genre": "science"
+    },
+    {
+      "id": "a-short-history-of-nearly-everything",
+      "title": "A Short History of Nearly Everything",
+      "author": "Bill Bryson",
+      "year": 2003,
+      "status": "read",
+      "topics": ["science", "history"],
+      "genre": "science"
+    },
+    {
+      "id": "the-way-of-kings",
+      "title": "The Way of Kings",
+      "author": "Brandon Sanderson",
+      "year": 2010,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "naked-statistics",
+      "title": "Naked Statistics",
+      "author": "Charles Wheelan",
+      "year": 2013,
+      "status": "read",
+      "topics": ["statistics", "math"],
+      "genre": "science"
+    },
+    {
+      "id": "breath",
+      "title": "Breath: The New Science of a Lost Art",
+      "author": "James Nestor",
+      "year": 2020,
+      "status": "read",
+      "topics": ["health", "science"],
+      "genre": "science"
+    },
+    {
+      "id": "reality-is-not-what-it-seems",
+      "title": "Reality Is Not What It Seems",
+      "author": "Carlo Rovelli",
+      "year": 2014,
+      "status": "read",
+      "topics": ["physics", "quantum"],
+      "genre": "science"
+    },
+    {
+      "id": "tools-of-titans",
+      "title": "Tools of Titans",
+      "author": "Tim Ferriss",
+      "year": 2016,
+      "status": "read",
+      "topics": ["productivity", "business"],
+      "genre": "self-help"
+    },
+    {
+      "id": "atomic-habits",
+      "title": "Atomic Habits",
+      "author": "James Clear",
+      "year": 2018,
+      "status": "read",
+      "topics": ["habits", "productivity"],
+      "genre": "self-help"
+    },
+    {
+      "id": "the-infidel-and-the-professor",
+      "title": "The Infidel and the Professor",
+      "author": "Dennis C. Rasmussen",
+      "year": 2017,
+      "status": "read",
+      "topics": ["philosophy", "history", "economics"],
+      "genre": "history"
+    },
+    {
+      "id": "snow-crash",
+      "title": "Snow Crash",
+      "author": "Neal Stephenson",
+      "year": 1992,
+      "status": "read",
+      "topics": ["science-fiction", "cyberpunk"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "ball-lightning",
+      "title": "Ball Lightning",
+      "author": "Liu Cixin",
+      "year": 2004,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "until-the-end-of-time",
+      "title": "Until the End of Time",
+      "author": "Brian Greene",
+      "year": 2020,
+      "status": "read",
+      "topics": ["physics", "cosmology"],
+      "genre": "science"
+    },
+    {
+      "id": "seveneves",
+      "title": "Seveneves",
+      "author": "Neal Stephenson",
+      "year": 2015,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "caffeine",
+      "title": "Caffeine: How Caffeine Created the Modern World",
+      "author": "Michael Pollan",
+      "year": 2020,
+      "status": "read",
+      "topics": ["history", "science"],
+      "genre": "science"
+    },
+    {
+      "id": "speaker-for-the-dead",
+      "title": "Speaker for the Dead",
+      "author": "Orson Scott Card",
+      "year": 1986,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "enders-game",
+      "title": "Ender's Game",
+      "author": "Orson Scott Card",
+      "year": 1985,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "something-deeply-hidden",
+      "title": "Something Deeply Hidden",
+      "author": "Sean Carroll",
+      "year": 2019,
+      "status": "read",
+      "topics": ["physics", "quantum"],
+      "genre": "science"
+    },
+    {
+      "id": "lifespan",
+      "title": "Lifespan: Why We Age—and Why We Don't Have To",
+      "author": "David A. Sinclair",
+      "year": 2019,
+      "status": "read",
+      "topics": ["science", "longevity"],
+      "genre": "science"
+    },
+    {
+      "id": "the-new-right",
+      "title": "The New Right",
+      "author": "Michael Malice",
+      "year": 2019,
+      "status": "read",
+      "topics": ["politics"],
+      "genre": "politics"
+    },
+    {
+      "id": "the-art-of-the-start-2-0",
+      "title": "The Art of the Start 2.0",
+      "author": "Guy Kawasaki",
+      "year": 2015,
+      "status": "read",
+      "topics": ["startups", "business"],
+      "genre": "business"
+    },
+    {
+      "id": "fall-or-dodge-in-hell",
+      "title": "Fall; or, Dodge in Hell",
+      "author": "Neal Stephenson",
+      "year": 2019,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "midnight-in-chernobyl",
+      "title": "Midnight in Chernobyl",
+      "author": "Adam Higginbotham",
+      "year": 2019,
+      "status": "read",
+      "topics": ["history", "science"],
+      "genre": "history"
+    },
+    {
+      "id": "range",
+      "title": "Range: Why Generalists Triumph in a Specialized World",
+      "author": "David Epstein",
+      "year": 2019,
+      "status": "read",
+      "topics": ["performance", "learning"],
+      "genre": "non-fiction"
+    },
+    {
+      "id": "the-quantum-magician",
+      "title": "The Quantum Magician",
+      "author": "Derek Kunsken",
+      "year": 2018,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "bold",
+      "title": "Bold",
+      "author": "Peter H. Diamandis & Steven Kotler",
+      "year": 2015,
+      "status": "read",
+      "topics": ["entrepreneurship", "technology"],
+      "genre": "business"
+    },
+    {
+      "id": "the-ends-of-the-world",
+      "title": "The Ends of the World",
+      "author": "Peter Brannen",
+      "year": 2017,
+      "status": "read",
+      "topics": ["science", "geology"],
+      "genre": "science"
+    },
+    {
+      "id": "cant-hurt-me",
+      "title": "Can't Hurt Me",
+      "author": "David Goggins",
+      "year": 2018,
+      "status": "read",
+      "topics": ["memoir", "performance"],
+      "genre": "memoir"
+    },
+    {
+      "id": "barking-up-the-wrong-tree",
+      "title": "Barking up the Wrong Tree",
+      "author": "Eric Barker",
+      "year": 2017,
+      "status": "read",
+      "topics": ["success", "psychology"],
+      "genre": "self-help"
+    },
+    {
+      "id": "artemis",
+      "title": "Artemis",
+      "author": "Andy Weir",
+      "year": 2017,
+      "status": "read",
+      "topics": ["science-fiction"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "hit-makers",
+      "title": "Hit Makers",
+      "author": "Derek Thompson",
+      "year": 2017,
+      "status": "read",
+      "topics": ["culture", "marketing"],
+      "genre": "non-fiction"
+    },
+    {
+      "id": "the-doomsday-machine",
+      "title": "The Doomsday Machine",
+      "author": "Daniel Ellsberg",
+      "year": 2017,
+      "status": "read",
+      "topics": ["nuclear", "history", "war"],
+      "genre": "history"
+    },
+    {
+      "id": "never-split-the-difference",
+      "title": "Never Split the Difference",
+      "author": "Chris Voss",
+      "year": 2016,
+      "status": "read",
+      "topics": ["negotiation", "business"],
+      "genre": "business"
+    },
+    {
+      "id": "the-tangled-tree",
+      "title": "The Tangled Tree",
+      "author": "David Quammen",
+      "year": 2018,
+      "status": "read",
+      "topics": ["biology", "evolution"],
+      "genre": "science"
+    },
+    {
+      "id": "norse-mythology",
+      "title": "Norse Mythology",
+      "author": "Neil Gaiman",
+      "year": 2017,
+      "status": "read",
+      "topics": ["mythology"],
+      "genre": "fiction"
+    },
+    {
+      "id": "slaughterhouse-five",
+      "title": "Slaughterhouse-Five",
+      "author": "Kurt Vonnegut",
+      "year": 1969,
+      "status": "read",
+      "topics": ["fiction", "war"],
+      "genre": "literary-fiction"
+    },
+    {
+      "id": "the-order-of-time",
+      "title": "The Order of Time",
+      "author": "Carlo Rovelli",
+      "year": 2017,
+      "status": "read",
+      "topics": ["physics", "time"],
+      "genre": "science"
+    },
+    {
+      "id": "the-age-of-em",
+      "title": "The Age of Em",
+      "author": "Robin Hanson",
+      "year": 2016,
+      "status": "read",
+      "topics": ["ai", "future", "economics"],
+      "genre": "non-fiction"
+    },
+    {
+      "id": "waking-up",
+      "title": "Waking Up",
+      "author": "Sam Harris",
+      "year": 2014,
+      "status": "read",
+      "topics": ["meditation", "spirituality", "neuroscience"],
+      "genre": "philosophy"
+    },
+    {
+      "id": "how-to-change-your-mind",
+      "title": "How to Change Your Mind",
+      "author": "Michael Pollan",
+      "year": 2018,
+      "status": "read",
+      "topics": ["psychedelics", "neuroscience"],
+      "genre": "science"
+    },
+    {
+      "id": "homo-deus",
+      "title": "Homo Deus",
+      "author": "Yuval Noah Harari",
+      "year": 2015,
+      "status": "read",
+      "topics": ["future", "history"],
+      "genre": "non-fiction"
+    },
+    {
+      "id": "skin-in-the-game",
+      "title": "Skin in the Game",
+      "author": "Nassim Nicholas Taleb",
+      "year": 2018,
+      "status": "read",
+      "topics": ["risk", "philosophy", "economics"],
+      "genre": "philosophy"
+    },
+    {
+      "id": "sapiens",
+      "title": "Sapiens",
+      "author": "Yuval Noah Harari",
+      "year": 2011,
+      "status": "read",
+      "topics": ["history", "anthropology"],
+      "genre": "history"
+    },
+    {
+      "id": "thinking-fast-and-slow",
+      "title": "Thinking, Fast and Slow",
+      "author": "Daniel Kahneman",
+      "year": 2011,
+      "status": "read",
+      "topics": ["psychology", "economics", "decision-making"],
+      "genre": "psychology"
+    },
+    {
+      "id": "behave",
+      "title": "Behave",
+      "author": "Robert Sapolsky",
+      "year": 2017,
+      "status": "read",
+      "topics": ["neuroscience", "biology", "psychology"],
+      "genre": "science"
+    },
+    {
+      "id": "grit",
+      "title": "Grit",
+      "author": "Angela Duckworth",
+      "year": 2016,
+      "status": "read",
+      "topics": ["psychology", "performance"],
+      "genre": "psychology"
+    },
+    {
+      "id": "the-gunslinger",
+      "title": "The Gunslinger",
+      "author": "Stephen King",
+      "year": 1982,
+      "status": "read",
+      "topics": ["fantasy", "horror"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "the-drawing-of-the-three",
+      "title": "The Drawing of the Three",
+      "author": "Stephen King",
+      "year": 1987,
+      "status": "read",
+      "topics": ["fantasy", "horror"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "the-waste-lands",
+      "title": "The Waste Lands",
+      "author": "Stephen King",
+      "year": 1991,
+      "status": "read",
+      "topics": ["fantasy", "horror"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "hillbilly-elegy",
+      "title": "Hillbilly Elegy",
+      "author": "J.D. Vance",
+      "year": 2016,
+      "status": "read",
+      "topics": ["memoir", "society"],
+      "genre": "memoir"
+    },
+    {
+      "id": "astrophysics-for-people-in-a-hurry",
+      "title": "Astrophysics for People in a Hurry",
+      "author": "Neil deGrasse Tyson",
+      "year": 2017,
+      "status": "read",
+      "topics": ["physics", "cosmology"],
+      "genre": "science"
+    },
+    {
+      "id": "fooled-by-randomness",
+      "title": "Fooled by Randomness",
+      "author": "Nassim Nicholas Taleb",
+      "year": 2001,
+      "status": "read",
+      "topics": ["probability", "finance", "philosophy"],
+      "genre": "finance"
+    },
+    {
+      "id": "the-48-laws-of-power",
+      "title": "48 Laws of Power",
+      "author": "Robert Greene",
+      "year": 1998,
+      "status": "read",
+      "topics": ["power", "strategy"],
+      "genre": "self-help"
+    },
+    {
+      "id": "the-game",
+      "title": "The Game",
+      "author": "Neil Strauss",
+      "year": 2005,
+      "status": "read",
+      "topics": ["memoir", "social-dynamics"],
+      "genre": "memoir"
+    },
+    {
+      "id": "equal-is-unfair",
+      "title": "Equal Is Unfair",
+      "author": "Don Watkins & Yaron Brook",
+      "year": 2016,
+      "status": "read",
+      "topics": ["economics", "inequality", "libertarianism"],
+      "genre": "economics"
+    },
+    {
+      "id": "eragon",
+      "title": "Eragon",
+      "author": "Christopher Paolini",
+      "year": 2003,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "eldest",
+      "title": "Eldest",
+      "author": "Christopher Paolini",
+      "year": 2005,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "brisingr",
+      "title": "Brisingr",
+      "author": "Christopher Paolini",
+      "year": 2008,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "inheritance",
+      "title": "Inheritance",
+      "author": "Christopher Paolini",
+      "year": 2011,
+      "status": "read",
+      "topics": ["fantasy"],
+      "genre": "fantasy"
+    },
+    {
+      "id": "divergent",
+      "title": "Divergent",
+      "author": "Veronica Roth",
+      "year": 2011,
+      "status": "read",
+      "topics": ["young-adult", "dystopia"],
+      "genre": "young-adult"
+    },
+    {
+      "id": "insurgent",
+      "title": "Insurgent",
+      "author": "Veronica Roth",
+      "year": 2012,
+      "status": "read",
+      "topics": ["young-adult", "dystopia"],
+      "genre": "young-adult"
+    },
+    {
+      "id": "allegiant",
+      "title": "Allegiant",
+      "author": "Veronica Roth",
+      "year": 2013,
+      "status": "read",
+      "topics": ["young-adult", "dystopia"],
+      "genre": "young-adult"
+    },
+    {
+      "id": "i-am-number-four",
+      "title": "I Am Number Four",
+      "author": "Pittacus Lore",
+      "year": 2010,
+      "status": "read",
+      "topics": ["young-adult", "science-fiction"],
+      "genre": "young-adult"
+    },
+    {
+      "id": "human-action",
+      "title": "Human Action",
+      "author": "Ludwig von Mises",
+      "year": 1949,
+      "status": "read",
+      "topics": ["economics", "austrian-economics"],
+      "genre": "economics"
+    },
+    {
+      "id": "for-a-new-liberty",
+      "title": "For A New Liberty",
+      "author": "Murray N. Rothbard",
+      "year": 1973,
+      "status": "read",
+      "topics": ["libertarianism", "economics"],
+      "genre": "political-theory"
+    },
+    {
+      "id": "anatomy-of-the-state",
+      "title": "Anatomy of the State",
+      "author": "Murray N. Rothbard",
+      "year": 1974,
+      "status": "read",
+      "topics": ["libertarianism", "politics"],
+      "genre": "political-theory"
+    },
+    {
+      "id": "americas-great-depression",
+      "title": "America's Great Depression",
+      "author": "Murray N. Rothbard",
+      "year": 1963,
+      "status": "read",
+      "topics": ["economics", "history"],
+      "genre": "economics"
+    },
+    {
+      "id": "what-has-government-done-to-our-money",
+      "title": "What Has Government Done to Our Money?",
+      "author": "Murray N. Rothbard",
+      "year": 1963,
+      "status": "read",
+      "topics": ["economics", "money"],
+      "genre": "economics"
+    },
+    {
+      "id": "economic-policy",
+      "title": "Economic Policy: Thoughts for Today and Tomorrow",
+      "author": "Ludwig von Mises",
+      "year": 1979,
+      "status": "read",
+      "topics": ["economics"],
+      "genre": "economics"
+    },
+    {
+      "id": "the-law",
+      "title": "The Law",
+      "author": "Frederic Bastiat",
+      "year": 1850,
+      "status": "read",
+      "topics": ["libertarianism", "law", "economics"],
+      "genre": "political-theory"
+    },
+    {
+      "id": "liberty-defined",
+      "title": "Liberty Defined",
+      "author": "Ron Paul",
+      "year": 2011,
+      "status": "read",
+      "topics": ["libertarianism", "politics"],
+      "genre": "politics"
+    },
+    {
+      "id": "end-the-fed",
+      "title": "End the Fed",
+      "author": "Ron Paul",
+      "year": 2009,
+      "status": "read",
+      "topics": ["economics", "federal-reserve"],
+      "genre": "economics"
+    },
+    {
+      "id": "against-intellectual-property",
+      "title": "Against Intellectual Property",
+      "author": "N. Stephan Kinsella",
+      "year": 2008,
+      "status": "read",
+      "topics": ["libertarianism", "law", "ip"],
+      "genre": "political-theory"
+    },
+    {
+      "id": "inventing-freedom",
+      "title": "Inventing Freedom",
+      "author": "Daniel Hannan",
+      "year": 2013,
+      "status": "read",
+      "topics": ["history", "liberty", "anglosphere"],
+      "genre": "history"
+    },
+    {
+      "id": "the-great-gatsby",
+      "title": "The Great Gatsby",
+      "author": "F. Scott Fitzgerald",
+      "year": 1925,
+      "status": "read",
+      "topics": ["fiction", "classic"],
+      "genre": "literary-fiction"
+    },
+    {
+      "id": "the-count-of-monte-cristo",
+      "title": "The Count of Monte Cristo",
+      "author": "Alexandre Dumas",
+      "year": 1844,
+      "status": "read",
+      "topics": ["fiction", "classic"],
+      "genre": "literary-fiction"
+    },
+    {
+      "id": "pride-and-prejudice",
+      "title": "Pride and Prejudice",
+      "author": "Jane Austen",
+      "year": 1813,
+      "status": "read",
+      "topics": ["fiction", "classic"],
+      "genre": "literary-fiction"
+    },
+    {
+      "id": "dracula",
+      "title": "Dracula",
+      "author": "Bram Stoker",
+      "year": 1897,
+      "status": "read",
+      "topics": ["horror", "classic"],
+      "genre": "horror"
+    },
+    {
+      "id": "frankenstein",
+      "title": "Frankenstein",
+      "author": "Mary Shelley",
+      "year": 1818,
+      "status": "read",
+      "topics": ["horror", "science-fiction", "classic"],
+      "genre": "horror"
+    },
+    {
+      "id": "moby-dick",
+      "title": "Moby Dick",
+      "author": "Herman Melville",
+      "year": 1851,
+      "status": "read",
+      "topics": ["fiction", "classic"],
+      "genre": "literary-fiction"
+    },
+    {
+      "id": "the-republic",
+      "title": "The Republic",
+      "author": "Plato",
+      "year": -380,
+      "status": "read",
+      "topics": ["philosophy", "politics"],
+      "genre": "philosophy"
+    },
+    {
+      "id": "the-prince",
+      "title": "The Prince",
+      "author": "Niccolo Machiavelli",
+      "year": 1532,
+      "status": "read",
+      "topics": ["politics", "philosophy"],
+      "genre": "philosophy"
+    },
+    {
+      "id": "the-art-of-war",
+      "title": "The Art of War",
+      "author": "Sun Tzu",
+      "year": -500,
+      "status": "read",
+      "topics": ["strategy", "war"],
+      "genre": "philosophy"
+    },
+    {
+      "id": "the-communist-manifesto",
+      "title": "The Communist Manifesto",
+      "author": "Karl Marx",
+      "year": 1848,
+      "status": "read",
+      "topics": ["politics", "economics"],
+      "genre": "political-theory"
+    },
+    {
+      "id": "on-liberty",
+      "title": "On Liberty",
+      "author": "John Stuart Mill",
+      "year": 1859,
+      "status": "read",
+      "topics": ["philosophy", "liberty"],
+      "genre": "philosophy"
+    },
+    {
+      "id": "second-treatise-of-government",
+      "title": "Second Treatise of Government",
+      "author": "John Locke",
+      "year": 1689,
+      "status": "read",
+      "topics": ["philosophy", "politics"],
+      "genre": "philosophy"
+    },
+    {
+      "id": "beyond-good-and-evil",
+      "title": "Beyond Good and Evil",
+      "author": "Friedrich Nietzsche",
+      "year": 1886,
+      "status": "read",
+      "topics": ["philosophy"],
+      "genre": "philosophy"
+    },
+    {
+      "id": "the-odyssey",
+      "title": "The Odyssey",
+      "author": "Homer",
+      "year": -700,
+      "status": "read",
+      "topics": ["classic", "mythology"],
+      "genre": "literary-fiction"
+    },
+    {
+      "id": "one-second-after",
+      "title": "One Second After",
+      "author": "William R. Forstchen",
+      "year": 2009,
+      "status": "read",
+      "topics": ["fiction", "survival"],
+      "genre": "thriller"
+    },
+    {
+      "id": "one-year-after",
+      "title": "One Year After",
+      "author": "William R. Forstchen",
+      "year": 2015,
+      "status": "read",
+      "topics": ["fiction", "survival"],
+      "genre": "thriller"
+    },
+    {
+      "id": "the-final-day",
+      "title": "The Final Day",
+      "author": "William R. Forstchen",
+      "year": 2017,
+      "status": "read",
+      "topics": ["fiction", "survival"],
+      "genre": "thriller"
+    },
+    {
+      "id": "five-years-after",
+      "title": "Five Years After",
+      "author": "William R. Forstchen",
+      "year": 2024,
+      "status": "read",
+      "topics": ["fiction", "survival"],
+      "genre": "thriller"
+    },
+    {
+      "id": "eve-how-the-female-body",
+      "title": "Eve: How the Female Body Drove 200 Million Years of Human Evolution",
+      "author": "Cat Bohannon",
+      "year": 2023,
+      "status": "read",
+      "topics": ["biology", "evolution"],
+      "genre": "science"
+    },
+    {
+      "id": "the-solace-of-open-spaces",
+      "title": "The Solace of Open Spaces",
+      "author": "Gretel Ehrlich",
+      "year": 1985,
+      "status": "read",
+      "topics": ["memoir", "nature"],
+      "genre": "memoir"
+    },
+    {
+      "id": "carrie",
+      "title": "Carrie",
+      "author": "Stephen King",
+      "year": 1974,
+      "status": "read",
+      "topics": ["horror"],
+      "genre": "horror"
+    },
+    {
+      "id": "treasure-island",
+      "title": "Treasure Island",
+      "author": "Robert Louis Stevenson",
+      "year": 1883,
+      "status": "read",
+      "topics": ["adventure", "classic"],
+      "genre": "adventure"
+    },
+    {
+      "id": "the-call-of-the-wild",
+      "title": "The Call of the Wild",
+      "author": "Jack London",
+      "year": 1903,
+      "status": "read",
+      "topics": ["adventure", "classic"],
+      "genre": "adventure"
+    },
+    {
+      "id": "journey-to-the-center-of-the-earth",
+      "title": "Journey to the Center of the Earth",
+      "author": "Jules Verne",
+      "year": 1864,
+      "status": "read",
+      "topics": ["science-fiction", "classic"],
+      "genre": "science-fiction"
+    },
+    {
+      "id": "around-the-world-in-80-days",
+      "title": "Around the World in 80 Days",
+      "author": "Jules Verne",
+      "year": 1872,
+      "status": "read",
+      "topics": ["adventure", "classic"],
+      "genre": "adventure"
+    },
+    {
+      "id": "jane-eyre",
+      "title": "Jane Eyre",
+      "author": "Charlotte Bronte",
+      "year": 1847,
+      "status": "read",
+      "topics": ["fiction", "classic"],
+      "genre": "literary-fiction"
+    },
+    {
+      "id": "wuthering-heights",
+      "title": "Wuthering Heights",
+      "author": "Emily Bronte",
+      "year": 1847,
+      "status": "read",
+      "topics": ["fiction", "classic"],
+      "genre": "literary-fiction"
+    },
+    {
+      "id": "great-expectations",
+      "title": "Great Expectations",
+      "author": "Charles Dickens",
+      "year": 1861,
+      "status": "read",
+      "topics": ["fiction", "classic"],
+      "genre": "literary-fiction"
+    },
+    {
+      "id": "a-christmas-carol",
+      "title": "A Christmas Carol",
+      "author": "Charles Dickens",
+      "year": 1843,
+      "status": "read",
+      "topics": ["fiction", "classic"],
+      "genre": "literary-fiction"
+    },
+    {
+      "id": "the-adventures-of-sherlock-holmes",
+      "title": "The Adventures of Sherlock Holmes",
+      "author": "Arthur Conan Doyle",
+      "year": 1892,
+      "status": "read",
+      "topics": ["mystery", "classic"],
+      "genre": "mystery"
+    },
+    {
+      "id": "we",
+      "title": "We",
+      "author": "Yevgeny Zamyatin",
+      "year": 1924,
+      "status": "read",
+      "topics": ["science-fiction", "dystopia"],
+      "genre": "science-fiction"
     }
   ]
 }

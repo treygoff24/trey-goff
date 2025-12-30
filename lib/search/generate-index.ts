@@ -186,11 +186,11 @@ export function generateSearchIndex(): SearchIndex {
       type: 'book',
       title: book.title,
       description: `by ${book.author} (${book.year})`,
-      content: book.whyILoveIt.slice(0, 200),
+      content: book.whyILoveIt?.slice(0, 200) || '',
       tags: book.topics,
       keywords: [book.author, book.genre || ''].filter(Boolean),
       url: `/library#${book.id}`,
-      priority: book.rating === 5 ? 7 : 5,
+      priority: book.rating === 5 ? 7 : book.whyILoveIt ? 6 : 5,
     })
   }
 
