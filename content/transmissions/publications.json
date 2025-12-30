@@ -2,15 +2,87 @@
   "lastUpdated": "2024-12-30",
   "transmissions": [
     {
-      "id": "acx-prospectus-prospera",
-      "title": "Prospectus On Próspera",
-      "publication": "Astral Codex Ten",
-      "channel": "ACX",
-      "date": "2021-04-12",
-      "url": "https://www.astralcodexten.com/p/prospectus-on-prospera",
-      "summary": "Scott Alexander's deep-dive into Próspera featuring extensive Q&A on governance structure, legal framework, and the vision for charter cities.",
-      "tags": ["governance", "prospera", "charter-cities", "zede"],
+      "id": "jsj-first-honduran-zede",
+      "title": "Creating the First Honduran ZEDE: Lessons in Political Economy, Institutional Design, and Governance Systems",
+      "publication": "Journal of Special Jurisdictions",
+      "channel": "JSJ",
+      "date": "2021-05-01",
+      "url": "https://journalofspecialjurisdictions.com/index.php/jsj/article/download/27/14/108",
+      "summary": "Peer-reviewed academic paper on the history, formation, and governance structure of Próspera. Co-authored with Erick Brimen and Nicholas Dranias.",
+      "tags": ["governance", "prospera", "charter-cities", "zede", "economics"],
       "featured": true
+    },
+    {
+      "id": "mises-voluntaryist-constitution",
+      "title": "The Voluntaryist Constitution",
+      "publication": "Mises Wire",
+      "channel": "MISES",
+      "date": "2017-10-24",
+      "url": "https://mises.org/mises-wire/voluntaryist-constitution",
+      "summary": "A theoretical framework for constitutional governance based on voluntary association and consent. Co-authored with Stephan Kinsella, Cesar Balmaseda, and Pierre-Louis Boitel.",
+      "tags": ["governance", "philosophy", "libertarianism", "politics"],
+      "featured": true
+    },
+    {
+      "id": "mises-better-tax-haven",
+      "title": "How to Build a Better Tax Haven",
+      "publication": "Mises Wire",
+      "channel": "MISES",
+      "date": "2018-03-15",
+      "url": "https://www.eurasiareview.com/03042018-how-to-build-a-better-tax-haven-oped/",
+      "summary": "Analysis of Cayman Enterprise City and the principles of competitive governance. How jurisdictional competition can drive better policy.",
+      "tags": ["governance", "economics", "charter-cities", "policy"]
+    },
+    {
+      "id": "mises-bell-book-review",
+      "title": "Book Review: Your Next Government? by Tom W. Bell",
+      "publication": "Mises Wire",
+      "channel": "MISES",
+      "date": "2018-01-01",
+      "url": "https://mises.org/mises-wire",
+      "summary": "Review of Tom W. Bell's book on the transition from nation states to stateless nations and special jurisdictions.",
+      "tags": ["governance", "books", "charter-cities", "libertarianism"]
+    },
+    {
+      "id": "mcpp-prosperity-districts",
+      "title": "Prosperity Districts and Mississippi Economic Development",
+      "publication": "Promoting Prosperity in Mississippi",
+      "channel": "MCPP",
+      "date": "2018-01-01",
+      "url": "https://mspolicy.org/publications/promoting-prosperity-in-mississippi/",
+      "summary": "Chapter 10 in the Mississippi Center for Public Policy book. Analysis of how prosperity districts can drive economic development in Mississippi.",
+      "tags": ["governance", "economics", "policy", "charter-cities"],
+      "featured": true
+    },
+    {
+      "id": "mcpp-criminal-justice",
+      "title": "Criminal Justice Reform and its Social and Economic Impact",
+      "publication": "Promoting Prosperity in Mississippi",
+      "channel": "MCPP",
+      "date": "2018-01-01",
+      "url": "https://mspolicy.org/publications/promoting-prosperity-in-mississippi/",
+      "summary": "Chapter 16 in the Mississippi Center for Public Policy book. Examining the intersection of criminal justice reform with economic outcomes.",
+      "tags": ["policy", "economics", "criminal-justice"]
+    },
+    {
+      "id": "beacon-silly-laws",
+      "title": "14 Outrageously Silly Tennessee Taxes and Laws",
+      "publication": "Beacon Center of Tennessee",
+      "channel": "BEACON",
+      "date": "2016-06-01",
+      "url": "https://www.beacontn.org/14-outrageously-silly-tennessee-taxes-and-laws/",
+      "summary": "A look at some of the most absurd taxes and regulations still on the books in Tennessee.",
+      "tags": ["policy", "economics", "libertarianism"]
+    },
+    {
+      "id": "beacon-minimum-wage",
+      "title": "The Real Consequences of Raising the Minimum Wage",
+      "publication": "Beacon Center of Tennessee",
+      "channel": "BEACON",
+      "date": "2016-05-01",
+      "url": "https://www.beacontn.org/the-real-consequences-of-raising-the-minimum-wage/",
+      "summary": "Economic analysis of minimum wage policy and its effects on employment and business.",
+      "tags": ["economics", "policy", "libertarianism"]
     }
   ]
 }
