@@ -149,19 +149,21 @@ export default function HomePage() {
 					</div>
 
 					{/* Interactive World entry link - discoverable "secret level" */}
-					<div className="mt-16 text-center animate-fade-in-up animation-delay-300">
-						<Link
-							href="/interactive"
-							prefetch={false}
-							onMouseEnter={handleInteractiveHover}
-							onMouseLeave={handleInteractiveLeave}
-							className="group inline-flex items-center gap-2 text-sm text-text-3 transition-colors hover:text-warm"
-						>
-							<span className="h-px w-8 bg-surface-2 transition-all group-hover:w-12 group-hover:bg-warm" />
-							<span>Explore Interactive World</span>
-							<span className="h-px w-8 bg-surface-2 transition-all group-hover:w-12 group-hover:bg-warm" />
-						</Link>
-					</div>
+					{process.env.NEXT_PUBLIC_ENABLE_INTERACTIVE_WORLD === "true" && (
+						<div className="mt-16 text-center animate-fade-in-up animation-delay-300">
+							<Link
+								href="/interactive"
+								prefetch={false}
+								onMouseEnter={handleInteractiveHover}
+								onMouseLeave={handleInteractiveLeave}
+								className="group inline-flex items-center gap-2 text-sm text-text-3 transition-colors hover:text-warm"
+							>
+								<span className="h-px w-8 bg-surface-2 transition-all group-hover:w-12 group-hover:bg-warm" />
+								<span>Explore Interactive World</span>
+								<span className="h-px w-8 bg-surface-2 transition-all group-hover:w-12 group-hover:bg-warm" />
+							</Link>
+						</div>
+					)}
 				</div>
 			</div>
 		</>
