@@ -1,7 +1,36 @@
 {
   "version": "1.0.0",
-  "generated": "2025-12-30T17:51:52.314Z",
+  "generated": "2025-12-30T20:34:26.554Z",
   "entries": [
+    {
+      "id": "how-i-became-a-christian",
+      "slug": "how-i-became-a-christian",
+      "title": "How I Became a Christian",
+      "excerpt": "A rationalist's journey to faith—from southern Baptist childhood to angry atheism to genuine belief.",
+      "tags": [
+        "philosophy",
+        "personal",
+        "christianity"
+      ],
+      "publishedAt": "2025-09-15",
+      "readingTime": 16,
+      "status": "published"
+    },
+    {
+      "id": "peer-reviewed-paper-prospera-governance",
+      "slug": "peer-reviewed-paper-prospera-governance",
+      "title": "Peer-Reviewed Academic Paper on Prospera Governance",
+      "excerpt": "A peer-reviewed paper on the history, formation, and governance structure of Honduras's first ZEDE.",
+      "tags": [
+        "governance",
+        "prospera",
+        "economics",
+        "zede"
+      ],
+      "publishedAt": "2024-04-05",
+      "readingTime": 1,
+      "status": "published"
+    },
     {
       "id": "governance-innovation",
       "slug": "governance-innovation",
@@ -27,6 +56,20 @@
       ],
       "publishedAt": "2024-01-15",
       "readingTime": 1,
+      "status": "published"
+    },
+    {
+      "id": "future-of-music-is-electronic",
+      "slug": "future-of-music-is-electronic",
+      "title": "The Future of Music is Electronic",
+      "excerpt": "Why we're running out of traditional melodies and how software-modified timbre opens an infinite frontier for musical creation.",
+      "tags": [
+        "economics",
+        "music",
+        "technology"
+      ],
+      "publishedAt": "2020-02-18",
+      "readingTime": 10,
       "status": "published"
     }
   ]
