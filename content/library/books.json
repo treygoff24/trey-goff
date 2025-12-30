@@ -69,8 +69,10 @@
       "author": "Tyler Cowen",
       "year": 2018,
       "status": "read",
+      "rating": 5,
       "topics": ["economics", "ethics", "growth"],
-      "genre": "philosophy"
+      "genre": "philosophy",
+      "whyILoveIt": "The moral case for economic growth as a near-sacred duty. Cowen argues that maximizing sustainable growth is the most ethical thing we can do for future generations—a belief I hold deeply."
     },
     {
       "id": "the-beginning-of-infinity",
