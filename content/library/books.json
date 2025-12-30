@@ -7,10 +7,8 @@
       "author": "Henry George",
       "year": 1879,
       "status": "read",
-      "rating": 5,
       "topics": ["economics", "land", "governance", "classical-liberalism"],
-      "genre": "economics",
-      "whyILoveIt": "The most important book on political economy ever written. George's diagnosis of why progress creates poverty remains devastatingly relevant."
+      "genre": "economics"
     },
     {
       "id": "the-problem-of-political-authority",
@@ -62,10 +60,8 @@
       "author": "James Dale Davidson & Lord William Rees-Mogg",
       "year": 1997,
       "status": "read",
-      "rating": 4,
       "topics": ["technology", "governance", "future"],
-      "genre": "futurism",
-      "whyILoveIt": "Prescient predictions about how information technology would reshape sovereignty and governance. Written before the internet age but eerily accurate."
+      "genre": "futurism"
     },
     {
       "id": "stubborn-attachments",
@@ -74,8 +70,7 @@
       "year": 2018,
       "status": "read",
       "topics": ["economics", "ethics", "growth"],
-      "genre": "philosophy",
-      "whyILoveIt": "A compelling case for sustainable economic growth as a moral imperative. Cowen's 'Crusonia plant' thought experiment is memorable."
+      "genre": "philosophy"
     },
     {
       "id": "the-beginning-of-infinity",
@@ -1173,8 +1168,10 @@
       "author": "Tom W. Bell",
       "year": 2017,
       "status": "read",
+      "rating": 5,
       "topics": ["governance", "libertarianism", "charter-cities"],
-      "genre": "political-theory"
+      "genre": "political-theory",
+      "whyILoveIt": "The best book on special economic zones and competitive governance. Bell's legal framework for 'special jurisdictions' directly shaped my work at Próspera."
     },
     {
       "id": "invent-and-wander",
@@ -1713,8 +1710,10 @@
       "author": "Gregory Cochran & Henry Harpending",
       "year": 2009,
       "status": "read",
+      "rating": 5,
       "topics": ["genetics", "evolution", "history"],
-      "genre": "science"
+      "genre": "science",
+      "whyILoveIt": "Demolishes the idea that human evolution stopped 50,000 years ago. Cochran and Harpending show how agriculture accelerated genetic change—provocative and rigorous."
     },
     {
       "id": "service-model",
@@ -2658,8 +2657,10 @@
       "author": "Murray N. Rothbard",
       "year": 1973,
       "status": "read",
-      "topics": ["libertarianism", "economics"],
-      "genre": "political-theory"
+      "rating": 5,
+      "topics": ["libertarianism", "economics", "anarcho-capitalism"],
+      "genre": "political-theory",
+      "whyILoveIt": "The libertarian manifesto. Rothbard systematically applies property rights and non-aggression to every area of society—radical, uncompromising, and thrilling to read."
     },
     {
       "id": "anatomy-of-the-state",

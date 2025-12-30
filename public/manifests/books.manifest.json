@@ -1,22 +1,21 @@
 {
   "version": "1.0.0",
-  "generated": "2025-12-30T22:14:17.989Z",
+  "generated": "2025-12-30T22:29:07.095Z",
   "entries": [
     {
-      "id": "progress-and-poverty",
-      "title": "Progress and Poverty",
-      "author": "Henry George",
+      "id": "for-a-new-liberty",
+      "title": "For A New Liberty",
+      "author": "Murray N. Rothbard",
       "rating": 5,
       "tier": "favorites",
-      "blurb": "The most important book on political economy ever written. George's diagnosis of why progress creates poverty remains devastatingly relevant.",
+      "blurb": "The libertarian manifesto. Rothbard systematically applies property rights and non-aggression to every area of society—radical, uncompromising, and thrilling to read.",
       "topics": [
+        "libertarianism",
         "economics",
-        "land",
-        "governance",
-        "classical-liberalism"
+        "anarcho-capitalism"
       ],
-      "year": 1879,
-      "coverImage": "/covers/progress-and-poverty.jpg"
+      "year": 1973,
+      "coverImage": "/covers/for-a-new-liberty.jpg"
     },
     {
       "id": "seeing-like-a-state",
@@ -34,6 +33,21 @@
       "coverImage": "/covers/seeing-like-a-state.jpg"
     },
     {
+      "id": "the-10000-year-explosion",
+      "title": "The 10,000 Year Explosion",
+      "author": "Gregory Cochran & Henry Harpending",
+      "rating": 5,
+      "tier": "favorites",
+      "blurb": "Demolishes the idea that human evolution stopped 50,000 years ago. Cochran and Harpending show how agriculture accelerated genetic change—provocative and rigorous.",
+      "topics": [
+        "genetics",
+        "evolution",
+        "history"
+      ],
+      "year": 2009,
+      "coverImage": "/covers/the-10000-year-explosion.jpg"
+    },
+    {
       "id": "the-problem-of-political-authority",
       "title": "The Problem of Political Authority",
       "author": "Michael Huemer",
@@ -48,6 +62,21 @@
       ],
       "year": 2012,
       "coverImage": "/covers/the-problem-of-political-authority.jpg"
+    },
+    {
+      "id": "your-next-government",
+      "title": "Your Next Government?",
+      "author": "Tom W. Bell",
+      "rating": 5,
+      "tier": "favorites",
+      "blurb": "The best book on special economic zones and competitive governance. Bell's legal framework for 'special jurisdictions' directly shaped my work at Próspera.",
+      "topics": [
+        "governance",
+        "libertarianism",
+        "charter-cities"
+      ],
+      "year": 2017,
+      "coverImage": "/covers/your-next-government.jpg"
     },
     {
       "id": "antifragile",
@@ -78,21 +107,6 @@
       ],
       "year": 1973,
       "coverImage": "/covers/the-machinery-of-freedom.jpg"
-    },
-    {
-      "id": "the-sovereign-individual",
-      "title": "The Sovereign Individual",
-      "author": "James Dale Davidson & Lord William Rees-Mogg",
-      "rating": 4,
-      "tier": "recommended",
-      "blurb": "Prescient predictions about how information technology would reshape sovereignty and governance. Written before the internet age but eerily accurate.",
-      "topics": [
-        "technology",
-        "governance",
-        "future"
-      ],
-      "year": 1997,
-      "coverImage": "/covers/the-sovereign-individual.jpg"
     },
     {
       "id": "100m-offers",
@@ -1102,18 +1116,6 @@
       "coverImage": "/covers/fooled-by-randomness.jpg"
     },
     {
-      "id": "for-a-new-liberty",
-      "title": "For A New Liberty",
-      "author": "Murray N. Rothbard",
-      "tier": "read",
-      "topics": [
-        "libertarianism",
-        "economics"
-      ],
-      "year": 1973,
-      "coverImage": "/covers/for-a-new-liberty.jpg"
-    },
-    {
       "id": "foundations-of-a-free-society",
       "title": "Foundations of a Free Society",
       "author": "Gregory Salmieri & Robert Mayhew",
@@ -1941,6 +1943,20 @@
       "coverImage": "/covers/pride-and-prejudice.jpg"
     },
     {
+      "id": "progress-and-poverty",
+      "title": "Progress and Poverty",
+      "author": "Henry George",
+      "tier": "read",
+      "topics": [
+        "economics",
+        "land",
+        "governance",
+        "classical-liberalism"
+      ],
+      "year": 1879,
+      "coverImage": "/covers/progress-and-poverty.jpg"
+    },
+    {
       "id": "project-hail-mary",
       "title": "Project Hail Mary",
       "author": "Andy Weir",
@@ -2306,7 +2322,6 @@
       "title": "Stubborn Attachments",
       "author": "Tyler Cowen",
       "tier": "read",
-      "blurb": "A compelling case for sustainable economic growth as a moral imperative. Cowen's 'Crusonia plant' thought experiment is memorable.",
       "topics": [
         "economics",
         "ethics",
@@ -2350,19 +2365,6 @@
       ],
       "year": 2016,
       "coverImage": "/covers/the-1-page-marketing-plan.jpg"
-    },
-    {
-      "id": "the-10000-year-explosion",
-      "title": "The 10,000 Year Explosion",
-      "author": "Gregory Cochran & Henry Harpending",
-      "tier": "read",
-      "topics": [
-        "genetics",
-        "evolution",
-        "history"
-      ],
-      "year": 2009,
-      "coverImage": "/covers/the-10000-year-explosion.jpg"
     },
     {
       "id": "the-2-hour-cocktail-party",
@@ -3461,6 +3463,19 @@
       "coverImage": "/covers/the-solace-of-open-spaces.jpg"
     },
     {
+      "id": "the-sovereign-individual",
+      "title": "The Sovereign Individual",
+      "author": "James Dale Davidson & Lord William Rees-Mogg",
+      "tier": "read",
+      "topics": [
+        "technology",
+        "governance",
+        "future"
+      ],
+      "year": 1997,
+      "coverImage": "/covers/the-sovereign-individual.jpg"
+    },
+    {
       "id": "the-struggle-for-taiwan",
       "title": "The Struggle for Taiwan",
       "author": "Sulmaan Wasif Khan",
@@ -3976,19 +3991,6 @@
       ],
       "year": 2011,
       "coverImage": "/covers/your-dog-is-your-mirror.jpg"
-    },
-    {
-      "id": "your-next-government",
-      "title": "Your Next Government?",
-      "author": "Tom W. Bell",
-      "tier": "read",
-      "topics": [
-        "governance",
-        "libertarianism",
-        "charter-cities"
-      ],
-      "year": 2017,
-      "coverImage": "/covers/your-next-government.jpg"
     },
     {
       "id": "zen-and-the-art-of-motorcycle-maintenance",
