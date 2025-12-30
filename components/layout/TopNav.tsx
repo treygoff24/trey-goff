@@ -33,27 +33,30 @@ export function TopNav() {
 
           {/* Desktop nav */}
           <div className="hidden items-center gap-6 md:flex">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`text-sm transition-colors ${
-                  pathname === item.href || pathname?.startsWith(item.href + '/')
-                    ? 'text-text-1 font-medium'
-                    : 'text-text-2 hover:text-text-1'
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const isActive = pathname === item.href || pathname?.startsWith(item.href + '/')
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`relative text-sm transition-colors ${
+                    isActive
+                      ? 'text-warm font-medium nav-link-active'
+                      : 'text-text-2 hover:text-text-1'
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              )
+            })}
 
             <button
               onClick={() => setOpen(true)}
-              className="flex items-center gap-2 rounded-md border border-border-1 px-3 py-1.5 text-sm text-text-3 transition-colors hover:border-border-2 hover:text-text-2"
+              className="group/search flex items-center gap-2 rounded-md border border-border-1 px-3 py-1.5 text-sm text-text-3 transition-all hover:border-warm/30 hover:text-text-2 hover:bg-warm/5"
               aria-label="Open search (Command K)"
             >
               Search
-              <kbd className="rounded bg-surface-1 px-1.5 py-0.5 font-mono text-xs">
+              <kbd className="rounded bg-surface-1 px-1.5 py-0.5 font-mono text-xs transition-colors group-hover/search:bg-warm/10 group-hover/search:text-warm">
                 ⌘K
               </kbd>
             </button>

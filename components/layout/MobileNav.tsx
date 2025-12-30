@@ -103,21 +103,26 @@ export function MobileNav({
 
         {/* Nav links */}
         <div className="flex flex-col gap-1 p-4">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={onClose}
-              className={cn(
-                'rounded-lg px-4 py-3 text-base font-medium transition-colors',
-                currentPath === item.href || currentPath?.startsWith(item.href + '/')
-                  ? 'bg-surface-2 text-text-1'
-                  : 'text-text-2 hover:bg-surface-1 hover:text-text-1'
-              )}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {navItems.map((item, index) => {
+            const isActive = currentPath === item.href || currentPath?.startsWith(item.href + '/')
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={onClose}
+                className={cn(
+                  'rounded-lg px-4 py-3 text-base font-medium transition-all',
+                  !prefersReducedMotion && 'stagger-item',
+                  isActive
+                    ? 'bg-warm/10 text-warm border-l-2 border-warm'
+                    : 'text-text-2 hover:bg-surface-1 hover:text-text-1 hover:translate-x-1'
+                )}
+                style={!prefersReducedMotion ? { animationDelay: `${index * 50}ms` } : undefined}
+              >
+                {item.label}
+              </Link>
+            )
+          })}
         </div>
 
         {/* Secondary links */}

@@ -24,7 +24,7 @@ export function EssayCard({
   return (
     <article className="group">
       <Link href={`/writing/${slug}`} className="block">
-        <div className="rounded-lg border border-border-1 bg-surface-1 p-6 transition-all hover:border-border-2 hover:bg-surface-2">
+        <div className="card-interactive rounded-lg border border-border-1 bg-surface-1 p-6 hover:border-warm/20 hover:bg-surface-2">
           {/* Status badge for evergreen */}
           {status === 'evergreen' && (
             <span className="mb-2 inline-block rounded-full bg-warm/10 px-2 py-0.5 text-xs font-medium text-warm">

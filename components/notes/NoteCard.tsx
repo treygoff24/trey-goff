@@ -42,7 +42,7 @@ export function NoteCard({
   return (
     <article
       id={slug}
-      className="group rounded-lg border border-border-1 bg-surface-1 p-6 transition-all hover:border-border-2"
+      className="group card-interactive rounded-lg border border-border-1 bg-surface-1 p-6 hover:border-warm/20 hover:bg-surface-1/80"
     >
       {/* Header */}
       <div className="mb-4 flex items-start justify-between">

@@ -41,7 +41,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
   return (
     <article
       id={project.slug}
-      className="rounded-2xl border border-border-1 bg-surface-1 p-6"
+      className="card-interactive rounded-2xl border border-border-1 bg-surface-1 p-6 hover:border-warm/20"
     >
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>

@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { cn } from '@/lib/utils'
 import type { Book } from '@/lib/books/types'
 import { Star } from 'lucide-react'
+import { GenerativeBookCover } from './GenerativeBookCover'
 
 interface BookCardProps {
   book: Book
@@ -62,14 +63,12 @@ export function BookCard({
             unoptimized={coverUrl.startsWith('data:') || coverUrl.startsWith('http')}
           />
         ) : (
-          <div
-            className="flex aspect-[2/3] w-full items-center justify-center bg-surface-1"
-            style={{ width, height }}
-          >
-            <span className="px-2 text-center text-xs text-text-3">
-              {book.title}
-            </span>
-          </div>
+          <GenerativeBookCover
+            title={book.title}
+            author={book.author}
+            width={width}
+            height={height}
+          />
         )}
 
         {/* Status badge */}

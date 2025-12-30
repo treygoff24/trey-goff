@@ -52,8 +52,8 @@ export function AppearanceCard({
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
-        'group block overflow-hidden rounded-lg border border-border-1 bg-surface-1',
-        'transition-all hover:border-warm hover:shadow-lg',
+        'group block overflow-hidden rounded-lg border border-border-1 bg-surface-1 card-interactive',
+        'hover:border-warm/30 hover:shadow-[0_8px_30px_-8px_rgba(255,184,107,0.15)]',
         isFeatured ? 'flex flex-col md:flex-row' : ''
       )}
     >
