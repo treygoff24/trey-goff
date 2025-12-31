@@ -76,7 +76,7 @@ export async function resolveAllCovers(
       source = 'manual'
     } else if (coverUrl.includes('openlibrary')) {
       source = 'openlibrary'
-    } else if (coverUrl.includes('googleapis')) {
+    } else if (coverUrl.includes('books.google.com')) {
       source = 'google'
     }
 

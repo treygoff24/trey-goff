@@ -7,7 +7,12 @@
       "author": "Henry George",
       "year": 1879,
       "status": "read",
-      "topics": ["economics", "land", "governance", "classical-liberalism"],
+      "topics": [
+        "economics",
+        "land",
+        "governance",
+        "classical-liberalism"
+      ],
       "genre": "economics"
     },
     {
@@ -17,7 +22,12 @@
       "year": 2012,
       "status": "read",
       "rating": 5,
-      "topics": ["philosophy", "governance", "libertarianism", "ethics"],
+      "topics": [
+        "philosophy",
+        "governance",
+        "libertarianism",
+        "ethics"
+      ],
       "genre": "philosophy",
       "whyILoveIt": "A rigorous philosophical examination of why governments claim authority and whether those claims are justified. Changed how I think about legitimacy."
     },
@@ -28,7 +38,11 @@
       "year": 1973,
       "status": "read",
       "rating": 4,
-      "topics": ["economics", "governance", "anarcho-capitalism"],
+      "topics": [
+        "economics",
+        "governance",
+        "anarcho-capitalism"
+      ],
       "genre": "political-theory",
       "whyILoveIt": "A practical exploration of how a stateless society might function. Friedman's economic approach to anarchism is uniquely compelling."
     },
@@ -39,9 +53,14 @@
       "year": 1998,
       "status": "read",
       "rating": 5,
-      "topics": ["governance", "planning", "local-knowledge"],
+      "topics": [
+        "governance",
+        "planning",
+        "local-knowledge"
+      ],
       "genre": "political-science",
-      "whyILoveIt": "Essential reading for anyone interested in governance. Scott's concept of 'metis' and critique of high-modernist planning is profound."
+      "whyILoveIt": "Essential reading for anyone interested in governance. Scott's concept of 'metis' and critique of high-modernist planning is profound.",
+      "isbn13": "9780300246759"
     },
     {
       "id": "antifragile",
@@ -50,7 +69,11 @@
       "year": 2012,
       "status": "read",
       "rating": 4,
-      "topics": ["risk", "systems", "philosophy"],
+      "topics": [
+        "risk",
+        "systems",
+        "philosophy"
+      ],
       "genre": "non-fiction",
       "whyILoveIt": "Taleb's framework for things that gain from disorder. The concept of antifragility has shaped how I think about building resilient systems."
     },
@@ -60,7 +83,11 @@
       "author": "James Dale Davidson & Lord William Rees-Mogg",
       "year": 1997,
       "status": "read",
-      "topics": ["technology", "governance", "future"],
+      "topics": [
+        "technology",
+        "governance",
+        "future"
+      ],
       "genre": "futurism"
     },
     {
@@ -70,7 +97,11 @@
       "year": 2018,
       "status": "read",
       "rating": 5,
-      "topics": ["economics", "ethics", "growth"],
+      "topics": [
+        "economics",
+        "ethics",
+        "growth"
+      ],
       "genre": "philosophy",
       "whyILoveIt": "The moral case for economic growth as a near-sacred duty. Cowen argues that maximizing sustainable growth is the most ethical thing we can do for future generations—a belief I hold deeply."
     },
@@ -80,7 +111,11 @@
       "author": "David Deutsch",
       "year": 2011,
       "status": "want",
-      "topics": ["philosophy", "science", "knowledge"],
+      "topics": [
+        "philosophy",
+        "science",
+        "knowledge"
+      ],
       "genre": "philosophy",
       "whyILoveIt": "On my list because of its exploration of the power of explanatory knowledge. Deutsch's optimism about human potential is inspiring."
     },
@@ -90,7 +125,11 @@
       "author": "Donald W. Braben",
       "year": 2008,
       "status": "read",
-      "topics": ["science", "innovation", "policy"],
+      "topics": [
+        "science",
+        "innovation",
+        "policy"
+      ],
       "genre": "science"
     },
     {
@@ -99,7 +138,11 @@
       "author": "Theodore Dalrymple",
       "year": 2001,
       "status": "read",
-      "topics": ["society", "culture", "poverty"],
+      "topics": [
+        "society",
+        "culture",
+        "poverty"
+      ],
       "genre": "social-commentary"
     },
     {
@@ -108,7 +151,10 @@
       "author": "Janet Malcolm",
       "year": 1990,
       "status": "read",
-      "topics": ["journalism", "ethics"],
+      "topics": [
+        "journalism",
+        "ethics"
+      ],
       "genre": "non-fiction"
     },
     {
@@ -117,7 +163,11 @@
       "author": "Paul Kingsnorth",
       "year": 2023,
       "status": "read",
-      "topics": ["technology", "philosophy", "society"],
+      "topics": [
+        "technology",
+        "philosophy",
+        "society"
+      ],
       "genre": "philosophy"
     },
     {
@@ -126,7 +176,11 @@
       "author": "Dan Wang",
       "year": 2024,
       "status": "read",
-      "topics": ["china", "technology", "geopolitics"],
+      "topics": [
+        "china",
+        "technology",
+        "geopolitics"
+      ],
       "genre": "non-fiction"
     },
     {
@@ -135,7 +189,11 @@
       "author": "John Lewis Gaddis",
       "year": 2018,
       "status": "read",
-      "topics": ["strategy", "history", "leadership"],
+      "topics": [
+        "strategy",
+        "history",
+        "leadership"
+      ],
       "genre": "history"
     },
     {
@@ -144,7 +202,9 @@
       "author": "Hannu Rajaniemi",
       "year": 2010,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -153,8 +213,12 @@
       "author": "qntm",
       "year": 2022,
       "status": "read",
-      "topics": ["science-fiction"],
-      "genre": "science-fiction"
+      "topics": [
+        "science-fiction"
+      ],
+      "genre": "science-fiction",
+      "isbn13": "9798359298063",
+      "coverUrl": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1667225936i/63198504.jpg"
     },
     {
       "id": "why-greatness-cannot-be-planned",
@@ -162,7 +226,11 @@
       "author": "Kenneth O. Stanley & Joel Lehman",
       "year": 2015,
       "status": "read",
-      "topics": ["innovation", "ai", "creativity"],
+      "topics": [
+        "innovation",
+        "ai",
+        "creativity"
+      ],
       "genre": "science"
     },
     {
@@ -171,7 +239,11 @@
       "author": "Robert Wright",
       "year": 2017,
       "status": "read",
-      "topics": ["buddhism", "psychology", "meditation"],
+      "topics": [
+        "buddhism",
+        "psychology",
+        "meditation"
+      ],
       "genre": "philosophy"
     },
     {
@@ -180,7 +252,11 @@
       "author": "Sulmaan Wasif Khan",
       "year": 2024,
       "status": "read",
-      "topics": ["geopolitics", "china", "history"],
+      "topics": [
+        "geopolitics",
+        "china",
+        "history"
+      ],
       "genre": "history"
     },
     {
@@ -189,7 +265,10 @@
       "author": "Michael Foster & Dominic Bnonn Tennant",
       "year": 2021,
       "status": "read",
-      "topics": ["christianity", "masculinity"],
+      "topics": [
+        "christianity",
+        "masculinity"
+      ],
       "genre": "religion"
     },
     {
@@ -198,7 +277,10 @@
       "author": "Tyler Parris",
       "year": 2015,
       "status": "read",
-      "topics": ["business", "leadership"],
+      "topics": [
+        "business",
+        "leadership"
+      ],
       "genre": "business"
     },
     {
@@ -207,7 +289,11 @@
       "author": "George H. Smith",
       "year": 1974,
       "status": "read",
-      "topics": ["philosophy", "religion", "atheism"],
+      "topics": [
+        "philosophy",
+        "religion",
+        "atheism"
+      ],
       "genre": "philosophy"
     },
     {
@@ -216,7 +302,11 @@
       "author": "Jason Brennan",
       "year": 2018,
       "status": "read",
-      "topics": ["philosophy", "politics", "ethics"],
+      "topics": [
+        "philosophy",
+        "politics",
+        "ethics"
+      ],
       "genre": "philosophy"
     },
     {
@@ -225,7 +315,10 @@
       "author": "Robert G. Kaiser",
       "year": 2013,
       "status": "read",
-      "topics": ["politics", "government"],
+      "topics": [
+        "politics",
+        "government"
+      ],
       "genre": "politics"
     },
     {
@@ -234,7 +327,10 @@
       "author": "Trevor Corning, Nolan Dolan & Ryan Strasser",
       "year": 2017,
       "status": "read",
-      "topics": ["politics", "government"],
+      "topics": [
+        "politics",
+        "government"
+      ],
       "genre": "politics"
     },
     {
@@ -243,7 +339,11 @@
       "author": "Tae Kim",
       "year": 2024,
       "status": "read",
-      "topics": ["technology", "business", "biography"],
+      "topics": [
+        "technology",
+        "business",
+        "biography"
+      ],
       "genre": "business"
     },
     {
@@ -252,7 +352,9 @@
       "author": "Robert M. Pirsig",
       "year": 1974,
       "status": "read",
-      "topics": ["philosophy"],
+      "topics": [
+        "philosophy"
+      ],
       "genre": "philosophy"
     },
     {
@@ -261,7 +363,9 @@
       "author": "Brandon Sanderson",
       "year": 2006,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -270,7 +374,9 @@
       "author": "Brandon Sanderson",
       "year": 2007,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -279,7 +385,9 @@
       "author": "Brandon Sanderson",
       "year": 2008,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -288,7 +396,9 @@
       "author": "Brandon Sanderson",
       "year": 2011,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -297,7 +407,9 @@
       "author": "Brandon Sanderson",
       "year": 2015,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -306,7 +418,9 @@
       "author": "Brandon Sanderson",
       "year": 2016,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -315,7 +429,9 @@
       "author": "Brandon Sanderson",
       "year": 2022,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -324,7 +440,10 @@
       "author": "Samir Varma",
       "year": 2023,
       "status": "read",
-      "topics": ["philosophy", "neuroscience"],
+      "topics": [
+        "philosophy",
+        "neuroscience"
+      ],
       "genre": "philosophy"
     },
     {
@@ -333,7 +452,10 @@
       "author": "Will Guidara",
       "year": 2022,
       "status": "read",
-      "topics": ["business", "hospitality"],
+      "topics": [
+        "business",
+        "hospitality"
+      ],
       "genre": "business"
     },
     {
@@ -342,8 +464,12 @@
       "author": "qntm",
       "year": 2021,
       "status": "read",
-      "topics": ["science-fiction"],
-      "genre": "science-fiction"
+      "topics": [
+        "science-fiction"
+      ],
+      "genre": "science-fiction",
+      "isbn13": "9798512039069",
+      "coverUrl": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1623447168i/57891620.jpg"
     },
     {
       "id": "reentry",
@@ -351,7 +477,11 @@
       "author": "Eric Berger",
       "year": 2024,
       "status": "read",
-      "topics": ["space", "technology", "biography"],
+      "topics": [
+        "space",
+        "technology",
+        "biography"
+      ],
       "genre": "science"
     },
     {
@@ -360,7 +490,10 @@
       "author": "Michael Gervais",
       "year": 2023,
       "status": "read",
-      "topics": ["psychology", "performance"],
+      "topics": [
+        "psychology",
+        "performance"
+      ],
       "genre": "self-help"
     },
     {
@@ -369,7 +502,9 @@
       "author": "David Mitchell",
       "year": 2004,
       "status": "read",
-      "topics": ["fiction"],
+      "topics": [
+        "fiction"
+      ],
       "genre": "literary-fiction"
     },
     {
@@ -378,7 +513,10 @@
       "author": "Emily Oster",
       "year": 2019,
       "status": "read",
-      "topics": ["parenting", "data"],
+      "topics": [
+        "parenting",
+        "data"
+      ],
       "genre": "parenting"
     },
     {
@@ -387,7 +525,10 @@
       "author": "Neal Stephenson",
       "year": 2024,
       "status": "read",
-      "topics": ["science-fiction", "history"],
+      "topics": [
+        "science-fiction",
+        "history"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -396,8 +537,12 @@
       "author": "Tsutomu Nihei",
       "year": 1998,
       "status": "read",
-      "topics": ["manga", "science-fiction"],
-      "genre": "manga"
+      "topics": [
+        "manga",
+        "science-fiction"
+      ],
+      "genre": "manga",
+      "isbn13": "9781942993773"
     },
     {
       "id": "how-life-works",
@@ -405,7 +550,10 @@
       "author": "Philip Ball",
       "year": 2023,
       "status": "read",
-      "topics": ["biology", "science"],
+      "topics": [
+        "biology",
+        "science"
+      ],
       "genre": "science"
     },
     {
@@ -414,7 +562,10 @@
       "author": "Sarah Bakewell",
       "year": 2016,
       "status": "read",
-      "topics": ["philosophy", "history"],
+      "topics": [
+        "philosophy",
+        "history"
+      ],
       "genre": "philosophy"
     },
     {
@@ -423,7 +574,11 @@
       "author": "Garett Jones",
       "year": 2022,
       "status": "read",
-      "topics": ["economics", "culture", "immigration"],
+      "topics": [
+        "economics",
+        "culture",
+        "immigration"
+      ],
       "genre": "economics"
     },
     {
@@ -432,7 +587,10 @@
       "author": "Tom Chivers",
       "year": 2024,
       "status": "read",
-      "topics": ["statistics", "probability"],
+      "topics": [
+        "statistics",
+        "probability"
+      ],
       "genre": "science"
     },
     {
@@ -441,7 +599,11 @@
       "author": "Geoffrey A. Moore",
       "year": 1991,
       "status": "read",
-      "topics": ["business", "marketing", "startups"],
+      "topics": [
+        "business",
+        "marketing",
+        "startups"
+      ],
       "genre": "business"
     },
     {
@@ -450,7 +612,10 @@
       "author": "Lee Strobel",
       "year": 1998,
       "status": "read",
-      "topics": ["christianity", "apologetics"],
+      "topics": [
+        "christianity",
+        "apologetics"
+      ],
       "genre": "religion"
     },
     {
@@ -459,7 +624,9 @@
       "author": "Devon Eriksen",
       "year": 2023,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -468,7 +635,10 @@
       "author": "Allan Dib",
       "year": 2016,
       "status": "read",
-      "topics": ["marketing", "business"],
+      "topics": [
+        "marketing",
+        "business"
+      ],
       "genre": "business"
     },
     {
@@ -477,7 +647,9 @@
       "author": "Christopher Paolini",
       "year": 2023,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -486,7 +658,10 @@
       "author": "John Lovell",
       "year": 2021,
       "status": "read",
-      "topics": ["masculinity", "philosophy"],
+      "topics": [
+        "masculinity",
+        "philosophy"
+      ],
       "genre": "self-help"
     },
     {
@@ -495,7 +670,11 @@
       "author": "Richard Hanania",
       "year": 2023,
       "status": "read",
-      "topics": ["politics", "law", "culture"],
+      "topics": [
+        "politics",
+        "law",
+        "culture"
+      ],
       "genre": "politics"
     },
     {
@@ -504,8 +683,14 @@
       "author": "Michael Saylor",
       "year": 2022,
       "status": "read",
-      "topics": ["bitcoin", "economics", "money"],
-      "genre": "economics"
+      "topics": [
+        "bitcoin",
+        "economics",
+        "money"
+      ],
+      "genre": "economics",
+      "isbn13": "9798837608513",
+      "coverUrl": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1662144339i/62295182.jpg"
     },
     {
       "id": "elon-musk",
@@ -513,7 +698,11 @@
       "author": "Walter Isaacson",
       "year": 2023,
       "status": "read",
-      "topics": ["biography", "technology", "business"],
+      "topics": [
+        "biography",
+        "technology",
+        "business"
+      ],
       "genre": "biography"
     },
     {
@@ -522,7 +711,10 @@
       "author": "Peter Burke",
       "year": 2020,
       "status": "read",
-      "topics": ["history", "knowledge"],
+      "topics": [
+        "history",
+        "knowledge"
+      ],
       "genre": "history"
     },
     {
@@ -531,7 +723,10 @@
       "author": "Christopher F. Rufo",
       "year": 2023,
       "status": "read",
-      "topics": ["politics", "culture"],
+      "topics": [
+        "politics",
+        "culture"
+      ],
       "genre": "politics"
     },
     {
@@ -540,7 +735,10 @@
       "author": "Brian Greene",
       "year": 1999,
       "status": "read",
-      "topics": ["physics", "string-theory"],
+      "topics": [
+        "physics",
+        "string-theory"
+      ],
       "genre": "science"
     },
     {
@@ -549,7 +747,10 @@
       "author": "Claire Hughes Johnson",
       "year": 2023,
       "status": "read",
-      "topics": ["business", "management"],
+      "topics": [
+        "business",
+        "management"
+      ],
       "genre": "business"
     },
     {
@@ -558,7 +759,11 @@
       "author": "Max Tegmark",
       "year": 2017,
       "status": "read",
-      "topics": ["ai", "future", "technology"],
+      "topics": [
+        "ai",
+        "future",
+        "technology"
+      ],
       "genre": "science"
     },
     {
@@ -567,8 +772,13 @@
       "author": "Tim Urban",
       "year": 2023,
       "status": "read",
-      "topics": ["society", "politics", "psychology"],
-      "genre": "non-fiction"
+      "topics": [
+        "society",
+        "politics",
+        "psychology"
+      ],
+      "genre": "non-fiction",
+      "isbn13": "9798987722602"
     },
     {
       "id": "science-of-muscle-hypertrophy",
@@ -576,7 +786,10 @@
       "author": "Brad Schoenfeld",
       "year": 2016,
       "status": "read",
-      "topics": ["fitness", "science"],
+      "topics": [
+        "fitness",
+        "science"
+      ],
       "genre": "fitness"
     },
     {
@@ -585,7 +798,10 @@
       "author": "Miyamoto Musashi",
       "year": 1645,
       "status": "read",
-      "topics": ["philosophy", "strategy"],
+      "topics": [
+        "philosophy",
+        "strategy"
+      ],
       "genre": "philosophy"
     },
     {
@@ -594,7 +810,11 @@
       "author": "Michael Malice",
       "year": 2022,
       "status": "read",
-      "topics": ["history", "politics", "anarchism"],
+      "topics": [
+        "history",
+        "politics",
+        "anarchism"
+      ],
       "genre": "history"
     },
     {
@@ -603,7 +823,11 @@
       "author": "Anne Applebaum",
       "year": 2017,
       "status": "read",
-      "topics": ["history", "ukraine", "communism"],
+      "topics": [
+        "history",
+        "ukraine",
+        "communism"
+      ],
       "genre": "history"
     },
     {
@@ -612,8 +836,12 @@
       "author": "Exurb1a",
       "year": 2018,
       "status": "read",
-      "topics": ["science-fiction"],
-      "genre": "science-fiction"
+      "topics": [
+        "science-fiction"
+      ],
+      "genre": "science-fiction",
+      "isbn13": "9781796356304",
+      "coverUrl": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1549131511i/43916366.jpg"
     },
     {
       "id": "100m-offers",
@@ -621,7 +849,11 @@
       "author": "Alex Hormozi",
       "year": 2021,
       "status": "read",
-      "topics": ["business", "marketing", "entrepreneurship"],
+      "topics": [
+        "business",
+        "marketing",
+        "entrepreneurship"
+      ],
       "genre": "business"
     },
     {
@@ -630,7 +862,10 @@
       "author": "Marcus Aurelius",
       "year": 180,
       "status": "read",
-      "topics": ["philosophy", "stoicism"],
+      "topics": [
+        "philosophy",
+        "stoicism"
+      ],
       "genre": "philosophy"
     },
     {
@@ -639,7 +874,10 @@
       "author": "Nick Gray",
       "year": 2022,
       "status": "read",
-      "topics": ["networking", "social"],
+      "topics": [
+        "networking",
+        "social"
+      ],
       "genre": "self-help"
     },
     {
@@ -648,7 +886,11 @@
       "author": "Masamune Shirow",
       "year": 1989,
       "status": "read",
-      "topics": ["manga", "science-fiction", "cyberpunk"],
+      "topics": [
+        "manga",
+        "science-fiction",
+        "cyberpunk"
+      ],
       "genre": "manga"
     },
     {
@@ -657,7 +899,10 @@
       "author": "Randall Stross",
       "year": 2012,
       "status": "read",
-      "topics": ["startups", "business"],
+      "topics": [
+        "startups",
+        "business"
+      ],
       "genre": "business"
     },
     {
@@ -666,7 +911,10 @@
       "author": "Ayn Rand",
       "year": 1957,
       "status": "read",
-      "topics": ["philosophy", "libertarianism"],
+      "topics": [
+        "philosophy",
+        "libertarianism"
+      ],
       "genre": "fiction"
     },
     {
@@ -675,7 +923,11 @@
       "author": "Steven Kotler & Jamie Wheal",
       "year": 2017,
       "status": "read",
-      "topics": ["psychology", "performance", "consciousness"],
+      "topics": [
+        "psychology",
+        "performance",
+        "consciousness"
+      ],
       "genre": "science"
     },
     {
@@ -684,7 +936,11 @@
       "author": "Soren Kierkegaard",
       "year": 1843,
       "status": "read",
-      "topics": ["philosophy", "religion", "existentialism"],
+      "topics": [
+        "philosophy",
+        "religion",
+        "existentialism"
+      ],
       "genre": "philosophy"
     },
     {
@@ -693,7 +949,11 @@
       "author": "Balaji Srinivasan",
       "year": 2022,
       "status": "read",
-      "topics": ["governance", "technology", "future"],
+      "topics": [
+        "governance",
+        "technology",
+        "future"
+      ],
       "genre": "non-fiction"
     },
     {
@@ -702,7 +962,10 @@
       "author": "Jane McGonigal",
       "year": 2011,
       "status": "read",
-      "topics": ["games", "psychology"],
+      "topics": [
+        "games",
+        "psychology"
+      ],
       "genre": "non-fiction"
     },
     {
@@ -711,7 +974,9 @@
       "author": "Liu Cixin",
       "year": 2008,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -720,7 +985,9 @@
       "author": "Liu Cixin",
       "year": 2008,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -729,7 +996,9 @@
       "author": "Liu Cixin",
       "year": 2010,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -738,7 +1007,10 @@
       "author": "Paul Rosenberg",
       "year": 2007,
       "status": "read",
-      "topics": ["libertarianism", "fiction"],
+      "topics": [
+        "libertarianism",
+        "fiction"
+      ],
       "genre": "fiction"
     },
     {
@@ -747,7 +1019,11 @@
       "author": "Rich Cohen",
       "year": 2012,
       "status": "read",
-      "topics": ["history", "business", "biography"],
+      "topics": [
+        "history",
+        "business",
+        "biography"
+      ],
       "genre": "biography"
     },
     {
@@ -756,7 +1032,10 @@
       "author": "Timothy Keller",
       "year": 2008,
       "status": "read",
-      "topics": ["christianity", "apologetics"],
+      "topics": [
+        "christianity",
+        "apologetics"
+      ],
       "genre": "religion"
     },
     {
@@ -765,7 +1044,10 @@
       "author": "Esther Perel",
       "year": 2006,
       "status": "read",
-      "topics": ["relationships", "psychology"],
+      "topics": [
+        "relationships",
+        "psychology"
+      ],
       "genre": "psychology"
     },
     {
@@ -774,7 +1056,11 @@
       "author": "Jeevan Vasagar",
       "year": 2021,
       "status": "read",
-      "topics": ["singapore", "history", "governance"],
+      "topics": [
+        "singapore",
+        "history",
+        "governance"
+      ],
       "genre": "history"
     },
     {
@@ -783,7 +1069,10 @@
       "author": "Frank Slootman",
       "year": 2022,
       "status": "read",
-      "topics": ["business", "leadership"],
+      "topics": [
+        "business",
+        "leadership"
+      ],
       "genre": "business"
     },
     {
@@ -792,7 +1081,10 @@
       "author": "Michael Pye",
       "year": 2014,
       "status": "read",
-      "topics": ["history", "europe"],
+      "topics": [
+        "history",
+        "europe"
+      ],
       "genre": "history"
     },
     {
@@ -801,7 +1093,11 @@
       "author": "Brad Stone",
       "year": 2021,
       "status": "read",
-      "topics": ["business", "technology", "biography"],
+      "topics": [
+        "business",
+        "technology",
+        "biography"
+      ],
       "genre": "business"
     },
     {
@@ -810,7 +1106,11 @@
       "author": "Brad Stone",
       "year": 2013,
       "status": "read",
-      "topics": ["business", "technology", "biography"],
+      "topics": [
+        "business",
+        "technology",
+        "biography"
+      ],
       "genre": "business"
     },
     {
@@ -819,7 +1119,11 @@
       "author": "Andrew Chen",
       "year": 2021,
       "status": "read",
-      "topics": ["startups", "networks", "business"],
+      "topics": [
+        "startups",
+        "networks",
+        "business"
+      ],
       "genre": "business"
     },
     {
@@ -828,7 +1132,10 @@
       "author": "Neal Stephenson",
       "year": 2021,
       "status": "read",
-      "topics": ["science-fiction", "climate"],
+      "topics": [
+        "science-fiction",
+        "climate"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -837,7 +1144,11 @@
       "author": "Kenneth Whyte",
       "year": 2021,
       "status": "read",
-      "topics": ["history", "business", "automotive"],
+      "topics": [
+        "history",
+        "business",
+        "automotive"
+      ],
       "genre": "history"
     },
     {
@@ -846,7 +1157,11 @@
       "author": "Adrian Wooldridge",
       "year": 2021,
       "status": "read",
-      "topics": ["history", "meritocracy", "society"],
+      "topics": [
+        "history",
+        "meritocracy",
+        "society"
+      ],
       "genre": "history"
     },
     {
@@ -855,8 +1170,14 @@
       "author": "Calvin Duke",
       "year": 2021,
       "status": "read",
-      "topics": ["governance", "libertarianism", "communities"],
-      "genre": "political-theory"
+      "topics": [
+        "governance",
+        "libertarianism",
+        "communities"
+      ],
+      "genre": "political-theory",
+      "isbn13": "9798987090022",
+      "coverUrl": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1673977287i/65214489.jpg"
     },
     {
       "id": "t-the-story-of-testosterone",
@@ -864,7 +1185,10 @@
       "author": "Carole Hooven",
       "year": 2021,
       "status": "read",
-      "topics": ["biology", "science"],
+      "topics": [
+        "biology",
+        "science"
+      ],
       "genre": "science"
     },
     {
@@ -873,7 +1197,11 @@
       "author": "Amanda Montell",
       "year": 2021,
       "status": "read",
-      "topics": ["language", "psychology", "cults"],
+      "topics": [
+        "language",
+        "psychology",
+        "cults"
+      ],
       "genre": "non-fiction"
     },
     {
@@ -882,7 +1210,10 @@
       "author": "Timothy Keller",
       "year": 2011,
       "status": "read",
-      "topics": ["christianity", "marriage"],
+      "topics": [
+        "christianity",
+        "marriage"
+      ],
       "genre": "religion"
     },
     {
@@ -891,7 +1222,9 @@
       "author": "Robert Jordan",
       "year": 1990,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -900,7 +1233,9 @@
       "author": "Robert Jordan",
       "year": 1990,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -909,7 +1244,9 @@
       "author": "Robert Jordan",
       "year": 1991,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -918,7 +1255,9 @@
       "author": "Robert Jordan",
       "year": 1992,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -927,7 +1266,9 @@
       "author": "Robert Jordan",
       "year": 1993,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -936,7 +1277,9 @@
       "author": "Robert Jordan",
       "year": 1994,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -945,7 +1288,9 @@
       "author": "Robert Jordan",
       "year": 1996,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -954,7 +1299,9 @@
       "author": "Robert Jordan",
       "year": 1998,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -963,7 +1310,9 @@
       "author": "Robert Jordan",
       "year": 2000,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -972,7 +1321,9 @@
       "author": "Robert Jordan",
       "year": 2003,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -981,7 +1332,9 @@
       "author": "Robert Jordan",
       "year": 2005,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -990,7 +1343,9 @@
       "author": "Robert Jordan & Brandon Sanderson",
       "year": 2009,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -999,7 +1354,9 @@
       "author": "Robert Jordan & Brandon Sanderson",
       "year": 2010,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -1008,8 +1365,11 @@
       "author": "Robert Jordan & Brandon Sanderson",
       "year": 2013,
       "status": "read",
-      "topics": ["fantasy"],
-      "genre": "fantasy"
+      "topics": [
+        "fantasy"
+      ],
+      "genre": "fantasy",
+      "isbn13": "9781429997171"
     },
     {
       "id": "working-backwards",
@@ -1017,7 +1377,10 @@
       "author": "Colin Bryar & Bill Carr",
       "year": 2021,
       "status": "read",
-      "topics": ["business", "amazon"],
+      "topics": [
+        "business",
+        "amazon"
+      ],
       "genre": "business"
     },
     {
@@ -1026,8 +1389,13 @@
       "author": "Jamie Metzl",
       "year": 2019,
       "status": "read",
-      "topics": ["genetics", "future", "science"],
-      "genre": "science"
+      "topics": [
+        "genetics",
+        "future",
+        "science"
+      ],
+      "genre": "science",
+      "isbn13": "9781492670100"
     },
     {
       "id": "the-player-of-games",
@@ -1035,8 +1403,11 @@
       "author": "Iain M. Banks",
       "year": 1988,
       "status": "read",
-      "topics": ["science-fiction"],
-      "genre": "science-fiction"
+      "topics": [
+        "science-fiction"
+      ],
+      "genre": "science-fiction",
+      "isbn13": "9780316095860"
     },
     {
       "id": "consider-phlebas",
@@ -1044,7 +1415,9 @@
       "author": "Iain M. Banks",
       "year": 1987,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1053,7 +1426,10 @@
       "author": "Nicholas Walton",
       "year": 2018,
       "status": "read",
-      "topics": ["singapore", "history"],
+      "topics": [
+        "singapore",
+        "history"
+      ],
       "genre": "history"
     },
     {
@@ -1062,7 +1438,10 @@
       "author": "Scott Horton",
       "year": 2017,
       "status": "read",
-      "topics": ["foreign-policy", "war"],
+      "topics": [
+        "foreign-policy",
+        "war"
+      ],
       "genre": "politics"
     },
     {
@@ -1071,7 +1450,10 @@
       "author": "Willis Johnson",
       "year": 2014,
       "status": "read",
-      "topics": ["business", "entrepreneurship"],
+      "topics": [
+        "business",
+        "entrepreneurship"
+      ],
       "genre": "business"
     },
     {
@@ -1080,7 +1462,10 @@
       "author": "Bryan Caplan",
       "year": 2018,
       "status": "read",
-      "topics": ["economics", "education"],
+      "topics": [
+        "economics",
+        "education"
+      ],
       "genre": "economics"
     },
     {
@@ -1089,7 +1474,10 @@
       "author": "Sean Ellis & Morgan Brown",
       "year": 2017,
       "status": "read",
-      "topics": ["marketing", "startups"],
+      "topics": [
+        "marketing",
+        "startups"
+      ],
       "genre": "business"
     },
     {
@@ -1098,7 +1486,10 @@
       "author": "Eric Berger",
       "year": 2021,
       "status": "read",
-      "topics": ["space", "biography"],
+      "topics": [
+        "space",
+        "biography"
+      ],
       "genre": "biography"
     },
     {
@@ -1107,7 +1498,11 @@
       "author": "Saifedean Ammous",
       "year": 2018,
       "status": "read",
-      "topics": ["bitcoin", "economics", "money"],
+      "topics": [
+        "bitcoin",
+        "economics",
+        "money"
+      ],
       "genre": "economics"
     },
     {
@@ -1116,7 +1511,10 @@
       "author": "Amy C. Edmondson & Susan Salter Reynolds",
       "year": 2016,
       "status": "read",
-      "topics": ["innovation", "business"],
+      "topics": [
+        "innovation",
+        "business"
+      ],
       "genre": "business"
     },
     {
@@ -1125,7 +1523,11 @@
       "author": "Carl L. Hart",
       "year": 2021,
       "status": "read",
-      "topics": ["drugs", "policy", "science"],
+      "topics": [
+        "drugs",
+        "policy",
+        "science"
+      ],
       "genre": "science"
     },
     {
@@ -1134,7 +1536,10 @@
       "author": "Cristiane Correa",
       "year": 2014,
       "status": "read",
-      "topics": ["business", "3g-capital"],
+      "topics": [
+        "business",
+        "3g-capital"
+      ],
       "genre": "business"
     },
     {
@@ -1143,8 +1548,12 @@
       "author": "Travis J.I. Corcoran",
       "year": 2017,
       "status": "read",
-      "topics": ["science-fiction", "libertarianism"],
-      "genre": "science-fiction"
+      "topics": [
+        "science-fiction",
+        "libertarianism"
+      ],
+      "genre": "science-fiction",
+      "isbn13": "9781798234631"
     },
     {
       "id": "the-immortalists",
@@ -1152,7 +1561,10 @@
       "author": "David M. Friedman",
       "year": 2007,
       "status": "read",
-      "topics": ["biography", "science"],
+      "topics": [
+        "biography",
+        "science"
+      ],
       "genre": "biography"
     },
     {
@@ -1161,7 +1573,11 @@
       "author": "Joseph Henrich",
       "year": 2020,
       "status": "read",
-      "topics": ["psychology", "anthropology", "culture"],
+      "topics": [
+        "psychology",
+        "anthropology",
+        "culture"
+      ],
       "genre": "science"
     },
     {
@@ -1171,7 +1587,11 @@
       "year": 2017,
       "status": "read",
       "rating": 5,
-      "topics": ["governance", "libertarianism", "charter-cities"],
+      "topics": [
+        "governance",
+        "libertarianism",
+        "charter-cities"
+      ],
       "genre": "political-theory",
       "whyILoveIt": "The best book on special economic zones and competitive governance. Bell's legal framework for 'special jurisdictions' directly shaped my work at Próspera."
     },
@@ -1181,7 +1601,10 @@
       "author": "Jeff Bezos & Walter Isaacson",
       "year": 2020,
       "status": "read",
-      "topics": ["business", "biography"],
+      "topics": [
+        "business",
+        "biography"
+      ],
       "genre": "business"
     },
     {
@@ -1190,7 +1613,10 @@
       "author": "Annie Duke",
       "year": 2020,
       "status": "read",
-      "topics": ["decision-making", "psychology"],
+      "topics": [
+        "decision-making",
+        "psychology"
+      ],
       "genre": "self-help"
     },
     {
@@ -1199,7 +1625,10 @@
       "author": "Mihaly Csikszentmihalyi",
       "year": 1990,
       "status": "read",
-      "topics": ["psychology", "performance"],
+      "topics": [
+        "psychology",
+        "performance"
+      ],
       "genre": "psychology"
     },
     {
@@ -1208,7 +1637,9 @@
       "author": "Frank Herbert",
       "year": 1965,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1217,7 +1648,9 @@
       "author": "Frank Herbert",
       "year": 1969,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1226,7 +1659,9 @@
       "author": "Frank Herbert",
       "year": 1976,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1235,7 +1670,9 @@
       "author": "Frank Herbert",
       "year": 1981,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1244,7 +1681,11 @@
       "author": "J. Storrs Hall",
       "year": 2018,
       "status": "read",
-      "topics": ["technology", "innovation", "future"],
+      "topics": [
+        "technology",
+        "innovation",
+        "future"
+      ],
       "genre": "science"
     },
     {
@@ -1253,7 +1694,11 @@
       "author": "Ben Horowitz",
       "year": 2014,
       "status": "read",
-      "topics": ["business", "startups", "leadership"],
+      "topics": [
+        "business",
+        "startups",
+        "leadership"
+      ],
       "genre": "business"
     },
     {
@@ -1262,7 +1707,9 @@
       "author": "Pierce Brown",
       "year": 2014,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1271,7 +1718,9 @@
       "author": "Pierce Brown",
       "year": 2015,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1280,7 +1729,9 @@
       "author": "Pierce Brown",
       "year": 2016,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1289,7 +1740,9 @@
       "author": "Pierce Brown",
       "year": 2018,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1298,7 +1751,9 @@
       "author": "Pierce Brown",
       "year": 2019,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1307,7 +1762,10 @@
       "author": "Kory Stamper",
       "year": 2017,
       "status": "read",
-      "topics": ["language", "linguistics"],
+      "topics": [
+        "language",
+        "linguistics"
+      ],
       "genre": "non-fiction"
     },
     {
@@ -1316,7 +1774,10 @@
       "author": "Alain Bertaud",
       "year": 2018,
       "status": "read",
-      "topics": ["urban-planning", "economics"],
+      "topics": [
+        "urban-planning",
+        "economics"
+      ],
       "genre": "economics"
     },
     {
@@ -1325,7 +1786,11 @@
       "author": "Tim Ferriss",
       "year": 2007,
       "status": "read",
-      "topics": ["productivity", "business", "lifestyle"],
+      "topics": [
+        "productivity",
+        "business",
+        "lifestyle"
+      ],
       "genre": "self-help"
     },
     {
@@ -1334,7 +1799,10 @@
       "author": "Ashley Mears",
       "year": 2020,
       "status": "read",
-      "topics": ["sociology", "nightlife"],
+      "topics": [
+        "sociology",
+        "nightlife"
+      ],
       "genre": "sociology"
     },
     {
@@ -1343,7 +1811,11 @@
       "author": "Christian Brose",
       "year": 2020,
       "status": "read",
-      "topics": ["military", "technology", "defense"],
+      "topics": [
+        "military",
+        "technology",
+        "defense"
+      ],
       "genre": "non-fiction"
     },
     {
@@ -1352,7 +1824,11 @@
       "author": "Camille Paglia",
       "year": 2018,
       "status": "read",
-      "topics": ["culture", "art", "politics"],
+      "topics": [
+        "culture",
+        "art",
+        "politics"
+      ],
       "genre": "essays"
     },
     {
@@ -1361,7 +1837,10 @@
       "author": "Jim Collins",
       "year": 2001,
       "status": "read",
-      "topics": ["business", "management"],
+      "topics": [
+        "business",
+        "management"
+      ],
       "genre": "business"
     },
     {
@@ -1370,7 +1849,10 @@
       "author": "Jason Fried & David Heinemeier Hansson",
       "year": 2018,
       "status": "read",
-      "topics": ["business", "productivity"],
+      "topics": [
+        "business",
+        "productivity"
+      ],
       "genre": "business"
     },
     {
@@ -1379,8 +1861,12 @@
       "author": "Gregory Salmieri & Robert Mayhew",
       "year": 2019,
       "status": "read",
-      "topics": ["philosophy", "libertarianism"],
-      "genre": "philosophy"
+      "topics": [
+        "philosophy",
+        "libertarianism"
+      ],
+      "genre": "philosophy",
+      "isbn13": "9780822945482"
     },
     {
       "id": "secrets-of-sand-hill-road",
@@ -1388,7 +1874,10 @@
       "author": "Scott Kupor",
       "year": 2019,
       "status": "read",
-      "topics": ["venture-capital", "startups"],
+      "topics": [
+        "venture-capital",
+        "startups"
+      ],
       "genre": "business"
     },
     {
@@ -1397,7 +1886,11 @@
       "author": "Robert A. Levy & William Mellor",
       "year": 2008,
       "status": "read",
-      "topics": ["law", "constitution", "libertarianism"],
+      "topics": [
+        "law",
+        "constitution",
+        "libertarianism"
+      ],
       "genre": "law"
     },
     {
@@ -1406,7 +1899,10 @@
       "author": "Andrew Romans",
       "year": 2013,
       "status": "read",
-      "topics": ["venture-capital", "startups"],
+      "topics": [
+        "venture-capital",
+        "startups"
+      ],
       "genre": "business"
     },
     {
@@ -1415,7 +1911,9 @@
       "author": "Sylvain Neuvel",
       "year": 2016,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1424,7 +1922,9 @@
       "author": "Sylvain Neuvel",
       "year": 2017,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1433,7 +1933,9 @@
       "author": "Sylvain Neuvel",
       "year": 2018,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1442,7 +1944,10 @@
       "author": "Elad Gil",
       "year": 2018,
       "status": "read",
-      "topics": ["startups", "business"],
+      "topics": [
+        "startups",
+        "business"
+      ],
       "genre": "business"
     },
     {
@@ -1451,7 +1956,10 @@
       "author": "Jason Matthews",
       "year": 2013,
       "status": "read",
-      "topics": ["thriller", "espionage"],
+      "topics": [
+        "thriller",
+        "espionage"
+      ],
       "genre": "thriller"
     },
     {
@@ -1460,7 +1968,10 @@
       "author": "Jason Matthews",
       "year": 2015,
       "status": "read",
-      "topics": ["thriller", "espionage"],
+      "topics": [
+        "thriller",
+        "espionage"
+      ],
       "genre": "thriller"
     },
     {
@@ -1469,7 +1980,10 @@
       "author": "Jason Matthews",
       "year": 2018,
       "status": "read",
-      "topics": ["thriller", "espionage"],
+      "topics": [
+        "thriller",
+        "espionage"
+      ],
       "genre": "thriller"
     },
     {
@@ -1478,7 +1992,11 @@
       "author": "Dan Senor & Saul Singer",
       "year": 2009,
       "status": "read",
-      "topics": ["israel", "startups", "innovation"],
+      "topics": [
+        "israel",
+        "startups",
+        "innovation"
+      ],
       "genre": "business"
     },
     {
@@ -1487,7 +2005,10 @@
       "author": "Joseph Rocco Mitchell & David L. Stebenne",
       "year": 2017,
       "status": "read",
-      "topics": ["urban-planning", "history"],
+      "topics": [
+        "urban-planning",
+        "history"
+      ],
       "genre": "history"
     },
     {
@@ -1496,7 +2017,11 @@
       "author": "Alex Hutchinson",
       "year": 2018,
       "status": "read",
-      "topics": ["sports", "performance", "science"],
+      "topics": [
+        "sports",
+        "performance",
+        "science"
+      ],
       "genre": "science"
     },
     {
@@ -1505,7 +2030,10 @@
       "author": "Kevin Simler & Robin Hanson",
       "year": 2018,
       "status": "read",
-      "topics": ["psychology", "economics"],
+      "topics": [
+        "psychology",
+        "economics"
+      ],
       "genre": "psychology"
     },
     {
@@ -1514,8 +2042,12 @@
       "author": "Tom Woods",
       "year": 2014,
       "status": "read",
-      "topics": ["libertarianism", "politics"],
-      "genre": "politics"
+      "topics": [
+        "libertarianism",
+        "politics"
+      ],
+      "genre": "politics",
+      "isbn13": "9781500844769"
     },
     {
       "id": "the-joy-of-x",
@@ -1523,7 +2055,9 @@
       "author": "Steven Strogatz",
       "year": 2012,
       "status": "read",
-      "topics": ["mathematics"],
+      "topics": [
+        "mathematics"
+      ],
       "genre": "science"
     },
     {
@@ -1532,7 +2066,9 @@
       "author": "Martin MacInnes",
       "year": 2023,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1541,7 +2077,11 @@
       "author": "Roger Penrose",
       "year": 1989,
       "status": "read",
-      "topics": ["ai", "consciousness", "physics"],
+      "topics": [
+        "ai",
+        "consciousness",
+        "physics"
+      ],
       "genre": "science"
     },
     {
@@ -1550,7 +2090,11 @@
       "author": "Bryan Burrough",
       "year": 2015,
       "status": "read",
-      "topics": ["history", "terrorism", "politics"],
+      "topics": [
+        "history",
+        "terrorism",
+        "politics"
+      ],
       "genre": "history"
     },
     {
@@ -1559,7 +2103,10 @@
       "author": "Nancy Wilson",
       "year": 1997,
       "status": "read",
-      "topics": ["christianity", "women"],
+      "topics": [
+        "christianity",
+        "women"
+      ],
       "genre": "religion"
     },
     {
@@ -1568,7 +2115,10 @@
       "author": "Leigh Brasington",
       "year": 2015,
       "status": "read",
-      "topics": ["buddhism", "meditation"],
+      "topics": [
+        "buddhism",
+        "meditation"
+      ],
       "genre": "religion"
     },
     {
@@ -1577,7 +2127,10 @@
       "author": "David R. Hawkins",
       "year": 2012,
       "status": "read",
-      "topics": ["spirituality", "psychology"],
+      "topics": [
+        "spirituality",
+        "psychology"
+      ],
       "genre": "self-help"
     },
     {
@@ -1586,7 +2139,11 @@
       "author": "Culadasa",
       "year": 2015,
       "status": "read",
-      "topics": ["buddhism", "meditation", "neuroscience"],
+      "topics": [
+        "buddhism",
+        "meditation",
+        "neuroscience"
+      ],
       "genre": "religion"
     },
     {
@@ -1595,7 +2152,9 @@
       "author": "Walpola Rahula",
       "year": 1959,
       "status": "read",
-      "topics": ["buddhism"],
+      "topics": [
+        "buddhism"
+      ],
       "genre": "religion"
     },
     {
@@ -1604,8 +2163,13 @@
       "author": "Alex Mayyasi",
       "year": 2024,
       "status": "read",
-      "topics": ["technology", "politics", "governance"],
-      "genre": "politics"
+      "topics": [
+        "technology",
+        "politics",
+        "governance"
+      ],
+      "genre": "politics",
+      "isbn13": "9781529945409"
     },
     {
       "id": "fourth-wing",
@@ -1613,7 +2177,9 @@
       "author": "Rebecca Yarros",
       "year": 2023,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -1622,7 +2188,9 @@
       "author": "Rebecca Yarros",
       "year": 2023,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -1631,7 +2199,9 @@
       "author": "Rebecca Yarros",
       "year": 2025,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -1640,7 +2210,10 @@
       "author": "Emily Oster",
       "year": 2013,
       "status": "read",
-      "topics": ["parenting", "data"],
+      "topics": [
+        "parenting",
+        "data"
+      ],
       "genre": "parenting"
     },
     {
@@ -1649,7 +2222,11 @@
       "author": "Benjamin Labatut",
       "year": 2023,
       "status": "read",
-      "topics": ["science", "ai", "history"],
+      "topics": [
+        "science",
+        "ai",
+        "history"
+      ],
       "genre": "literary-fiction"
     },
     {
@@ -1658,7 +2235,10 @@
       "author": "Emerson Eggerichs",
       "year": 2004,
       "status": "read",
-      "topics": ["christianity", "marriage"],
+      "topics": [
+        "christianity",
+        "marriage"
+      ],
       "genre": "religion"
     },
     {
@@ -1667,7 +2247,11 @@
       "author": "David Reich",
       "year": 2018,
       "status": "read",
-      "topics": ["genetics", "history", "anthropology"],
+      "topics": [
+        "genetics",
+        "history",
+        "anthropology"
+      ],
       "genre": "science"
     },
     {
@@ -1676,7 +2260,9 @@
       "author": "Adrian Tchaikovsky",
       "year": 2024,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1685,7 +2271,9 @@
       "author": "James S.A. Corey",
       "year": 2024,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1694,7 +2282,10 @@
       "author": "John Kennedy Toole",
       "year": 1980,
       "status": "read",
-      "topics": ["fiction", "humor"],
+      "topics": [
+        "fiction",
+        "humor"
+      ],
       "genre": "literary-fiction"
     },
     {
@@ -1703,7 +2294,10 @@
       "author": "Jim Paul & Brendan Moynihan",
       "year": 1994,
       "status": "read",
-      "topics": ["investing", "psychology"],
+      "topics": [
+        "investing",
+        "psychology"
+      ],
       "genre": "finance"
     },
     {
@@ -1713,7 +2307,11 @@
       "year": 2009,
       "status": "read",
       "rating": 5,
-      "topics": ["genetics", "evolution", "history"],
+      "topics": [
+        "genetics",
+        "evolution",
+        "history"
+      ],
       "genre": "science",
       "whyILoveIt": "Demolishes the idea that human evolution stopped 50,000 years ago. Cochran and Harpending show how agriculture accelerated genetic change—provocative and rigorous."
     },
@@ -1723,7 +2321,9 @@
       "author": "Adrian Tchaikovsky",
       "year": 2024,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1732,7 +2332,11 @@
       "author": "Iain McGilchrist",
       "year": 2009,
       "status": "read",
-      "topics": ["neuroscience", "philosophy", "culture"],
+      "topics": [
+        "neuroscience",
+        "philosophy",
+        "culture"
+      ],
       "genre": "science"
     },
     {
@@ -1741,7 +2345,10 @@
       "author": "Rob Henderson",
       "year": 2024,
       "status": "read",
-      "topics": ["memoir", "sociology"],
+      "topics": [
+        "memoir",
+        "sociology"
+      ],
       "genre": "memoir"
     },
     {
@@ -1750,7 +2357,10 @@
       "author": "John Mark Comer",
       "year": 2019,
       "status": "read",
-      "topics": ["christianity", "spirituality"],
+      "topics": [
+        "christianity",
+        "spirituality"
+      ],
       "genre": "religion"
     },
     {
@@ -1759,7 +2369,11 @@
       "author": "Matt Zwolinski & John Tomasi",
       "year": 2023,
       "status": "read",
-      "topics": ["libertarianism", "philosophy", "history"],
+      "topics": [
+        "libertarianism",
+        "philosophy",
+        "history"
+      ],
       "genre": "philosophy"
     },
     {
@@ -1768,7 +2382,9 @@
       "author": "Liu Cixin",
       "year": 2000,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1777,7 +2393,11 @@
       "author": "James Pethokoukis",
       "year": 2023,
       "status": "read",
-      "topics": ["politics", "technology", "future"],
+      "topics": [
+        "politics",
+        "technology",
+        "future"
+      ],
       "genre": "politics"
     },
     {
@@ -1786,7 +2406,11 @@
       "author": "Stephen C. Meyer",
       "year": 2021,
       "status": "read",
-      "topics": ["science", "religion", "philosophy"],
+      "topics": [
+        "science",
+        "religion",
+        "philosophy"
+      ],
       "genre": "religion"
     },
     {
@@ -1795,7 +2419,11 @@
       "author": "Richard Rhodes",
       "year": 1986,
       "status": "read",
-      "topics": ["history", "science", "war"],
+      "topics": [
+        "history",
+        "science",
+        "war"
+      ],
       "genre": "history"
     },
     {
@@ -1804,7 +2432,9 @@
       "author": "James S.A. Corey",
       "year": 2011,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1813,7 +2443,9 @@
       "author": "James S.A. Corey",
       "year": 2012,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1822,7 +2454,9 @@
       "author": "James S.A. Corey",
       "year": 2013,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1831,7 +2465,9 @@
       "author": "James S.A. Corey",
       "year": 2014,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1840,7 +2476,9 @@
       "author": "James S.A. Corey",
       "year": 2015,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1849,7 +2487,9 @@
       "author": "James S.A. Corey",
       "year": 2016,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1858,7 +2498,9 @@
       "author": "James S.A. Corey",
       "year": 2017,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1867,7 +2509,9 @@
       "author": "James S.A. Corey",
       "year": 2019,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1876,7 +2520,9 @@
       "author": "James S.A. Corey",
       "year": 2021,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1885,7 +2531,10 @@
       "author": "Stephen King",
       "year": 2022,
       "status": "read",
-      "topics": ["fantasy", "horror"],
+      "topics": [
+        "fantasy",
+        "horror"
+      ],
       "genre": "fantasy"
     },
     {
@@ -1894,7 +2543,10 @@
       "author": "Blake Crouch",
       "year": 2022,
       "status": "read",
-      "topics": ["science-fiction", "genetics"],
+      "topics": [
+        "science-fiction",
+        "genetics"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1903,7 +2555,10 @@
       "author": "Matthew McConaughey",
       "year": 2020,
       "status": "read",
-      "topics": ["memoir", "philosophy"],
+      "topics": [
+        "memoir",
+        "philosophy"
+      ],
       "genre": "memoir"
     },
     {
@@ -1912,7 +2567,11 @@
       "author": "Alex Epstein",
       "year": 2014,
       "status": "read",
-      "topics": ["energy", "environment", "economics"],
+      "topics": [
+        "energy",
+        "environment",
+        "economics"
+      ],
       "genre": "non-fiction"
     },
     {
@@ -1921,7 +2580,9 @@
       "author": "Adrian Tchaikovsky",
       "year": 2019,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1930,7 +2591,9 @@
       "author": "Adrian Tchaikovsky",
       "year": 2015,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1939,7 +2602,9 @@
       "author": "Baoshu",
       "year": 2011,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -1948,8 +2613,12 @@
       "author": "Alex Michaelides",
       "year": 2019,
       "status": "read",
-      "topics": ["thriller", "psychology"],
-      "genre": "thriller"
+      "topics": [
+        "thriller",
+        "psychology"
+      ],
+      "genre": "thriller",
+      "isbn13": "9781250301710"
     },
     {
       "id": "the-biggest-ideas-in-the-universe",
@@ -1957,7 +2626,10 @@
       "author": "Sean Carroll",
       "year": 2022,
       "status": "read",
-      "topics": ["physics", "science"],
+      "topics": [
+        "physics",
+        "science"
+      ],
       "genre": "science"
     },
     {
@@ -1966,7 +2638,10 @@
       "author": "Matthew Ball",
       "year": 2022,
       "status": "read",
-      "topics": ["technology", "future"],
+      "topics": [
+        "technology",
+        "future"
+      ],
       "genre": "technology"
     },
     {
@@ -1975,8 +2650,12 @@
       "author": "Jack Carr",
       "year": 2018,
       "status": "read",
-      "topics": ["thriller", "military"],
-      "genre": "thriller"
+      "topics": [
+        "thriller",
+        "military"
+      ],
+      "genre": "thriller",
+      "isbn13": "9781501180835"
     },
     {
       "id": "your-dog-is-your-mirror",
@@ -1984,8 +2663,12 @@
       "author": "Kevin Behan",
       "year": 2011,
       "status": "read",
-      "topics": ["dogs", "psychology"],
-      "genre": "non-fiction"
+      "topics": [
+        "dogs",
+        "psychology"
+      ],
+      "genre": "non-fiction",
+      "isbn13": "9781608680887"
     },
     {
       "id": "shadows-of-the-apt-1",
@@ -1993,8 +2676,11 @@
       "author": "Adrian Tchaikovsky",
       "year": 2008,
       "status": "read",
-      "topics": ["fantasy"],
-      "genre": "fantasy"
+      "topics": [
+        "fantasy"
+      ],
+      "genre": "fantasy",
+      "isbn13": "9781616143398"
     },
     {
       "id": "a-thousand-brains",
@@ -2002,8 +2688,12 @@
       "author": "Jeff Hawkins",
       "year": 2021,
       "status": "read",
-      "topics": ["neuroscience", "ai"],
-      "genre": "science"
+      "topics": [
+        "neuroscience",
+        "ai"
+      ],
+      "genre": "science",
+      "isbn13": "9781541675803"
     },
     {
       "id": "the-doors-of-eden",
@@ -2011,8 +2701,11 @@
       "author": "Adrian Tchaikovsky",
       "year": 2020,
       "status": "read",
-      "topics": ["science-fiction"],
-      "genre": "science-fiction"
+      "topics": [
+        "science-fiction"
+      ],
+      "genre": "science-fiction",
+      "isbn13": "9780316705783"
     },
     {
       "id": "helgoland",
@@ -2020,8 +2713,12 @@
       "author": "Carlo Rovelli",
       "year": 2020,
       "status": "read",
-      "topics": ["physics", "quantum"],
-      "genre": "science"
+      "topics": [
+        "physics",
+        "quantum"
+      ],
+      "genre": "science",
+      "isbn13": "9780241454701"
     },
     {
       "id": "effortless",
@@ -2029,8 +2726,11 @@
       "author": "Greg McKeown",
       "year": 2021,
       "status": "read",
-      "topics": ["productivity"],
-      "genre": "self-help"
+      "topics": [
+        "productivity"
+      ],
+      "genre": "self-help",
+      "isbn13": "9780593135655"
     },
     {
       "id": "project-hail-mary",
@@ -2038,8 +2738,11 @@
       "author": "Andy Weir",
       "year": 2021,
       "status": "read",
-      "topics": ["science-fiction"],
-      "genre": "science-fiction"
+      "topics": [
+        "science-fiction"
+      ],
+      "genre": "science-fiction",
+      "isbn13": "9798217299461"
     },
     {
       "id": "hyperion",
@@ -2047,8 +2750,11 @@
       "author": "Dan Simmons",
       "year": 1989,
       "status": "read",
-      "topics": ["science-fiction"],
-      "genre": "science-fiction"
+      "topics": [
+        "science-fiction"
+      ],
+      "genre": "science-fiction",
+      "isbn13": "9780385263481"
     },
     {
       "id": "the-fall-of-hyperion",
@@ -2056,8 +2762,11 @@
       "author": "Dan Simmons",
       "year": 1990,
       "status": "read",
-      "topics": ["science-fiction"],
-      "genre": "science-fiction"
+      "topics": [
+        "science-fiction"
+      ],
+      "genre": "science-fiction",
+      "isbn13": "9780385267472"
     },
     {
       "id": "the-midnight-library",
@@ -2065,8 +2774,11 @@
       "author": "Matt Haig",
       "year": 2020,
       "status": "read",
-      "topics": ["fiction"],
-      "genre": "literary-fiction"
+      "topics": [
+        "fiction"
+      ],
+      "genre": "literary-fiction",
+      "isbn13": "9781443455886"
     },
     {
       "id": "anathem",
@@ -2074,7 +2786,10 @@
       "author": "Neal Stephenson",
       "year": 2008,
       "status": "read",
-      "topics": ["science-fiction", "philosophy"],
+      "topics": [
+        "science-fiction",
+        "philosophy"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -2083,8 +2798,11 @@
       "author": "Christopher Paolini",
       "year": 2020,
       "status": "read",
-      "topics": ["science-fiction"],
-      "genre": "science-fiction"
+      "topics": [
+        "science-fiction"
+      ],
+      "genre": "science-fiction",
+      "isbn13": "9781250762900"
     },
     {
       "id": "the-molecule-of-more",
@@ -2092,7 +2810,10 @@
       "author": "Daniel Z. Lieberman & Michael E. Long",
       "year": 2018,
       "status": "read",
-      "topics": ["neuroscience", "dopamine"],
+      "topics": [
+        "neuroscience",
+        "dopamine"
+      ],
       "genre": "science"
     },
     {
@@ -2101,7 +2822,10 @@
       "author": "Bill Bryson",
       "year": 2003,
       "status": "read",
-      "topics": ["science", "history"],
+      "topics": [
+        "science",
+        "history"
+      ],
       "genre": "science"
     },
     {
@@ -2110,7 +2834,9 @@
       "author": "Brandon Sanderson",
       "year": 2010,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -2119,7 +2845,10 @@
       "author": "Charles Wheelan",
       "year": 2013,
       "status": "read",
-      "topics": ["statistics", "math"],
+      "topics": [
+        "statistics",
+        "math"
+      ],
       "genre": "science"
     },
     {
@@ -2128,8 +2857,12 @@
       "author": "James Nestor",
       "year": 2020,
       "status": "read",
-      "topics": ["health", "science"],
-      "genre": "science"
+      "topics": [
+        "health",
+        "science"
+      ],
+      "genre": "science",
+      "isbn13": "9780735213623"
     },
     {
       "id": "reality-is-not-what-it-seems",
@@ -2137,7 +2870,10 @@
       "author": "Carlo Rovelli",
       "year": 2014,
       "status": "read",
-      "topics": ["physics", "quantum"],
+      "topics": [
+        "physics",
+        "quantum"
+      ],
       "genre": "science"
     },
     {
@@ -2146,7 +2882,10 @@
       "author": "Tim Ferriss",
       "year": 2016,
       "status": "read",
-      "topics": ["productivity", "business"],
+      "topics": [
+        "productivity",
+        "business"
+      ],
       "genre": "self-help"
     },
     {
@@ -2155,7 +2894,10 @@
       "author": "James Clear",
       "year": 2018,
       "status": "read",
-      "topics": ["habits", "productivity"],
+      "topics": [
+        "habits",
+        "productivity"
+      ],
       "genre": "self-help"
     },
     {
@@ -2164,7 +2906,11 @@
       "author": "Dennis C. Rasmussen",
       "year": 2017,
       "status": "read",
-      "topics": ["philosophy", "history", "economics"],
+      "topics": [
+        "philosophy",
+        "history",
+        "economics"
+      ],
       "genre": "history"
     },
     {
@@ -2173,7 +2919,10 @@
       "author": "Neal Stephenson",
       "year": 1992,
       "status": "read",
-      "topics": ["science-fiction", "cyberpunk"],
+      "topics": [
+        "science-fiction",
+        "cyberpunk"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -2182,7 +2931,9 @@
       "author": "Liu Cixin",
       "year": 2004,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -2191,7 +2942,10 @@
       "author": "Brian Greene",
       "year": 2020,
       "status": "read",
-      "topics": ["physics", "cosmology"],
+      "topics": [
+        "physics",
+        "cosmology"
+      ],
       "genre": "science"
     },
     {
@@ -2200,7 +2954,9 @@
       "author": "Neal Stephenson",
       "year": 2015,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -2209,8 +2965,12 @@
       "author": "Michael Pollan",
       "year": 2020,
       "status": "read",
-      "topics": ["history", "science"],
-      "genre": "science"
+      "topics": [
+        "history",
+        "science"
+      ],
+      "genre": "science",
+      "isbn13": "9781119679059"
     },
     {
       "id": "speaker-for-the-dead",
@@ -2218,8 +2978,11 @@
       "author": "Orson Scott Card",
       "year": 1986,
       "status": "read",
-      "topics": ["science-fiction"],
-      "genre": "science-fiction"
+      "topics": [
+        "science-fiction"
+      ],
+      "genre": "science-fiction",
+      "isbn13": "9780808586876"
     },
     {
       "id": "enders-game",
@@ -2227,7 +2990,9 @@
       "author": "Orson Scott Card",
       "year": 1985,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -2236,7 +3001,10 @@
       "author": "Sean Carroll",
       "year": 2019,
       "status": "read",
-      "topics": ["physics", "quantum"],
+      "topics": [
+        "physics",
+        "quantum"
+      ],
       "genre": "science"
     },
     {
@@ -2245,7 +3013,10 @@
       "author": "David A. Sinclair",
       "year": 2019,
       "status": "read",
-      "topics": ["science", "longevity"],
+      "topics": [
+        "science",
+        "longevity"
+      ],
       "genre": "science"
     },
     {
@@ -2254,7 +3025,9 @@
       "author": "Michael Malice",
       "year": 2019,
       "status": "read",
-      "topics": ["politics"],
+      "topics": [
+        "politics"
+      ],
       "genre": "politics"
     },
     {
@@ -2263,8 +3036,12 @@
       "author": "Guy Kawasaki",
       "year": 2015,
       "status": "read",
-      "topics": ["startups", "business"],
-      "genre": "business"
+      "topics": [
+        "startups",
+        "business"
+      ],
+      "genre": "business",
+      "isbn13": "9781591847847"
     },
     {
       "id": "fall-or-dodge-in-hell",
@@ -2272,7 +3049,9 @@
       "author": "Neal Stephenson",
       "year": 2019,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -2281,7 +3060,10 @@
       "author": "Adam Higginbotham",
       "year": 2019,
       "status": "read",
-      "topics": ["history", "science"],
+      "topics": [
+        "history",
+        "science"
+      ],
       "genre": "history"
     },
     {
@@ -2290,7 +3072,10 @@
       "author": "David Epstein",
       "year": 2019,
       "status": "read",
-      "topics": ["performance", "learning"],
+      "topics": [
+        "performance",
+        "learning"
+      ],
       "genre": "non-fiction"
     },
     {
@@ -2299,7 +3084,9 @@
       "author": "Derek Kunsken",
       "year": 2018,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -2308,7 +3095,10 @@
       "author": "Peter H. Diamandis & Steven Kotler",
       "year": 2015,
       "status": "read",
-      "topics": ["entrepreneurship", "technology"],
+      "topics": [
+        "entrepreneurship",
+        "technology"
+      ],
       "genre": "business"
     },
     {
@@ -2317,7 +3107,10 @@
       "author": "Peter Brannen",
       "year": 2017,
       "status": "read",
-      "topics": ["science", "geology"],
+      "topics": [
+        "science",
+        "geology"
+      ],
       "genre": "science"
     },
     {
@@ -2326,7 +3119,10 @@
       "author": "David Goggins",
       "year": 2018,
       "status": "read",
-      "topics": ["memoir", "performance"],
+      "topics": [
+        "memoir",
+        "performance"
+      ],
       "genre": "memoir"
     },
     {
@@ -2335,7 +3131,10 @@
       "author": "Eric Barker",
       "year": 2017,
       "status": "read",
-      "topics": ["success", "psychology"],
+      "topics": [
+        "success",
+        "psychology"
+      ],
       "genre": "self-help"
     },
     {
@@ -2344,7 +3143,9 @@
       "author": "Andy Weir",
       "year": 2017,
       "status": "read",
-      "topics": ["science-fiction"],
+      "topics": [
+        "science-fiction"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -2353,7 +3154,10 @@
       "author": "Derek Thompson",
       "year": 2017,
       "status": "read",
-      "topics": ["culture", "marketing"],
+      "topics": [
+        "culture",
+        "marketing"
+      ],
       "genre": "non-fiction"
     },
     {
@@ -2362,7 +3166,11 @@
       "author": "Daniel Ellsberg",
       "year": 2017,
       "status": "read",
-      "topics": ["nuclear", "history", "war"],
+      "topics": [
+        "nuclear",
+        "history",
+        "war"
+      ],
       "genre": "history"
     },
     {
@@ -2371,7 +3179,10 @@
       "author": "Chris Voss",
       "year": 2016,
       "status": "read",
-      "topics": ["negotiation", "business"],
+      "topics": [
+        "negotiation",
+        "business"
+      ],
       "genre": "business"
     },
     {
@@ -2380,7 +3191,10 @@
       "author": "David Quammen",
       "year": 2018,
       "status": "read",
-      "topics": ["biology", "evolution"],
+      "topics": [
+        "biology",
+        "evolution"
+      ],
       "genre": "science"
     },
     {
@@ -2389,7 +3203,9 @@
       "author": "Neil Gaiman",
       "year": 2017,
       "status": "read",
-      "topics": ["mythology"],
+      "topics": [
+        "mythology"
+      ],
       "genre": "fiction"
     },
     {
@@ -2398,7 +3214,10 @@
       "author": "Kurt Vonnegut",
       "year": 1969,
       "status": "read",
-      "topics": ["fiction", "war"],
+      "topics": [
+        "fiction",
+        "war"
+      ],
       "genre": "literary-fiction"
     },
     {
@@ -2407,7 +3226,10 @@
       "author": "Carlo Rovelli",
       "year": 2017,
       "status": "read",
-      "topics": ["physics", "time"],
+      "topics": [
+        "physics",
+        "time"
+      ],
       "genre": "science"
     },
     {
@@ -2416,7 +3238,11 @@
       "author": "Robin Hanson",
       "year": 2016,
       "status": "read",
-      "topics": ["ai", "future", "economics"],
+      "topics": [
+        "ai",
+        "future",
+        "economics"
+      ],
       "genre": "non-fiction"
     },
     {
@@ -2425,7 +3251,11 @@
       "author": "Sam Harris",
       "year": 2014,
       "status": "read",
-      "topics": ["meditation", "spirituality", "neuroscience"],
+      "topics": [
+        "meditation",
+        "spirituality",
+        "neuroscience"
+      ],
       "genre": "philosophy"
     },
     {
@@ -2434,7 +3264,10 @@
       "author": "Michael Pollan",
       "year": 2018,
       "status": "read",
-      "topics": ["psychedelics", "neuroscience"],
+      "topics": [
+        "psychedelics",
+        "neuroscience"
+      ],
       "genre": "science"
     },
     {
@@ -2443,7 +3276,10 @@
       "author": "Yuval Noah Harari",
       "year": 2015,
       "status": "read",
-      "topics": ["future", "history"],
+      "topics": [
+        "future",
+        "history"
+      ],
       "genre": "non-fiction"
     },
     {
@@ -2452,7 +3288,11 @@
       "author": "Nassim Nicholas Taleb",
       "year": 2018,
       "status": "read",
-      "topics": ["risk", "philosophy", "economics"],
+      "topics": [
+        "risk",
+        "philosophy",
+        "economics"
+      ],
       "genre": "philosophy"
     },
     {
@@ -2461,7 +3301,10 @@
       "author": "Yuval Noah Harari",
       "year": 2011,
       "status": "read",
-      "topics": ["history", "anthropology"],
+      "topics": [
+        "history",
+        "anthropology"
+      ],
       "genre": "history"
     },
     {
@@ -2470,8 +3313,13 @@
       "author": "Daniel Kahneman",
       "year": 2011,
       "status": "read",
-      "topics": ["psychology", "economics", "decision-making"],
-      "genre": "psychology"
+      "topics": [
+        "psychology",
+        "economics",
+        "decision-making"
+      ],
+      "genre": "psychology",
+      "isbn13": "9780385676526"
     },
     {
       "id": "behave",
@@ -2479,7 +3327,11 @@
       "author": "Robert Sapolsky",
       "year": 2017,
       "status": "read",
-      "topics": ["neuroscience", "biology", "psychology"],
+      "topics": [
+        "neuroscience",
+        "biology",
+        "psychology"
+      ],
       "genre": "science"
     },
     {
@@ -2488,7 +3340,10 @@
       "author": "Angela Duckworth",
       "year": 2016,
       "status": "read",
-      "topics": ["psychology", "performance"],
+      "topics": [
+        "psychology",
+        "performance"
+      ],
       "genre": "psychology"
     },
     {
@@ -2497,7 +3352,10 @@
       "author": "Stephen King",
       "year": 1982,
       "status": "read",
-      "topics": ["fantasy", "horror"],
+      "topics": [
+        "fantasy",
+        "horror"
+      ],
       "genre": "fantasy"
     },
     {
@@ -2506,7 +3364,10 @@
       "author": "Stephen King",
       "year": 1987,
       "status": "read",
-      "topics": ["fantasy", "horror"],
+      "topics": [
+        "fantasy",
+        "horror"
+      ],
       "genre": "fantasy"
     },
     {
@@ -2515,8 +3376,12 @@
       "author": "Stephen King",
       "year": 1991,
       "status": "read",
-      "topics": ["fantasy", "horror"],
-      "genre": "fantasy"
+      "topics": [
+        "fantasy",
+        "horror"
+      ],
+      "genre": "fantasy",
+      "isbn13": "9781501143540"
     },
     {
       "id": "hillbilly-elegy",
@@ -2524,7 +3389,10 @@
       "author": "J.D. Vance",
       "year": 2016,
       "status": "read",
-      "topics": ["memoir", "society"],
+      "topics": [
+        "memoir",
+        "society"
+      ],
       "genre": "memoir"
     },
     {
@@ -2533,7 +3401,10 @@
       "author": "Neil deGrasse Tyson",
       "year": 2017,
       "status": "read",
-      "topics": ["physics", "cosmology"],
+      "topics": [
+        "physics",
+        "cosmology"
+      ],
       "genre": "science"
     },
     {
@@ -2542,7 +3413,11 @@
       "author": "Nassim Nicholas Taleb",
       "year": 2001,
       "status": "read",
-      "topics": ["probability", "finance", "philosophy"],
+      "topics": [
+        "probability",
+        "finance",
+        "philosophy"
+      ],
       "genre": "finance"
     },
     {
@@ -2551,7 +3426,10 @@
       "author": "Robert Greene",
       "year": 1998,
       "status": "read",
-      "topics": ["power", "strategy"],
+      "topics": [
+        "power",
+        "strategy"
+      ],
       "genre": "self-help"
     },
     {
@@ -2560,7 +3438,10 @@
       "author": "Neil Strauss",
       "year": 2005,
       "status": "read",
-      "topics": ["memoir", "social-dynamics"],
+      "topics": [
+        "memoir",
+        "social-dynamics"
+      ],
       "genre": "memoir"
     },
     {
@@ -2569,7 +3450,11 @@
       "author": "Don Watkins & Yaron Brook",
       "year": 2016,
       "status": "read",
-      "topics": ["economics", "inequality", "libertarianism"],
+      "topics": [
+        "economics",
+        "inequality",
+        "libertarianism"
+      ],
       "genre": "economics"
     },
     {
@@ -2578,7 +3463,9 @@
       "author": "Christopher Paolini",
       "year": 2003,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -2587,7 +3474,9 @@
       "author": "Christopher Paolini",
       "year": 2005,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -2596,7 +3485,9 @@
       "author": "Christopher Paolini",
       "year": 2008,
       "status": "read",
-      "topics": ["fantasy"],
+      "topics": [
+        "fantasy"
+      ],
       "genre": "fantasy"
     },
     {
@@ -2605,8 +3496,11 @@
       "author": "Christopher Paolini",
       "year": 2011,
       "status": "read",
-      "topics": ["fantasy"],
-      "genre": "fantasy"
+      "topics": [
+        "fantasy"
+      ],
+      "genre": "fantasy",
+      "isbn13": "9780375846151"
     },
     {
       "id": "divergent",
@@ -2614,7 +3508,10 @@
       "author": "Veronica Roth",
       "year": 2011,
       "status": "read",
-      "topics": ["young-adult", "dystopia"],
+      "topics": [
+        "young-adult",
+        "dystopia"
+      ],
       "genre": "young-adult"
     },
     {
@@ -2623,7 +3520,10 @@
       "author": "Veronica Roth",
       "year": 2012,
       "status": "read",
-      "topics": ["young-adult", "dystopia"],
+      "topics": [
+        "young-adult",
+        "dystopia"
+      ],
       "genre": "young-adult"
     },
     {
@@ -2632,7 +3532,10 @@
       "author": "Veronica Roth",
       "year": 2013,
       "status": "read",
-      "topics": ["young-adult", "dystopia"],
+      "topics": [
+        "young-adult",
+        "dystopia"
+      ],
       "genre": "young-adult"
     },
     {
@@ -2641,7 +3544,10 @@
       "author": "Pittacus Lore",
       "year": 2010,
       "status": "read",
-      "topics": ["young-adult", "science-fiction"],
+      "topics": [
+        "young-adult",
+        "science-fiction"
+      ],
       "genre": "young-adult"
     },
     {
@@ -2650,7 +3556,10 @@
       "author": "Ludwig von Mises",
       "year": 1949,
       "status": "read",
-      "topics": ["economics", "austrian-economics"],
+      "topics": [
+        "economics",
+        "austrian-economics"
+      ],
       "genre": "economics"
     },
     {
@@ -2660,7 +3569,11 @@
       "year": 1973,
       "status": "read",
       "rating": 5,
-      "topics": ["libertarianism", "economics", "anarcho-capitalism"],
+      "topics": [
+        "libertarianism",
+        "economics",
+        "anarcho-capitalism"
+      ],
       "genre": "political-theory",
       "whyILoveIt": "The libertarian manifesto. Rothbard systematically applies property rights and non-aggression to every area of society—radical, uncompromising, and thrilling to read."
     },
@@ -2670,7 +3583,10 @@
       "author": "Murray N. Rothbard",
       "year": 1974,
       "status": "read",
-      "topics": ["libertarianism", "politics"],
+      "topics": [
+        "libertarianism",
+        "politics"
+      ],
       "genre": "political-theory"
     },
     {
@@ -2679,7 +3595,10 @@
       "author": "Murray N. Rothbard",
       "year": 1963,
       "status": "read",
-      "topics": ["economics", "history"],
+      "topics": [
+        "economics",
+        "history"
+      ],
       "genre": "economics"
     },
     {
@@ -2688,7 +3607,10 @@
       "author": "Murray N. Rothbard",
       "year": 1963,
       "status": "read",
-      "topics": ["economics", "money"],
+      "topics": [
+        "economics",
+        "money"
+      ],
       "genre": "economics"
     },
     {
@@ -2697,7 +3619,9 @@
       "author": "Ludwig von Mises",
       "year": 1979,
       "status": "read",
-      "topics": ["economics"],
+      "topics": [
+        "economics"
+      ],
       "genre": "economics"
     },
     {
@@ -2706,7 +3630,11 @@
       "author": "Frederic Bastiat",
       "year": 1850,
       "status": "read",
-      "topics": ["libertarianism", "law", "economics"],
+      "topics": [
+        "libertarianism",
+        "law",
+        "economics"
+      ],
       "genre": "political-theory"
     },
     {
@@ -2715,7 +3643,10 @@
       "author": "Ron Paul",
       "year": 2011,
       "status": "read",
-      "topics": ["libertarianism", "politics"],
+      "topics": [
+        "libertarianism",
+        "politics"
+      ],
       "genre": "politics"
     },
     {
@@ -2724,7 +3655,10 @@
       "author": "Ron Paul",
       "year": 2009,
       "status": "read",
-      "topics": ["economics", "federal-reserve"],
+      "topics": [
+        "economics",
+        "federal-reserve"
+      ],
       "genre": "economics"
     },
     {
@@ -2733,7 +3667,11 @@
       "author": "N. Stephan Kinsella",
       "year": 2008,
       "status": "read",
-      "topics": ["libertarianism", "law", "ip"],
+      "topics": [
+        "libertarianism",
+        "law",
+        "ip"
+      ],
       "genre": "political-theory"
     },
     {
@@ -2742,7 +3680,11 @@
       "author": "Daniel Hannan",
       "year": 2013,
       "status": "read",
-      "topics": ["history", "liberty", "anglosphere"],
+      "topics": [
+        "history",
+        "liberty",
+        "anglosphere"
+      ],
       "genre": "history"
     },
     {
@@ -2751,7 +3693,10 @@
       "author": "F. Scott Fitzgerald",
       "year": 1925,
       "status": "read",
-      "topics": ["fiction", "classic"],
+      "topics": [
+        "fiction",
+        "classic"
+      ],
       "genre": "literary-fiction"
     },
     {
@@ -2760,7 +3705,10 @@
       "author": "Alexandre Dumas",
       "year": 1844,
       "status": "read",
-      "topics": ["fiction", "classic"],
+      "topics": [
+        "fiction",
+        "classic"
+      ],
       "genre": "literary-fiction"
     },
     {
@@ -2769,7 +3717,10 @@
       "author": "Jane Austen",
       "year": 1813,
       "status": "read",
-      "topics": ["fiction", "classic"],
+      "topics": [
+        "fiction",
+        "classic"
+      ],
       "genre": "literary-fiction"
     },
     {
@@ -2778,7 +3729,10 @@
       "author": "Bram Stoker",
       "year": 1897,
       "status": "read",
-      "topics": ["horror", "classic"],
+      "topics": [
+        "horror",
+        "classic"
+      ],
       "genre": "horror"
     },
     {
@@ -2787,7 +3741,11 @@
       "author": "Mary Shelley",
       "year": 1818,
       "status": "read",
-      "topics": ["horror", "science-fiction", "classic"],
+      "topics": [
+        "horror",
+        "science-fiction",
+        "classic"
+      ],
       "genre": "horror"
     },
     {
@@ -2796,7 +3754,10 @@
       "author": "Herman Melville",
       "year": 1851,
       "status": "read",
-      "topics": ["fiction", "classic"],
+      "topics": [
+        "fiction",
+        "classic"
+      ],
       "genre": "literary-fiction"
     },
     {
@@ -2805,7 +3766,10 @@
       "author": "Plato",
       "year": -380,
       "status": "read",
-      "topics": ["philosophy", "politics"],
+      "topics": [
+        "philosophy",
+        "politics"
+      ],
       "genre": "philosophy"
     },
     {
@@ -2814,7 +3778,10 @@
       "author": "Niccolo Machiavelli",
       "year": 1532,
       "status": "read",
-      "topics": ["politics", "philosophy"],
+      "topics": [
+        "politics",
+        "philosophy"
+      ],
       "genre": "philosophy"
     },
     {
@@ -2823,7 +3790,10 @@
       "author": "Sun Tzu",
       "year": -500,
       "status": "read",
-      "topics": ["strategy", "war"],
+      "topics": [
+        "strategy",
+        "war"
+      ],
       "genre": "philosophy"
     },
     {
@@ -2832,7 +3802,10 @@
       "author": "Karl Marx",
       "year": 1848,
       "status": "read",
-      "topics": ["politics", "economics"],
+      "topics": [
+        "politics",
+        "economics"
+      ],
       "genre": "political-theory"
     },
     {
@@ -2841,7 +3814,10 @@
       "author": "John Stuart Mill",
       "year": 1859,
       "status": "read",
-      "topics": ["philosophy", "liberty"],
+      "topics": [
+        "philosophy",
+        "liberty"
+      ],
       "genre": "philosophy"
     },
     {
@@ -2850,7 +3826,10 @@
       "author": "John Locke",
       "year": 1689,
       "status": "read",
-      "topics": ["philosophy", "politics"],
+      "topics": [
+        "philosophy",
+        "politics"
+      ],
       "genre": "philosophy"
     },
     {
@@ -2859,7 +3838,9 @@
       "author": "Friedrich Nietzsche",
       "year": 1886,
       "status": "read",
-      "topics": ["philosophy"],
+      "topics": [
+        "philosophy"
+      ],
       "genre": "philosophy"
     },
     {
@@ -2868,7 +3849,10 @@
       "author": "Homer",
       "year": -700,
       "status": "read",
-      "topics": ["classic", "mythology"],
+      "topics": [
+        "classic",
+        "mythology"
+      ],
       "genre": "literary-fiction"
     },
     {
@@ -2877,7 +3861,10 @@
       "author": "William R. Forstchen",
       "year": 2009,
       "status": "read",
-      "topics": ["fiction", "survival"],
+      "topics": [
+        "fiction",
+        "survival"
+      ],
       "genre": "thriller"
     },
     {
@@ -2886,7 +3873,10 @@
       "author": "William R. Forstchen",
       "year": 2015,
       "status": "read",
-      "topics": ["fiction", "survival"],
+      "topics": [
+        "fiction",
+        "survival"
+      ],
       "genre": "thriller"
     },
     {
@@ -2895,7 +3885,10 @@
       "author": "William R. Forstchen",
       "year": 2017,
       "status": "read",
-      "topics": ["fiction", "survival"],
+      "topics": [
+        "fiction",
+        "survival"
+      ],
       "genre": "thriller"
     },
     {
@@ -2904,7 +3897,10 @@
       "author": "William R. Forstchen",
       "year": 2024,
       "status": "read",
-      "topics": ["fiction", "survival"],
+      "topics": [
+        "fiction",
+        "survival"
+      ],
       "genre": "thriller"
     },
     {
@@ -2913,7 +3909,10 @@
       "author": "Cat Bohannon",
       "year": 2023,
       "status": "read",
-      "topics": ["biology", "evolution"],
+      "topics": [
+        "biology",
+        "evolution"
+      ],
       "genre": "science"
     },
     {
@@ -2922,7 +3921,10 @@
       "author": "Gretel Ehrlich",
       "year": 1985,
       "status": "read",
-      "topics": ["memoir", "nature"],
+      "topics": [
+        "memoir",
+        "nature"
+      ],
       "genre": "memoir"
     },
     {
@@ -2931,7 +3933,9 @@
       "author": "Stephen King",
       "year": 1974,
       "status": "read",
-      "topics": ["horror"],
+      "topics": [
+        "horror"
+      ],
       "genre": "horror"
     },
     {
@@ -2940,7 +3944,10 @@
       "author": "Robert Louis Stevenson",
       "year": 1883,
       "status": "read",
-      "topics": ["adventure", "classic"],
+      "topics": [
+        "adventure",
+        "classic"
+      ],
       "genre": "adventure"
     },
     {
@@ -2949,7 +3956,10 @@
       "author": "Jack London",
       "year": 1903,
       "status": "read",
-      "topics": ["adventure", "classic"],
+      "topics": [
+        "adventure",
+        "classic"
+      ],
       "genre": "adventure"
     },
     {
@@ -2958,7 +3968,10 @@
       "author": "Jules Verne",
       "year": 1864,
       "status": "read",
-      "topics": ["science-fiction", "classic"],
+      "topics": [
+        "science-fiction",
+        "classic"
+      ],
       "genre": "science-fiction"
     },
     {
@@ -2967,7 +3980,10 @@
       "author": "Jules Verne",
       "year": 1872,
       "status": "read",
-      "topics": ["adventure", "classic"],
+      "topics": [
+        "adventure",
+        "classic"
+      ],
       "genre": "adventure"
     },
     {
@@ -2976,7 +3992,10 @@
       "author": "Charlotte Bronte",
       "year": 1847,
       "status": "read",
-      "topics": ["fiction", "classic"],
+      "topics": [
+        "fiction",
+        "classic"
+      ],
       "genre": "literary-fiction"
     },
     {
@@ -2985,7 +4004,10 @@
       "author": "Emily Bronte",
       "year": 1847,
       "status": "read",
-      "topics": ["fiction", "classic"],
+      "topics": [
+        "fiction",
+        "classic"
+      ],
       "genre": "literary-fiction"
     },
     {
@@ -2994,7 +4016,10 @@
       "author": "Charles Dickens",
       "year": 1861,
       "status": "read",
-      "topics": ["fiction", "classic"],
+      "topics": [
+        "fiction",
+        "classic"
+      ],
       "genre": "literary-fiction"
     },
     {
@@ -3003,7 +4028,10 @@
       "author": "Charles Dickens",
       "year": 1843,
       "status": "read",
-      "topics": ["fiction", "classic"],
+      "topics": [
+        "fiction",
+        "classic"
+      ],
       "genre": "literary-fiction"
     },
     {
@@ -3012,8 +4040,12 @@
       "author": "Arthur Conan Doyle",
       "year": 1892,
       "status": "read",
-      "topics": ["mystery", "classic"],
-      "genre": "mystery"
+      "topics": [
+        "mystery",
+        "classic"
+      ],
+      "genre": "mystery",
+      "coverUrl": "https://covers.openlibrary.org/b/isbn/9780140439083-L.jpg"
     },
     {
       "id": "we",
@@ -3021,7 +4053,10 @@
       "author": "Yevgeny Zamyatin",
       "year": 1924,
       "status": "read",
-      "topics": ["science-fiction", "dystopia"],
+      "topics": [
+        "science-fiction",
+        "dystopia"
+      ],
       "genre": "science-fiction"
     }
   ]
