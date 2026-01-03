@@ -1,838 +1,854 @@
-# Interactive World - Implementation Plan (v5)
+# Floating Library Implementation Plan
 
-## Current Status
-
-**Phase**: 9 - Library Room
-**Working on**: Building Library with interactive book visualization
-**Cross-agent reviews completed**: Codex plan review (v1-v4 → revise, v5 → APPROVED), Phases 0-8 reviews
-**Blockers**: None
-**Runtime**: Phase 8 complete
+**Spec Reference**: `docs/plans/2026-01-03-floating-library-design.md`
+**Last Updated**: 2026-01-03
+**Complexity**: Very High
+**Estimated Phases**: 7
 
 ---
 
-## Overview
+## Executive Summary
 
-Build an immersive 3D "secret level" at `/interactive` that maps to site content. The world includes a mansion exterior and interior rooms (Library, Gym, Projects) visualizing blog posts, books, and PRs.
+Transform `/library` from a grid layout into a 3D cosmic exploration experience using React Three Fiber. Books float as constellations organized by topic (nebulae), with smooth camera transitions between Universe, Constellation, and Book views.
 
-**Spec location**: `/treygoff-interactive-world-spec-v1.2.md`
+### Critical Path
 
-**MVP Scope (per spec):**
-- Exterior: mansion, sky with O'Neill cylinders, garage, "Goff Industries" mech
-- Main Hall: hub with wayfinding to rooms
-- Library: books from reviews/posts
-- Gym: PR visualization with plates
-- Projects Room: museum exhibits
-
-**Deferred to V1.1 (per spec):**
-- Study Room with Knowledge Graph Hologram
-- Audio (ambient + positional)
-- Gaussian Splat integration
+1. Zustand store for library state
+2. Basic Canvas with camera system
+3. Book textures and FloatingBook component
+4. Constellation (nebula) grouping
+5. Universe view with star field
+6. Filters, search, and animations
+7. Polish: stats constellation, performance, accessibility
 
 ---
 
-## Phase 0: Route Isolation + Entry Flow
+## Phase 1: Foundation - Store and Types
 
-**Objective:** Establish isolated `/interactive` route with Normal site integration
+**Goal**: Create the state management infrastructure for the floating library.
+**Dependencies**: None
+**Estimated Effort**: S
 
-**Dependencies:** None
+### Tasks
 
-**Tasks:**
+#### 1.1 Create Library State Store
 
-### 0.1 Route Structure (~30 min)
-- [ ] Create `/app/interactive/` directory
-- [ ] Create `page.tsx` - client-only entry (no SSR)
-- [ ] Create `layout.tsx` - minimal chrome, no TopNav/Footer
-- [ ] Use Client Component boundary with `dynamic()` for code splitting
-- [ ] Verify route loads without errors
+- **Description**: Create a Zustand store for library view state (camera state, selected book, filters, view level). Pattern follows `lib/interactive/store.ts`.
+- **Files to create**:
+  - `/Users/treygoff/Code/trey-goff/lib/library/store.ts`
+- **Technical approach**:
+  ```typescript
+  // Key state shape
+  interface LibraryStore {
+    // View state
+    viewLevel: 'universe' | 'constellation' | 'book'
+    activeConstellation: string | null  // topic name
+    selectedBook: Book | null
 
-### 0.2 Normal Site Entry Flow (~45 min)
-- [ ] Add "Explore Interactive" link to homepage with `prefetch={false}`
-- [ ] Implement high-intent prefetch: hover >500ms or explicit click triggers `router.prefetch()`
-- [ ] Add capability detection (WebGL2, device memory heuristics, reduced-motion preference)
-- [ ] Show dual choice: "Fast (Normal)" vs "Explore (Interactive)"
-- [ ] Quality tier selection before load: Auto (default) / Low / Medium / High
-- [ ] Manual tier overrides auto-detection
+    // Camera targets (for animation)
+    cameraTarget: [number, number, number]
+    cameraPosition: [number, number, number]
 
-### 0.3 Return to Normal (~20 min)
-- [ ] Add persistent "Return to Normal" button in Interactive UI
-- [ ] Never hidden, always accessible
-- [ ] Link back to last Normal page or homepage
+    // Filters
+    statusFilter: BookStatus | null
+    topicFilter: string | null
+    searchQuery: string
+    sortBy: 'rating' | 'title' | 'author' | 'year'
+    // Note: `isFiltered` should be DERIVED (getter) not stored, to avoid state drift
+    // isFiltered = statusFilter !== null || topicFilter !== null || searchQuery.length >= 2
 
-### 0.4 Non-WebGL Fallback (~30 min)
-- [ ] Detect WebGL2 unavailability
-- [ ] Show fallback UI: guided tour mode (static screenshots + content)
-- [ ] Always-available link to Normal site
+    // Performance
+    qualityLevel: 'full' | 'reduced' | 'minimal'
+    showClassicFallback: boolean
 
-**Acceptance Criteria:**
-- [ ] `/interactive` route loads client-only
-- [ ] Normal site has no Three.js imports (verify manually)
-- [ ] Entry flow shows capability detection
-- [ ] Fallback works when WebGL disabled
-- [ ] "Return to Normal" always visible
+    // Actions
+    zoomToConstellation: (topic: string) => void
+    selectBook: (book: Book | null) => void
+    stepBack: () => void
+    setFilters: (...) => void
+    clearFilters: () => void
+  }
+  ```
+- **Acceptance criteria**:
+  - Store exports `useLibraryStore` hook
+  - All state transitions work correctly
+  - `stepBack()` correctly navigates: book -> constellation -> universe
+- **Edge cases**:
+  - Stepping back from universe should no-op
+  - Selecting book while filtered should work correctly
 
-**Complexity:** Moderate
+#### 1.2 Create Library Types
 
----
+- **Description**: Type definitions for constellation data, book positions, topic colors.
+- **Files to create**:
+  - `/Users/treygoff/Code/trey-goff/lib/library/types.ts`
+- **Technical approach**:
+  ```typescript
+  export const TOPIC_COLORS: Record<string, string> = {
+    philosophy: '#8B5CF6',
+    economics: '#F59E0B',
+    governance: '#14B8A6',
+    technology: '#3B82F6',
+    science: '#22C55E',
+    history: '#A16207',
+    fiction: '#F43F5E',
+    biography: '#FB7185',
+    'self-help': '#EAB308',
+    libertarianism: '#EA580C',
+    futurism: '#06B6D4',
+  }
+  export const DEFAULT_TOPIC_COLOR = '#6B7280'
 
-## Phase 1: R3F Infrastructure
+  export interface ConstellationData {
+    topic: string
+    color: string
+    position: [number, number, number]
+    books: BookWithPosition[]
+  }
 
-**Objective:** Set up React Three Fiber canvas with proper configuration
+  export interface BookWithPosition extends Book {
+    position: [number, number, number]
+    isDrifter: boolean
+  }
+  ```
+- **Acceptance criteria**:
+  - All 11 topic colors from spec are defined
+  - Types are exported and usable
 
-**Dependencies:** Phase 0 complete
+#### 1.3 Create Constellation Grouping Utilities
 
-**Tasks:**
+- **Description**: Functions to group books by primary topic, identify drifters, calculate positions.
+- **Files to create**:
+  - `/Users/treygoff/Code/trey-goff/lib/library/constellation.ts`
+- **Technical approach**:
+  - Hash function for deterministic positions (seeded by topic/book ID)
+  - Group books by first topic in `topics[]` array
+  - Single-book topics become drifters
+  - Books with no topics become drifters
+  - Spread constellations in 3D space (spherical distribution)
+  - Position books within constellation with collision avoidance
+- **Acceptance criteria**:
+  - `groupBooksIntoConstellations(books)` returns `ConstellationData[]`
+  - `getDrifterBooks(books)` returns `BookWithPosition[]`
+  - Positions are deterministic (same input = same output)
+  - No overlapping positions within constellation
 
-### 1.1 Canvas Setup (~30 min)
-- [ ] Create `/components/interactive/RendererRoot.tsx`
-- [ ] Configure R3F Canvas with WebGL2 context
-- [ ] Set up color management (sRGB output, ACES tone mapping)
-- [ ] Configure for performance: antialias off, stencil off
+### Phase Verification
 
-### 1.2 GLTF Loader Configuration (~30 min)
-- [ ] Configure GLTFLoader with KTX2Loader
-- [ ] Set up MeshoptDecoder
-- [ ] Create loader wrapper utility
-- [ ] Test with placeholder cube GLB
-
-### 1.3 Quality Tier System (~45 min)
-- [ ] Create `/lib/interactive/quality.ts`
-- [ ] Define Low/Medium/High tier settings per spec:
-  - DPR: 1.0 / 1.5 / min(2.0, native)
-  - Shadow map: none / 1024 / 2048
-  - Shadow distance: none / 20m / 40m
-  - Post-FX: minimal / standard / full
-  - LOD bias: aggressive / normal / quality
-  - Reflection probe res: 64 / 128 / 256
-- [ ] Auto tier: start Medium, sample first 60 frames
-- [ ] Thresholds: P95 >20ms → drop to Low, P95 <12ms → allow High
-- [ ] Never auto-upgrade on mobile (battery concern)
-
-### 1.4 Shader Warmup (~30 min)
-- [ ] Create shader warmup phase
-- [ ] Render all unique materials off-screen during load
-- [ ] Prevent first-frame jank from shader compilation
-
-**Acceptance Criteria:**
-- [ ] Canvas renders test scene
-- [ ] GLTFLoader loads KTX2/Meshopt assets
-- [ ] Quality tier selection works
-- [ ] No shader compilation stutter on first render
-
-**Complexity:** Moderate
-
----
-
-## Phase 2: Asset Pipeline + CI Gates
-
-**Objective:** Establish compression pipeline and budget enforcement
-
-**Dependencies:** Phase 1 complete
-
-**Tasks:**
-
-### 2.1 Asset Directory Structure (~30 min)
-- [ ] Create `/public/assets/chunks/` for room GLB files:
-  - `exterior.glb` - mansion exterior, sky elements
-  - `mainhall.glb` - entry hall, hub area
-  - `library.glb` - shelves, furniture, book slots
-  - `gym.glb` - equipment, plates, plaques
-  - `projects.glb` - pedestals, terminals
-  - `garage.glb` - vehicles, tools, props (separate for streaming)
-- [ ] Create `/public/assets/props/` for shared/LOD-managed props:
-  - `mech.glb` - hero mech (separate for LOD management)
-  - `books-atlas.glb` - instanced book geometry + spine atlas
-  - `plates.glb` - weight plate instances
-- [ ] Create `/public/manifests/` for runtime JSON
-- [ ] Document naming convention: `chunk-[name]-[hash].glb`
-
-### 2.2 Compression Pipeline (~45 min)
-- [ ] Add glTF Transform CLI as dev dependency
-- [ ] Create script: `scripts/compress-assets.ts`
-- [ ] Apply KTX2 texture compression (UASTC for hero, ETC1S for background)
-- [ ] Apply Meshopt geometry compression
-- [ ] Generate hashed filenames
-
-### 2.3 Budget Validation (~45 min)
-- [ ] Create script: `scripts/validate-asset-budgets.ts`
-- [ ] Enforce per-chunk budgets:
-  - Compressed download: <2MB
-  - Triangles: <100K
-  - Draw calls contribution: <30
-  - Textures: <10 unique
-  - Estimated VRAM: <50MB
-- [ ] Enforce scene-wide budgets:
-  - Total triangles in view: <300K
-  - Total draw calls: <100
-  - Peak memory (JS heap + GPU): <500MB with 2 chunks loaded
-- [ ] Check for missing KTX2 textures (all textures must be .ktx2)
-- [ ] Check for missing Meshopt compression (verify extension present)
-- [ ] Validate manifest→asset references (all manifest assets exist)
-- [ ] Fail build on any budget violation
-- [ ] Add to prebuild script
-
-### 2.4 Bundle Analysis (~30 min)
-- [ ] Add bundle analyzer to verify Normal routes
-- [ ] Create CI check: zero Three.js bytes in Normal bundles
-- [ ] Document verification process
-
-**Acceptance Criteria:**
-- [ ] Assets compress with KTX2 + Meshopt
-- [ ] Budget validation runs in prebuild
-- [ ] Missing compression/textures detected and fail build
-- [ ] Manifest→asset references validated
-- [ ] Bundle analysis confirms route isolation
-- [ ] Placeholder exterior chunk created and compressed
-
-**Complexity:** Moderate
+- [ ] `pnpm typecheck` passes
+- [ ] `pnpm lint` passes
+- [ ] Store can be imported and used in a test component
+- [ ] Constellation grouping produces correct output for sample data
 
 ---
 
-## Phase 3: State Management + Telemetry
+## Phase 2: Canvas Infrastructure
 
-**Objective:** Create Zustand store and early telemetry infrastructure
+**Goal**: Set up R3F Canvas with camera system and basic scene.
+**Dependencies**: Phase 1
+**Estimated Effort**: M
 
-**Dependencies:** Phase 2 complete
+### Tasks
 
-**Tasks:**
+#### 2.1 Create FloatingLibrary Canvas Wrapper
 
-### 3.1 Interactive Store (~45 min)
-- [ ] Create `/lib/interactive/store.ts` with Zustand
-- [ ] Chunk states: unloaded/preloading/loaded/active/dormant/disposed
-- [ ] Quality tier state
-- [ ] Settings: camera mode, sensitivity, reduced motion
-- [ ] Current room + spawn position
+- **Description**: Main R3F Canvas component that wraps the 3D scene. Handles WebGL detection, reduced motion, error boundaries.
+- **Files to create**:
+  - `/Users/treygoff/Code/trey-goff/components/library/floating/FloatingLibrary.tsx`
+- **Technical approach**:
+  - Pattern follows `components/interactive/RendererRoot.tsx`
+  - Detect WebGL support, fall back to existing `LibraryClient` if unsupported
+  - Pass `reducedMotion` from `useReducedMotion()` hook
+  - Use `Suspense` for async loading with fallback
+  - Canvas config: dark background (#070A0F), appropriate camera FOV
+- **Acceptance criteria**:
+  - Canvas renders on WebGL-capable browsers
+  - Falls back gracefully on unsupported browsers
+  - Shows loading state during initialization
 
-### 3.2 State Restoration (~30 min)
-- [ ] Save to localStorage: last room, spawn position, quality, settings
-- [ ] Save to URL query params: room (for shareable links)
-- [ ] Restore on load with fallback handling
-- [ ] Show toast on restoration failure: "Couldn't restore position—starting from main hall"
+#### 2.2 Create Camera Controller with Navigation Controls
 
-### 3.3 Telemetry Foundation (~60 min)
-- [ ] Create `/lib/interactive/telemetry.ts`
-- [ ] Track load milestones per spec:
-  - Capability check complete
-  - Download start (per chunk)
-  - Download complete (per chunk)
-  - Shader warmup complete
-  - First render
-  - First input received
-  - First Controllable Frame (FCF)
-- [ ] Track engagement events per spec:
-  - Entry choice: Normal vs Interactive
-  - Room entered (with dwell time)
-  - Book opened (which book)
-  - Project viewed (which project)
-  - Quality tier changed
-  - "Return to Normal" clicked
-- [ ] Performance sampling: FPS buckets (0-15, 15-30, 30-45, 45-60, 60+) every 5s
-  - Include quality tier (initial + current) in sampling events
-- [ ] Long frame detection (>50ms)
-- [ ] Memory warnings (via Performance.memory on Chrome)
-- [ ] WebGL context lost events (telemetry, not just UI)
-- [ ] Note: Graph-mode engagement events deferred to V1.1 with Study room
+- **Description**: Camera system with animated transitions AND manual navigation (drag to pan, scroll/pinch to zoom).
+- **Files to create**:
+  - `/Users/treygoff/Code/trey-goff/components/library/floating/CameraController.tsx`
+- **Technical approach**:
+  - Use `@react-three/drei` `OrbitControls` or `MapControls` for manual navigation
+  - Subscribe to store's `cameraPosition` and `cameraTarget`
+  - **Manual controls** (when NOT in scripted transition):
+    - Mouse drag: pan around scene
+    - Scroll wheel: zoom in/out
+    - Touch: drag to pan, pinch to zoom
+  - **Scripted transitions** (disable manual controls during these):
+    - Use `useFrame` with lerp for smooth transitions (600ms)
+    - Set `controls.enabled = false` during transition
+    - Re-enable controls when transition completes
+  - Instant transitions when `reducedMotion` is true
+  - Camera modes:
+    - Universe: far away, sees all constellations (controls enabled)
+    - Constellation: inside nebula, books spread out (controls enabled, limited zoom range)
+    - Book: focused on single book (controls disabled)
+  - Store `isTransitioning` flag in Zustand to coordinate
+- **Acceptance criteria**:
+  - Camera smoothly animates between positions on scripted transitions
+  - Manual drag/scroll/pinch works when not transitioning
+  - Controls disabled during transitions (no interference)
+  - Reduced motion disables animation
+  - Touch controls work on mobile
 
-### 3.4 Error Handling (~45 min)
-- [ ] WebGL context lost → log to telemetry + show recovery UI with reload button
-- [ ] Chunk load failure → retry 2x with backoff → show error UI
-- [ ] Memory exhaustion → auto-downgrade quality tier; if still failing, prompt reload
-- [ ] Shader compilation failure → fall back to basic materials
-- [ ] Tab suspension recovery: detect hidden→visible transition, verify context
-- [ ] Log all errors to telemetry
+#### 2.3 Create Universe Component
 
-**Acceptance Criteria:**
-- [ ] Store persists across page navigation
-- [ ] State restores from localStorage + query params
-- [ ] All telemetry events fire correctly per spec
-- [ ] Error recovery UI works for all failure modes
-- [ ] Shader fallback works gracefully
+- **Description**: Top-level scene component that renders constellations, drifters, and background.
+- **Files to create**:
+  - `/Users/treygoff/Code/trey-goff/components/library/floating/Universe.tsx`
+- **Technical approach**:
+  - Receive grouped constellation data as props
+  - Render each `Constellation` component at its position
+  - Render `Drifter` components for orphan books
+  - Render star field background (instanced particles)
+  - Handle click on backdrop (step back navigation)
+- **Acceptance criteria**:
+  - All constellations render at correct positions
+  - Drifters are visible and moving
+  - Backdrop click triggers `stepBack()`
 
-**Complexity:** Moderate
+### Phase Verification
 
----
-
-## Phase 4: Loading UX + Character Controller
-
-**Objective:** Implement loading sequence and player movement
-
-**Dependencies:** Phase 3 complete
-
-**Tasks:**
-
-### 4.1 Loading Sequence (~45 min)
-- [ ] Create styled progress bar component
-- [ ] Status text phases: "Initializing...", "Loading assets...", "Warming shaders..."
-- [ ] Fade-in transition to gameplay
-- [ ] Skippable intro cinematic (placeholder)
-
-### 4.2 Pathfinding Library Decision (~20 min)
-- [ ] Evaluate recast-navigation-js vs three-pathfinding
-- [ ] Consider: WASM load time, Safari stability, navmesh generation
-- [ ] Decision: use three-pathfinding (simpler, no WASM)
-- [ ] Document decision in CONTEXT.md
-
-### 4.3 Character Controller - Desktop (~45 min)
-- [ ] Install and configure `ecctrl`
-- [ ] WASD/Arrow key movement
-- [ ] Mouse-look (pointer lock optional, not required)
-- [ ] `E` key / left click interaction raycast
-- [ ] Spawn point system
-
-### 4.4 Character Controller - Mobile (~45 min)
-- [ ] Tap-to-move on navmesh with smooth autopilot
-- [ ] Drag-to-look camera rotation
-- [ ] Tap objects directly for interaction
-- [ ] Optional on-screen joystick (settings toggle)
-- [ ] Room label tap targets for navigation
-
-**Acceptance Criteria:**
-- [ ] Loading sequence completes smoothly
-- [ ] Desktop movement with WASD works
-- [ ] Mobile tap-to-move works
-- [ ] Interaction raycast detects objects
-
-**Complexity:** Complex
+- [ ] `pnpm typecheck` passes
+- [ ] `pnpm lint` passes
+- [ ] `pnpm build` passes
+- [ ] Canvas renders without errors in browser
+- [ ] Console shows no WebGL warnings
 
 ---
 
-## Phase 5: Camera + Interaction System
+## Phase 3: Book Rendering
 
-**Objective:** Polish camera behavior and interaction feedback
+**Goal**: Render individual books as 3D objects with covers.
+**Dependencies**: Phase 2
+**Estimated Effort**: L
 
-**Dependencies:** Phase 4 complete
+### Tasks
 
-**Tasks:**
+#### 3.0 Generate Local Cover Assets (Pre-requisite)
 
-### 5.1 Camera System (~45 min)
-- [ ] Third-person follow camera (default)
-- [ ] First-person mode (settings option)
-- [ ] Smooth transitions with easing
-- [ ] Camera collision avoidance (never clips geometry)
-- [ ] Reduced motion: disable sway, use instant cuts
+- **Description**: Extend cover resolution script to download covers locally and generate LOD versions.
+- **Files to modify**:
+  - `/Users/treygoff/Code/trey-goff/scripts/resolve-book-covers.ts`
+- **Files to create**:
+  - Local cover assets in `public/covers/[book-id]/` at multiple resolutions
+- **Technical approach**:
+  - Download covers from remote URLs to `public/covers/[book-id]/full.jpg`
+  - Generate LOD versions: `thumb.jpg` (64x96), `medium.jpg` (256x384), `full.jpg` (512x768)
+  - Use sharp or similar for image processing
+  - Update `cover-map.json` format to include LOD URLs:
+    ```json
+    {
+      "book-id": {
+        "thumb": "/covers/book-id/thumb.jpg",
+        "medium": "/covers/book-id/medium.jpg",
+        "full": "/covers/book-id/full.jpg"
+      }
+    }
+    ```
+  - Add `pnpm covers:lod` script for this task
+- **Acceptance criteria**:
+  - Local covers exist for all books with remote URLs
+  - Three resolution versions per book
+  - No CORS issues when loading from `/covers/`
+  - Covers survive build and deploy
+- **Why critical**: WebGL `TextureLoader` requires CORS-safe URLs. Remote Google Books/Open Library URLs may fail. Local assets guarantee reliability.
 
-### 5.2 Interaction Feedback (~30 min)
-- [ ] Hover highlight on interactables (subtle outline/glow)
-- [ ] Tap highlight on mobile (brief flash on tap-down)
-- [ ] "Press E" / "Tap to open" hints near interactables
-- [ ] Settings: `Esc` opens settings menu
+#### 3.1 Create Texture Loading System
 
-### 5.3 Diegetic UI System (~30 min)
-- [ ] In-world text rendering for labels
-- [ ] Monitor/screen rendering for project displays
-- [ ] Holographic text for gym PRs
+- **Description**: Load book cover textures with LOD support and placeholder handling.
+- **Files to create**:
+  - `/Users/treygoff/Code/trey-goff/lib/library/textures.ts`
+- **Technical approach**:
+  - Use `THREE.TextureLoader` for cover images
+  - Create colored placeholder texture from topic color
+  - LOD buckets per spec: 64x96 (distant), 256x384 (constellation), 512x768 (detail)
+  - Lazy-load higher res on zoom
+  - Unload textures for off-screen books after 5s
+  - Track memory usage, target < 150MB GPU
+- **Acceptance criteria**:
+  - Covers load from `cover-map.json` URLs
+  - Failed covers show topic-colored placeholder
+  - Memory budget is respected
+  - LOD switching works based on camera distance
 
-### 5.4 Overlay System (~30 min)
-- [ ] Clean DOM overlay panel for long-form content
-- [ ] "Read more" links to Normal route
-- [ ] Persistent "Return to Interactive" from Normal
+#### 3.2 Create FloatingBook Component
 
-**Acceptance Criteria:**
-- [ ] Camera follows smoothly without clipping
-- [ ] Interaction hints appear correctly
-- [ ] Diegetic UI renders in-world text
-- [ ] Overlay opens for detailed content
+- **Description**: Individual book as a 3D plane with cover texture, hover/select states.
+- **Files to create**:
+  - `/Users/treygoff/Code/trey-goff/components/library/floating/FloatingBook.tsx`
+- **Technical approach**:
+  - Plane geometry with book aspect ratio (roughly 2:3)
+  - Apply cover texture from texture system
+  - Subtle floating animation (bob + slight rotation) via `useFrame`
+  - Disable animation when `reducedMotion`
+  - Hover: scale 1.1x, tilt toward cursor, glow intensifies
+  - Click: call `selectBook(book)` in store
+  - Throttled raycasting (16ms) for hover detection
+- **Acceptance criteria**:
+  - Books render with correct covers
+  - Hover state works smoothly
+  - Click selects book and updates store
+  - Animation respects reduced motion
 
-**Complexity:** Moderate
+#### 3.3 Create Drifter Component
 
----
+- **Description**: Orphan book with slow curved trajectory through void.
+- **Files to create**:
+  - `/Users/treygoff/Code/trey-goff/components/library/floating/Drifter.tsx`
+- **Technical approach**:
+  - Extends `FloatingBook` with path animation
+  - Use Bezier or elliptical orbit for curved path
+  - Very slow movement (period: 60-120 seconds)
+  - Path seeded by book ID for determinism
+- **Acceptance criteria**:
+  - Drifters move along curved paths
+  - Movement is continuous and smooth
+  - Path is consistent across page loads
 
-## Phase 6: Chunk Streaming State Machine
+### Phase Verification
 
-**Objective:** Implement room loading/unloading with memory management
-
-**Dependencies:** Phase 5 complete
-
-**Tasks:**
-
-### 6.1 State Machine Core (~45 min)
-- [ ] Implement state flow: unloaded → preloading → loaded → active → dormant → disposed
-- [ ] State transition logging for debugging
-- [ ] Memory tracking via `renderer.info.memory`
-
-### 6.2 Preload Triggers (~30 min)
-- [ ] Door proximity trigger (15m distance)
-- [ ] Start preloading target room chunk
-- [ ] Cancel preload if player moves away
-
-### 6.3 Activation + Transition (~30 min)
-- [ ] Room entry activates chunk
-- [ ] Mark previous room as dormant
-- [ ] Fade to black (0.3s) to mask chunk swap
-- [ ] Spawn at door position after transition
-
-### 6.4 Disposal Protocol (~45 min)
-- [ ] Traverse chunk scene graph on dispose
-- [ ] Dispose: geometry, materials, textures
-- [ ] Handle ImageBitmap cleanup for KTX2
-- [ ] Keep max 2 dormant chunks
-- [ ] Dispose oldest dormant on memory pressure
-- [ ] Verify cleanup with `renderer.info.memory`
-
-**Acceptance Criteria:**
-- [ ] Chunks preload on door proximity
-- [ ] Transitions are smooth (no pop-in)
-- [ ] Memory returns to baseline after disposal
-- [ ] 10-minute session shows stable memory
-
-**Complexity:** Complex
-
----
-
-## Phase 7: Exterior + Main Hall
-
-**Objective:** Build the entry area and hub room
-
-**Dependencies:** Phase 6 complete
-
-**Tasks:**
-
-### 7.1 Exterior Geometry (~45 min)
-- [ ] Create exterior chunk with mansion facade
-- [ ] Ground plane with grid/path texture
-- [ ] Sky: O'Neill cylinders as distant sprites in skybox
-- [ ] Mountains as distant backdrop
-
-### 7.2 Exterior Props + LOD (~60 min)
-- [ ] Garage structure (separate chunk for streaming)
-- [ ] "Goff Industries Prototype" mech (separate prop for LOD management)
-- [ ] Approach path to mansion entrance
-- [ ] Lighting: directional sun + ambient
-- [ ] LOD setup per spec:
-  - Mech: LOD0 (full detail), LOD1 (50% tris), LOD2 (25% tris)
-  - Exterior props: LOD0, LOD1 (50%), LOD2 (billboard/impostor)
-  - Interior furniture: LOD0 (full), LOD1 (60%), N/A (culled when not in room)
-- [ ] Calibrate LOD transition distances
-
-### 7.3 Main Hall Geometry (~30 min)
-- [ ] Hub layout with clear sightlines to all doors
-- [ ] Room label signage at each doorway
-- [ ] Spawn point at entrance
-
-### 7.4 Door/Portal System (~30 min)
-- [ ] Door triggers to each room
-- [ ] Door interaction (approach + E / tap)
-- [ ] Visual feedback when door is activatable
-- [ ] Mobile: room labels as tap-to-navigate targets
-
-**Acceptance Criteria:**
-- [ ] Exterior renders with all required elements
-- [ ] Mech is visible and looks premium
-- [ ] Main hall has clear wayfinding
-- [ ] All doors are interactive
-
-**Complexity:** Moderate
+- [ ] `pnpm typecheck` passes
+- [ ] `pnpm lint` passes
+- [ ] `pnpm build` passes
+- [ ] Books render with covers in browser
+- [ ] Hover states work
+- [ ] Click selection works
+- [ ] Drifters animate along paths
 
 ---
 
-## Phase 8: Content Manifests
+## Phase 4: Constellations and Nebulae
 
-**Objective:** Generate runtime manifests from content sources
+**Goal**: Create the nebula visual effect and topic grouping.
+**Dependencies**: Phase 3
+**Estimated Effort**: M
 
-**Dependencies:** Phase 7 complete
+### Tasks
 
-**Tasks:**
+#### 4.1 Create Constellation Component
 
-### 8.1 Source Alignment (~20 min)
-- [x] Map spec paths to actual codebase paths:
-  - Spec `/content/blog/` → Actual `/content/essays/` (MDX)
-  - Spec `/content/books/` → Actual `/content/library/books.json`
-  - Spec `/content/projects/` → Actual `/content/projects/` (create if needed)
-  - Spec `/data/lifts.json` → Create `/data/lifts.json` with PR data
-  - Spec `/data/knowledge-graph.json` → Deferred to V1.1
-- [x] Document path mapping in CONTEXT.md
+- **Description**: Single nebula containing books for one topic.
+- **Files to create**:
+  - `/Users/treygoff/Code/trey-goff/components/library/floating/Constellation.tsx`
+- **Technical approach**:
+  - Receives topic, color, books, position as props
+  - Renders nebula cloud effect (see 4.2)
+  - Renders contained books at their sub-positions
+  - **Topic label**: Use `@react-three/drei` `Html` component instead of `Text` to avoid font asset dependency
+    - Renders as DOM element positioned in 3D space
+    - Can use CSS with site's design tokens (font-family: var(--font-satoshi))
+    - Add glow/pulse effect via CSS animation
+    - Click handler calls `zoomToConstellation(topic)`
+  - When zoomed in: denser particle dust, warm glow
+- **Acceptance criteria**:
+  - Nebula is visible from universe view
+  - Label is readable and clickable (uses site's Satoshi font via CSS)
+  - Books are positioned within nebula bounds
+  - Visual changes when constellation is active
 
-### 8.2 Manifest Generator (~45 min)
-- [x] Create `/scripts/generate-interactive-manifests.ts`
-- [x] Generate `essays.manifest.json` from essays (named for actual directory)
-- [x] Generate `books.manifest.json` from library data
-- [x] Generate `projects.manifest.json` from projects
-- [x] Generate `lifts.manifest.json` from lifts data
+#### 4.2 Create Nebula Effect
 
-### 8.3 Manifest Schema (~30 min)
-- [x] Define TypeScript types for each manifest
-- [x] Include required fields per spec:
-  - Essays: id, slug, title, excerpt, tags, publishedAt, readingTime, status
-  - Books: id, title, author, rating, tier, blurb, topics, year, coverImage
-  - Projects: id, title, summary, links, images, tags, status, type, featuredRank
-  - Lifts: squat, bench, deadlift, total with weight/unit/date + history
+- **Description**: Glowing cloud effect for constellation background.
+- **Files to create**:
+  - `/Users/treygoff/Code/trey-goff/components/library/floating/NebulaCloud.tsx`
+- **Technical approach**:
+  - Options: drei `Cloud` component, or custom particle system
+  - Color from topic's assigned color
+  - Soft edges, slight animation (if motion allowed)
+  - Bloom post-processing for glow effect
+  - Lower opacity when viewing from distance
+- **Acceptance criteria**:
+  - Nebula has correct topic color
+  - Soft, glowing appearance
+  - Not too dense (books visible inside)
 
-### 8.4 Build Integration (~20 min)
-- [x] Add manifest generation to prebuild script
-- [x] Validate manifests have required fields (via TypeScript types)
-- [x] Output to `/public/manifests/`
+#### 4.3 Create Star Field Background
 
-**Acceptance Criteria:**
-- [x] All manifests generate correctly
-- [x] Manifests have all required fields
-- [x] Build includes manifest generation
-- [x] TypeScript types match manifest structure
+- **Description**: Subtle star field with slight twinkle.
+- **Files to create**:
+  - `/Users/treygoff/Code/trey-goff/components/library/floating/StarField.tsx`
+- **Technical approach**:
+  - Use `InstancedMesh` for performance (1000-5000 particles)
+  - Small white points scattered in sphere around scene
+  - Subtle brightness variation (twinkle) via shader or opacity animation
+  - Disable twinkle when `reducedMotion`
+- **Acceptance criteria**:
+  - Stars visible throughout scene
+  - Performance impact minimal
+  - Twinkle effect present (motion allowed)
 
-**Complexity:** Simple
+### Phase Verification
 
----
-
-## Phase 9: Library Room
-
-**Objective:** Build the Library with interactive book visualization
-
-**Dependencies:** Phase 8 complete
-
-**Tasks:**
-
-### 9.1 Library Geometry (~30 min)
-- [ ] Create library room chunk
-- [ ] Bookshelf layout with slots
-- [ ] Reading nook area
-- [ ] Warm ambient lighting
-
-### 9.2 Book Instances (~45 min)
-- [ ] Create book mesh template
-- [ ] Generate InstancedMesh from books.manifest
-- [ ] Per-instance variation (color, size, position in slot)
-- [ ] Spine text atlas (placeholder or build-time generated)
-
-### 9.3 Book Interaction (~45 min)
-- [ ] Hover highlight on books
-- [ ] Click opens book inspection mode
-- [ ] Book animates to inspect position
-- [ ] Overlay shows book details + review excerpt
-- [ ] "Read Review" links to Normal site
-
-**Acceptance Criteria:**
-- [ ] Library loads with books from manifest
-- [ ] Books display correctly on shelves
-- [ ] Book interaction shows details
-- [ ] Navigation to Normal preserves return state
-
-**Complexity:** Moderate
+- [ ] `pnpm typecheck` passes
+- [ ] `pnpm lint` passes
+- [ ] `pnpm build` passes
+- [ ] Nebulae render with correct colors
+- [ ] Star field visible
+- [ ] Labels clickable and trigger zoom
 
 ---
 
-## Phase 10: Gym Room
+## Phase 5: View Transitions and Detail Panel
 
-**Objective:** Build the Gym with data-driven PR visualization
+**Goal**: Implement smooth camera transitions and book detail overlay.
+**Dependencies**: Phase 4
+**Estimated Effort**: M
 
-**Dependencies:** Phase 9 complete
+### Tasks
 
-**Tasks:**
+#### 5.1 Implement View Level Transitions
 
-### 10.1 Gym Geometry (~30 min)
-- [ ] Create gym room chunk
-- [ ] Barbell station centerpiece
-- [ ] Achievement plaque wall
-- [ ] Industrial/gym lighting
+- **Description**: Camera animations between Universe/Constellation/Book views.
+- **Files to modify**:
+  - `/Users/treygoff/Code/trey-goff/components/library/floating/CameraController.tsx`
+  - `/Users/treygoff/Code/trey-goff/lib/library/store.ts`
+  - `/Users/treygoff/Code/trey-goff/components/library/floating/FloatingBook.tsx`
+- **Technical approach**:
+  - Store actions calculate target positions:
+    - `zoomToConstellation`: move camera inside nebula, warm glow atmosphere
+    - `selectBook`: move camera to book position
+    - `stepBack`: reverse to previous level
+  - Camera controller lerps to targets (600ms ease-out)
+  - Non-active constellations fade/blur during constellation view
+  - **Book view visuals** (per spec):
+    - Selected book scales up and pulls toward camera center
+    - **Other books dim** to ~20% opacity (not just blur background)
+    - **Spotlight effect** on selected book (point light or emissive material)
+    - **3D depth**: selected book uses BoxGeometry (slight thickness) instead of flat plane
+    - Post-processing depth-of-field for background blur
+  - Disable manual camera controls during book view
+- **Acceptance criteria**:
+  - Smooth 600ms transition to constellation
+  - Book selection pulls book forward with 3D depth
+  - Other books dim when book is selected
+  - Spotlight illuminates selected book
+  - Background blurs when book selected
+  - `stepBack` reverses correctly
 
-### 10.2 Plate Visualization (~45 min)
-- [ ] Load lifts.manifest.json
-- [ ] Calculate plate counts: `floor((weight - 45) / (2 * plateWeight))`
-- [ ] InstancedMesh for plates (45lb, 25lb, 10lb, etc.)
-- [ ] Plates render correctly on bar
+#### 5.2 Create BookDetailPanel Component and Amazon URL Validation
 
-### 10.3 PR Display (~30 min)
-- [ ] Holographic text for PR numbers
-- [ ] Date plaques for achievements
-- [ ] Squat, Bench, Deadlift, Total displayed
+- **Description**: HTML overlay showing selected book details, plus centralized Amazon URL validation.
+- **Files to create**:
+  - `/Users/treygoff/Code/trey-goff/components/library/floating/BookDetailPanel.tsx`
+  - `/Users/treygoff/Code/trey-goff/lib/library/amazon.ts` (validation helper)
+- **Files to modify**:
+  - `/Users/treygoff/Code/trey-goff/components/library/BookDetail.tsx` (add validation to classic fallback too)
+- **Technical approach**:
+  - Create `isValidAmazonUrl(url: string): boolean` helper in `lib/library/amazon.ts`
+    - Parse URL, check hostname matches `amazon.com`, `*.amazon.com`, or regional domains
+    - Regex: `/^([\w-]+\.)?amazon(\.[a-z]{2,3}){1,2}$/`
+  - Reuse markup/styling from existing `BookDetail.tsx`
+  - Position: right side on desktop, bottom sheet on mobile
+  - Show when `selectedBook !== null`
+  - Amazon link: only render if URL passes `isValidAmazonUrl()`, add `rel="noopener noreferrer" target="_blank"`
+  - Close button calls `selectBook(null)`
+  - **Also update `BookDetail.tsx`** to use the same validation (for classic fallback)
+- **Acceptance criteria**:
+  - Panel shows all book info (title, author, rating, topics, whyILoveIt)
+  - Amazon link validates URL hostname (rejects lookalikes)
+  - Both new panel AND classic BookDetail validate Amazon URLs
+  - Close button works
+  - Panel slides from right (desktop) or bottom (mobile)
 
-**Acceptance Criteria:**
-- [ ] Gym shows accurate PR data from manifest
-- [ ] Plates visualize weight correctly
-- [ ] PR display is readable and impressive
+#### 5.3 Implement Navigation Controls
 
-**Complexity:** Simple
+- **Description**: Breadcrumb, Escape key, and back button handling.
+- **Files to create**:
+  - `/Users/treygoff/Code/trey-goff/components/library/floating/LibraryBreadcrumb.tsx`
+- **Files to modify**:
+  - `/Users/treygoff/Code/trey-goff/components/library/floating/FloatingLibrary.tsx`
+- **Technical approach**:
+  - Breadcrumb: "Library" > "Philosophy" > "Book Title"
+  - Click any level to jump there
+  - Escape key listener calls `stepBack()`
+  - Browser back button should work (consider URL state)
+- **Acceptance criteria**:
+  - Breadcrumb shows current navigation path
+  - Clicking breadcrumb levels works
+  - Escape key steps back
+  - All methods documented in spec work
 
----
+### Phase Verification
 
-## Phase 11: Projects Room
-
-**Objective:** Build the Projects room with museum-style exhibits
-
-**Dependencies:** Phase 10 complete
-
-**Tasks:**
-
-### 11.1 Projects Geometry (~30 min)
-- [ ] Create projects room chunk
-- [ ] Pedestal layout for exhibits
-- [ ] Terminal/screen displays
-- [ ] Museum-like lighting
-
-### 11.2 Project Exhibits (~45 min)
-- [ ] Load projects.manifest.json
-- [ ] Generate pedestals from project data
-- [ ] Project thumbnail on terminal screens
-- [ ] Holographic project name labels
-
-### 11.3 Project Interaction (~30 min)
-- [ ] Click opens detail overlay
-- [ ] Links to live project / GitHub
-- [ ] "View Project" navigates to Normal site
-
-**Acceptance Criteria:**
-- [ ] Projects room shows all projects
-- [ ] Project interactions work
-- [ ] Links to external sites work
-
-**Complexity:** Simple
-
----
-
-## Phase 12: Post-Processing + Polish
-
-**Objective:** Add cinematic post-processing and visual polish
-
-**Dependencies:** Phase 11 complete
-
-**Tasks:**
-
-### 12.1 Post-Processing Stack (~45 min)
-- [ ] Tone mapping (ACES) - all tiers
-- [ ] Color grading (shader-based, no LUT)
-- [ ] Selective bloom (Medium/High only, emissive >1.0)
-- [ ] Vignette (Medium/High)
-- [ ] Film grain (High only, optional)
-- [ ] Gate by quality tier and reduced-motion
-
-### 12.2 Lighting Polish (~30 min)
-- [ ] Consistent lighting across rooms
-- [ ] Baked lightmap placeholders (or real bakes if time)
-- [ ] Reflection probes per room
-
-### 12.3 Material Polish (~30 min)
-- [ ] Verify PBR consistency
-- [ ] Add surface detail: edge wear, dust, roughness variation
-- [ ] No flat/plastic look
-
-### 12.4 Reduced Motion (~20 min)
-- [ ] Respect `prefers-reduced-motion`
-- [ ] Provide explicit toggle in settings
-- [ ] Skip: motion blur, camera sway, long transitions
-- [ ] Use instant camera cuts
-
-**Acceptance Criteria:**
-- [ ] Post-processing looks cinematic
-- [ ] Lighting is consistent and flattering
-- [ ] Materials look premium
-- [ ] Reduced motion respected
-
-**Complexity:** Moderate
+- [ ] `pnpm typecheck` passes
+- [ ] `pnpm lint` passes
+- [ ] `pnpm build` passes
+- [ ] Click nebula label -> zoom in works
+- [ ] Click book -> detail panel shows
+- [ ] Escape key steps back
+- [ ] Breadcrumb navigation works
 
 ---
 
-## Phase 13: Mobile Optimization
+## Phase 6: Filtering, Search, and Animations
 
-**Objective:** Ensure smooth mobile experience
+**Goal**: Implement filter controls and regrouping animations.
+**Dependencies**: Phase 5
+**Estimated Effort**: L
 
-**Dependencies:** Phase 12 complete
+### Tasks
 
-**Tasks:**
+#### 6.1 Create LibraryHUD Component
 
-### 13.1 Mobile Quality Tier (~30 min)
-- [ ] Auto-detect mobile devices
-- [ ] Default to Low tier on mobile
-- [ ] Never auto-upgrade on mobile (battery)
-- [ ] Larger tap targets for interactions
+- **Description**: Filter controls floating over the 3D scene.
+- **Files to create**:
+  - `/Users/treygoff/Code/trey-goff/components/library/floating/LibraryHUD.tsx`
+- **Technical approach**:
+  - HTML overlay in top-left corner
+  - Controls: Status dropdown, Topic dropdown, Sort dropdown, Search input
+  - Style: minimal, semi-transparent background, matches site design tokens
+  - **Search semantics** (per spec):
+    - Minimum 2 characters to trigger search
+    - Case-insensitive substring match on title AND author
+    - Debounce 300ms
+  - **Sort semantics** (per spec):
+    - Rating: highest first (5 → 1), unrated last
+    - Title: A → Z
+    - Author: A → Z (by last name if parseable, else full string)
+    - Year: newest first
+    - **Sort only repositions when filtered** (unfiltered keeps seeded positions)
+  - On filter/search change: update store, zoom out to universe if in constellation/book view
+- **Acceptance criteria**:
+  - All four controls work
+  - Search requires min 2 chars, debounces correctly
+  - Sort directions match spec
+  - Filter change zooms out to universe view
+  - Controls are accessible via keyboard
 
-### 13.2 Mobile Input Polish (~30 min)
-- [ ] Tap-to-move as primary
-- [ ] Room label waypoints work correctly
-- [ ] No pointer lock requirement
-- [ ] No browser gesture conflicts
+#### 6.2 Implement Filter Regrouping Animation
 
-### 13.3 Performance Verification (~45 min)
-- [ ] Test on iPhone 12 Safari
-- [ ] Test on mid-range Android Chrome
-- [ ] Verify 30fps at Low tier
-- [ ] Verify FCF <5s
+- **Description**: Books regroup into central cluster when filtered; nebulae are hidden.
+- **Files to modify**:
+  - `/Users/treygoff/Code/trey-goff/components/library/floating/Universe.tsx`
+  - `/Users/treygoff/Code/trey-goff/lib/library/constellation.ts`
+- **Technical approach**:
+  - When `isFiltered`:
+    - **Hide all nebulae** (fade out NebulaCloud components)
+    - Calculate "Search Results" cluster positions at scene center
+    - Non-matching books fade to 10% opacity and drift outward
+    - Matching books animate to cluster center (800ms ease-out)
+    - Sort affects position within cluster (spiral layout)
+    - Show "No books match filters" with clear button if zero matches
+  - Clear filter: nebulae fade back in, books animate back to home nebulae (1000ms)
+  - **Stats update**: pass filtered book list to StatsConstellation when filtered
+- **Acceptance criteria**:
+  - Filter hides nebulae (per spec)
+  - Matching books shown in central cluster
+  - Non-matching books dim to 10% opacity
+  - Empty state shows message with clear action
+  - Stats update to reflect filtered subset
+  - Clear filter animates books back and restores nebulae
 
-**Acceptance Criteria:**
-- [ ] Mobile experience is smooth
-- [ ] 30fps on target mobile devices
-- [ ] No gesture conflicts
-- [ ] Tap-to-move works reliably
+#### 6.3 Implement Book Position Animations
 
-**Complexity:** Simple
+- **Description**: Smooth position transitions for regrouping.
+- **Files to modify**:
+  - `/Users/treygoff/Code/trey-goff/components/library/floating/FloatingBook.tsx`
+- **Technical approach**:
+  - Book receives target position, animates with lerp
+  - Animation duration: ~800ms for filter, ~500ms for sort
+  - Stagger animation start slightly per book for organic feel
+  - Respect `reducedMotion` (instant position change)
+- **Acceptance criteria**:
+  - Books animate smoothly to new positions
+  - No position glitches or jumps
+  - Reduced motion makes changes instant
 
----
+### Phase Verification
 
-## Phase 14: Settings + Accessibility
-
-**Objective:** Complete settings menu and accessibility features
-
-**Dependencies:** Phase 13 complete
-
-**Tasks:**
-
-### 14.1 Settings Menu (~45 min)
-- [ ] Quality tier: Auto/Low/Medium/High
-- [ ] Reduced motion toggle
-- [ ] Camera: Third-person/First-person
-- [ ] Sensitivity, invert Y, camera distance
-- [ ] Mobile: joystick toggle
-- [ ] Debug overlay (dev only): FPS, frame time, chunk state, draw calls, triangle count, texture count, VRAM estimate, JS heap size
-
-### 14.2 Keyboard Navigation (~30 min)
-- [ ] Menus accessible via keyboard
-- [ ] Visible focus states
-- [ ] Esc opens settings menu
-
-### 14.3 Screen Reader Fallback (~30 min)
-- [ ] Canvas is aria-hidden
-- [ ] Provide accessible summary of room content
-- [ ] Link to Normal site for full content
-
-### 14.4 Security (~20 min)
-- [ ] Sanitize any CMS HTML in overlays
-- [ ] Verify CSP constraints
-- [ ] External links: rel="noopener noreferrer"
-
-**Acceptance Criteria:**
-- [ ] Settings work and persist
-- [ ] Keyboard navigation functional
-- [ ] Accessibility basics covered
-- [ ] No security vulnerabilities
-
-**Complexity:** Simple
-
----
-
-## Phase 15: QA + Launch Verification
-
-**Objective:** Full testing and launch readiness
-
-**Dependencies:** Phase 14 complete
-
-**Tasks:**
-
-### 15.1 Device Matrix Testing (~60 min)
-- [ ] MacBook Air M1 - Chrome, Safari
-- [ ] iPhone 12+ - Safari (P0)
-- [ ] Pixel 6 / Samsung S21 - Chrome (P0)
-- [ ] Windows laptop - Chrome, Edge (P1)
-- [ ] iPad - Safari (P1)
-
-### 15.2 Performance Verification (~30 min)
-- [ ] FCF <5s on 50Mbps
-- [ ] 60fps on M1 at Medium tier
-- [ ] 30fps on iPhone 12 at Low tier
-- [ ] Memory stable over 10-minute session
-- [ ] No memory leaks from disposal
-
-### 15.3 Normal Site Verification (~20 min)
-- [ ] No prefetch of /interactive from Normal links
-- [ ] No regression in Core Web Vitals
-- [ ] Zero Three.js bytes in Normal bundles (bundle analysis)
-
-### 15.4 Functionality Verification (~30 min)
-- [ ] All rooms reachable and functional
-- [ ] All content interactions work
-- [ ] State restoration works after Normal navigation
-- [ ] Settings persist across sessions
-- [ ] Error recovery UI works
-
-### 15.5 Testing (~60 min)
-- [ ] Unit tests:
-  - Manifest generation schema validation
-  - Capability detection logic
-  - Quality tier selection logic
-  - Chunk state machine transitions
-- [ ] Integration tests:
-  - GLTFLoader with KTX2/Meshopt loads correctly
-  - Disposal actually frees memory (verify with renderer.info)
-  - State restoration from localStorage + query params
-  - Tab suspension recovery (simulate visibility change, verify context)
-- [ ] E2E tests:
-  - Enter Interactive from Normal
-  - Navigate to each room
-  - Open content overlay
-  - Navigate to Normal and return
-  - Complete flow on mobile viewport
-
-### 15.6 Device Matrix Completion (~30 min)
-- [ ] Firefox desktop (P2 priority)
-- [ ] Verify all P1/P2 devices pass basic functionality
-
-**Acceptance Criteria:**
-- [ ] All P0 devices pass testing
-- [ ] All performance targets met
-- [ ] All functionality works
-- [ ] All unit/integration/e2e tests pass
-- [ ] Firefox P2 verified
-
-**Complexity:** Moderate
+- [ ] `pnpm typecheck` passes
+- [ ] `pnpm lint` passes
+- [ ] `pnpm build` passes
+- [ ] Status filter works
+- [ ] Topic filter works (matches any topic in array)
+- [ ] Search filters by title/author
+- [ ] Sort reorders filtered cluster
+- [ ] Clear filter animates books back
 
 ---
 
-## Phase 16: Codex Final Cross-Check + Launch
+## Phase 7: Polish, Performance, and Accessibility
 
-**Objective:** Get final approval and ship
+**Goal**: Stats constellation, performance optimization, accessibility, and final polish.
+**Dependencies**: Phase 6
+**Estimated Effort**: L
 
-**Dependencies:** Phase 15 complete
+### Tasks
 
-**Tasks:**
+#### 7.1 Create StatsConstellation Component
 
-### 16.1 Pre-Launch Checklist (~30 min)
-- [ ] All phases complete in this plan
-- [ ] All quality gates pass (typecheck, lint, build)
-- [ ] All tests pass
-- [ ] Manual verification on device matrix complete
+- **Description**: Special nebula showing reading statistics as floating artifacts.
+- **Files to create**:
+  - `/Users/treygoff/Code/trey-goff/components/library/floating/StatsConstellation.tsx`
+- **Technical approach**:
+  - Position among topic nebulae
+  - Contents (when zoomed in):
+    - Total Books: large glowing 3D text
+    - 5-Star Books: golden cluster of those book covers
+    - Average Rating: floating star icons
+    - Books by Year: horizontal timeline with positioned books
+    - Topic Breakdown: mini-nebulae with relative sizes
+  - Use existing stats utilities from `lib/books/index.ts`
+  - Interactive: click 5-star cluster to highlight those books
+- **Acceptance criteria**:
+  - Stats constellation visible in universe view
+  - All five stat displays render correctly
+  - Interactive elements work
+  - Handles empty/missing data gracefully
 
-### 16.2 Codex Final Cross-Check (~60 min)
-- [ ] Call Codex for final review
-- [ ] Address any issues found
-- [ ] Get "ship it" verdict
+#### 7.2 Implement Performance Optimization
 
-### 16.3 Capture Learnings (~20 min)
-- [ ] Update LEARNINGS.md with:
-  - What worked
-  - What failed
-  - Patterns for future
+- **Description**: LOD, graceful degradation, FPS monitoring.
+- **Files to create**:
+  - `/Users/treygoff/Code/trey-goff/lib/library/performance.ts`
+- **Files to modify**:
+  - `/Users/treygoff/Code/trey-goff/components/library/floating/FloatingLibrary.tsx`
+  - `/Users/treygoff/Code/trey-goff/components/library/floating/FloatingBook.tsx`
+- **Technical approach**:
+  - FPS sampling (use existing pattern from `lib/interactive/quality.ts`)
+  - Hysteresis thresholds per spec:
+    - < 45fps for 2s: reduce particles 50%
+    - < 35fps for 2s: disable post-processing
+    - < 25fps for 2s: simplify to flat sprites
+    - < 20fps for 3s: prompt for classic view
+  - Store quality level in library store
+  - LOD for book textures based on camera distance
+  - Frustum culling (R3F default, verify working)
+- **Acceptance criteria**:
+  - 60fps on modern devices (M1, iPhone 12+)
+  - Graceful degradation when performance drops
+  - No oscillation between quality levels (hysteresis)
+  - Memory stays under 150MB GPU textures
 
-### 16.4 Ship (~10 min)
-- [ ] All commits pushed
-- [ ] PR opened (if on feature branch)
-- [ ] Celebrate
+#### 7.3 Implement Accessibility
 
-**Acceptance Criteria:**
-- [ ] Codex verdict: "ship it"
-- [ ] All commits pushed
-- [ ] Learnings captured
+- **Description**: Screen reader support, keyboard navigation, reduced motion.
+- **Files to create**:
+  - `/Users/treygoff/Code/trey-goff/components/library/floating/AccessibleBookList.tsx`
+- **Files to modify**:
+  - `/Users/treygoff/Code/trey-goff/components/library/floating/FloatingLibrary.tsx`
+- **Technical approach**:
+  - Canvas: `aria-hidden="true"`
+  - Render hidden `<ul>` with all books grouped by topic (SR-accessible)
+  - Focus management: move focus to detail panel when book selected
+  - Tab navigation: filter controls, breadcrumb, detail panel
+  - Escape: close detail, step back
+  - `prefers-reduced-motion`: disable all animations, instant transitions
+- **Acceptance criteria**:
+  - Screen reader can navigate book list
+  - Focus moves to detail panel on selection
+  - Keyboard navigation works for overlays
+  - Reduced motion disables all animation
 
-**Complexity:** Simple
+#### 7.4 Update Library Page Entry Point
+
+- **Description**: Integrate floating library into `/library` page.
+- **Files to modify**:
+  - `/Users/treygoff/Code/trey-goff/app/library/page.tsx`
+- **Technical approach**:
+  - Import `FloatingLibrary` component
+  - Pass book data from `getAllBooks()`
+  - Wrap in error boundary
+  - Keep existing `LibraryClient` as fallback option
+  - Full viewport canvas with overlays
+- **Acceptance criteria**:
+  - `/library` shows 3D experience by default
+  - Falls back to grid on WebGL error
+  - SEO metadata and structured data preserved
+  - Page loads without hydration errors
+
+#### 7.5 Mobile Optimization
+
+- **Description**: Touch controls and mobile-specific UI.
+- **Files to modify**:
+  - `/Users/treygoff/Code/trey-goff/components/library/floating/FloatingLibrary.tsx`
+  - `/Users/treygoff/Code/trey-goff/components/library/floating/BookDetailPanel.tsx`
+- **Technical approach**:
+  - Touch to select (no hover states on mobile)
+  - Pinch to zoom, drag to pan (drei controls)
+  - Detail panel slides from bottom (< 768px)
+  - Reduce texture resolution on mobile (50%)
+  - Touch-friendly filter controls
+- **Acceptance criteria**:
+  - Touch controls work smoothly
+  - Detail panel is bottom sheet on mobile
+  - Performance acceptable on mid-range mobile
+
+### Phase Verification
+
+- [ ] `pnpm typecheck` passes
+- [ ] `pnpm lint` passes
+- [ ] `pnpm build` passes
+- [ ] Stats constellation renders correctly
+- [ ] Performance monitor shows 60fps on capable devices
+- [ ] Graceful degradation triggers correctly
+- [ ] Screen reader can navigate all books
+- [ ] Mobile touch controls work
+- [ ] `/library` URL loads new experience
 
 ---
 
-## Post-Launch (V1.1 - Deferred)
+## Integration Points
 
-Per spec, these are explicitly deferred:
+### Data Flow
 
-- **Study Room + Knowledge Graph Hologram** (moved from MVP)
-- Audio (ambient + positional)
-- Gaussian Splat integration
-- Additional rooms
-- WebGPU exploration
-- Animation polish
+```
+books.json (build time)
+    |
+    v
+getAllBooks() -> groupBooksIntoConstellations()
+    |
+    v
+Universe component receives ConstellationData[]
+    |
+    v
+Each Constellation renders its books
+    |
+    v
+FloatingBook loads texture, handles interaction
+    |
+    v
+User click -> store.selectBook() -> BookDetailPanel renders
+```
+
+### Component Hierarchy
+
+```
+app/library/page.tsx
+  |
+  +-- FloatingLibrary (Canvas wrapper)
+        |
+        +-- CameraController
+        +-- Universe
+        |     +-- StarField
+        |     +-- Constellation[] (one per topic)
+        |     |     +-- NebulaCloud
+        |     |     +-- FloatingBook[]
+        |     |     +-- TopicLabel
+        |     +-- StatsConstellation
+        |     +-- Drifter[]
+        |
+        +-- LibraryHUD (HTML overlay)
+        +-- LibraryBreadcrumb (HTML overlay)
+        +-- BookDetailPanel (HTML overlay)
+        +-- AccessibleBookList (hidden, SR only)
+```
+
+### Store Connections
+
+| Component | Store Usage |
+|-----------|-------------|
+| CameraController | Reads `cameraPosition`, `cameraTarget` |
+| Universe | Reads `viewLevel`, `activeConstellation`, `isFiltered` |
+| FloatingBook | Calls `selectBook()` |
+| Constellation | Calls `zoomToConstellation()` |
+| BookDetailPanel | Reads `selectedBook`, calls `selectBook(null)` |
+| LibraryHUD | Reads/writes filters, calls `setFilters()`, `clearFilters()` |
+| LibraryBreadcrumb | Reads view state, calls `stepBack()`, `zoomToConstellation()` |
 
 ---
 
-## Risk Mitigations
+## Testing Strategy
 
-| Risk | Mitigation |
-|------|------------|
-| Asset weight exceeds budgets | CI gates in Phase 2, aggressive KTX2/Meshopt |
-| Mobile Safari performance | Early device testing Phase 4, default Low tier |
-| Shader compilation jank | Warmup phase in Phase 1 |
-| Memory leaks | Disposal protocol Phase 6, monitoring throughout |
-| Three.js leaks to Normal | Bundle analysis Phase 2, manual prefetch Phase 0 |
-| Art quality shortfall | Clear texel density targets, PBR discipline |
+### Unit Tests
+
+- Constellation grouping logic (determinism, drifter detection)
+- Amazon URL validation
+- Position calculation functions
+
+### Integration Tests
+
+- Store state transitions
+- Filter application and clearing
+- Navigation flow (universe -> constellation -> book -> back)
+
+### E2E Tests (Playwright)
+
+- Load library page, verify canvas renders
+- Click constellation label, verify zoom
+- Click book, verify detail panel
+- Use filters, verify regrouping
+- Test keyboard navigation (Escape, Tab)
+- Mobile touch interaction
+
+### Performance Tests
+
+- FPS benchmark on target devices
+- Memory usage monitoring
+- Texture loading time
 
 ---
 
-## Definition of Done
+## Rollout Considerations
 
-1. All 16 phases marked complete
-2. All cross-agent reviews passed (plan + phase + final)
-3. All quality gates pass (typecheck, lint, build)
-4. Codex final verdict: "ship it"
-5. Manual verification on P0 device matrix
-6. All commits pushed
-7. Learnings captured in LEARNINGS.md
+### Feature Flag
+
+Consider adding a feature flag to enable/disable 3D library:
+
+```typescript
+// lib/library/config.ts
+export const ENABLE_FLOATING_LIBRARY = true
+```
+
+### Migration
+
+- No database migration needed
+- `amazonUrl` field already exists in Book type
+- Cover map already exists
+
+### Rollback
+
+- Keep `LibraryClient` component intact
+- Feature flag can disable 3D mode
+- Query param `?view=classic` for manual override
+
+---
+
+## Risk Assessment
+
+### Technical Risks
+
+| Risk | Likelihood | Impact | Mitigation |
+|------|-----------|--------|------------|
+| WebGL compatibility issues | Medium | High | Comprehensive fallback to grid view |
+| Performance on low-end devices | Medium | Medium | Aggressive graceful degradation |
+| Texture memory overflow | Low | High | Strict LOD and unloading policy |
+| Complex animation state bugs | Medium | Medium | Thorough testing, reduced motion fallback |
+
+### Dependencies
+
+- `@react-three/fiber` ^9.4.2 (already installed)
+- `@react-three/drei` ^10.7.7 (already installed)
+- `@react-three/postprocessing` ^3.0.4 (already installed)
+- `three` ^0.182.0 (already installed)
+- `zustand` ^5.0.9 (already installed)
+
+All dependencies are already in `package.json`. No new packages required.
+
+### Performance Considerations
+
+- Initial load: lazy-load textures, show loading state
+- Texture budget: 150MB max, enforce with unloading
+- Draw calls: instanced star field, batch similar materials
+- Memory leaks: proper disposal of textures/geometries
+
+---
+
+## Definition of Done (from spec)
+
+1. [ ] Universe view renders with labeled topic nebulae + stats constellation
+2. [ ] Drifter books float lazily through the void
+3. [ ] Click nebula -> smooth zoom into warm-glow constellation view
+4. [ ] Books display as covers, hover shows tilt + glow
+5. [ ] Click book -> pulls forward, detail panel shows with Amazon link placeholder
+6. [ ] Breadcrumb + Escape + backdrop click + back button all work
+7. [ ] Filters cause smooth regrouping animation
+8. [ ] Mobile: touch/pinch works, detail panel slides from bottom
+9. [ ] Performance: 60fps on modern devices, graceful degradation
+10. [ ] Reduced motion: respects system preference
+11. [ ] Existing library URL (`/library`) shows new experience
