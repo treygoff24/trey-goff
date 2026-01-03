@@ -101,16 +101,21 @@ Books with multiple topics appear in their primary topic's nebula (first topic i
 
 **Search Behavior:**
 - Searches book titles and author names (case-insensitive substring match)
-- As user types, matching books brighten and non-matching books fade
 - Minimum 2 characters to trigger search
 - Debounced 300ms to avoid excessive re-renders
+- Search triggers regrouping (same as filters) — see Filter Scope below
 
 **Filter Scope:**
-- Filters apply to the **entire universe**, regardless of current view
-- If viewing a constellation when filter is applied, camera zooms out to universe view
+- Filters AND search apply to the **entire universe**, regardless of current view
+- If viewing a constellation when filter/search is applied, camera zooms out to universe view
 - Matching books from ALL nebulae regroup into a temporary "Search Results" cluster at center
 - Non-matching books fade to 10% opacity (still visible as dim points)
 - Stats constellation updates to reflect filtered subset (e.g., "5-Star Books" shows only filtered 5-star books)
+
+**Topic Filter Semantics:**
+- Topic filter matches books that have the selected topic **anywhere in their topics array** (not just primary)
+- This means a book tagged `["philosophy", "governance"]` appears when filtering by either topic
+- However, for constellation assignment (home nebula), only the **primary topic (first in array)** is used
 
 **Animation:**
 - Filter/search animations are smooth, ~800ms, ease-out
@@ -144,7 +149,7 @@ Books with multiple topics appear in their primary topic's nebula (first topic i
 |-------|----------|
 | WebGL not supported | Fall back to existing grid layout with message: "Your browser doesn't support 3D. Showing classic view." |
 | Book cover fails to load | Show solid color placeholder (topic color) as WebGL texture. The DOM-based `GenerativeBookCover` cannot be used in WebGL context. |
-| Performance < 30fps for 3 seconds | Prompt: "Running slow? Switch to classic view" with toggle |
+| Performance < 20fps for 3 seconds | Prompt: "Running slow? Switch to classic view" with toggle (see hysteresis table in Performance section) |
 
 **Note:** Book data is loaded at build time and passed as props, so runtime data loading errors are not possible. Cover images are loaded at runtime and may fail.
 
@@ -295,27 +300,27 @@ components/library/
 
 ---
 
-## Schema Changes Required
+## Schema Notes
 
-Add to `Book` type in `lib/books/types.ts`:
+**Existing fields in `Book` type (`lib/books/types.ts`) used by this feature:**
+- `rating?: 1 | 2 | 3 | 4 | 5` — used for average and 5-star cluster
+- `status: BookStatus` — used for filtering
+- `year: number` — publication year
+- `dateRead?: string` — ISO date, used for "Books by Year" timeline
+- `topics: string[]` — used for constellation grouping
+
+**New field required:**
 ```typescript
-amazonUrl?: string  // URL to Amazon product page (must start with https://amazon.com or https://www.amazon.com)
-dateRead?: string   // ISO date string (YYYY-MM-DD) when book was finished (for timeline)
+amazonUrl?: string  // URL to Amazon product page
 ```
 
-**Existing fields used by Stats:**
-- `rating?: number` (1-5) — already exists, used for average and 5-star cluster
-- `status: BookStatus` — already exists, used for filtering
-- `year: number` — publication year, already exists
+**Note on dateRead:** Many books may not have this field populated. The "Books by Year" timeline should gracefully handle missing dates by excluding books without `dateRead` from the timeline.
 
-**Note on dateRead:** Many books may not have this field populated. The "Books by Year" timeline should gracefully handle missing dates by either:
-- Excluding books without `dateRead` from the timeline, OR
-- Using a "Unknown date" bucket
-
-Populate `amazonUrl` values in `content/library/books.json` after implementation (separate task).
+**Populate `amazonUrl`** values in `content/library/books.json` after implementation (separate task).
 
 **Link Security:** All `amazonUrl` links must:
-- Be validated to start with `https://amazon.com` or `https://www.amazon.com`
+- Be validated by parsing the URL and checking `hostname` ends with `amazon.com` (handles `www.amazon.com`, `smile.amazon.com`, etc.)
+- Reject URLs where hostname contains `amazon.com` as a substring but not as the domain (e.g., `amazon.com.evil.com` must be rejected)
 - Include `rel="noopener noreferrer"` and `target="_blank"` attributes
 - Invalid URLs should be ignored (no link shown)
 
