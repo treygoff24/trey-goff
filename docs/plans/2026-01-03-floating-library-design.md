@@ -24,7 +24,7 @@ The library exists as an explorable 3D universe. At the top level, users see **t
 
 ### Special Elements
 
-- **Topic Nebulae**: One constellation for each topic with 2+ books
+- **Topic Nebulae**: One constellation for each topic with 2+ books **assigned by primary topic** (first in array)
 - **Stats Constellation**: A "Reading Stats" nebula showing statistics as floating artifacts
 - **Drifters**: Books that drift lazily through the void on slow curved trajectories. A book becomes a drifter if:
   - It has no topics, OR
@@ -120,10 +120,15 @@ Books with multiple topics appear in their primary topic's nebula (first topic i
 - However, for constellation assignment (home nebula), only the **primary topic (first in array)** is used
 
 **Sorting Behavior:**
-- Sort affects book order **within the regrouped cluster** (or within constellations when unfiltered)
-- Books reposition along a spiral or grid layout based on sort order
-- Default sort: Rating (highest first)
-- Sort changes trigger smooth ~500ms reposition animation
+- **When unfiltered:** Sort does NOT reposition books within their home nebulae. Books stay in their seeded positions. Sort only affects the order when hovering/listing.
+- **When filtered:** Sort repositions books within the "Search Results" cluster using a spiral layout based on sort order.
+- Sort directions:
+  - Rating: Highest first (5 → 1), unrated books last
+  - Title: A → Z
+  - Author: A → Z (by last name if parseable, else full string)
+  - Year: Newest first
+- Default sort: Rating
+- Sort changes (when filtered) trigger smooth ~500ms reposition animation
 
 **Filter/Search While in Book View:**
 - If user applies filter/search while viewing a book detail:
@@ -174,7 +179,8 @@ Books with multiple topics appear in their primary topic's nebula (first topic i
 |-------|----------|
 | No books in library | Single floating text: "No books yet" |
 | Filter returns zero results | Books fade out, text appears: "No books match filters" with "Clear filters" button |
-| Topic has no books (after filter) | Nebula dims and shows "(empty)" label |
+
+**Note on nebulae during filtering:** When filters are active, matching books regroup into a central "Search Results" cluster — they leave their home nebulae. Nebulae are not shown during filtering; only the central cluster and dimmed non-matching books remain visible. When filters are cleared, books animate back to their home nebulae.
 
 ---
 
@@ -334,11 +340,16 @@ amazonUrl?: string  // URL to Amazon product page
 **Populate `amazonUrl`** values in `content/library/books.json` after implementation (separate task).
 
 **Link Security:** All `amazonUrl` links must:
-- Be validated by parsing the URL and checking hostname matches this pattern:
-  - Exactly `amazon.com`, OR
-  - Ends with `.amazon.com` (e.g., `www.amazon.com`, `smile.amazon.com`), OR
-  - Regional domains: `amazon.co.uk`, `amazon.de`, `amazon.fr`, `amazon.ca`, `amazon.co.jp`, etc.
-- Implementation: `hostname === 'amazon.com' || hostname.endsWith('.amazon.com') || /^amazon\.[a-z]{2,3}(\.[a-z]{2})?$/.test(hostname)`
+- Be validated by parsing the URL and checking hostname is a valid Amazon domain:
+  - `amazon.com` or `*.amazon.com` (e.g., `www.amazon.com`, `smile.amazon.com`)
+  - Regional: `amazon.<tld>` or `*.amazon.<tld>` where `<tld>` is a valid TLD (e.g., `amazon.co.uk`, `www.amazon.co.uk`, `amazon.de`, `www.amazon.de`)
+- Implementation:
+  ```typescript
+  const isValidAmazonHost = (hostname: string): boolean => {
+    // Match amazon.com, *.amazon.com, amazon.<tld>, *.amazon.<tld>
+    return /^([\w-]+\.)?amazon(\.[a-z]{2,3}){1,2}$/.test(hostname);
+  };
+  ```
 - This rejects lookalikes like `evilamazon.com` or `amazon.com.evil.com`
 - Include `rel="noopener noreferrer"` and `target="_blank"` attributes
 - Invalid URLs should be ignored (no link shown)
