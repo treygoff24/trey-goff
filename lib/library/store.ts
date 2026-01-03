@@ -1,0 +1,383 @@
+/**
+ * Zustand store for Floating Library state management.
+ * Handles view level, camera state, filters, and performance settings.
+ */
+
+import { create } from 'zustand'
+import { subscribeWithSelector } from 'zustand/middleware'
+import type { Book } from '@/lib/books/types'
+import type {
+  ViewLevel,
+  Position3D,
+  FilterState,
+  SortBy,
+  QualityLevel,
+} from './types'
+
+// =============================================================================
+// Constants
+// =============================================================================
+
+/** Default camera position for universe view (far out) */
+const UNIVERSE_CAMERA_POSITION: Position3D = [0, 0, 100]
+const UNIVERSE_CAMERA_TARGET: Position3D = [0, 0, 0]
+
+/** Minimum search query length to trigger filtering */
+const MIN_SEARCH_LENGTH = 2
+
+// =============================================================================
+// Store State Interface
+// =============================================================================
+
+interface LibraryStoreState {
+  // View state
+  viewLevel: ViewLevel
+  activeConstellation: string | null
+  selectedBook: Book | null
+
+  // Camera
+  cameraPosition: Position3D
+  cameraTarget: Position3D
+  isTransitioning: boolean
+
+  // Filters
+  statusFilter: Book['status'] | null
+  topicFilter: string | null
+  searchQuery: string
+  sortBy: SortBy
+
+  // Performance
+  qualityLevel: QualityLevel
+  showClassicFallback: boolean
+}
+
+interface LibraryStoreActions {
+  // Navigation
+  zoomToConstellation: (
+    topic: string,
+    position: Position3D,
+    targetOffset?: Position3D
+  ) => void
+  selectBook: (book: Book | null, position?: Position3D) => void
+  stepBack: () => void
+  goToUniverse: () => void
+
+  // Camera
+  setCameraPosition: (position: Position3D) => void
+  setCameraTarget: (target: Position3D) => void
+  setIsTransitioning: (transitioning: boolean) => void
+
+  // Filters
+  setFilters: (filters: Partial<FilterState>) => void
+  clearFilters: () => void
+  setStatusFilter: (status: Book['status'] | null) => void
+  setTopicFilter: (topic: string | null) => void
+  setSearchQuery: (query: string) => void
+  setSortBy: (sortBy: SortBy) => void
+
+  // Performance
+  setQualityLevel: (level: QualityLevel) => void
+  setShowClassicFallback: (show: boolean) => void
+
+  // Reset
+  reset: () => void
+}
+
+export interface LibraryStore extends LibraryStoreState, LibraryStoreActions {
+  // Derived state (computed on access)
+  isFiltered: boolean
+}
+
+// =============================================================================
+// Initial State
+// =============================================================================
+
+const initialState: LibraryStoreState = {
+  // View state
+  viewLevel: 'universe',
+  activeConstellation: null,
+  selectedBook: null,
+
+  // Camera
+  cameraPosition: UNIVERSE_CAMERA_POSITION,
+  cameraTarget: UNIVERSE_CAMERA_TARGET,
+  isTransitioning: false,
+
+  // Filters
+  statusFilter: null,
+  topicFilter: null,
+  searchQuery: '',
+  sortBy: 'rating',
+
+  // Performance
+  qualityLevel: 'full',
+  showClassicFallback: false,
+}
+
+// =============================================================================
+// Store
+// =============================================================================
+
+export const useLibraryStore = create<LibraryStore>()(
+  subscribeWithSelector((set, get) => ({
+    ...initialState,
+
+    // =========================================================================
+    // Derived State
+    // =========================================================================
+
+    get isFiltered(): boolean {
+      const state = get()
+      return (
+        state.statusFilter !== null ||
+        state.topicFilter !== null ||
+        state.searchQuery.length >= MIN_SEARCH_LENGTH
+      )
+    },
+
+    // =========================================================================
+    // Navigation Actions
+    // =========================================================================
+
+    zoomToConstellation: (topic, position, targetOffset = [0, 0, 0]) => {
+      // Calculate camera position to be inside the constellation looking at center
+      const cameraPosition: Position3D = [
+        position[0] + targetOffset[0],
+        position[1] + targetOffset[1] + 5, // Slightly above
+        position[2] + targetOffset[2] + 25, // In front
+      ]
+
+      set({
+        viewLevel: 'constellation',
+        activeConstellation: topic,
+        selectedBook: null,
+        cameraPosition,
+        cameraTarget: position,
+        isTransitioning: true,
+      })
+    },
+
+    selectBook: (book, position) => {
+      if (book === null) {
+        // Deselecting - go back to constellation or universe
+        const state = get()
+        if (state.activeConstellation) {
+          // Return camera to constellation view
+          set({
+            selectedBook: null,
+            isTransitioning: true,
+          })
+        } else {
+          // Return to universe
+          set({
+            viewLevel: 'universe',
+            selectedBook: null,
+            cameraPosition: UNIVERSE_CAMERA_POSITION,
+            cameraTarget: UNIVERSE_CAMERA_TARGET,
+            isTransitioning: true,
+          })
+        }
+        return
+      }
+
+      // Selecting a book
+      const cameraPosition: Position3D = position
+        ? [position[0], position[1] + 2, position[2] + 8]
+        : get().cameraPosition
+
+      const cameraTarget: Position3D = position ?? get().cameraTarget
+
+      set({
+        viewLevel: 'book',
+        selectedBook: book,
+        cameraPosition,
+        cameraTarget,
+        isTransitioning: true,
+      })
+    },
+
+    stepBack: () => {
+      const state = get()
+
+      switch (state.viewLevel) {
+        case 'book':
+          // Book -> Constellation (or Universe if no active constellation)
+          if (state.activeConstellation) {
+            set({
+              viewLevel: 'constellation',
+              selectedBook: null,
+              isTransitioning: true,
+            })
+          } else {
+            set({
+              viewLevel: 'universe',
+              selectedBook: null,
+              cameraPosition: UNIVERSE_CAMERA_POSITION,
+              cameraTarget: UNIVERSE_CAMERA_TARGET,
+              isTransitioning: true,
+            })
+          }
+          break
+
+        case 'constellation':
+          // Constellation -> Universe
+          set({
+            viewLevel: 'universe',
+            activeConstellation: null,
+            selectedBook: null,
+            cameraPosition: UNIVERSE_CAMERA_POSITION,
+            cameraTarget: UNIVERSE_CAMERA_TARGET,
+            isTransitioning: true,
+          })
+          break
+
+        case 'universe':
+          // Already at top level - no-op
+          break
+      }
+    },
+
+    goToUniverse: () => {
+      set({
+        viewLevel: 'universe',
+        activeConstellation: null,
+        selectedBook: null,
+        cameraPosition: UNIVERSE_CAMERA_POSITION,
+        cameraTarget: UNIVERSE_CAMERA_TARGET,
+        isTransitioning: true,
+      })
+    },
+
+    // =========================================================================
+    // Camera Actions
+    // =========================================================================
+
+    setCameraPosition: (position) => {
+      set({ cameraPosition: position })
+    },
+
+    setCameraTarget: (target) => {
+      set({ cameraTarget: target })
+    },
+
+    setIsTransitioning: (transitioning) => {
+      set({ isTransitioning: transitioning })
+    },
+
+    // =========================================================================
+    // Filter Actions
+    // =========================================================================
+
+    setFilters: (filters) => {
+      const state = get()
+
+      // When filters change, zoom out to universe view if not already there
+      const shouldZoomOut =
+        state.viewLevel !== 'universe' &&
+        (filters.statusFilter !== undefined ||
+          filters.topicFilter !== undefined ||
+          filters.searchQuery !== undefined)
+
+      set((s) => ({
+        statusFilter:
+          filters.statusFilter !== undefined
+            ? filters.statusFilter
+            : s.statusFilter,
+        topicFilter:
+          filters.topicFilter !== undefined
+            ? filters.topicFilter
+            : s.topicFilter,
+        searchQuery:
+          filters.searchQuery !== undefined
+            ? filters.searchQuery
+            : s.searchQuery,
+        sortBy: filters.sortBy !== undefined ? filters.sortBy : s.sortBy,
+        ...(shouldZoomOut
+          ? {
+              viewLevel: 'universe' as ViewLevel,
+              activeConstellation: null,
+              selectedBook: null,
+              cameraPosition: UNIVERSE_CAMERA_POSITION,
+              cameraTarget: UNIVERSE_CAMERA_TARGET,
+              isTransitioning: true,
+            }
+          : {}),
+      }))
+    },
+
+    clearFilters: () => {
+      set({
+        statusFilter: null,
+        topicFilter: null,
+        searchQuery: '',
+        sortBy: 'rating',
+      })
+    },
+
+    setStatusFilter: (status) => {
+      get().setFilters({ statusFilter: status })
+    },
+
+    setTopicFilter: (topic) => {
+      get().setFilters({ topicFilter: topic })
+    },
+
+    setSearchQuery: (query) => {
+      get().setFilters({ searchQuery: query })
+    },
+
+    setSortBy: (sortBy) => {
+      set({ sortBy })
+    },
+
+    // =========================================================================
+    // Performance Actions
+    // =========================================================================
+
+    setQualityLevel: (level) => {
+      set({ qualityLevel: level })
+    },
+
+    setShowClassicFallback: (show) => {
+      set({ showClassicFallback: show })
+    },
+
+    // =========================================================================
+    // Reset
+    // =========================================================================
+
+    reset: () => {
+      set(initialState)
+    },
+  }))
+)
+
+// =============================================================================
+// Selectors (for optimized subscriptions)
+// =============================================================================
+
+export const selectViewLevel = (state: LibraryStore) => state.viewLevel
+export const selectActiveConstellation = (state: LibraryStore) =>
+  state.activeConstellation
+export const selectSelectedBook = (state: LibraryStore) => state.selectedBook
+export const selectCameraPosition = (state: LibraryStore) =>
+  state.cameraPosition
+export const selectCameraTarget = (state: LibraryStore) => state.cameraTarget
+export const selectIsTransitioning = (state: LibraryStore) =>
+  state.isTransitioning
+export const selectStatusFilter = (state: LibraryStore) => state.statusFilter
+export const selectTopicFilter = (state: LibraryStore) => state.topicFilter
+export const selectSearchQuery = (state: LibraryStore) => state.searchQuery
+export const selectSortBy = (state: LibraryStore) => state.sortBy
+export const selectQualityLevel = (state: LibraryStore) => state.qualityLevel
+export const selectShowClassicFallback = (state: LibraryStore) =>
+  state.showClassicFallback
+
+/**
+ * Check if any filters are active.
+ * Note: This is a derived value, computed from filter state.
+ */
+export const selectIsFiltered = (state: LibraryStore) =>
+  state.statusFilter !== null ||
+  state.topicFilter !== null ||
+  state.searchQuery.length >= MIN_SEARCH_LENGTH

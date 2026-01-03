@@ -1,0 +1,214 @@
+'use client'
+
+/**
+ * FloatingLibrary - Main R3F Canvas wrapper for the 3D library experience.
+ * Handles WebGL detection, reduced motion, error boundaries, and fallback.
+ */
+
+import { Canvas } from '@react-three/fiber'
+import { Suspense, useCallback, useEffect, useState } from 'react'
+import * as THREE from 'three'
+import type { Book } from '@/lib/books/types'
+import { useReducedMotion } from '@/hooks/useReducedMotion'
+import { useLibraryStore } from '@/lib/library/store'
+import {
+  groupBooksIntoConstellations,
+  getDrifterBooks,
+} from '@/lib/library/constellation'
+import { CameraController } from './CameraController'
+import { Universe } from './Universe'
+import { BookDetailPanel } from './BookDetailPanel'
+import { LibraryBreadcrumb } from './LibraryBreadcrumb'
+import { LibraryHUD } from './LibraryHUD'
+import { AccessibleBookList } from './AccessibleBookList'
+
+// =============================================================================
+// Types
+// =============================================================================
+
+interface FloatingLibraryProps {
+  books: Book[]
+  fallback?: React.ReactNode
+}
+
+// =============================================================================
+// WebGL Detection
+// =============================================================================
+
+function isWebGLSupported(): boolean {
+  if (typeof window === 'undefined') return false
+
+  try {
+    const canvas = document.createElement('canvas')
+    const gl =
+      canvas.getContext('webgl2') ||
+      canvas.getContext('webgl') ||
+      canvas.getContext('experimental-webgl')
+    return gl !== null
+  } catch {
+    return false
+  }
+}
+
+// =============================================================================
+// Loading Fallback
+// =============================================================================
+
+function LoadingState() {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center bg-bg-0">
+      <div className="text-center">
+        <div className="mb-4 h-8 w-8 animate-spin rounded-full border-2 border-surface-2 border-t-warm" />
+        <p className="text-text-2 text-sm">Loading library...</p>
+      </div>
+    </div>
+  )
+}
+
+// =============================================================================
+// Error Boundary
+// =============================================================================
+
+interface ErrorBoundaryState {
+  hasError: boolean
+  error?: Error
+}
+
+class LibraryErrorBoundary extends React.Component<
+  { children: React.ReactNode; fallback?: React.ReactNode },
+  ErrorBoundaryState
+> {
+  constructor(props: { children: React.ReactNode; fallback?: React.ReactNode }) {
+    super(props)
+    this.state = { hasError: false }
+  }
+
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    return { hasError: true, error }
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('[FloatingLibrary] Error:', error, errorInfo)
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        this.props.fallback ?? (
+          <div className="flex h-full items-center justify-center">
+            <div className="text-center">
+              <p className="text-text-1 mb-2">Unable to load 3D library</p>
+              <p className="text-text-3 text-sm">
+                {this.state.error?.message ?? 'An error occurred'}
+              </p>
+            </div>
+          </div>
+        )
+      )
+    }
+
+    return this.props.children
+  }
+}
+
+// Need to import React for class component
+import React from 'react'
+
+// =============================================================================
+// Main Component
+// =============================================================================
+
+export function FloatingLibrary({ books, fallback }: FloatingLibraryProps) {
+  const [webGLSupported, setWebGLSupported] = useState<boolean | null>(null)
+  const [isReady, setIsReady] = useState(false)
+  const reducedMotion = useReducedMotion()
+  const showClassicFallback = useLibraryStore((s) => s.showClassicFallback)
+
+  // Check WebGL support
+  useEffect(() => {
+    setWebGLSupported(isWebGLSupported())
+  }, [])
+
+  // Pre-compute constellation data
+  const constellations = groupBooksIntoConstellations(books)
+  const drifters = getDrifterBooks(books)
+
+  // Handle canvas ready
+  const handleReady = useCallback(() => {
+    setIsReady(true)
+  }, [])
+
+  // Handle errors
+  const handleError = useCallback((error: Error) => {
+    console.error('[FloatingLibrary] Canvas error:', error)
+  }, [])
+
+  // Show loading while checking WebGL
+  if (webGLSupported === null) {
+    return <LoadingState />
+  }
+
+  // Show fallback if WebGL not supported or user requested classic view
+  if (!webGLSupported || showClassicFallback) {
+    return fallback ?? null
+  }
+
+  return (
+    <LibraryErrorBoundary fallback={fallback}>
+      <div className="relative h-full w-full">
+        {/* Loading overlay */}
+        {!isReady && <LoadingState />}
+
+        {/* 3D Canvas */}
+        <Canvas
+          camera={{
+            fov: 60,
+            near: 0.1,
+            far: 2000,
+            position: [0, 0, 100],
+          }}
+          style={{
+            background: '#070A0F',
+            position: 'absolute',
+            inset: 0,
+          }}
+          onCreated={({ gl }) => {
+            // Configure renderer
+            gl.setClearColor(0x070a0f, 1)
+            gl.toneMapping = THREE.ACESFilmicToneMapping
+            gl.toneMappingExposure = 1.2
+            handleReady()
+          }}
+          aria-hidden="true"
+        >
+          <Suspense fallback={null}>
+            {/* Camera system */}
+            <CameraController reducedMotion={reducedMotion} />
+
+            {/* Scene content */}
+            <Universe
+              constellations={constellations}
+              drifters={drifters}
+              reducedMotion={reducedMotion}
+            />
+
+            {/* Ambient lighting */}
+            <ambientLight intensity={0.2} />
+          </Suspense>
+        </Canvas>
+
+        {/* Navigation breadcrumb */}
+        {isReady && <LibraryBreadcrumb />}
+
+        {/* Filter controls */}
+        {isReady && <LibraryHUD books={books} />}
+
+        {/* Book detail panel */}
+        <BookDetailPanel />
+
+        {/* Accessible book list for screen readers */}
+        <AccessibleBookList books={books} />
+      </div>
+    </LibraryErrorBoundary>
+  )
+}

@@ -1,10 +1,10 @@
-import { LibraryClient } from '@/components/library/LibraryClient'
 import { getAllBooks } from '@/lib/books'
 import { generateBookSchema } from '@/lib/structured-data'
+import { FloatingLibraryWrapper } from '@/components/library/FloatingLibraryWrapper'
 
 export const metadata = {
   title: 'Library',
-  description: 'Books I\'ve read, am reading, and want to read.',
+  description: "Books I've read, am reading, and want to read.",
 }
 
 export default function LibraryPage() {
@@ -12,6 +12,7 @@ export default function LibraryPage() {
 
   return (
     <>
+      {/* Structured data for SEO */}
       {books.map((book) => (
         <script
           key={book.id}
@@ -28,17 +29,10 @@ export default function LibraryPage() {
           }}
         />
       ))}
-      <div className="mx-auto max-w-6xl px-4 py-16">
-        <header className="mb-12">
-          <h1 className="mb-4 font-satoshi text-4xl font-medium text-text-1">
-            Library
-          </h1>
-          <p className="max-w-2xl text-lg text-text-2">
-            Books that have shaped my thinking on governance, economics, and building better systems.
-          </p>
-        </header>
 
-        <LibraryClient />
+      {/* Full-viewport 3D library experience */}
+      <div className="fixed inset-0 h-screen w-screen bg-bg-0">
+        <FloatingLibraryWrapper books={books} />
       </div>
     </>
   )
