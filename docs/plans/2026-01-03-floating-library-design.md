@@ -93,12 +93,28 @@ Books with multiple topics appear in their primary topic's nebula (first topic i
 
 ### Filtering & Search
 
-- Filter controls float as minimal HUD in top-left corner (status, topic, sort)
-- When filter applied:
-  - Matching books drift together and regroup into temporary cluster
-  - Non-matching books fade to transparent and drift away
-  - Animation is smooth, ~800ms, eased
-- Clear filter: books drift back to their home nebulae
+**Filter Controls** (float as minimal HUD in top-left corner):
+- Status dropdown: All / Read / Reading / Want to Read
+- Topic dropdown: All / [list of topics]
+- Sort dropdown: Rating / Title / Author / Year
+- Search input: Text field for title/author search
+
+**Search Behavior:**
+- Searches book titles and author names (case-insensitive substring match)
+- As user types, matching books brighten and non-matching books fade
+- Minimum 2 characters to trigger search
+- Debounced 300ms to avoid excessive re-renders
+
+**Filter Scope:**
+- Filters apply to the **entire universe**, regardless of current view
+- If viewing a constellation when filter is applied, camera zooms out to universe view
+- Matching books from ALL nebulae regroup into a temporary "Search Results" cluster at center
+- Non-matching books fade to 10% opacity (still visible as dim points)
+- Stats constellation updates to reflect filtered subset (e.g., "5-Star Books" shows only filtered 5-star books)
+
+**Animation:**
+- Filter/search animations are smooth, ~800ms, ease-out
+- Clear filter: books drift back to their home nebulae over ~1000ms
 
 ### Hover States
 
@@ -127,9 +143,10 @@ Books with multiple topics appear in their primary topic's nebula (first topic i
 | Error | Behavior |
 |-------|----------|
 | WebGL not supported | Fall back to existing grid layout with message: "Your browser doesn't support 3D. Showing classic view." |
-| Book cover fails to load | Show `GenerativeBookCover` component (existing fallback) |
-| books.json fails to load | Show error state: "Couldn't load the library. Please refresh." with retry button |
+| Book cover fails to load | Show solid color placeholder (topic color) as WebGL texture. The DOM-based `GenerativeBookCover` cannot be used in WebGL context. |
 | Performance < 30fps for 3 seconds | Prompt: "Running slow? Switch to classic view" with toggle |
+
+**Note:** Book data is loaded at build time and passed as props, so runtime data loading errors are not possible. Cover images are loaded at runtime and may fail.
 
 ### Empty States
 
@@ -199,11 +216,14 @@ components/library/
 
 ### Data Flow
 
-1. `books.json` loaded at build time (existing)
-2. Books grouped by primary topic → constellation assignments
-3. Constellation positions calculated (spread in 3D space, no overlap)
-4. Book positions within constellation (clustered, slight randomness)
-5. Drifters identified (books with no topics) → assigned drift paths
+1. `books.json` loaded at build time via `getAllBooks()` (existing pattern)
+2. Books passed as props to client component (no runtime fetch needed)
+3. Books grouped by primary topic → constellation assignments
+4. Constellation positions calculated deterministically (seeded by topic name hash, spread in 3D space)
+5. Book positions within constellation (seeded by book ID hash, clustered with collision avoidance)
+6. Drifters identified (books with no topics OR single-book topics) → assigned drift paths
+
+**Note:** Since data is loaded at build time, the "books.json fails to load" error state only applies during development/build. At runtime, data is always available via props. The retry UI is for cover image loading failures, not data loading.
 
 ### Camera System
 
@@ -220,17 +240,37 @@ components/library/
 | LOD (Level of Detail) | Books at distance = simple sprites, full covers only when close |
 | Frustum culling | R3F default, ensure distant books skip animation computation |
 | InstancedMesh | Star field particles use instancing |
-| Texture management | Lazy-load covers on zoom, or use texture atlas |
+| Texture management | Lazy-load covers on zoom, use compressed textures |
 | Reduced motion | Respect `prefers-reduced-motion` — disable animations, instant transitions |
-| Throttled raycasting | Debounce hover detection |
+| Throttled raycasting | Debounce hover detection (16ms throttle) |
+
+**Texture Resolution Budgets:**
+
+| Context | Max Resolution | Format |
+|---------|---------------|--------|
+| Universe view (distant) | 64x96 (thumbnail) | WebP/JPEG |
+| Constellation view | 256x384 | WebP/JPEG |
+| Book detail view | 512x768 (full) | WebP/JPEG |
+| Mobile (all views) | 50% of above | WebP/JPEG |
+
+**Memory Budget:**
+- Target: < 150MB GPU memory for textures
+- With 250 books at max quality: 250 × 512 × 768 × 4 bytes ≈ 390MB (too high)
+- Strategy: Only load full-res for visible books; distant books use LOD thumbnails
+- Unload textures for books outside frustum after 5 seconds
 
 **Target**: 60fps on devices from 2020+ (M1 Mac, iPhone 12, mid-range Android).
 
-**Graceful Degradation** (when fps drops):
-1. First: Reduce particle count by 50%
-2. Then: Disable post-processing effects (bloom, blur)
-3. Then: Simplify book rendering (flat sprites instead of 3D)
-4. Finally: Prompt user to switch to classic grid view
+**Graceful Degradation** (with hysteresis to prevent oscillation):
+
+| Threshold | Action | Recovery Threshold |
+|-----------|--------|-------------------|
+| < 45fps for 2s | Reduce particle count by 50% | > 55fps for 5s to restore |
+| < 35fps for 2s | Disable post-processing (bloom, blur) | > 50fps for 5s to restore |
+| < 25fps for 2s | Simplify books to flat sprites | > 45fps for 5s to restore |
+| < 20fps for 3s | Show prompt: "Running slow? Switch to classic view" | User must manually re-enable |
+
+**Hysteresis:** Recovery thresholds are higher than degradation thresholds to prevent rapid oscillation between quality levels.
 
 ---
 
@@ -259,10 +299,25 @@ components/library/
 
 Add to `Book` type in `lib/books/types.ts`:
 ```typescript
-amazonUrl?: string  // URL to Amazon product page
+amazonUrl?: string  // URL to Amazon product page (must start with https://amazon.com or https://www.amazon.com)
+dateRead?: string   // ISO date string (YYYY-MM-DD) when book was finished (for timeline)
 ```
 
-Populate URLs in `content/library/books.json` after implementation (separate task).
+**Existing fields used by Stats:**
+- `rating?: number` (1-5) — already exists, used for average and 5-star cluster
+- `status: BookStatus` — already exists, used for filtering
+- `year: number` — publication year, already exists
+
+**Note on dateRead:** Many books may not have this field populated. The "Books by Year" timeline should gracefully handle missing dates by either:
+- Excluding books without `dateRead` from the timeline, OR
+- Using a "Unknown date" bucket
+
+Populate `amazonUrl` values in `content/library/books.json` after implementation (separate task).
+
+**Link Security:** All `amazonUrl` links must:
+- Be validated to start with `https://amazon.com` or `https://www.amazon.com`
+- Include `rel="noopener noreferrer"` and `target="_blank"` attributes
+- Invalid URLs should be ignored (no link shown)
 
 ---
 
@@ -290,9 +345,31 @@ Populate URLs in `content/library/books.json` after implementation (separate tas
 
 ---
 
+## Accessibility
+
+**Screen Reader Support:**
+- The 3D canvas is marked with `aria-hidden="true"` since it's not navigable by screen readers
+- A visually-hidden but SR-accessible list of all books is rendered in the DOM alongside the canvas
+- This list is a simple `<ul>` with book titles as links, grouped by topic headings
+- The list provides equivalent access to all book information for SR users
+- When a book is selected in 3D view, focus moves to the detail panel (which is fully accessible HTML)
+
+**Keyboard Navigation:**
+- Tab navigates to filter controls, breadcrumb, and detail panel (all HTML overlays)
+- Escape closes detail view and steps back one level
+- Full keyboard navigation within 3D space is out of scope for v1, but the SR-accessible list provides an alternative
+
+**Reduced Motion:**
+- `prefers-reduced-motion: reduce` disables all animations
+- Camera transitions become instant cuts
+- Floating/bobbing animations are disabled
+- Particle effects are disabled
+
+---
+
 ## Future Enhancements (Out of Scope)
 
 - Sound design (ambient space sounds, book selection sounds)
-- Keyboard navigation within 3D space
+- Full keyboard navigation within 3D space (arrow keys to move between books)
 - Sharing deep links to specific books/constellations
 - VR/AR support
