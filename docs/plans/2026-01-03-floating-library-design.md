@@ -26,7 +26,9 @@ The library exists as an explorable 3D universe. At the top level, users see **t
 
 - **Topic Nebulae**: One constellation for each topic with 2+ books
 - **Stats Constellation**: A "Reading Stats" nebula showing statistics as floating artifacts
-- **Drifters**: Books without topics drift lazily through the void on slow curved trajectories
+- **Drifters**: Books that drift lazily through the void on slow curved trajectories. A book becomes a drifter if:
+  - It has no topics, OR
+  - Its primary topic (first in array) has only 1 book total (single-book topics don't form nebulae)
 
 Books with multiple topics appear in their primary topic's nebula (first topic in array).
 
@@ -116,6 +118,19 @@ Books with multiple topics appear in their primary topic's nebula (first topic i
 - Topic filter matches books that have the selected topic **anywhere in their topics array** (not just primary)
 - This means a book tagged `["philosophy", "governance"]` appears when filtering by either topic
 - However, for constellation assignment (home nebula), only the **primary topic (first in array)** is used
+
+**Sorting Behavior:**
+- Sort affects book order **within the regrouped cluster** (or within constellations when unfiltered)
+- Books reposition along a spiral or grid layout based on sort order
+- Default sort: Rating (highest first)
+- Sort changes trigger smooth ~500ms reposition animation
+
+**Filter/Search While in Book View:**
+- If user applies filter/search while viewing a book detail:
+  - Detail panel closes
+  - Camera zooms out to Universe view
+  - Filter/search is then applied with normal regrouping animation
+- This ensures the user sees the full filtered result
 
 **Animation:**
 - Filter/search animations are smooth, ~800ms, ease-out
@@ -319,8 +334,12 @@ amazonUrl?: string  // URL to Amazon product page
 **Populate `amazonUrl`** values in `content/library/books.json` after implementation (separate task).
 
 **Link Security:** All `amazonUrl` links must:
-- Be validated by parsing the URL and checking `hostname` ends with `amazon.com` (handles `www.amazon.com`, `smile.amazon.com`, etc.)
-- Reject URLs where hostname contains `amazon.com` as a substring but not as the domain (e.g., `amazon.com.evil.com` must be rejected)
+- Be validated by parsing the URL and checking hostname matches this pattern:
+  - Exactly `amazon.com`, OR
+  - Ends with `.amazon.com` (e.g., `www.amazon.com`, `smile.amazon.com`), OR
+  - Regional domains: `amazon.co.uk`, `amazon.de`, `amazon.fr`, `amazon.ca`, `amazon.co.jp`, etc.
+- Implementation: `hostname === 'amazon.com' || hostname.endsWith('.amazon.com') || /^amazon\.[a-z]{2,3}(\.[a-z]{2})?$/.test(hostname)`
+- This rejects lookalikes like `evilamazon.com` or `amazon.com.evil.com`
 - Include `rel="noopener noreferrer"` and `target="_blank"` attributes
 - Invalid URLs should be ignored (no link shown)
 
