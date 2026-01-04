@@ -39,6 +39,12 @@ interface LibraryStoreState {
   cameraPosition: Position3D
   cameraTarget: Position3D
   isTransitioning: boolean
+  transitionPhase: number // 0-1, progress of camera transition
+
+  // Animation flags (v2)
+  isUvPanning: boolean // Active nebula UV animation
+  isParticleDrifting: boolean // Particle drift animation
+  hasBookLerps: boolean // Book position animations in progress
 
   // Filters
   statusFilter: Book['status'] | null
@@ -49,6 +55,7 @@ interface LibraryStoreState {
   // Performance
   qualityLevel: QualityLevel
   showClassicFallback: boolean
+  postprocessingEnabled: boolean // v2: false when degraded for performance
 }
 
 interface LibraryStoreActions {
@@ -66,6 +73,13 @@ interface LibraryStoreActions {
   setCameraPosition: (position: Position3D) => void
   setCameraTarget: (target: Position3D) => void
   setIsTransitioning: (transitioning: boolean) => void
+  setTransitionPhase: (phase: number) => void
+
+  // Animation (v2)
+  setIsUvPanning: (panning: boolean) => void
+  setIsParticleDrifting: (drifting: boolean) => void
+  setHasBookLerps: (lerping: boolean) => void
+  setPostprocessingEnabled: (enabled: boolean) => void
 
   // Filters
   setFilters: (filters: Partial<FilterState>) => void
@@ -86,6 +100,7 @@ interface LibraryStoreActions {
 export interface LibraryStore extends LibraryStoreState, LibraryStoreActions {
   // Derived state (computed on access)
   isFiltered: boolean
+  isAnimating: boolean // v2: true when any animation is active
 }
 
 // =============================================================================
@@ -102,6 +117,12 @@ const initialState: LibraryStoreState = {
   cameraPosition: UNIVERSE_CAMERA_POSITION,
   cameraTarget: UNIVERSE_CAMERA_TARGET,
   isTransitioning: false,
+  transitionPhase: 0,
+
+  // Animation flags (v2)
+  isUvPanning: false,
+  isParticleDrifting: false,
+  hasBookLerps: false,
 
   // Filters
   statusFilter: null,
@@ -112,6 +133,7 @@ const initialState: LibraryStoreState = {
   // Performance
   qualityLevel: 'full',
   showClassicFallback: false,
+  postprocessingEnabled: true,
 }
 
 // =============================================================================
@@ -131,7 +153,17 @@ export const useLibraryStore = create<LibraryStore>()(
       return (
         state.statusFilter !== null ||
         state.topicFilter !== null ||
-        state.searchQuery.length >= MIN_SEARCH_LENGTH
+        state.searchQuery.trim().length >= MIN_SEARCH_LENGTH
+      )
+    },
+
+    get isAnimating(): boolean {
+      const state = get()
+      return (
+        state.isTransitioning ||
+        state.isUvPanning ||
+        state.isParticleDrifting ||
+        state.hasBookLerps
       )
     },
 
@@ -164,6 +196,7 @@ export const useLibraryStore = create<LibraryStore>()(
         if (state.activeConstellation) {
           // Return camera to constellation view
           set({
+            viewLevel: 'constellation',
             selectedBook: null,
             isTransitioning: true,
           })
@@ -262,6 +295,30 @@ export const useLibraryStore = create<LibraryStore>()(
 
     setIsTransitioning: (transitioning) => {
       set({ isTransitioning: transitioning })
+    },
+
+    setTransitionPhase: (phase) => {
+      set({ transitionPhase: phase })
+    },
+
+    // =========================================================================
+    // Animation Actions (v2)
+    // =========================================================================
+
+    setIsUvPanning: (panning) => {
+      set({ isUvPanning: panning })
+    },
+
+    setIsParticleDrifting: (drifting) => {
+      set({ isParticleDrifting: drifting })
+    },
+
+    setHasBookLerps: (lerping) => {
+      set({ hasBookLerps: lerping })
+    },
+
+    setPostprocessingEnabled: (enabled) => {
+      set({ postprocessingEnabled: enabled })
     },
 
     // =========================================================================
@@ -380,4 +437,24 @@ export const selectShowClassicFallback = (state: LibraryStore) =>
 export const selectIsFiltered = (state: LibraryStore) =>
   state.statusFilter !== null ||
   state.topicFilter !== null ||
-  state.searchQuery.length >= MIN_SEARCH_LENGTH
+  state.searchQuery.trim().length >= MIN_SEARCH_LENGTH
+
+// Animation selectors (v2)
+export const selectTransitionPhase = (state: LibraryStore) =>
+  state.transitionPhase
+export const selectIsUvPanning = (state: LibraryStore) => state.isUvPanning
+export const selectIsParticleDrifting = (state: LibraryStore) =>
+  state.isParticleDrifting
+export const selectHasBookLerps = (state: LibraryStore) => state.hasBookLerps
+export const selectPostprocessingEnabled = (state: LibraryStore) =>
+  state.postprocessingEnabled
+
+/**
+ * Check if any animation is active.
+ * Note: This is a derived value, computed from animation flags.
+ */
+export const selectIsAnimating = (state: LibraryStore) =>
+  state.isTransitioning ||
+  state.isUvPanning ||
+  state.isParticleDrifting ||
+  state.hasBookLerps
