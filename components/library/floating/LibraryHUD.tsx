@@ -6,9 +6,10 @@
  */
 
 import { useCallback, useState, useEffect, useMemo } from 'react'
-import { Search, Filter, ChevronDown, X } from 'lucide-react'
+import { Search, ChevronDown, X, Settings } from 'lucide-react'
 import { useLibraryStore } from '@/lib/library/store'
-import { TOPIC_COLORS } from '@/lib/library/types'
+import { TOPIC_COLORS, DEFAULT_TOPIC_COLOR } from '@/lib/library/types'
+import type { QualityLevel } from '@/lib/library/types'
 import type { Book } from '@/lib/books/types'
 
 // =============================================================================
@@ -41,6 +42,12 @@ const SORT_OPTIONS: { value: SortOption; label: string }[] = [
   { value: 'year', label: 'Year' },
 ]
 
+const QUALITY_OPTIONS: { value: QualityLevel; label: string; description: string }[] = [
+  { value: 'full', label: 'Full', description: 'All effects' },
+  { value: 'reduced', label: 'Reduced', description: 'No particles' },
+  { value: 'minimal', label: 'Minimal', description: 'No postprocessing' },
+]
+
 // =============================================================================
 // Debounce Hook
 // =============================================================================
@@ -64,7 +71,6 @@ interface SelectProps<T extends string | null> {
   value: T
   options: { value: T; label: string }[]
   onChange: (value: T) => void
-  icon?: React.ReactNode
   'aria-label': string
 }
 
@@ -72,11 +78,8 @@ function Select<T extends string | null>({
   value,
   options,
   onChange,
-  icon,
   'aria-label': ariaLabel,
 }: SelectProps<T>) {
-  const selectedLabel = options.find((opt) => opt.value === value)?.label ?? ''
-
   return (
     <div className="relative">
       <select
@@ -132,7 +135,7 @@ function TopicSelect({ value, topics, onChange }: TopicSelectProps) {
           className="absolute left-1.5 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full"
           style={{
             backgroundColor:
-              TOPIC_COLORS[value.toLowerCase()] ?? TOPIC_COLORS.default,
+              TOPIC_COLORS[value.toLowerCase()] ?? DEFAULT_TOPIC_COLOR,
           }}
         />
       )}
@@ -154,8 +157,12 @@ export function LibraryHUD({ books }: LibraryHUDProps) {
   const sortBy = useLibraryStore((s) => s.sortBy)
   const setFilters = useLibraryStore((s) => s.setFilters)
   const clearFilters = useLibraryStore((s) => s.clearFilters)
-  const goToUniverse = useLibraryStore((s) => s.goToUniverse)
   const isFiltered = useLibraryStore((s) => s.isFiltered)
+
+  // Quality settings
+  const qualityLevel = useLibraryStore((s) => s.qualityLevel)
+  const setQualityLevel = useLibraryStore((s) => s.setQualityLevel)
+  const [showQualityMenu, setShowQualityMenu] = useState(false)
 
   // Calculate filtered book count
   const filteredCount = useMemo(() => {
@@ -170,9 +177,10 @@ export function LibraryHUD({ books }: LibraryHUDProps) {
         return false
       }
 
-      // Search filter (case-insensitive, min 2 chars)
-      if (searchQuery.length >= 2) {
-        const query = searchQuery.toLowerCase()
+      // Search filter (case-insensitive, min 2 chars, trimmed)
+      const trimmedQuery = searchQuery.trim()
+      if (trimmedQuery.length >= 2) {
+        const query = trimmedQuery.toLowerCase()
         const matchesTitle = book.title.toLowerCase().includes(query)
         const matchesAuthor = book.author.toLowerCase().includes(query)
         if (!matchesTitle && !matchesAuthor) return false
@@ -203,21 +211,20 @@ export function LibraryHUD({ books }: LibraryHUDProps) {
   }, [debouncedSearch, setFilters])
 
   // Handle status filter change
+  // Note: setFilters already handles zooming out to universe view when filters change
   const handleStatusChange = useCallback(
     (value: StatusOption) => {
       setFilters({ statusFilter: value })
-      goToUniverse()
     },
-    [setFilters, goToUniverse]
+    [setFilters]
   )
 
   // Handle topic filter change
   const handleTopicChange = useCallback(
     (value: string | null) => {
       setFilters({ topicFilter: value })
-      goToUniverse()
     },
-    [setFilters, goToUniverse]
+    [setFilters]
   )
 
   // Handle sort change
@@ -248,8 +255,7 @@ export function LibraryHUD({ books }: LibraryHUDProps) {
   const handleClearAll = useCallback(() => {
     setLocalSearch('')
     clearFilters()
-    goToUniverse()
-  }, [clearFilters, goToUniverse])
+  }, [clearFilters])
 
   return (
     <div
@@ -288,7 +294,6 @@ export function LibraryHUD({ books }: LibraryHUDProps) {
           value={statusFilter}
           options={STATUS_OPTIONS}
           onChange={handleStatusChange}
-          icon={<Filter size={14} />}
           aria-label="Filter by status"
         />
         <TopicSelect value={topicFilter} topics={topics} onChange={handleTopicChange} />
@@ -321,6 +326,42 @@ export function LibraryHUD({ books }: LibraryHUDProps) {
           </button>
         </div>
       )}
+
+      {/* Quality settings button */}
+      <div className="relative mt-2">
+        <button
+          onClick={() => setShowQualityMenu((prev) => !prev)}
+          className="flex items-center gap-1.5 rounded-lg bg-surface-1/90 px-3 py-2 text-xs text-text-2 backdrop-blur-sm transition-colors hover:bg-surface-2/90"
+          aria-label="Quality settings"
+          aria-expanded={showQualityMenu}
+        >
+          <Settings size={14} />
+          <span>Quality: {QUALITY_OPTIONS.find((o) => o.value === qualityLevel)?.label}</span>
+        </button>
+
+        {/* Quality dropdown */}
+        {showQualityMenu && (
+          <div className="absolute left-0 top-full z-50 mt-1 w-48 rounded-lg bg-surface-1/95 p-1 shadow-lg backdrop-blur-sm">
+            {QUALITY_OPTIONS.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => {
+                  setQualityLevel(option.value)
+                  setShowQualityMenu(false)
+                }}
+                className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-colors ${
+                  qualityLevel === option.value
+                    ? 'bg-warm/20 text-warm'
+                    : 'text-text-1 hover:bg-surface-2'
+                }`}
+              >
+                <span>{option.label}</span>
+                <span className="text-xs text-text-3">{option.description}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

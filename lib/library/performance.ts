@@ -20,6 +20,12 @@ interface PerformanceConfig {
   fallbackThreshold: number
   /** Time in ms that FPS must be below threshold before action */
   hysteresisTime: number
+  /** Maximum delta (in ms) to consider valid - reject outliers */
+  maxValidDelta: number
+  /** Time to continue sampling after animations stop (ms) */
+  recoverySamplingDuration: number
+  /** FPS threshold for recovering to higher quality */
+  recoveryThreshold: number
 }
 
 interface PerformanceState {
@@ -27,6 +33,8 @@ interface PerformanceState {
   currentQuality: QualityLevel
   lastDegradationTime: number
   belowThresholdSince: number | null
+  lastAnimatingTime: number | null
+  isInRecoveryPeriod: boolean
 }
 
 // =============================================================================
@@ -39,6 +47,9 @@ const DEFAULT_CONFIG: PerformanceConfig = {
   minimalThreshold: 35,
   fallbackThreshold: 20,
   hysteresisTime: 2000,
+  maxValidDelta: 100, // Reject deltas > 100ms (< 10fps outliers)
+  recoverySamplingDuration: 3000, // Continue sampling 3s after animations stop
+  recoveryThreshold: 55, // FPS to recover to higher quality
 }
 
 // =============================================================================
@@ -65,6 +76,8 @@ export class PerformanceMonitor {
       currentQuality: 'full',
       lastDegradationTime: 0,
       belowThresholdSince: null,
+      lastAnimatingTime: null,
+      isInRecoveryPeriod: false,
     }
     this.onQualityChange = callbacks?.onQualityChange
     this.onSuggestFallback = callbacks?.onSuggestFallback
@@ -72,9 +85,34 @@ export class PerformanceMonitor {
 
   /**
    * Record a frame timing. Call this from useFrame.
+   * Only samples when isAnimating is true or during recovery period.
    * @param delta Time since last frame in seconds
+   * @param isAnimating Whether the scene is currently animating
    */
-  recordFrame(delta: number): void {
+  recordFrame(delta: number, isAnimating: boolean = true): void {
+    const now = Date.now()
+    const deltaMs = delta * 1000
+
+    // Update animation tracking
+    if (isAnimating) {
+      this.state.lastAnimatingTime = now
+      this.state.isInRecoveryPeriod = false
+    } else if (this.state.lastAnimatingTime !== null) {
+      // Check if we're in recovery period (3s after animations stop)
+      const timeSinceAnimating = now - this.state.lastAnimatingTime
+      this.state.isInRecoveryPeriod = timeSinceAnimating < this.config.recoverySamplingDuration
+    }
+
+    // Only sample during animation or recovery period
+    if (!isAnimating && !this.state.isInRecoveryPeriod) {
+      return
+    }
+
+    // Reject outliers (deltas > maxValidDelta ms, typically caused by tab switches)
+    if (deltaMs > this.config.maxValidDelta) {
+      return
+    }
+
     const fps = 1 / delta
     this.state.samples.push(fps)
 
@@ -116,11 +154,13 @@ export class PerformanceMonitor {
       currentQuality: 'full',
       lastDegradationTime: 0,
       belowThresholdSince: null,
+      lastAnimatingTime: null,
+      isInRecoveryPeriod: false,
     }
   }
 
   /**
-   * Evaluate performance and trigger degradation if needed
+   * Evaluate performance and trigger degradation/recovery if needed
    */
   private evaluate(): void {
     const avgFps = this.getAverageFps()
@@ -147,24 +187,43 @@ export class PerformanceMonitor {
       this.state.belowThresholdSince = null
     }
 
-    // Apply hysteresis - only degrade after being below threshold for hysteresisTime
+    // Apply hysteresis for quality changes
     if (targetQuality !== this.state.currentQuality) {
-      // Only allow degradation, not improvement (to prevent oscillation)
       const qualityOrder: QualityLevel[] = ['full', 'reduced', 'minimal']
       const currentIndex = qualityOrder.indexOf(this.state.currentQuality)
       const targetIndex = qualityOrder.indexOf(targetQuality)
 
       if (targetIndex > currentIndex) {
-        // Degrading - apply after hysteresis
-        const timeSinceLastDegradation = now - this.state.lastDegradationTime
-        if (timeSinceLastDegradation > this.config.hysteresisTime) {
+        // Degrading - apply after hysteresis (2s below threshold)
+        const timeSinceLastChange = now - this.state.lastDegradationTime
+        if (timeSinceLastChange > this.config.hysteresisTime) {
           this.state.currentQuality = targetQuality
           this.state.lastDegradationTime = now
           this.onQualityChange?.(targetQuality)
         }
+      } else if (avgFps >= this.config.recoveryThreshold) {
+        // Recovering - allow improvement only if FPS is consistently high (55+)
+        // Requires 3s of good performance (recovery hysteresis)
+        const timeSinceLastChange = now - this.state.lastDegradationTime
+        if (timeSinceLastChange > this.config.recoverySamplingDuration) {
+          // Step up one quality level at a time
+          const newIndex = Math.max(0, currentIndex - 1)
+          const newQuality = qualityOrder[newIndex]!
+          this.state.currentQuality = newQuality
+          this.state.lastDegradationTime = now
+          this.onQualityChange?.(newQuality)
+        }
       }
-      // Don't auto-improve quality - user must refresh or manually reset
     }
+  }
+
+  /**
+   * Force a specific quality level (for user override)
+   */
+  setQuality(quality: QualityLevel): void {
+    this.state.currentQuality = quality
+    this.state.lastDegradationTime = Date.now()
+    this.onQualityChange?.(quality)
   }
 }
 
