@@ -2,15 +2,15 @@
 
 /**
  * Constellation - A nebula containing books for a single topic.
- * Includes nebula cloud effect, topic label, and positioned books.
+ * Includes volumetric nebula effect, topic label, and positioned books.
  */
 
 import { useCallback } from 'react'
 import { Html } from '@react-three/drei'
 import type { ConstellationData } from '@/lib/library/types'
-import { useLibraryStore } from '@/lib/library/store'
+import { useLibraryStore, selectTransitionPhase } from '@/lib/library/store'
 import { FloatingBook } from './FloatingBook'
-import { NebulaCloud } from './NebulaCloud'
+import { VolumetricNebula } from './VolumetricNebula'
 
 // =============================================================================
 // Types
@@ -38,6 +38,7 @@ export function Constellation({
   // Store
   const zoomToConstellation = useLibraryStore((s) => s.zoomToConstellation)
   const viewLevel = useLibraryStore((s) => s.viewLevel)
+  const transitionPhase = useLibraryStore(selectTransitionPhase)
 
   // Handle label click
   const handleLabelClick = useCallback(() => {
@@ -55,14 +56,17 @@ export function Constellation({
 
   return (
     <group position={position}>
-      {/* Nebula cloud */}
-      <NebulaCloud
+      {/* Volumetric nebula (slice-volume approach) */}
+      <VolumetricNebula
+        topic={topic}
         color={color}
         position={[0, 0, 0]}
         radius={nebulaRadius}
-        particleCount={isActive ? 200 : 100}
-        reducedMotion={reducedMotion}
+        isActive={isActive}
+        viewLevel={viewLevel}
+        transitionPhase={isActive ? transitionPhase : 0}
         opacity={opacity}
+        reducedMotion={reducedMotion}
       />
 
       {/* Topic label using Html for CSS styling */}
