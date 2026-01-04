@@ -2,7 +2,7 @@
 
 /**
  * Constellation - A nebula containing books for a single topic.
- * Includes volumetric nebula effect, topic label, and positioned books.
+ * Includes volumetric nebula effect, particle dust, topic label, and positioned books.
  */
 
 import { useCallback } from 'react'
@@ -11,6 +11,7 @@ import type { ConstellationData } from '@/lib/library/types'
 import { useLibraryStore, selectTransitionPhase } from '@/lib/library/store'
 import { FloatingBook } from './FloatingBook'
 import { VolumetricNebula } from './VolumetricNebula'
+import { NebulaDust } from './NebulaDust'
 
 // =============================================================================
 // Types
@@ -65,6 +66,17 @@ export function Constellation({
         isActive={isActive}
         viewLevel={viewLevel}
         transitionPhase={isActive ? transitionPhase : 0}
+        opacity={opacity}
+        reducedMotion={reducedMotion}
+      />
+
+      {/* Particle dust layer */}
+      <NebulaDust
+        topicColor={color}
+        radius={nebulaRadius}
+        position={[0, 0, 0]}
+        viewLevel={viewLevel}
+        isActive={isActive}
         opacity={opacity}
         reducedMotion={reducedMotion}
       />
