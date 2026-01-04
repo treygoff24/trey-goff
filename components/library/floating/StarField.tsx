@@ -1,12 +1,12 @@
 'use client'
 
 /**
- * StarField - Subtle star field background with optional twinkle effect.
- * Uses instanced rendering for performance.
+ * StarField - Static star field background.
+ * Previously had twinkle animation - removed for performance (was causing constant GPU usage).
+ * Stars are now static but still vary in brightness and size.
  */
 
 import { useRef, useMemo, useEffect } from 'react'
-import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
 // =============================================================================
@@ -48,16 +48,14 @@ export function StarField({
   radius = DEFAULT_RADIUS,
 }: StarFieldProps) {
   const meshRef = useRef<THREE.InstancedMesh>(null)
-  const timeRef = useRef(0)
 
   // Generate star positions (using seeded random for determinism)
-  const { positions, baseOpacities, twinklePhases, sizes } = useMemo(() => {
+  const { positions, baseOpacities, sizes } = useMemo(() => {
     // Use a fixed seed for deterministic star field
     const random = createSeededRandom(42)
 
     const positions: THREE.Vector3[] = []
     const baseOpacities: number[] = []
-    const twinklePhases: number[] = []
     const sizes: number[] = []
 
     for (let i = 0; i < count; i++) {
@@ -75,17 +73,14 @@ export function StarField({
       // Random base brightness (some stars brighter than others)
       baseOpacities.push(0.3 + random() * 0.7)
 
-      // Random phase offset for twinkle
-      twinklePhases.push(random() * Math.PI * 2)
-
       // Random size (smaller stars more common)
       sizes.push(0.3 + Math.pow(random(), 2) * 0.7)
     }
 
-    return { positions, baseOpacities, twinklePhases, sizes }
+    return { positions, baseOpacities, sizes }
   }, [count, radius])
 
-  // Create instance colors for opacity control
+  // Create instance colors for brightness variation
   const colors = useMemo(() => {
     const arr = new Float32Array(count * 3)
     for (let i = 0; i < count; i++) {
@@ -121,44 +116,7 @@ export function StarField({
     meshRef.current.instanceMatrix.needsUpdate = true
   }, [positions, count, sizes])
 
-  // Animate twinkle using a mutable colors ref
-  const colorsRef = useRef<Float32Array | null>(null)
-
-  // Initialize colors ref when mesh is ready
-  useEffect(() => {
-    if (meshRef.current?.instanceColor) {
-      colorsRef.current = meshRef.current.instanceColor.array as Float32Array
-    }
-  }, [colors])
-
-  useFrame((_state, delta) => {
-    if (reducedMotion || !meshRef.current || !colorsRef.current) return
-
-    timeRef.current += delta * 0.5
-
-    // Update colors for twinkle effect (throttled - only update some stars each frame)
-    const colorArray = colorsRef.current
-
-    // Update a subset of stars each frame for performance
-    const updateCount = Math.min(200, count)
-    // Use seeded random for consistent starting index
-    const startIndex = Math.floor((timeRef.current * 100) % (count - updateCount))
-
-    for (let i = startIndex; i < startIndex + updateCount; i++) {
-      const phase = twinklePhases[i] ?? 0
-      const baseOpacity = baseOpacities[i] ?? 0.5
-      const twinkle = 0.8 + 0.2 * Math.sin(timeRef.current * 2 + phase)
-      const brightness = baseOpacity * twinkle
-
-      colorArray[i * 3] = brightness
-      colorArray[i * 3 + 1] = brightness
-      colorArray[i * 3 + 2] = brightness
-    }
-
-    if (meshRef.current.instanceColor) {
-      meshRef.current.instanceColor.needsUpdate = true
-    }
-  })
+  // NO useFrame - stars are now static for GPU efficiency
 
   return (
     <instancedMesh
@@ -168,9 +126,12 @@ export function StarField({
     >
       <sphereGeometry args={[1, 4, 4]} />
       <meshBasicMaterial
-        color="white"
         transparent
         opacity={0.8}
+        vertexColors
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+        toneMapped={false}
       />
       <instancedBufferAttribute
         attach="instanceColor"

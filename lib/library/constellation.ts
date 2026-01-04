@@ -20,17 +20,17 @@ import { getTopicColor } from './types'
 const MIN_BOOKS_FOR_CONSTELLATION = 2
 
 /** Radius for spreading constellations in universe view */
-const CONSTELLATION_SPREAD_RADIUS = 60
+const CONSTELLATION_SPREAD_RADIUS = 160
 
 /** Radius for spreading books within a constellation */
-const BOOK_SPREAD_RADIUS = 15
+const BOOK_SPREAD_RADIUS = 12
 
 /** Vertical spread for constellations */
-const VERTICAL_SPREAD = 20
+const VERTICAL_SPREAD = 70
 
 /** Drifter orbit radius range */
-const DRIFTER_ORBIT_MIN = 70
-const DRIFTER_ORBIT_MAX = 90
+const DRIFTER_ORBIT_MIN = 140
+const DRIFTER_ORBIT_MAX = 180
 
 // =============================================================================
 // Hashing for Deterministic Positions
@@ -79,12 +79,13 @@ function calculateConstellationPosition(
   // Use golden angle for even spherical distribution
   const goldenAngle = Math.PI * (3 - Math.sqrt(5))
   const theta = goldenAngle * index
-  const y = 1 - (index / (total - 1)) * 2 // Range from 1 to -1
+  // Range from 1 to -1, handle single constellation case
+  const y = total <= 1 ? 0 : 1 - (index / (total - 1)) * 2
 
-  // Add some randomness to break perfect pattern
-  const jitterX = (random() - 0.5) * 10
-  const jitterY = (random() - 0.5) * VERTICAL_SPREAD * 0.3
-  const jitterZ = (random() - 0.5) * 10
+  // Subtle jitter to break perfect pattern without causing overlap
+  const jitterX = (random() - 0.5) * 6
+  const jitterY = (random() - 0.5) * VERTICAL_SPREAD * 0.15
+  const jitterZ = (random() - 0.5) * 6
 
   const radiusAtY = Math.sqrt(1 - y * y)
   const x = Math.cos(theta) * radiusAtY * CONSTELLATION_SPREAD_RADIUS + jitterX
@@ -96,41 +97,43 @@ function calculateConstellationPosition(
 
 /**
  * Calculate book position within a constellation.
- * Uses the book ID for deterministic placement.
+ * Returns LOCAL position (relative to constellation center).
+ * Spreads books in 3D space within the nebula sphere.
  */
 function calculateBookPosition(
   book: Book,
   index: number,
   total: number,
-  constellationCenter: Position3D
+  _constellationCenter: Position3D
 ): Position3D {
+  // Nebula radius scales with book count (same formula as Constellation.tsx)
+  const nebulaRadius = Math.max(15, Math.min(30, 10 + total * 0.5))
+  
+  // Use seeded random for deterministic but varied positions
   const seed = hashString(book.id)
   const random = createSeededRandom(seed)
-
-  // Spiral distribution with randomness
-  const angle = (index / total) * Math.PI * 2 * 3 // 3 full rotations
-  const radiusFactor = 0.3 + (index / total) * 0.7 // Start closer, expand out
-  const radius = BOOK_SPREAD_RADIUS * radiusFactor
-
-  // Add randomness
-  const jitterAngle = (random() - 0.5) * 0.5
-  const jitterRadius = (random() - 0.5) * 3
-  const jitterY = (random() - 0.5) * 8
-
-  const finalAngle = angle + jitterAngle
-  const finalRadius = radius + jitterRadius
-
-  const x = constellationCenter[0] + Math.cos(finalAngle) * finalRadius
-  const y = constellationCenter[1] + jitterY
-  const z = constellationCenter[2] + Math.sin(finalAngle) * finalRadius
-
+  
+  // Spherical distribution using fibonacci sphere for even spacing
+  const goldenRatio = (1 + Math.sqrt(5)) / 2
+  const theta = 2 * Math.PI * index / goldenRatio
+  const phi = Math.acos(1 - 2 * (index + 0.5) / total)
+  
+  // Vary radius so books fill the nebula volume (not just surface)
+  const radiusFactor = 0.3 + random() * 0.6 // 30-90% of nebula radius
+  const radius = nebulaRadius * radiusFactor * 0.7 // Stay well inside nebula
+  
+  // Convert spherical to cartesian (LOCAL coordinates)
+  const x = radius * Math.sin(phi) * Math.cos(theta)
+  const y = radius * Math.sin(phi) * Math.sin(theta) * 0.6 // Flatten slightly
+  const z = radius * Math.cos(phi) * 0.8 // Reduce Z spread
+  
   return [x, y, z]
 }
 
 /**
  * Calculate drifter book position on a lazy orbit.
  */
-function calculateDrifterPosition(book: Book, _index: number): Position3D {
+function calculateDrifterPosition(book: Book): Position3D {
   const seed = hashString(book.id)
   const random = createSeededRandom(seed)
 
@@ -151,15 +154,19 @@ function calculateDrifterPosition(book: Book, _index: number): Position3D {
 // Grouping Functions
 // =============================================================================
 
+/** Special topic for orphan books */
+const RANDOM_TOPIC = 'random'
+
 /**
  * Group books into constellations by primary topic.
- * Books with no topics or single-book topics become drifters.
+ * Books with no topics or single-book topics go into a "Random" constellation.
  */
 export function groupBooksIntoConstellations(
   books: Book[]
 ): ConstellationData[] {
   // Count books per primary topic
   const topicCounts = new Map<string, Book[]>()
+  const orphanBooks: Book[] = []
 
   for (const book of books) {
     const primaryTopic = book.topics[0] ?? null
@@ -167,24 +174,37 @@ export function groupBooksIntoConstellations(
       const existing = topicCounts.get(primaryTopic) ?? []
       existing.push(book)
       topicCounts.set(primaryTopic, existing)
+    } else {
+      // No topic at all - orphan
+      orphanBooks.push(book)
     }
   }
 
-  // Filter to topics with enough books
-  const validTopics = Array.from(topicCounts.entries()).filter(
-    ([, topicBooks]) => topicBooks.length >= MIN_BOOKS_FOR_CONSTELLATION
-  )
+  // Separate valid topics from single-book topics
+  const validTopics: [string, Book[]][] = []
+
+  for (const [topic, topicBooks] of topicCounts.entries()) {
+    if (topicBooks.length >= MIN_BOOKS_FOR_CONSTELLATION) {
+      validTopics.push([topic, topicBooks])
+    } else {
+      // Single-book topic - add to orphans
+      orphanBooks.push(...topicBooks)
+    }
+  }
 
   // Sort topics by book count for consistent ordering
   validTopics.sort((a, b) => b[1].length - a[1].length)
 
-  // Create constellation data
+  // Total constellations (including Random if there are orphans)
+  const totalConstellations = validTopics.length + (orphanBooks.length > 0 ? 1 : 0)
+
+  // Create constellation data for regular topics
   const constellations: ConstellationData[] = validTopics.map(
     ([topic, topicBooks], index) => {
       const position = calculateConstellationPosition(
         topic,
         index,
-        validTopics.length
+        totalConstellations
       )
       const color = getTopicColor(topic)
 
@@ -214,44 +234,49 @@ export function groupBooksIntoConstellations(
     }
   )
 
+  // Add Random constellation for orphan books
+  if (orphanBooks.length > 0) {
+    const randomPosition = calculateConstellationPosition(
+      RANDOM_TOPIC,
+      validTopics.length, // Last position
+      totalConstellations
+    )
+    const randomColor = getTopicColor(RANDOM_TOPIC)
+
+    const randomBooksWithPosition: BookWithPosition[] = orphanBooks.map(
+      (book, bookIndex) => ({
+        ...book,
+        position: calculateBookPosition(
+          book,
+          bookIndex,
+          orphanBooks.length,
+          randomPosition
+        ),
+        isDrifter: false,
+        primaryTopic: RANDOM_TOPIC,
+      })
+    )
+
+    constellations.push({
+      topic: RANDOM_TOPIC,
+      label: 'Random',
+      color: randomColor,
+      position: randomPosition,
+      books: randomBooksWithPosition,
+      bookCount: randomBooksWithPosition.length,
+    })
+  }
+
   return constellations
 }
 
 /**
- * Get books that should be drifters (no topic or single-book topic).
+ * Get books that should be drifters.
+ * @deprecated Drifters are now placed in the "Random" constellation instead.
  */
-export function getDrifterBooks(books: Book[]): BookWithPosition[] {
-  // Count books per primary topic
-  const topicCounts = new Map<string, number>()
-  for (const book of books) {
-    const primaryTopic = book.topics[0]
-    if (primaryTopic) {
-      topicCounts.set(primaryTopic, (topicCounts.get(primaryTopic) ?? 0) + 1)
-    }
-  }
-
-  // Find books that are drifters
-  const drifters: BookWithPosition[] = []
-  let drifterIndex = 0
-
-  for (const book of books) {
-    const primaryTopic = book.topics[0] ?? null
-    const isDrifter =
-      !primaryTopic ||
-      (topicCounts.get(primaryTopic) ?? 0) < MIN_BOOKS_FOR_CONSTELLATION
-
-    if (isDrifter) {
-      drifters.push({
-        ...book,
-        position: calculateDrifterPosition(book, drifterIndex),
-        isDrifter: true,
-        primaryTopic: null,
-      })
-      drifterIndex++
-    }
-  }
-
-  return drifters
+export function getDrifterBooks(_books: Book[]): BookWithPosition[] {
+  // All orphan books now go into the "Random" constellation
+  return []
 }
 
 /**
@@ -370,9 +395,13 @@ export function calculateFilteredPositions(
 
   // Position in a spiral at scene center
   return sorted.map((book, index) => {
+    // Use seeded random based on book ID for deterministic Y positions
+    const seed = hashString(book.id + '-filtered')
+    const random = createSeededRandom(seed)
+
     const angle = (index / sorted.length) * Math.PI * 2 * 2 // 2 rotations
     const radius = 5 + (index / sorted.length) * 20 // Expand outward
-    const y = (Math.random() - 0.5) * 10
+    const y = (random() - 0.5) * 10
 
     return {
       ...book,

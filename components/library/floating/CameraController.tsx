@@ -37,7 +37,7 @@ const POSITION_THRESHOLD = 0.1
 // =============================================================================
 
 export function CameraController({ reducedMotion }: CameraControllerProps) {
-  const { camera } = useThree()
+  const { camera, invalidate } = useThree()
   const controlsRef = useRef<React.ComponentRef<typeof OrbitControls>>(null)
 
   // Reusable vectors for lerping (avoid allocations)
@@ -84,6 +84,7 @@ export function CameraController({ reducedMotion }: CameraControllerProps) {
         controlsRef.current.target.copy(targetLookAt)
         controlsRef.current.update()
       }
+      invalidate() // Final render
       return
     }
 
@@ -118,6 +119,9 @@ export function CameraController({ reducedMotion }: CameraControllerProps) {
 
       setIsTransitioning(false)
     }
+    
+    // Keep rendering during transition
+    invalidate()
   })
 
   // Initialize current lookAt from camera

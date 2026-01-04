@@ -5,8 +5,7 @@
  * Positioned among topic nebulae, shows stats when zoomed in.
  */
 
-import { useMemo, useRef, useCallback } from 'react'
-import { useFrame } from '@react-three/fiber'
+import { useMemo, useCallback } from 'react'
 import { Html } from '@react-three/drei'
 import * as THREE from 'three'
 import type { Book } from '@/lib/books/types'
@@ -73,27 +72,18 @@ function StatCard({ label, value, subtext, position, delay = 0 }: StatCardProps)
 // Stats Glow Effect
 // =============================================================================
 
-function StatsGlow({ color }: { color: string }) {
-  const meshRef = useRef<THREE.Mesh>(null)
-  const materialRef = useRef<THREE.MeshBasicMaterial>(null)
-
-  useFrame(({ clock }) => {
-    if (materialRef.current) {
-      // Gentle pulse
-      const t = clock.getElapsedTime()
-      materialRef.current.opacity = 0.15 + Math.sin(t * 0.5) * 0.05
-    }
-  })
-
+function StatsGlow({ color }: { color: string; reducedMotion: boolean }) {
+  // NO useFrame - static glow for GPU efficiency
   return (
-    <mesh ref={meshRef} scale={[15, 15, 1]}>
-      <circleGeometry args={[1, 32]} />
+    <mesh>
+      <sphereGeometry args={[6, 16, 16]} />
       <meshBasicMaterial
-        ref={materialRef}
         color={color}
         transparent
-        opacity={0.15}
+        opacity={0.03}
         depthWrite={false}
+        blending={THREE.AdditiveBlending}
+        toneMapped={false}
       />
     </mesh>
   )
@@ -219,7 +209,7 @@ export function StatsConstellation({
   return (
     <group position={position}>
       {/* Glow effect */}
-      <StatsGlow color={STATS_COLOR} />
+      <StatsGlow color={STATS_COLOR} reducedMotion={reducedMotion} />
 
       {/* Label (visible from universe view) */}
       {viewLevel === 'universe' && (
@@ -249,7 +239,7 @@ export function StatsConstellation({
           <StatCard
             label="Books Read"
             value={stats.read}
-            subtext={`${Math.round((stats.read / stats.total) * 100)}% of library`}
+            subtext={stats.total > 0 ? `${Math.round((stats.read / stats.total) * 100)}% of library` : '0% of library'}
             position={[0, 8, 0]}
             delay={100}
           />
