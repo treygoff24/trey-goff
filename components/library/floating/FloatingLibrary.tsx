@@ -210,7 +210,7 @@ export function FloatingLibrary({ books, fallback }: FloatingLibraryProps) {
             position: 'absolute',
             inset: 0,
           }}
-          onCreated={({ gl }) => {
+          onCreated={({ gl, invalidate }) => {
             // Configure renderer
             gl.setClearColor(0x070a0f, 1)
             // Start with NoToneMapping - postprocessing handles tone mapping
@@ -220,6 +220,8 @@ export function FloatingLibrary({ books, fallback }: FloatingLibraryProps) {
             gl.outputColorSpace = THREE.SRGBColorSpace
             glRef.current = gl
             handleReady()
+            // Trigger initial render after a short delay to show loading state
+            setTimeout(() => invalidate(), 100)
           }}
           aria-hidden="true"
         >

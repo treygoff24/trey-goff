@@ -17,12 +17,12 @@ import { getTopicColor, TOPIC_COLORS } from './types'
 // Constants
 // =============================================================================
 
-/** Texture resolution (512x512 is good balance of quality vs memory) */
-const TEXTURE_SIZE = 512
+/** Texture resolution (256x256 for fast generation, still looks good with blur) */
+const TEXTURE_SIZE = 256
 
 /** Noise parameters for organic nebula appearance */
 const NOISE_SCALE = 3.5
-const NOISE_OCTAVES = 5
+const NOISE_OCTAVES = 3
 const NOISE_PERSISTENCE = 0.55
 
 /** Radial falloff parameters */
