@@ -23,6 +23,7 @@ import { LibraryBreadcrumb } from './LibraryBreadcrumb'
 import { LibraryHUD } from './LibraryHUD'
 import { AccessibleBookList } from './AccessibleBookList'
 import { PostProcessingEffects } from './PostProcessingEffects'
+import { AnimationDriver } from './AnimationDriver'
 
 // =============================================================================
 // Types
@@ -223,6 +224,9 @@ export function FloatingLibrary({ books, fallback }: FloatingLibraryProps) {
           aria-hidden="true"
         >
           <Suspense fallback={null}>
+            {/* Animation invalidation driver - must be first to catch all animations */}
+            <AnimationDriver />
+
             {/* Camera system */}
             <CameraController reducedMotion={reducedMotion} />
 

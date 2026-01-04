@@ -44,6 +44,8 @@ export function CameraController({ reducedMotion }: CameraControllerProps) {
   const targetPositionRef = useRef(new THREE.Vector3())
   const targetLookAtRef = useRef(new THREE.Vector3())
   const currentLookAtRef = useRef(new THREE.Vector3())
+  const startPositionRef = useRef(new THREE.Vector3())
+  const totalDistanceRef = useRef(0)
 
   // Store subscriptions
   const cameraPosition = useLibraryStore((s) => s.cameraPosition)
@@ -51,12 +53,21 @@ export function CameraController({ reducedMotion }: CameraControllerProps) {
   const isTransitioning = useLibraryStore(selectIsTransitioning)
   const viewLevel = useLibraryStore((s) => s.viewLevel)
   const setIsTransitioning = useLibraryStore((s) => s.setIsTransitioning)
+  const setTransitionPhase = useLibraryStore((s) => s.setTransitionPhase)
 
-  // Update target vectors when store changes
+  // Update target vectors when store changes and capture start position
   useEffect(() => {
+    // Capture start position for transition phase calculation
+    startPositionRef.current.copy(camera.position)
     targetPositionRef.current.set(...cameraPosition)
     targetLookAtRef.current.set(...cameraTarget)
-  }, [cameraPosition, cameraTarget])
+
+    // Calculate total distance for phase tracking
+    totalDistanceRef.current = startPositionRef.current.distanceTo(targetPositionRef.current)
+
+    // Reset transition phase to 0 when new transition starts
+    setTransitionPhase(0)
+  }, [cameraPosition, cameraTarget, camera.position, setTransitionPhase])
 
   // Disable controls during transitions
   useEffect(() => {
@@ -77,6 +88,7 @@ export function CameraController({ reducedMotion }: CameraControllerProps) {
       // Instant transition
       camera.position.copy(targetPosition)
       camera.lookAt(targetLookAt)
+      setTransitionPhase(1) // Transition complete
       setIsTransitioning(false)
 
       // Update orbit controls target
@@ -103,8 +115,16 @@ export function CameraController({ reducedMotion }: CameraControllerProps) {
       controlsRef.current.update()
     }
 
+    // Calculate and update transition phase (0-1)
+    const currentDistance = camera.position.distanceTo(targetPosition)
+    const totalDistance = totalDistanceRef.current
+    const phase = totalDistance > 0
+      ? Math.min(1, 1 - currentDistance / totalDistance)
+      : 1
+    setTransitionPhase(phase)
+
     // Check if transition is complete
-    const positionDistance = camera.position.distanceTo(targetPosition)
+    const positionDistance = currentDistance
     const lookAtDistance = currentLookAtRef.current.distanceTo(targetLookAt)
 
     if (positionDistance < POSITION_THRESHOLD && lookAtDistance < POSITION_THRESHOLD) {
@@ -117,9 +137,10 @@ export function CameraController({ reducedMotion }: CameraControllerProps) {
         controlsRef.current.update()
       }
 
+      setTransitionPhase(1)
       setIsTransitioning(false)
     }
-    
+
     // Keep rendering during transition
     invalidate()
   })

@@ -1,7 +1,7 @@
 'use client'
 
 /**
- * Universe - Top-level scene component that renders constellations, drifters, and background.
+ * Universe - Top-level scene component that renders constellations and background.
  * This is the main 3D scene containing all library content.
  */
 
@@ -11,7 +11,6 @@ import { useLibraryStore, selectIsFiltered } from '@/lib/library/store'
 import { filterBooks, calculateFilteredPositions } from '@/lib/library/constellation'
 import { StarField } from './StarField'
 import { Constellation } from './Constellation'
-import { Drifter } from './Drifter'
 import { FloatingBook } from './FloatingBook'
 import { StatsConstellation } from './StatsConstellation'
 
@@ -21,7 +20,6 @@ import { StatsConstellation } from './StatsConstellation'
 
 interface UniverseProps {
   constellations: ConstellationData[]
-  drifters: BookWithPosition[]
   reducedMotion: boolean
 }
 
@@ -61,7 +59,6 @@ function FilteredCluster({
 
 export function Universe({
   constellations,
-  drifters,
   reducedMotion,
 }: UniverseProps) {
   // Store state
@@ -80,9 +77,8 @@ export function Universe({
     for (const c of constellations) {
       books.push(...c.books)
     }
-    books.push(...drifters)
     return books
-  }, [constellations, drifters])
+  }, [constellations])
 
   // Filter books when filters are active
   const filteredBooks = useMemo(() => {
@@ -103,28 +99,22 @@ export function Universe({
   }, [stepBack])
 
   // Calculate opacity for non-active constellations
+  // Per spec: book view dims scene to 40% except selected book
   const getConstellationOpacity = useCallback(
     (topic: string) => {
       if (isFiltered) return 0 // Hidden when filtered
       if (viewLevel === 'universe') return 1
       if (viewLevel === 'constellation') {
-        return activeConstellation === topic ? 1 : 0.2
+        return activeConstellation === topic ? 1 : 0.3
       }
       if (viewLevel === 'book') {
-        return activeConstellation === topic ? 0.5 : 0.1
+        // Scene dims to 40% except selected book (which glows via emissive)
+        return activeConstellation === topic ? 0.4 : 0.15
       }
       return 1
     },
     [viewLevel, activeConstellation, isFiltered]
   )
-
-  // Drifter opacity
-  const drifterOpacity = useMemo(() => {
-    if (isFiltered) return 0
-    if (viewLevel === 'book') return 0.2
-    if (viewLevel === 'constellation') return 0.4
-    return 0.85
-  }, [viewLevel, isFiltered])
 
   return (
     <group>
@@ -140,7 +130,7 @@ export function Universe({
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
 
-      {/* Constellations (hidden when filtered) */}
+      {/* Constellations (including Random for orphan books) */}
       {constellations.map((constellation) => (
         <Constellation
           key={constellation.topic}
@@ -151,18 +141,10 @@ export function Universe({
         />
       ))}
 
-      {/* Drifters (hidden when filtered) */}
-      {drifterOpacity > 0 &&
-        drifters.map((book) => (
-          <group key={book.id} visible={drifterOpacity > 0}>
-            <Drifter book={book} reducedMotion={reducedMotion} />
-          </group>
-        ))}
-
       {/* Stats constellation */}
       <StatsConstellation
         books={allBooks}
-        position={[60, 30, -30]}
+        position={[-100, 60, -50]}
         reducedMotion={reducedMotion}
       />
 
