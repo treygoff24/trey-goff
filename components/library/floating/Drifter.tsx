@@ -19,6 +19,7 @@ import { useLibraryStore } from '@/lib/library/store'
 interface DrifterProps {
   book: BookWithPosition
   reducedMotion: boolean
+  opacity?: number
 }
 
 // =============================================================================
@@ -62,7 +63,7 @@ function createSeededRandom(seed: number): () => number {
 // Component
 // =============================================================================
 
-export function Drifter({ book, reducedMotion }: DrifterProps) {
+export function Drifter({ book, reducedMotion, opacity = 0.85 }: DrifterProps) {
   const meshRef = useRef<THREE.Mesh>(null)
   const materialRef = useRef<THREE.MeshStandardMaterial>(null)
   const timeRef = useRef(0)
@@ -164,7 +165,7 @@ export function Drifter({ book, reducedMotion }: DrifterProps) {
 
     // Opacity
     if (materialRef.current) {
-      materialRef.current.opacity = 0.85
+      materialRef.current.opacity = opacity
     }
   })
 
@@ -182,7 +183,13 @@ export function Drifter({ book, reducedMotion }: DrifterProps) {
 
   const handleClick = useCallback((e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation()
-    selectBook(book, book.position)
+    // Use current mesh position (animated), not original book.position
+    if (meshRef.current) {
+      const pos = meshRef.current.position
+      selectBook(book, [pos.x, pos.y, pos.z])
+    } else {
+      selectBook(book, book.position)
+    }
   }, [book, selectBook])
 
   // Cleanup cursor
@@ -192,28 +199,32 @@ export function Drifter({ book, reducedMotion }: DrifterProps) {
 
   const emissiveIntensity = useMemo(() => {
     if (isSelected) return 0.3
-    if (isHovered) return 0.15
-    return 0
+    if (isHovered) return 0.2
+    return 0.05 // Very subtle base glow
   }, [isHovered, isSelected])
+
+  // Disable raycast when drifter is mostly hidden
+  const isInteractive = opacity > 0.3
 
   return (
     <mesh
       ref={meshRef}
       position={book.position}
-      onPointerOver={handlePointerOver}
-      onPointerOut={handlePointerOut}
-      onClick={handleClick}
+      onPointerOver={isInteractive ? handlePointerOver : undefined}
+      onPointerOut={isInteractive ? handlePointerOut : undefined}
+      onClick={isInteractive ? handleClick : undefined}
+      raycast={isInteractive ? undefined : () => {}}
     >
       <boxGeometry args={[BOOK_WIDTH, BOOK_HEIGHT, BOOK_DEPTH]} />
       <meshStandardMaterial
         ref={materialRef}
         map={texture}
         transparent
-        opacity={0.85}
-        emissive={texture ? '#ffffff' : '#888888'}
+        opacity={opacity}
+        emissive={new THREE.Color('#888888')}
         emissiveIntensity={emissiveIntensity}
-        roughness={0.8}
-        metalness={0.1}
+        roughness={0.7}
+        metalness={0.0}
       />
     </mesh>
   )

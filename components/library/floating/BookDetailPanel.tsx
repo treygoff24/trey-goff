@@ -7,7 +7,6 @@
 
 import { useEffect, useRef, useCallback } from 'react'
 import { X, ExternalLink, Star } from 'lucide-react'
-import type { Book } from '@/lib/books/types'
 import { useLibraryStore } from '@/lib/library/store'
 import { isValidAmazonUrl } from '@/lib/library/amazon'
 import { getTopicColor, DEFAULT_TOPIC_COLOR } from '@/lib/library/types'
@@ -18,6 +17,7 @@ import { getTopicColor, DEFAULT_TOPIC_COLOR } from '@/lib/library/types'
 
 export function BookDetailPanel() {
   const panelRef = useRef<HTMLDivElement>(null)
+  const previousFocusRef = useRef<HTMLElement | null>(null)
   const selectedBook = useLibraryStore((s) => s.selectedBook)
   const selectBook = useLibraryStore((s) => s.selectBook)
 
@@ -26,23 +26,54 @@ export function BookDetailPanel() {
     selectBook(null)
   }, [selectBook])
 
-  // Escape key handler
+  // Focus management: store previous focus and restore on close
   useEffect(() => {
+    if (selectedBook && panelRef.current) {
+      // Store the element that had focus before opening
+      previousFocusRef.current = document.activeElement as HTMLElement
+      // Focus the first focusable element (close button)
+      const firstFocusable = panelRef.current.querySelector<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      )
+      firstFocusable?.focus()
+    } else if (previousFocusRef.current) {
+      // Restore focus when closing
+      previousFocusRef.current.focus()
+      previousFocusRef.current = null
+    }
+  }, [selectedBook])
+
+  // Focus trap: prevent tabbing outside the modal
+  useEffect(() => {
+    if (!selectedBook || !panelRef.current) return
+
+    const panel = panelRef.current
+    const focusableElements = panel.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    )
+    const firstFocusable = focusableElements[0]
+    const lastFocusable = focusableElements[focusableElements.length - 1]
+
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && selectedBook) {
-        handleClose()
+      if (e.key !== 'Tab') return
+
+      if (e.shiftKey) {
+        // Shift+Tab: if on first element, wrap to last
+        if (document.activeElement === firstFocusable) {
+          e.preventDefault()
+          lastFocusable?.focus()
+        }
+      } else {
+        // Tab: if on last element, wrap to first
+        if (document.activeElement === lastFocusable) {
+          e.preventDefault()
+          firstFocusable?.focus()
+        }
       }
     }
 
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [selectedBook, handleClose])
-
-  // Focus trap
-  useEffect(() => {
-    if (selectedBook && panelRef.current) {
-      panelRef.current.focus()
-    }
+    panel.addEventListener('keydown', handleKeyDown)
+    return () => panel.removeEventListener('keydown', handleKeyDown)
   }, [selectedBook])
 
   if (!selectedBook) {

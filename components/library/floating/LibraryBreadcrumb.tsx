@@ -19,7 +19,6 @@ export function LibraryBreadcrumb() {
   const selectedBook = useLibraryStore((s) => s.selectedBook)
   const goToUniverse = useLibraryStore((s) => s.goToUniverse)
   const stepBack = useLibraryStore((s) => s.stepBack)
-  const zoomToConstellation = useLibraryStore((s) => s.zoomToConstellation)
 
   // Handle click on Library (root)
   const handleLibraryClick = useCallback(() => {

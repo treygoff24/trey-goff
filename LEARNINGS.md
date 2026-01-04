@@ -1,5 +1,43 @@
 # Learnings
 
+## 2026-01-04 - Floating Library v2 (Volumetric Nebulae & Postprocessing)
+
+**What Worked:**
+- Slice-volume approach for nebulae (8-48 stacked billboards with parallax) - looks great, performs well
+- AnimationDriver pattern: single component at Canvas root handles centralized invalidation
+- `frameloop="demand"` + selective `invalidate()` saves massive GPU power when scene is idle
+- Multi-layer parallax star fields (3 layers with different parallax factors) add depth without complexity
+- HDR workflow: `toneMapped={false}` on emissive materials + EffectComposer with ToneMapping effect
+- Derived Zustand selectors (selectIsAnimating) cleanly compute from multiple flags
+- LOD crossfade (300ms opacity transition) prevents jarring LOD pops
+- Performance monitor with outlier rejection (ignore >100ms deltas from tab switches)
+- Recovery hysteresis: require 55+ fps for 3s before stepping up quality
+
+**What Failed:**
+- Passing ref values directly in JSX render caused "Cannot access refs during render" lint error
+  - Fix: Have each child component manage its own ref internally
+- Initial parallax tracking in parent component was awkward
+  - Fix: Each StarLayer tracks its own parallax offset
+- EffectComposer conditional children (per quality tier) don't work well
+  - Fix: Use separate components or conditionally include entire EffectComposer
+
+**Patterns:**
+- AnimationDriver at Canvas root: `if (isAnimating) invalidate()` in useFrame
+- transitionPhase (0-1) enables progress-based effects (warp stretch, nebula brightening)
+- Quality toggle with Full/Reduced/Minimal presets gives user control
+- Slice positioning: ellipsoid distribution with seeded random and per-topic axis ratios
+- Procedural textures: simplex noise + radial falloff, cached per topic (12 textures total)
+- Focus trap in modals: store previousFocus, Tab/Shift+Tab wrap, restore on close
+
+**Performance Tips:**
+- Gate sampling in PerformanceMonitor to when isAnimating is true
+- Continue sampling for 3s after animations stop (recovery period)
+- Disable raycast on mostly-transparent meshes (opacity < 0.3)
+- Cap DPR at 2x even on high-DPI displays
+- Use single THREE.Color instance, not string per frame
+
+---
+
 ## 2025-12-28 - Interactive 3D World
 
 **What Worked:**

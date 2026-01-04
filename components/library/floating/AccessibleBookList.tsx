@@ -41,8 +41,9 @@ export function AccessibleBookList({ books }: AccessibleBookListProps) {
       ) {
         continue
       }
-      if (searchQuery.length >= 2) {
-        const query = searchQuery.toLowerCase()
+      const trimmedQuery = searchQuery.trim()
+      if (trimmedQuery.length >= 2) {
+        const query = trimmedQuery.toLowerCase()
         const matchesTitle = book.title.toLowerCase().includes(query)
         const matchesAuthor = book.author.toLowerCase().includes(query)
         if (!matchesTitle && !matchesAuthor) continue
@@ -90,8 +91,9 @@ export function AccessibleBookList({ books }: AccessibleBookListProps) {
               {topicBooks.map((book) => (
                 <li key={book.id}>
                   <button
-                    onClick={() => selectBook(book, [0, 0, 0])}
+                    onClick={() => selectBook(book)}
                     className="text-left"
+                    tabIndex={-1}
                     aria-label={`${book.title} by ${book.author}${
                       book.rating ? `, rated ${book.rating} out of 5` : ''
                     }`}
@@ -116,8 +118,9 @@ export function AccessibleBookList({ books }: AccessibleBookListProps) {
             {groupedBooks.orphans.map((book) => (
               <li key={book.id}>
                 <button
-                  onClick={() => selectBook(book, [0, 0, 0])}
+                  onClick={() => selectBook(book)}
                   className="text-left"
+                  tabIndex={-1}
                   aria-label={`${book.title} by ${book.author}${
                     book.rating ? `, rated ${book.rating} out of 5` : ''
                   }`}
