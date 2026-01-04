@@ -36,6 +36,7 @@ const CLEANUP_INTERVAL = 60 * 1000
 
 class TextureManager {
   private cache: Map<string, TextureEntry> = new Map()
+  private placeholderCache: Map<string, THREE.Texture> = new Map() // Cache placeholders by topic
   private loader: THREE.TextureLoader
   private cleanupTimer: ReturnType<typeof setInterval> | null = null
   private coverMap: Record<string, string> | null = null
@@ -116,12 +117,31 @@ class TextureManager {
         this.cacheTexture(bookId, texture)
         return texture
       } catch (err) {
-        console.warn(`[TextureManager] Failed to load cover for ${bookId}:`, err)
+        // Silently fall back to placeholder (don't spam console)
       }
     }
 
-    // Fallback to topic-colored placeholder
-    return this.createPlaceholderTexture(topics)
+    // Fallback to cached topic-colored placeholder
+    return this.getOrCreatePlaceholder(topics)
+  }
+
+  /**
+   * Get or create a cached placeholder texture for a topic.
+   * This prevents creating 150+ identical textures when covers fail to load.
+   */
+  private getOrCreatePlaceholder(topics: string[]): THREE.Texture {
+    const primaryTopic = topics[0]?.toLowerCase() ?? '_default'
+    
+    // Check placeholder cache
+    const cached = this.placeholderCache.get(primaryTopic)
+    if (cached) {
+      return cached
+    }
+    
+    // Create and cache new placeholder
+    const texture = this.createPlaceholderTexture(topics)
+    this.placeholderCache.set(primaryTopic, texture)
+    return texture
   }
 
   /**
@@ -133,6 +153,7 @@ class TextureManager {
         url,
         (texture) => {
           // Configure texture for better quality
+          texture.colorSpace = THREE.SRGBColorSpace
           texture.minFilter = THREE.LinearMipmapLinearFilter
           texture.magFilter = THREE.LinearFilter
           texture.generateMipmaps = true
@@ -146,37 +167,75 @@ class TextureManager {
   }
 
   /**
-   * Create a colored placeholder texture based on topic.
+   * Create a styled placeholder texture based on topic.
+   * Looks like a book cover with spine and gradient.
    */
   createPlaceholderTexture(topics: string[]): THREE.Texture {
     const primaryTopic = topics[0]?.toLowerCase()
     const color = primaryTopic ? getTopicColor(primaryTopic) : DEFAULT_TOPIC_COLOR
 
-    // Create a simple colored canvas
+    // Create a styled book cover canvas
     const canvas = document.createElement('canvas')
-    canvas.width = 128
-    canvas.height = 192
+    canvas.width = 256
+    canvas.height = 384
     const ctx = canvas.getContext('2d')
 
     if (ctx) {
-      // Fill with topic color
-      ctx.fillStyle = color
+      // Parse the hex color
+      const r = parseInt(color.slice(1, 3), 16)
+      const g = parseInt(color.slice(3, 5), 16)
+      const b = parseInt(color.slice(5, 7), 16)
+      
+      // Main cover gradient
+      const mainGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height)
+      mainGradient.addColorStop(0, color)
+      mainGradient.addColorStop(0.5, `rgba(${r * 0.7}, ${g * 0.7}, ${b * 0.7}, 1)`)
+      mainGradient.addColorStop(1, `rgba(${r * 0.5}, ${g * 0.5}, ${b * 0.5}, 1)`)
+      ctx.fillStyle = mainGradient
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-      // Add a subtle gradient overlay
-      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
-      gradient.addColorStop(0, 'rgba(255,255,255,0.1)')
-      gradient.addColorStop(1, 'rgba(0,0,0,0.2)')
-      ctx.fillStyle = gradient
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      // Spine shadow on left edge
+      const spineGradient = ctx.createLinearGradient(0, 0, 30, 0)
+      spineGradient.addColorStop(0, 'rgba(0,0,0,0.4)')
+      spineGradient.addColorStop(1, 'rgba(0,0,0,0)')
+      ctx.fillStyle = spineGradient
+      ctx.fillRect(0, 0, 30, canvas.height)
 
-      // Add a border
-      ctx.strokeStyle = 'rgba(255,255,255,0.2)'
+      // Subtle page edges on right
+      ctx.fillStyle = 'rgba(255,255,255,0.08)'
+      ctx.fillRect(canvas.width - 8, 10, 6, canvas.height - 20)
+
+      // Top highlight
+      const topHighlight = ctx.createLinearGradient(0, 0, 0, 60)
+      topHighlight.addColorStop(0, 'rgba(255,255,255,0.15)')
+      topHighlight.addColorStop(1, 'rgba(255,255,255,0)')
+      ctx.fillStyle = topHighlight
+      ctx.fillRect(0, 0, canvas.width, 60)
+
+      // Decorative lines
+      ctx.strokeStyle = 'rgba(255,255,255,0.12)'
       ctx.lineWidth = 2
-      ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4)
+      
+      // Top decoration
+      ctx.beginPath()
+      ctx.moveTo(40, 50)
+      ctx.lineTo(canvas.width - 30, 50)
+      ctx.stroke()
+      
+      // Bottom decoration
+      ctx.beginPath()
+      ctx.moveTo(40, canvas.height - 50)
+      ctx.lineTo(canvas.width - 30, canvas.height - 50)
+      ctx.stroke()
+
+      // Border
+      ctx.strokeStyle = 'rgba(255,255,255,0.1)'
+      ctx.lineWidth = 3
+      ctx.strokeRect(3, 3, canvas.width - 6, canvas.height - 6)
     }
 
     const texture = new THREE.CanvasTexture(canvas)
+    texture.colorSpace = THREE.SRGBColorSpace
     texture.minFilter = THREE.LinearFilter
     texture.magFilter = THREE.LinearFilter
 

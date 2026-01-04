@@ -6,15 +6,12 @@
  */
 
 import { Canvas } from '@react-three/fiber'
-import { Suspense, useCallback, useEffect, useState } from 'react'
+import { Suspense, useCallback, useEffect, useState, useMemo } from 'react'
 import * as THREE from 'three'
 import type { Book } from '@/lib/books/types'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 import { useLibraryStore } from '@/lib/library/store'
-import {
-  groupBooksIntoConstellations,
-  getDrifterBooks,
-} from '@/lib/library/constellation'
+import { groupBooksIntoConstellations } from '@/lib/library/constellation'
 import { CameraController } from './CameraController'
 import { Universe } from './Universe'
 import { BookDetailPanel } from './BookDetailPanel'
@@ -123,24 +120,36 @@ export function FloatingLibrary({ books, fallback }: FloatingLibraryProps) {
   const [isReady, setIsReady] = useState(false)
   const reducedMotion = useReducedMotion()
   const showClassicFallback = useLibraryStore((s) => s.showClassicFallback)
+  const viewLevel = useLibraryStore((s) => s.viewLevel)
+  const stepBack = useLibraryStore((s) => s.stepBack)
 
   // Check WebGL support
   useEffect(() => {
     setWebGLSupported(isWebGLSupported())
   }, [])
 
-  // Pre-compute constellation data
-  const constellations = groupBooksIntoConstellations(books)
-  const drifters = getDrifterBooks(books)
+  // Global Escape key handler for all view levels
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && viewLevel !== 'universe') {
+        stepBack()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [viewLevel, stepBack])
+
+  // Pre-compute constellation data (memoized to avoid recomputation)
+  // Note: Orphan books are now included in a "Random" constellation
+  const constellations = useMemo(
+    () => groupBooksIntoConstellations(books),
+    [books]
+  )
 
   // Handle canvas ready
   const handleReady = useCallback(() => {
     setIsReady(true)
-  }, [])
-
-  // Handle errors
-  const handleError = useCallback((error: Error) => {
-    console.error('[FloatingLibrary] Canvas error:', error)
   }, [])
 
   // Show loading while checking WebGL
@@ -161,11 +170,13 @@ export function FloatingLibrary({ books, fallback }: FloatingLibraryProps) {
 
         {/* 3D Canvas */}
         <Canvas
+          dpr={[1, 2]} // Cap DPR to reduce GPU load on high-DPI displays
+          frameloop="demand" // Only render when invalidated - massive GPU savings
           camera={{
             fov: 60,
             near: 0.1,
-            far: 2000,
-            position: [0, 0, 100],
+            far: 3000,
+            position: [0, 20, 200],
           }}
           style={{
             background: '#070A0F',
@@ -176,7 +187,8 @@ export function FloatingLibrary({ books, fallback }: FloatingLibraryProps) {
             // Configure renderer
             gl.setClearColor(0x070a0f, 1)
             gl.toneMapping = THREE.ACESFilmicToneMapping
-            gl.toneMappingExposure = 1.2
+            gl.toneMappingExposure = 1.0
+            gl.outputColorSpace = THREE.SRGBColorSpace
             handleReady()
           }}
           aria-hidden="true"
@@ -188,12 +200,13 @@ export function FloatingLibrary({ books, fallback }: FloatingLibraryProps) {
             {/* Scene content */}
             <Universe
               constellations={constellations}
-              drifters={drifters}
               reducedMotion={reducedMotion}
             />
 
-            {/* Ambient lighting */}
-            <ambientLight intensity={0.2} />
+            {/* Lighting setup for books */}
+            <ambientLight intensity={0.5} />
+            <directionalLight position={[50, 80, 50]} intensity={0.6} />
+            <directionalLight position={[-30, -20, -40]} intensity={0.3} color="#6366f1" />
           </Suspense>
         </Canvas>
 

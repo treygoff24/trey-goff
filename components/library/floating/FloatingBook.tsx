@@ -2,11 +2,12 @@
 
 /**
  * FloatingBook - Individual book rendered as a 3D plane with cover texture.
- * Handles hover/select states, floating animation, and interaction.
+ * Handles hover/select states and smooth position/scale transitions.
+ * Uses invalidate() for on-demand rendering (GPU efficient).
  */
 
 import { useRef, useState, useEffect, useCallback, useMemo } from 'react'
-import { useFrame, ThreeEvent } from '@react-three/fiber'
+import { useFrame, useThree, ThreeEvent } from '@react-three/fiber'
 import * as THREE from 'three'
 import type { BookWithPosition, Position3D } from '@/lib/library/types'
 import { textureManager } from '@/lib/library/textures'
@@ -32,17 +33,15 @@ const BOOK_WIDTH = 2
 const BOOK_HEIGHT = 3
 const BOOK_DEPTH = 0.2
 
-/** Floating animation parameters */
-const FLOAT_AMPLITUDE = 0.15
-const FLOAT_SPEED = 0.5
-const ROTATION_AMPLITUDE = 0.03
-
 /** Hover animation parameters */
 const HOVER_SCALE = 1.15
 const HOVER_TILT = 0.15
 
 /** Position lerp speed */
 const POSITION_LERP_SPEED = 3
+
+/** Threshold for considering lerp complete */
+const LERP_THRESHOLD = 0.01
 
 // =============================================================================
 // Component
@@ -56,6 +55,7 @@ export function FloatingBook({
 }: FloatingBookProps) {
   const meshRef = useRef<THREE.Mesh>(null)
   const materialRef = useRef<THREE.MeshStandardMaterial>(null)
+  const { invalidate } = useThree()
 
   // State
   const [texture, setTexture] = useState<THREE.Texture | null>(null)
@@ -66,19 +66,12 @@ export function FloatingBook({
   const selectedBook = useLibraryStore((s) => s.selectedBook)
   const isSelected = selectedBook?.id === book.id
 
-  // Animation refs - use book ID hash for deterministic offset
-  const timeOffset = useMemo(() => {
-    let hash = 0
-    for (let i = 0; i < book.id.length; i++) {
-      hash = (hash * 31 + book.id.charCodeAt(i)) & 0x7fffffff
-    }
-    return (hash % 1000) / 10
-  }, [book.id])
-  const timeRef = useRef(timeOffset)
+  // Animation refs
   const currentPositionRef = useRef(new THREE.Vector3(...book.position))
   const targetPositionRef = useRef(new THREE.Vector3(...book.position))
   const baseScaleRef = useRef(new THREE.Vector3(1, 1, 1))
   const targetScaleRef = useRef(new THREE.Vector3(1, 1, 1))
+  const isAnimatingRef = useRef(false)
 
   // Load texture
   useEffect(() => {
@@ -87,13 +80,14 @@ export function FloatingBook({
     textureManager.getTexture(book.id, book.topics).then((tex) => {
       if (mounted) {
         setTexture(tex)
+        invalidate() // Re-render with new texture
       }
     })
 
     return () => {
       mounted = false
     }
-  }, [book.id, book.topics])
+  }, [book.id, book.topics, invalidate])
 
   // Update target position when prop changes
   useEffect(() => {
@@ -102,58 +96,44 @@ export function FloatingBook({
     } else {
       targetPositionRef.current.set(...book.position)
     }
-  }, [targetPosition, book.position])
+    isAnimatingRef.current = true
+    invalidate() // Trigger animation
+  }, [targetPosition, book.position, invalidate])
 
   // Update target scale based on hover/select state
   useEffect(() => {
     const scale = isHovered || isSelected ? HOVER_SCALE : 1
     targetScaleRef.current.set(scale, scale, scale)
-  }, [isHovered, isSelected])
+    isAnimatingRef.current = true
+    invalidate() // Trigger animation
+  }, [isHovered, isSelected, invalidate])
 
-  // Animation frame
+  // Animation frame - only runs when invalidate() is called
   useFrame((_state, delta) => {
     if (!meshRef.current) return
 
-    // Update time
-    timeRef.current += delta
+    // Skip if not animating
+    if (!isAnimatingRef.current) return
 
-    // Lerp position
     const currentPos = currentPositionRef.current
     const targetPos = targetPositionRef.current
 
+    // Lerp position
     if (!reducedMotion) {
       currentPos.lerp(targetPos, delta * POSITION_LERP_SPEED)
     } else {
       currentPos.copy(targetPos)
     }
 
-    // Apply floating animation (if not reduced motion)
-    let floatY = 0
-    let rotationX = 0
-    let rotationZ = 0
+    // Set position (no floating animation - static for GPU efficiency)
+    meshRef.current.position.copy(currentPos)
 
-    if (!reducedMotion && !isSelected) {
-      const t = timeRef.current * FLOAT_SPEED
-      floatY = Math.sin(t) * FLOAT_AMPLITUDE
-      rotationX = Math.sin(t * 0.7) * ROTATION_AMPLITUDE
-      rotationZ = Math.cos(t * 0.5) * ROTATION_AMPLITUDE
-    }
-
-    // Apply hover tilt
+    // Apply hover tilt (static, not animated)
     if (isHovered && !reducedMotion) {
-      rotationX += HOVER_TILT * 0.5
-      rotationZ += HOVER_TILT * 0.3
+      meshRef.current.rotation.set(HOVER_TILT * 0.5, 0, HOVER_TILT * 0.3)
+    } else {
+      meshRef.current.rotation.set(0, 0, 0)
     }
-
-    // Set position
-    meshRef.current.position.set(
-      currentPos.x,
-      currentPos.y + floatY,
-      currentPos.z
-    )
-
-    // Set rotation
-    meshRef.current.rotation.set(rotationX, 0, rotationZ)
 
     // Lerp scale
     if (!reducedMotion) {
@@ -166,6 +146,20 @@ export function FloatingBook({
     // Update material opacity
     if (materialRef.current) {
       materialRef.current.opacity = opacity
+    }
+
+    // Check if animation is complete
+    const positionDist = currentPos.distanceTo(targetPos)
+    const scaleDist = baseScaleRef.current.distanceTo(targetScaleRef.current)
+
+    if (positionDist < LERP_THRESHOLD && scaleDist < LERP_THRESHOLD) {
+      // Snap to final values
+      currentPos.copy(targetPos)
+      baseScaleRef.current.copy(targetScaleRef.current)
+      isAnimatingRef.current = false
+    } else {
+      // Keep animating
+      invalidate()
     }
   })
 
@@ -199,17 +193,21 @@ export function FloatingBook({
   // Glow intensity based on state
   const emissiveIntensity = useMemo(() => {
     if (isSelected) return 0.3
-    if (isHovered) return 0.15
-    return 0
+    if (isHovered) return 0.2
+    return 0.05 // Very subtle base glow
   }, [isHovered, isSelected])
+
+  // Disable raycast when book is fully hidden (filtered out)
+  const isInteractive = opacity > 0.1
 
   return (
     <mesh
       ref={meshRef}
       position={book.position}
-      onPointerOver={handlePointerOver}
-      onPointerOut={handlePointerOut}
-      onClick={handleClick}
+      onPointerOver={isInteractive ? handlePointerOver : undefined}
+      onPointerOut={isInteractive ? handlePointerOut : undefined}
+      onClick={isInteractive ? handleClick : undefined}
+      raycast={isInteractive ? undefined : () => {}}
     >
       <boxGeometry args={[BOOK_WIDTH, BOOK_HEIGHT, BOOK_DEPTH]} />
       <meshStandardMaterial
@@ -217,10 +215,10 @@ export function FloatingBook({
         map={texture}
         transparent={opacity < 1}
         opacity={opacity}
-        emissive={texture ? '#ffffff' : '#888888'}
+        emissive={new THREE.Color('#888888')}
         emissiveIntensity={emissiveIntensity}
-        roughness={0.8}
-        metalness={0.1}
+        roughness={0.7}
+        metalness={0.0}
       />
     </mesh>
   )
