@@ -58,24 +58,24 @@ const DEFAULT_RADIUS = 20
 
 /** LOD slice counts by state */
 const SLICE_COUNTS = {
-  universe: 8,
-  constellationInactive: 12,
-  constellationActive: 48,
-  book: 24,
+  universe: 12,
+  constellationInactive: 20,
+  constellationActive: 64,
+  book: 32,
 } as const
 
-/** HDR emissive intensities */
+/** HDR emissive intensities - lowered for softer glow */
 const EMISSIVE_INTENSITY = {
-  base: 1.2,
-  active: 1.8,
-  brightened: 2.4, // During transition
+  base: 0.8,
+  active: 1.2,
+  brightened: 1.6, // During transition
 } as const
 
 /** Fallback emissive (when postprocessing disabled) */
 const FALLBACK_EMISSIVE_INTENSITY = {
-  base: 0.4,
-  active: 0.6,
-  brightened: 0.8,
+  base: 0.3,
+  active: 0.5,
+  brightened: 0.6,
 } as const
 
 /** UV animation speed */
@@ -182,13 +182,17 @@ function generateSlices(
       z * radius * axes[2]
     )
 
-    // Larger slices near center, smaller at edges
+    // Varied slice sizes - smaller overall for more organic look
+    // Core slices larger, outer slices smaller and wispier
     const distFromCenter = Math.sqrt(d)
-    const scale = radius * (0.6 + (1 - distFromCenter) * 0.8)
+    const baseSize = radius * (0.4 + rng() * 0.4) // 0.4 to 0.8 of radius
+    const distanceScale = 1.0 - distFromCenter * 0.5 // Smaller at edges
+    const scale = baseSize * distanceScale
 
     // Random UV offset and scale for variety
     const uvOffset: [number, number] = [rng() * 0.5, rng() * 0.5]
-    const uvScale = 0.3 + rng() * 0.4
+    // Lower uvScale = lower opacity per slice (used as opacity multiplier)
+    const uvScale = 0.15 + rng() * 0.25 // 0.15 to 0.4 - much softer
 
     // Random rotation for variety
     const rotation = rng() * Math.PI * 2

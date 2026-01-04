@@ -21,13 +21,16 @@ import { getTopicColor, TOPIC_COLORS } from './types'
 const TEXTURE_SIZE = 256
 
 /** Noise parameters for organic nebula appearance */
-const NOISE_SCALE = 3.5
+const NOISE_SCALE = 2.5        // Lower = larger features
 const NOISE_OCTAVES = 3
-const NOISE_PERSISTENCE = 0.55
+const NOISE_PERSISTENCE = 0.6
 
-/** Radial falloff parameters */
-const FALLOFF_POWER = 2.2
-const FALLOFF_EDGE = 0.85 // Where falloff starts (0-1 from center)
+/** 
+ * Radial falloff parameters - creates soft, cloud-like edges
+ * Key insight: real nebulae have very soft, diffuse edges that fade gradually
+ */
+const FALLOFF_START = 0.0     // Start fading immediately from center
+const FALLOFF_POWER = 1.8     // Gentler falloff curve
 
 // =============================================================================
 // Texture Cache
@@ -134,13 +137,6 @@ export function generateNebulaTexture(topic: string): THREE.Texture {
       // Distance from center (0 at center, 1 at edge)
       const dist = Math.sqrt(nx * nx + ny * ny)
 
-      // Radial falloff (soft edge)
-      let falloff = 1
-      if (dist > FALLOFF_EDGE) {
-        const edgeDist = (dist - FALLOFF_EDGE) / (1 - FALLOFF_EDGE)
-        falloff = Math.max(0, 1 - Math.pow(edgeDist, FALLOFF_POWER))
-      }
-
       // Multi-octave noise for organic variation
       const noise = fbm2D(
         x / TEXTURE_SIZE * NOISE_SCALE,
@@ -151,18 +147,48 @@ export function generateNebulaTexture(topic: string): THREE.Texture {
         seed
       )
 
-      // Map noise from [-1, 1] to [0, 1] with contrast boost
-      const noiseValue = Math.pow((noise + 1) / 2, 1.5)
+      // Secondary noise at different scale for edge variation
+      const edgeNoise = fbm2D(
+        x / TEXTURE_SIZE * NOISE_SCALE * 2,
+        y / TEXTURE_SIZE * NOISE_SCALE * 2,
+        2,
+        0.5,
+        2,
+        seed + 1000
+      )
 
-      // Combine noise with radial falloff
-      const intensity = noiseValue * falloff
+      // Noise-modulated radial falloff - creates organic, wispy edges
+      // The edge boundary varies with noise, creating natural-looking shapes
+      const noiseModulation = 0.3 + (edgeNoise + 1) * 0.35 // 0.3 to 1.0
+      const effectiveRadius = noiseModulation
 
-      // Apply color tint
+      // Soft gaussian-like falloff from the noise-modulated boundary
+      let falloff: number
+      if (dist < effectiveRadius * 0.5) {
+        // Inner core - mostly opaque but with some variation
+        falloff = 1.0
+      } else if (dist < effectiveRadius) {
+        // Transition zone - smooth falloff
+        const t = (dist - effectiveRadius * 0.5) / (effectiveRadius * 0.5)
+        falloff = 1.0 - t * t // Quadratic falloff
+      } else {
+        // Outer wisps - exponential decay for soft edges
+        const overshoot = (dist - effectiveRadius) / (1 - effectiveRadius + 0.01)
+        falloff = Math.exp(-overshoot * 3) * 0.5
+      }
+
+      // Map primary noise from [-1, 1] to [0, 1] with subtle variation
+      const noiseValue = 0.6 + (noise + 1) * 0.2 // 0.6 to 1.0 - keeps it bright but varied
+
+      // Combine: base intensity from falloff, modulated by noise
+      const intensity = falloff * noiseValue
+
+      // Apply color tint with softer overall opacity
       const pixelIndex = (y * TEXTURE_SIZE + x) * 4
-      data[pixelIndex] = Math.floor(r * intensity * 255)
-      data[pixelIndex + 1] = Math.floor(g * intensity * 255)
-      data[pixelIndex + 2] = Math.floor(b * intensity * 255)
-      data[pixelIndex + 3] = Math.floor(intensity * 255) // Alpha for transparency
+      data[pixelIndex] = Math.floor(r * 255)
+      data[pixelIndex + 1] = Math.floor(g * 255)
+      data[pixelIndex + 2] = Math.floor(b * 255)
+      data[pixelIndex + 3] = Math.floor(intensity * 200) // Cap at 200 for softer look
     }
   }
 
