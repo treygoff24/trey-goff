@@ -1,6 +1,6 @@
-# Floating Library - Build Context
+# Floating Library v2 - Build Context
 
-**Last Updated**: Phase 0 - Pre-implementation (STARTING)
+**Last Updated**: Phase 0 - Store Foundation (IN PROGRESS)
 
 ## Protocol Reminder (Re-read on every phase start)
 
@@ -22,8 +22,6 @@ codex exec \
   "[PROMPT]"
 ```
 
-**Be patient:** Codex may take up to 30 minutes for complex reviews.
-
 **Quality gates before review:**
 ```bash
 pnpm typecheck && pnpm lint && pnpm build
@@ -33,23 +31,21 @@ pnpm typecheck && pnpm lint && pnpm build
 
 ## What This Is
 
-Transform the `/library` page from a standard grid layout into an explorable 3D cosmos where books float as constellations organized by topic (nebulae). Built with React Three Fiber.
-
-Key features:
-- **Universe view**: All topic constellations visible from distance
-- **Constellation view**: Zoom into a nebula to browse books
-- **Book view**: Select a book to see details + Amazon link
-- **Drifters**: Books without topics float lazily through the void
-- **Stats constellation**: Reading metrics as floating artifacts
+Visual upgrade for the Floating Library:
+- **Postprocessing pipeline** — Bloom, DOF, vignette, film grain
+- **Volumetric nebulae** — Slice-volume approach (stacked sprites with parallax)
+- **Particle dust** — GPU particles for wisps inside nebulae
+- **Star field upgrade** — Multi-layer parallax with warp stretch
+- **Transitions** — Warp effects, nebula brightening, scene dimming
 
 ---
 
 ## Build Context
 
-**Type**: Feature addition
-**Spec location**: `docs/plans/2026-01-03-floating-library-design.md`
-**Plan location**: `IMPLEMENTATION_PLAN.md`
-**Feature branch**: `feature/floating-library`
+**Type**: Feature enhancement
+**Spec location**: `docs/plans/FLOATING_LIBRARY_V2_SPEC.md`
+**Plan location**: `IMPLEMENTATION_PLAN_V2.md`
+**Feature branch**: `feature/floating-library-v2`
 
 ---
 
@@ -58,77 +54,71 @@ Key features:
 **Existing (reuse):**
 - Framework: Next.js 15 (App Router) + TypeScript
 - Styling: Tailwind CSS v4 with CSS-first tokens
-- State: Zustand patterns from `/lib/interactive/store.ts`
+- State: Zustand patterns from `/lib/library/store.ts`
 - 3D: React Three Fiber + drei + postprocessing (already installed)
 - Fonts: Satoshi (UI), Newsreader (prose), Monaspace Neon (mono)
 
-**New for Floating Library:**
-- `/lib/library/store.ts` - Zustand store for library-specific state
-- `/lib/library/types.ts` - Topic colors, constellation types
-- `/lib/library/constellation.ts` - Grouping and positioning utilities
-- `/components/library/floating/` - All 3D library components
+**New for v2:**
+- `/lib/library/noise.ts` - Simplex noise utility
+- `/lib/library/nebulaTextures.ts` - Procedural texture generator
+- `/components/library/floating/PostProcessingEffects.tsx` - EffectComposer wrapper
+- `/components/library/floating/VolumetricNebula.tsx` - Slice-volume nebula
+- `/components/library/floating/NebulaDust.tsx` - GPU particles
+- `/components/library/floating/AnimationDriver.tsx` - Invalidation controller
 
 ---
 
 ## Current Phase
 
-**Phase 1: Foundation - Store and Types**
+**Phase 0: Store Foundation**
 
 Tasks:
-1. [ ] Create Zustand store (`lib/library/store.ts`)
-2. [ ] Define types and topic colors (`lib/library/types.ts`)
-3. [ ] Create constellation grouping utilities (`lib/library/constellation.ts`)
+1. [x] Add animation flags to store
+2. [ ] Add transitionPhase
+3. [ ] Add postprocessingEnabled
+4. [ ] Add derived isAnimating getter
+5. [ ] Add setters for all new state
 
 ---
 
 ## Implementation Progress
 
-- [x] Phase 0: Spec and Plan (approved by Codex)
-- [ ] Phase 1: Foundation - Store and Types
-- [ ] Phase 2: Canvas Infrastructure
-- [ ] Phase 3: Book Rendering (incl. cover LOD)
-- [ ] Phase 4: Constellations and Nebulae
-- [ ] Phase 5: View Transitions and Detail
-- [ ] Phase 6: Filtering and Search
-- [ ] Phase 7: Polish, Performance, Accessibility
+- [x] Spec (approved by Codex)
+- [x] Implementation Plan (approved by Codex)
+- [ ] Phase 0: Store Foundation
+- [ ] Phase 1: Postprocessing Pipeline
+- [ ] Phase 2: Nebula Textures
+- [ ] Phase 3: Volumetric Nebula
+- [ ] Phase 4: Particle Dust
+- [ ] Phase 5: Star Field Upgrade
+- [ ] Phase 6: Transitions & Animation Driver
+- [ ] Phase 7: Performance & Polish
 
 ---
 
-## Hook Signatures
+## Store Additions (Phase 0)
 
-### useLibraryStore() (to be created)
 ```typescript
-Returns: {
-  // View state
-  viewLevel: 'universe' | 'constellation' | 'book'
-  activeConstellation: string | null
-  selectedBook: Book | null
+// Animation flags
+postprocessingEnabled: boolean        // Default true
+transitionPhase: number               // 0-1, camera transition progress
+isTransitioning: boolean              // Camera transition in progress
+isUvPanning: boolean                  // Active nebula UV animation
+isParticleDrifting: boolean           // Particle drift animation
+hasBookLerps: boolean                 // Book position animations
 
-  // Camera
-  cameraTarget: [number, number, number]
-  cameraPosition: [number, number, number]
-  isTransitioning: boolean
-
-  // Filters
-  statusFilter: BookStatus | null
-  topicFilter: string | null
-  searchQuery: string
-  sortBy: 'rating' | 'title' | 'author' | 'year'
-
-  // Derived (getter)
-  isFiltered: boolean
-
-  // Performance
-  qualityLevel: 'full' | 'reduced' | 'minimal'
-  showClassicFallback: boolean
-
-  // Actions
-  zoomToConstellation: (topic: string) => void
-  selectBook: (book: Book | null) => void
-  stepBack: () => void
-  setFilters: (filters: Partial<FilterState>) => void
-  clearFilters: () => void
+// Derived getter
+get isAnimating(): boolean {
+  return this.isTransitioning || this.isUvPanning || this.isParticleDrifting || this.hasBookLerps
 }
+
+// Setters
+setTransitionPhase: (phase: number) => void
+setIsTransitioning: (v: boolean) => void
+setIsUvPanning: (v: boolean) => void
+setIsParticleDrifting: (v: boolean) => void
+setHasBookLerps: (v: boolean) => void
+setPostprocessingEnabled: (v: boolean) => void
 ```
 
 ---
@@ -138,71 +128,39 @@ Returns: {
 **Existing:**
 - `Book`, `BookStatus` → `@/lib/books/types`
 - `getAllBooks()`, `getAllTopics()` → `@/lib/books`
-- `getReadingStats()`, `getBooksReadByYear()` → `@/lib/books`
+- `useLibraryStore` → `@/lib/library/store`
+- `TOPIC_COLORS` → `@/lib/library/types`
 - `useReducedMotion()` → `@/hooks/useReducedMotion`
 - `cn()` → `@/lib/utils`
 
 **To be created:**
-- `useLibraryStore()` → `@/lib/library/store`
-- `TOPIC_COLORS` → `@/lib/library/types`
-- `ConstellationData`, `BookWithPosition` → `@/lib/library/types`
-- `groupBooksIntoConstellations()` → `@/lib/library/constellation`
-- `isValidAmazonUrl()` → `@/lib/library/amazon`
+- `PostProcessingEffects` → `@/components/library/floating/PostProcessingEffects`
+- `VolumetricNebula` → `@/components/library/floating/VolumetricNebula`
+- `NebulaDust` → `@/components/library/floating/NebulaDust`
+- `AnimationDriver` → `@/components/library/floating/AnimationDriver`
+- `simplex2D()` → `@/lib/library/noise`
+- `getNebulaTexture()` → `@/lib/library/nebulaTextures`
 
 ---
 
 ## Design Decisions
 
-- Books grouped by **primary topic** (first in `topics[]` array) for constellation assignment
-- **Single-book topics** become drifters (no nebula for 1 book)
-- **Topic filter** matches ANY topic in array (not just primary)
-- **Sort only repositions when filtered** — unfiltered keeps seeded positions
-- `isFiltered` is DERIVED from filter state, not stored separately
-- Topic labels use `drei/Html` (CSS) instead of `drei/Text` (no font files needed)
-- Camera controls disabled during scripted transitions
-- Cover textures loaded locally at multiple LOD resolutions to avoid CORS issues
-
----
-
-## Topic Colors (from spec)
-
-```typescript
-const TOPIC_COLORS: Record<string, string> = {
-  philosophy: '#8B5CF6',
-  economics: '#F59E0B',
-  governance: '#14B8A6',
-  technology: '#3B82F6',
-  science: '#22C55E',
-  history: '#A16207',
-  fiction: '#F43F5E',
-  biography: '#FB7185',
-  'self-help': '#EAB308',
-  libertarianism: '#EA580C',
-  futurism: '#06B6D4',
-}
-const DEFAULT_TOPIC_COLOR = '#6B7280'
-```
+- **Shared textures:** One 512×512 texture per topic (12 total), not per slice
+- **OffscreenCanvas fallback:** Use HTMLCanvasElement on iOS Safari < 16.4
+- **UV animation gating:** Only animate when `viewLevel === 'constellation'` AND `isActive`
+- **HDR for bloom:** Nebula slices and selected books use `emissive > 1.0` with `toneMapped={false}`
+- **Postprocessing fallback:** When disabled, re-enable renderer tone mapping + clamp emissive to 1.0
+- **Animation invalidation:** Root-level AnimationDriver component calls `invalidate()` when `isAnimating`
+- **LOD crossfade:** 300ms opacity fade to prevent popping
 
 ---
 
 ## Performance Targets
 
-- 60fps on modern devices (2020+: M1 Mac, iPhone 12, mid-range Android)
-- < 150MB GPU texture memory
-- Graceful degradation with hysteresis:
-  - < 45fps for 2s: reduce particles 50%
-  - < 35fps for 2s: disable post-processing
-  - < 25fps for 2s: simplify to flat sprites
-  - < 20fps for 3s: prompt for classic view
-
----
-
-## Files That Don't Exist
-
-- There is no `LibraryStore` class — use `useLibraryStore()` hook
-- There is no `amazonUrl` in books yet — field exists in type but not populated
-- Cover LOD files don't exist yet — Phase 3 task to generate them
-- `/public/covers/` directory doesn't exist yet
+- 60fps (16.7ms frame time) on M1 Mac, iPhone 14, Pixel 7
+- 45fps acceptable on 2020 devices
+- Graceful degradation with hysteresis
+- `frameloop="demand"` maintained
 
 ---
 
@@ -211,23 +169,4 @@ const DEFAULT_TOPIC_COLOR = '#6B7280'
 (Update as work progresses)
 
 ### Phase 0 Notes
-- Spec went through 5 Codex review cycles before approval
-- Key issues addressed: Amazon URL validation, drifter criteria, filter behavior, search/sort semantics
-- Implementation plan went through 2 Codex review cycles
-- Key additions: manual navigation controls, local cover LOD generation, book-view 3D visuals
-
----
-
-## Acceptance Criteria Summary (from spec)
-
-1. [ ] Universe view with labeled topic nebulae + stats constellation
-2. [ ] Drifter books floating lazily
-3. [ ] Smooth zoom into constellation (600ms)
-4. [ ] Book covers with hover tilt + glow
-5. [ ] Book detail panel with Amazon link
-6. [ ] Navigation: breadcrumb, Escape, backdrop click, back button
-7. [ ] Filter regrouping animation (800ms)
-8. [ ] Mobile: touch/pinch, bottom sheet detail
-9. [ ] 60fps with graceful degradation
-10. [ ] Reduced motion support
-11. [ ] `/library` shows new experience
+- Starting implementation of store additions

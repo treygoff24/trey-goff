@@ -4,6 +4,7 @@
  * FloatingBook - Individual book rendered as a 3D plane with cover texture.
  * Handles hover/select states and smooth position/scale transitions.
  * Uses invalidate() for on-demand rendering (GPU efficient).
+ * HDR emissive for selected state - caught by bloom postprocessing.
  */
 
 import { useRef, useState, useEffect, useCallback, useMemo } from 'react'
@@ -11,7 +12,7 @@ import { useFrame, useThree, ThreeEvent } from '@react-three/fiber'
 import * as THREE from 'three'
 import type { BookWithPosition, Position3D } from '@/lib/library/types'
 import { textureManager } from '@/lib/library/textures'
-import { useLibraryStore } from '@/lib/library/store'
+import { useLibraryStore, selectPostprocessingEnabled } from '@/lib/library/store'
 
 // =============================================================================
 // Types
@@ -43,6 +44,20 @@ const POSITION_LERP_SPEED = 3
 /** Threshold for considering lerp complete */
 const LERP_THRESHOLD = 0.01
 
+/** HDR emissive intensities for bloom (postprocessing enabled) */
+const HDR_EMISSIVE = {
+  base: 0.1,
+  hover: 0.4,
+  selected: 1.5,
+}
+
+/** Fallback emissive intensities (postprocessing disabled, clamped to prevent blowout) */
+const FALLBACK_EMISSIVE = {
+  base: 0.05,
+  hover: 0.2,
+  selected: 0.5,
+}
+
 // =============================================================================
 // Component
 // =============================================================================
@@ -65,6 +80,7 @@ export function FloatingBook({
   const selectBook = useLibraryStore((s) => s.selectBook)
   const selectedBook = useLibraryStore((s) => s.selectedBook)
   const isSelected = selectedBook?.id === book.id
+  const postprocessingEnabled = useLibraryStore(selectPostprocessingEnabled)
 
   // Animation refs
   const currentPositionRef = useRef(new THREE.Vector3(...book.position))
@@ -190,12 +206,13 @@ export function FloatingBook({
     }
   }, [])
 
-  // Glow intensity based on state
+  // Glow intensity based on state and postprocessing mode
   const emissiveIntensity = useMemo(() => {
-    if (isSelected) return 0.3
-    if (isHovered) return 0.2
-    return 0.05 // Very subtle base glow
-  }, [isHovered, isSelected])
+    const intensities = postprocessingEnabled ? HDR_EMISSIVE : FALLBACK_EMISSIVE
+    if (isSelected) return intensities.selected
+    if (isHovered) return intensities.hover
+    return intensities.base
+  }, [isHovered, isSelected, postprocessingEnabled])
 
   // Disable raycast when book is fully hidden (filtered out)
   const isInteractive = opacity > 0.1
@@ -219,6 +236,7 @@ export function FloatingBook({
         emissiveIntensity={emissiveIntensity}
         roughness={0.7}
         metalness={0.0}
+        toneMapped={false}
       />
     </mesh>
   )

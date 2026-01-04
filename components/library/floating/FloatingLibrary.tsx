@@ -6,11 +6,15 @@
  */
 
 import { Canvas } from '@react-three/fiber'
-import { Suspense, useCallback, useEffect, useState, useMemo } from 'react'
+import { Suspense, useCallback, useEffect, useState, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import type { Book } from '@/lib/books/types'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
-import { useLibraryStore } from '@/lib/library/store'
+import {
+  useLibraryStore,
+  selectPostprocessingEnabled,
+  selectIsFiltered,
+} from '@/lib/library/store'
 import { groupBooksIntoConstellations } from '@/lib/library/constellation'
 import { CameraController } from './CameraController'
 import { Universe } from './Universe'
@@ -18,6 +22,7 @@ import { BookDetailPanel } from './BookDetailPanel'
 import { LibraryBreadcrumb } from './LibraryBreadcrumb'
 import { LibraryHUD } from './LibraryHUD'
 import { AccessibleBookList } from './AccessibleBookList'
+import { PostProcessingEffects } from './PostProcessingEffects'
 
 // =============================================================================
 // Types
@@ -119,9 +124,14 @@ export function FloatingLibrary({ books, fallback }: FloatingLibraryProps) {
   const [webGLSupported, setWebGLSupported] = useState<boolean | null>(null)
   const [isReady, setIsReady] = useState(false)
   const reducedMotion = useReducedMotion()
+  const glRef = useRef<THREE.WebGLRenderer | null>(null)
+
+  // Store subscriptions
   const showClassicFallback = useLibraryStore((s) => s.showClassicFallback)
   const viewLevel = useLibraryStore((s) => s.viewLevel)
   const stepBack = useLibraryStore((s) => s.stepBack)
+  const postprocessingEnabled = useLibraryStore(selectPostprocessingEnabled)
+  const isFiltered = useLibraryStore(selectIsFiltered)
 
   // Check WebGL support
   useEffect(() => {
@@ -139,6 +149,22 @@ export function FloatingLibrary({ books, fallback }: FloatingLibraryProps) {
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [viewLevel, stepBack])
+
+  // Toggle renderer tone mapping based on postprocessing state
+  // When postprocessing is enabled, we disable renderer tone mapping (handled by EffectComposer)
+  // When postprocessing is disabled, we re-enable renderer tone mapping as fallback
+  useEffect(() => {
+    if (!glRef.current) return
+
+    if (postprocessingEnabled) {
+      // Postprocessing handles tone mapping via ToneMapping effect
+      glRef.current.toneMapping = THREE.NoToneMapping
+    } else {
+      // Fallback: Use renderer's built-in ACES Filmic tone mapping
+      glRef.current.toneMapping = THREE.ACESFilmicToneMapping
+      glRef.current.toneMappingExposure = 1.0
+    }
+  }, [postprocessingEnabled])
 
   // Pre-compute constellation data (memoized to avoid recomputation)
   // Note: Orphan books are now included in a "Random" constellation
@@ -186,9 +212,12 @@ export function FloatingLibrary({ books, fallback }: FloatingLibraryProps) {
           onCreated={({ gl }) => {
             // Configure renderer
             gl.setClearColor(0x070a0f, 1)
-            gl.toneMapping = THREE.ACESFilmicToneMapping
+            // Start with NoToneMapping - postprocessing handles tone mapping
+            // If postprocessing is disabled, useEffect will switch to ACESFilmicToneMapping
+            gl.toneMapping = THREE.NoToneMapping
             gl.toneMappingExposure = 1.0
             gl.outputColorSpace = THREE.SRGBColorSpace
+            glRef.current = gl
             handleReady()
           }}
           aria-hidden="true"
@@ -207,6 +236,13 @@ export function FloatingLibrary({ books, fallback }: FloatingLibraryProps) {
             <ambientLight intensity={0.5} />
             <directionalLight position={[50, 80, 50]} intensity={0.6} />
             <directionalLight position={[-30, -20, -40]} intensity={0.3} color="#6366f1" />
+
+            {/* Postprocessing effects (v2) */}
+            <PostProcessingEffects
+              viewLevel={viewLevel}
+              enabled={postprocessingEnabled}
+              disableDOF={isFiltered}
+            />
           </Suspense>
         </Canvas>
 
