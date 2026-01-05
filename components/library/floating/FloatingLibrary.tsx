@@ -14,7 +14,9 @@ import {
   useLibraryStore,
   selectPostprocessingEnabled,
   selectIsFiltered,
+  selectNebulaTextureMode,
 } from '@/lib/library/store'
+import { preloadBlenderNebulaTextures } from '@/lib/library/blenderNebulaTextures'
 import { groupBooksIntoConstellations } from '@/lib/library/constellation'
 import { CameraController } from './CameraController'
 import { Universe } from './Universe'
@@ -134,10 +136,23 @@ export function FloatingLibrary({ books, fallback }: FloatingLibraryProps) {
   const postprocessingEnabled = useLibraryStore(selectPostprocessingEnabled)
   const isFiltered = useLibraryStore(selectIsFiltered)
 
+  // Nebula texture preloading
+  const nebulaTextureMode = useLibraryStore(selectNebulaTextureMode)
+  const setBlenderTexturesLoaded = useLibraryStore((s) => s.setBlenderTexturesLoaded)
+
   // Check WebGL support
   useEffect(() => {
     setWebGLSupported(isWebGLSupported())
   }, [])
+
+  // Preload Blender nebula textures when mode is 'blender'
+  useEffect(() => {
+    if (nebulaTextureMode === 'blender') {
+      preloadBlenderNebulaTextures(() => {
+        setBlenderTexturesLoaded(true)
+      })
+    }
+  }, [nebulaTextureMode, setBlenderTexturesLoaded])
 
   // Global Escape key handler for all view levels
   useEffect(() => {

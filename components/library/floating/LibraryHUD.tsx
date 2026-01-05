@@ -5,9 +5,13 @@
  * Position: top-left corner with semi-transparent background.
  */
 
-import { useCallback, useState, useEffect, useMemo } from 'react'
+import { useCallback, useState, useEffect, useMemo, useRef } from 'react'
 import { Search, ChevronDown, X, Settings } from 'lucide-react'
-import { useLibraryStore } from '@/lib/library/store'
+import {
+  useLibraryStore,
+  selectNebulaTextureMode,
+  selectBlenderTexturesLoaded,
+} from '@/lib/library/store'
 import { TOPIC_COLORS, DEFAULT_TOPIC_COLOR } from '@/lib/library/types'
 import type { QualityLevel } from '@/lib/library/types'
 import type { Book } from '@/lib/books/types'
@@ -163,6 +167,33 @@ export function LibraryHUD({ books }: LibraryHUDProps) {
   const qualityLevel = useLibraryStore((s) => s.qualityLevel)
   const setQualityLevel = useLibraryStore((s) => s.setQualityLevel)
   const [showQualityMenu, setShowQualityMenu] = useState(false)
+  const qualityMenuRef = useRef<HTMLDivElement>(null)
+
+  // Close quality menu on outside click
+  useEffect(() => {
+    if (!showQualityMenu) return
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (qualityMenuRef.current && !qualityMenuRef.current.contains(e.target as Node)) {
+        setShowQualityMenu(false)
+      }
+    }
+
+    // Delay to avoid closing immediately from the button click
+    const timeoutId = setTimeout(() => {
+      document.addEventListener('click', handleClickOutside)
+    }, 0)
+
+    return () => {
+      clearTimeout(timeoutId)
+      document.removeEventListener('click', handleClickOutside)
+    }
+  }, [showQualityMenu])
+
+  // Nebula texture settings
+  const nebulaTextureMode = useLibraryStore(selectNebulaTextureMode)
+  const blenderTexturesLoaded = useLibraryStore(selectBlenderTexturesLoaded)
+  const setNebulaTextureMode = useLibraryStore((s) => s.setNebulaTextureMode)
 
   // Calculate filtered book count
   const filteredCount = useMemo(() => {
@@ -341,7 +372,10 @@ export function LibraryHUD({ books }: LibraryHUDProps) {
 
         {/* Quality dropdown */}
         {showQualityMenu && (
-          <div className="absolute left-0 top-full z-50 mt-1 w-48 rounded-lg bg-surface-1/95 p-1 shadow-lg backdrop-blur-sm">
+          <div
+            ref={qualityMenuRef}
+            className="absolute left-0 top-full z-50 mt-1 w-48 rounded-lg bg-surface-1/95 p-1 shadow-lg backdrop-blur-sm"
+          >
             {QUALITY_OPTIONS.map((option) => (
               <button
                 key={option.value}
@@ -359,6 +393,32 @@ export function LibraryHUD({ books }: LibraryHUDProps) {
                 <span className="text-xs text-text-3">{option.description}</span>
               </button>
             ))}
+
+            {/* Divider */}
+            <div className="my-1 h-px bg-surface-2" />
+
+            {/* HD Nebulae toggle */}
+            <button
+              onClick={() => {
+                setNebulaTextureMode(nebulaTextureMode === 'blender' ? 'procedural' : 'blender')
+              }}
+              className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-colors ${
+                nebulaTextureMode === 'blender'
+                  ? 'bg-warm/20 text-warm'
+                  : 'text-text-1 hover:bg-surface-2'
+              }`}
+            >
+              <span>
+                {nebulaTextureMode === 'blender' ? '✓ ' : ''}HD Nebulae
+              </span>
+              <span className="text-xs text-text-3">
+                {nebulaTextureMode === 'blender'
+                  ? blenderTexturesLoaded
+                    ? 'Loaded'
+                    : 'Loading...'
+                  : 'Procedural'}
+              </span>
+            </button>
           </div>
         )}
       </div>

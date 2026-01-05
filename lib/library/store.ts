@@ -26,6 +26,12 @@ const UNIVERSE_CAMERA_TARGET: Position3D = [0, 0, 0]
 const MIN_SEARCH_LENGTH = 2
 
 // =============================================================================
+// Nebula Texture Types
+// =============================================================================
+
+export type NebulaTextureMode = 'procedural' | 'blender'
+
+// =============================================================================
 // Store State Interface
 // =============================================================================
 
@@ -56,6 +62,11 @@ interface LibraryStoreState {
   qualityLevel: QualityLevel
   showClassicFallback: boolean
   postprocessingEnabled: boolean // v2: false when degraded for performance
+
+  // Nebula textures (Blender integration)
+  nebulaTextureMode: NebulaTextureMode
+  blenderTexturesLoaded: boolean
+  nebulaTextureModeManual: boolean // true if user manually set mode
 }
 
 interface LibraryStoreActions {
@@ -92,6 +103,10 @@ interface LibraryStoreActions {
   // Performance
   setQualityLevel: (level: QualityLevel) => void
   setShowClassicFallback: (show: boolean) => void
+
+  // Nebula textures (Blender integration)
+  setNebulaTextureMode: (mode: NebulaTextureMode) => void
+  setBlenderTexturesLoaded: (loaded: boolean) => void
 
   // Reset
   reset: () => void
@@ -134,6 +149,12 @@ const initialState: LibraryStoreState = {
   qualityLevel: 'full',
   showClassicFallback: false,
   postprocessingEnabled: true,
+
+  // Nebula textures (Blender integration)
+  // Default to 'blender' for full quality, but don't load until component mounts
+  nebulaTextureMode: 'blender',
+  blenderTexturesLoaded: false,
+  nebulaTextureModeManual: false,
 }
 
 // =============================================================================
@@ -392,11 +413,34 @@ export const useLibraryStore = create<LibraryStore>()(
     // =========================================================================
 
     setQualityLevel: (level) => {
-      set({ qualityLevel: level })
+      const state = get()
+      const updates: Partial<LibraryStoreState> = { qualityLevel: level }
+
+      // Only auto-update nebula texture mode if user hasn't manually set it
+      if (!state.nebulaTextureModeManual) {
+        updates.nebulaTextureMode = level === 'full' ? 'blender' : 'procedural'
+      }
+
+      set(updates)
     },
 
     setShowClassicFallback: (show) => {
       set({ showClassicFallback: show })
+    },
+
+    // =========================================================================
+    // Nebula Texture Actions (Blender integration)
+    // =========================================================================
+
+    setNebulaTextureMode: (mode) => {
+      set({
+        nebulaTextureMode: mode,
+        nebulaTextureModeManual: true, // User override - persists across quality changes
+      })
+    },
+
+    setBlenderTexturesLoaded: (loaded) => {
+      set({ blenderTexturesLoaded: loaded })
     },
 
     // =========================================================================
@@ -458,3 +502,9 @@ export const selectIsAnimating = (state: LibraryStore) =>
   state.isUvPanning ||
   state.isParticleDrifting ||
   state.hasBookLerps
+
+// Nebula texture selectors (Blender integration)
+export const selectNebulaTextureMode = (state: LibraryStore) =>
+  state.nebulaTextureMode
+export const selectBlenderTexturesLoaded = (state: LibraryStore) =>
+  state.blenderTexturesLoaded

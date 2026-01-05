@@ -19,9 +19,12 @@ import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { Billboard } from '@react-three/drei'
 import { getNebulaTexture } from '@/lib/library/nebulaTextures'
+import { getBlenderNebulaTexture } from '@/lib/library/blenderNebulaTextures'
 import {
   useLibraryStore,
   selectPostprocessingEnabled,
+  selectNebulaTextureMode,
+  selectBlenderTexturesLoaded,
 } from '@/lib/library/store'
 import type { ViewLevel, Position3D } from '@/lib/library/types'
 
@@ -56,12 +59,12 @@ interface VolumetricNebulaProps {
 
 const DEFAULT_RADIUS = 20
 
-/** LOD slice counts by state */
+/** LOD slice counts by state - optimized for GPU performance */
 const SLICE_COUNTS = {
-  universe: 12,
-  constellationInactive: 20,
-  constellationActive: 64,
-  book: 32,
+  universe: 2,           // Minimal for distant view - just 2 slices
+  constellationInactive: 4,  // Reduced further
+  constellationActive: 12,   // Reduced from 16
+  book: 6,               // Reduced from 8
 } as const
 
 /** HDR emissive intensities - lowered for softer glow */
@@ -81,8 +84,8 @@ const FALLBACK_EMISSIVE_INTENSITY = {
 /** UV animation speed */
 const UV_ANIMATION_SPEED = 0.02
 
-/** LOD crossfade duration in seconds */
-const CROSSFADE_DURATION = 0.3
+/** LOD crossfade duration in seconds - set low for faster transition */
+const CROSSFADE_DURATION = 0.05
 
 // =============================================================================
 // Helpers
@@ -214,6 +217,8 @@ interface NebulaSliceProps {
   emissiveIntensity: number
   opacity: number
   uvAnimationOffset: number
+  /** True when using Blender pre-rendered textures (color baked in) */
+  isBlenderTexture: boolean
 }
 
 function NebulaSlice({
@@ -223,6 +228,7 @@ function NebulaSlice({
   emissiveIntensity,
   opacity,
   uvAnimationOffset,
+  isBlenderTexture,
 }: NebulaSliceProps) {
   const materialRef = useRef<THREE.MeshStandardMaterial>(null)
 
@@ -240,19 +246,37 @@ function NebulaSlice({
     <Billboard position={data.position} follow lockX={false} lockY={false} lockZ={false}>
       <mesh rotation={[0, 0, data.rotation]}>
         <planeGeometry args={[data.scale, data.scale]} />
-        <meshStandardMaterial
-          ref={materialRef}
-          map={texture}
-          color="#000000"
-          emissive={color}
-          emissiveIntensity={emissiveIntensity}
-          transparent
-          opacity={opacity * data.uvScale}
-          depthWrite={false}
-          blending={THREE.AdditiveBlending}
-          toneMapped={false}
-          side={THREE.DoubleSide}
-        />
+        {isBlenderTexture ? (
+          // Blender textures: Use emissiveMap for HDR bloom (texture has color baked in)
+          <meshStandardMaterial
+            ref={materialRef}
+            map={texture}
+            emissiveMap={texture}
+            emissive="#ffffff"
+            emissiveIntensity={emissiveIntensity * 2.5}
+            transparent
+            opacity={opacity * Math.min(data.uvScale * 6, 0.95)}
+            depthWrite={false}
+            blending={THREE.AdditiveBlending}
+            toneMapped={false}
+            side={THREE.DoubleSide}
+          />
+        ) : (
+          // Procedural textures: MeshStandardMaterial with emissive color
+          <meshStandardMaterial
+            ref={materialRef}
+            map={texture}
+            color="#000000"
+            emissive={color}
+            emissiveIntensity={emissiveIntensity}
+            transparent
+            opacity={opacity * data.uvScale * 3}
+            depthWrite={false}
+            blending={THREE.AdditiveBlending}
+            toneMapped={false}
+            side={THREE.DoubleSide}
+          />
+        )}
       </mesh>
     </Billboard>
   )
@@ -277,6 +301,10 @@ export function VolumetricNebula({
   const postprocessingEnabled = useLibraryStore(selectPostprocessingEnabled)
   const setIsUvPanning = useLibraryStore((s) => s.setIsUvPanning)
 
+  // Nebula texture mode (Blender vs procedural)
+  const nebulaTextureMode = useLibraryStore(selectNebulaTextureMode)
+  const blenderTexturesLoaded = useLibraryStore(selectBlenderTexturesLoaded)
+
   // Animation state (using state for render-time values)
   const [uvOffset, setUvOffset] = useState(0)
   const [crossfadeProgress, setCrossfadeProgress] = useState(1)
@@ -288,14 +316,42 @@ export function VolumetricNebula({
   // Get current slice count
   const sliceCount = getSliceCount(viewLevel, isActive)
 
-  // Get texture (cached) and configure for UV animation
+  // Determine if using Blender texture (mode is blender AND textures are loaded AND we have one for this topic)
+  const isBlenderTexture = useMemo(() => {
+    if (nebulaTextureMode !== 'blender' || !blenderTexturesLoaded) return false
+    return getBlenderNebulaTexture(topic) !== null
+  }, [nebulaTextureMode, blenderTexturesLoaded, topic])
+
+  // Get texture (cached) - Blender if available, procedural as fallback
+  // IMPORTANT: Clone Blender textures to avoid shared UV offset mutation
   const texture = useMemo(() => {
+    // Try Blender texture first if mode is set and loaded
+    if (nebulaTextureMode === 'blender' && blenderTexturesLoaded) {
+      const blenderTex = getBlenderNebulaTexture(topic)
+      if (blenderTex) {
+        // Clone to avoid shared UV offset mutation across nebulae
+        const cloned = blenderTex.clone()
+        cloned.wrapS = THREE.RepeatWrapping
+        cloned.wrapT = THREE.RepeatWrapping
+        return cloned
+      }
+    }
+    // Fall back to procedural (already unique per topic)
     const tex = getNebulaTexture(topic)
-    // Configure wrapping for UV animation
     tex.wrapS = THREE.RepeatWrapping
     tex.wrapT = THREE.RepeatWrapping
     return tex
-  }, [topic])
+  }, [topic, nebulaTextureMode, blenderTexturesLoaded])
+
+  // Dispose cloned texture on unmount or when texture changes
+  useEffect(() => {
+    return () => {
+      // Only dispose if it's a cloned Blender texture (has source)
+      if (texture.source?.data && nebulaTextureMode === 'blender') {
+        texture.dispose()
+      }
+    }
+  }, [texture, nebulaTextureMode])
 
   // Generate slice data (memoized, regenerates on slice count change)
   const slices = useMemo(
@@ -389,6 +445,7 @@ export function VolumetricNebula({
           emissiveIntensity={emissiveIntensity}
           opacity={opacity * (1 - crossfadeProgress)}
           uvAnimationOffset={uvOffset}
+          isBlenderTexture={isBlenderTexture}
         />
       ))}
 
@@ -402,6 +459,7 @@ export function VolumetricNebula({
           emissiveIntensity={emissiveIntensity}
           opacity={opacity * (prevSlices ? crossfadeProgress : 1)}
           uvAnimationOffset={uvOffset}
+          isBlenderTexture={isBlenderTexture}
         />
       ))}
     </group>
