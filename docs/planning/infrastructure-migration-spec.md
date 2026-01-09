@@ -4,6 +4,7 @@
 **Date:** January 2026
 **Current Stack:** Vercel (managed)
 **Target Stack:** Cloudflare (free tier) + Hetzner VPS ($5/mo)
+**Based on:** `feature/floating-library` branch (includes 3D library + interactive world)
 
 ---
 
@@ -85,6 +86,66 @@ Migrate from Vercel's managed hosting to a self-hosted Hetzner VPS with Cloudfla
 - Caddy handles SSL termination (or use Cloudflare Full Strict)
 
 **Recommendation:** Start with Option A (Tunnel) for simplicity and security.
+
+---
+
+## Special Considerations: 3D Features
+
+The `feature/floating-library` branch adds significant 3D functionality that affects infrastructure:
+
+### New Dependencies
+
+```
+@react-three/fiber      # React Three.js renderer
+@react-three/drei       # R3F helpers
+@react-three/postprocessing  # Visual effects
+@react-three/rapier     # Physics engine
+three                   # Three.js core (~500KB gzipped)
+zustand                 # State management for 3D scenes
+ecctrl                  # Character controller
+three-pathfinding       # Navigation meshes
+```
+
+### Bundle Isolation Strategy
+
+Three.js is **isolated to specific routes** to avoid bloating the main bundle:
+
+- `/library` - Floating Library (3D book cosmos)
+- `/interactive` - Interactive 3D world
+
+The build includes a **bundle isolation check** (`pnpm check-bundle-isolation`) that verifies Three.js chunks don't leak into protected routes like `/`, `/writing`, `/about`, etc.
+
+### 3D Asset Pipeline
+
+```
+public/assets/source/*.glb     # Uncompressed source assets
+       ↓ (compress-assets.ts)
+public/assets/chunks/*.glb     # Meshopt + KTX2 compressed
+public/assets/props/*.glb      # Smaller prop assets
+public/manifests/assets.manifest.json  # Asset registry
+```
+
+**Compression stack:**
+- **Meshopt** - Geometry compression (significant size reduction)
+- **KTX2** - Texture compression (requires `toktx` CLI, optional)
+
+### Asset Budgets (Enforced)
+
+| Budget | Limit |
+|--------|-------|
+| Per-chunk download | <2MB |
+| Per-chunk triangles | <100K |
+| Scene total triangles | <300K |
+| Scene draw calls | <100 |
+| Peak memory (2 chunks) | <500MB |
+
+### Build Memory Requirements
+
+Building with Three.js and asset compression requires more memory:
+
+- **Minimum:** 4GB RAM (CX22 VPS has this)
+- **Recommended:** Build in CI (GitHub Actions has 7GB)
+- **Strategy:** Build artifacts in CI, deploy only the standalone output
 
 ---
 
@@ -203,23 +264,44 @@ GOOGLE_BOOKS_API_KEY=
 
 **File:** `package.json`
 
-Add production scripts:
+The floating-library branch has a more complex build pipeline. Add `start:standalone`:
 
 ```json
 {
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "pnpm run prebuild && next build",
+    "build": "next build",
     "start": "next start",
     "start:standalone": "node .next/standalone/server.js",
-    "lint": "next lint",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "prebuild": "pnpm run generate-search",
+
+    // Prebuild (runs before next build)
+    "prebuild": "tsx scripts/resolve-book-covers.ts && tsx scripts/generate-search-index.ts && tsx scripts/generate-interactive-manifests.ts && tsx scripts/compress-assets.ts",
+
+    // Postbuild validation (runs after next build)
+    "postbuild": "tsx scripts/validate-asset-budgets.ts && tsx scripts/check-bundle-isolation.ts",
+
+    // Individual scripts
+    "covers": "tsx scripts/resolve-book-covers.ts",
     "generate-search": "tsx scripts/generate-search-index.ts",
-    "covers": "tsx scripts/resolve-covers.ts"
+    "generate-manifests": "tsx scripts/generate-interactive-manifests.ts",
+    "compress-assets": "tsx scripts/compress-assets.ts",
+    "validate-budgets": "tsx scripts/validate-asset-budgets.ts",
+    "check-bundle-isolation": "tsx scripts/check-bundle-isolation.ts",
+
+    // Testing
+    "test": "node --import tsx --test test/*.test.ts",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   }
 }
 ```
+
+**Build pipeline order:**
+1. `prebuild` - Resolve covers, generate search index, compress 3D assets
+2. `next build` - Build Next.js app
+3. `postbuild` - Validate asset budgets, verify bundle isolation
 
 **Note:** `start:standalone` is for the VPS. The standalone server includes everything needed.
 
@@ -248,7 +330,7 @@ export async function GET() {
 
 ---
 
-### 6. Static Asset Headers (Optional Optimization)
+### 6. Static Asset Headers (Required for 3D Assets)
 
 **File:** `next.config.ts` (add headers)
 
@@ -270,6 +352,35 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/fonts/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // 3D assets (GLB files are content-hashed, safe to cache forever)
+      {
+        source: '/assets/chunks/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/assets/props/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // Book covers (also content-hashed)
+      {
+        source: '/covers/:path*',
         headers: [
           {
             key: 'Cache-Control',
@@ -335,6 +446,15 @@ jobs:
         run: pnpm build
         env:
           NEXT_PUBLIC_SITE_URL: ${{ secrets.SITE_URL }}
+
+      # Postbuild validations are run automatically by npm/pnpm
+      # They verify asset budgets and bundle isolation
+
+      - name: Run E2E tests (optional)
+        run: |
+          npx playwright install --with-deps chromium
+          pnpm test:e2e --project=chromium
+        continue-on-error: true  # Don't fail deploy on E2E failures initially
 
       - name: Prepare standalone
         run: |
@@ -647,8 +767,14 @@ sudo ufw enable
 |------|---------|
 | `trey.world/_next/static/*` | Cache Level: Cache Everything, Edge TTL: 1 month |
 | `trey.world/fonts/*` | Cache Level: Cache Everything, Edge TTL: 1 month |
+| `trey.world/assets/chunks/*` | Cache Level: Cache Everything, Edge TTL: 1 month |
+| `trey.world/assets/props/*` | Cache Level: Cache Everything, Edge TTL: 1 month |
+| `trey.world/covers/*` | Cache Level: Cache Everything, Edge TTL: 1 month |
+| `trey.world/manifests/*` | Cache Level: Standard, Edge TTL: 1 hour |
 | `trey.world/api/*` | Cache Level: Bypass |
 | `trey.world/*.xml` | Cache Level: Standard, Edge TTL: 1 hour |
+
+**Note:** 3D assets (GLB files) are content-hashed, so aggressive caching is safe. The manifests are checked more frequently to pick up new asset versions.
 
 ### Security Settings
 
@@ -753,8 +879,16 @@ Add to cron: `0 * * * * /home/deploy/scripts/monitor.sh | mail -s "VPS Alert" yo
 - [ ] Newsletter signup works
 - [ ] RSS feeds accessible
 - [ ] API health endpoint returns 200
-- [ ] Lighthouse score 90+
+- [ ] Lighthouse score 90+ (on non-3D pages)
 - [ ] No console errors
+
+**3D-Specific Verification:**
+
+- [ ] `/library` loads and displays floating books
+- [ ] `/interactive` loads (if 3D assets are present)
+- [ ] GLB assets load from Cloudflare CDN (check Network tab)
+- [ ] WebGL fallback works on unsupported browsers
+- [ ] Mobile touch controls work for 3D navigation
 
 ### Post-Migration
 
@@ -865,24 +999,38 @@ sudo systemctl enable fail2ban
 
 | File | Change Type | Description |
 |------|-------------|-------------|
-| `next.config.ts` | Modified | Add `output: 'standalone'`, cache headers |
-| `package.json` | Modified | Add `start:standalone` script |
+| `next.config.ts` | Modified | Add `output: 'standalone'`, cache headers for 3D assets |
+| `package.json` | Modified | Add `start:standalone` script (other scripts already exist) |
 | `app/api/health/route.ts` | New | Health check endpoint |
 | `.env.example` | Modified | Document required vars |
-| `.github/workflows/deploy.yml` | New | CI/CD pipeline |
+| `.github/workflows/deploy.yml` | New | CI/CD pipeline with E2E tests |
 | `.gitignore` | Modified | Ensure `.env.production` ignored |
+
+**Already Present in floating-library branch:**
+
+| File | Description |
+|------|-------------|
+| `scripts/compress-assets.ts` | GLB compression pipeline |
+| `scripts/validate-asset-budgets.ts` | Asset size validation |
+| `scripts/check-bundle-isolation.ts` | Three.js bundle leak detection |
+| `scripts/generate-interactive-manifests.ts` | Asset manifest generation |
+| `playwright.config.ts` | E2E test configuration |
+| `e2e/*.e2e.ts` | End-to-end tests |
 
 ---
 
 ## Implementation Phases
 
-### Phase 1: Code Changes (1 hour)
+### Phase 1: Code Changes (1-2 hours)
 
-1. Add `output: 'standalone'` to next.config.ts
-2. Add health check endpoint
-3. Update package.json scripts
-4. Test local build with standalone output
-5. Commit changes
+1. Merge `feature/floating-library` into `main` (if not already)
+2. Add `output: 'standalone'` to next.config.ts
+3. Add cache headers for static/3D assets
+4. Add health check endpoint
+5. Add `start:standalone` script to package.json
+6. Test local build with standalone output
+7. Verify postbuild validations pass (bundle isolation, asset budgets)
+8. Commit changes
 
 ### Phase 2: VPS Provisioning (1 hour)
 
@@ -929,7 +1077,27 @@ sudo systemctl enable fail2ban
 2. **Tunnel vs Direct:** Preference for Cloudflare Tunnel (simpler, more secure) or traditional proxy (more control)?
 3. **Monitoring:** Preference for monitoring service (UptimeRobot, Betterstack, etc.)?
 4. **Backup strategy:** Want automated VPS snapshots on Hetzner (~20% of VPS cost)?
+5. **3D Assets:** Are the GLB source files stored in the repo, or do they need to be fetched from elsewhere during build?
+6. **E2E Tests:** Should deployment fail if E2E tests fail, or just warn?
 
 ---
 
-*This spec provides a complete migration path from Vercel to self-hosted infrastructure. The changes are minimal on the application side, with most work being infrastructure setup.*
+## Summary of 3D Feature Impact
+
+The `feature/floating-library` branch adds significant complexity but the infrastructure migration approach remains the same:
+
+| Aspect | Impact |
+|--------|--------|
+| Bundle size | Larger, but isolated to specific routes |
+| Build time | Longer (asset compression, validation) |
+| Build memory | Higher (recommend CI build, not VPS) |
+| Static assets | More (GLB files, covers, manifests) |
+| Caching strategy | Same approach, more cache rules |
+| Runtime requirements | Same (Node.js standalone) |
+| VPS resources | CX22 still sufficient for serving |
+
+The main change is ensuring aggressive CDN caching for 3D assets and running builds in CI where memory is less constrained.
+
+---
+
+*This spec provides a complete migration path from Vercel to self-hosted infrastructure, updated for the 3D features in the floating-library branch.*
