@@ -93,7 +93,6 @@ export function AccessibleBookList({ books }: AccessibleBookListProps) {
                   <button
                     onClick={() => selectBook(book)}
                     className="text-left"
-                    tabIndex={-1}
                     aria-label={`${book.title} by ${book.author}${
                       book.rating ? `, rated ${book.rating} out of 5` : ''
                     }`}
@@ -120,7 +119,6 @@ export function AccessibleBookList({ books }: AccessibleBookListProps) {
                 <button
                   onClick={() => selectBook(book)}
                   className="text-left"
-                  tabIndex={-1}
                   aria-label={`${book.title} by ${book.author}${
                     book.rating ? `, rated ${book.rating} out of 5` : ''
                   }`}

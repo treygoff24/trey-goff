@@ -8,7 +8,11 @@
 import { useCallback } from 'react'
 import { Html } from '@react-three/drei'
 import type { ConstellationData } from '@/lib/library/types'
-import { useLibraryStore, selectTransitionPhase } from '@/lib/library/store'
+import {
+  useLibraryStore,
+  selectQualityLevel,
+  selectTransitionPhase,
+} from '@/lib/library/store'
 import { FloatingBook } from './FloatingBook'
 import { VolumetricNebula } from './VolumetricNebula'
 import { NebulaDust } from './NebulaDust'
@@ -40,6 +44,7 @@ export function Constellation({
   const zoomToConstellation = useLibraryStore((s) => s.zoomToConstellation)
   const viewLevel = useLibraryStore((s) => s.viewLevel)
   const transitionPhase = useLibraryStore(selectTransitionPhase)
+  const qualityLevel = useLibraryStore(selectQualityLevel)
 
   // Handle label click
   const handleLabelClick = useCallback(() => {
@@ -54,6 +59,7 @@ export function Constellation({
   // Label style - different based on active state
   const labelOpacity = isActive ? 1 : 0.8
   const labelScale = isActive ? 1.2 : 1
+  const showParticles = qualityLevel !== 'reduced'
 
   return (
     <group position={position}>
@@ -71,15 +77,17 @@ export function Constellation({
       />
 
       {/* Particle dust layer */}
-      <NebulaDust
-        topicColor={color}
-        radius={nebulaRadius}
-        position={[0, 0, 0]}
-        viewLevel={viewLevel}
-        isActive={isActive}
-        opacity={opacity}
-        reducedMotion={reducedMotion}
-      />
+      {showParticles && (
+        <NebulaDust
+          topicColor={color}
+          radius={nebulaRadius}
+          position={[0, 0, 0]}
+          viewLevel={viewLevel}
+          isActive={isActive}
+          opacity={opacity}
+          reducedMotion={reducedMotion}
+        />
+      )}
 
       {/* Topic label using Html for CSS styling */}
       <Html

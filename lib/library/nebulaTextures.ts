@@ -25,12 +25,6 @@ const NOISE_SCALE = 2.5        // Lower = larger features
 const NOISE_OCTAVES = 3
 const NOISE_PERSISTENCE = 0.6
 
-/** 
- * Radial falloff parameters - creates soft, cloud-like edges
- * Key insight: real nebulae have very soft, diffuse edges that fade gradually
- */
-const FALLOFF_START = 0.0     // Start fading immediately from center
-const FALLOFF_POWER = 1.8     // Gentler falloff curve
 
 // =============================================================================
 // Texture Cache

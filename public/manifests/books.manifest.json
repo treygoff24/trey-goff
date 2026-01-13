@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "generated": "2025-12-30T22:29:07.095Z",
+  "generated": "2026-01-13T22:20:27.652Z",
   "entries": [
     {
       "id": "for-a-new-liberty",
@@ -31,6 +31,21 @@
       ],
       "year": 1998,
       "coverImage": "/covers/seeing-like-a-state.jpg"
+    },
+    {
+      "id": "stubborn-attachments",
+      "title": "Stubborn Attachments",
+      "author": "Tyler Cowen",
+      "rating": 5,
+      "tier": "favorites",
+      "blurb": "The moral case for economic growth as a near-sacred duty. Cowen argues that maximizing sustainable growth is the most ethical thing we can do for future generations—a belief I hold deeply.",
+      "topics": [
+        "economics",
+        "ethics",
+        "growth"
+      ],
+      "year": 2018,
+      "coverImage": "/covers/stubborn-attachments.jpg"
     },
     {
       "id": "the-10000-year-explosion",
@@ -957,7 +972,7 @@
         "communities"
       ],
       "year": 2021,
-      "coverImage": "/covers/entrepreneurial-communities.jpg"
+      "coverImage": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1673977287i/65214489.jpg"
     },
     {
       "id": "equal-is-unfair",
@@ -1064,7 +1079,7 @@
         "science-fiction"
       ],
       "year": 2021,
-      "coverImage": "/covers/fine-structure.jpg"
+      "coverImage": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1623447168i/57891620.jpg"
     },
     {
       "id": "five-years-after",
@@ -2318,19 +2333,6 @@
       "coverImage": "/covers/stealing-fire.jpg"
     },
     {
-      "id": "stubborn-attachments",
-      "title": "Stubborn Attachments",
-      "author": "Tyler Cowen",
-      "tier": "read",
-      "topics": [
-        "economics",
-        "ethics",
-        "growth"
-      ],
-      "year": 2018,
-      "coverImage": "/covers/stubborn-attachments.jpg"
-    },
-    {
       "id": "t-the-story-of-testosterone",
       "title": "T: The Story of Testosterone",
       "author": "Carole Hooven",
@@ -2401,7 +2403,7 @@
         "classic"
       ],
       "year": 1892,
-      "coverImage": "/covers/the-adventures-of-sherlock-holmes.jpg"
+      "coverImage": "https://covers.openlibrary.org/b/isbn/9780140439083-L.jpg"
     },
     {
       "id": "the-age-of-em",
@@ -2799,7 +2801,7 @@
         "science-fiction"
       ],
       "year": 2018,
-      "coverImage": "/covers/the-fifth-science.jpg"
+      "coverImage": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1549131511i/43916366.jpg"
     },
     {
       "id": "the-final-day",
@@ -3757,7 +3759,7 @@
         "science-fiction"
       ],
       "year": 2022,
-      "coverImage": "/covers/valuable-humans-in-transit.jpg"
+      "coverImage": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1667225936i/63198504.jpg"
     },
     {
       "id": "very-important-people",
@@ -3842,7 +3844,7 @@
         "money"
       ],
       "year": 2022,
-      "coverImage": "/covers/what-is-money.jpg"
+      "coverImage": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1662144339i/62295182.jpg"
     },
     {
       "id": "what-the-buddha-taught",

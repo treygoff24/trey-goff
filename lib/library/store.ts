@@ -414,7 +414,10 @@ export const useLibraryStore = create<LibraryStore>()(
 
     setQualityLevel: (level) => {
       const state = get()
-      const updates: Partial<LibraryStoreState> = { qualityLevel: level }
+      const updates: Partial<LibraryStoreState> = {
+        qualityLevel: level,
+        postprocessingEnabled: level !== 'minimal',
+      }
 
       // Only auto-update nebula texture mode if user hasn't manually set it
       if (!state.nebulaTextureModeManual) {

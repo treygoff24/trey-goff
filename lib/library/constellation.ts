@@ -22,15 +22,9 @@ const MIN_BOOKS_FOR_CONSTELLATION = 2
 /** Radius for spreading constellations in universe view */
 const CONSTELLATION_SPREAD_RADIUS = 160
 
-/** Radius for spreading books within a constellation */
-const BOOK_SPREAD_RADIUS = 12
-
 /** Vertical spread for constellations */
 const VERTICAL_SPREAD = 70
 
-/** Drifter orbit radius range */
-const DRIFTER_ORBIT_MIN = 140
-const DRIFTER_ORBIT_MAX = 180
 
 // =============================================================================
 // Hashing for Deterministic Positions
@@ -130,25 +124,6 @@ function calculateBookPosition(
   return [x, y, z]
 }
 
-/**
- * Calculate drifter book position on a lazy orbit.
- */
-function calculateDrifterPosition(book: Book): Position3D {
-  const seed = hashString(book.id)
-  const random = createSeededRandom(seed)
-
-  // Random point on a sphere between inner and outer orbit
-  const theta = random() * Math.PI * 2
-  const phi = Math.acos(2 * random() - 1)
-  const radius =
-    DRIFTER_ORBIT_MIN + random() * (DRIFTER_ORBIT_MAX - DRIFTER_ORBIT_MIN)
-
-  const x = radius * Math.sin(phi) * Math.cos(theta)
-  const y = radius * Math.sin(phi) * Math.sin(theta) * 0.3 // Flatten vertically
-  const z = radius * Math.cos(phi)
-
-  return [x, y, z]
-}
 
 // =============================================================================
 // Grouping Functions

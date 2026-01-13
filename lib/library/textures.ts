@@ -116,7 +116,7 @@ class TextureManager {
         const texture = await this.loadTexture(url)
         this.cacheTexture(bookId, texture)
         return texture
-      } catch (err) {
+      } catch {
         // Silently fall back to placeholder (don't spam console)
       }
     }

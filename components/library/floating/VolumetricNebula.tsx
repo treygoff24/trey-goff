@@ -331,6 +331,7 @@ export function VolumetricNebula({
       if (blenderTex) {
         // Clone to avoid shared UV offset mutation across nebulae
         const cloned = blenderTex.clone()
+        cloned.userData.__nebulaBlenderClone = true
         cloned.wrapS = THREE.RepeatWrapping
         cloned.wrapT = THREE.RepeatWrapping
         return cloned
@@ -346,12 +347,12 @@ export function VolumetricNebula({
   // Dispose cloned texture on unmount or when texture changes
   useEffect(() => {
     return () => {
-      // Only dispose if it's a cloned Blender texture (has source)
-      if (texture.source?.data && nebulaTextureMode === 'blender') {
+      // Only dispose cloned Blender textures, never cached procedural textures
+      if (texture.userData?.__nebulaBlenderClone) {
         texture.dispose()
       }
     }
-  }, [texture, nebulaTextureMode])
+  }, [texture])
 
   // Generate slice data (memoized, regenerates on slice count change)
   const slices = useMemo(

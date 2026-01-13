@@ -1,172 +1,85 @@
-# Floating Library v2 - Build Context
+# Project Context — DO NOT DELETE
 
-**Last Updated**: Phase 0 - Store Foundation (IN PROGRESS)
+**Last Updated**: Phase [N] - [Name] ([STATUS])
 
-## Protocol Reminder (Re-read on every phase start)
+## Maximum Autonomy Warning
 
-**The Loop**: IMPLEMENT → TYPECHECK → LINT → BUILD → TEST → REVIEW → FIX → REPEAT → COMMIT
+This template references `--dangerously-skip-permissions`, which bypasses safety prompts. Use only in trusted repos and remove the flag if you want approval gates.
 
-**Cross-agent checkpoints (mandatory):**
-- Spec creation → Codex reviews ✅
-- Implementation plan creation → Codex reviews ✅
-- Phase completion → Dual code review (Claude subagent + Codex)
-- Final completion → Codex cross-check
-- Stuck in error loop → Call Codex for fresh perspective
+## 🔄 Protocol Reminder (Re-read on every phase start)
 
-**How to call Codex:**
-```bash
-codex exec \
-  --model gpt-5.2-codex \
-  --config model_reasoning_effort="xhigh" \
-  --yolo \
-  "[PROMPT]"
-```
+**The Loop**: IMPLEMENT → TYPECHECK → LINT → BUILD → TEST → REVIEW → FIX → SLOP REMOVAL → COMMIT
 
 **Quality gates before review:**
 ```bash
-pnpm typecheck && pnpm lint && pnpm build
+npm run typecheck && npm run lint && npm run build && npm run test
 ```
 
----
+**Key agents and rules for this phase:**
+- `tdd-implementer` agent — Write test first, watch it fail, implement
+- `debugger` agent — Don't guess, investigate root causes
+- `verification-standards` rule — No claims without evidence
+- `requesting-code-review` skill — Get review before proceeding
 
-## What This Is
-
-Visual upgrade for the Floating Library:
-- **Postprocessing pipeline** — Bloom, DOF, vignette, film grain
-- **Volumetric nebulae** — Slice-volume approach (stacked sprites with parallax)
-- **Particle dust** — GPU particles for wisps inside nebulae
-- **Star field upgrade** — Multi-layer parallax with warp stretch
-- **Transitions** — Warp effects, nebula brightening, scene dimming
-
----
+**If context feels stale:** Re-read `AUTONOMOUS_BUILD_CLAUDE_v2.md` for the full protocol.
 
 ## Build Context
 
-**Type**: Feature enhancement
-**Spec location**: `docs/plans/FLOATING_LIBRARY_V2_SPEC.md`
-**Plan location**: `IMPLEMENTATION_PLAN_V2.md`
-**Feature branch**: `feature/floating-library-v2`
+**Type**: [Greenfield | Feature addition | Refactor]
+**Spec location**: [path to SPEC.md]
+**Plan location**: [path to IMPLEMENTATION_PLAN.md]
 
----
+## Project Setup
 
-## Tech Stack
-
-**Existing (reuse):**
-- Framework: Next.js 15 (App Router) + TypeScript
-- Styling: Tailwind CSS v4 with CSS-first tokens
-- State: Zustand patterns from `/lib/library/store.ts`
-- 3D: React Three Fiber + drei + postprocessing (already installed)
-- Fonts: Satoshi (UI), Newsreader (prose), Monaspace Neon (mono)
-
-**New for v2:**
-- `/lib/library/noise.ts` - Simplex noise utility
-- `/lib/library/nebulaTextures.ts` - Procedural texture generator
-- `/components/library/floating/PostProcessingEffects.tsx` - EffectComposer wrapper
-- `/components/library/floating/VolumetricNebula.tsx` - Slice-volume nebula
-- `/components/library/floating/NebulaDust.tsx` - GPU particles
-- `/components/library/floating/AnimationDriver.tsx` - Invalidation controller
-
----
+- Framework: [e.g., Next.js 14 + TypeScript]
+- Styling: [e.g., Tailwind CSS]
+- State: [e.g., TanStack Query + Zustand]
+- Database: [e.g., Supabase with RLS]
+- Testing: [e.g., Vitest + Playwright]
 
 ## Current Phase
 
-**Phase 0: Store Foundation**
+[What you're working on right now]
 
-Tasks:
-1. [x] Add animation flags to store
-2. [ ] Add transitionPhase
-3. [ ] Add postprocessingEnabled
-4. [ ] Add derived isAnimating getter
-5. [ ] Add setters for all new state
+## Hook Signatures
 
----
+[Add every custom hook with its exact return type as you create them]
 
-## Implementation Progress
-
-- [x] Spec (approved by Codex)
-- [x] Implementation Plan (approved by Codex)
-- [ ] Phase 0: Store Foundation
-- [ ] Phase 1: Postprocessing Pipeline
-- [ ] Phase 2: Nebula Textures
-- [ ] Phase 3: Volumetric Nebula
-- [ ] Phase 4: Particle Dust
-- [ ] Phase 5: Star Field Upgrade
-- [ ] Phase 6: Transitions & Animation Driver
-- [ ] Phase 7: Performance & Polish
-
----
-
-## Store Additions (Phase 0)
-
+### useExample()
 ```typescript
-// Animation flags
-postprocessingEnabled: boolean        // Default true
-transitionPhase: number               // 0-1, camera transition progress
-isTransitioning: boolean              // Camera transition in progress
-isUvPanning: boolean                  // Active nebula UV animation
-isParticleDrifting: boolean           // Particle drift animation
-hasBookLerps: boolean                 // Book position animations
-
-// Derived getter
-get isAnimating(): boolean {
-  return this.isTransitioning || this.isUvPanning || this.isParticleDrifting || this.hasBookLerps
+Returns: {
+  data: Example[] | null;
+  isLoading: boolean;
+  error: Error | null;
+  refresh: () => void;
 }
-
-// Setters
-setTransitionPhase: (phase: number) => void
-setIsTransitioning: (v: boolean) => void
-setIsUvPanning: (v: boolean) => void
-setIsParticleDrifting: (v: boolean) => void
-setHasBookLerps: (v: boolean) => void
-setPostprocessingEnabled: (v: boolean) => void
 ```
 
----
+## Utility Functions
+
+[Track utilities and their locations]
+- `formatDate(date: Date): string` → `src/utils/dateUtils.ts`
 
 ## Import Locations
 
-**Existing:**
-- `Book`, `BookStatus` → `@/lib/books/types`
-- `getAllBooks()`, `getAllTopics()` → `@/lib/books`
-- `useLibraryStore` → `@/lib/library/store`
-- `TOPIC_COLORS` → `@/lib/library/types`
-- `useReducedMotion()` → `@/hooks/useReducedMotion`
-- `cn()` → `@/lib/utils`
-
-**To be created:**
-- `PostProcessingEffects` → `@/components/library/floating/PostProcessingEffects`
-- `VolumetricNebula` → `@/components/library/floating/VolumetricNebula`
-- `NebulaDust` → `@/components/library/floating/NebulaDust`
-- `AnimationDriver` → `@/components/library/floating/AnimationDriver`
-- `simplex2D()` → `@/lib/library/noise`
-- `getNebulaTexture()` → `@/lib/library/nebulaTextures`
-
----
+[Track non-obvious imports to prevent errors]
+- `Button` → `@/components/ui/Button`
 
 ## Design Decisions
 
-- **Shared textures:** One 512×512 texture per topic (12 total), not per slice
-- **OffscreenCanvas fallback:** Use HTMLCanvasElement on iOS Safari < 16.4
-- **UV animation gating:** Only animate when `viewLevel === 'constellation'` AND `isActive`
-- **HDR for bloom:** Nebula slices and selected books use `emissive > 1.0` with `toneMapped={false}`
-- **Postprocessing fallback:** When disabled, re-enable renderer tone mapping + clamp emissive to 1.0
-- **Animation invalidation:** Root-level AnimationDriver component calls `invalidate()` when `isAnimating`
-- **LOD crossfade:** 300ms opacity fade to prevent popping
+[Record decisions that affect multiple files]
+- All dates stored as ISO strings, displayed in local time
+- All API responses follow `{ data, error }` shape
 
----
+## API Contracts
 
-## Performance Targets
+[Document endpoints as you build them]
 
-- 60fps (16.7ms frame time) on M1 Mac, iPhone 14, Pixel 7
-- 45fps acceptable on 2020 devices
-- Graceful degradation with hysteresis
-- `frameloop="demand"` maintained
+### GET /api/items
+Query: `?limit=10&offset=0`
+Response: `{ items: Item[], total: number }`
 
----
+## Files That Don't Exist
 
-## Notes
-
-(Update as work progresses)
-
-### Phase 0 Notes
-- Starting implementation of store additions
+[Prevent importing non-existent modules]
+- There is no `getAllItems()` function—use the `items` array directly
