@@ -1,22 +1,16 @@
 'use client'
 
-/**
- * FloatingLibrary - Main R3F Canvas wrapper for the 3D library experience.
- * Handles WebGL detection, reduced motion, error boundaries, and fallback.
- */
-
 import { Canvas } from '@react-three/fiber'
 import { Suspense, useCallback, useEffect, useState, useMemo, useRef } from 'react'
 import * as THREE from 'three'
+import React from 'react'
 import type { Book } from '@/lib/books/types'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 import {
   useLibraryStore,
   selectPostprocessingEnabled,
   selectIsFiltered,
-  selectNebulaTextureMode,
 } from '@/lib/library/store'
-import { preloadBlenderNebulaTextures } from '@/lib/library/blenderNebulaTextures'
 import { groupBooksIntoConstellations } from '@/lib/library/constellation'
 import { CameraController } from './CameraController'
 import { Universe } from './Universe'
@@ -27,18 +21,10 @@ import { AccessibleBookList } from './AccessibleBookList'
 import { PostProcessingEffects } from './PostProcessingEffects'
 import { AnimationDriver } from './AnimationDriver'
 
-// =============================================================================
-// Types
-// =============================================================================
-
 interface FloatingLibraryProps {
   books: Book[]
   fallback?: React.ReactNode
 }
-
-// =============================================================================
-// WebGL Detection
-// =============================================================================
 
 function isWebGLSupported(): boolean {
   if (typeof window === 'undefined') return false
@@ -55,10 +41,6 @@ function isWebGLSupported(): boolean {
   }
 }
 
-// =============================================================================
-// Loading Fallback
-// =============================================================================
-
 function LoadingState() {
   return (
     <div className="absolute inset-0 flex items-center justify-center bg-bg-0">
@@ -69,10 +51,6 @@ function LoadingState() {
     </div>
   )
 }
-
-// =============================================================================
-// Error Boundary
-// =============================================================================
 
 interface ErrorBoundaryState {
   hasError: boolean
@@ -116,45 +94,22 @@ class LibraryErrorBoundary extends React.Component<
   }
 }
 
-// Need to import React for class component
-import React from 'react'
-
-// =============================================================================
-// Main Component
-// =============================================================================
-
 export function FloatingLibrary({ books, fallback }: FloatingLibraryProps) {
   const [webGLSupported, setWebGLSupported] = useState<boolean | null>(null)
   const [isReady, setIsReady] = useState(false)
   const reducedMotion = useReducedMotion()
   const glRef = useRef<THREE.WebGLRenderer | null>(null)
 
-  // Store subscriptions
   const showClassicFallback = useLibraryStore((s) => s.showClassicFallback)
   const viewLevel = useLibraryStore((s) => s.viewLevel)
   const stepBack = useLibraryStore((s) => s.stepBack)
   const postprocessingEnabled = useLibraryStore(selectPostprocessingEnabled)
   const isFiltered = useLibraryStore(selectIsFiltered)
 
-  // Nebula texture preloading
-  const nebulaTextureMode = useLibraryStore(selectNebulaTextureMode)
-  const setBlenderTexturesLoaded = useLibraryStore((s) => s.setBlenderTexturesLoaded)
-
-  // Check WebGL support
   useEffect(() => {
     setWebGLSupported(isWebGLSupported())
   }, [])
 
-  // Preload Blender nebula textures when mode is 'blender'
-  useEffect(() => {
-    if (nebulaTextureMode === 'blender') {
-      preloadBlenderNebulaTextures(() => {
-        setBlenderTexturesLoaded(true)
-      })
-    }
-  }, [nebulaTextureMode, setBlenderTexturesLoaded])
-
-  // Global Escape key handler for all view levels
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && viewLevel !== 'universe') {
@@ -166,30 +121,20 @@ export function FloatingLibrary({ books, fallback }: FloatingLibraryProps) {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [viewLevel, stepBack])
 
-  // Toggle renderer tone mapping based on postprocessing state
-  // When postprocessing is enabled, we disable renderer tone mapping (handled by EffectComposer)
-  // When postprocessing is disabled, we re-enable renderer tone mapping as fallback
   useEffect(() => {
     if (!glRef.current) return
 
-    if (postprocessingEnabled) {
-      // Postprocessing handles tone mapping via ToneMapping effect
-      glRef.current.toneMapping = THREE.NoToneMapping
-    } else {
-      // Fallback: Use renderer's built-in ACES Filmic tone mapping
-      glRef.current.toneMapping = THREE.ACESFilmicToneMapping
-      glRef.current.toneMappingExposure = 1.0
-    }
+    glRef.current.toneMapping = postprocessingEnabled
+      ? THREE.NoToneMapping
+      : THREE.ACESFilmicToneMapping
+    glRef.current.toneMappingExposure = 1.0
   }, [postprocessingEnabled])
 
-  // Pre-compute constellation data (memoized to avoid recomputation)
-  // Note: Orphan books are now included in a "Random" constellation
   const constellations = useMemo(
     () => groupBooksIntoConstellations(books),
     [books]
   )
 
-  // Handle canvas ready
   const handleReady = useCallback(() => {
     setIsReady(true)
   }, [])
@@ -207,13 +152,11 @@ export function FloatingLibrary({ books, fallback }: FloatingLibraryProps) {
   return (
     <LibraryErrorBoundary fallback={fallback}>
       <div className="relative h-full w-full">
-        {/* Loading overlay */}
         {!isReady && <LoadingState />}
 
-        {/* 3D Canvas */}
         <Canvas
-          dpr={[1, 2]} // Cap DPR to reduce GPU load on high-DPI displays
-          frameloop="demand" // Only render when invalidated - massive GPU savings
+          dpr={[1, 2]}
+          frameloop="demand"
           camera={{
             fov: 60,
             near: 0.1,
@@ -226,39 +169,28 @@ export function FloatingLibrary({ books, fallback }: FloatingLibraryProps) {
             inset: 0,
           }}
           onCreated={({ gl, invalidate }) => {
-            // Configure renderer
             gl.setClearColor(0x070a0f, 1)
-            // Start with NoToneMapping - postprocessing handles tone mapping
-            // If postprocessing is disabled, useEffect will switch to ACESFilmicToneMapping
             gl.toneMapping = THREE.NoToneMapping
             gl.toneMappingExposure = 1.0
             gl.outputColorSpace = THREE.SRGBColorSpace
             glRef.current = gl
             handleReady()
-            // Trigger initial render after a short delay to show loading state
             setTimeout(() => invalidate(), 100)
           }}
           aria-hidden="true"
         >
           <Suspense fallback={null}>
-            {/* Animation invalidation driver - must be first to catch all animations */}
             <AnimationDriver />
-
-            {/* Camera system */}
             <CameraController reducedMotion={reducedMotion} />
-
-            {/* Scene content */}
             <Universe
               constellations={constellations}
               reducedMotion={reducedMotion}
             />
 
-            {/* Lighting setup for books */}
             <ambientLight intensity={0.5} />
             <directionalLight position={[50, 80, 50]} intensity={0.6} />
             <directionalLight position={[-30, -20, -40]} intensity={0.3} color="#6366f1" />
 
-            {/* Postprocessing effects (v2) */}
             <PostProcessingEffects
               viewLevel={viewLevel}
               enabled={postprocessingEnabled}
@@ -267,16 +199,10 @@ export function FloatingLibrary({ books, fallback }: FloatingLibraryProps) {
           </Suspense>
         </Canvas>
 
-        {/* Navigation breadcrumb */}
         {isReady && <LibraryBreadcrumb />}
-
-        {/* Filter controls */}
         {isReady && <LibraryHUD books={books} />}
 
-        {/* Book detail panel */}
         <BookDetailPanel />
-
-        {/* Accessible book list for screen readers */}
         <AccessibleBookList books={books} />
       </div>
     </LibraryErrorBoundary>

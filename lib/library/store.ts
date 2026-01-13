@@ -1,8 +1,3 @@
-/**
- * Zustand store for Floating Library state management.
- * Handles view level, camera state, filters, and performance settings.
- */
-
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
 import type { Book } from '@/lib/books/types'
@@ -14,63 +9,35 @@ import type {
   QualityLevel,
 } from './types'
 
-// =============================================================================
-// Constants
-// =============================================================================
-
-/** Default camera position for universe view (far out) */
 const UNIVERSE_CAMERA_POSITION: Position3D = [0, 0, 100]
 const UNIVERSE_CAMERA_TARGET: Position3D = [0, 0, 0]
-
-/** Minimum search query length to trigger filtering */
 const MIN_SEARCH_LENGTH = 2
 
-// =============================================================================
-// Nebula Texture Types
-// =============================================================================
-
-export type NebulaTextureMode = 'procedural' | 'blender'
-
-// =============================================================================
-// Store State Interface
-// =============================================================================
-
 interface LibraryStoreState {
-  // View state
   viewLevel: ViewLevel
   activeConstellation: string | null
   selectedBook: Book | null
 
-  // Camera
   cameraPosition: Position3D
   cameraTarget: Position3D
   isTransitioning: boolean
-  transitionPhase: number // 0-1, progress of camera transition
+  transitionPhase: number
 
-  // Animation flags (v2)
-  isUvPanning: boolean // Active nebula UV animation
-  isParticleDrifting: boolean // Particle drift animation
-  hasBookLerps: boolean // Book position animations in progress
+  isUvPanning: boolean
+  isParticleDrifting: boolean
+  hasBookLerps: boolean
 
-  // Filters
   statusFilter: Book['status'] | null
   topicFilter: string | null
   searchQuery: string
   sortBy: SortBy
 
-  // Performance
   qualityLevel: QualityLevel
   showClassicFallback: boolean
-  postprocessingEnabled: boolean // v2: false when degraded for performance
-
-  // Nebula textures (Blender integration)
-  nebulaTextureMode: NebulaTextureMode
-  blenderTexturesLoaded: boolean
-  nebulaTextureModeManual: boolean // true if user manually set mode
+  postprocessingEnabled: boolean
 }
 
 interface LibraryStoreActions {
-  // Navigation
   zoomToConstellation: (
     topic: string,
     position: Position3D,
@@ -80,19 +47,16 @@ interface LibraryStoreActions {
   stepBack: () => void
   goToUniverse: () => void
 
-  // Camera
   setCameraPosition: (position: Position3D) => void
   setCameraTarget: (target: Position3D) => void
   setIsTransitioning: (transitioning: boolean) => void
   setTransitionPhase: (phase: number) => void
 
-  // Animation (v2)
   setIsUvPanning: (panning: boolean) => void
   setIsParticleDrifting: (drifting: boolean) => void
   setHasBookLerps: (lerping: boolean) => void
   setPostprocessingEnabled: (enabled: boolean) => void
 
-  // Filters
   setFilters: (filters: Partial<FilterState>) => void
   clearFilters: () => void
   setStatusFilter: (status: Book['status'] | null) => void
@@ -100,15 +64,9 @@ interface LibraryStoreActions {
   setSearchQuery: (query: string) => void
   setSortBy: (sortBy: SortBy) => void
 
-  // Performance
   setQualityLevel: (level: QualityLevel) => void
   setShowClassicFallback: (show: boolean) => void
 
-  // Nebula textures (Blender integration)
-  setNebulaTextureMode: (mode: NebulaTextureMode) => void
-  setBlenderTexturesLoaded: (loaded: boolean) => void
-
-  // Reset
   reset: () => void
 }
 
@@ -118,56 +76,33 @@ export interface LibraryStore extends LibraryStoreState, LibraryStoreActions {
   isAnimating: boolean // v2: true when any animation is active
 }
 
-// =============================================================================
-// Initial State
-// =============================================================================
-
 const initialState: LibraryStoreState = {
-  // View state
   viewLevel: 'universe',
   activeConstellation: null,
   selectedBook: null,
 
-  // Camera
   cameraPosition: UNIVERSE_CAMERA_POSITION,
   cameraTarget: UNIVERSE_CAMERA_TARGET,
   isTransitioning: false,
   transitionPhase: 0,
 
-  // Animation flags (v2)
   isUvPanning: false,
   isParticleDrifting: false,
   hasBookLerps: false,
 
-  // Filters
   statusFilter: null,
   topicFilter: null,
   searchQuery: '',
   sortBy: 'rating',
 
-  // Performance
   qualityLevel: 'full',
   showClassicFallback: false,
   postprocessingEnabled: true,
-
-  // Nebula textures (Blender integration)
-  // Default to 'blender' for full quality, but don't load until component mounts
-  nebulaTextureMode: 'blender',
-  blenderTexturesLoaded: false,
-  nebulaTextureModeManual: false,
 }
-
-// =============================================================================
-// Store
-// =============================================================================
 
 export const useLibraryStore = create<LibraryStore>()(
   subscribeWithSelector((set, get) => ({
     ...initialState,
-
-    // =========================================================================
-    // Derived State
-    // =========================================================================
 
     get isFiltered(): boolean {
       const state = get()
@@ -188,16 +123,11 @@ export const useLibraryStore = create<LibraryStore>()(
       )
     },
 
-    // =========================================================================
-    // Navigation Actions
-    // =========================================================================
-
     zoomToConstellation: (topic, position, targetOffset = [0, 0, 0]) => {
-      // Calculate camera position to be inside the constellation looking at center
       const cameraPosition: Position3D = [
         position[0] + targetOffset[0],
-        position[1] + targetOffset[1] + 5, // Slightly above
-        position[2] + targetOffset[2] + 25, // In front
+        position[1] + targetOffset[1] + 5,
+        position[2] + targetOffset[2] + 25,
       ]
 
       set({
@@ -212,17 +142,14 @@ export const useLibraryStore = create<LibraryStore>()(
 
     selectBook: (book, position) => {
       if (book === null) {
-        // Deselecting - go back to constellation or universe
         const state = get()
         if (state.activeConstellation) {
-          // Return camera to constellation view
           set({
             viewLevel: 'constellation',
             selectedBook: null,
             isTransitioning: true,
           })
         } else {
-          // Return to universe
           set({
             viewLevel: 'universe',
             selectedBook: null,
@@ -234,7 +161,6 @@ export const useLibraryStore = create<LibraryStore>()(
         return
       }
 
-      // Selecting a book
       const cameraPosition: Position3D = position
         ? [position[0], position[1] + 2, position[2] + 8]
         : get().cameraPosition
@@ -255,7 +181,6 @@ export const useLibraryStore = create<LibraryStore>()(
 
       switch (state.viewLevel) {
         case 'book':
-          // Book -> Constellation (or Universe if no active constellation)
           if (state.activeConstellation) {
             set({
               viewLevel: 'constellation',
@@ -274,7 +199,6 @@ export const useLibraryStore = create<LibraryStore>()(
           break
 
         case 'constellation':
-          // Constellation -> Universe
           set({
             viewLevel: 'universe',
             activeConstellation: null,
@@ -286,7 +210,6 @@ export const useLibraryStore = create<LibraryStore>()(
           break
 
         case 'universe':
-          // Already at top level - no-op
           break
       }
     },
@@ -301,10 +224,6 @@ export const useLibraryStore = create<LibraryStore>()(
         isTransitioning: true,
       })
     },
-
-    // =========================================================================
-    // Camera Actions
-    // =========================================================================
 
     setCameraPosition: (position) => {
       set({ cameraPosition: position })
@@ -322,10 +241,6 @@ export const useLibraryStore = create<LibraryStore>()(
       set({ transitionPhase: phase })
     },
 
-    // =========================================================================
-    // Animation Actions (v2)
-    // =========================================================================
-
     setIsUvPanning: (panning) => {
       set({ isUvPanning: panning })
     },
@@ -342,14 +257,8 @@ export const useLibraryStore = create<LibraryStore>()(
       set({ postprocessingEnabled: enabled })
     },
 
-    // =========================================================================
-    // Filter Actions
-    // =========================================================================
-
     setFilters: (filters) => {
       const state = get()
-
-      // When filters change, zoom out to universe view if not already there
       const shouldZoomOut =
         state.viewLevel !== 'universe' &&
         (filters.statusFilter !== undefined ||
@@ -408,57 +317,22 @@ export const useLibraryStore = create<LibraryStore>()(
       set({ sortBy })
     },
 
-    // =========================================================================
-    // Performance Actions
-    // =========================================================================
-
     setQualityLevel: (level) => {
-      const state = get()
-      const updates: Partial<LibraryStoreState> = {
+      set({
         qualityLevel: level,
         postprocessingEnabled: level !== 'minimal',
-      }
-
-      // Only auto-update nebula texture mode if user hasn't manually set it
-      if (!state.nebulaTextureModeManual) {
-        updates.nebulaTextureMode = level === 'full' ? 'blender' : 'procedural'
-      }
-
-      set(updates)
+      })
     },
 
     setShowClassicFallback: (show) => {
       set({ showClassicFallback: show })
     },
 
-    // =========================================================================
-    // Nebula Texture Actions (Blender integration)
-    // =========================================================================
-
-    setNebulaTextureMode: (mode) => {
-      set({
-        nebulaTextureMode: mode,
-        nebulaTextureModeManual: true, // User override - persists across quality changes
-      })
-    },
-
-    setBlenderTexturesLoaded: (loaded) => {
-      set({ blenderTexturesLoaded: loaded })
-    },
-
-    // =========================================================================
-    // Reset
-    // =========================================================================
-
     reset: () => {
       set(initialState)
     },
   }))
 )
-
-// =============================================================================
-// Selectors (for optimized subscriptions)
-// =============================================================================
 
 export const selectViewLevel = (state: LibraryStore) => state.viewLevel
 export const selectActiveConstellation = (state: LibraryStore) =>
@@ -477,16 +351,11 @@ export const selectQualityLevel = (state: LibraryStore) => state.qualityLevel
 export const selectShowClassicFallback = (state: LibraryStore) =>
   state.showClassicFallback
 
-/**
- * Check if any filters are active.
- * Note: This is a derived value, computed from filter state.
- */
 export const selectIsFiltered = (state: LibraryStore) =>
   state.statusFilter !== null ||
   state.topicFilter !== null ||
   state.searchQuery.trim().length >= MIN_SEARCH_LENGTH
 
-// Animation selectors (v2)
 export const selectTransitionPhase = (state: LibraryStore) =>
   state.transitionPhase
 export const selectIsUvPanning = (state: LibraryStore) => state.isUvPanning
@@ -496,18 +365,8 @@ export const selectHasBookLerps = (state: LibraryStore) => state.hasBookLerps
 export const selectPostprocessingEnabled = (state: LibraryStore) =>
   state.postprocessingEnabled
 
-/**
- * Check if any animation is active.
- * Note: This is a derived value, computed from animation flags.
- */
 export const selectIsAnimating = (state: LibraryStore) =>
   state.isTransitioning ||
   state.isUvPanning ||
   state.isParticleDrifting ||
   state.hasBookLerps
-
-// Nebula texture selectors (Blender integration)
-export const selectNebulaTextureMode = (state: LibraryStore) =>
-  state.nebulaTextureMode
-export const selectBlenderTexturesLoaded = (state: LibraryStore) =>
-  state.blenderTexturesLoaded

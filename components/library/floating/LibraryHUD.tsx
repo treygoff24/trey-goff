@@ -1,24 +1,11 @@
 'use client'
 
-/**
- * LibraryHUD - Filter controls floating over the 3D scene.
- * Position: top-left corner with semi-transparent background.
- */
-
 import { useCallback, useState, useEffect, useMemo, useRef } from 'react'
 import { Search, ChevronDown, X, Settings } from 'lucide-react'
-import {
-  useLibraryStore,
-  selectNebulaTextureMode,
-  selectBlenderTexturesLoaded,
-} from '@/lib/library/store'
+import { useLibraryStore } from '@/lib/library/store'
 import { TOPIC_COLORS, DEFAULT_TOPIC_COLOR } from '@/lib/library/types'
 import type { QualityLevel } from '@/lib/library/types'
 import type { Book } from '@/lib/books/types'
-
-// =============================================================================
-// Types
-// =============================================================================
 
 interface LibraryHUDProps {
   books: Book[]
@@ -26,10 +13,6 @@ interface LibraryHUDProps {
 
 type StatusOption = Book['status'] | null
 type SortOption = 'rating' | 'title' | 'author' | 'year'
-
-// =============================================================================
-// Constants
-// =============================================================================
 
 const STATUS_OPTIONS: { value: StatusOption; label: string }[] = [
   { value: null, label: 'All Status' },
@@ -52,10 +35,6 @@ const QUALITY_OPTIONS: { value: QualityLevel; label: string; description: string
   { value: 'minimal', label: 'Minimal', description: 'No postprocessing' },
 ]
 
-// =============================================================================
-// Debounce Hook
-// =============================================================================
-
 function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value)
 
@@ -66,10 +45,6 @@ function useDebounce<T>(value: T, delay: number): T {
 
   return debouncedValue
 }
-
-// =============================================================================
-// Select Component
-// =============================================================================
 
 interface SelectProps<T extends string | null> {
   value: T
@@ -107,10 +82,6 @@ function Select<T extends string | null>({
     </div>
   )
 }
-
-// =============================================================================
-// Topic Select Component
-// =============================================================================
 
 interface TopicSelectProps {
   value: string | null
@@ -150,10 +121,6 @@ function TopicSelect({ value, topics, onChange }: TopicSelectProps) {
   )
 }
 
-// =============================================================================
-// Main Component
-// =============================================================================
-
 export function LibraryHUD({ books }: LibraryHUDProps) {
   const statusFilter = useLibraryStore((s) => s.statusFilter)
   const topicFilter = useLibraryStore((s) => s.topicFilter)
@@ -189,11 +156,6 @@ export function LibraryHUD({ books }: LibraryHUDProps) {
       document.removeEventListener('click', handleClickOutside)
     }
   }, [showQualityMenu])
-
-  // Nebula texture settings
-  const nebulaTextureMode = useLibraryStore(selectNebulaTextureMode)
-  const blenderTexturesLoaded = useLibraryStore(selectBlenderTexturesLoaded)
-  const setNebulaTextureMode = useLibraryStore((s) => s.setNebulaTextureMode)
 
   // Calculate filtered book count
   const filteredCount = useMemo(() => {
@@ -393,32 +355,6 @@ export function LibraryHUD({ books }: LibraryHUDProps) {
                 <span className="text-xs text-text-3">{option.description}</span>
               </button>
             ))}
-
-            {/* Divider */}
-            <div className="my-1 h-px bg-surface-2" />
-
-            {/* HD Nebulae toggle */}
-            <button
-              onClick={() => {
-                setNebulaTextureMode(nebulaTextureMode === 'blender' ? 'procedural' : 'blender')
-              }}
-              className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition-colors ${
-                nebulaTextureMode === 'blender'
-                  ? 'bg-warm/20 text-warm'
-                  : 'text-text-1 hover:bg-surface-2'
-              }`}
-            >
-              <span>
-                {nebulaTextureMode === 'blender' ? '✓ ' : ''}HD Nebulae
-              </span>
-              <span className="text-xs text-text-3">
-                {nebulaTextureMode === 'blender'
-                  ? blenderTexturesLoaded
-                    ? 'Loaded'
-                    : 'Loading...'
-                  : 'Procedural'}
-              </span>
-            </button>
           </div>
         )}
       </div>
