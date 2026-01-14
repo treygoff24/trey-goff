@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "covers": "tsx scripts/resolve-book-covers.ts",
-    "prebuild": "tsx scripts/resolve-book-covers.ts && tsx scripts/generate-search-index.ts && tsx scripts/generate-interactive-manifests.ts && tsx scripts/compress-assets.ts",
+    "covers": "tsx scripts/resolve-book-covers.ts && tsx scripts/resolve-appearance-covers.ts",
+    "prebuild": "tsx scripts/resolve-book-covers.ts && tsx scripts/resolve-appearance-covers.ts && tsx scripts/generate-search-index.ts && tsx scripts/generate-interactive-manifests.ts && tsx scripts/compress-assets.ts",
     "generate-manifests": "tsx scripts/generate-interactive-manifests.ts",
     "build": "next build",
     "postbuild": "tsx scripts/validate-asset-budgets.ts && tsx scripts/check-bundle-isolation.ts",

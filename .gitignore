@@ -50,6 +50,7 @@ test-results/
 
 # Build cache
 .cover-cache.json
+.appearance-cover-cache.json
 
 # Content Collections
 .content-collections

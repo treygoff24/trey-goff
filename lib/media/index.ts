@@ -1,5 +1,9 @@
 import appearancesData from '@/content/media/appearances.json'
+import appearanceCovers from '@/public/appearance-covers.json'
 import type { Appearance, AppearancesData, AppearanceType } from './types'
+
+// Pre-resolved cover map
+const coverMap = appearanceCovers as Record<string, string>
 
 // Get all appearances
 export function getAllAppearances(): Appearance[] {
@@ -30,33 +34,13 @@ export function sortAppearancesByDate(appearances: Appearance[]): Appearance[] {
   )
 }
 
-// Extract YouTube video ID from URL
-export function extractYouTubeId(url: string): string | null {
-  const patterns = [
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s?]+)/,
-  ]
-  for (const pattern of patterns) {
-    const match = url.match(pattern)
-    if (match?.[1]) return match[1]
-  }
-  return null
-}
-
-// Get YouTube thumbnail URL
-export function getYouTubeThumbnail(url: string): string | null {
-  const videoId = extractYouTubeId(url)
-  return videoId
-    ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
-    : null
-}
-
-// Get thumbnail for appearance (YouTube auto-fetch or showArtwork)
+// Get thumbnail for appearance from pre-resolved cover map
 export function getAppearanceThumbnail(appearance: Appearance): string | null {
-  const youtubeUrl = appearance.youtubeUrl || appearance.url
-  if (youtubeUrl.includes('youtube.com') || youtubeUrl.includes('youtu.be')) {
-    const thumbnail = getYouTubeThumbnail(youtubeUrl)
-    if (thumbnail) return thumbnail
-  }
+  // Use pre-resolved cover from build-time resolution
+  const cover = coverMap[appearance.id]
+  if (cover) return cover
+
+  // Fallback to manual showArtwork if not in cover map
   return appearance.showArtwork || null
 }
 
