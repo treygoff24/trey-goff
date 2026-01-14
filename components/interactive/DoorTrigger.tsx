@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useMemo, useCallback } from "react";
 import { useFrame } from "@react-three/fiber";
+import { Text } from "@react-three/drei";
 import * as THREE from "three";
 import { useInteractiveStore } from "@/lib/interactive/store";
 import type { RoomId } from "@/lib/interactive/types";
@@ -32,6 +33,10 @@ interface DoorTriggerProps {
 	enabled?: boolean;
 	/** Show debug visuals */
 	debug?: boolean;
+	/** Label to display above the door */
+	label?: string;
+	/** Rotation of the door frame (radians) for label orientation */
+	labelRotation?: number;
 }
 
 // =============================================================================
@@ -63,6 +68,8 @@ export function DoorTrigger({
 	onActivate,
 	enabled = true,
 	debug = false,
+	label,
+	labelRotation,
 }: DoorTriggerProps) {
 	const groupRef = useRef<THREE.Group>(null);
 	const doorPosition = useMemo(() => new THREE.Vector3(...position), [position]);
@@ -197,6 +204,33 @@ export function DoorTrigger({
 					</mesh>
 				</>
 			)}
+
+			{/* Door label */}
+			{label && (
+				<group rotation={[0, labelRotation ?? 0, 0]}>
+					{/* Label background */}
+					<mesh position={[0, size[1] / 2 + 0.5, 0.05]}>
+						<planeGeometry args={[2.4, 0.5]} />
+						<meshBasicMaterial
+							color={THREE_COLORS.accent}
+							transparent
+							opacity={0.9}
+						/>
+					</mesh>
+					{/* Label text */}
+					<Text
+						position={[0, size[1] / 2 + 0.5, 0.1]}
+						fontSize={0.25}
+						color="white"
+						anchorX="center"
+						anchorY="middle"
+						outlineWidth={0.02}
+						outlineColor="black"
+					>
+						{label}
+					</Text>
+				</group>
+			)}
 		</group>
 	);
 }
@@ -212,6 +246,8 @@ export interface DoorConfig {
 	spawnPosition: [number, number, number];
 	spawnRotation?: number;
 	size?: [number, number];
+	label?: string;
+	labelRotation?: number;
 }
 
 /**
@@ -236,6 +272,8 @@ export function DoorTriggers({
 					spawnPosition={door.spawnPosition}
 					spawnRotation={door.spawnRotation}
 					size={door.size}
+					label={door.label}
+					labelRotation={door.labelRotation}
 					onActivate={onActivate}
 					debug={debug}
 				/>

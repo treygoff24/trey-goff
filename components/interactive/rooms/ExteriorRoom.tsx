@@ -398,6 +398,8 @@ export function ExteriorRoom({ debug = false, onDoorActivate }: ExteriorRoomProp
 				spawnRotation={Math.PI}
 				onActivate={onDoorActivate}
 				debug={debug}
+				label="Enter Mansion"
+				labelRotation={0}
 			/>
 
 			{/* Fog for atmosphere */}

@@ -955,6 +955,8 @@ export function GymRoom({ debug = false, onDoorActivate }: GymRoomProps) {
 				spawnRotation={Math.PI / 2}
 				onActivate={onDoorActivate}
 				debug={debug}
+				label="Main Hall"
+				labelRotation={Math.PI / 2}
 			/>
 
 			{/* Door frame */}

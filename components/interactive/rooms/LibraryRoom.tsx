@@ -904,6 +904,8 @@ export function LibraryRoom({ debug = false, onDoorActivate, onContentSelect }: 
 				spawnRotation={-Math.PI / 2}
 				onActivate={onDoorActivate}
 				debug={debug}
+				label="Main Hall"
+				labelRotation={Math.PI}
 			/>
 
 			{/* Door frame */}

@@ -499,6 +499,8 @@ export function ProjectsRoom({ debug = false, onDoorActivate, onContentSelect }:
 				spawnRotation={0}
 				onActivate={onDoorActivate}
 				debug={debug}
+				label="Main Hall"
+				labelRotation={Math.PI}
 			/>
 
 			{/* Door frame */}

@@ -37,6 +37,7 @@ const DOOR_CONFIGS: DoorConfig[] = [
 		spawnPosition: [0, 0, -5],
 		spawnRotation: 0,
 		label: "Exterior",
+		labelRotation: Math.PI,
 	},
 	{
 		id: "door-library",
@@ -45,6 +46,7 @@ const DOOR_CONFIGS: DoorConfig[] = [
 		spawnPosition: [6, 0, 5],
 		spawnRotation: Math.PI,
 		label: "Library",
+		labelRotation: Math.PI / 2,
 	},
 	{
 		id: "door-gym",
@@ -53,6 +55,7 @@ const DOOR_CONFIGS: DoorConfig[] = [
 		spawnPosition: [-8, 0, 0],
 		spawnRotation: -Math.PI / 2,
 		label: "Gym",
+		labelRotation: -Math.PI / 2,
 	},
 	{
 		id: "door-projects",
@@ -61,6 +64,7 @@ const DOOR_CONFIGS: DoorConfig[] = [
 		spawnPosition: [0, 0, 8],
 		spawnRotation: Math.PI,
 		label: "Projects",
+		labelRotation: 0,
 	},
 ];
 
