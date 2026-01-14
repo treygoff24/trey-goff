@@ -1,8 +1,9 @@
 'use client'
 
-import { useRef, useMemo } from 'react'
-import { useFrame, useThree } from '@react-three/fiber'
+import { useRef, useMemo, useEffect } from 'react'
+import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
+import { useLibraryStore } from '@/lib/library/store'
 
 interface NebulaCoreProps {
   color: THREE.ColorRepresentation
@@ -10,6 +11,7 @@ interface NebulaCoreProps {
   scale?: number | [number, number, number]
   reducedMotion: boolean
   opacity?: number
+  isAnimating?: boolean
 }
 
 const vertexShader = /* glsl */ `
@@ -87,11 +89,26 @@ export function NebulaCore({
   scale = 1.0,
   reducedMotion,
   opacity = 1.0,
+  isAnimating = true,
 }: NebulaCoreProps) {
   const materialRef = useRef<THREE.ShaderMaterial>(null)
-  const { invalidate } = useThree()
+  const setIsUvPanning = useLibraryStore((s) => s.setIsUvPanning)
 
   const colorVec = useMemo(() => new THREE.Color(color), [color])
+
+  // Register animation state with store - AnimationDriver handles invalidation
+  const shouldAnimate = !reducedMotion && isAnimating
+  useEffect(() => {
+    if (shouldAnimate) {
+      setIsUvPanning(true)
+    }
+    return () => {
+      // Clear on unmount or when animation stops
+      if (shouldAnimate) {
+        setIsUvPanning(false)
+      }
+    }
+  }, [shouldAnimate, setIsUvPanning])
 
   const geometry = useMemo(
     () => new THREE.IcosahedronGeometry(1, GEOMETRY_DETAIL),
@@ -125,12 +142,12 @@ export function NebulaCore({
     }
 
     u.uIntensity.value = intensity * opacity
-    u.uBreathingSpeed.value = reducedMotion ? 0 : BREATHING_SPEED
-    u.uBreathingAmount.value = reducedMotion ? 0 : BREATHING_AMOUNT
+    u.uBreathingSpeed.value = shouldAnimate ? BREATHING_SPEED : 0
+    u.uBreathingAmount.value = shouldAnimate ? BREATHING_AMOUNT : 0
 
-    if (!reducedMotion) {
+    if (shouldAnimate) {
       u.uTime.value = state.clock.elapsedTime
-      invalidate()
+      // AnimationDriver handles invalidation via isUvPanning flag
     }
   })
 

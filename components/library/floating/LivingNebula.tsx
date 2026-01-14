@@ -128,6 +128,9 @@ export function LivingNebula({
   const wispCount = WISP_COUNTS[lodTier]
   const showParticles = lodTier >= 2 && qualityLevel !== 'minimal'
 
+  // Only animate cores that are visible (active or transitioning)
+  const shouldAnimateCore = isActive || transitionPhase > 0
+
   return (
     <group position={position}>
       <NebulaCore
@@ -136,6 +139,7 @@ export function LivingNebula({
         scale={coreScale}
         reducedMotion={reducedMotion}
         opacity={opacity}
+        isAnimating={shouldAnimateCore}
       />
 
       {wispCount > 0 && (

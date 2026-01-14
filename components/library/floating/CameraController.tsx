@@ -46,6 +46,7 @@ export function CameraController({ reducedMotion }: CameraControllerProps) {
   const currentLookAtRef = useRef(new THREE.Vector3())
   const startPositionRef = useRef(new THREE.Vector3())
   const totalDistanceRef = useRef(0)
+  const lastEmittedPhaseRef = useRef(0)
 
   // Store subscriptions
   const cameraPosition = useLibraryStore((s) => s.cameraPosition)
@@ -66,6 +67,7 @@ export function CameraController({ reducedMotion }: CameraControllerProps) {
     totalDistanceRef.current = startPositionRef.current.distanceTo(targetPositionRef.current)
 
     // Reset transition phase to 0 when new transition starts
+    lastEmittedPhaseRef.current = 0
     setTransitionPhase(0)
   }, [cameraPosition, cameraTarget, camera.position, setTransitionPhase])
 
@@ -121,7 +123,12 @@ export function CameraController({ reducedMotion }: CameraControllerProps) {
     const phase = totalDistance > 0
       ? Math.min(1, 1 - currentDistance / totalDistance)
       : 1
-    setTransitionPhase(phase)
+
+    // Only update store when phase changes significantly (reduces re-renders)
+    if (Math.abs(phase - lastEmittedPhaseRef.current) > 0.02) {
+      lastEmittedPhaseRef.current = phase
+      setTransitionPhase(phase)
+    }
 
     // Check if transition is complete
     const positionDistance = currentDistance
@@ -137,6 +144,7 @@ export function CameraController({ reducedMotion }: CameraControllerProps) {
         controlsRef.current.update()
       }
 
+      lastEmittedPhaseRef.current = 1
       setTransitionPhase(1)
       setIsTransitioning(false)
     }

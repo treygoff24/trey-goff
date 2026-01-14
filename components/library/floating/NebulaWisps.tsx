@@ -1,9 +1,10 @@
 'use client'
 
-import { useRef, useMemo } from 'react'
-import { useFrame, useThree } from '@react-three/fiber'
+import { useRef, useMemo, useEffect } from 'react'
+import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { Billboard } from '@react-three/drei'
+import { useLibraryStore } from '@/lib/library/store'
 
 interface NebulaWispsProps {
   topic: string
@@ -202,7 +203,6 @@ interface SingleWispProps {
 
 function SingleWisp({ data, color, opacity, reducedMotion }: SingleWispProps) {
   const materialRef = useRef<THREE.ShaderMaterial>(null)
-  const { invalidate } = useThree()
 
   const uniforms = useMemo(
     () => ({
@@ -230,7 +230,7 @@ function SingleWisp({ data, color, opacity, reducedMotion }: SingleWispProps) {
 
     if (!reducedMotion) {
       u.uTime.value = state.clock.elapsedTime
-      invalidate()
+      // Don't call invalidate here - NebulaWisps parent manages animation state
     }
   })
 
@@ -263,11 +263,24 @@ export function NebulaWisps({
   reducedMotion,
 }: NebulaWispsProps) {
   const colorObj = useMemo(() => new THREE.Color(color), [color])
+  const setIsUvPanning = useLibraryStore((s) => s.setIsUvPanning)
 
   const wisps = useMemo(
     () => generateWispData(topic, count, radius),
     [topic, count, radius]
   )
+
+  // Register animation state with store - AnimationDriver handles invalidation
+  useEffect(() => {
+    if (!reducedMotion && count > 0) {
+      setIsUvPanning(true)
+    }
+    return () => {
+      // Only clear if we set it (avoid race conditions with other wisps)
+      // The last wisp to unmount will clear it
+      setIsUvPanning(false)
+    }
+  }, [reducedMotion, count, setIsUvPanning])
 
   return (
     <group>

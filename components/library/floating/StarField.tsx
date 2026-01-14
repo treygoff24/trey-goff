@@ -105,6 +105,12 @@ function StarLayer({
   const parallaxOffset = useRef(new THREE.Vector3())
   const prevCameraPos = useRef(new THREE.Vector3())
 
+  // Reusable objects for useFrame - avoid per-frame allocations
+  const tempMatrix = useRef(new THREE.Matrix4())
+  const tempPosition = useRef(new THREE.Vector3())
+  const tempScale = useRef(new THREE.Vector3())
+  const tempCameraDelta = useRef(new THREE.Vector3())
+
   // Generate star data
   const starData = useMemo(() => {
     // Different seed per layer for variety
@@ -178,8 +184,8 @@ function StarLayer({
     // Skip if reduced motion and not transitioning
     if (reducedMotion && !isTransitioning && !needsUpdateRef.current) return
 
-    // Calculate camera delta for parallax
-    const cameraDelta = new THREE.Vector3().subVectors(camera.position, prevCameraPos.current)
+    // Calculate camera delta for parallax - reuse temp vector
+    const cameraDelta = tempCameraDelta.current.subVectors(camera.position, prevCameraPos.current)
     const cameraMovedSignificantly = cameraDelta.lengthSq() > 0.0001
 
     // Check if warp changed
@@ -206,10 +212,10 @@ function StarLayer({
       prevCameraPos.current.copy(camera.position)
     }
 
-    // Update instance matrices
-    const matrix = new THREE.Matrix4()
-    const position = new THREE.Vector3()
-    const scale = new THREE.Vector3()
+    // Update instance matrices - reuse temp objects
+    const matrix = tempMatrix.current
+    const position = tempPosition.current
+    const scale = tempScale.current
     const offset = parallaxOffset.current
 
     for (let i = 0; i < config.count; i++) {

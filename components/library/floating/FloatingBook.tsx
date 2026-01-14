@@ -7,7 +7,7 @@
  * HDR emissive for selected state - caught by bloom postprocessing.
  */
 
-import { useRef, useState, useEffect, useCallback, useMemo } from 'react'
+import { useRef, useState, useEffect, useCallback, useMemo, memo } from 'react'
 import { useFrame, useThree, ThreeEvent } from '@react-three/fiber'
 import * as THREE from 'three'
 import type { BookWithPosition, Position3D } from '@/lib/library/types'
@@ -58,11 +58,14 @@ const FALLBACK_EMISSIVE = {
   selected: 0.5,
 }
 
+/** Shared emissive color - memoized to avoid per-render allocation */
+const EMISSIVE_COLOR = new THREE.Color('#888888')
+
 // =============================================================================
 // Component
 // =============================================================================
 
-export function FloatingBook({
+export const FloatingBook = memo(function FloatingBook({
   book,
   reducedMotion,
   targetPosition,
@@ -232,7 +235,7 @@ export function FloatingBook({
         map={texture}
         transparent={opacity < 1}
         opacity={opacity}
-        emissive={new THREE.Color('#888888')}
+        emissive={EMISSIVE_COLOR}
         emissiveIntensity={emissiveIntensity}
         roughness={0.7}
         metalness={0.0}
@@ -240,4 +243,4 @@ export function FloatingBook({
       />
     </mesh>
   )
-}
+})
