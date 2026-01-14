@@ -1,13 +1,19 @@
 "use client";
 
-import {
-	EffectComposer,
-	Vignette,
-	Bloom,
-	Noise,
-	ChromaticAberration,
-} from "@react-three/postprocessing";
-import { BlendFunction } from "postprocessing";
+/**
+ * PostProcessing - Cinematic post-processing effects for Interactive route.
+ *
+ * Effects are gated by quality tier from QUALITY_PRESETS:
+ * - Low: Vignette + ToneMapping
+ * - Medium: Vignette + Bloom + ToneMapping
+ * - High: Vignette + Bloom + Noise + ChromaticAberration + SSAO + DOF + ToneMapping
+ *
+ * Reduced motion disables animated effects (noise, chromatic aberration, DOF).
+ */
+
+import { EffectComposer, Vignette, Bloom, Noise, ChromaticAberration, DepthOfField, ToneMapping, SSAO } from "@react-three/postprocessing";
+import { BlendFunction, ToneMappingMode } from "postprocessing";
+import { getQualitySettings, applyReducedMotion, type PostProcessingSettings } from "@/lib/interactive/quality";
 import type { QualityTier } from "@/lib/interactive/capabilities";
 
 // =============================================================================
@@ -22,106 +28,97 @@ interface PostProcessingProps {
 }
 
 // =============================================================================
-// Tier-Specific Composers
+// Effect Renderers
 // =============================================================================
 
 /**
- * Low tier: Vignette only
+ * Render effects based on PostProcessingSettings.
+ * Uses separate EffectComposer configurations to avoid conditional children issues.
  */
-function LowTierEffects({ vignetteIntensity }: { vignetteIntensity: number }) {
-	return (
-		<EffectComposer multisampling={0}>
-			<Vignette
-				offset={0.3}
-				darkness={vignetteIntensity}
-				blendFunction={BlendFunction.NORMAL}
-			/>
-		</EffectComposer>
-	);
-}
+function EffectsRenderer({ settings }: { settings: PostProcessingSettings }) {
+	const { vignette, bloom, noise, chromaticAberration, ssao, depthOfField, toneMapping, multisampling } = settings;
 
-/**
- * Medium tier: Vignette + Bloom
- */
-function MediumTierEffects({
-	vignetteIntensity,
-	bloomIntensity,
-	bloomThreshold,
-}: {
-	vignetteIntensity: number;
-	bloomIntensity: number;
-	bloomThreshold: number;
-}) {
-	return (
-		<EffectComposer multisampling={0}>
-			<Vignette
-				offset={0.3}
-				darkness={vignetteIntensity}
-				blendFunction={BlendFunction.NORMAL}
+	// Build effect list based on what's enabled
+	const effects: React.ReactElement[] = [];
+
+	if (ssao) {
+		effects.push(
+			<SSAO
+				key="ssao"
+				intensity={ssao.intensity}
+				radius={ssao.radius}
+				luminanceInfluence={0.5}
+				bias={0.025}
 			/>
+		);
+	}
+
+	if (depthOfField) {
+		effects.push(
+			<DepthOfField
+				key="dof"
+				focusDistance={depthOfField.focusDistance}
+				focalLength={depthOfField.focalLength}
+				bokehScale={depthOfField.bokehScale}
+			/>
+		);
+	}
+
+	if (bloom) {
+		effects.push(
 			<Bloom
-				intensity={bloomIntensity}
-				luminanceThreshold={bloomThreshold}
-				luminanceSmoothing={0.9}
+				key="bloom"
+				intensity={bloom.intensity}
+				luminanceThreshold={bloom.threshold}
+				luminanceSmoothing={bloom.smoothing}
 				mipmapBlur
 			/>
-		</EffectComposer>
-	);
-}
+		);
+	}
 
-/**
- * High tier: Vignette + Bloom + Noise + Chromatic Aberration
- */
-function HighTierEffects({
-	vignetteIntensity,
-	bloomIntensity,
-	bloomThreshold,
-	noiseOpacity,
-	chromaticOffset,
-}: {
-	vignetteIntensity: number;
-	bloomIntensity: number;
-	bloomThreshold: number;
-	noiseOpacity: number;
-	chromaticOffset: number;
-}) {
-	return (
-		<EffectComposer multisampling={4}>
+	if (vignette) {
+		effects.push(
 			<Vignette
-				offset={0.3}
-				darkness={vignetteIntensity}
+				key="vignette"
+				offset={vignette.offset}
+				darkness={vignette.darkness}
 				blendFunction={BlendFunction.NORMAL}
 			/>
-			<Bloom
-				intensity={bloomIntensity}
-				luminanceThreshold={bloomThreshold}
-				luminanceSmoothing={0.9}
-				mipmapBlur
-			/>
+		);
+	}
+
+	if (noise) {
+		effects.push(
 			<Noise
-				opacity={noiseOpacity}
+				key="noise"
+				opacity={noise.opacity}
 				blendFunction={BlendFunction.OVERLAY}
 			/>
+		);
+	}
+
+	if (chromaticAberration) {
+		effects.push(
 			<ChromaticAberration
-				offset={[chromaticOffset, chromaticOffset]}
+				key="chromatic"
+				offset={[chromaticAberration.offset, chromaticAberration.offset]}
 				radialModulation={false}
 				modulationOffset={0.5}
 			/>
-		</EffectComposer>
-	);
-}
+		);
+	}
 
-/**
- * Reduced motion: Vignette only (static effect)
- */
-function ReducedMotionEffects() {
+	if (toneMapping) {
+		effects.push(<ToneMapping key="tonemapping" mode={ToneMappingMode.ACES_FILMIC} />);
+	}
+
+	if (effects.length === 0) {
+		return null;
+	}
+
 	return (
-		<EffectComposer multisampling={0}>
-			<Vignette
-				offset={0.3}
-				darkness={0.3}
-				blendFunction={BlendFunction.NORMAL}
-			/>
+		<EffectComposer multisampling={multisampling}>
+			{effects}
 		</EffectComposer>
 	);
 }
@@ -130,48 +127,14 @@ function ReducedMotionEffects() {
 // Main Component
 // =============================================================================
 
-/**
- * PostProcessing - Cinematic post-processing effects.
- *
- * Effects are gated by quality tier:
- * - Low: Vignette only
- * - Medium: Vignette + Bloom
- * - High: Vignette + Bloom + Noise + Chromatic Aberration
- *
- * Reduced motion uses minimal static effects only.
- */
 export function PostProcessing({ qualityTier, reducedMotion }: PostProcessingProps) {
-	// Reduced motion overrides all tiers
+	// Get settings for the current tier
+	let settings = getQualitySettings(qualityTier);
+
+	// Apply reduced motion overrides
 	if (reducedMotion) {
-		return <ReducedMotionEffects />;
+		settings = applyReducedMotion(settings);
 	}
 
-	// Skip post-processing entirely on auto (will default to low)
-	if (qualityTier === "auto") {
-		return <LowTierEffects vignetteIntensity={0.25} />;
-	}
-
-	switch (qualityTier) {
-		case "high":
-			return (
-				<HighTierEffects
-					vignetteIntensity={0.4}
-					bloomIntensity={0.5}
-					bloomThreshold={0.8}
-					noiseOpacity={0.05}
-					chromaticOffset={0.001}
-				/>
-			);
-		case "medium":
-			return (
-				<MediumTierEffects
-					vignetteIntensity={0.35}
-					bloomIntensity={0.3}
-					bloomThreshold={0.9}
-				/>
-			);
-		case "low":
-		default:
-			return <LowTierEffects vignetteIntensity={0.25} />;
-	}
+	return <EffectsRenderer settings={settings.postprocessing} />;
 }

@@ -16,20 +16,33 @@ export interface QualitySettings {
 	shadowMapSize: number;
 	/** Shadow view distance in meters */
 	shadowDistance: number;
-	/** Enable bloom effect */
-	bloom: boolean;
-	/** Enable vignette */
-	vignette: boolean;
-	/** Enable film grain */
-	filmGrain: boolean;
 	/** LOD bias multiplier (higher = switch to lower LOD sooner) */
 	lodBias: number;
 	/** Reflection probe resolution */
 	reflectionProbeRes: number;
-	/** Enable SSAO */
-	ssao: boolean;
 	/** Antialias (multisampling) */
 	antialias: boolean;
+	/** Post-processing effect settings */
+	postprocessing: PostProcessingSettings;
+}
+
+export interface PostProcessingSettings {
+	/** Vignette settings (null = disabled) */
+	vignette: { offset: number; darkness: number } | null;
+	/** Bloom settings (null = disabled) */
+	bloom: { intensity: number; threshold: number; smoothing: number } | null;
+	/** Film grain/noise settings (null = disabled) */
+	noise: { opacity: number } | null;
+	/** Chromatic aberration settings (null = disabled) */
+	chromaticAberration: { offset: number } | null;
+	/** SSAO settings (null = disabled) */
+	ssao: { intensity: number; radius: number } | null;
+	/** Depth of field settings (null = disabled) */
+	depthOfField: { focusDistance: number; focalLength: number; bokehScale: number } | null;
+	/** Tone mapping mode */
+	toneMapping: boolean;
+	/** EffectComposer multisampling level */
+	multisampling: number;
 }
 
 // =============================================================================
@@ -39,39 +52,57 @@ export interface QualitySettings {
 export const QUALITY_PRESETS: Record<Exclude<QualityTier, "auto">, QualitySettings> = {
 	low: {
 		dpr: 1.0,
-		shadowMapSize: 0, // No shadows
+		shadowMapSize: 0,
 		shadowDistance: 0,
-		bloom: false,
-		vignette: false,
-		filmGrain: false,
-		lodBias: 1.5, // Aggressive LOD switching
+		lodBias: 1.5,
 		reflectionProbeRes: 64,
-		ssao: false,
 		antialias: false,
+		postprocessing: {
+			vignette: { offset: 0.3, darkness: 0.25 },
+			bloom: null,
+			noise: null,
+			chromaticAberration: null,
+			ssao: null,
+			depthOfField: null,
+			toneMapping: true,
+			multisampling: 0,
+		},
 	},
 	medium: {
 		dpr: 1.5,
 		shadowMapSize: 1024,
 		shadowDistance: 20,
-		bloom: true,
-		vignette: true,
-		filmGrain: false,
-		lodBias: 1.0, // Normal LOD
+		lodBias: 1.0,
 		reflectionProbeRes: 128,
-		ssao: false,
 		antialias: true,
+		postprocessing: {
+			vignette: { offset: 0.3, darkness: 0.35 },
+			bloom: { intensity: 0.3, threshold: 0.9, smoothing: 0.9 },
+			noise: null,
+			chromaticAberration: null,
+			ssao: null,
+			depthOfField: null,
+			toneMapping: true,
+			multisampling: 0,
+		},
 	},
 	high: {
-		dpr: [1.5, 2.0], // Adaptive DPR, max 2.0
+		dpr: [1.5, 2.0],
 		shadowMapSize: 2048,
 		shadowDistance: 40,
-		bloom: true,
-		vignette: true,
-		filmGrain: true,
-		lodBias: 0.8, // Quality-biased LOD
+		lodBias: 0.8,
 		reflectionProbeRes: 256,
-		ssao: true,
 		antialias: true,
+		postprocessing: {
+			vignette: { offset: 0.3, darkness: 0.4 },
+			bloom: { intensity: 0.5, threshold: 0.8, smoothing: 0.9 },
+			noise: { opacity: 0.05 },
+			chromaticAberration: { offset: 0.001 },
+			ssao: { intensity: 1.0, radius: 0.05 },
+			depthOfField: { focusDistance: 0.02, focalLength: 0.05, bokehScale: 2 },
+			toneMapping: true,
+			multisampling: 4,
+		},
 	},
 };
 
@@ -228,7 +259,11 @@ export function getCanvasConfig(settings: QualitySettings) {
 export function applyReducedMotion(settings: QualitySettings): QualitySettings {
 	return {
 		...settings,
-		filmGrain: false, // Disable film grain animation
-		// Note: Camera sway and transitions handled separately
+		postprocessing: {
+			...settings.postprocessing,
+			noise: null,
+			chromaticAberration: null,
+			depthOfField: null,
+		},
 	};
 }
