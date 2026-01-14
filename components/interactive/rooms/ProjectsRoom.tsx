@@ -6,6 +6,7 @@ import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import * as THREE from "three";
 import { THREE_COLORS } from "@/lib/interactive/colors";
 import { DoorTrigger } from "../DoorTrigger";
+import { HolographicScreen, TechFloorGrid, AmbientParticles, GlowRing } from "../effects";
 import type { RoomId } from "@/lib/interactive/types";
 import type { ProjectsManifest, ProjectManifestEntry } from "@/lib/interactive/manifest-types";
 import type { OverlayContent } from "../ContentOverlay";
@@ -33,19 +34,19 @@ const ROOM_HEIGHT = 7;
 
 // Status colors for project pedestals
 const STATUS_COLORS: Record<string, string> = {
-	active: "#48bb78",    // Green
-	shipped: "#4299e1",   // Blue
-	"on-hold": "#ed8936", // Orange
-	archived: "#718096",  // Gray
-	idea: "#9f7aea",      // Purple
+	active: "#48bb78",
+	shipped: "#4299e1",
+	"on-hold": "#ed8936",
+	archived: "#718096",
+	idea: "#9f7aea",
 };
 
 // Type icons/colors
 const TYPE_COLORS: Record<string, string> = {
-	software: "#7C5CFF",     // Accent purple
-	policy: "#FFB86B",       // Warm gold
-	professional: "#4299e1", // Blue
-	experiment: "#48bb78",   // Green
+	software: "#7C5CFF",
+	policy: "#FFB86B",
+	professional: "#4299e1",
+	experiment: "#48bb78",
 };
 
 // =============================================================================
@@ -53,28 +54,7 @@ const TYPE_COLORS: Record<string, string> = {
 // =============================================================================
 
 /**
- * Museum floor with polished appearance.
- */
-function Floor() {
-	return (
-		<mesh
-			rotation={[-Math.PI / 2, 0, 0]}
-			position={[0, 0, 0]}
-			receiveShadow
-			name="ground"
-		>
-			<planeGeometry args={[ROOM_WIDTH, ROOM_DEPTH]} />
-			<meshStandardMaterial
-				color="#151520"
-				roughness={0.4}
-				metalness={0.3}
-			/>
-		</mesh>
-	);
-}
-
-/**
- * Museum walls.
+ * Museum walls with subtle emissive accent lines.
  */
 function Walls() {
 	return (
@@ -82,47 +62,62 @@ function Walls() {
 			{/* Back wall */}
 			<mesh position={[0, ROOM_HEIGHT / 2, -ROOM_DEPTH / 2]} receiveShadow>
 				<boxGeometry args={[ROOM_WIDTH, ROOM_HEIGHT, 0.3]} />
-				<meshStandardMaterial color="#1a1a2e" roughness={0.8} metalness={0.2} />
+				<meshStandardMaterial color="#0a0a15" roughness={0.9} metalness={0.3} />
 			</mesh>
 
 			{/* Front wall (with door to main hall) */}
 			<mesh position={[0, ROOM_HEIGHT / 2, ROOM_DEPTH / 2]} receiveShadow>
 				<boxGeometry args={[ROOM_WIDTH, ROOM_HEIGHT, 0.3]} />
-				<meshStandardMaterial color="#1a1a2e" roughness={0.8} metalness={0.2} />
+				<meshStandardMaterial color="#0a0a15" roughness={0.9} metalness={0.3} />
 			</mesh>
 
 			{/* Left wall */}
 			<mesh position={[-ROOM_WIDTH / 2, ROOM_HEIGHT / 2, 0]} receiveShadow>
 				<boxGeometry args={[0.3, ROOM_HEIGHT, ROOM_DEPTH]} />
-				<meshStandardMaterial color="#1a1a2e" roughness={0.8} metalness={0.2} />
+				<meshStandardMaterial color="#0a0a15" roughness={0.9} metalness={0.3} />
 			</mesh>
 
 			{/* Right wall */}
 			<mesh position={[ROOM_WIDTH / 2, ROOM_HEIGHT / 2, 0]} receiveShadow>
 				<boxGeometry args={[0.3, ROOM_HEIGHT, ROOM_DEPTH]} />
-				<meshStandardMaterial color="#1a1a2e" roughness={0.8} metalness={0.2} />
+				<meshStandardMaterial color="#0a0a15" roughness={0.9} metalness={0.3} />
 			</mesh>
+
+			{/* Accent trim lines on walls */}
+			{[-ROOM_DEPTH / 2 + 0.16, ROOM_DEPTH / 2 - 0.16].map((z, i) => (
+				<mesh key={i} position={[0, 0.1, z]}>
+					<boxGeometry args={[ROOM_WIDTH - 0.6, 0.02, 0.02]} />
+					<meshBasicMaterial color={THREE_COLORS.accent} />
+				</mesh>
+			))}
 		</group>
 	);
 }
 
 /**
- * Ceiling with track lighting.
+ * Ceiling with recessed lighting panels.
  */
 function Ceiling() {
 	return (
-		<mesh
-			rotation={[Math.PI / 2, 0, 0]}
-			position={[0, ROOM_HEIGHT, 0]}
-		>
-			<planeGeometry args={[ROOM_WIDTH, ROOM_DEPTH]} />
-			<meshStandardMaterial color="#0a0a15" roughness={0.9} metalness={0.1} />
-		</mesh>
+		<group>
+			<mesh rotation={[Math.PI / 2, 0, 0]} position={[0, ROOM_HEIGHT, 0]}>
+				<planeGeometry args={[ROOM_WIDTH, ROOM_DEPTH]} />
+				<meshStandardMaterial color="#050510" roughness={0.95} metalness={0.1} />
+			</mesh>
+
+			{/* Recessed light panels */}
+			{[-6, 0, 6].map((x, i) => (
+				<mesh key={i} position={[x, ROOM_HEIGHT - 0.05, 0]} rotation={[Math.PI / 2, 0, 0]}>
+					<planeGeometry args={[2, ROOM_DEPTH - 4]} />
+					<meshBasicMaterial color="#1a1a2a" />
+				</mesh>
+			))}
+		</group>
 	);
 }
 
 /**
- * Project exhibit pedestal with terminal screen.
+ * Project exhibit pedestal with holographic terminal screen.
  */
 function ProjectPedestal({
 	project,
@@ -139,10 +134,9 @@ function ProjectPedestal({
 	onPointerEnter: () => void;
 	onPointerLeave: () => void;
 }) {
-	const screenRef = useRef<THREE.Mesh>(null);
+	const screenRef = useRef<THREE.Group>(null);
 	const glowRef = useRef<THREE.PointLight>(null);
 
-	// Subtle hover animation
 	useFrame((state) => {
 		if (!screenRef.current) return;
 
@@ -152,7 +146,7 @@ function ProjectPedestal({
 
 		// Pulse glow on hover
 		if (glowRef.current) {
-			const targetIntensity = isHovered ? 0.8 : 0.3;
+			const targetIntensity = isHovered ? 1.2 : 0.4;
 			glowRef.current.intensity += (targetIntensity - glowRef.current.intensity) * 0.1;
 		}
 	});
@@ -162,28 +156,28 @@ function ProjectPedestal({
 
 	return (
 		<group position={position}>
-			{/* Pedestal base */}
+			{/* Pedestal base - darker, more refined */}
 			<mesh position={[0, 0.4, 0]} castShadow>
-				<cylinderGeometry args={[0.6, 0.8, 0.8, 8]} />
+				<cylinderGeometry args={[0.5, 0.7, 0.8, 16]} />
 				<meshStandardMaterial
-					color="#2a2a3a"
-					roughness={0.4}
-					metalness={0.6}
-				/>
-			</mesh>
-
-			{/* Pedestal column */}
-			<mesh position={[0, 1, 0]} castShadow>
-				<cylinderGeometry args={[0.15, 0.15, 0.8, 16]} />
-				<meshStandardMaterial
-					color="#3a3a4a"
+					color="#151520"
 					roughness={0.3}
 					metalness={0.7}
 				/>
 			</mesh>
 
-			{/* Terminal screen */}
-			<mesh
+			{/* Pedestal column - sleeker */}
+			<mesh position={[0, 1, 0]} castShadow>
+				<cylinderGeometry args={[0.1, 0.12, 0.8, 16]} />
+				<meshStandardMaterial
+					color="#252535"
+					roughness={0.2}
+					metalness={0.8}
+				/>
+			</mesh>
+
+			{/* Screen backing (for interaction) */}
+			<group
 				ref={screenRef}
 				position={[0, 1.6, 0]}
 				onClick={(e) => {
@@ -200,58 +194,63 @@ function ProjectPedestal({
 					onPointerLeave();
 					document.body.style.cursor = "auto";
 				}}
-				userData={{ type: "project", project }}
 			>
-				<boxGeometry args={[1.2, 0.8, 0.1]} />
-				<meshStandardMaterial
-					color="#0f0f1a"
-					roughness={0.2}
-					metalness={0.8}
-					emissive={isHovered ? typeColor : "#1a1a2e"}
-					emissiveIntensity={isHovered ? 0.5 : 0.2}
-				/>
-			</mesh>
+				{/* Invisible interaction mesh */}
+				<mesh userData={{ type: "project", project }}>
+					<boxGeometry args={[1.3, 0.9, 0.15]} />
+					<meshBasicMaterial visible={false} />
+				</mesh>
 
-			{/* Screen content area */}
-			<mesh position={[0, 1.6, 0.06]}>
-				<planeGeometry args={[1, 0.6]} />
-				<meshBasicMaterial
-					color={typeColor}
-					transparent
-					opacity={0.3}
-				/>
-			</mesh>
+				{/* Holographic screen effect */}
+				<group position={[0, 0, 0.06]}>
+					<HolographicScreen
+						color={typeColor}
+						intensity={0.8}
+						width={1.2}
+						height={0.8}
+						isActive={isHovered}
+					/>
+				</group>
 
-			{/* Status indicator */}
-			<mesh position={[0, 2.1, 0]}>
-				<sphereGeometry args={[0.08, 16, 16]} />
+				{/* Screen frame */}
+				<mesh position={[0, 0, -0.02]}>
+					<boxGeometry args={[1.3, 0.9, 0.04]} />
+					<meshStandardMaterial
+						color="#0a0a12"
+						roughness={0.2}
+						metalness={0.9}
+					/>
+				</mesh>
+			</group>
+
+			{/* Status indicator - pulsing orb */}
+			<mesh position={[0, 2.15, 0]}>
+				<sphereGeometry args={[0.06, 16, 16]} />
 				<meshStandardMaterial
 					color={statusColor}
 					emissive={statusColor}
-					emissiveIntensity={0.8}
+					emissiveIntensity={1.2}
 				/>
 			</mesh>
 
 			{/* Glow light */}
 			<pointLight
 				ref={glowRef}
-				position={[0, 1.6, 0.5]}
-				intensity={0.3}
+				position={[0, 1.6, 0.6]}
+				intensity={0.4}
 				color={typeColor}
-				distance={3}
+				distance={4}
 				decay={2}
 			/>
 
-			{/* Accent ring on floor */}
-			<mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
-				<ringGeometry args={[0.9, 1.1, 32]} />
-				<meshBasicMaterial
-					color={typeColor}
-					transparent
-					opacity={isHovered ? 0.4 : 0.15}
-					side={THREE.DoubleSide}
-				/>
-			</mesh>
+			{/* Animated glow ring on floor */}
+			<GlowRing
+				innerRadius={0.85}
+				outerRadius={1.05}
+				color={typeColor}
+				intensity={0.6}
+				isActive={isHovered}
+			/>
 		</group>
 	);
 }
@@ -268,7 +267,6 @@ function ProjectExhibits({
 }) {
 	const [hoveredProject, setHoveredProject] = useState<string | null>(null);
 
-	// Calculate pedestal positions in a grid
 	const pedestalPositions = useMemo(() => {
 		const positions: Array<{ project: ProjectManifestEntry; position: [number, number, number] }> = [];
 		const cols = Math.min(projects.length, 3);
@@ -285,7 +283,6 @@ function ProjectExhibits({
 		return positions;
 	}, [projects]);
 
-	// Cleanup cursor on unmount
 	useEffect(() => {
 		return () => {
 			document.body.style.cursor = "auto";
@@ -310,7 +307,7 @@ function ProjectExhibits({
 }
 
 /**
- * Decorative museum elements.
+ * Enhanced museum decor with dramatic spotlights.
  */
 function MuseumDecor() {
 	return (
@@ -319,26 +316,28 @@ function MuseumDecor() {
 			{[-6, 0, 6].map((x, i) => (
 				<group key={i}>
 					<mesh position={[x, ROOM_HEIGHT - 0.3, 0]}>
-						<boxGeometry args={[0.1, 0.1, ROOM_DEPTH - 2]} />
-						<meshStandardMaterial color="#2a2a3a" roughness={0.4} metalness={0.7} />
+						<boxGeometry args={[0.08, 0.08, ROOM_DEPTH - 2]} />
+						<meshStandardMaterial color="#1a1a25" roughness={0.3} metalness={0.8} />
 					</mesh>
 
 					{/* Spotlights on track */}
 					{[-4, 0, 4].map((z, j) => (
 						<group key={j} position={[x, ROOM_HEIGHT - 0.5, z]}>
 							<mesh>
-								<cylinderGeometry args={[0.1, 0.15, 0.3, 8]} />
-								<meshStandardMaterial color="#1a1a1a" roughness={0.3} metalness={0.8} />
+								<cylinderGeometry args={[0.08, 0.12, 0.25, 8]} />
+								<meshStandardMaterial color="#0a0a10" roughness={0.2} metalness={0.9} />
 							</mesh>
 							<spotLight
-								position={[0, 0, 0]}
-								angle={0.4}
-								penumbra={0.6}
-								intensity={0.5}
+								position={[0, -0.1, 0]}
+								angle={0.5}
+								penumbra={0.8}
+								intensity={0.8}
 								color="#ffffff"
-								distance={8}
+								distance={10}
 								decay={2}
-								target-position={[x, 0, z]}
+								castShadow
+								shadow-mapSize-width={512}
+								shadow-mapSize-height={512}
 							/>
 						</group>
 					))}
@@ -352,9 +351,6 @@ function MuseumDecor() {
 // Collision Bodies
 // =============================================================================
 
-/**
- * Collision bodies for projects room - floor, walls, and pedestals.
- */
 function ProjectsColliders() {
 	const wallThickness = 0.5;
 	const wallHeight = ROOM_HEIGHT;
@@ -366,22 +362,22 @@ function ProjectsColliders() {
 				<CuboidCollider args={[ROOM_WIDTH / 2, 0.25, ROOM_DEPTH / 2]} />
 			</RigidBody>
 
-			{/* Back wall (negative Z) */}
+			{/* Back wall */}
 			<RigidBody type="fixed" position={[0, wallHeight / 2, -ROOM_DEPTH / 2 - wallThickness / 2]}>
 				<CuboidCollider args={[ROOM_WIDTH / 2, wallHeight / 2, wallThickness / 2]} />
 			</RigidBody>
 
-			{/* Front wall (positive Z) */}
+			{/* Front wall */}
 			<RigidBody type="fixed" position={[0, wallHeight / 2, ROOM_DEPTH / 2 + wallThickness / 2]}>
 				<CuboidCollider args={[ROOM_WIDTH / 2, wallHeight / 2, wallThickness / 2]} />
 			</RigidBody>
 
-			{/* Left wall (negative X) */}
+			{/* Left wall */}
 			<RigidBody type="fixed" position={[-ROOM_WIDTH / 2 - wallThickness / 2, wallHeight / 2, 0]}>
 				<CuboidCollider args={[wallThickness / 2, wallHeight / 2, ROOM_DEPTH / 2]} />
 			</RigidBody>
 
-			{/* Right wall (positive X) */}
+			{/* Right wall */}
 			<RigidBody type="fixed" position={[ROOM_WIDTH / 2 + wallThickness / 2, wallHeight / 2, 0]}>
 				<CuboidCollider args={[wallThickness / 2, wallHeight / 2, ROOM_DEPTH / 2]} />
 			</RigidBody>
@@ -393,14 +389,10 @@ function ProjectsColliders() {
 // Main Component
 // =============================================================================
 
-/**
- * ProjectsRoom - Museum-style display of projects.
- */
 export function ProjectsRoom({ debug = false, onDoorActivate, onContentSelect }: ProjectsRoomProps) {
 	const [projects, setProjects] = useState<ProjectManifestEntry[]>([]);
 	const [loading, setLoading] = useState(true);
 
-	// Load projects manifest with abort cleanup
 	useEffect(() => {
 		const controller = new AbortController();
 
@@ -423,7 +415,6 @@ export function ProjectsRoom({ debug = false, onDoorActivate, onContentSelect }:
 		return () => controller.abort();
 	}, []);
 
-	// Convert project to overlay content
 	const handleProjectSelect = useCallback((project: ProjectManifestEntry) => {
 		if (!onContentSelect) return;
 
@@ -463,10 +454,28 @@ export function ProjectsRoom({ debug = false, onDoorActivate, onContentSelect }:
 			{/* Collision bodies */}
 			<ProjectsColliders />
 
+			{/* Tech floor with grid pattern */}
+			<TechFloorGrid
+				width={ROOM_WIDTH}
+				depth={ROOM_DEPTH}
+				baseColor="#080810"
+				gridColor={THREE_COLORS.accent}
+				gridIntensity={0.12}
+				gridSize={2.0}
+			/>
+
 			{/* Structure */}
-			<Floor />
 			<Walls />
 			<Ceiling />
+
+			{/* Atmospheric particles */}
+			<AmbientParticles
+				count={50}
+				bounds={[ROOM_WIDTH - 2, ROOM_HEIGHT - 1, ROOM_DEPTH - 2]}
+				color={THREE_COLORS.accent}
+				size={12}
+				speed={0.8}
+			/>
 
 			{/* Museum decor */}
 			<MuseumDecor />
@@ -479,7 +488,7 @@ export function ProjectsRoom({ debug = false, onDoorActivate, onContentSelect }:
 				/>
 			)}
 
-			{/* Empty state message area */}
+			{/* Empty state */}
 			{!loading && projects.length === 0 && (
 				<mesh position={[0, 2, 0]}>
 					<planeGeometry args={[4, 1]} />
@@ -503,35 +512,59 @@ export function ProjectsRoom({ debug = false, onDoorActivate, onContentSelect }:
 				labelRotation={Math.PI}
 			/>
 
-			{/* Door frame */}
+			{/* Door frame - enhanced */}
 			<group position={[0, 2, ROOM_DEPTH / 2]}>
 				<mesh>
 					<boxGeometry args={[3.5, 4.5, 0.3]} />
 					<meshStandardMaterial
+						color="#1a1520"
+						roughness={0.3}
+						metalness={0.7}
+					/>
+				</mesh>
+				{/* Door frame accent */}
+				<mesh position={[0, 0, 0.1]}>
+					<boxGeometry args={[3.2, 4.2, 0.05]} />
+					<meshStandardMaterial
 						color={THREE_COLORS.warm}
+						emissive={THREE_COLORS.warm}
+						emissiveIntensity={0.15}
 						roughness={0.4}
 						metalness={0.6}
-						emissive={THREE_COLORS.warm}
-						emissiveIntensity={0.1}
 					/>
 				</mesh>
 				<mesh position={[0, 0, -0.1]}>
 					<boxGeometry args={[2.5, 4, 0.2]} />
-					<meshBasicMaterial color="#050510" />
+					<meshBasicMaterial color="#030308" />
 				</mesh>
 			</group>
 
-			{/* Ambient lighting */}
-			<ambientLight intensity={0.1} color="#aaaacc" />
+			{/* Ambient lighting - subtle cool tone */}
+			<ambientLight intensity={0.08} color="#8888bb" />
 
-			{/* Main overhead light */}
+			{/* Main overhead lights - dramatic */}
 			<pointLight
 				position={[0, ROOM_HEIGHT - 1, 0]}
-				intensity={0.4}
+				intensity={0.3}
 				color="#ffffff"
-				distance={15}
+				distance={12}
 				decay={2}
-				castShadow
+			/>
+
+			{/* Accent rim lights */}
+			<pointLight
+				position={[-ROOM_WIDTH / 2 + 1, 2, 0]}
+				intensity={0.15}
+				color={THREE_COLORS.accent}
+				distance={8}
+				decay={2}
+			/>
+			<pointLight
+				position={[ROOM_WIDTH / 2 - 1, 2, 0]}
+				intensity={0.15}
+				color={THREE_COLORS.accent}
+				distance={8}
+				decay={2}
 			/>
 		</group>
 	);
