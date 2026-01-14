@@ -119,6 +119,8 @@ function SceneContent({
 					roomId={currentRoom as RoomId}
 					onDoorActivate={onDoorActivate}
 					onContentSelect={onContentSelect}
+					qualityTier={qualityTier}
+					reducedMotion={reducedMotion}
 				/>
 
 				{/* Player Controller - key forces remount on room change for spawn reset */}

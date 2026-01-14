@@ -24,6 +24,10 @@ export interface QualitySettings {
 	antialias: boolean;
 	/** Post-processing effect settings */
 	postprocessing: PostProcessingSettings;
+	/** Enable fog effect */
+	fog: boolean;
+	/** Dust particle multiplier (0 = disabled, 1 = full) */
+	dustParticles: number;
 }
 
 export interface PostProcessingSettings {
@@ -67,6 +71,8 @@ export const QUALITY_PRESETS: Record<Exclude<QualityTier, "auto">, QualitySettin
 			toneMapping: true,
 			multisampling: 0,
 		},
+		fog: true,
+		dustParticles: 0,
 	},
 	medium: {
 		dpr: 1.5,
@@ -85,6 +91,8 @@ export const QUALITY_PRESETS: Record<Exclude<QualityTier, "auto">, QualitySettin
 			toneMapping: true,
 			multisampling: 0,
 		},
+		fog: true,
+		dustParticles: 0.5,
 	},
 	high: {
 		dpr: [1.5, 2.0],
@@ -103,6 +111,8 @@ export const QUALITY_PRESETS: Record<Exclude<QualityTier, "auto">, QualitySettin
 			toneMapping: true,
 			multisampling: 4,
 		},
+		fog: true,
+		dustParticles: 1.0,
 	},
 };
 

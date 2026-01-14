@@ -2,6 +2,7 @@
 
 import { Suspense, lazy, type ComponentType } from "react";
 import type { RoomId } from "@/lib/interactive/types";
+import type { QualityTier } from "@/lib/interactive/capabilities";
 import type { OverlayContent } from "../ContentOverlay";
 import { DoorTrigger } from "../DoorTrigger";
 
@@ -13,6 +14,10 @@ export interface RoomProps {
 	debug?: boolean;
 	onDoorActivate?: (targetRoom: RoomId, spawnPosition: [number, number, number], spawnRotation: number) => void;
 	onContentSelect?: (content: OverlayContent) => void;
+	/** Quality tier for atmospheric effects */
+	qualityTier?: QualityTier;
+	/** Whether reduced motion is preferred */
+	reducedMotion?: boolean;
 }
 
 export interface RoomConfig {
@@ -172,13 +177,24 @@ interface RoomRendererProps {
 	debug?: boolean;
 	onDoorActivate?: (targetRoom: RoomId, spawnPosition: [number, number, number], spawnRotation: number) => void;
 	onContentSelect?: (content: OverlayContent) => void;
+	/** Quality tier for atmospheric effects */
+	qualityTier?: QualityTier;
+	/** Whether reduced motion is preferred */
+	reducedMotion?: boolean;
 }
 
 /**
  * Renders a room by ID with Suspense boundary.
  * Used by the chunk system to render active rooms.
  */
-export function RoomRenderer({ roomId, debug, onDoorActivate, onContentSelect }: RoomRendererProps) {
+export function RoomRenderer({
+	roomId,
+	debug,
+	onDoorActivate,
+	onContentSelect,
+	qualityTier,
+	reducedMotion,
+}: RoomRendererProps) {
 	const config = ROOM_REGISTRY[roomId];
 
 	if (!config) {
@@ -190,7 +206,13 @@ export function RoomRenderer({ roomId, debug, onDoorActivate, onContentSelect }:
 
 	return (
 		<Suspense fallback={null}>
-			<Component debug={debug} onDoorActivate={onDoorActivate} onContentSelect={onContentSelect} />
+			<Component
+				debug={debug}
+				onDoorActivate={onDoorActivate}
+				onContentSelect={onContentSelect}
+				qualityTier={qualityTier}
+				reducedMotion={reducedMotion}
+			/>
 		</Suspense>
 	);
 }
