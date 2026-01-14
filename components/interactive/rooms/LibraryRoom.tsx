@@ -61,6 +61,292 @@ function getCachedColor(hex: string): THREE.Color {
 	return colorCache.get(hex)!;
 }
 
+// Dust particle settings
+const DUST_PARTICLE_COUNT = 80;
+const DUST_DRIFT_SPEED = 0.08;
+const DUST_SEED = 42;
+
+// Seeded random generator for deterministic particle placement
+function seededRandom(seed: number): () => number {
+	let s = seed;
+	return () => {
+		s = (s * 1664525 + 1013904223) >>> 0;
+		return s / 4294967296;
+	};
+}
+
+// Pre-generate dust particle data at module level for purity
+const dustParticleData = (() => {
+	const rng = seededRandom(DUST_SEED);
+	const pos = new Float32Array(DUST_PARTICLE_COUNT * 3);
+	const siz = new Float32Array(DUST_PARTICLE_COUNT);
+	const vel = new Float32Array(DUST_PARTICLE_COUNT * 3);
+
+	for (let i = 0; i < DUST_PARTICLE_COUNT; i++) {
+		pos[i * 3] = (rng() - 0.5) * (ROOM_WIDTH - 4);
+		pos[i * 3 + 1] = 1 + rng() * (ROOM_HEIGHT - 2);
+		pos[i * 3 + 2] = (rng() - 0.5) * (ROOM_DEPTH - 4);
+		siz[i] = 0.02 + rng() * 0.03;
+		vel[i * 3] = (rng() - 0.5) * 0.1;
+		vel[i * 3 + 1] = (rng() - 0.5) * 0.05;
+		vel[i * 3 + 2] = (rng() - 0.5) * 0.1;
+	}
+
+	return { positions: pos, sizes: siz, velocities: vel };
+})();
+
+// =============================================================================
+// Visual Enhancement Components
+// =============================================================================
+
+/**
+ * Floating dust motes that catch the light.
+ * Uses Points geometry for efficient rendering.
+ */
+function DustMotes() {
+	const pointsRef = useRef<THREE.Points>(null);
+	const timeRef = useRef(0);
+
+	const { positions, sizes, velocities } = dustParticleData;
+
+	const geometry = useMemo(() => {
+		const geom = new THREE.BufferGeometry();
+		geom.setAttribute("position", new THREE.BufferAttribute(positions.slice(), 3));
+		geom.setAttribute("size", new THREE.BufferAttribute(sizes, 1));
+		return geom;
+	}, [positions, sizes]);
+
+	useFrame((_, delta) => {
+		if (!pointsRef.current) return;
+
+		timeRef.current += delta * DUST_DRIFT_SPEED;
+		const posAttr = pointsRef.current.geometry.getAttribute("position");
+
+		for (let i = 0; i < DUST_PARTICLE_COUNT; i++) {
+			const baseX = positions[i * 3]!;
+			const baseY = positions[i * 3 + 1]!;
+			const baseZ = positions[i * 3 + 2]!;
+
+			// Gentle sinusoidal drift
+			const t = timeRef.current + i * 0.1;
+			const driftX = Math.sin(t * velocities[i * 3]!) * 0.3;
+			const driftY = Math.sin(t * 0.5 + i) * 0.15;
+			const driftZ = Math.cos(t * velocities[i * 3 + 2]!) * 0.3;
+
+			posAttr.setXYZ(i, baseX + driftX, baseY + driftY, baseZ + driftZ);
+		}
+
+		posAttr.needsUpdate = true;
+	});
+
+	return (
+		<points ref={pointsRef}>
+			<primitive object={geometry} attach="geometry" />
+			<pointsMaterial
+				color="#ffddaa"
+				size={0.04}
+				transparent
+				opacity={0.4}
+				sizeAttenuation
+				depthWrite={false}
+				blending={THREE.AdditiveBlending}
+			/>
+		</points>
+	);
+}
+
+/**
+ * Decorative floor rug with pattern.
+ */
+function FloorRug() {
+	return (
+		<group position={[0, 0.01, 0]}>
+			{/* Main rug body */}
+			<mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+				<planeGeometry args={[8, 10]} />
+				<meshStandardMaterial
+					color="#3d1a1a"
+					roughness={0.9}
+					metalness={0}
+				/>
+			</mesh>
+
+			{/* Decorative border */}
+			<mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.001, 0]}>
+				<ringGeometry args={[3.2, 3.6, 32]} />
+				<meshStandardMaterial
+					color="#8b6914"
+					roughness={0.8}
+					metalness={0.2}
+				/>
+			</mesh>
+
+			{/* Inner pattern circle */}
+			<mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.002, 0]}>
+				<ringGeometry args={[1.5, 1.8, 32]} />
+				<meshStandardMaterial
+					color="#8b6914"
+					roughness={0.8}
+					metalness={0.2}
+				/>
+			</mesh>
+
+			{/* Center medallion */}
+			<mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.003, 0]}>
+				<circleGeometry args={[0.8, 16]} />
+				<meshStandardMaterial
+					color="#5c3d1e"
+					roughness={0.85}
+					metalness={0.1}
+				/>
+			</mesh>
+		</group>
+	);
+}
+
+/**
+ * Animated fireplace with flickering flames.
+ */
+function Fireplace() {
+	const flameRef = useRef<THREE.Mesh>(null);
+	const lightRef = useRef<THREE.PointLight>(null);
+
+	useFrame((state) => {
+		const t = state.clock.elapsedTime;
+
+		// Animate flame mesh scale
+		if (flameRef.current) {
+			const flicker = 0.9 + Math.sin(t * 8) * 0.05 + Math.sin(t * 13) * 0.05;
+			flameRef.current.scale.y = flicker;
+			flameRef.current.scale.x = 0.95 + Math.sin(t * 10) * 0.05;
+		}
+
+		// Animate light intensity
+		if (lightRef.current) {
+			const intensity = 0.8 + Math.sin(t * 6) * 0.15 + Math.sin(t * 11) * 0.1;
+			lightRef.current.intensity = intensity;
+		}
+	});
+
+	return (
+		<group position={[ROOM_WIDTH / 2 - 0.5, 0, -2]}>
+			{/* Fireplace frame */}
+			<mesh position={[0, 1.5, 0]} castShadow>
+				<boxGeometry args={[0.3, 3, 2.5]} />
+				<meshStandardMaterial color="#2d1a10" roughness={0.9} metalness={0} />
+			</mesh>
+
+			{/* Mantle */}
+			<mesh position={[-0.1, 2.8, 0]} castShadow>
+				<boxGeometry args={[0.5, 0.2, 3]} />
+				<meshStandardMaterial color="#4a3728" roughness={0.7} metalness={0.1} />
+			</mesh>
+
+			{/* Firebox opening */}
+			<mesh position={[0.05, 1, 0]}>
+				<boxGeometry args={[0.25, 1.6, 1.8]} />
+				<meshBasicMaterial color="#050505" />
+			</mesh>
+
+			{/* Flame glow mesh */}
+			<mesh ref={flameRef} position={[-0.05, 0.8, 0]}>
+				<coneGeometry args={[0.4, 0.8, 8]} />
+				<meshBasicMaterial
+					color="#ff6622"
+					transparent
+					opacity={0.7}
+				/>
+			</mesh>
+
+			{/* Ember glow */}
+			<mesh position={[-0.05, 0.35, 0]}>
+				<sphereGeometry args={[0.5, 8, 8]} />
+				<meshStandardMaterial
+					color="#ff4400"
+					emissive="#ff2200"
+					emissiveIntensity={2}
+					transparent
+					opacity={0.5}
+				/>
+			</mesh>
+
+			{/* Flickering fire light */}
+			<pointLight
+				ref={lightRef}
+				position={[-0.3, 1.2, 0]}
+				intensity={0.8}
+				color="#ff6633"
+				distance={8}
+				decay={2}
+				castShadow
+			/>
+
+			{/* Fireplace collider */}
+			<RigidBody type="fixed" position={[0, 1.5, 0]}>
+				<CuboidCollider args={[0.3, 1.5, 1.3]} />
+			</RigidBody>
+		</group>
+	);
+}
+
+/**
+ * Window with moonlight beam.
+ */
+function MoonlitWindow() {
+	return (
+		<group position={[ROOM_WIDTH / 2 - 0.15, 4, 4]}>
+			{/* Window frame */}
+			<mesh>
+				<boxGeometry args={[0.3, 2.5, 2]} />
+				<meshStandardMaterial color="#3d2b1f" roughness={0.8} metalness={0.1} />
+			</mesh>
+
+			{/* Window glass (emissive for moonlight) */}
+			<mesh position={[0.05, 0, 0]}>
+				<planeGeometry args={[0.1, 2, 1.5]} />
+				<meshStandardMaterial
+					color="#aabbdd"
+					emissive="#6688bb"
+					emissiveIntensity={0.3}
+					transparent
+					opacity={0.6}
+				/>
+			</mesh>
+
+			{/* Window panes divider */}
+			<mesh position={[0.1, 0, 0]}>
+				<boxGeometry args={[0.05, 2.2, 0.05]} />
+				<meshStandardMaterial color="#3d2b1f" roughness={0.8} metalness={0.1} />
+			</mesh>
+			<mesh position={[0.1, 0, 0]}>
+				<boxGeometry args={[0.05, 0.05, 1.7]} />
+				<meshStandardMaterial color="#3d2b1f" roughness={0.8} metalness={0.1} />
+			</mesh>
+
+			{/* Moonlight beam (subtle spotlight) */}
+			<spotLight
+				position={[2, 2, 0]}
+				angle={0.5}
+				penumbra={0.8}
+				intensity={0.25}
+				color="#99aacc"
+				distance={10}
+				decay={2}
+				target-position={[-3, -4, 0]}
+			/>
+
+			{/* Ambient moonlight fill */}
+			<pointLight
+				position={[0.5, 0, 0]}
+				intensity={0.15}
+				color="#8899bb"
+				distance={6}
+				decay={2}
+			/>
+		</group>
+	);
+}
+
 // =============================================================================
 // Book Instance Data
 // =============================================================================
@@ -307,6 +593,16 @@ function Bookshelf({
  * Reading nook with chair and lamp.
  */
 function ReadingNook() {
+	const lampFlickerRef = useRef<THREE.PointLight>(null);
+
+	// Subtle lamp flicker for cozy atmosphere
+	useFrame((state) => {
+		if (lampFlickerRef.current) {
+			const t = state.clock.elapsedTime;
+			lampFlickerRef.current.intensity = 0.5 + Math.sin(t * 3) * 0.02;
+		}
+	});
+
 	return (
 		<group position={[5, 0, 3]}>
 			{/* Chair base */}
@@ -315,17 +611,45 @@ function ReadingNook() {
 				<meshStandardMaterial color="#4a3728" roughness={0.6} metalness={0.2} />
 			</mesh>
 
+			{/* Chair cushion */}
+			<mesh position={[0, 0.55, 0]} castShadow>
+				<boxGeometry args={[1.1, 0.1, 1.1]} />
+				<meshStandardMaterial color="#5c3d3d" roughness={0.9} metalness={0} />
+			</mesh>
+
 			{/* Chair back */}
 			<mesh position={[0, 1, -0.5]} castShadow>
 				<boxGeometry args={[1.2, 1.2, 0.2]} />
 				<meshStandardMaterial color="#4a3728" roughness={0.6} metalness={0.2} />
 			</mesh>
 
+			{/* Chair back cushion */}
+			<mesh position={[0, 1, -0.35]} castShadow>
+				<boxGeometry args={[1, 0.9, 0.1]} />
+				<meshStandardMaterial color="#5c3d3d" roughness={0.9} metalness={0} />
+			</mesh>
+
+			{/* Armrests */}
+			<mesh position={[-0.55, 0.7, -0.1]} castShadow>
+				<boxGeometry args={[0.1, 0.4, 0.8]} />
+				<meshStandardMaterial color="#4a3728" roughness={0.6} metalness={0.2} />
+			</mesh>
+			<mesh position={[0.55, 0.7, -0.1]} castShadow>
+				<boxGeometry args={[0.1, 0.4, 0.8]} />
+				<meshStandardMaterial color="#4a3728" roughness={0.6} metalness={0.2} />
+			</mesh>
+
 			{/* Reading lamp */}
 			<group position={[1.5, 0, 0]}>
+				{/* Lamp base */}
+				<mesh position={[0, 0.05, 0]}>
+					<cylinderGeometry args={[0.15, 0.18, 0.1, 16]} />
+					<meshStandardMaterial color="#brass" metalness={0.9} roughness={0.2} />
+				</mesh>
+
 				{/* Lamp pole */}
 				<mesh position={[0, 1.2, 0]}>
-					<cylinderGeometry args={[0.03, 0.03, 2.4, 8]} />
+					<cylinderGeometry args={[0.03, 0.03, 2.3, 8]} />
 					<meshStandardMaterial color="#brass" metalness={0.8} roughness={0.3} />
 				</mesh>
 
@@ -336,13 +660,14 @@ function ReadingNook() {
 						color={THREE_COLORS.warm}
 						roughness={0.5}
 						emissive={THREE_COLORS.warm}
-						emissiveIntensity={0.3}
+						emissiveIntensity={0.4}
 						side={THREE.DoubleSide}
 					/>
 				</mesh>
 
-				{/* Lamp light */}
+				{/* Lamp light with subtle flicker */}
 				<pointLight
+					ref={lampFlickerRef}
 					position={[0, 2, 0]}
 					intensity={0.5}
 					color={THREE_COLORS.warm}
@@ -351,11 +676,19 @@ function ReadingNook() {
 				/>
 			</group>
 
-			{/* Small side table */}
-			<mesh position={[-1.2, 0.4, 0]} castShadow>
-				<cylinderGeometry args={[0.3, 0.3, 0.8, 16]} />
-				<meshStandardMaterial color="#3d2b1f" roughness={0.7} metalness={0.1} />
-			</mesh>
+			{/* Small side table with book */}
+			<group position={[-1.2, 0, 0]}>
+				<mesh position={[0, 0.4, 0]} castShadow>
+					<cylinderGeometry args={[0.3, 0.3, 0.8, 16]} />
+					<meshStandardMaterial color="#3d2b1f" roughness={0.7} metalness={0.1} />
+				</mesh>
+
+				{/* Open book on table */}
+				<mesh position={[0, 0.85, 0]} rotation={[-0.1, 0.3, 0]} castShadow>
+					<boxGeometry args={[0.25, 0.03, 0.2]} />
+					<meshStandardMaterial color="#e8e0d0" roughness={0.9} metalness={0} />
+				</mesh>
+			</group>
 		</group>
 	);
 }
@@ -538,8 +871,14 @@ export function LibraryRoom({ debug = false, onDoorActivate, onContentSelect }: 
 
 			{/* Structure */}
 			<Floor />
+			<FloorRug />
 			<Walls />
 			<Ceiling />
+
+			{/* Visual enhancements */}
+			<DustMotes />
+			<Fireplace />
+			<MoonlitWindow />
 
 			{/* Bookshelves */}
 			<Bookshelf position={[-5, 0, -ROOM_DEPTH / 2 + 0.5]} />
@@ -586,12 +925,12 @@ export function LibraryRoom({ debug = false, onDoorActivate, onContentSelect }: 
 			</group>
 
 			{/* Lighting */}
-			<ambientLight intensity={0.15} color="#ffddaa" />
+			<ambientLight intensity={0.12} color="#ffddaa" />
 
-			{/* Main ceiling lights - warm */}
+			{/* Main ceiling lights - warm, reduced intensity due to fireplace */}
 			<pointLight
 				position={[0, ROOM_HEIGHT - 1, 0]}
-				intensity={0.8}
+				intensity={0.6}
 				color="#ffcc88"
 				distance={15}
 				decay={2}
@@ -599,14 +938,14 @@ export function LibraryRoom({ debug = false, onDoorActivate, onContentSelect }: 
 			/>
 			<pointLight
 				position={[-4, ROOM_HEIGHT - 1, -3]}
-				intensity={0.5}
+				intensity={0.35}
 				color="#ffcc88"
 				distance={10}
 				decay={2}
 			/>
 			<pointLight
 				position={[4, ROOM_HEIGHT - 1, -3]}
-				intensity={0.5}
+				intensity={0.35}
 				color="#ffcc88"
 				distance={10}
 				decay={2}
@@ -618,7 +957,7 @@ export function LibraryRoom({ debug = false, onDoorActivate, onContentSelect }: 
 				position={[-2, 5, -5]}
 				angle={0.3}
 				penumbra={0.5}
-				intensity={0.4}
+				intensity={0.3}
 				color={THREE_COLORS.accent}
 				target={spotTargetRef.current ?? undefined}
 			/>
