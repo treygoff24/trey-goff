@@ -97,8 +97,7 @@ function calculateConstellationPosition(
 function calculateBookPosition(
   book: Book,
   index: number,
-  total: number,
-  _constellationCenter: Position3D
+  total: number
 ): Position3D {
   // Nebula radius scales with book count (same formula as Constellation.tsx)
   const nebulaRadius = Math.max(15, Math.min(30, 10 + total * 0.5))
@@ -190,8 +189,7 @@ export function groupBooksIntoConstellations(
           position: calculateBookPosition(
             book,
             bookIndex,
-            topicBooks.length,
-            position
+            topicBooks.length
           ),
           isDrifter: false,
           primaryTopic: topic,
@@ -224,8 +222,7 @@ export function groupBooksIntoConstellations(
         position: calculateBookPosition(
           book,
           bookIndex,
-          orphanBooks.length,
-          randomPosition
+          orphanBooks.length
         ),
         isDrifter: false,
         primaryTopic: RANDOM_TOPIC,
@@ -246,29 +243,11 @@ export function groupBooksIntoConstellations(
 }
 
 /**
- * Get books that should be drifters.
- * @deprecated Drifters are now placed in the "Random" constellation instead.
- */
-export function getDrifterBooks(_books: Book[]): BookWithPosition[] {
-  // All orphan books now go into the "Random" constellation
-  return []
-}
-
-/**
- * Get all books with positions (both constellation and drifter books).
+ * Get all books with positions from all constellations.
  */
 export function getAllBooksWithPositions(books: Book[]): BookWithPosition[] {
   const constellations = groupBooksIntoConstellations(books)
-  const drifters = getDrifterBooks(books)
-
-  const allBooks: BookWithPosition[] = []
-
-  for (const constellation of constellations) {
-    allBooks.push(...constellation.books)
-  }
-  allBooks.push(...drifters)
-
-  return allBooks
+  return constellations.flatMap((c) => c.books)
 }
 
 // =============================================================================
@@ -408,20 +387,3 @@ function getLastName(author: string): string {
   return parts[parts.length - 1] ?? author
 }
 
-/**
- * Get stats about the library grouping.
- */
-export function getGroupingStats(books: Book[]): {
-  constellationCount: number
-  drifterCount: number
-  topics: string[]
-} {
-  const constellations = groupBooksIntoConstellations(books)
-  const drifters = getDrifterBooks(books)
-
-  return {
-    constellationCount: constellations.length,
-    drifterCount: drifters.length,
-    topics: constellations.map((c) => c.topic),
-  }
-}

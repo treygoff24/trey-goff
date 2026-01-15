@@ -25,7 +25,6 @@ interface LibraryStoreState {
 
   isUvPanning: boolean
   isParticleDrifting: boolean
-  hasBookLerps: boolean
 
   statusFilter: Book['status'] | null
   topicFilter: string | null
@@ -47,14 +46,11 @@ interface LibraryStoreActions {
   stepBack: () => void
   goToUniverse: () => void
 
-  setCameraPosition: (position: Position3D) => void
-  setCameraTarget: (target: Position3D) => void
   setIsTransitioning: (transitioning: boolean) => void
   setTransitionPhase: (phase: number) => void
 
   setIsUvPanning: (panning: boolean) => void
   setIsParticleDrifting: (drifting: boolean) => void
-  setHasBookLerps: (lerping: boolean) => void
   setPostprocessingEnabled: (enabled: boolean) => void
 
   setFilters: (filters: Partial<FilterState>) => void
@@ -88,7 +84,6 @@ const initialState: LibraryStoreState = {
 
   isUvPanning: false,
   isParticleDrifting: false,
-  hasBookLerps: false,
 
   statusFilter: null,
   topicFilter: null,
@@ -118,8 +113,7 @@ export const useLibraryStore = create<LibraryStore>()(
       return (
         state.isTransitioning ||
         state.isUvPanning ||
-        state.isParticleDrifting ||
-        state.hasBookLerps
+        state.isParticleDrifting
       )
     },
 
@@ -225,14 +219,6 @@ export const useLibraryStore = create<LibraryStore>()(
       })
     },
 
-    setCameraPosition: (position) => {
-      set({ cameraPosition: position })
-    },
-
-    setCameraTarget: (target) => {
-      set({ cameraTarget: target })
-    },
-
     setIsTransitioning: (transitioning) => {
       set({ isTransitioning: transitioning })
     },
@@ -247,10 +233,6 @@ export const useLibraryStore = create<LibraryStore>()(
 
     setIsParticleDrifting: (drifting) => {
       set({ isParticleDrifting: drifting })
-    },
-
-    setHasBookLerps: (lerping) => {
-      set({ hasBookLerps: lerping })
     },
 
     setPostprocessingEnabled: (enabled) => {
@@ -361,12 +343,10 @@ export const selectTransitionPhase = (state: LibraryStore) =>
 export const selectIsUvPanning = (state: LibraryStore) => state.isUvPanning
 export const selectIsParticleDrifting = (state: LibraryStore) =>
   state.isParticleDrifting
-export const selectHasBookLerps = (state: LibraryStore) => state.hasBookLerps
 export const selectPostprocessingEnabled = (state: LibraryStore) =>
   state.postprocessingEnabled
 
 export const selectIsAnimating = (state: LibraryStore) =>
   state.isTransitioning ||
   state.isUvPanning ||
-  state.isParticleDrifting ||
-  state.hasBookLerps
+  state.isParticleDrifting

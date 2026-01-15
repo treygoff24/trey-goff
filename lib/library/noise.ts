@@ -24,10 +24,19 @@ const GRAD2: readonly (readonly [number, number])[] = [
 // =============================================================================
 
 /**
- * Generate a seeded permutation table.
+ * Cache for permutation tables by seed.
+ * Avoids regenerating the table on every noise call.
+ */
+const permutationCache = new Map<number, number[]>()
+
+/**
+ * Generate a seeded permutation table, with caching.
  * Uses a simple LCG (Linear Congruential Generator) for reproducibility.
  */
-function generatePermutation(seed: number): number[] {
+function getPermutation(seed: number): number[] {
+  const cached = permutationCache.get(seed)
+  if (cached) return cached
+
   const perm: number[] = new Array(256)
   for (let i = 0; i < 256; i++) {
     perm[i] = i
@@ -51,6 +60,8 @@ function generatePermutation(seed: number): number[] {
     result[i] = perm[i]!
     result[i + 256] = perm[i]!
   }
+
+  permutationCache.set(seed, result)
   return result
 }
 
@@ -82,8 +93,8 @@ const G2 = (3 - Math.sqrt(3)) / 6
  * @returns Noise value in range [-1, 1]
  */
 export function simplex2D(x: number, y: number, seed = 0): number {
-  // Generate permutation table for this seed
-  const perm = generatePermutation(seed)
+  // Get cached permutation table for this seed
+  const perm = getPermutation(seed)
 
   // Skew input space to determine which simplex cell we're in
   const s = (x + y) * F2

@@ -110,7 +110,6 @@ function StarLayer({
   const tempPosition = useRef(new THREE.Vector3())
   const tempScale = useRef(new THREE.Vector3())
   const tempCameraDelta = useRef(new THREE.Vector3())
-
   // Generate star data
   const starData = useMemo(() => {
     // Different seed per layer for variety

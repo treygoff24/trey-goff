@@ -17,7 +17,6 @@ interface NebulaCoreProps {
 const vertexShader = /* glsl */ `
   varying vec3 vNormal;
   varying vec3 vViewDir;
-  varying float vDistFromCenter;
 
   void main() {
     // Transform normal to view space
@@ -26,9 +25,6 @@ const vertexShader = /* glsl */ `
     // Calculate view direction in view space
     vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
     vViewDir = normalize(-mvPosition.xyz);
-
-    // Distance from center for radial falloff (0 at center, 1 at surface)
-    vDistFromCenter = length(position);
 
     gl_Position = projectionMatrix * mvPosition;
   }
@@ -45,10 +41,9 @@ const fragmentShader = /* glsl */ `
 
   varying vec3 vNormal;
   varying vec3 vViewDir;
-  varying float vDistFromCenter;
 
   void main() {
-    // Fresnel effect - stronger at glancing angles
+    // Fresnel effect - stronger at glancing angles (edges)
     float fresnel = 1.0 - max(dot(vViewDir, vNormal), 0.0);
     fresnel = pow(fresnel, 2.0);
 
@@ -56,18 +51,14 @@ const fragmentShader = /* glsl */ `
     float core = 1.0 - fresnel;
     core = pow(core, 1.5);
 
-    // Radial falloff from geometry center
-    float radialFalloff = 1.0 - smoothstep(0.0, 1.0, vDistFromCenter);
-    radialFalloff = pow(radialFalloff, 0.8);
-
     // Breathing animation - subtle intensity pulse
     float breath = 1.0 + uBreathingAmount * sin(uTime * uBreathingSpeed);
 
     // Rim highlight - visible at edges for definition
-    float rim = fresnel * 0.5;
+    float rim = fresnel * 0.4;
 
-    // Combine all effects
-    float intensity = (core * radialFalloff + rim) * uIntensity * breath;
+    // Combine: core glow dominates, with subtle rim highlight
+    float intensity = (core * 0.9 + rim) * uIntensity * breath;
 
     // HDR output for bloom pickup (values > 1.0)
     vec3 color = uColor * intensity * 1.5;

@@ -18,8 +18,6 @@ interface NebulaCloudProps {
   color: string
   position: [number, number, number]
   radius?: number
-  particleCount?: number
-  reducedMotion: boolean
   opacity?: number
 }
 
@@ -43,7 +41,6 @@ export function NebulaCloud({
   color,
   position,
   radius = DEFAULT_RADIUS,
-  reducedMotion: _reducedMotion,
   opacity = 1,
 }: NebulaCloudProps) {
   // Check if postprocessing is enabled for HDR vs fallback emissive

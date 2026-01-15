@@ -239,6 +239,7 @@ export function NebulaDust({
     }
   })
 
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (isDriftingRef.current) {
@@ -246,6 +247,14 @@ export function NebulaDust({
       }
     }
   }, [setIsParticleDrifting])
+
+  // Reset drifting state when particle count drops to 0
+  useEffect(() => {
+    if (currentCount === 0 && isDriftingRef.current) {
+      isDriftingRef.current = false
+      setIsParticleDrifting(false)
+    }
+  }, [currentCount, setIsParticleDrifting])
 
   if (currentCount === 0) {
     return null

@@ -9,6 +9,7 @@ import { useEffect, useRef, useCallback } from 'react'
 import { X, ExternalLink, Star } from 'lucide-react'
 import { useLibraryStore } from '@/lib/library/store'
 import { isValidAmazonUrl } from '@/lib/library/amazon'
+import { isValidGoodreadsUrl } from '@/lib/library/goodreads'
 import { getTopicColor, DEFAULT_TOPIC_COLOR } from '@/lib/library/types'
 
 // =============================================================================
@@ -86,6 +87,7 @@ export function BookDetailPanel() {
     : DEFAULT_TOPIC_COLOR
 
   const hasValidAmazonUrl = isValidAmazonUrl(selectedBook.amazonUrl)
+  const hasValidGoodreadsUrl = isValidGoodreadsUrl(selectedBook.goodreadsUrl)
 
   return (
     <>
@@ -229,10 +231,10 @@ export function BookDetailPanel() {
             </a>
           )}
 
-          {/* Goodreads link (if no Amazon) */}
-          {!hasValidAmazonUrl && selectedBook.goodreadsUrl && (
+          {/* Goodreads link (if no valid Amazon URL) */}
+          {!hasValidAmazonUrl && hasValidGoodreadsUrl && (
             <a
-              href={selectedBook.goodreadsUrl}
+              href={selectedBook.goodreadsUrl!}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 rounded-lg bg-surface-2 px-4 py-3 font-medium text-text-1 transition-colors hover:bg-surface-2/80"
