@@ -1,9 +1,17 @@
-import { Feed } from 'feed'
 import { allEssays, allNotes } from 'content-collections'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://trey.world'
+let feedModule: typeof import('feed') | null = null
+
+const getFeedModule = async () => {
+  if (!feedModule) {
+    feedModule = await import('feed')
+  }
+  return feedModule
+}
 
 export async function GET() {
+  const { Feed } = await getFeedModule()
   const feed = new Feed({
     title: 'Trey Goff',
     description:
