@@ -52,6 +52,28 @@ test.describe('Writing Page', () => {
     })
   })
 
+  test.describe('Featured section', () => {
+    test('should surface featured essays when available', async ({ page }) => {
+      const featuredSection = page.locator('section').filter({
+        has: page.getByRole('heading', { name: 'Start here' }),
+      })
+
+      const sectionCount = await featuredSection.count()
+      if (sectionCount > 0) {
+        const featuredCards = featuredSection.locator('article')
+        const featuredCount = await featuredCards.count()
+        expect(featuredCount).toBeGreaterThan(0)
+
+        const featuredBadgeCount = await featuredSection
+          .locator('span', { hasText: 'Featured' })
+          .count()
+        expect(featuredBadgeCount).toBeGreaterThan(0)
+
+        await expect(page.getByRole('heading', { name: 'All essays' })).toBeVisible()
+      }
+    })
+  })
+
   test.describe('Essay cards', () => {
     test('should display essay title in cards', async () => {
       const cardCount = await writingPage.essayCards.count()

@@ -22,7 +22,7 @@ export function CommandHero() {
 			initial={reducedMotion ? false : { opacity: 0, y: 20 }}
 			animate={{ opacity: 1, y: 0 }}
 			transition={reducedMotion ? { duration: 0 } : { delay: 0.1, duration: 0.5 }}
-			className="relative w-full max-w-lg mx-auto mb-20 group"
+			className="relative mx-auto mb-12 w-full max-w-lg group"
 		>
 			{/* Pulse Effect Container */}
 			<motion.div
@@ -55,7 +55,7 @@ export function CommandHero() {
 								ease: "linear",
 								repeatDelay: 5,
 							}}
-							style={{ boxShadow: "0 0 10px 1px rgba(255, 184, 107, 0.3)" }}
+							style={{ boxShadow: "0 0 10px 1px rgba(245, 162, 90, 0.3)" }}
 						/>
 					)}
 

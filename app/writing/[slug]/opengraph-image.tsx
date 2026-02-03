@@ -24,7 +24,7 @@ export default async function OGImage({
       (
         <div
           style={{
-            background: '#0B1020',
+            background: '#0A0F1C',
             width: '100%',
             height: '100%',
             display: 'flex',
@@ -32,7 +32,7 @@ export default async function OGImage({
             justifyContent: 'center',
           }}
         >
-          <span style={{ color: '#FFB86B', fontSize: 48 }}>Essay Not Found</span>
+          <span style={{ color: '#F5A25A', fontSize: 48 }}>Essay Not Found</span>
         </div>
       ),
       { ...size }
@@ -43,7 +43,7 @@ export default async function OGImage({
     (
       <div
         style={{
-          background: 'linear-gradient(to bottom, #070A0F, #0B1020)',
+          background: 'linear-gradient(to bottom, #05060A, #0A0F1C)',
           width: '100%',
           height: '100%',
           display: 'flex',
@@ -75,7 +75,7 @@ export default async function OGImage({
         <div
           style={{
             fontSize: 24,
-            color: '#FFB86B',
+            color: '#F5A25A',
           }}
         >
           trey.world

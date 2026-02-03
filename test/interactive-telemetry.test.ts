@@ -32,14 +32,18 @@ beforeEach(() => {
   console.log = (...args: unknown[]) => {
     logs.push(args)
   }
-  process.env.NODE_ENV = 'development'
+  ;(process.env as Record<string, string | undefined>).NODE_ENV = 'development'
   resetTelemetry()
   setTelemetryEnabled(true)
 })
 
 afterEach(() => {
   console.log = originalConsoleLog
-  process.env.NODE_ENV = originalEnv
+  if (originalEnv === undefined) {
+    delete (process.env as { NODE_ENV?: string }).NODE_ENV
+  } else {
+    ;(process.env as Record<string, string | undefined>).NODE_ENV = originalEnv
+  }
   setTelemetryEnabled(true)
 })
 

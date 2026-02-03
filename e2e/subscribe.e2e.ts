@@ -59,9 +59,9 @@ test.describe('Newsletter Subscribe Form - Subscribe Page', () => {
   test.describe('Form submission', () => {
     test('should show loading state during submission', async ({ page }) => {
       // Hold the API response so we can assert loading state deterministically
-      let releaseResponse: (() => void) | null = null
+      let releaseResponse: (() => void) | undefined
       const pendingResponse = new Promise<void>((resolve) => {
-        releaseResponse = resolve
+        releaseResponse = () => resolve()
       })
 
       await page.route('/api/subscribe', async (route) => {

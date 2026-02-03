@@ -95,10 +95,12 @@ test('monitorMemory triggers warnings and cleans up', () => {
   let storedCallback: (() => void) | null = null
   let clearedId: NodeJS.Timeout | null = null
 
-  globalThis.setInterval = ((callback) => {
-    storedCallback = callback as () => void
+  globalThis.setInterval = ((callback: TimerHandler) => {
+    if (typeof callback === 'function') {
+      storedCallback = callback as () => void
+    }
     return 123 as unknown as NodeJS.Timeout
-  }) as typeof setInterval
+  }) as unknown as typeof setInterval
 
   globalThis.clearInterval = ((id) => {
     clearedId = id as NodeJS.Timeout
@@ -109,7 +111,10 @@ test('monitorMemory triggers warnings and cleans up', () => {
     warned = true
   }, 80)
 
-  storedCallback?.()
+  const callback = storedCallback as (() => void) | null
+  if (callback) {
+    callback()
+  }
   assert.equal(warned, true)
 
   cleanup()
@@ -124,16 +129,20 @@ test('monitorTabSuspension fires suspend and restore callbacks', () => {
   const globalAny = globalThis as typeof globalThis & { document?: unknown }
   const originalDocument = globalAny.document
 
-  let visibilityHandler: (() => void) | null = null
+  let visibilityHandler: ((event?: Event) => void) | null = null
   globalAny.document = {
     visibilityState: 'visible',
-    addEventListener: (_event: string, handler: () => void) => {
-      visibilityHandler = handler
+    addEventListener: (_event: string, handler: EventListenerOrEventListenerObject) => {
+      if (typeof handler === 'function') {
+        visibilityHandler = (event?: Event) => handler(event as Event)
+      } else {
+        visibilityHandler = () => handler.handleEvent(new Event('visibilitychange'))
+      }
     },
     removeEventListener: () => {
       visibilityHandler = null
     },
-  }
+  } as unknown as Document
 
   let suspendCount = 0
   let restoreCount = 0
@@ -147,9 +156,15 @@ test('monitorTabSuspension fires suspend and restore callbacks', () => {
   )
 
   ;(globalAny.document as { visibilityState: string }).visibilityState = 'hidden'
-  visibilityHandler?.()
+  const handler = visibilityHandler as ((event?: Event) => void) | null
+  if (handler) {
+    handler(new Event('visibilitychange'))
+  }
   ;(globalAny.document as { visibilityState: string }).visibilityState = 'visible'
-  visibilityHandler?.()
+  const handlerAgain = visibilityHandler as ((event?: Event) => void) | null
+  if (handlerAgain) {
+    handlerAgain(new Event('visibilitychange'))
+  }
 
   assert.equal(suspendCount, 1)
   assert.equal(restoreCount, 1)

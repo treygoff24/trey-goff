@@ -25,8 +25,11 @@ test('media helpers filter and sort appearances', () => {
   const sorted = sortAppearancesByDate(appearances)
 
   for (let i = 1; i < sorted.length; i++) {
-    const prev = new Date(sorted[i - 1].date).getTime()
-    const next = new Date(sorted[i].date).getTime()
+    const previous = sorted[i - 1]
+    const current = sorted[i]
+    assert.ok(previous && current)
+    const prev = new Date(previous.date).getTime()
+    const next = new Date(current.date).getTime()
     assert.ok(prev >= next)
   }
 

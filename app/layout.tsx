@@ -12,17 +12,26 @@ export const metadata: Metadata = {
 		template: "%s — Trey",
 	},
 	description:
-		"Building better governance through acceleration zones and institutional innovation.",
+		"Governance, acceleration zones, and institutional innovation for a faster future.",
 	metadataBase: new URL("https://trey.world"),
 	openGraph: {
 		type: "website",
 		locale: "en_US",
 		url: "https://trey.world",
 		siteName: "Trey Goff",
+		images: [
+			{
+				url: "/opengraph-image",
+				width: 1200,
+				height: 630,
+				alt: "Trey Goff",
+			},
+		],
 	},
 	twitter: {
 		card: "summary_large_image",
 		creator: "@treygoff",
+		images: ["/opengraph-image"],
 	},
 	robots: {
 		index: true,

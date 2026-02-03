@@ -33,6 +33,9 @@ export default async function WritingPage({ searchParams }: WritingPageProps) {
   const filteredEssays = activeTag
     ? sortedEssays.filter((essay) => essay.tags.includes(activeTag))
     : sortedEssays
+  const featuredEssays = filteredEssays.filter((essay) => essay.featured)
+  const nonFeaturedEssays = filteredEssays.filter((essay) => !essay.featured)
+  const showFeaturedSection = featuredEssays.length > 0
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-16">
@@ -69,19 +72,65 @@ export default async function WritingPage({ searchParams }: WritingPageProps) {
           </p>
         </div>
       ) : (
-        <div className="space-y-6">
-          {filteredEssays.map((essay) => (
-            <EssayCard
-              key={essay.slug}
-              title={essay.title}
-              slug={essay.slug}
-              date={essay.date}
-              summary={essay.summary}
-              tags={essay.tags}
-              readingTime={essay.readingTime}
-              status={essay.status}
-            />
-          ))}
+        <div className="space-y-10">
+          {showFeaturedSection && (
+            <section>
+              <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-text-3">
+                    Featured
+                  </p>
+                  <h2 className="mt-2 font-satoshi text-2xl font-medium text-text-1">
+                    Start here
+                  </h2>
+                </div>
+              </div>
+              <div className="space-y-6">
+                {featuredEssays.map((essay) => (
+                  <EssayCard
+                    key={essay.slug}
+                    title={essay.title}
+                    slug={essay.slug}
+                    date={essay.date}
+                    summary={essay.summary}
+                    tags={essay.tags}
+                    readingTime={essay.readingTime}
+                    status={essay.status}
+                    featured={essay.featured}
+                  />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {(showFeaturedSection ? nonFeaturedEssays : filteredEssays).length >
+            0 && (
+            <section>
+              {showFeaturedSection && (
+                <h2 className="mb-4 font-satoshi text-2xl font-medium text-text-1">
+                  All essays
+                </h2>
+              )}
+              <div className="space-y-6">
+                {(showFeaturedSection
+                  ? nonFeaturedEssays
+                  : filteredEssays
+                ).map((essay) => (
+                  <EssayCard
+                    key={essay.slug}
+                    title={essay.title}
+                    slug={essay.slug}
+                    date={essay.date}
+                    summary={essay.summary}
+                    tags={essay.tags}
+                    readingTime={essay.readingTime}
+                    status={essay.status}
+                    featured={essay.featured}
+                  />
+                ))}
+              </div>
+            </section>
+          )}
         </div>
       )}
     </div>

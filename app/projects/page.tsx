@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { allProjects } from 'content-collections'
 import { ProjectCard } from '@/components/projects/ProjectCard'
 
@@ -16,14 +17,25 @@ export default function ProjectsPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-16">
-      <header className="mb-12">
-        <h1 className="font-satoshi text-4xl font-medium text-text-1 mb-4">
-          Projects
-        </h1>
-        <p className="max-w-2xl text-lg text-text-2">
-          Case studies and experiments across software, policy, and institutional
-          innovation.
-        </p>
+      <header className="mb-14 space-y-6">
+        <div className="space-y-4">
+          <p className="eyebrow text-text-3">Selected work</p>
+          <h1 className="font-satoshi text-4xl font-medium text-text-1 sm:text-5xl">
+            Projects that move from idea to deployment.
+          </h1>
+          <p className="max-w-2xl text-lg leading-relaxed text-text-2 sm:text-xl">
+            Case studies and experiments across software, policy, and institutional
+            innovation—built to ship, measured in practice, and iterated in public.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-3">
+          <Link
+            href="/subscribe"
+            className="inline-flex items-center justify-center rounded-full bg-warm px-6 py-3 text-sm font-semibold text-bg-0 shadow-lg shadow-warm/25 transition hover:-translate-y-0.5 hover:shadow-warm/40"
+          >
+            Get project updates
+          </Link>
+        </div>
       </header>
 
       {projects.length === 0 ? (

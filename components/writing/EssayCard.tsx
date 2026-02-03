@@ -10,6 +10,7 @@ interface EssayCardProps {
   tags: string[]
   readingTime: number
   status: 'draft' | 'published' | 'evergreen'
+  featured?: boolean
 }
 
 export function EssayCard({
@@ -20,23 +21,45 @@ export function EssayCard({
   tags,
   readingTime,
   status,
+  featured = false,
 }: EssayCardProps) {
+  const cardClasses = [
+    'card-interactive relative rounded-lg border border-border-1 bg-surface-1 p-6 transition duration-300 ease-out',
+    'hover:-translate-y-1 hover:border-warm/30 hover:bg-surface-2 hover:shadow-lg hover:shadow-warm/10',
+    featured ? 'border-warm/30 bg-warm/5 shadow-sm shadow-warm/10' : '',
+  ]
+    .filter(Boolean)
+    .join(' ')
+
   return (
     <article className="group">
-      <Link href={`/writing/${slug}`} className="block">
-        <div className="card-interactive rounded-lg border border-border-1 bg-surface-1 p-6 hover:border-warm/20 hover:bg-surface-2">
-          {/* Status badge for evergreen */}
-          {status === 'evergreen' && (
-            <span className="mb-2 inline-block rounded-full bg-warm/10 px-2 py-0.5 text-xs font-medium text-warm">
-              Evergreen
-            </span>
+      <Link
+        href={`/writing/${slug}`}
+        className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warm/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-1"
+      >
+        <div className={cardClasses}>
+          {(featured || status === 'evergreen') && (
+            <div className="mb-3 flex flex-wrap items-center gap-2">
+              {featured && (
+                <span className="inline-flex items-center rounded-full bg-warm/15 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-warm ring-1 ring-warm/30">
+                  Featured
+                </span>
+              )}
+              {status === 'evergreen' && (
+                <span className="inline-flex items-center rounded-full bg-warm/10 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-warm">
+                  Evergreen
+                </span>
+              )}
+            </div>
           )}
 
-          <h2 className="font-satoshi text-xl font-medium text-text-1 group-hover:text-warm">
+          <h2 className="font-satoshi text-xl font-medium text-text-1 transition group-hover:text-warm">
             {title}
           </h2>
 
-          <p className="mt-2 text-text-2 line-clamp-2">{summary}</p>
+          <p className="mt-2 text-text-2 line-clamp-2 transition group-hover:text-text-1">
+            {summary}
+          </p>
 
           <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-text-3">
             <time dateTime={date}>{formatDate(date)}</time>

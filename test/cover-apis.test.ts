@@ -36,7 +36,9 @@ describe('fetchOpenLibraryCover', () => {
       'https://covers.openlibrary.org/b/isbn/1234567890-L.jpg'
     )
     assert.equal(calls.length, 1)
-    assert.equal(calls[0].init?.method, 'HEAD')
+    const firstCall = calls[0]
+    assert.ok(firstCall)
+    assert.equal(firstCall.init?.method, 'HEAD')
   })
 
   test('skips missing covers and continues to next size', async () => {

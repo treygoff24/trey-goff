@@ -44,12 +44,14 @@ test.describe('Static content pages', () => {
     await basePage.goto('/projects')
 
     await expect(page.getByRole('heading', { name: 'Projects' })).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Get project updates' })).toBeVisible()
 
     const cards = page.locator('article')
     const cardCount = await cards.count()
 
     if (cardCount > 0) {
       await expect(cards.first().getByRole('heading')).toBeVisible()
+      await expect(cards.first().getByRole('link').first()).toBeVisible()
     } else {
       await expect(page.getByText(/Projects coming soon/i)).toBeVisible()
     }

@@ -46,8 +46,8 @@ export default function NotFound() {
         className="pointer-events-none absolute inset-0 opacity-20"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(255, 184, 107, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 184, 107, 0.1) 1px, transparent 1px)
+            linear-gradient(rgba(245, 162, 90, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(245, 162, 90, 0.1) 1px, transparent 1px)
           `,
           backgroundSize: '50px 50px',
         }}
@@ -58,7 +58,7 @@ export default function NotFound() {
         className="pointer-events-none absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-warm/50 to-transparent"
         style={{
           top: `${scanLine}%`,
-          boxShadow: '0 0 20px 2px rgba(255, 184, 107, 0.3)',
+          boxShadow: '0 0 20px 2px rgba(245, 162, 90, 0.3)',
         }}
       />
 
@@ -88,8 +88,8 @@ export default function NotFound() {
           className="relative mb-4 font-mono text-[8rem] font-bold leading-none tracking-tighter text-text-1 sm:text-[12rem]"
           style={{
             textShadow: `
-              2px 0 rgba(255, 184, 107, 0.4),
-              -2px 0 rgba(124, 92, 255, 0.4)
+              2px 0 rgba(245, 162, 90, 0.4),
+              -2px 0 rgba(62, 214, 200, 0.4)
             `,
           }}
         >

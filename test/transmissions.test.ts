@@ -12,8 +12,11 @@ test('transmissions are sorted newest first', () => {
   assert.ok(transmissions.length > 0)
 
   for (let i = 1; i < transmissions.length; i++) {
-    const prev = new Date(transmissions[i - 1].date).getTime()
-    const next = new Date(transmissions[i].date).getTime()
+    const previous = transmissions[i - 1]
+    const current = transmissions[i]
+    assert.ok(previous && current)
+    const prev = new Date(previous.date).getTime()
+    const next = new Date(current.date).getTime()
     assert.ok(prev >= next)
   }
 })
