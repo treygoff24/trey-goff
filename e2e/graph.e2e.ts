@@ -169,20 +169,18 @@ test.describe('Knowledge Graph Page', () => {
     test('should display all node types in legend', async ({ page }) => {
       await graphPage.expectGraphRendered()
 
-      const legend = page.locator('text=Legend').locator('..')
-
-      await expect(legend.getByText('Essays')).toBeVisible()
-      await expect(legend.getByText('Notes')).toBeVisible()
-      await expect(legend.getByText('Books')).toBeVisible()
-      await expect(legend.getByText('Tags')).toBeVisible()
+      await expect(graphPage.legend).toBeVisible()
+      await expect(graphPage.legend.getByText('Essays', { exact: true })).toBeVisible()
+      await expect(graphPage.legend.getByText('Notes', { exact: true })).toBeVisible()
+      await expect(graphPage.legend.getByText('Books', { exact: true })).toBeVisible()
+      await expect(graphPage.legend.getByText('Tags', { exact: true })).toBeVisible()
     })
 
     test('should display colored indicators for each type', async ({ page }) => {
       await graphPage.expectGraphRendered()
 
       // Each legend item should have a colored circle
-      const legend = page.locator('text=Legend').locator('..')
-      const colorIndicators = legend.locator('.rounded-full')
+      const colorIndicators = graphPage.legend.locator('.rounded-full')
 
       const count = await colorIndicators.count()
       expect(count).toBeGreaterThanOrEqual(4) // At least 4 node types
@@ -192,26 +190,26 @@ test.describe('Knowledge Graph Page', () => {
   test.describe('Navigation help', () => {
     test('should show click instruction', async ({ page }) => {
       await graphPage.expectGraphRendered()
-      await expect(page.getByText('Click:')).toBeVisible()
-      await expect(page.getByText('Select node')).toBeVisible()
+      await expect(graphPage.navigationHelp.getByText('Click:')).toBeVisible()
+      await expect(graphPage.navigationHelp.getByText('Select node')).toBeVisible()
     })
 
     test('should show drag instruction', async ({ page }) => {
       await graphPage.expectGraphRendered()
-      await expect(page.getByText('Drag:')).toBeVisible()
-      await expect(page.getByText('Pan view')).toBeVisible()
+      await expect(graphPage.navigationHelp.getByText('Drag:')).toBeVisible()
+      await expect(graphPage.navigationHelp.getByText('Pan view')).toBeVisible()
     })
 
     test('should show scroll instruction', async ({ page }) => {
       await graphPage.expectGraphRendered()
-      await expect(page.getByText('Scroll:')).toBeVisible()
-      await expect(page.getByText('Zoom in/out')).toBeVisible()
+      await expect(graphPage.navigationHelp.getByText('Scroll:')).toBeVisible()
+      await expect(graphPage.navigationHelp.getByText('Zoom in/out')).toBeVisible()
     })
 
     test('should show hover instruction', async ({ page }) => {
       await graphPage.expectGraphRendered()
-      await expect(page.getByText('Hover:')).toBeVisible()
-      await expect(page.getByText('Highlight connections')).toBeVisible()
+      await expect(graphPage.navigationHelp.getByText('Hover:')).toBeVisible()
+      await expect(graphPage.navigationHelp.getByText('Highlight connections')).toBeVisible()
     })
   })
 })

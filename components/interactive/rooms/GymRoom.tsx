@@ -8,7 +8,12 @@ import * as THREE from "three";
 import { THREE_COLORS } from "@/lib/interactive/colors";
 import { DoorTrigger } from "../DoorTrigger";
 import type { RoomId } from "@/lib/interactive/types";
-import type { LiftsManifest, LiftsManifestEntry } from "@/lib/interactive/manifest-types";
+import type {
+	LiftName,
+	LiftRecord,
+	LiftsManifest,
+	LiftsManifestEntry,
+} from "@/lib/interactive/manifest-types";
 
 // =============================================================================
 // Types
@@ -598,7 +603,7 @@ function PRPlaque({
 	position,
 }: {
 	lift: LiftName;
-	pr: PRRecord;
+	pr: LiftRecord;
 	position: [number, number, number];
 }) {
 	const meshRef = useRef<THREE.Mesh>(null);
@@ -695,7 +700,7 @@ function PlaqueWall({
 	total,
 }: {
 	lifts: LiftsManifestEntry[];
-	total: TotalEntry;
+	total: LiftRecord;
 }) {
 	const squat = lifts.find((l) => l.lift === "squat");
 	const bench = lifts.find((l) => l.lift === "bench");
@@ -728,9 +733,15 @@ function PlaqueWall({
 			</Text>
 
 			{/* Individual lift plaques */}
-			{squat && <PRPlaque position={[-2.5, 0, 0]} />}
-			{bench && <PRPlaque position={[0, 0, 0]} />}
-			{deadlift && <PRPlaque position={[2.5, 0, 0]} />}
+			{squat && (
+				<PRPlaque lift={squat.lift} pr={squat.pr} position={[-2.5, 0, 0]} />
+			)}
+			{bench && (
+				<PRPlaque lift={bench.lift} pr={bench.pr} position={[0, 0, 0]} />
+			)}
+			{deadlift && (
+				<PRPlaque lift={deadlift.lift} pr={deadlift.pr} position={[2.5, 0, 0]} />
+			)}
 
 			{/* Total plaque */}
 			<group position={[0, -1.6, 0]}>
@@ -941,7 +952,7 @@ export function GymRoom({ debug = false, onDoorActivate }: GymRoomProps) {
 
 			{/* PR Wall */}
 			{!loading && liftsData && (
-				<PlaqueWall lifts={liftsData.lifts} />
+				<PlaqueWall lifts={liftsData.lifts} total={liftsData.total} />
 			)}
 
 			{/* Door to Main Hall */}

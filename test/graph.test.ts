@@ -173,8 +173,9 @@ describe('graph edges', () => {
       assert.ok(edge.target.startsWith('tag-'), 'Tag edge target should be a tag node')
       assert.ok(
         edge.source.startsWith('essay-') ||
-          edge.source.startsWith('note-'),
-        'Tag edge source should be essay or note'
+          edge.source.startsWith('note-') ||
+          edge.source.startsWith('transmission-'),
+        'Tag edge source should be essay, note, or transmission'
       )
     }
   })

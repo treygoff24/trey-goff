@@ -491,12 +491,20 @@ function Pillars() {
  */
 function AmbientParticles() {
 	const count = 50;
+	const seededRandom = (seed: number) => {
+		const x = Math.sin(seed) * 10000;
+		return x - Math.floor(x);
+	};
 	const positions = useMemo(() => {
 		const pos = new Float32Array(count * 3);
 		for (let i = 0; i < count; i++) {
-			pos[i * 3] = (Math.random() - 0.5) * HALL_WIDTH * 0.8;
-			pos[i * 3 + 1] = Math.random() * HALL_HEIGHT * 0.8 + 1;
-			pos[i * 3 + 2] = (Math.random() - 0.5) * HALL_DEPTH * 0.8;
+			const baseSeed = i + 1;
+			const xRand = seededRandom(baseSeed * 12.9898);
+			const yRand = seededRandom(baseSeed * 78.233);
+			const zRand = seededRandom(baseSeed * 39.425);
+			pos[i * 3] = (xRand - 0.5) * HALL_WIDTH * 0.8;
+			pos[i * 3 + 1] = yRand * HALL_HEIGHT * 0.8 + 1;
+			pos[i * 3 + 2] = (zRand - 0.5) * HALL_DEPTH * 0.8;
 		}
 		return pos;
 	}, []);
@@ -505,11 +513,15 @@ function AmbientParticles() {
 
 	useFrame((state) => {
 		if (!pointsRef.current) return;
-		const positions = pointsRef.current.geometry.attributes.position.array as Float32Array;
+		const positionAttribute = pointsRef.current.geometry.getAttribute("position");
+		if (!(positionAttribute instanceof THREE.BufferAttribute)) return;
+		const positions = positionAttribute.array as Float32Array;
 		for (let i = 0; i < count; i++) {
-			positions[i * 3 + 1] += Math.sin(state.clock.elapsedTime * 0.5 + i) * 0.002;
+			const index = i * 3 + 1;
+			const current = positions[index] ?? 0;
+			positions[index] = current + Math.sin(state.clock.elapsedTime * 0.5 + i) * 0.002;
 		}
-		pointsRef.current.geometry.attributes.position.needsUpdate = true;
+		positionAttribute.needsUpdate = true;
 	});
 
 	return (
@@ -517,9 +529,7 @@ function AmbientParticles() {
 			<bufferGeometry>
 				<bufferAttribute
 					attach="attributes-position"
-					count={count}
-					array={positions}
-					itemSize={3}
+					args={[positions, 3]}
 				/>
 			</bufferGeometry>
 			<pointsMaterial

@@ -5,6 +5,7 @@ import { BasePage } from './base.page'
  * Page object model for the Subscribe page and newsletter forms.
  */
 export class SubscribePage extends BasePage {
+  readonly form: Locator
   readonly emailInput: Locator
   readonly submitButton: Locator
   readonly errorMessage: Locator
@@ -12,10 +13,11 @@ export class SubscribePage extends BasePage {
 
   constructor(page: Page) {
     super(page)
-    this.emailInput = page.getByRole('textbox', { name: /email/i })
-    this.submitButton = page.getByRole('button', { name: /subscribe/i })
-    this.errorMessage = page.getByRole('alert')
-    this.successMessage = page.locator('.text-success')
+    this.form = page.getByTestId('subscribe-form')
+    this.emailInput = this.form.getByRole('textbox', { name: /email/i })
+    this.submitButton = this.form.getByRole('button', { name: /subscribe/i })
+    this.errorMessage = this.form.getByRole('alert')
+    this.successMessage = page.getByTestId('subscribe-success')
   }
 
   async gotoSubscribePage() {
@@ -36,9 +38,12 @@ export class SubscribePage extends BasePage {
   }
 
   async expectLoadingState() {
-    await expect(this.submitButton).toHaveText(/subscribing/i)
-    await expect(this.submitButton).toBeDisabled()
-    await expect(this.emailInput).toBeDisabled()
+    const loadingButton = this.page.getByRole('button', { name: /subscribing/i })
+    const loadingInput = this.page.getByRole('textbox', { name: /email/i })
+
+    await expect(loadingButton).toBeVisible()
+    await expect(loadingButton).toBeDisabled()
+    await expect(loadingInput).toBeDisabled()
   }
 
   async expectSuccessState() {
@@ -53,6 +58,7 @@ export class SubscribePage extends BasePage {
   }
 
   async expectFormVisible() {
+    await expect(this.form).toBeVisible()
     await expect(this.emailInput).toBeVisible()
     await expect(this.submitButton).toBeVisible()
     await expect(this.submitButton).toBeEnabled()
@@ -68,9 +74,13 @@ export class SubscribePage extends BasePage {
    * Get the compact subscribe form found in essay footers.
    */
   getCompactForm() {
+    const cta = this.page
+      .getByRole('heading', { name: 'Enjoyed this essay?' })
+      .locator('..')
     return {
-      emailInput: this.page.locator('.mt-16 input[type="email"]'),
-      submitButton: this.page.locator('.mt-16 button[type="submit"]'),
+      emailInput: cta.getByTestId('subscribe-form').locator('input[type="email"]'),
+      submitButton: cta.getByTestId('subscribe-form').locator('button[type="submit"]'),
+      successMessage: cta.getByTestId('subscribe-success'),
     }
   }
 }

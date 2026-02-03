@@ -41,6 +41,7 @@ export function SubscribeForm({ compact = false }: { compact?: boolean }) {
   if (status === 'success') {
     return (
       <div
+        data-testid="subscribe-success"
         className={cn(
           'rounded-lg border border-success/30 bg-success/10 p-6 text-center',
           compact && 'p-4'
@@ -52,7 +53,7 @@ export function SubscribeForm({ compact = false }: { compact?: boolean }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form data-testid="subscribe-form" onSubmit={handleSubmit} className="space-y-4">
       <div
         className={cn(
           'flex gap-3',

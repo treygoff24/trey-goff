@@ -11,6 +11,7 @@ export class CommandPalettePage extends BasePage {
   readonly emptyState: Locator
   readonly navigationGroup: Locator
   readonly actionsGroup: Locator
+  readonly loadingIndicator: Locator
 
   constructor(page: Page) {
     super(page)
@@ -18,9 +19,32 @@ export class CommandPalettePage extends BasePage {
     // cmdk uses a custom input without standard role, use placeholder selector
     this.searchInput = page.getByPlaceholder('Search everything...')
     this.commandList = page.locator('[cmdk-list]')
-    this.emptyState = page.getByText('No results found.')
+    this.emptyState = page.getByText('No results found')
     this.navigationGroup = page.getByRole('group', { name: 'Navigation' })
     this.actionsGroup = page.getByRole('group', { name: 'Actions' })
+    this.loadingIndicator = page.getByText('Loading search...')
+  }
+
+  async openCommandPalette() {
+    await super.openCommandPalette()
+    await this.waitForSearchIdle()
+  }
+
+  async openCommandPaletteByClick() {
+    await super.openCommandPaletteByClick()
+    await this.waitForSearchIdle()
+  }
+
+  async waitForSearchIdle() {
+    // Ensure the list is rendered before checking loading state
+    await expect(this.commandList).toBeVisible()
+    // If loading appears, wait for it to finish; otherwise continue
+    const loadingVisible = await this.loadingIndicator
+      .isVisible({ timeout: 1000 })
+      .catch(() => false)
+    if (loadingVisible) {
+      await expect(this.loadingIndicator).toBeHidden({ timeout: 10000 })
+    }
   }
 
   async search(query: string) {
@@ -33,10 +57,23 @@ export class CommandPalettePage extends BasePage {
     await this.searchInput.clear()
   }
 
-  async selectResult(text: string) {
-    // Use exact match to avoid ambiguity
-    const item = this.commandList.getByRole('option', { name: text, exact: true })
+  async selectResult(text: string, { exact = false }: { exact?: boolean } = {}) {
+    await expect
+      .poll(async () => this.commandList.getByRole('option').count(), {
+        timeout: 10000,
+      })
+      .toBeGreaterThan(0)
+
+    const name = exact
+      ? new RegExp(`^${escapeRegExp(text)}(?:\\s+G\\s+\\w+)?$`)
+      : text
+    const item = this.commandList.getByRole('option', { name }).first()
+    await expect(item).toBeVisible()
     await item.click()
+  }
+
+  async selectResultExact(text: string) {
+    await this.selectResult(text, { exact: true })
   }
 
   async selectResultByKeyboard(text: string) {
@@ -87,4 +124,8 @@ export class CommandPalettePage extends BasePage {
     const results = await this.getVisibleResults()
     expect(results.length).toBeGreaterThanOrEqual(minCount)
   }
+}
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }

@@ -190,7 +190,7 @@ export function generateSearchIndex(): SearchIndex {
       tags: book.topics,
       keywords: [book.author, book.genre || ''].filter(Boolean),
       url: `/library#${book.id}`,
-      priority: book.rating === 5 ? 7 : book.whyILoveIt ? 6 : 5,
+      priority: book.rating === 5 ? 7 : 5,
     })
   }
 

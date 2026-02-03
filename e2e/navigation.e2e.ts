@@ -13,12 +13,12 @@ test.describe('Navigation - Desktop', () => {
 
   test.describe('Top navigation', () => {
     test('should display site logo/name', async ({ page }) => {
-      await expect(page.getByRole('link', { name: 'Trey' })).toBeVisible()
+      await expect(basePage.topNav.getByRole('link', { name: 'Trey', exact: true })).toBeVisible()
     })
 
     test('should navigate to home when clicking logo', async ({ page }) => {
       await page.goto('/about')
-      await page.getByRole('link', { name: 'Trey' }).click()
+      await basePage.topNav.getByRole('link', { name: 'Trey', exact: true }).click()
       await expect(page).toHaveURL('/')
     })
 
@@ -162,12 +162,12 @@ test.describe('Navigation - Mobile', () => {
 
   test.describe('Mobile search', () => {
     test('should display mobile search button', async ({ page }) => {
-      const searchButton = page.getByRole('button', { name: 'Search' })
+      const searchButton = basePage.topNav.getByRole('button', { name: 'Search', exact: true })
       await expect(searchButton).toBeVisible()
     })
 
     test('should open command palette when clicking mobile search', async ({ page }) => {
-      const searchButton = page.getByRole('button', { name: 'Search' })
+      const searchButton = basePage.topNav.getByRole('button', { name: 'Search', exact: true })
       await searchButton.click()
 
       await expect(page.getByRole('dialog')).toBeVisible()

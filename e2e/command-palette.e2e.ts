@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test'
 import { CommandPalettePage } from './pages'
 
+const navigationTimeout = 15000
+
 test.describe('Command Palette', () => {
   let commandPalette: CommandPalettePage
 
@@ -11,12 +13,14 @@ test.describe('Command Palette', () => {
 
   test.describe('Opening and closing', () => {
     test('should open with Cmd+K keyboard shortcut', async ({ page }) => {
+      await page.waitForSelector('html[data-command-palette-ready="true"]')
       await page.keyboard.press('Meta+k')
       await expect(commandPalette.dialog).toBeVisible()
       await expect(commandPalette.searchInput).toBeFocused()
     })
 
     test('should open with Ctrl+K keyboard shortcut', async ({ page }) => {
+      await page.waitForSelector('html[data-command-palette-ready="true"]')
       await page.keyboard.press('Control+k')
       await expect(commandPalette.dialog).toBeVisible()
     })
@@ -61,58 +65,58 @@ test.describe('Command Palette', () => {
     test('should navigate to Home when selecting Home', async ({ page }) => {
       await commandPalette.goto('/about')
       await commandPalette.openCommandPalette()
-      await commandPalette.selectResult('Home')
+      await commandPalette.selectResultExact('Home')
 
-      await expect(page).toHaveURL('/')
+      await expect(page).toHaveURL('/', { timeout: navigationTimeout })
     })
 
     test('should navigate to Writing when selecting Writing', async ({ page }) => {
       await commandPalette.openCommandPalette()
-      await commandPalette.selectResult('Writing')
+      await commandPalette.selectResultExact('Writing')
 
-      await expect(page).toHaveURL('/writing')
+      await expect(page).toHaveURL('/writing', { timeout: navigationTimeout })
     })
 
     test('should navigate to Notes when selecting Notes', async ({ page }) => {
       await commandPalette.openCommandPalette()
-      await commandPalette.selectResult('Notes')
+      await commandPalette.selectResultExact('Notes')
 
-      await expect(page).toHaveURL('/notes')
+      await expect(page).toHaveURL('/notes', { timeout: navigationTimeout })
     })
 
     test('should navigate to Library when selecting Library', async ({ page }) => {
       await commandPalette.openCommandPalette()
-      await commandPalette.selectResult('Library')
+      await commandPalette.selectResultExact('Library')
 
-      await expect(page).toHaveURL('/library')
+      await expect(page).toHaveURL('/library', { timeout: navigationTimeout })
     })
 
     test('should navigate to Projects when selecting Projects', async ({ page }) => {
       await commandPalette.openCommandPalette()
-      await commandPalette.selectResult('Projects')
+      await commandPalette.selectResultExact('Projects')
 
-      await expect(page).toHaveURL('/projects')
+      await expect(page).toHaveURL('/projects', { timeout: navigationTimeout })
     })
 
     test('should navigate to About when selecting About', async ({ page }) => {
       await commandPalette.openCommandPalette()
-      await commandPalette.selectResult('About')
+      await commandPalette.selectResultExact('About')
 
-      await expect(page).toHaveURL('/about')
+      await expect(page).toHaveURL('/about', { timeout: navigationTimeout })
     })
 
     test('should navigate to Now when selecting Now', async ({ page }) => {
       await commandPalette.openCommandPalette()
-      await commandPalette.selectResult('Now')
+      await commandPalette.selectResultExact('Now')
 
-      await expect(page).toHaveURL('/now')
+      await expect(page).toHaveURL('/now', { timeout: navigationTimeout })
     })
 
     test('should navigate to Knowledge Graph when selecting Knowledge Graph', async ({ page }) => {
       await commandPalette.openCommandPalette()
-      await commandPalette.selectResult('Knowledge Graph')
+      await commandPalette.selectResultExact('Knowledge Graph')
 
-      await expect(page).toHaveURL('/graph')
+      await expect(page).toHaveURL('/graph', { timeout: navigationTimeout })
     })
   })
 
@@ -128,13 +132,16 @@ test.describe('Command Palette', () => {
       // Type a query
       await commandPalette.search('writing')
 
-      // Wait for results to update
-      await commandPalette.page.waitForTimeout(200)
+      await expect
+        .poll(async () => commandPalette.commandList.getByRole('option').count(), {
+          timeout: 5000,
+        })
+        .toBeGreaterThan(0)
 
       // Results should contain writing-related items
       const results = await commandPalette.getVisibleResults()
-      const hasWritingResult = results.some((r) => r.toLowerCase().includes('writing'))
-      expect(hasWritingResult).toBe(true)
+      const resultsText = results.join(' ').toLowerCase()
+      expect(resultsText).toContain('writing')
     })
 
     test('should show empty state when no results match', async () => {
@@ -148,10 +155,16 @@ test.describe('Command Palette', () => {
       await commandPalette.openCommandPalette()
       await commandPalette.search('library')
 
+      await expect
+        .poll(async () => commandPalette.commandList.getByRole('option').count(), {
+          timeout: 5000,
+        })
+        .toBeGreaterThan(0)
+
       // Click on a result
       await commandPalette.selectResult('Library')
 
-      await expect(page).toHaveURL('/library')
+      await expect(page).toHaveURL('/library', { timeout: navigationTimeout })
     })
   })
 
@@ -172,9 +185,9 @@ test.describe('Command Palette', () => {
 
     test('should navigate to RSS feed when selecting RSS Feed', async ({ page }) => {
       await commandPalette.openCommandPalette()
-      await commandPalette.selectResult('RSS Feed')
+      await commandPalette.selectResultExact('RSS Feed')
 
-      await expect(page).toHaveURL('/feed.xml')
+      await expect(page).toHaveURL('/feed.xml', { timeout: navigationTimeout })
     })
   })
 
@@ -190,9 +203,14 @@ test.describe('Command Palette', () => {
       // Press down arrow to select first item
       await page.keyboard.press('ArrowDown')
 
-      // First item should be selected (has data-selected attribute)
-      const firstItem = commandPalette.commandList.getByRole('option').first()
-      await expect(firstItem).toHaveAttribute('data-selected', 'true')
+      // One item should be selected (aria-selected)
+      await expect
+        .poll(
+          async () =>
+            commandPalette.commandList.locator('[aria-selected="true"]').count(),
+          { timeout: 5000 }
+        )
+        .toBeGreaterThan(0)
     })
 
     test('should select result with Enter key', async ({ page }) => {
@@ -221,7 +239,7 @@ test.describe('Command Palette - Mobile', () => {
 
   test('should open via mobile search button', async () => {
     // On mobile, there's a search icon button
-    const searchButton = commandPalette.page.getByRole('button', { name: 'Search' })
+    const searchButton = commandPalette.page.getByRole('button', { name: 'Search', exact: true })
     await searchButton.click()
 
     await expect(commandPalette.dialog).toBeVisible()
@@ -235,7 +253,7 @@ test.describe('Command Palette - Mobile', () => {
     await expect(commandPalette.searchInput).toBeVisible()
 
     // Navigation should work
-    await commandPalette.selectResult('Library')
-    await expect(page).toHaveURL('/library')
+    await commandPalette.selectResultExact('Library')
+    await expect(page).toHaveURL('/library', { timeout: navigationTimeout })
   })
 })

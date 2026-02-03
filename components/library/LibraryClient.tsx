@@ -114,7 +114,7 @@ export function LibraryClient() {
 
         {/* Book grid */}
         <main className="flex-1">
-          <div className="mb-4 text-sm text-text-3">
+          <div className="mb-4 text-sm text-text-3" data-testid="library-book-count">
             {filteredBooks.length} book{filteredBooks.length !== 1 ? 's' : ''}
           </div>
 

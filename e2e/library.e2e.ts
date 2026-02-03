@@ -1,13 +1,17 @@
 import { test, expect } from '@playwright/test'
 import { LibraryPage } from './pages'
 
-test.describe('Library Page', () => {
+test.describe('Library Page - Classic', () => {
   let libraryPage: LibraryPage
 
   test.beforeEach(async ({ page }) => {
     libraryPage = new LibraryPage(page)
     await libraryPage.gotoLibraryPage()
     await libraryPage.waitForPageLoad()
+
+    if (!(await libraryPage.isClassicMode())) {
+      test.skip(true, '3D library active')
+    }
   })
 
   test.describe('Page display', () => {
@@ -39,7 +43,6 @@ test.describe('Library Page', () => {
       const initialCount = await libraryPage.getBookCount()
       await libraryPage.filterByStatus('Read')
 
-      // Count may change (fewer or equal books)
       const filteredCount = await libraryPage.getBookCount()
       expect(filteredCount).toBeLessThanOrEqual(initialCount)
     })
@@ -47,7 +50,6 @@ test.describe('Library Page', () => {
     test('should filter by Reading status', async () => {
       await libraryPage.filterByStatus('Reading')
 
-      // Should show reading books or no results
       const count = await libraryPage.getBookCount()
       expect(count).toBeGreaterThanOrEqual(0)
     })
@@ -70,7 +72,6 @@ test.describe('Library Page', () => {
     })
 
     test('should show no results message when filter matches nothing', async () => {
-      // Filter by abandoned - may have no books
       await libraryPage.filterByStatus('Abandoned')
 
       const count = await libraryPage.getBookCount()
@@ -84,12 +85,10 @@ test.describe('Library Page', () => {
     test('should filter by topic', async ({ page }) => {
       const initialCount = await libraryPage.getBookCount()
 
-      // Find a topic button and click it
       const topicButtons = page.locator('text=Topic').locator('..').locator('button')
       const topicCount = await topicButtons.count()
 
       if (topicCount > 1) {
-        // Click second button (first is "All")
         await topicButtons.nth(1).click()
 
         const filteredCount = await libraryPage.getBookCount()
@@ -100,7 +99,6 @@ test.describe('Library Page', () => {
     test('should clear topic filter when clicking All', async ({ page }) => {
       const initialCount = await libraryPage.getBookCount()
 
-      // Apply a topic filter
       const topicButtons = page.locator('text=Topic').locator('..').locator('button')
       const topicCount = await topicButtons.count()
 
@@ -121,8 +119,6 @@ test.describe('Library Page', () => {
 
     test('should sort by Title', async () => {
       await libraryPage.sortBy('Title')
-
-      // Page should still show books (sorting doesn't filter)
       await libraryPage.expectBooksDisplayed()
     })
 
@@ -149,14 +145,11 @@ test.describe('Library Page', () => {
 
   test.describe('Book detail modal', () => {
     test('should open book detail modal when clicking a book', async ({ page }) => {
-      // Wait for books to load
       await page.waitForSelector('.grid h3', { timeout: 10000 })
 
-      // Click the first book card (div with cursor-pointer)
       const firstBook = page.locator('.grid .cursor-pointer').first()
       await firstBook.click()
 
-      // Modal should be visible
       await libraryPage.expectBookDetailVisible()
     })
 
@@ -165,12 +158,10 @@ test.describe('Library Page', () => {
       const firstBook = page.locator('.grid .cursor-pointer').first()
       await firstBook.click()
 
-      // Modal should show book title
       await expect(page.locator('.fixed h2')).toBeVisible()
 
-      // Should show author (text below title)
       const modal = page.locator('.fixed.inset-0').filter({ has: page.locator('h2') })
-      await expect(modal.locator('p.text-lg')).toBeVisible() // Author
+      await expect(modal.locator('p.text-lg')).toBeVisible()
     })
 
     test('should close modal when clicking backdrop', async ({ page }) => {
@@ -180,8 +171,6 @@ test.describe('Library Page', () => {
 
       await libraryPage.expectBookDetailVisible()
 
-      // Click on the backdrop (bg-black/80 div) at a corner away from modal content
-      // The modal content is centered, so click near the edge
       const backdrop = page.locator('.fixed.inset-0 > .absolute.inset-0')
       const box = await backdrop.boundingBox()
       if (box) {
@@ -198,7 +187,6 @@ test.describe('Library Page', () => {
 
       await libraryPage.expectBookDetailVisible()
 
-      // Click the close button (X)
       const closeButton = page.locator('.fixed button').filter({ has: page.locator('svg') }).first()
       await closeButton.click()
 
@@ -219,7 +207,6 @@ test.describe('Library Page', () => {
       await page.waitForSelector('.grid h3', { timeout: 10000 })
       const firstTitle = page.locator('.grid h3').first()
 
-      // Card should have title text
       await expect(firstTitle).toContainText(/.+/)
     })
 
@@ -227,7 +214,6 @@ test.describe('Library Page', () => {
       await page.waitForSelector('.grid h3', { timeout: 10000 })
       const firstCard = page.locator('.grid .cursor-pointer').first()
 
-      // Should have either an img or a text placeholder
       const hasImage = await firstCard.locator('img').count()
       const hasPlaceholder = await firstCard.locator('.bg-surface-1').count()
 
@@ -236,13 +222,43 @@ test.describe('Library Page', () => {
   })
 })
 
-test.describe('Library Page - Mobile', () => {
+test.describe('Library Page - 3D', () => {
+  let libraryPage: LibraryPage
+
+  test.beforeEach(async ({ page }) => {
+    libraryPage = new LibraryPage(page)
+    await libraryPage.gotoLibraryPage()
+    await libraryPage.waitForPageLoad()
+
+    if (!(await libraryPage.is3DMode())) {
+      test.skip(true, 'Classic library fallback active')
+    }
+  })
+
+  test('should render the 3D canvas', async ({ page }) => {
+    await expect(page.locator('canvas:visible').first()).toBeVisible()
+  })
+
+  test('should show the library filters HUD', async ({ page }) => {
+    await expect(page.getByRole('region', { name: 'Library filters' })).toBeVisible()
+  })
+
+  test('should expose quality settings control', async ({ page }) => {
+    await expect(page.getByRole('button', { name: 'Quality settings' })).toBeVisible()
+  })
+})
+
+test.describe('Library Page - Mobile (Classic)', () => {
   test.use({ viewport: { width: 375, height: 667 } })
 
   test('should display books in responsive grid on mobile', async ({ page }) => {
     const libraryPage = new LibraryPage(page)
     await libraryPage.gotoLibraryPage()
     await libraryPage.waitForPageLoad()
+
+    if (!(await libraryPage.isClassicMode())) {
+      test.skip(true, '3D library active')
+    }
 
     await libraryPage.expectBooksDisplayed()
   })
@@ -251,6 +267,10 @@ test.describe('Library Page - Mobile', () => {
     const libraryPage = new LibraryPage(page)
     await libraryPage.gotoLibraryPage()
     await page.waitForSelector('.grid h3', { timeout: 10000 })
+
+    if (!(await libraryPage.isClassicMode())) {
+      test.skip(true, '3D library active')
+    }
 
     const firstBook = page.locator('.grid .cursor-pointer').first()
     await firstBook.click()
@@ -262,7 +282,10 @@ test.describe('Library Page - Mobile', () => {
     const libraryPage = new LibraryPage(page)
     await libraryPage.gotoLibraryPage()
 
-    // Status filter buttons should be visible
+    if (!(await libraryPage.isClassicMode())) {
+      test.skip(true, '3D library active')
+    }
+
     await expect(page.getByRole('button', { name: 'All', exact: true })).toBeVisible()
     await expect(page.getByRole('button', { name: 'Read', exact: true })).toBeVisible()
   })

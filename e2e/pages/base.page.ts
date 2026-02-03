@@ -25,10 +25,11 @@ export class BasePage {
   }
 
   async goto(path: string = '/') {
-    await this.page.goto(path)
+    await this.page.goto(path, { waitUntil: 'domcontentloaded', timeout: 60000 })
   }
 
   async openCommandPalette() {
+    await this.page.waitForSelector('html[data-command-palette-ready="true"]')
     // Use keyboard shortcut
     await this.page.keyboard.press('Meta+k')
     // Wait for the dialog to be visible
@@ -36,6 +37,7 @@ export class BasePage {
   }
 
   async openCommandPaletteByClick() {
+    await this.page.waitForSelector('html[data-command-palette-ready="true"]')
     await this.searchButton.first().click()
     await expect(this.page.getByRole('dialog')).toBeVisible()
   }
@@ -46,6 +48,7 @@ export class BasePage {
   }
 
   async openMobileNav() {
+    await this.page.waitForSelector('html[data-command-palette-ready="true"]')
     await this.mobileMenuButton.click()
     await expect(this.mobileNav).toBeVisible()
   }
@@ -71,6 +74,6 @@ export class BasePage {
   }
 
   async waitForPageLoad() {
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 }

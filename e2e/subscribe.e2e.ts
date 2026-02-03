@@ -58,9 +58,14 @@ test.describe('Newsletter Subscribe Form - Subscribe Page', () => {
 
   test.describe('Form submission', () => {
     test('should show loading state during submission', async ({ page }) => {
-      // Mock the API to be slow
+      // Hold the API response so we can assert loading state deterministically
+      let releaseResponse: (() => void) | null = null
+      const pendingResponse = new Promise<void>((resolve) => {
+        releaseResponse = resolve
+      })
+
       await page.route('/api/subscribe', async (route) => {
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        await pendingResponse
         await route.fulfill({
           status: 200,
           contentType: 'application/json',
@@ -72,8 +77,8 @@ test.describe('Newsletter Subscribe Form - Subscribe Page', () => {
       await subscribePage.submit()
 
       // Check loading state
-      await expect(subscribePage.submitButton).toContainText(/subscribing/i)
-      await expect(subscribePage.submitButton).toBeDisabled()
+      await subscribePage.expectLoadingState()
+      releaseResponse?.()
     })
 
     test('should show success state after successful submission', async ({ page }) => {
@@ -168,20 +173,23 @@ test.describe('Newsletter Subscribe Form - Subscribe Page', () => {
 test.describe('Newsletter Subscribe Form - Essay Footer', () => {
   test.beforeEach(async ({ page }) => {
     // We need an actual essay to test. Let's go to writing first to find one.
-    await page.goto('/writing')
+    await page.goto('/writing', { waitUntil: 'domcontentloaded' })
   })
 
   test('should display newsletter CTA at bottom of essays', async ({ page }) => {
+    const subscribePage = new SubscribePage(page)
     // Click on first essay if available
     const essayLinks = page.locator('article a')
     const count = await essayLinks.count()
 
     if (count > 0) {
       await essayLinks.first().click()
-      await page.waitForLoadState('networkidle')
+      await expect(page.locator('article h1')).toBeVisible({ timeout: 15000 })
 
       // Newsletter CTA should be visible
-      await expect(page.getByText('Enjoyed this essay?')).toBeVisible()
+      await expect(
+        page.getByRole('heading', { name: 'Enjoyed this essay?' })
+      ).toBeVisible()
     } else {
       // Skip test if no essays available
       test.skip()
@@ -189,29 +197,31 @@ test.describe('Newsletter Subscribe Form - Essay Footer', () => {
   })
 
   test('should have compact subscribe form in essay footer', async ({ page }) => {
+    const subscribePage = new SubscribePage(page)
     const essayLinks = page.locator('article a')
     const count = await essayLinks.count()
 
     if (count > 0) {
       await essayLinks.first().click()
-      await page.waitForLoadState('networkidle')
+      await expect(page.locator('article h1')).toBeVisible({ timeout: 15000 })
 
       // Compact form should have email input and subscribe button
-      const ctaSection = page.locator('.mt-16').filter({ hasText: 'Enjoyed this essay?' })
-      await expect(ctaSection.locator('input[type="email"]')).toBeVisible()
-      await expect(ctaSection.locator('button[type="submit"]')).toBeVisible()
+      const compactForm = subscribePage.getCompactForm()
+      await expect(compactForm.emailInput).toBeVisible()
+      await expect(compactForm.submitButton).toBeVisible()
     } else {
       test.skip()
     }
   })
 
   test('compact form should submit successfully', async ({ page }) => {
+    const subscribePage = new SubscribePage(page)
     const essayLinks = page.locator('article a')
     const count = await essayLinks.count()
 
     if (count > 0) {
       await essayLinks.first().click()
-      await page.waitForLoadState('networkidle')
+      await expect(page.locator('article h1')).toBeVisible({ timeout: 15000 })
 
       // Mock successful API response
       await page.route('/api/subscribe', async (route) => {
@@ -222,12 +232,12 @@ test.describe('Newsletter Subscribe Form - Essay Footer', () => {
         })
       })
 
-      const ctaSection = page.locator('.mt-16').filter({ hasText: 'Enjoyed this essay?' })
-      await ctaSection.locator('input[type="email"]').fill('test@example.com')
-      await ctaSection.locator('button[type="submit"]').click()
+      const compactForm = subscribePage.getCompactForm()
+      await compactForm.emailInput.fill('test@example.com')
+      await compactForm.submitButton.click()
 
       // Success message should appear
-      await expect(page.locator('.text-success')).toBeVisible()
+      await expect(compactForm.successMessage).toBeVisible()
     } else {
       test.skip()
     }

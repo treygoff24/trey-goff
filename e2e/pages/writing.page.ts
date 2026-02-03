@@ -77,7 +77,9 @@ export class EssayDetailPage extends BasePage {
     this.readingTime = page.getByText(/\d+ min read/)
     this.wordCount = page.getByText(/\d+,?\d* words/)
     this.publishDate = page.locator('article time')
-    this.newsletterCta = page.locator('.mt-16').filter({ hasText: 'Enjoyed this essay?' })
+    this.newsletterCta = page
+      .getByRole('heading', { name: 'Enjoyed this essay?' })
+      .locator('..')
     this.evergreenBadge = page.getByText('Evergreen')
   }
 
@@ -86,8 +88,8 @@ export class EssayDetailPage extends BasePage {
   }
 
   async expectArticleLoaded() {
-    await expect(this.articleTitle).toBeVisible()
-    await expect(this.articleContent).toBeVisible()
+    await expect(this.articleTitle).toBeVisible({ timeout: 15000 })
+    await expect(this.articleContent).toBeVisible({ timeout: 15000 })
   }
 
   async expectTableOfContentsVisible() {

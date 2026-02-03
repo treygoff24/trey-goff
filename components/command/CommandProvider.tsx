@@ -26,6 +26,7 @@ export function CommandPaletteProvider({ children }: { children: ReactNode }) {
 
   // Global keyboard shortcut: Cmd+K / Ctrl+K
   useEffect(() => {
+    document.documentElement.dataset.commandPaletteReady = 'true'
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault()
@@ -34,7 +35,10 @@ export function CommandPaletteProvider({ children }: { children: ReactNode }) {
     }
 
     document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
+    return () => {
+      delete document.documentElement.dataset.commandPaletteReady
+      document.removeEventListener('keydown', handleKeyDown)
+    }
   }, [toggle])
 
   return (

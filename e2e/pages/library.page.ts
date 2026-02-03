@@ -25,7 +25,7 @@ export class LibraryPage extends BasePage {
     this.bookCountText = page.locator('text=/\\d+ books?/')
     this.statusFilterButtons = page.locator('text=Status').locator('..').locator('button')
     this.topicFilterButtons = page.locator('text=Topic').locator('..').locator('button')
-    this.sortSelect = page.getByRole('combobox')
+    this.sortSelect = page.getByLabel('Sort by')
     this.bookDetailModal = page.locator('.fixed.inset-0').filter({ has: page.locator('h2') })
     this.modalCloseButton = page.locator('.fixed button').filter({ has: page.locator('svg') }).first()
     this.noResultsMessage = page.getByText('No books match the current filters.')
@@ -34,6 +34,16 @@ export class LibraryPage extends BasePage {
 
   async gotoLibraryPage() {
     await this.goto('/library')
+  }
+
+  async isClassicMode(): Promise<boolean> {
+    const countLabel = this.page.getByTestId('library-book-count')
+    return countLabel.isVisible().catch(() => false)
+  }
+
+  async is3DMode(): Promise<boolean> {
+    const hud = this.page.getByRole('region', { name: 'Library filters' })
+    return hud.isVisible().catch(() => false)
   }
 
   async filterByStatus(status: 'All' | 'Read' | 'Reading' | 'Want to Read' | 'Abandoned') {
@@ -52,7 +62,8 @@ export class LibraryPage extends BasePage {
   }
 
   async sortBy(option: 'Title' | 'Author' | 'Year' | 'Rating' | 'Date Read') {
-    await this.sortSelect.selectOption(option.toLowerCase().replace(' ', '-'))
+    const value = option === 'Date Read' ? 'dateRead' : option.toLowerCase()
+    await this.sortSelect.selectOption(value)
   }
 
   async clickFirstBook() {
@@ -101,7 +112,9 @@ export class LibraryPage extends BasePage {
   }
 
   async getBookCount(): Promise<number> {
-    const text = await this.page.locator('text=/\\d+ books?/').textContent()
+    if (!(await this.isClassicMode())) return 0
+
+    const text = await this.page.getByTestId('library-book-count').textContent()
     const match = text?.match(/(\d+)/)
     return match?.[1] ? parseInt(match[1], 10) : 0
   }

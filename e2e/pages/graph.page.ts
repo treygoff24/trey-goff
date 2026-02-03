@@ -10,6 +10,7 @@ export class GraphPage extends BasePage {
   readonly filterButtons: Locator
   readonly nodeInspector: Locator
   readonly legend: Locator
+  readonly legendItems: Locator
   readonly navigationHelp: Locator
   readonly statsText: Locator
   readonly loadingIndicator: Locator
@@ -17,11 +18,12 @@ export class GraphPage extends BasePage {
   constructor(page: Page) {
     super(page)
     this.pageTitle = page.getByRole('heading', { name: /Knowledge Graph/i, level: 1 })
-    this.graphCanvas = page.locator('canvas')
+    this.graphCanvas = page.locator('canvas.sigma-mouse')
     this.filterButtons = page.locator('button').filter({ hasText: /Essays|Notes|Books|Tags|Ideas/ })
     this.nodeInspector = page.locator('text=Select a node').locator('..').locator('..')
-    this.legend = page.locator('text=Legend').locator('..')
-    this.navigationHelp = page.locator('text=Navigation').locator('..')
+    this.legend = this.mainContent.getByRole('heading', { name: 'Legend' }).locator('..')
+    this.legendItems = this.legend.locator('.text-text-2')
+    this.navigationHelp = this.mainContent.getByRole('heading', { name: 'Navigation' }).locator('..')
     this.statsText = page.locator('text=/\\d+ nodes/')
     this.loadingIndicator = page.getByText('Loading graph...')
   }
@@ -86,16 +88,16 @@ export class GraphPage extends BasePage {
   async expectLegendVisible() {
     await expect(this.legend).toBeVisible()
     // Legend should show all node types
-    await expect(this.page.getByText('Essays')).toBeVisible()
-    await expect(this.page.getByText('Notes')).toBeVisible()
-    await expect(this.page.getByText('Books')).toBeVisible()
-    await expect(this.page.getByText('Tags')).toBeVisible()
+    await expect(this.legendItems.getByText('Essays', { exact: true })).toBeVisible()
+    await expect(this.legendItems.getByText('Notes', { exact: true })).toBeVisible()
+    await expect(this.legendItems.getByText('Books', { exact: true })).toBeVisible()
+    await expect(this.legendItems.getByText('Tags', { exact: true })).toBeVisible()
   }
 
   async expectNavigationHelpVisible() {
     await expect(this.navigationHelp).toBeVisible()
-    await expect(this.page.getByText('Click:')).toBeVisible()
-    await expect(this.page.getByText('Drag:')).toBeVisible()
-    await expect(this.page.getByText('Scroll:')).toBeVisible()
+    await expect(this.navigationHelp.getByText('Click:')).toBeVisible()
+    await expect(this.navigationHelp.getByText('Drag:')).toBeVisible()
+    await expect(this.navigationHelp.getByText('Scroll:')).toBeVisible()
   }
 }

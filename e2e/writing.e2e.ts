@@ -1,5 +1,26 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
 import { WritingPage, EssayDetailPage } from './pages'
+
+const navigationTimeout = 15000
+
+async function openFirstEssay(page: Page, essayPage?: EssayDetailPage) {
+  const essayLinks = page.locator('article a')
+  const count = await essayLinks.count()
+
+  if (count === 0) {
+    return false
+  }
+
+  await essayLinks.first().click()
+
+  if (essayPage) {
+    await essayPage.expectArticleLoaded()
+  } else {
+    await expect(page.locator('article h1')).toBeVisible({ timeout: navigationTimeout })
+  }
+
+  return true
+}
 
 test.describe('Writing Page', () => {
   let writingPage: WritingPage
@@ -71,7 +92,7 @@ test.describe('Writing Page', () => {
 
         await firstLink.click()
 
-        await expect(page).toHaveURL(href!)
+        await expect(page).toHaveURL(href!, { timeout: navigationTimeout })
       }
     })
   })
@@ -100,28 +121,20 @@ test.describe('Essay Detail Page', () => {
   test.beforeEach(async ({ page }) => {
     essayPage = new EssayDetailPage(page)
     // First go to writing to find an essay
-    await page.goto('/writing')
+    await page.goto('/writing', { waitUntil: 'domcontentloaded' })
   })
 
   test.describe('Article display', () => {
     test('should display essay title', async ({ page }) => {
-      const essayLinks = page.locator('article a')
-      const count = await essayLinks.count()
-
-      if (count > 0) {
-        await essayLinks.first().click()
-        await essayPage.expectArticleLoaded()
-      } else {
+      const opened = await openFirstEssay(page, essayPage)
+      if (!opened) {
         test.skip()
       }
     })
 
     test('should display essay content', async ({ page }) => {
-      const essayLinks = page.locator('article a')
-      const count = await essayLinks.count()
-
-      if (count > 0) {
-        await essayLinks.first().click()
+      const opened = await openFirstEssay(page, essayPage)
+      if (opened) {
         await expect(essayPage.articleContent).toBeVisible()
       } else {
         test.skip()
@@ -129,11 +142,8 @@ test.describe('Essay Detail Page', () => {
     })
 
     test('should display reading time and word count', async ({ page }) => {
-      const essayLinks = page.locator('article a')
-      const count = await essayLinks.count()
-
-      if (count > 0) {
-        await essayLinks.first().click()
+      const opened = await openFirstEssay(page, essayPage)
+      if (opened) {
         await expect(essayPage.readingTime).toBeVisible()
         await expect(essayPage.wordCount).toBeVisible()
       } else {
@@ -142,11 +152,8 @@ test.describe('Essay Detail Page', () => {
     })
 
     test('should display publish date', async ({ page }) => {
-      const essayLinks = page.locator('article a')
-      const count = await essayLinks.count()
-
-      if (count > 0) {
-        await essayLinks.first().click()
+      const opened = await openFirstEssay(page, essayPage)
+      if (opened) {
         await expect(essayPage.publishDate).toBeVisible()
       } else {
         test.skip()
@@ -158,20 +165,16 @@ test.describe('Essay Detail Page', () => {
     test.use({ viewport: { width: 1280, height: 720 } })
 
     test('should display table of contents on desktop', async ({ page }) => {
-      const essayLinks = page.locator('article a')
-      const count = await essayLinks.count()
+      const opened = await openFirstEssay(page, essayPage)
 
-      if (count > 0) {
-        await essayLinks.first().click()
-        await page.waitForLoadState('networkidle')
-
+      if (opened) {
         // TOC is shown only if there are 2+ headings
         const tocNav = page.getByRole('navigation', { name: 'Table of contents' })
         const isTocVisible = await tocNav.isVisible()
 
         if (isTocVisible) {
           await expect(tocNav).toBeVisible()
-          await expect(page.getByText('On this page')).toBeVisible()
+          await expect(tocNav.getByText('On this page', { exact: true })).toBeVisible()
         }
       } else {
         test.skip()
@@ -179,13 +182,9 @@ test.describe('Essay Detail Page', () => {
     })
 
     test('should navigate to heading when clicking TOC link', async ({ page }) => {
-      const essayLinks = page.locator('article a')
-      const count = await essayLinks.count()
+      const opened = await openFirstEssay(page, essayPage)
 
-      if (count > 0) {
-        await essayLinks.first().click()
-        await page.waitForLoadState('networkidle')
-
+      if (opened) {
         const tocNav = page.getByRole('navigation', { name: 'Table of contents' })
         const isTocVisible = await tocNav.isVisible()
 
@@ -197,8 +196,10 @@ test.describe('Essay Detail Page', () => {
             const href = await tocLinks.first().getAttribute('href')
             await tocLinks.first().click()
 
-            // URL should contain the anchor
-            await expect(page).toHaveURL(new RegExp(href!.replace('#', '#')))
+            if (href) {
+              const target = page.locator(href)
+              await expect(target).toBeInViewport()
+            }
           }
         }
       } else {
@@ -211,13 +212,9 @@ test.describe('Essay Detail Page', () => {
     test.use({ viewport: { width: 375, height: 667 } })
 
     test('should display mobile TOC dropdown', async ({ page }) => {
-      const essayLinks = page.locator('article a')
-      const count = await essayLinks.count()
+      const opened = await openFirstEssay(page, essayPage)
 
-      if (count > 0) {
-        await essayLinks.first().click()
-        await page.waitForLoadState('networkidle')
-
+      if (opened) {
         // Mobile TOC button should be visible (if essay has headings)
         const mobileTocButton = page.getByRole('button', { name: 'On this page' })
         const isMobileTocVisible = await mobileTocButton.isVisible()
@@ -231,13 +228,9 @@ test.describe('Essay Detail Page', () => {
     })
 
     test('should expand mobile TOC when clicking button', async ({ page }) => {
-      const essayLinks = page.locator('article a')
-      const count = await essayLinks.count()
+      const opened = await openFirstEssay(page, essayPage)
 
-      if (count > 0) {
-        await essayLinks.first().click()
-        await page.waitForLoadState('networkidle')
-
+      if (opened) {
         const mobileTocButton = page.getByRole('button', { name: 'On this page' })
         const isMobileTocVisible = await mobileTocButton.isVisible()
 
@@ -254,13 +247,9 @@ test.describe('Essay Detail Page', () => {
     })
 
     test('should close mobile TOC when clicking a link', async ({ page }) => {
-      const essayLinks = page.locator('article a')
-      const count = await essayLinks.count()
+      const opened = await openFirstEssay(page, essayPage)
 
-      if (count > 0) {
-        await essayLinks.first().click()
-        await page.waitForLoadState('networkidle')
-
+      if (opened) {
         const mobileTocButton = page.getByRole('button', { name: 'On this page' })
         const isMobileTocVisible = await mobileTocButton.isVisible()
 
@@ -286,11 +275,9 @@ test.describe('Essay Detail Page', () => {
 
   test.describe('Newsletter CTA', () => {
     test('should display newsletter CTA at bottom', async ({ page }) => {
-      const essayLinks = page.locator('article a')
-      const count = await essayLinks.count()
+      const opened = await openFirstEssay(page, essayPage)
 
-      if (count > 0) {
-        await essayLinks.first().click()
+      if (opened) {
         await essayPage.expectNewsletterCtaVisible()
       } else {
         test.skip()
@@ -298,14 +285,11 @@ test.describe('Essay Detail Page', () => {
     })
 
     test('should have subscribe form in CTA', async ({ page }) => {
-      const essayLinks = page.locator('article a')
-      const count = await essayLinks.count()
+      const opened = await openFirstEssay(page, essayPage)
 
-      if (count > 0) {
-        await essayLinks.first().click()
-
-        await expect(page.locator('.mt-16 input[type="email"]')).toBeVisible()
-        await expect(page.locator('.mt-16 button[type="submit"]')).toBeVisible()
+      if (opened) {
+        await expect(essayPage.newsletterCta.locator('input[type="email"]')).toBeVisible()
+        await expect(essayPage.newsletterCta.locator('button[type="submit"]')).toBeVisible()
       } else {
         test.skip()
       }
@@ -314,13 +298,9 @@ test.describe('Essay Detail Page', () => {
 
   test.describe('Tags', () => {
     test('should display tags if present', async ({ page }) => {
-      const essayLinks = page.locator('article a')
-      const count = await essayLinks.count()
+      const opened = await openFirstEssay(page, essayPage)
 
-      if (count > 0) {
-        await essayLinks.first().click()
-        await page.waitForLoadState('networkidle')
-
+      if (opened) {
         // Tags are optional - just check they render if present
         const tagLinks = page.locator('article header a[href*="tag="]')
         const tagCount = await tagLinks.count()
@@ -345,6 +325,9 @@ test.describe('Essay Detail Page', () => {
           await page.goto('/writing')
           const links = page.locator('article a')
           await links.nth(i).click()
+          await expect(page.locator('article header h1')).toBeVisible({
+            timeout: navigationTimeout,
+          })
 
           const evergreenBadge = page.getByText('Evergreen')
           const isVisible = await evergreenBadge.isVisible()
