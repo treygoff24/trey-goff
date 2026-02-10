@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { satoshi, newsreader, monaspace } from "@/lib/fonts";
+import { connection } from "next/server";
 
 export const metadata: Metadata = {
 	title: "Interactive World — Trey Goff",
@@ -15,11 +16,14 @@ export const metadata: Metadata = {
  * Intentionally excludes TopNav, Footer, CommandPalette to avoid
  * polluting the 3D experience and to maintain bundle isolation.
  */
-export default function InteractiveLayout({
+export default async function InteractiveLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	// Keep this route dynamic so nonce-based CSP can be attached to framework inline scripts.
+	await connection();
+
 	return (
 		<div
 			className={`${satoshi.variable} ${newsreader.variable} ${monaspace.variable} min-h-screen bg-bg-0`}

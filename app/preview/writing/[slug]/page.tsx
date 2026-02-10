@@ -8,7 +8,7 @@ import {
 } from '@/components/writing/TableOfContents'
 import { Prose } from '@/components/content/Prose'
 import { markdownToHtml } from '@/lib/markdown'
-import { timingSafeEqual } from 'crypto'
+import { canAccessDraftPreview } from '@/lib/preview-auth'
 
 export const dynamic = 'force-dynamic'
 
@@ -34,15 +34,11 @@ export default async function EssayPreviewPage({
     ? searchParamsResolved?.secret[0]
     : searchParamsResolved?.secret
 
-  const isProduction = process.env.NODE_ENV === 'production'
-  const previewSecret = process.env.DRAFT_PREVIEW_SECRET
-
-  const secretBuffer = Buffer.from(secretParam || '')
-  const expectedBuffer = Buffer.from(previewSecret || '')
-  const isValidSecret = secretBuffer.length === expectedBuffer.length &&
-    timingSafeEqual(secretBuffer, expectedBuffer)
-
-  const canPreview = !isProduction || isValidSecret
+  const canPreview = canAccessDraftPreview({
+    nodeEnv: process.env.NODE_ENV,
+    providedSecret: secretParam,
+    previewSecret: process.env.DRAFT_PREVIEW_SECRET,
+  })
 
   if (!canPreview) {
     notFound()
