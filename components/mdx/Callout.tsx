@@ -43,7 +43,7 @@ export function Callout({ type = 'info', title, children }: CalloutProps) {
     >
       {title && (
         <div className="mb-2 flex items-center gap-2 font-satoshi font-medium text-text-1">
-          <span>{styles.icon}</span>
+          <span aria-hidden="true">{styles.icon}</span>
           <span>{title}</span>
         </div>
       )}

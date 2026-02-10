@@ -1,5 +1,7 @@
-import { GraphClient } from '@/components/graph/GraphClient'
 import { generateGraphData } from '@/lib/graph/generate'
+import { GraphClient } from '@/components/graph/GraphClient'
+
+export const revalidate = 3600
 
 export const metadata = {
   title: 'Graph',

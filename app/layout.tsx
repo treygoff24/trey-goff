@@ -4,6 +4,7 @@ import { TopNav } from "@/components/layout/TopNav";
 import { Footer } from "@/components/layout/Footer";
 import { CommandPaletteProvider, CommandPalette } from "@/components/command";
 import { EasterEggs } from "@/components/easter-eggs/EasterEggs";
+import { generateOrganizationSchema } from "@/lib/structured-data";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -14,6 +15,16 @@ export const metadata: Metadata = {
 	description:
 		"Governance, acceleration zones, and institutional innovation for a faster future.",
 	metadataBase: new URL("https://trey.world"),
+	alternates: {
+		canonical: "https://trey.world",
+		types: {
+			"application/rss+xml": [
+				{ url: "/feed.xml", title: "Trey Goff RSS Feed" },
+				{ url: "/writing/feed.xml", title: "Writing RSS Feed" },
+				{ url: "/notes/feed.xml", title: "Notes RSS Feed" },
+			],
+		},
+	},
 	openGraph: {
 		type: "website",
 		locale: "en_US",
@@ -44,12 +55,20 @@ export default function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const organizationSchema = generateOrganizationSchema();
+
 	return (
 		<html
 			lang="en"
 			className={`${satoshi.variable} ${newsreader.variable} ${monaspace.variable}`}
 		>
 			<body className="flex min-h-screen flex-col isolate">
+				<script
+					type="application/ld+json"
+					dangerouslySetInnerHTML={{
+						__html: JSON.stringify(organizationSchema),
+					}}
+				/>
 				<CommandPaletteProvider>
 					{/* Skip link for accessibility */}
 					<a
@@ -59,7 +78,7 @@ export default function RootLayout({
 						Skip to main content
 					</a>
 					<TopNav />
-					<main id="main-content" className="flex-1" tabIndex={-1}>
+					<main id="main-content" className="flex-1 outline-none" tabIndex={-1}>
 						{children}
 					</main>
 					<Footer />

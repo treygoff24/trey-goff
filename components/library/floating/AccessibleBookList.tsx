@@ -68,6 +68,7 @@ export function AccessibleBookList({ books }: AccessibleBookListProps) {
 
   return (
     <div
+      id="accessible-book-list"
       className="sr-only"
       role="region"
       aria-label="Book library (accessible list)"

@@ -135,6 +135,7 @@ export function MobileTableOfContents({
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex w-full items-center justify-between rounded-lg border border-border-1 bg-surface-1 px-4 py-3"
+        aria-expanded={isOpen}
       >
         <span className="font-satoshi text-sm font-medium text-text-2">
           On this page

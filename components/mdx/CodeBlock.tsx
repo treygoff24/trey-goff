@@ -51,7 +51,7 @@ export function CodeBlock({ children, className, title }: CodeBlockProps) {
       {!title && !language && (
         <button
           onClick={handleCopy}
-          className="absolute right-2 top-2 rounded-md bg-surface-1 p-2 text-text-3 opacity-0 transition-all hover:bg-surface-2 hover:text-text-2 group-hover:opacity-100"
+          className="absolute right-2 top-2 rounded-md bg-surface-1 p-2 text-text-3 opacity-0 transition-all hover:bg-surface-2 hover:text-text-2 group-hover:opacity-100 focus-visible:opacity-100"
           aria-label={copied ? 'Copied!' : 'Copy code'}
         >
           {copied ? (

@@ -505,6 +505,13 @@ html[data-konami='true'] a {
   box-shadow: 0 8px 30px -8px rgba(245, 162, 90, 0.12);
 }
 
+.card-interactive:focus-visible {
+  outline: 2px solid var(--color-warm);
+  outline-offset: 2px;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px -8px rgba(245, 162, 90, 0.12);
+}
+
 /* Link underline animation */
 .link-underline {
   position: relative;

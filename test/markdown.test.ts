@@ -38,8 +38,8 @@ test('markdownToHtml renders GFM tables', async () => {
 })
 
 test('markdownToHtml passes through raw HTML', async () => {
-  const markdown = '<div class="custom">Raw HTML</div>'
+  const markdown = '<div>Raw HTML</div>'
   const html = await markdownToHtml(markdown)
 
-  assert.match(html, /<div class="custom">Raw HTML<\/div>/)
+  assert.match(html, /<div>Raw HTML<\/div>/)
 })

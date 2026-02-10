@@ -10,7 +10,7 @@ import { Prose } from '@/components/content/Prose'
 import { RelatedLinks } from '@/components/content/RelatedLinks'
 import { SubscribeForm } from '@/components/newsletter/SubscribeForm'
 import { markdownToHtml } from '@/lib/markdown'
-import { generateArticleSchema } from '@/lib/structured-data'
+import { generateArticleSchema, generateBreadcrumbSchema } from '@/lib/structured-data'
 import { getBacklinksForEssay, getOutgoingLinksForEssay } from '@/lib/backlinks'
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -57,6 +57,11 @@ export default async function EssayPage({ params }: PageProps) {
     date: essay.date,
     slug: essay.slug,
   })
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: 'Home', url: 'https://trey.world' },
+    { name: 'Writing', url: 'https://trey.world/writing' },
+    { name: essay.title, url: `https://trey.world/writing/${essay.slug}` },
+  ])
   const outgoingLinks = getOutgoingLinksForEssay(essay.slug)
   const backlinks = getBacklinksForEssay(essay.slug)
 
@@ -66,6 +71,12 @@ export default async function EssayPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(articleSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema),
         }}
       />
       <article className="mx-auto max-w-4xl px-4 py-16">

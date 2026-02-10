@@ -68,7 +68,8 @@ export function AppearanceCard({
         {thumbnail ? (
           <Image
             src={thumbnail}
-            alt={appearance.title}
+            alt=""
+            aria-hidden="true"
             fill
             className="object-cover transition-transform group-hover:scale-105"
             unoptimized

@@ -11,6 +11,8 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
       ".content-collections/**",
+      "test/.broken/**",
+      "verify-arch.cjs",
     ],
   },
   {

@@ -2,11 +2,9 @@
 
 import { useState, useMemo, useEffect } from 'react'
 import {
-  getAllBooks,
   getAllTopics,
   sortBooks,
   filterBooks,
-  getReadingStats,
   getBooksReadByYear,
   getRatingDistribution,
   getTopicBreakdown,
@@ -22,7 +20,11 @@ interface CoverMap {
   [bookId: string]: string
 }
 
-export function LibraryClient() {
+interface LibraryClientProps {
+  books: Book[]
+}
+
+export function LibraryClient({ books }: LibraryClientProps) {
   const [statusFilter, setStatusFilter] = useState<BookStatus | null>(null)
   const [topicFilter, setTopicFilter] = useState<string | null>(null)
   const [sortBy, setSortBy] = useState<
@@ -41,30 +43,39 @@ export function LibraryClient() {
       })
   }, [])
 
-  const allBooks = useMemo(() => getAllBooks(), [])
   const allTopics = useMemo(() => getAllTopics(), [])
-  const stats = useMemo(() => getReadingStats(), [])
-  const booksPerYear = useMemo(() => getBooksReadByYear(allBooks), [allBooks])
+
+  const stats = useMemo(() => {
+    const read = books.filter((b) => b.status === 'read').length
+    const fiveStarBooks = books.filter((b) => b.rating === 5).length
+    const ratedBooks = books.filter((b) => b.rating !== undefined)
+    const averageRating = ratedBooks.length
+      ? ratedBooks.reduce((sum, b) => sum + (b.rating || 0), 0) / ratedBooks.length
+      : 0
+    return { total: books.length, read, fiveStarBooks, averageRating }
+  }, [books])
+
+  const booksPerYear = useMemo(() => getBooksReadByYear(books), [books])
   const ratingDistribution = useMemo(
-    () => getRatingDistribution(allBooks),
-    [allBooks]
+    () => getRatingDistribution(books),
+    [books]
   )
-  const topicBreakdown = useMemo(() => getTopicBreakdown(allBooks), [allBooks])
+  const topicBreakdown = useMemo(() => getTopicBreakdown(books), [books])
 
   const filteredBooks = useMemo(() => {
-    let books = allBooks
+    let filteredList = books
 
     // Apply filters
-    books = filterBooks(books, {
+    filteredList = filterBooks(filteredList, {
       status: statusFilter ?? undefined,
       topic: topicFilter ?? undefined,
     })
 
     // Sort
-    books = sortBooks(books, sortBy)
+    filteredList = sortBooks(filteredList, sortBy)
 
-    return books
-  }, [allBooks, statusFilter, topicFilter, sortBy])
+    return filteredList
+  }, [books, statusFilter, topicFilter, sortBy])
 
   return (
     <>

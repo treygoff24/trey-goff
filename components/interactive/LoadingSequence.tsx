@@ -142,7 +142,7 @@ export function LoadingSequence({
 				<h1 className="font-satoshi text-3xl font-medium text-text-1">
 					Interactive World
 				</h1>
-				<p className="mt-2 text-text-2" aria-live="polite">
+				<p className="mt-2 text-text-2">
 					{PHASE_MESSAGES[phase]}
 				</p>
 			</div>

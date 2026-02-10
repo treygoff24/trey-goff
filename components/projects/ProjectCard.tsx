@@ -84,32 +84,32 @@ export function ProjectCard({ project }: ProjectCardProps) {
         )}
       </div>
 
-      <div className="mt-7 grid gap-6 md:grid-cols-2">
+      <dl className="mt-7 grid gap-6 md:grid-cols-2">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-text-3">Problem</p>
-          <p className="mt-2 text-sm leading-relaxed text-text-2">
+          <dt className="text-xs uppercase tracking-[0.2em] text-text-3">Problem</dt>
+          <dd className="mt-2 text-sm leading-relaxed text-text-2">
             {project.problem}
-          </p>
+          </dd>
         </div>
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-text-3">
+          <dt className="text-xs uppercase tracking-[0.2em] text-text-3">
             Approach
-          </p>
-          <p className="mt-2 text-sm leading-relaxed text-text-2">
+          </dt>
+          <dd className="mt-2 text-sm leading-relaxed text-text-2">
             {project.approach}
-          </p>
+          </dd>
         </div>
-      </div>
+      </dl>
 
       {project.roles.length > 0 && (
-        <div className="mt-7">
-          <p className="text-xs uppercase tracking-[0.2em] text-text-3">Roles</p>
-          <div className="mt-3 flex flex-wrap gap-2">
+        <dl className="mt-7">
+          <dt className="text-xs uppercase tracking-[0.2em] text-text-3">Roles</dt>
+          <dd className="mt-3 flex flex-wrap gap-2">
             {project.roles.map((role) => (
               <TagPill key={role} tag={role} />
             ))}
-          </div>
-        </div>
+          </dd>
+        </dl>
       )}
 
       {secondaryLinks.length > 0 && (

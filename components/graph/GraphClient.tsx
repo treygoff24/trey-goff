@@ -89,6 +89,7 @@ export function GraphClient({ data }: GraphClientProps) {
             <button
               key={type}
               onClick={() => toggleType(type)}
+              aria-pressed={visibleTypes.has(type) ? 'true' : 'false'}
               className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium transition-all ${
                 visibleTypes.has(type)
                   ? 'bg-surface-2 text-text-1'

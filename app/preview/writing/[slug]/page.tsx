@@ -8,6 +8,7 @@ import {
 } from '@/components/writing/TableOfContents'
 import { Prose } from '@/components/content/Prose'
 import { markdownToHtml } from '@/lib/markdown'
+import { timingSafeEqual } from 'crypto'
 
 export const dynamic = 'force-dynamic'
 
@@ -35,8 +36,13 @@ export default async function EssayPreviewPage({
 
   const isProduction = process.env.NODE_ENV === 'production'
   const previewSecret = process.env.DRAFT_PREVIEW_SECRET
-  const canPreview =
-    !isProduction || (previewSecret && secretParam === previewSecret)
+
+  const secretBuffer = Buffer.from(secretParam || '')
+  const expectedBuffer = Buffer.from(previewSecret || '')
+  const isValidSecret = secretBuffer.length === expectedBuffer.length &&
+    timingSafeEqual(secretBuffer, expectedBuffer)
+
+  const canPreview = !isProduction || isValidSecret
 
   if (!canPreview) {
     notFound()

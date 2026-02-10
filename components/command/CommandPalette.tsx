@@ -73,7 +73,7 @@ export function CommandPalette() {
       />
       <CommandList>
         {isLoading && (
-          <div className="flex items-center justify-center gap-2 py-6 text-sm text-text-3">
+          <div className="flex items-center justify-center gap-2 py-6 text-sm text-text-3" aria-live="polite">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-warm opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-warm" />

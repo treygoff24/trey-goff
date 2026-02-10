@@ -1,9 +1,9 @@
 "use client";
 
-import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
 import Link from "next/link";
 import type { MouseEvent } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useState } from "react";
 
 interface HolographicTileProps {
 	href: string;
@@ -21,57 +21,46 @@ export function HolographicTile({
 	index,
 }: HolographicTileProps) {
 	const reducedMotion = useReducedMotion();
-	const mouseX = useMotionValue(0);
-	const mouseY = useMotionValue(0);
+	const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
 	const handleMouseMove = ({ currentTarget, clientX, clientY }: MouseEvent) => {
 		if (reducedMotion) return;
 		const { left, top } = currentTarget.getBoundingClientRect();
-		mouseX.set(clientX - left);
-		mouseY.set(clientY - top);
+		setMousePos({ x: clientX - left, y: clientY - top });
 	};
+
+	const animationDelay = reducedMotion ? "0s" : `${0.2 + index * 0.1}s`;
+	const animationClass = reducedMotion ? "" : "animate-fade-in-up";
 
 	return (
 		<Link href={href} className="group relative block h-full">
-			<motion.div
-				initial={reducedMotion ? false : { opacity: 0, y: 20 }}
-				animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
-				transition={
-					reducedMotion
-						? { duration: 0 }
-						: { delay: 0.2 + index * 0.1, duration: 0.5 }
-				}
+			<div
 				onMouseMove={handleMouseMove}
-				className="relative h-full overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02] p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.04] hover:shadow-2xl"
+				className={`holographic-tile relative h-full overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02] p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.04] hover:shadow-2xl ${animationClass}`}
+				style={
+					{
+						animationDelay,
+						"--mouse-x": `${mousePos.x}px`,
+						"--mouse-y": `${mousePos.y}px`,
+					} as React.CSSProperties
+				}
 			>
 				{/* Glow Highlight Pattern */}
 				{!reducedMotion && (
-					<motion.div
+					<div
 						className="pointer-events-none absolute -inset-px rounded-xl opacity-0 transition duration-300 group-hover:opacity-100"
 						style={{
-							background: useMotionTemplate`
-              radial-gradient(
-                650px circle at ${mouseX}px ${mouseY}px,
-                rgba(245, 162, 90, 0.15),
-                transparent 80%
-              )
-            `,
+							background: `radial-gradient(650px circle at ${mousePos.x}px ${mousePos.y}px, rgba(245, 162, 90, 0.15), transparent 80%)`,
 						}}
 					/>
 				)}
 
 				{/* Border Glow */}
 				{!reducedMotion && (
-					<motion.div
+					<div
 						className="pointer-events-none absolute -inset-px rounded-xl opacity-0 transition duration-300 group-hover:opacity-100"
 						style={{
-							background: useMotionTemplate`
-                    radial-gradient(
-                        600px circle at ${mouseX}px ${mouseY}px,
-                        rgba(245, 162, 90, 0.4),
-                        transparent 40%
-                    )
-                `,
+							background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(245, 162, 90, 0.4), transparent 40%)`,
 							zIndex: 1,
 						}}
 					/>
@@ -96,7 +85,7 @@ export function HolographicTile({
 				<div className="absolute right-0 top-0 p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
 					<div className="h-1.5 w-1.5 rounded-full bg-warm/50" />
 				</div>
-			</motion.div>
+			</div>
 		</Link>
 	);
 }

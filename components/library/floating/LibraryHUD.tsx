@@ -146,14 +146,22 @@ export function LibraryHUD({ books }: LibraryHUDProps) {
       }
     }
 
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setShowQualityMenu(false)
+      }
+    }
+
     // Delay to avoid closing immediately from the button click
     const timeoutId = setTimeout(() => {
       document.addEventListener('click', handleClickOutside)
+      document.addEventListener('keydown', handleKeyDown)
     }, 0)
 
     return () => {
       clearTimeout(timeoutId)
       document.removeEventListener('click', handleClickOutside)
+      document.removeEventListener('keydown', handleKeyDown)
     }
   }, [showQualityMenu])
 
@@ -336,11 +344,14 @@ export function LibraryHUD({ books }: LibraryHUDProps) {
         {showQualityMenu && (
           <div
             ref={qualityMenuRef}
+            role="listbox"
             className="absolute left-0 top-full z-50 mt-1 w-48 rounded-lg bg-surface-1/95 p-1 shadow-lg backdrop-blur-sm"
           >
             {QUALITY_OPTIONS.map((option) => (
               <button
                 key={option.value}
+                role="option"
+                aria-selected={qualityLevel === option.value}
                 onClick={() => {
                   setQualityLevel(option.value)
                   setShowQualityMenu(false)

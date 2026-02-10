@@ -24,14 +24,14 @@ export function TransmissionCard({
       className={cn(
         'group relative block overflow-hidden rounded-lg',
         'border border-dashed border-border-2 bg-surface-1/50',
-        'transition-all duration-300',
+        'transition-all duration-300 motion-reduce:transition-none',
         'hover:border-warm/40 hover:bg-surface-1',
         'hover:shadow-[0_0_40px_-10px_rgba(255,184,107,0.25)]',
         isFeatured && 'md:flex md:items-stretch'
       )}
     >
       {/* Signal wave effect - left edge */}
-      <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-warm/0 via-warm/30 to-warm/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-warm/0 via-warm/30 to-warm/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 motion-reduce:transition-none" />
 
       {/* Animated signal rings on hover */}
       <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
@@ -39,7 +39,7 @@ export function TransmissionCard({
           <div className="signal-ring signal-ring-1" />
           <div className="signal-ring signal-ring-2" />
           <div className="signal-ring signal-ring-3" />
-          <Radio className="relative z-10 h-4 w-4 text-text-3 group-hover:text-warm transition-colors duration-300" />
+          <Radio className="relative z-10 h-4 w-4 text-text-3 group-hover:text-warm transition-colors duration-300 motion-reduce:transition-none" aria-hidden="true" />
         </div>
       </div>
 
@@ -57,7 +57,7 @@ export function TransmissionCard({
         {/* Title */}
         <h3
           className={cn(
-            'font-satoshi font-medium text-text-1 group-hover:text-warm transition-colors duration-200',
+            'font-satoshi font-medium text-text-1 group-hover:text-warm transition-colors duration-200 motion-reduce:transition-none',
             isFeatured ? 'text-xl mb-2' : 'text-lg mb-1.5'
           )}
         >
@@ -89,9 +89,9 @@ export function TransmissionCard({
         )}
 
         {/* External link indicator */}
-        <div className="flex items-center gap-2 text-sm text-text-3 group-hover:text-warm transition-colors duration-200">
+        <div className="flex items-center gap-2 text-sm text-text-3 group-hover:text-warm transition-colors duration-200 motion-reduce:transition-none">
           <span>Read on {transmission.publication}</span>
-          <ExternalLink className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          <ExternalLink className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none" aria-hidden="true" />
         </div>
       </div>
 

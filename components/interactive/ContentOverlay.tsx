@@ -141,6 +141,17 @@ export function ContentOverlay({
 	reducedMotion = false,
 }: ContentOverlayProps) {
 	const overlayRef = useRef<HTMLDivElement>(null);
+	const previouslyFocusedElementRef = useRef<HTMLElement | null>(null);
+
+	// Save focus on open and restore on close
+	useEffect(() => {
+		if (content) {
+			previouslyFocusedElementRef.current = document.activeElement as HTMLElement;
+		} else if (previouslyFocusedElementRef.current) {
+			previouslyFocusedElementRef.current.focus();
+			previouslyFocusedElementRef.current = null;
+		}
+	}, [content]);
 
 	// Close on Escape key
 	useEffect(() => {

@@ -85,7 +85,7 @@ export function BookCard({
         {book.rating && (
           <div className="absolute bottom-2 left-2 flex gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
             {Array.from({ length: book.rating }).map((_, i) => (
-              <Star key={i} className="h-3 w-3 fill-warm text-warm" />
+              <Star key={i} className="h-3 w-3 fill-warm text-warm" aria-hidden="true" />
             ))}
           </div>
         )}
@@ -108,7 +108,7 @@ export function BookCard({
 // Rating display component
 export function RatingStars({ rating }: { rating: number }) {
   return (
-    <div className="flex gap-0.5">
+    <div className="flex gap-0.5" aria-label={`Rating: ${rating} out of 5`}>
       {Array.from({ length: 5 }).map((_, i) => (
         <Star
           key={i}
@@ -116,6 +116,7 @@ export function RatingStars({ rating }: { rating: number }) {
             'h-4 w-4',
             i < rating ? 'fill-warm text-warm' : 'text-text-3'
           )}
+          aria-hidden="true"
         />
       ))}
     </div>

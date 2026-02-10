@@ -24,6 +24,8 @@ export default function LibraryPage() {
                 author: book.author,
                 isbn13: book.isbn13,
                 url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://trey.world'}/library#${book.id}`,
+                coverUrl: book.coverUrl,
+                year: book.year,
               })
             ),
           }}

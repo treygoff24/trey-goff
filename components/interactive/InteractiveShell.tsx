@@ -120,6 +120,13 @@ export function InteractiveShell({ className }: InteractiveShellProps) {
 	// Loading/playing state
 	return (
 		<div className={`relative h-screen w-screen ${className ?? ""}`}>
+			<a
+				href="#return-to-normal"
+				className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-warm focus:px-4 focus:py-2 focus:text-bg-0"
+				aria-label="Skip past 3D world to navigation"
+			>
+				Skip to content
+			</a>
 			{showWorld && (
 				<InteractiveWorld
 					qualityTier={selectedTier}
@@ -212,7 +219,7 @@ function EntryUI({
 					<label className="block text-sm font-medium text-text-2">
 						Quality Tier
 					</label>
-					<div className="grid grid-cols-4 gap-2">
+					<div className="grid grid-cols-4 gap-2" role="group" aria-label="Quality settings">
 						{(["auto", "low", "medium", "high"] as const).map((tier) => (
 							<button
 								key={tier}
@@ -329,6 +336,7 @@ function ErrorUI({
 function ReturnToNormalButton() {
 	return (
 		<Link
+			id="return-to-normal"
 			href="/"
 			prefetch={false}
 			className="fixed bottom-6 left-6 z-50 flex items-center gap-2 rounded-full border border-surface-2 bg-bg-0/80 px-4 py-2 text-sm text-text-2 backdrop-blur-sm transition-colors hover:border-text-3 hover:text-text-1"

@@ -35,7 +35,7 @@ interface FloatingLibraryWrapperProps {
 /**
  * Classic library fallback - used when WebGL not supported or user preference
  */
-function ClassicLibraryFallback() {
+function ClassicLibraryFallback({ books }: { books: Book[] }) {
   return (
     <div className="mx-auto max-w-6xl px-4 py-16">
       <header className="mb-12">
@@ -48,13 +48,13 @@ function ClassicLibraryFallback() {
         </p>
       </header>
 
-      <LibraryClient />
+      <LibraryClient books={books} />
     </div>
   )
 }
 
 export function FloatingLibraryWrapper({ books }: FloatingLibraryWrapperProps) {
   return (
-    <FloatingLibrary books={books} fallback={<ClassicLibraryFallback />} />
+    <FloatingLibrary books={books} fallback={<ClassicLibraryFallback books={books} />} />
   )
 }

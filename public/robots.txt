@@ -1,0 +1,10 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Disallow private routes
+Disallow: /api/
+Disallow: /preview/
+
+# Sitemap
+Sitemap: https://trey.world/sitemap.xml

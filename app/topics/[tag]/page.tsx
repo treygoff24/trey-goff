@@ -7,6 +7,7 @@ import { markdownToHtml } from '@/lib/markdown'
 import { cn } from '@/lib/utils'
 import { getTopicContent, getTopicsIndex } from '@/lib/topics'
 import { getBacklinksForNote, getOutgoingLinksForNote } from '@/lib/backlinks'
+import { generateBreadcrumbSchema } from '@/lib/structured-data'
 import type { Book } from '@/lib/books/types'
 
 interface PageProps {
@@ -20,10 +21,39 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps) {
   const { tag } = await params
   const topicTag = tag
+  const { essays, notes, books } = getTopicContent(topicTag)
+
+  const getLatestDate = (): string | undefined => {
+    const dates: number[] = []
+
+    for (const essay of essays) {
+      if (essay.date) dates.push(new Date(essay.date).getTime())
+    }
+
+    for (const note of notes) {
+      if (note.date) dates.push(new Date(note.date).getTime())
+    }
+
+    for (const book of books) {
+      const bookDate = book.dateRead || book.dateStarted || (book.year ? `${book.year}-01-01` : undefined)
+      if (bookDate) dates.push(new Date(bookDate).getTime())
+    }
+
+    if (dates.length === 0) {
+      return undefined
+    }
+
+    return new Date(Math.max(...dates)).toISOString()
+  }
+
+  const latestDate = getLatestDate()
 
   return {
     title: `${topicTag} - Topics`,
     description: `Signals about ${topicTag} across essays, notes, and books.`,
+    openGraph: {
+      ...(latestDate ? { modifiedTime: latestDate } : {}),
+    },
   }
 }
 
@@ -64,8 +94,21 @@ export default async function TopicPage({ params }: PageProps) {
     }))
   )
 
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: 'Home', url: 'https://trey.world' },
+    { name: 'Topics', url: 'https://trey.world/topics' },
+    { name: topicTag, url: `https://trey.world/topics/${topicTag}` },
+  ])
+
   return (
-    <div className="mx-auto max-w-5xl px-4 py-16">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema),
+        }}
+      />
+      <div className="mx-auto max-w-5xl px-4 py-16">
       <header className="mb-12">
         <Link href="/topics" className="text-sm text-text-3 hover:text-text-2">
           Back to topics
@@ -152,7 +195,8 @@ export default async function TopicPage({ params }: PageProps) {
           </div>
         )}
       </section>
-    </div>
+      </div>
+    </>
   )
 }
 

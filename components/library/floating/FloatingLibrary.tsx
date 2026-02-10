@@ -152,33 +152,45 @@ export function FloatingLibrary({ books, fallback }: FloatingLibraryProps) {
   return (
     <LibraryErrorBoundary fallback={fallback}>
       <div className="relative h-full w-full">
+        <a
+          href="#accessible-book-list"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-warm focus:px-4 focus:py-2 focus:text-bg-0"
+          aria-label="Skip past 3D content to book list"
+        >
+          Skip to content
+        </a>
         {!isReady && <LoadingState />}
 
-        <Canvas
-          dpr={[1, 2]}
-          frameloop="demand"
-          camera={{
-            fov: 60,
-            near: 0.1,
-            far: 3000,
-            position: [0, 20, 200],
-          }}
-          style={{
-            background: '#070A0F',
-            position: 'absolute',
-            inset: 0,
-          }}
-          onCreated={({ gl, invalidate }) => {
-            gl.setClearColor(0x070a0f, 1)
-            gl.toneMapping = THREE.NoToneMapping
-            gl.toneMappingExposure = 1.0
-            gl.outputColorSpace = THREE.SRGBColorSpace
-            glRef.current = gl
-            handleReady()
-            setTimeout(() => invalidate(), 100)
-          }}
-          aria-hidden="true"
+        <div
+          tabIndex={0}
+          className="absolute inset-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-warm"
+          aria-label="3D Library Canvas - Use arrow keys to navigate constellations"
         >
+          <Canvas
+            dpr={[1, 2]}
+            frameloop="demand"
+            camera={{
+              fov: 60,
+              near: 0.1,
+              far: 3000,
+              position: [0, 20, 200],
+            }}
+            style={{
+              background: '#070A0F',
+              position: 'absolute',
+              inset: 0,
+            }}
+            onCreated={({ gl, invalidate }) => {
+              gl.setClearColor(0x070a0f, 1)
+              gl.toneMapping = THREE.NoToneMapping
+              gl.toneMappingExposure = 1.0
+              gl.outputColorSpace = THREE.SRGBColorSpace
+              glRef.current = gl
+              handleReady()
+              setTimeout(() => invalidate(), 100)
+            }}
+            aria-hidden="true"
+          >
           <Suspense fallback={null}>
             <AnimationDriver />
             <CameraController reducedMotion={reducedMotion} />
@@ -198,6 +210,7 @@ export function FloatingLibrary({ books, fallback }: FloatingLibraryProps) {
             />
           </Suspense>
         </Canvas>
+        </div>
 
         {isReady && <LibraryBreadcrumb />}
         {isReady && <LibraryHUD books={books} />}

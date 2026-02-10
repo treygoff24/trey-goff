@@ -54,7 +54,7 @@ export function Footer() {
             <h3 className="font-mono text-xs font-medium uppercase tracking-wider text-text-3">
               Navigation
             </h3>
-            <nav className="grid grid-cols-2 gap-2">
+            <nav className="grid grid-cols-2 gap-2" aria-label="Footer navigation">
               {quickNav.map((link) => (
                 <Link
                   key={link.href}
@@ -110,7 +110,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           {/* Footer links */}
-          <nav className="flex flex-wrap justify-center gap-6">
+          <nav className="flex flex-wrap justify-center gap-6" aria-label="Footer links">
             {footerLinks.map((link) => (
               <Link
                 key={link.href}

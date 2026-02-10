@@ -56,7 +56,7 @@ export function NoteCard({
         {/* Anchor link */}
         <a
           href={`#${slug}`}
-          className="text-text-3 opacity-0 transition-opacity hover:text-text-2 group-hover:opacity-100"
+          className="text-text-3 opacity-0 transition-opacity hover:text-text-2 group-hover:opacity-100 focus-visible:opacity-100"
           aria-label="Link to this note"
         >
           #

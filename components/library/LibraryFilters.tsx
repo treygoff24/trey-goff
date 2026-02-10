@@ -50,6 +50,7 @@ export function LibraryFilters({
             <button
               key={status.value ?? 'all'}
               onClick={() => onStatusChange(status.value)}
+              aria-pressed={statusFilter === status.value}
               className={cn(
                 'rounded-full px-3 py-1 text-sm transition-colors',
                 statusFilter === status.value
@@ -71,6 +72,7 @@ export function LibraryFilters({
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => onTopicChange(null)}
+            aria-pressed={topicFilter === null}
             className={cn(
               'rounded-full px-3 py-1 text-sm transition-colors',
               topicFilter === null
@@ -84,6 +86,7 @@ export function LibraryFilters({
             <button
               key={topic}
               onClick={() => onTopicChange(topic)}
+              aria-pressed={topicFilter === topic}
               className={cn(
                 'rounded-full px-3 py-1 text-sm transition-colors',
                 topicFilter === topic
@@ -99,10 +102,11 @@ export function LibraryFilters({
 
       {/* Sort */}
       <div>
-        <label className="mb-2 block text-sm font-medium text-text-3">
+        <label htmlFor="sort-select" className="mb-2 block text-sm font-medium text-text-3">
           Sort by
         </label>
         <select
+          id="sort-select"
           value={sortBy}
           onChange={(e) =>
             onSortChange(e.target.value as LibraryFiltersProps['sortBy'])

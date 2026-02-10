@@ -56,6 +56,11 @@ export function BookDetailPanel() {
     const lastFocusable = focusableElements[focusableElements.length - 1]
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleClose()
+        return
+      }
+
       if (e.key !== 'Tab') return
 
       if (e.shiftKey) {
@@ -75,7 +80,7 @@ export function BookDetailPanel() {
 
     panel.addEventListener('keydown', handleKeyDown)
     return () => panel.removeEventListener('keydown', handleKeyDown)
-  }, [selectedBook])
+  }, [selectedBook, handleClose])
 
   if (!selectedBook) {
     return null

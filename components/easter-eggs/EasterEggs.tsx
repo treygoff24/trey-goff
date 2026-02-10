@@ -38,7 +38,7 @@ export function EasterEggs() {
   if (!toast) return null
 
   return (
-    <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full border border-border-1 bg-bg-1/90 px-4 py-2 text-xs uppercase tracking-[0.2em] text-text-2 shadow-lg backdrop-blur">
+    <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full border border-border-1 bg-bg-1/90 px-4 py-2 text-xs uppercase tracking-[0.2em] text-text-2 shadow-lg backdrop-blur" role="alert">
       {toast}
     </div>
   )

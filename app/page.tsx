@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { allEssays, allProjects } from "content-collections";
 import { HeroSection } from "@/components/home/HeroSection";
 import { SignalGrid } from "@/components/home/SignalGrid";
@@ -5,6 +6,18 @@ import { FeaturedProject } from "@/components/home/FeaturedProject";
 import { FeaturedWriting } from "@/components/home/FeaturedWriting";
 import { CTASection } from "@/components/home/CTASection";
 import { StarfieldClient } from "@/components/home/StarfieldClient";
+
+export const metadata: Metadata = {
+	title: "Trey Goff — Writer, Builder, Explorer",
+	description:
+		"Personal site of Trey Goff. Essays on governance, technology, and building. Books, projects, and a 3D floating library.",
+	openGraph: {
+		title: "Trey Goff — Writer, Builder, Explorer",
+		description:
+			"Personal site of Trey Goff. Essays on governance, technology, and building.",
+		type: "website",
+	},
+};
 
 export default function HomePage() {
   const isProduction = process.env.NODE_ENV === "production";

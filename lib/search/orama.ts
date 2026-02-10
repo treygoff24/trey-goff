@@ -1,8 +1,19 @@
 import { create, insert, search, type Orama } from '@orama/orama'
 import type { SearchDocument, SearchIndex } from './types'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let db: Orama<any> | null = null
+type OramaSchema = {
+  id: 'string'
+  type: 'string'
+  title: 'string'
+  description: 'string'
+  content: 'string'
+  tags: 'string[]'
+  url: 'string'
+  keywords: 'string[]'
+  priority: 'number'
+}
+
+let db: Orama<OramaSchema> | null = null
 let initPromise: Promise<void> | null = null
 
 export async function initializeSearch(): Promise<void> {
@@ -76,7 +87,12 @@ export async function searchDocuments(query: string): Promise<SearchResult[]> {
     return []
   }
 
-  const results = await search(db!, {
+  if (!db) {
+    console.error('Search database failed to initialize')
+    return []
+  }
+
+  const results = await search(db, {
     term: query,
     properties: ['title', 'description', 'content', 'tags', 'keywords'],
     boost: {

@@ -12,7 +12,7 @@
  *         public/assets/props/*.glb (compressed with content hash)
  */
 
-import { execSync } from "child_process";
+import { execFileSync } from "child_process";
 import { createHash } from "crypto";
 import * as fs from "fs";
 import * as path from "path";
@@ -132,28 +132,30 @@ async function compressAsset(
 
 	try {
 		// Step 1: Apply Meshopt compression
-		const meshoptCmd = [
-			"npx gltf-transform optimize",
-			`"${sourcePath}"`,
-			`"${tempPath}"`,
-			"--compress meshopt",
-		].join(" ");
-
-		execSync(meshoptCmd, { stdio: "pipe" });
+		execFileSync(
+			"npx",
+			[
+				"gltf-transform",
+				"optimize",
+				sourcePath,
+				tempPath,
+				"--compress",
+				"meshopt",
+			],
+			{ stdio: "pipe" }
+		);
 
 		// Step 2: Apply KTX2 texture compression
 		// Note: Requires KTX-Software CLI tools installed
 		// For CI, we'll skip KTX2 if toktx isn't available
 		const ktx2Mode = useUastc ? "uastc" : "etc1s";
-		const ktx2Cmd = [
-			"npx gltf-transform ktx2",
-			`"${tempPath}"`,
-			`"${outputPath}"`,
-			`--mode ${ktx2Mode}`,
-		].join(" ");
 
 		try {
-			execSync(ktx2Cmd, { stdio: "pipe" });
+			execFileSync(
+				"npx",
+				["gltf-transform", "ktx2", tempPath, outputPath, "--mode", ktx2Mode],
+				{ stdio: "pipe" }
+			);
 			// Remove temp file
 			fs.unlinkSync(tempPath);
 		} catch {
