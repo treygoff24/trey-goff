@@ -92,6 +92,15 @@ describe('formatDateRelative', () => {
     assert.equal(result, 'Yesterday')
   })
 
+  test('returns "Yesterday" across the spring DST boundary', (t) => {
+    t.mock.timers.enable({ apis: ['Date'], now: new Date('2024-03-11T00:30:00-05:00') })
+
+    const result = formatDateRelative('2024-03-10T00:30:00-06:00')
+
+    assert.equal(result, 'Yesterday')
+    t.mock.timers.reset()
+  })
+
   test('returns "X days ago" for 2-6 days ago', () => {
     const daysAgo = (n: number) => {
       const date = new Date()
@@ -147,7 +156,7 @@ describe('formatDateRelative', () => {
     // String from yesterday
     const yesterday = new Date()
     yesterday.setDate(yesterday.getDate() - 1)
-    const isoString = yesterday.toISOString().split('T')[0]!
+    const isoString = yesterday.toISOString()
     const result = formatDateRelative(isoString)
     assert.equal(result, 'Yesterday')
   })

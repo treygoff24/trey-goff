@@ -12,8 +12,9 @@ function toDirectiveMap(csp: string): Map<string, string> {
       .filter(Boolean)
       .map((directive) => {
         const [name, ...value] = directive.split(/\s+/)
-        return [name, value.join(' ')]
+        return name ? ([name, value.join(' ')] as const) : null
       })
+      .filter((entry): entry is readonly [string, string] => entry !== null)
   )
 }
 
@@ -21,10 +22,13 @@ test('next config includes static security headers and no static CSP', async () 
   assert.ok(nextConfig.headers, 'headers function should be defined')
 
   const headers = await nextConfig.headers!()
-  assert.equal(headers.length, 1, 'should have a single catch-all route for static headers')
-  assert.equal(headers[0].source, '/:path*', 'static headers should apply to all routes')
+  const staticHeaders = headers[0]
 
-  const headerMap = new Map(headers[0].headers!.map((h) => [h.key, h.value]))
+  assert.equal(headers.length, 1, 'should have a single catch-all route for static headers')
+  assert.ok(staticHeaders, 'expected a catch-all static headers entry')
+  assert.equal(staticHeaders.source, '/:path*', 'static headers should apply to all routes')
+
+  const headerMap = new Map((staticHeaders.headers ?? []).map((h) => [h.key, h.value] as const))
   assert.equal(headerMap.get('X-Frame-Options'), 'DENY')
   assert.equal(headerMap.get('X-Content-Type-Options'), 'nosniff')
   assert.equal(headerMap.get('Referrer-Policy'), 'strict-origin-when-cross-origin')
