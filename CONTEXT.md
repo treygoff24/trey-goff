@@ -1,111 +1,38 @@
-# Project Context — Living Nebula v3
+# Project Context
 
-**Last Updated**: Phase 0 - Pre-flight (IN PROGRESS)
+**Last Updated**: 2026-03-09
 
-## Protocol Reminder
+## Current Snapshot
 
-**The Loop**: IMPLEMENT → TYPECHECK → LINT → BUILD → TEST → REVIEW → FIX → SLOP REMOVAL → COMMIT
+- Repo: Trey Goff's personal site built with Next.js 16 and React 19
+- Package manager: `pnpm@9.15.1`
+- Styling: Tailwind CSS v4 with shared tokens in `app/globals.css`
+- Content pipeline: MDX content plus generated search, cover, manifest, and compressed asset artifacts
+- Interactive stack: Three.js with React Three Fiber, Drei, Rapier, graph tooling, and Framer Motion
+- State and validation: Zustand and Zod
 
-**Quality gates before review:**
+## Source Of Truth
+
+- App code lives in `app/`, `components/`, and `lib/`
+- Content lives in `content/`
+- Build and generation scripts live in `scripts/`
+- Generated artifacts are committed from `public/`
+
+## Verification Guidance
+
+Use this baseline gate for code changes:
+
 ```bash
-npm run typecheck && npm run lint && npm run build && npm run test
+pnpm typecheck && pnpm lint && pnpm build
 ```
 
-**If context feels stale:** Re-read `AUTONOMOUS_BUILD_CLAUDE.md` for the full protocol.
+Additional checks when they apply:
 
----
+- `pnpm test` runs the Node.js native test runner via `node --test` with `tsx`
+- `pnpm test:e2e` runs the Playwright suite
+- `pnpm prebuild` regenerates search, cover, manifest, and compressed asset outputs; run it whenever you edit `content/` or `content/library/books.json`
 
-## Build Context
+## Notes
 
-**Type**: Feature Rewrite
-**Spec location**: `docs/specs/LIVING_NEBULA_V3_SPEC.md`
-**Plan location**: `docs/plans/LIVING_NEBULA_V3_PLAN.md`
-**Branch**: `feature/floating-library-v3`
-
-## Project Setup
-
-- Framework: Next.js 16 + TypeScript (strict)
-- 3D: React Three Fiber + Drei
-- State: Zustand (lib/library/store.ts)
-- Styling: Tailwind CSS
-- Testing: Vitest + Playwright
-
-## Current Phase
-
-**Phase 1: NebulaCore Shader** — Creating the soft glowing core with fresnel rim.
-
-## What We're Building
-
-Rewriting the Floating Library's nebula effects:
-- **Old**: Blender textures + billboard slices (didn't work well)
-- **New**: Pure procedural GLSL shaders (NebulaCore + NebulaWisps + NebulaDust)
-
-**Aesthetic**: "Living Nebula" — soft ethereal base, structured wisps, slow organic drift.
-
-**Key Constraint**: 44 nebulae visible in universe view, must hit 60 FPS.
-
-## Component Architecture
-
-```
-<LivingNebula>
-  ├── <NebulaCore />       — Soft glow (always visible)
-  ├── <NebulaWisps />      — Billboard planes with fbm noise (LOD-gated)
-  └── <NebulaDust />       — Instanced particles (LOD-gated)
-```
-
-## LOD Tiers
-
-| Tier | When | Components |
-|------|------|------------|
-| 0 | Universe, inactive | Core only |
-| 1 | Universe, nearby | Core + 2 wisps |
-| 2 | Constellation, active | Core + 5 wisps + particles |
-| 3 | Book view | Same as Tier 2 |
-
-## Files to Create
-
-- `components/library/floating/LivingNebula.tsx`
-- `components/library/floating/NebulaCore.tsx`
-- `components/library/floating/NebulaWisps.tsx`
-- `components/library/floating/shaders/nebulaCore.vert`
-- `components/library/floating/shaders/nebulaCore.frag`
-- `components/library/floating/shaders/nebulaWisp.vert`
-- `components/library/floating/shaders/nebulaWisp.frag`
-
-## Files to Delete (Phase 6)
-
-- `components/library/floating/VolumetricNebula.tsx`
-- `lib/library/nebulaTextures.ts`
-- `lib/library/blenderNebulaTextures.ts`
-
-## Key Store State
-
-From `lib/library/store.ts`:
-- `viewLevel`: 'universe' | 'constellation' | 'book'
-- `transitionPhase`: 0-1 during zoom transitions
-- `qualityLevel`: 'full' | 'reduced' | 'minimal'
-- `postprocessingEnabled`: boolean
-
-## Design Decisions
-
-- All noise computed in fragment shader (GPU-side)
-- No texture loading — pure procedural
-- Breathing animation via uTime uniform (~0.3 Hz)
-- Wisp drift via domain warping in noise function
-- LOD crossfade duration: ~100ms
-
-## Import Locations
-
-- `Billboard` → `@react-three/drei`
-- `useFrame, useThree` → `@react-three/fiber`
-- Store hooks → `@/lib/library/store`
-- Types → `@/lib/library/types`
-
----
-
-## Session Notes
-
-- User approved the "Living Nebula" aesthetic direction
-- User approved the component architecture and LOD strategy
-- User activated autonomous build mode
-- Codex/Gemini reviews scheduled per protocol
+- `pnpm build` triggers `prebuild` first, then runs postbuild checks for asset budgets and bundle isolation
+- Keep repo guidance branch-agnostic; do not treat this file as a task tracker or phase log

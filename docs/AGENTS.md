@@ -5,17 +5,19 @@
 - `components/`: shared UI and feature components (`components/ui/` contains shadcn/Radix primitives).
 - `lib/`: domain logic and utilities (notably `lib/search/`, `lib/books/`, `lib/graph/`).
 - `content/`: MDX + data (`content/essays/*.mdx`, `content/notes/*.mdx`, `content/library/books.json`).
-- `scripts/`: build-time generators (search index, book cover map).
-- `public/`: static assets; generated files include `public/search-index.json` and `public/cover-map.json`.
+- `scripts/`: build-time generators and validation steps for search, covers, manifests, asset compression, and postbuild checks.
+- `public/`: static assets plus generated artifacts such as `search-index.json`, `book-covers.json`, `appearance-covers.json`, and `interactive-manifests.json`.
 
 ## Build, Test, and Development Commands
 - `pnpm install`: install dependencies (repo uses `pnpm@9`).
 - `pnpm dev`: run the local dev server (Next.js + Turbopack).
 - `pnpm lint`: run ESLint (Next core-web-vitals rules).
 - `pnpm typecheck`: run `tsc --noEmit` (strict TypeScript).
-- `pnpm build`: production build (runs `prebuild` first).
-- `pnpm prebuild`: regenerate `public/search-index.json` and `public/cover-map.json`.
-- `pnpm generate-search` / `pnpm covers`: run generators individually.
+- `pnpm build`: production build; this runs `prebuild` first and then postbuild validation.
+- `pnpm prebuild`: regenerate covers, search index, interactive manifests, and compressed assets.
+- `pnpm test`: run the Node.js native test runner via `node --test` with `tsx`.
+- `pnpm test:e2e`: run the Playwright E2E suite.
+- `pnpm generate-search` / `pnpm covers` / `pnpm generate-manifests` / `pnpm compress-assets`: run generators individually.
 
 ## Coding Style & Naming Conventions
 - TypeScript/React, 2-space indentation, single quotes, and generally no semicolons (match existing files).
@@ -25,9 +27,12 @@
 - Keep styling token-driven: reuse classes/tokens defined in `app/globals.css`.
 
 ## Testing Guidelines
-- There is no dedicated unit/E2E suite in this repo yet. Treat these as the required gates: `pnpm typecheck && pnpm lint && pnpm build`.
-- After UI changes, smoke-test key pages locally with `pnpm dev`.
+- Treat `pnpm typecheck && pnpm lint && pnpm build` as the baseline verification gate.
+- Run `pnpm test` when your change touches covered utilities, scripts, or behavior exercised by the Node test suite in `test/*.test.ts`.
+- Run `pnpm test:e2e` for route, interaction, or rendering changes that can affect end-to-end behavior.
+- After UI-heavy changes, smoke-test key pages locally with `pnpm dev`.
 - If you edit `content/` or `content/library/books.json`, run `pnpm prebuild` and commit the updated `public/*.json` outputs.
+- If you touch interactive or asset-heavy frontend code, keep an eye on build-time postchecks for asset budgets and bundle isolation.
 
 ## Security & Configuration Tips
 - Copy `.env.example` to `.env.local`. Never commit secrets (e.g. `BUTTONDOWN_API_KEY`).
