@@ -22,9 +22,5 @@
     ".next/dev/types/**/*.ts",
     ".content-collections/generated/**/*.ts"
   ],
-  "exclude": [
-    "node_modules",
-    "e2e/**/*",
-    "playwright.config.ts"
-  ]
+  "exclude": ["node_modules", "e2e/**/*", "playwright.config.ts"]
 }
