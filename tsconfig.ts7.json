@@ -1,0 +1,30 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "next-env.d.ts",
+    "types/ts7-preview-css-shim.d.ts",
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "components/**/*.ts",
+    "components/**/*.tsx",
+    "content/**/*.ts",
+    "content/**/*.tsx",
+    "lib/**/*.ts",
+    "lib/**/*.tsx",
+    "scripts/**/*.ts",
+    "scripts/**/*.tsx",
+    "test/**/*.ts",
+    "test/**/*.tsx",
+    "content-collections.ts",
+    "middleware.ts",
+    "next.config.ts",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    ".content-collections/generated/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "e2e/**/*",
+    "playwright.config.ts"
+  ]
+}
