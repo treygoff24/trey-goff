@@ -8,6 +8,13 @@ import {
 
 const originalFetch = globalThis.fetch
 const originalGoogleApiKey = process.env.GOOGLE_BOOKS_API_KEY
+const getRequestUrl = (input: RequestInfo | URL): string => {
+  if (input instanceof Request) {
+    return input.url
+  }
+
+  return input instanceof URL ? input.href : input
+}
 
 beforeEach(() => {
   globalThis.fetch = originalFetch
@@ -23,7 +30,7 @@ describe('fetchOpenLibraryCover', () => {
   test('returns the first valid cover URL by size', async () => {
     const calls: Array<{ url: string; init?: RequestInit }> = []
     globalThis.fetch = async (url, init) => {
-      calls.push({ url: url.toString(), init })
+      calls.push({ url: getRequestUrl(url), init })
       return new Response(null, {
         status: 200,
         headers: { 'content-length': '1501' },
@@ -31,10 +38,7 @@ describe('fetchOpenLibraryCover', () => {
     }
 
     const result = await fetchOpenLibraryCover('1234567890')
-    assert.equal(
-      result,
-      'https://covers.openlibrary.org/b/isbn/1234567890-L.jpg'
-    )
+    assert.equal(result, 'https://covers.openlibrary.org/b/isbn/1234567890-L.jpg')
     assert.equal(calls.length, 1)
     const firstCall = calls[0]
     assert.ok(firstCall)
@@ -43,7 +47,7 @@ describe('fetchOpenLibraryCover', () => {
 
   test('skips missing covers and continues to next size', async () => {
     let callIndex = 0
-    globalThis.fetch = async (url) => {
+    globalThis.fetch = async () => {
       callIndex += 1
       if (callIndex === 1) {
         return new Response(null, {
@@ -90,7 +94,7 @@ describe('fetchGoogleBooksCover', () => {
     let requestedUrl = ''
 
     globalThis.fetch = async (url) => {
-      requestedUrl = url.toString()
+      requestedUrl = getRequestUrl(url)
       return new Response(
         JSON.stringify({
           items: [
@@ -103,7 +107,7 @@ describe('fetchGoogleBooksCover', () => {
             },
           ],
         }),
-        { status: 200 }
+        { status: 200 },
       )
     }
 
@@ -114,8 +118,7 @@ describe('fetchGoogleBooksCover', () => {
   })
 
   test('returns null when the API has no thumbnail', async () => {
-    globalThis.fetch = async () =>
-      new Response(JSON.stringify({ items: [] }), { status: 200 })
+    globalThis.fetch = async () => new Response(JSON.stringify({ items: [] }), { status: 200 })
 
     const result = await fetchGoogleBooksCover(undefined, 'Title', 'Author')
     assert.equal(result, null)

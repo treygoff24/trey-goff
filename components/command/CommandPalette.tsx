@@ -40,7 +40,7 @@ export function CommandPalette() {
   // Initialize search when palette opens
   useEffect(() => {
     if (open) {
-      initialize()
+      void initialize()
     }
   }, [open, initialize])
 
@@ -51,12 +51,16 @@ export function CommandPalette() {
     }
   }, [open, setQuery])
 
-  const handleSelect = (url: string) => {
+  const handleSelect = async (url: string) => {
     setOpen(false)
 
     // Handle special actions
     if (url === '#copy-url') {
-      navigator.clipboard.writeText(window.location.href)
+      try {
+        await navigator.clipboard.writeText(window.location.href)
+      } catch (error) {
+        console.error('[CommandPalette] Failed to copy URL:', error)
+      }
       return
     }
 
@@ -66,14 +70,13 @@ export function CommandPalette() {
 
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>
-      <CommandInput
-        placeholder="Search everything..."
-        value={query}
-        onValueChange={setQuery}
-      />
+      <CommandInput placeholder="Search everything..." value={query} onValueChange={setQuery} />
       <CommandList>
         {isLoading && (
-          <div className="flex items-center justify-center gap-2 py-6 text-sm text-text-3" aria-live="polite">
+          <div
+            className="flex items-center justify-center gap-2 py-6 text-sm text-text-3"
+            aria-live="polite"
+          >
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-warm opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-warm" />
@@ -82,17 +85,13 @@ export function CommandPalette() {
           </div>
         )}
 
-        {error && (
-          <div className="py-6 text-center text-sm text-error">{error}</div>
-        )}
+        {error && <div className="py-6 text-center text-sm text-error">{error}</div>}
 
         {!isLoading && query && results.length === 0 && !error && (
           <CommandEmpty>
             <div className="flex flex-col items-center gap-2">
               <span className="text-text-3">No results found</span>
-              <span className="text-xs text-text-3/70">
-                Try a different search term
-              </span>
+              <span className="text-xs text-text-3/70">Try a different search term</span>
             </div>
           </CommandEmpty>
         )}

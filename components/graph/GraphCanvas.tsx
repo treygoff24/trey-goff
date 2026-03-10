@@ -200,21 +200,21 @@ export function GraphCanvas({ data, onNodeClick, className }: GraphCanvasProps) 
   const zoomIn = useCallback(() => {
     if (sigmaRef.current) {
       const camera = sigmaRef.current.getCamera()
-      camera.animatedZoom({ duration: 300 })
+      void camera.animatedZoom({ duration: 300 })
     }
   }, [])
 
   const zoomOut = useCallback(() => {
     if (sigmaRef.current) {
       const camera = sigmaRef.current.getCamera()
-      camera.animatedUnzoom({ duration: 300 })
+      void camera.animatedUnzoom({ duration: 300 })
     }
   }, [])
 
   const resetView = useCallback(() => {
     if (sigmaRef.current) {
       const camera = sigmaRef.current.getCamera()
-      camera.animatedReset({ duration: 300 })
+      void camera.animatedReset({ duration: 300 })
     }
   }, [])
 
@@ -243,18 +243,8 @@ export function GraphCanvas({ data, onNodeClick, className }: GraphCanvasProps) 
           className="rounded-md bg-surface-2 p-2 text-text-1 hover:bg-surface-3 transition-colors"
           aria-label="Zoom in"
         >
-          <svg
-            className="h-5 w-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 4v16m8-8H4"
-            />
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
         </button>
         <button
@@ -262,18 +252,8 @@ export function GraphCanvas({ data, onNodeClick, className }: GraphCanvasProps) 
           className="rounded-md bg-surface-2 p-2 text-text-1 hover:bg-surface-3 transition-colors"
           aria-label="Zoom out"
         >
-          <svg
-            className="h-5 w-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M20 12H4"
-            />
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
           </svg>
         </button>
         <button
@@ -281,12 +261,7 @@ export function GraphCanvas({ data, onNodeClick, className }: GraphCanvasProps) 
           className="rounded-md bg-surface-2 p-2 text-text-1 hover:bg-surface-3 transition-colors"
           aria-label="Reset view"
         >
-          <svg
-            className="h-5 w-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"

@@ -12,11 +12,15 @@ interface CodeBlockProps {
 export function CodeBlock({ children, className, title }: CodeBlockProps) {
   const [copied, setCopied] = useState(false)
 
-  const handleCopy = () => {
+  const handleCopy = async () => {
     const code = extractTextFromChildren(children)
-    navigator.clipboard.writeText(code)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    try {
+      await navigator.clipboard.writeText(code)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (error) {
+      console.error('[CodeBlock] Failed to copy code:', error)
+    }
   }
 
   // Extract language from className (e.g., "language-typescript")
@@ -33,11 +37,7 @@ export function CodeBlock({ children, className, title }: CodeBlockProps) {
             className="text-text-3 transition-colors hover:text-text-2"
             aria-label={copied ? 'Copied!' : 'Copy code'}
           >
-            {copied ? (
-              <CheckIcon className="h-4 w-4" />
-            ) : (
-              <CopyIcon className="h-4 w-4" />
-            )}
+            {copied ? <CheckIcon className="h-4 w-4" /> : <CopyIcon className="h-4 w-4" />}
           </button>
         </div>
       )}
@@ -54,11 +54,7 @@ export function CodeBlock({ children, className, title }: CodeBlockProps) {
           className="absolute right-2 top-2 rounded-md bg-surface-1 p-2 text-text-3 opacity-0 transition-all hover:bg-surface-2 hover:text-text-2 group-hover:opacity-100 focus-visible:opacity-100"
           aria-label={copied ? 'Copied!' : 'Copy code'}
         >
-          {copied ? (
-            <CheckIcon className="h-4 w-4" />
-          ) : (
-            <CopyIcon className="h-4 w-4" />
-          )}
+          {copied ? <CheckIcon className="h-4 w-4" /> : <CopyIcon className="h-4 w-4" />}
         </button>
       )}
     </div>
@@ -80,12 +76,7 @@ function extractTextFromChildren(children: React.ReactNode): string {
 
 function CopyIcon({ className }: { className?: string }) {
   return (
-    <svg
-      className={className}
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -98,18 +89,8 @@ function CopyIcon({ className }: { className?: string }) {
 
 function CheckIcon({ className }: { className?: string }) {
   return (
-    <svg
-      className={className}
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M5 13l4 4L19 7"
-      />
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
     </svg>
   )
 }

@@ -31,7 +31,7 @@ export async function initializeSearch(): Promise<void> {
       const index: SearchIndex = await response.json()
 
       // Create Orama database
-      db = await create({
+      db = create({
         schema: {
           id: 'string',
           type: 'string',

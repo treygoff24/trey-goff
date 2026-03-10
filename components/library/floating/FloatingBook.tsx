@@ -96,12 +96,17 @@ export const FloatingBook = memo(function FloatingBook({
   useEffect(() => {
     let mounted = true
 
-    textureManager.getTexture(book.id, book.topics).then((tex) => {
-      if (mounted) {
-        setTexture(tex)
-        invalidate() // Re-render with new texture
-      }
-    })
+    void textureManager
+      .getTexture(book.id, book.topics)
+      .then((tex) => {
+        if (mounted) {
+          setTexture(tex)
+          invalidate() // Re-render with new texture
+        }
+      })
+      .catch((error: unknown) => {
+        console.error(`[FloatingBook] Failed to load texture for "${book.id}":`, error)
+      })
 
     return () => {
       mounted = false
@@ -199,7 +204,7 @@ export const FloatingBook = memo(function FloatingBook({
       e.stopPropagation()
       selectBook(book, book.position)
     },
-    [book, selectBook]
+    [book, selectBook],
   )
 
   // Cleanup cursor on unmount
