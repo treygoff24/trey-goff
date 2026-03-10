@@ -1,0 +1,16 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "useTabs": false,
+  "semi": false,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "ignorePatterns": [
+    ".next/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
+    ".content-collections/**",
+    "test/.broken/**",
+    "verify-arch.cjs"
+  ]
+}

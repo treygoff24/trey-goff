@@ -1,6 +1,6 @@
 # TypeScript 7 Preview Experiment
 
-This branch adds a side-by-side TypeScript 7 preview setup without removing the stable `typescript` dependency that Next.js, ESLint, and other tooling still expect.
+This branch now treats TypeScript 7 preview as the default typecheck path while still keeping stable `typescript` installed for compatibility backstops and ecosystem comparison.
 
 ## Installed
 
@@ -9,26 +9,34 @@ This branch adds a side-by-side TypeScript 7 preview setup without removing the 
 
 ## Commands
 
-- `pnpm typecheck`: stable `tsc --noEmit`
-- `pnpm typecheck:ts7`: alias for the scoped preview check
+- `pnpm content:sync`: builds `.content-collections/generated` for clean-checkout TS7/test/build flows
+- `pnpm prepare:quality`: runs `content:sync` and `next typegen`
+- `pnpm typecheck`: authoritative TS7 lane after `prepare:quality`
+- `pnpm typecheck:legacy`: stable `tsc --noEmit` comparison lane after `prepare:quality`
+- `pnpm typecheck:ts7`: alias for the full preview check
 - `pnpm typecheck:ts7:scoped`: `tsgo -p tsconfig.ts7.json --noEmit`
 - `pnpm typecheck:ts7:full`: `tsgo --noEmit`
+- `pnpm lint`: Oxlint default lane
+- `pnpm lint:legacy`: ESLint comparison lane
+- `pnpm lint:type-aware`: blocking Oxlint type-aware + type-check lane after `prepare:quality`
+- `pnpm fmt` / `pnpm fmt:check`: Oxfmt scoped formatter gate
 
 ## Current Status
 
 - `pnpm typecheck`: passes
-- `pnpm lint`: passes with the repo's existing warnings
+- `pnpm typecheck:legacy`: passes
+- `pnpm lint`: passes cleanly
+- `pnpm lint:legacy`: available for comparison when Oxc/TS7 behavior is in question
+- `pnpm lint:type-aware`: passes cleanly after `prepare:quality`
 - `pnpm test`: passes
 - `pnpm build`: passes
 - `pnpm typecheck:ts7:scoped`: passes
-- `pnpm typecheck:ts7:full`: fails
+- `pnpm typecheck:ts7:full`: passes
 
-## Known Blocker
+## Current Read
 
-The full-repo TS7 check currently fails in Playwright's bundled declarations under `playwright-core/types/protocol.d.ts` with `TS1540` errors about `module`-style namespace declarations.
-
-That is why this branch includes `tsconfig.ts7.json`: it keeps the main app, library, scripts, and Node test surface in the preview experiment while excluding the Playwright E2E surface that is not yet TS7-compatible here.
+`tsconfig.ts7.json` remains a scoped diagnostic lane only. The branch's authoritative proof command is the full TS7 path, not the scoped one.
 
 ## Preview-Only Shim
 
-`types/ts7-preview-css-shim.d.ts` exists only to let `tsgo` resolve the side-effect `./globals.css` import in `app/layout.tsx`. It is not part of the stable compiler path.
+`types/ts7-preview-css-shim.d.ts` exists only to let `tsgo` resolve the side-effect `./globals.css` import in `app/layout.tsx`. Keep it limited to the TS7 path and avoid treating it as the source of truth for stable `tsc`.

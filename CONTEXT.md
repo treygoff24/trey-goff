@@ -23,11 +23,15 @@
 Use this baseline gate for code changes:
 
 ```bash
-pnpm typecheck && pnpm lint && pnpm build
+pnpm ci:quality
 ```
 
 Additional checks when they apply:
 
+- `pnpm content:sync` builds `.content-collections/generated` and is required for clean-checkout TS7/test/build flows
+- `pnpm fmt:check` runs Oxfmt on the repo's scoped code surface
+- `pnpm lint:type-aware` is part of the authoritative Oxc gate once generated content and Next route types are prepared
+- `pnpm lint:legacy` and `pnpm typecheck:legacy` remain available as comparison lanes, not the definition of success
 - `pnpm test` runs the Node.js native test runner via `node --test` with `tsx`
 - `pnpm test:e2e` runs the Playwright suite
 - `pnpm prebuild` regenerates search, cover, manifest, and compressed asset outputs; run it whenever you edit `content/` or `content/library/books.json`

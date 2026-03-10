@@ -11,8 +11,12 @@
 ## Build, Test, and Development Commands
 - `pnpm install`: install dependencies (repo uses `pnpm@9`).
 - `pnpm dev`: run the local dev server (Next.js + Turbopack).
-- `pnpm lint`: run ESLint (Next core-web-vitals rules).
-- `pnpm typecheck`: run `tsc --noEmit` (strict TypeScript).
+- `pnpm content:sync`: build `.content-collections/generated` before TS7/test/build work in a clean checkout.
+- `pnpm fmt` / `pnpm fmt:check`: run Oxfmt on the repo's scoped code surface.
+- `pnpm lint`: run Oxlint as the default linter.
+- `pnpm lint:type-aware`: run the blocking Oxlint type-aware lane after `pnpm content:sync` + `pnpm exec next typegen`.
+- `pnpm typecheck`: run the authoritative TS7 check after `pnpm content:sync` + `pnpm exec next typegen`.
+- `pnpm lint:legacy` / `pnpm typecheck:legacy`: run comparison-only ESLint + `tsc --noEmit` lanes.
 - `pnpm build`: production build; this runs `prebuild` first and then postbuild validation.
 - `pnpm prebuild`: regenerate covers, search index, interactive manifests, and compressed assets.
 - `pnpm test`: run the Node.js native test runner via `node --test` with `tsx`.
@@ -27,7 +31,8 @@
 - Keep styling token-driven: reuse classes/tokens defined in `app/globals.css`.
 
 ## Testing Guidelines
-- Treat `pnpm typecheck && pnpm lint && pnpm build` as the baseline verification gate.
+- Treat `pnpm ci:quality` as the baseline verification gate.
+- `pnpm ci:quality` is Oxc/TS7-first: `prepare:quality`, `fmt:check`, `lint`, `lint:type-aware`, `typecheck:ts7:full`, `test`, `build`.
 - Run `pnpm test` when your change touches covered utilities, scripts, or behavior exercised by the Node test suite in `test/*.test.ts`.
 - Run `pnpm test:e2e` for route, interaction, or rendering changes that can affect end-to-end behavior.
 - After UI-heavy changes, smoke-test key pages locally with `pnpm dev`.
