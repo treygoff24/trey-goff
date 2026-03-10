@@ -10,7 +10,7 @@ async function main() {
 
   // Load appearances
   const appearancesData: AppearancesData = JSON.parse(
-    readFileSync('./content/media/appearances.json', 'utf-8')
+    readFileSync('./content/media/appearances.json', 'utf-8'),
   )
 
   // Resolve covers
@@ -18,10 +18,7 @@ async function main() {
 
   // Write cover mapping
   const coverMap = Object.fromEntries(covers)
-  writeFileSync(
-    './public/appearance-covers.json',
-    JSON.stringify(coverMap, null, 2)
-  )
+  writeFileSync('./public/appearance-covers.json', JSON.stringify(coverMap, null, 2))
 
   console.log(`Resolved ${covers.size} appearance covers`)
 

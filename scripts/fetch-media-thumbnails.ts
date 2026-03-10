@@ -67,7 +67,7 @@ async function main() {
 
   // Load appearances
   const data: AppearancesData = JSON.parse(
-    readFileSync('./content/media/appearances.json', 'utf-8')
+    readFileSync('./content/media/appearances.json', 'utf-8'),
   )
 
   const thumbnailMap: Record<string, string> = {}

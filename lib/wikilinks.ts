@@ -51,9 +51,7 @@ export function normalizeWikiKey(value: string): string {
 }
 
 export function parseWikilinkToken(raw: string): { target: string; label: string } {
-  const [targetPart = '', labelPart = ''] = raw
-    .split('|')
-    .map((part) => part.trim())
+  const [targetPart = '', labelPart = ''] = raw.split('|').map((part) => part.trim())
   if (labelPart) {
     const target = targetPart || labelPart
     return { target, label: labelPart }
@@ -63,7 +61,7 @@ export function parseWikilinkToken(raw: string): { target: string; label: string
 }
 
 export function splitWikilinkText(
-  text: string
+  text: string,
 ): Array<{ type: 'text'; value: string } | { type: 'link'; target: string; label: string }> {
   if (!text.includes('[[')) {
     return [{ type: 'text', value: text }]
@@ -157,7 +155,7 @@ export function getWikiLinkIndex(): WikiLinkIndex {
         url: `/writing/${essay.slug}`,
         slug: essay.slug,
       },
-      [essay.title, essay.slug]
+      [essay.title, essay.slug],
     )
   }
 
@@ -171,7 +169,7 @@ export function getWikiLinkIndex(): WikiLinkIndex {
         url: `/notes#${note.slug}`,
         slug: note.slug,
       },
-      [title, note.slug]
+      [title, note.slug],
     )
   }
 
@@ -184,7 +182,7 @@ export function getWikiLinkIndex(): WikiLinkIndex {
         url: `/projects#${project.slug}`,
         slug: project.slug,
       },
-      [project.name, project.slug]
+      [project.name, project.slug],
     )
   }
 
@@ -197,7 +195,7 @@ export function getWikiLinkIndex(): WikiLinkIndex {
         url: `/topics/${encodeURIComponent(topic.tag)}`,
         slug: topic.tag,
       },
-      [topic.tag]
+      [topic.tag],
     )
   }
 
@@ -216,7 +214,7 @@ export function resolveWikiLink(target: string): WikiLinkTarget | null {
 function walkNodes(
   node: MdastNode,
   parentType: string | null,
-  visitor: (node: MdastNode, parentType: string | null) => void
+  visitor: (node: MdastNode, parentType: string | null) => void,
 ) {
   visitor(node, parentType)
   if (!node.children) return

@@ -152,7 +152,7 @@ test('monitorTabSuspension fires suspend and restore callbacks', () => {
     },
     () => {
       suspendCount += 1
-    }
+    },
   )
 
   ;(globalAny.document as { visibilityState: string }).visibilityState = 'hidden'
@@ -175,13 +175,17 @@ test('monitorTabSuspension fires suspend and restore callbacks', () => {
 
 test('retryWithBackoff retries until success', async () => {
   let attempts = 0
-  const result = await retryWithBackoff(async () => {
-    attempts += 1
-    if (attempts < 3) {
-      throw new Error('nope')
-    }
-    return 'ok'
-  }, 3, 1)
+  const result = await retryWithBackoff(
+    async () => {
+      attempts += 1
+      if (attempts < 3) {
+        throw new Error('nope')
+      }
+      return 'ok'
+    },
+    3,
+    1,
+  )
 
   assert.equal(result, 'ok')
   assert.equal(attempts, 3)
@@ -191,11 +195,15 @@ test('retryWithBackoff throws the last error after max attempts', async () => {
   let attempts = 0
   await assert.rejects(
     () =>
-      retryWithBackoff(async () => {
-        attempts += 1
-        throw new Error('fail')
-      }, 2, 1),
-    /fail/
+      retryWithBackoff(
+        async () => {
+          attempts += 1
+          throw new Error('fail')
+        },
+        2,
+        1,
+      ),
+    /fail/,
   )
   assert.equal(attempts, 2)
 })

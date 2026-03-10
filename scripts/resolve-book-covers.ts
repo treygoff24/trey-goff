@@ -28,9 +28,7 @@ async function main() {
   mkdirSync(COVERS_DIR, { recursive: true })
 
   // Load books
-  const booksData: BooksData = JSON.parse(
-    readFileSync('./content/library/books.json', 'utf-8')
-  )
+  const booksData: BooksData = JSON.parse(readFileSync('./content/library/books.json', 'utf-8'))
 
   // First, resolve URLs using the existing system
   const coverUrls = await resolveAllCovers(booksData.books)
@@ -67,7 +65,10 @@ async function main() {
       // Fall back to the original URL (will fail due to CORS, but better than nothing)
       // Or generate placeholder
       console.warn(`  Failed to download, using placeholder for: ${bookId}`)
-      coverMap[bookId] = generateLocalPlaceholder(bookId, booksData.books.find(b => b.id === bookId))
+      coverMap[bookId] = generateLocalPlaceholder(
+        bookId,
+        booksData.books.find((b) => b.id === bookId),
+      )
     }
 
     // Rate limit
@@ -83,7 +84,10 @@ async function main() {
   console.log(`  Total: ${coverUrls.size}`)
 }
 
-function generateLocalPlaceholder(bookId: string, book?: { title?: string; author?: string }): string {
+function generateLocalPlaceholder(
+  bookId: string,
+  book?: { title?: string; author?: string },
+): string {
   const title = book?.title || bookId
   const author = book?.author || 'Unknown'
   const hash = title.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
@@ -111,12 +115,18 @@ function generateLocalPlaceholder(bookId: string, book?: { title?: string; autho
 function escapeXml(str: string): string {
   return str.replace(/[<>&'"]/g, (c) => {
     switch (c) {
-      case '<': return '&lt;'
-      case '>': return '&gt;'
-      case '&': return '&amp;'
-      case "'": return '&apos;'
-      case '"': return '&quot;'
-      default: return c
+      case '<':
+        return '&lt;'
+      case '>':
+        return '&gt;'
+      case '&':
+        return '&amp;'
+      case "'":
+        return '&apos;'
+      case '"':
+        return '&quot;'
+      default:
+        return c
     }
   })
 }

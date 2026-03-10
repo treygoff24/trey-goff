@@ -123,7 +123,10 @@ test.describe('Command Palette', () => {
   test.describe('Search functionality', () => {
     test('should show search input with placeholder', async () => {
       await commandPalette.openCommandPalette()
-      await expect(commandPalette.searchInput).toHaveAttribute('placeholder', 'Search everything...')
+      await expect(commandPalette.searchInput).toHaveAttribute(
+        'placeholder',
+        'Search everything...',
+      )
     })
 
     test('should filter results as user types', async () => {
@@ -172,14 +175,14 @@ test.describe('Command Palette', () => {
     test('should have Copy current URL action', async () => {
       await commandPalette.openCommandPalette()
       await expect(
-        commandPalette.commandList.getByRole('option', { name: 'Copy current URL' })
+        commandPalette.commandList.getByRole('option', { name: 'Copy current URL' }),
       ).toBeVisible()
     })
 
     test('should have RSS Feed action', async () => {
       await commandPalette.openCommandPalette()
       await expect(
-        commandPalette.commandList.getByRole('option', { name: 'RSS Feed' })
+        commandPalette.commandList.getByRole('option', { name: 'RSS Feed' }),
       ).toBeVisible()
     })
 
@@ -205,11 +208,9 @@ test.describe('Command Palette', () => {
 
       // One item should be selected (aria-selected)
       await expect
-        .poll(
-          async () =>
-            commandPalette.commandList.locator('[aria-selected="true"]').count(),
-          { timeout: 5000 }
-        )
+        .poll(async () => commandPalette.commandList.locator('[aria-selected="true"]').count(), {
+          timeout: 5000,
+        })
         .toBeGreaterThan(0)
     })
 

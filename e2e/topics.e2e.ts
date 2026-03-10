@@ -7,9 +7,7 @@ test.describe('Topics page', () => {
     await basePage.goto('/topics')
 
     const main = page.locator('main')
-    await expect(
-      main.getByRole('heading', { name: 'Topics', level: 1 })
-    ).toBeVisible()
+    await expect(main.getByRole('heading', { name: 'Topics', level: 1 })).toBeVisible()
 
     const topicLinks = main.locator('a[href^="/topics/"]')
     const linkCount = await topicLinks.count()

@@ -47,8 +47,7 @@ export function calculateReadingStats(books: Book[]) {
     abandoned: books.filter((b) => b.status === 'abandoned').length,
     averageRating:
       ratedReadBooks.length > 0
-        ? ratedReadBooks.reduce((sum, b) => sum + b.rating!, 0) /
-          ratedReadBooks.length
+        ? ratedReadBooks.reduce((sum, b) => sum + b.rating!, 0) / ratedReadBooks.length
         : 0,
     fiveStarBooks: readBooks.filter((b) => b.rating === 5).length,
   }
@@ -111,9 +110,7 @@ export function getTopicBreakdown(books: Book[], limit = 6) {
   if (entries.length <= limit) return entries
 
   const topEntries = entries.slice(0, limit - 1)
-  const otherCount = entries
-    .slice(limit - 1)
-    .reduce((sum, entry) => sum + entry.count, 0)
+  const otherCount = entries.slice(limit - 1).reduce((sum, entry) => sum + entry.count, 0)
 
   return [...topEntries, { topic: 'Other', count: otherCount }]
 }
@@ -121,7 +118,7 @@ export function getTopicBreakdown(books: Book[], limit = 6) {
 // Sort books
 export function sortBooks(
   books: Book[],
-  sortBy: 'title' | 'author' | 'year' | 'rating' | 'dateRead' = 'title'
+  sortBy: 'title' | 'author' | 'year' | 'rating' | 'dateRead' = 'title',
 ): Book[] {
   return [...books].sort((a, b) => {
     switch (sortBy) {
@@ -149,14 +146,13 @@ export function filterBooks(
     topic?: string
     genre?: string
     minRating?: number
-  }
+  },
 ): Book[] {
   return books.filter((book) => {
     if (filters.status && book.status !== filters.status) return false
     if (filters.topic && !book.topics.includes(filters.topic)) return false
     if (filters.genre && book.genre !== filters.genre) return false
-    if (filters.minRating && (!book.rating || book.rating < filters.minRating))
-      return false
+    if (filters.minRating && (!book.rating || book.rating < filters.minRating)) return false
     return true
   })
 }

@@ -21,13 +21,18 @@ export class LibraryPage extends BasePage {
     super(page)
     this.pageTitle = page.getByRole('heading', { name: 'Library', level: 1 })
     this.bookGrid = page.locator('.grid.grid-cols-2')
-    this.bookCards = page.locator('[class*="book-card"], article').filter({ has: page.locator('img, svg') })
+    this.bookCards = page
+      .locator('[class*="book-card"], article')
+      .filter({ has: page.locator('img, svg') })
     this.bookCountText = page.locator('text=/\\d+ books?/')
     this.statusFilterButtons = page.locator('text=Status').locator('..').locator('button')
     this.topicFilterButtons = page.locator('text=Topic').locator('..').locator('button')
     this.sortSelect = page.getByLabel('Sort by')
     this.bookDetailModal = page.locator('.fixed.inset-0').filter({ has: page.locator('h2') })
-    this.modalCloseButton = page.locator('.fixed button').filter({ has: page.locator('svg') }).first()
+    this.modalCloseButton = page
+      .locator('.fixed button')
+      .filter({ has: page.locator('svg') })
+      .first()
     this.noResultsMessage = page.getByText('No books match the current filters.')
     this.statsCards = page.locator('.grid.grid-cols-2.md\\:grid-cols-4 > div')
   }
@@ -67,7 +72,10 @@ export class LibraryPage extends BasePage {
   }
 
   async clickFirstBook() {
-    const firstCard = this.page.locator('article, [role="button"]').filter({ hasText: /.+/ }).first()
+    const firstCard = this.page
+      .locator('article, [role="button"]')
+      .filter({ hasText: /.+/ })
+      .first()
     await firstCard.click()
   }
 

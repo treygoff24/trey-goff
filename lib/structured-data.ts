@@ -85,9 +85,7 @@ export function generateBookSchema(book: {
     ...(book.url ? { url: book.url } : {}),
     ...(book.coverUrl ? { image: book.coverUrl } : {}),
     ...(book.year ? { datePublished: `${book.year}` } : {}),
-    ...(book.publisher
-      ? { publisher: { '@type': 'Organization', name: book.publisher } }
-      : {}),
+    ...(book.publisher ? { publisher: { '@type': 'Organization', name: book.publisher } } : {}),
     inLanguage: 'en',
   }
 }

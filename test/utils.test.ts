@@ -8,7 +8,12 @@ describe('cn (class name merger)', () => {
   })
 
   test('handles conditional classes', () => {
-    assert.equal(cn('base', false && 'hidden', true && 'visible'), 'base visible')
+    const hidden = false
+    const visible = true
+    assert.equal(
+      cn('base', hidden ? 'hidden' : undefined, visible ? 'visible' : undefined),
+      'base visible',
+    )
   })
 
   test('merges conflicting Tailwind classes (last wins)', () => {

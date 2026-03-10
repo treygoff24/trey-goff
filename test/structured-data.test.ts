@@ -11,15 +11,15 @@ test('Organization schema exists in app/layout.tsx', () => {
 
   assert.ok(
     layoutSource.includes('application/ld+json'),
-    'Layout should contain structured data script tag'
+    'Layout should contain structured data script tag',
   )
   assert.ok(
     layoutSource.includes('generateOrganizationSchema'),
-    'Layout should import and use generateOrganizationSchema'
+    'Layout should import and use generateOrganizationSchema',
   )
   assert.ok(
     layoutSource.includes('organizationSchema'),
-    'Layout should reference organizationSchema'
+    'Layout should reference organizationSchema',
   )
 })
 
@@ -29,7 +29,7 @@ test('BreadcrumbList schema exists in writing/[slug]/page.tsx', () => {
 
   assert.ok(
     writingSource.includes('BreadcrumbList') || writingSource.includes('generateBreadcrumbSchema'),
-    'Writing pages should include BreadcrumbList schema or breadcrumb generator'
+    'Writing pages should include BreadcrumbList schema or breadcrumb generator',
   )
 })
 
@@ -39,7 +39,7 @@ test('BreadcrumbList schema exists in topics/[tag]/page.tsx', () => {
 
   assert.ok(
     topicSource.includes('BreadcrumbList') || topicSource.includes('generateBreadcrumbSchema'),
-    'Topic pages should include BreadcrumbList schema or breadcrumb generator'
+    'Topic pages should include BreadcrumbList schema or breadcrumb generator',
   )
 })
 
@@ -49,14 +49,14 @@ test('Book schema includes enhanced fields', () => {
 
   assert.ok(
     structuredDataSource.includes('image') && structuredDataSource.includes('coverUrl'),
-    'Book schema should include image field mapped from coverUrl'
+    'Book schema should include image field mapped from coverUrl',
   )
   assert.ok(
     structuredDataSource.includes('datePublished') && structuredDataSource.includes('year'),
-    'Book schema should include datePublished field mapped from year'
+    'Book schema should include datePublished field mapped from year',
   )
   assert.ok(
     structuredDataSource.includes('inLanguage'),
-    'Book schema should include inLanguage field'
+    'Book schema should include inLanguage field',
   )
 })

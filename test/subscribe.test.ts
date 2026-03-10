@@ -64,10 +64,7 @@ describe('email validation regex', () => {
     // Note: The basic regex used in the API is intentionally permissive.
     // These technically match the pattern even though stricter validators
     // might reject them. The goal is to catch obvious typos, not be RFC-compliant.
-    const permissivelyAccepted = [
-      '.leading@domain.com',
-      'trailing.@domain.com',
-    ]
+    const permissivelyAccepted = ['.leading@domain.com', 'trailing.@domain.com']
 
     for (const email of permissivelyAccepted) {
       test(`accepts "${email}" (basic validation)`, () => {

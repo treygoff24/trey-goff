@@ -14,22 +14,14 @@ test.describe('Home', () => {
       page.getByRole('heading', {
         level: 1,
         name: 'Designing the systems that let progress compound.',
-      })
+      }),
     ).toBeVisible()
 
     await expect(page.getByRole('link', { name: 'Read the work' })).toBeVisible()
-    await expect(
-      page.getByRole('heading', { name: 'Four paths into the work' })
-    ).toBeVisible()
-    await expect(
-      page.getByRole('heading', { name: 'Selected work' })
-    ).toBeVisible()
-    await expect(
-      page.getByRole('heading', { name: 'Featured essays' })
-    ).toBeVisible()
-    await expect(
-      page.getByRole('heading', { name: 'Get the signal' })
-    ).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Four paths into the work' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Selected work' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Featured essays' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Get the signal' })).toBeVisible()
   })
 
   test('should surface primary CTAs and featured content', async ({ page }) => {

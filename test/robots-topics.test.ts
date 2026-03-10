@@ -25,7 +25,7 @@ describe('robots.txt', () => {
 
     assert.ok(
       content.includes('Sitemap: https://trey.world/sitemap.xml'),
-      'Should reference sitemap at https://trey.world/sitemap.xml'
+      'Should reference sitemap at https://trey.world/sitemap.xml',
     )
   })
 })
@@ -34,36 +34,27 @@ describe('topic page metadata', () => {
   test('topic pages should include lastModified based on latest content date', async () => {
     const topicPageModule = await import('@/app/topics/[tag]/page')
 
-    assert.ok(
-      topicPageModule.generateMetadata,
-      'generateMetadata should be exported'
-    )
+    assert.ok(topicPageModule.generateMetadata, 'generateMetadata should be exported')
 
     const mockParams = Promise.resolve({ tag: 'systems' })
     const metadata = await topicPageModule.generateMetadata({
-      params: mockParams
+      params: mockParams,
     })
 
     assert.ok(metadata, 'Should return metadata object')
     assert.ok(metadata.title, 'Should have title')
     assert.ok(metadata.description, 'Should have description')
 
-    assert.ok(
-      metadata.openGraph?.modifiedTime,
-      'Should have openGraph.modifiedTime for SEO'
-    )
+    assert.ok(metadata.openGraph?.modifiedTime, 'Should have openGraph.modifiedTime for SEO')
 
     const modifiedTime = new Date(metadata.openGraph.modifiedTime).getTime()
     const now = Date.now()
 
-    assert.ok(
-      modifiedTime <= now,
-      'modifiedTime should not be in the future'
-    )
+    assert.ok(modifiedTime <= now, 'modifiedTime should not be in the future')
 
     assert.ok(
       modifiedTime > new Date('2000-01-01').getTime(),
-      'modifiedTime should be after year 2000 (reasonable date validation)'
+      'modifiedTime should be after year 2000 (reasonable date validation)',
     )
   })
 })

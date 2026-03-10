@@ -30,7 +30,7 @@ export function printConsoleEasterEgg() {
  Anyway, if you find a bug, it's a feature.
 `,
     'color: #FFB86B; font-family: monospace;',
-    'color: #fff;'
+    'color: #fff;',
   )
 
   sessionStorage.setItem('console-easter-egg', 'true')

@@ -16,12 +16,10 @@ test('Next.js version >= 16.1.5 to patch CVE-2025-56334, CVE-2025-56335, CVE-202
   const [major, minor, patch] = versionMatch[0].split('.').map(Number)
 
   const meetsRequirement =
-    major > 16 ||
-    (major === 16 && minor > 1) ||
-    (major === 16 && minor === 1 && patch >= 5)
+    major > 16 || (major === 16 && minor > 1) || (major === 16 && minor === 1 && patch >= 5)
 
   assert(
     meetsRequirement,
-    `Next.js version ${versionMatch[0]} does not meet security requirement >= 16.1.5`
+    `Next.js version ${versionMatch[0]} does not meet security requirement >= 16.1.5`,
   )
 })

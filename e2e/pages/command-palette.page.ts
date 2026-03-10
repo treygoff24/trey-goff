@@ -64,9 +64,7 @@ export class CommandPalettePage extends BasePage {
       })
       .toBeGreaterThan(0)
 
-    const name = exact
-      ? new RegExp(`^${escapeRegExp(text)}(?:\\s+G\\s+\\w+)?$`)
-      : text
+    const name = exact ? new RegExp(`^${escapeRegExp(text)}(?:\\s+G\\s+\\w+)?$`) : text
     const item = this.commandList.getByRole('option', { name }).first()
     await expect(item).toBeVisible()
     await item.click()

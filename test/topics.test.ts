@@ -11,8 +11,7 @@ describe('topic helpers', () => {
   test('topic counts are internally consistent', () => {
     const topics = getTopicsIndex()
     for (const topic of topics) {
-      const total =
-        topic.counts.essays + topic.counts.notes + topic.counts.books
+      const total = topic.counts.essays + topic.counts.notes + topic.counts.books
       assert.equal(topic.counts.total, total)
     }
   })

@@ -27,6 +27,10 @@ describe('Home page metadata', () => {
   test('should have openGraph config with title and description', () => {
     assert.match(pageSource, /openGraph:\s*\{/, 'metadata should have openGraph')
     assert.match(pageSource, /openGraph:\s*\{[^}]*title:/, 'openGraph should have title')
-    assert.match(pageSource, /openGraph:\s*\{[^}]*description:/, 'openGraph should have description')
+    assert.match(
+      pageSource,
+      /openGraph:\s*\{[^}]*description:/,
+      'openGraph should have description',
+    )
   })
 })

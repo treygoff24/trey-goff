@@ -1,7 +1,5 @@
 // Open Library API (no auth required)
-export async function fetchOpenLibraryCover(
-  isbn: string
-): Promise<string | null> {
+export async function fetchOpenLibraryCover(isbn: string): Promise<string | null> {
   const sizes = ['L', 'M', 'S'] // Try large first
 
   for (const size of sizes) {
@@ -28,7 +26,7 @@ export async function fetchOpenLibraryCover(
 export async function fetchGoogleBooksCover(
   isbn?: string,
   title?: string,
-  author?: string
+  author?: string,
 ): Promise<string | null> {
   let query = ''
 
@@ -42,9 +40,7 @@ export async function fetchGoogleBooksCover(
 
   const apiKey = process.env.GOOGLE_BOOKS_API_KEY
   const baseUrl = 'https://www.googleapis.com/books/v1/volumes'
-  const url = apiKey
-    ? `${baseUrl}?q=${query}&key=${apiKey}`
-    : `${baseUrl}?q=${query}`
+  const url = apiKey ? `${baseUrl}?q=${query}&key=${apiKey}` : `${baseUrl}?q=${query}`
 
   try {
     const response = await fetch(url)

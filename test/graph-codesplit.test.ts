@@ -11,20 +11,12 @@ describe('Graph code splitting', () => {
     assert.match(
       source,
       /import\s+dynamic\s+from\s+['"]next\/dynamic['"]/,
-      'Should import dynamic from next/dynamic'
+      'Should import dynamic from next/dynamic',
     )
 
-    assert.match(
-      source,
-      /dynamic\s*\(/,
-      'Should use dynamic() function call'
-    )
+    assert.match(source, /dynamic\s*\(/, 'Should use dynamic() function call')
 
-    assert.match(
-      source,
-      /ssr:\s*false/,
-      'GraphCanvas dynamic import should have ssr: false'
-    )
+    assert.match(source, /ssr:\s*false/, 'GraphCanvas dynamic import should have ssr: false')
   })
 
   test('Graph page uses static import for GraphClient', () => {
@@ -34,13 +26,13 @@ describe('Graph code splitting', () => {
     assert.match(
       source,
       /import\s+\{[^}]*GraphClient[^}]*\}\s+from\s+['"]@\/components\/graph\/GraphClient['"]/,
-      'Should have static import of GraphClient'
+      'Should have static import of GraphClient',
     )
 
     assert.doesNotMatch(
       source,
       /import\s+dynamic\s+from\s+['"]next\/dynamic['"]/,
-      'Should NOT import dynamic from next/dynamic'
+      'Should NOT import dynamic from next/dynamic',
     )
   })
 })

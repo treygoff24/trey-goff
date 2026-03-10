@@ -30,6 +30,6 @@ test('preview images should not exceed 400KB each', () => {
     0,
     `Found ${oversizedFiles.length} oversized preview images:\n${oversizedFiles
       .map((f) => `  - ${f.name}: ${f.sizeKB}KB`)
-      .join('\n')}`
+      .join('\n')}`,
   )
 })

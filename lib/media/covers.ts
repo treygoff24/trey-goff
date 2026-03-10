@@ -1,9 +1,5 @@
 import fs from 'fs/promises'
-import {
-  fetchPodcastArtwork,
-  verifyYouTubeThumbnail,
-  generatePlaceholderCover,
-} from './cover-apis'
+import { fetchPodcastArtwork, verifyYouTubeThumbnail, generatePlaceholderCover } from './cover-apis'
 import type { Appearance } from './types'
 
 const COVER_CACHE_FILE = './.appearance-cover-cache.json'
@@ -16,9 +12,7 @@ interface CoverCache {
   }
 }
 
-export async function resolveAppearanceCover(
-  appearance: Appearance
-): Promise<string> {
+export async function resolveAppearanceCover(appearance: Appearance): Promise<string> {
   // 1. Manual override via showArtwork
   if (appearance.showArtwork) {
     return appearance.showArtwork
@@ -47,16 +41,10 @@ export async function resolveAppearanceCover(
   }
 
   // 4. Generate placeholder
-  return generatePlaceholderCover(
-    appearance.title,
-    appearance.show,
-    appearance.type
-  )
+  return generatePlaceholderCover(appearance.title, appearance.show, appearance.type)
 }
 
-export async function resolveAllCovers(
-  appearances: Appearance[]
-): Promise<Map<string, string>> {
+export async function resolveAllCovers(appearances: Appearance[]): Promise<Map<string, string>> {
   const results = new Map<string, string>()
 
   // Load existing cache

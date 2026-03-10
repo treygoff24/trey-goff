@@ -23,7 +23,9 @@ export class GraphPage extends BasePage {
     this.nodeInspector = page.locator('text=Select a node').locator('..').locator('..')
     this.legend = this.mainContent.getByRole('heading', { name: 'Legend' }).locator('..')
     this.legendItems = this.legend.locator('.text-text-2')
-    this.navigationHelp = this.mainContent.getByRole('heading', { name: 'Navigation' }).locator('..')
+    this.navigationHelp = this.mainContent
+      .getByRole('heading', { name: 'Navigation' })
+      .locator('..')
     this.statsText = page.locator('text=/\\d+ nodes/')
     this.loadingIndicator = page.getByText('Loading graph...')
   }

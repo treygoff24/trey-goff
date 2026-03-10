@@ -11,7 +11,7 @@ const NEBULAE_DIR = join(process.cwd(), 'public/assets/library/nebulae')
 
 async function convertToWebP() {
   const files = await readdir(NEBULAE_DIR)
-  const pngFiles = files.filter(f => f.endsWith('.png') && f.startsWith('nebula_'))
+  const pngFiles = files.filter((f) => f.endsWith('.png') && f.startsWith('nebula_'))
 
   console.log(`Found ${pngFiles.length} PNG files to convert...`)
 
@@ -20,14 +20,14 @@ async function convertToWebP() {
     const outputPath = inputPath.replace('.png', '.webp')
 
     try {
-      await sharp(inputPath)
-        .webp({ quality: 85, effort: 6 })
-        .toFile(outputPath)
+      await sharp(inputPath).webp({ quality: 85, effort: 6 }).toFile(outputPath)
 
       const inputStats = await sharp(inputPath).metadata()
       const outputStats = await sharp(outputPath).metadata()
 
-      console.log(`✓ ${file} → ${file.replace('.png', '.webp')} (saved ${Math.round(((inputStats.size || 0) - (outputStats.size || 0)) / 1024)}KB)`)
+      console.log(
+        `✓ ${file} → ${file.replace('.png', '.webp')} (saved ${Math.round(((inputStats.size || 0) - (outputStats.size || 0)) / 1024)}KB)`,
+      )
 
       await unlink(inputPath)
     } catch (error) {
@@ -39,7 +39,7 @@ async function convertToWebP() {
   console.log(`\nSuccessfully converted ${pngFiles.length} files to WebP format.`)
 }
 
-convertToWebP().catch(error => {
+convertToWebP().catch((error) => {
   console.error('Conversion failed:', error)
   process.exit(1)
 })

@@ -60,7 +60,7 @@ function addSignal(
   map: Map<string, TopicAggregate>,
   tag: string,
   signal: TopicSignal,
-  timestamp: number
+  timestamp: number,
 ) {
   const existing = map.get(tag) ?? {
     tag,

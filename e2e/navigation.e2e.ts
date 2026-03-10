@@ -12,7 +12,7 @@ test.describe('Navigation - Desktop', () => {
   })
 
   test.describe('Top navigation', () => {
-    test('should display site logo/name', async ({ page }) => {
+    test('should display site logo/name', async () => {
       await expect(basePage.topNav.getByRole('link', { name: 'Trey', exact: true })).toBeVisible()
     })
 
@@ -24,9 +24,15 @@ test.describe('Navigation - Desktop', () => {
 
     test('should display navigation links', async () => {
       // Use exact match to avoid matching homepage feature cards
-      await expect(basePage.topNav.getByRole('link', { name: 'Writing', exact: true })).toBeVisible()
-      await expect(basePage.topNav.getByRole('link', { name: 'Library', exact: true })).toBeVisible()
-      await expect(basePage.topNav.getByRole('link', { name: 'Projects', exact: true })).toBeVisible()
+      await expect(
+        basePage.topNav.getByRole('link', { name: 'Writing', exact: true }),
+      ).toBeVisible()
+      await expect(
+        basePage.topNav.getByRole('link', { name: 'Library', exact: true }),
+      ).toBeVisible()
+      await expect(
+        basePage.topNav.getByRole('link', { name: 'Projects', exact: true }),
+      ).toBeVisible()
       await expect(basePage.topNav.getByRole('link', { name: 'About', exact: true })).toBeVisible()
     })
 
@@ -161,7 +167,7 @@ test.describe('Navigation - Mobile', () => {
   })
 
   test.describe('Mobile search', () => {
-    test('should display mobile search button', async ({ page }) => {
+    test('should display mobile search button', async () => {
       const searchButton = basePage.topNav.getByRole('button', { name: 'Search', exact: true })
       await expect(searchButton).toBeVisible()
     })

@@ -1,7 +1,5 @@
 // iTunes Search API for podcast artwork (no auth required)
-export async function fetchPodcastArtwork(
-  podcastName: string
-): Promise<string | null> {
+export async function fetchPodcastArtwork(podcastName: string): Promise<string | null> {
   const encodedName = encodeURIComponent(podcastName)
   const url = `https://itunes.apple.com/search?term=${encodedName}&entity=podcast&limit=5`
 
@@ -42,9 +40,7 @@ export async function fetchPodcastArtwork(
 
 // Extract YouTube video ID from various URL formats
 export function extractYouTubeId(url: string): string | null {
-  const patterns = [
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s?]+)/,
-  ]
+  const patterns = [/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s?]+)/]
   for (const pattern of patterns) {
     const match = url.match(pattern)
     if (match?.[1]) return match[1]
@@ -63,9 +59,7 @@ export function getYouTubeThumbnail(url: string): string | null {
 }
 
 // Verify a YouTube thumbnail exists (maxresdefault may 404)
-export async function verifyYouTubeThumbnail(
-  url: string
-): Promise<string | null> {
+export async function verifyYouTubeThumbnail(url: string): Promise<string | null> {
   const videoId = extractYouTubeId(url)
   if (!videoId) return null
 
@@ -94,12 +88,10 @@ export async function verifyYouTubeThumbnail(
 export function generatePlaceholderCover(
   title: string,
   showName: string,
-  type: 'podcast' | 'youtube' | 'talk' | 'interview'
+  type: 'podcast' | 'youtube' | 'talk' | 'interview',
 ): string {
   // Create a gradient based on title hash for variety
-  const hash = (title + showName)
-    .split('')
-    .reduce((acc, char) => acc + char.charCodeAt(0), 0)
+  const hash = (title + showName).split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
   const hue = hash % 360
 
   // Icon based on type

@@ -77,9 +77,7 @@ export class EssayDetailPage extends BasePage {
     this.readingTime = page.getByText(/\d+ min read/)
     this.wordCount = page.getByText(/\d+,?\d* words/)
     this.publishDate = page.locator('article time')
-    this.newsletterCta = page
-      .getByRole('heading', { name: 'Enjoyed this essay?' })
-      .locator('..')
+    this.newsletterCta = page.getByRole('heading', { name: 'Enjoyed this essay?' }).locator('..')
     this.evergreenBadge = page.getByText('Evergreen')
   }
 

@@ -52,7 +52,7 @@ test('media thumbnails resolve from cover map or fallback artwork', () => {
   }
 
   const withFallback = appearances.find(
-    (appearance) => !coverMap[appearance.id] && appearance.showArtwork
+    (appearance) => !coverMap[appearance.id] && appearance.showArtwork,
   )
 
   if (withFallback) {

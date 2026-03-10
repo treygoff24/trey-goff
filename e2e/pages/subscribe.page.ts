@@ -76,9 +76,7 @@ export class SubscribePage extends BasePage {
    * Get the compact subscribe form found in essay footers.
    */
   getCompactForm() {
-    const cta = this.page
-      .getByRole('heading', { name: 'Enjoyed this essay?' })
-      .locator('..')
+    const cta = this.page.getByRole('heading', { name: 'Enjoyed this essay?' }).locator('..')
     return {
       emailInput: cta.getByTestId('subscribe-form').locator('input[type="email"]'),
       submitButton: cta.getByTestId('subscribe-form').locator('button[type="submit"]'),

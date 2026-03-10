@@ -24,8 +24,7 @@ const originalEnv = process.env.NODE_ENV
 let logs: unknown[][] = []
 
 const findLog = (type: string) => logs.find((args) => args[1] === type)
-const findFlushLog = () =>
-  logs.find((args) => args[0] === '[Telemetry] Flushed')
+const findFlushLog = () => logs.find((args) => args[0] === '[Telemetry] Flushed')
 
 beforeEach(() => {
   logs = []
@@ -56,7 +55,8 @@ test('records milestones and timing helpers', () => {
 
   const log = findLog('milestone:first_render')
   assert.ok(log)
-  assert.equal((log?.[2] as Record<string, unknown>).reason, 'test')
+  const entry = log[2] as Record<string, unknown>
+  assert.equal(entry.reason, 'test')
 })
 
 test('records download completion with throughput', () => {

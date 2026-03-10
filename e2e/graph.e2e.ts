@@ -138,7 +138,7 @@ test.describe('Knowledge Graph Page', () => {
     test('should support scroll for zoom', async ({ page }, testInfo) => {
       test.skip(
         testInfo.project.name === 'mobile-safari',
-        'Mouse wheel is not supported in Playwright mobile WebKit'
+        'Mouse wheel is not supported in Playwright mobile WebKit',
       )
 
       await graphPage.expectGraphRendered()
@@ -171,7 +171,7 @@ test.describe('Knowledge Graph Page', () => {
   })
 
   test.describe('Legend', () => {
-    test('should display all node types in legend', async ({ page }) => {
+    test('should display all node types in legend', async () => {
       await graphPage.expectGraphRendered()
 
       await expect(graphPage.legend).toBeVisible()
@@ -181,7 +181,7 @@ test.describe('Knowledge Graph Page', () => {
       await expect(graphPage.legend.getByText('Tags', { exact: true })).toBeVisible()
     })
 
-    test('should display colored indicators for each type', async ({ page }) => {
+    test('should display colored indicators for each type', async () => {
       await graphPage.expectGraphRendered()
 
       // Each legend item should have a colored circle
@@ -193,25 +193,25 @@ test.describe('Knowledge Graph Page', () => {
   })
 
   test.describe('Navigation help', () => {
-    test('should show click instruction', async ({ page }) => {
+    test('should show click instruction', async () => {
       await graphPage.expectGraphRendered()
       await expect(graphPage.navigationHelp.getByText('Click:')).toBeVisible()
       await expect(graphPage.navigationHelp.getByText('Select node')).toBeVisible()
     })
 
-    test('should show drag instruction', async ({ page }) => {
+    test('should show drag instruction', async () => {
       await graphPage.expectGraphRendered()
       await expect(graphPage.navigationHelp.getByText('Drag:')).toBeVisible()
       await expect(graphPage.navigationHelp.getByText('Pan view')).toBeVisible()
     })
 
-    test('should show scroll instruction', async ({ page }) => {
+    test('should show scroll instruction', async () => {
       await graphPage.expectGraphRendered()
       await expect(graphPage.navigationHelp.getByText('Scroll:')).toBeVisible()
       await expect(graphPage.navigationHelp.getByText('Zoom in/out')).toBeVisible()
     })
 
-    test('should show hover instruction', async ({ page }) => {
+    test('should show hover instruction', async () => {
       await graphPage.expectGraphRendered()
       await expect(graphPage.navigationHelp.getByText('Hover:')).toBeVisible()
       await expect(graphPage.navigationHelp.getByText('Highlight connections')).toBeVisible()

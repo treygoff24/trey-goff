@@ -29,9 +29,7 @@ export function getAllTypes(): AppearanceType[] {
 
 // Sort appearances by date (newest first)
 export function sortAppearancesByDate(appearances: Appearance[]): Appearance[] {
-  return [...appearances].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  )
+  return [...appearances].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 }
 
 // Get thumbnail for appearance from pre-resolved cover map

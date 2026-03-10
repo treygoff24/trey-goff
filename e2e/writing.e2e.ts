@@ -36,9 +36,7 @@ test.describe('Writing Page', () => {
     })
 
     test('should display page description', async ({ page }) => {
-      await expect(
-        page.getByText(/essays on governance|long-form essays/i)
-      ).toBeVisible()
+      await expect(page.getByText(/essays on governance|long-form essays/i)).toBeVisible()
     })
 
     test('should display essay cards or empty state', async () => {

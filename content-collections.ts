@@ -65,9 +65,7 @@ const projects = defineCollection({
     status: z.enum(['active', 'shipped', 'on-hold', 'archived', 'idea']),
     type: z.enum(['software', 'policy', 'professional', 'experiment']),
     roles: z.array(z.string()).default([]),
-    links: z
-      .array(z.object({ label: z.string(), url: z.string() }))
-      .default([]),
+    links: z.array(z.object({ label: z.string(), url: z.string() })).default([]),
     images: z.array(z.string()).default([]),
     tags: z.array(z.string()).default([]),
     featuredRank: z.number().optional(),

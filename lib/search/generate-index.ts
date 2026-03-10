@@ -6,9 +6,7 @@ import type { BooksData } from '@/lib/books/types'
 // Load books data
 function loadBooks(): BooksData['books'] {
   try {
-    const booksData: BooksData = JSON.parse(
-      readFileSync('./content/library/books.json', 'utf-8')
-    )
+    const booksData: BooksData = JSON.parse(readFileSync('./content/library/books.json', 'utf-8'))
     return booksData.books
   } catch {
     return []

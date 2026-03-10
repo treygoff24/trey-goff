@@ -5,7 +5,7 @@ import { join } from 'node:path'
 
 test('opengraph-image.tsx should exist for all major pages', () => {
   const appDir = join(process.cwd(), 'app')
-  
+
   const requiredOGImages = [
     join(appDir, 'projects', 'opengraph-image.tsx'),
     join(appDir, 'library', 'opengraph-image.tsx'),
@@ -16,10 +16,6 @@ test('opengraph-image.tsx should exist for all major pages', () => {
   ]
 
   for (const imagePath of requiredOGImages) {
-    assert.strictEqual(
-      existsSync(imagePath),
-      true,
-      `Missing opengraph-image.tsx at ${imagePath}`
-    )
+    assert.strictEqual(existsSync(imagePath), true, `Missing opengraph-image.tsx at ${imagePath}`)
   }
 })

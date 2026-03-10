@@ -1,10 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import {
-  extractWikilinksFromMarkdown,
-  normalizeWikiKey,
-  splitWikilinkText,
-} from '@/lib/wikilinks'
+import { extractWikilinksFromMarkdown, normalizeWikiKey, splitWikilinkText } from '@/lib/wikilinks'
 import { markdownToHtml } from '@/lib/markdown'
 
 test('normalizeWikiKey strips punctuation and collapses spaces', () => {

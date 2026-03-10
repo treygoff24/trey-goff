@@ -7,9 +7,7 @@ test.describe('Transmissions page', () => {
     await basePage.goto('/transmissions')
 
     const main = page.locator('main')
-    await expect(
-      main.getByRole('heading', { name: 'Transmissions', level: 1 })
-    ).toBeVisible()
+    await expect(main.getByRole('heading', { name: 'Transmissions', level: 1 })).toBeVisible()
     await expect(main.getByText(/active transmissions/i)).toBeVisible()
 
     const cards = main.locator('a[target="_blank"]')

@@ -14,7 +14,7 @@ function toDirectiveMap(csp: string): Map<string, string> {
         const [name, ...value] = directive.split(/\s+/)
         return name ? ([name, value.join(' ')] as const) : null
       })
-      .filter((entry): entry is readonly [string, string] => entry !== null)
+      .filter((entry): entry is readonly [string, string] => entry !== null),
   )
 }
 
@@ -36,7 +36,7 @@ test('next config includes static security headers and no static CSP', async () 
   assert.equal(
     headerMap.has('Content-Security-Policy'),
     false,
-    'CSP should be set dynamically in middleware with per-request nonce'
+    'CSP should be set dynamically in middleware with per-request nonce',
   )
 })
 
@@ -53,12 +53,24 @@ test('CSP uses strict nonce policy on interactive/library and static-friendly po
 
   // Default routes remain static-friendly for caching and do not require nonce.
   assert.match(defaultScriptSrc, /'unsafe-inline'/, 'default routes should allow inline scripts')
-  assert.doesNotMatch(defaultScriptSrc, /'unsafe-eval'/, 'default routes should not allow unsafe-eval')
+  assert.doesNotMatch(
+    defaultScriptSrc,
+    /'unsafe-eval'/,
+    'default routes should not allow unsafe-eval',
+  )
 
   // Interactive/library routes stay nonce-based and eval-enabled for Three.js.
   for (const scriptSrc of [interactiveScriptSrc, libraryScriptSrc]) {
-    assert.match(scriptSrc, new RegExp(`'nonce-${nonce}'`), 'strict routes should include nonce token')
-    assert.doesNotMatch(scriptSrc, /'unsafe-inline'/, 'strict routes should not allow unsafe-inline')
+    assert.match(
+      scriptSrc,
+      new RegExp(`'nonce-${nonce}'`),
+      'strict routes should include nonce token',
+    )
+    assert.doesNotMatch(
+      scriptSrc,
+      /'unsafe-inline'/,
+      'strict routes should not allow unsafe-inline',
+    )
     assert.match(scriptSrc, /'unsafe-eval'/, 'strict routes should allow unsafe-eval')
   }
 })

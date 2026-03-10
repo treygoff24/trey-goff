@@ -187,7 +187,10 @@ test.describe('Library Page - Classic', () => {
 
       await libraryPage.expectBookDetailVisible()
 
-      const closeButton = page.locator('.fixed button').filter({ has: page.locator('svg') }).first()
+      const closeButton = page
+        .locator('.fixed button')
+        .filter({ has: page.locator('svg') })
+        .first()
       await closeButton.click()
 
       await libraryPage.expectBookDetailHidden()

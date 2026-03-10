@@ -10,18 +10,14 @@ test('preview auth uses crypto.timingSafeEqual for secret comparison', () => {
   assert.match(
     content,
     /import.*timingSafeEqual.*from ['"]crypto['"]/,
-    'Should import timingSafeEqual from crypto'
+    'Should import timingSafeEqual from crypto',
   )
 
-  assert.match(
-    content,
-    /timingSafeEqual/,
-    'Should use timingSafeEqual for comparison'
-  )
+  assert.match(content, /timingSafeEqual/, 'Should use timingSafeEqual for comparison')
 
   assert.doesNotMatch(
     content,
     /providedSecret\s*===\s*previewSecret|secret(?:Param)?\s*===\s*(?:preview)?[Ss]ecret/,
-    'Should not use === for secret comparison (timing attack vulnerability)'
+    'Should not use === for secret comparison (timing attack vulnerability)',
   )
 })

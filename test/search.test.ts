@@ -136,13 +136,13 @@ describe('navigation pages in search index', () => {
 
     // Main navigation should have priority >= 6
     const mainNav = navPages.filter((d) =>
-      ['nav-home', 'nav-writing', 'nav-notes', 'nav-library', 'nav-about'].includes(d.id)
+      ['nav-home', 'nav-writing', 'nav-notes', 'nav-library', 'nav-about'].includes(d.id),
     )
 
     for (const page of mainNav) {
       assert.ok(
         page.priority && page.priority >= 6,
-        `Main navigation ${page.id} should have priority >= 6`
+        `Main navigation ${page.id} should have priority >= 6`,
       )
     }
   })
@@ -189,7 +189,10 @@ describe('content documents in search index', () => {
     const essays = documents.filter((d) => d.type === 'essay')
 
     for (const essay of essays) {
-      assert.ok(essay.url.startsWith('/writing/'), `Essay URL ${essay.url} should start with /writing/`)
+      assert.ok(
+        essay.url.startsWith('/writing/'),
+        `Essay URL ${essay.url} should start with /writing/`,
+      )
       assert.ok(essay.id.startsWith('essay-'), 'Essay ID should start with essay-')
     }
   })
@@ -211,7 +214,10 @@ describe('content documents in search index', () => {
     assert.ok(books.length > 0, 'Should have book documents')
 
     for (const book of books) {
-      assert.ok(book.url.startsWith('/library#'), `Book URL ${book.url} should start with /library#`)
+      assert.ok(
+        book.url.startsWith('/library#'),
+        `Book URL ${book.url} should start with /library#`,
+      )
       assert.ok(book.id.startsWith('book-'), 'Book ID should start with book-')
     }
   })
@@ -223,7 +229,7 @@ describe('content documents in search index', () => {
     for (const book of books) {
       assert.ok(
         book.description?.includes('by '),
-        `Book description "${book.description}" should include "by " for author`
+        `Book description "${book.description}" should include "by " for author`,
       )
     }
   })
@@ -234,10 +240,7 @@ describe('content documents in search index', () => {
 
     for (const essay of essays) {
       if (essay.content) {
-        assert.ok(
-          essay.content.length <= 200,
-          'Essay content should be truncated to 200 chars'
-        )
+        assert.ok(essay.content.length <= 200, 'Essay content should be truncated to 200 chars')
       }
     }
   })
@@ -248,10 +251,7 @@ describe('content documents in search index', () => {
 
     for (const note of notes) {
       if (note.content) {
-        assert.ok(
-          note.content.length <= 200,
-          'Note content should be truncated to 200 chars'
-        )
+        assert.ok(note.content.length <= 200, 'Note content should be truncated to 200 chars')
       }
     }
   })
@@ -280,7 +280,7 @@ describe('search document priorities', () => {
     for (const book of books) {
       assert.ok(
         book.priority === 5 || book.priority === 7,
-        `Book priority should be 5 or 7, got ${book.priority}`
+        `Book priority should be 5 or 7, got ${book.priority}`,
       )
     }
   })
@@ -289,7 +289,7 @@ describe('search document priorities', () => {
     const { documents } = generateSearchIndex()
     const notes = documents.filter((d) => d.type === 'note')
     const mainNavPages = documents.filter((d) =>
-      ['nav-home', 'nav-writing', 'nav-notes', 'nav-library', 'nav-about'].includes(d.id)
+      ['nav-home', 'nav-writing', 'nav-notes', 'nav-library', 'nav-about'].includes(d.id),
     )
 
     if (notes.length > 0 && mainNavPages.length > 0) {
@@ -298,7 +298,7 @@ describe('search document priorities', () => {
 
       assert.ok(
         maxNotePriority < minMainPagePriority,
-        `Notes max priority (${maxNotePriority}) should be less than main nav min (${minMainPagePriority})`
+        `Notes max priority (${maxNotePriority}) should be less than main nav min (${minMainPagePriority})`,
       )
     }
   })
@@ -357,10 +357,7 @@ describe('easter eggs in search index', () => {
     const easterEggs = documents.filter((d) => d.id.startsWith('easter-'))
 
     for (const egg of easterEggs) {
-      assert.ok(
-        egg.priority && egg.priority <= 2,
-        'Easter eggs should have low priority'
-      )
+      assert.ok(egg.priority && egg.priority <= 2, 'Easter eggs should have low priority')
     }
   })
 
@@ -369,6 +366,9 @@ describe('easter eggs in search index', () => {
     const powerlifting = documents.find((d) => d.id === 'easter-powerlifting')
 
     assert.ok(powerlifting?.keywords?.includes('gym'), 'Powerlifting should have gym keyword')
-    assert.ok(powerlifting?.keywords?.includes('fitness'), 'Powerlifting should have fitness keyword')
+    assert.ok(
+      powerlifting?.keywords?.includes('fitness'),
+      'Powerlifting should have fitness keyword',
+    )
   })
 })

@@ -175,7 +175,7 @@ describe('graph edges', () => {
         edge.source.startsWith('essay-') ||
           edge.source.startsWith('note-') ||
           edge.source.startsWith('transmission-'),
-        'Tag edge source should be essay, note, or transmission'
+        'Tag edge source should be essay, note, or transmission',
       )
     }
   })

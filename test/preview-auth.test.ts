@@ -10,7 +10,7 @@ describe('canAccessDraftPreview', () => {
         providedSecret: undefined,
         previewSecret: undefined,
       }),
-      false
+      false,
     )
   })
 
@@ -21,7 +21,7 @@ describe('canAccessDraftPreview', () => {
         providedSecret: undefined,
         previewSecret: 'top-secret',
       }),
-      false
+      false,
     )
 
     assert.equal(
@@ -30,7 +30,7 @@ describe('canAccessDraftPreview', () => {
         providedSecret: 'wrong-secret',
         previewSecret: 'top-secret',
       }),
-      false
+      false,
     )
 
     assert.equal(
@@ -39,7 +39,7 @@ describe('canAccessDraftPreview', () => {
         providedSecret: 'top-secret',
         previewSecret: 'top-secret',
       }),
-      true
+      true,
     )
   })
 
@@ -50,7 +50,7 @@ describe('canAccessDraftPreview', () => {
         providedSecret: undefined,
         previewSecret: undefined,
       }),
-      true
+      true,
     )
 
     assert.equal(
@@ -59,7 +59,7 @@ describe('canAccessDraftPreview', () => {
         providedSecret: 'wrong-secret',
         previewSecret: 'top-secret',
       }),
-      true
+      true,
     )
   })
 })

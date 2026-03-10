@@ -88,9 +88,30 @@ test('abandoned books are counted separately', () => {
 
 describe('sortBooks', () => {
   const testBooks = [
-    book({ id: 'a', title: 'Zephyr', author: 'Zach', year: 2020, rating: 3, dateRead: '2023-01-01' }),
-    book({ id: 'b', title: 'Alpha', author: 'Alice', year: 2024, rating: 5, dateRead: '2024-06-15' }),
-    book({ id: 'c', title: 'Mango', author: 'Mary', year: 2022, rating: 4, dateRead: '2023-06-01' }),
+    book({
+      id: 'a',
+      title: 'Zephyr',
+      author: 'Zach',
+      year: 2020,
+      rating: 3,
+      dateRead: '2023-01-01',
+    }),
+    book({
+      id: 'b',
+      title: 'Alpha',
+      author: 'Alice',
+      year: 2024,
+      rating: 5,
+      dateRead: '2024-06-15',
+    }),
+    book({
+      id: 'c',
+      title: 'Mango',
+      author: 'Mary',
+      year: 2022,
+      rating: 4,
+      dateRead: '2023-06-01',
+    }),
   ]
 
   test('sorts by title alphabetically', () => {
@@ -170,8 +191,20 @@ describe('sortBooks', () => {
 
 describe('filterBooks', () => {
   const testBooks = [
-    book({ id: 'a', status: 'read', topics: ['economics', 'history'], genre: 'non-fiction', rating: 5 }),
-    book({ id: 'b', status: 'want', topics: ['philosophy'], genre: 'non-fiction', rating: undefined }),
+    book({
+      id: 'a',
+      status: 'read',
+      topics: ['economics', 'history'],
+      genre: 'non-fiction',
+      rating: 5,
+    }),
+    book({
+      id: 'b',
+      status: 'want',
+      topics: ['philosophy'],
+      genre: 'non-fiction',
+      rating: undefined,
+    }),
     book({ id: 'c', status: 'reading', topics: ['economics'], genre: 'fiction', rating: 4 }),
     book({ id: 'd', status: 'read', topics: ['history'], genre: 'non-fiction', rating: 3 }),
   ]
@@ -179,13 +212,13 @@ describe('filterBooks', () => {
   test('filters by status', () => {
     const filtered = filterBooks(testBooks, { status: 'read' })
     assert.equal(filtered.length, 2)
-    assert.ok(filtered.every(b => b.status === 'read'))
+    assert.ok(filtered.every((b) => b.status === 'read'))
   })
 
   test('filters by topic', () => {
     const filtered = filterBooks(testBooks, { topic: 'economics' })
     assert.equal(filtered.length, 2)
-    assert.ok(filtered.every(b => b.topics.includes('economics')))
+    assert.ok(filtered.every((b) => b.topics.includes('economics')))
   })
 
   test('filters by genre', () => {
@@ -197,12 +230,12 @@ describe('filterBooks', () => {
   test('filters by minRating', () => {
     const filtered = filterBooks(testBooks, { minRating: 4 })
     assert.equal(filtered.length, 2)
-    assert.ok(filtered.every(b => b.rating && b.rating >= 4))
+    assert.ok(filtered.every((b) => b.rating && b.rating >= 4))
   })
 
   test('minRating excludes books without rating', () => {
     const filtered = filterBooks(testBooks, { minRating: 1 })
-    assert.ok(!filtered.some(b => b.id === 'b')) // Book b has no rating
+    assert.ok(!filtered.some((b) => b.id === 'b')) // Book b has no rating
   })
 
   test('combines multiple filters (AND logic)', () => {
@@ -261,7 +294,7 @@ describe('book data access functions', () => {
   test('getBooksByStatus returns correct books', () => {
     const reading = getBooksByStatus('reading')
     assert.ok(Array.isArray(reading))
-    assert.ok(reading.every(b => b.status === 'reading'))
+    assert.ok(reading.every((b) => b.status === 'reading'))
   })
 })
 
@@ -309,7 +342,7 @@ describe('reading breakdown helpers', () => {
         book({ id: 'd', status: 'read', topics: ['technology'] }),
         book({ id: 'e', status: 'reading', topics: ['economics'] }),
       ],
-      3
+      3,
     )
 
     const other = breakdown.find((entry) => entry.topic === 'Other')

@@ -42,9 +42,7 @@ export async function resolveBookCover(book: Book): Promise<string> {
   return generatePlaceholderCover(book.title, book.author)
 }
 
-export async function resolveAllCovers(
-  books: Book[]
-): Promise<Map<string, string>> {
+export async function resolveAllCovers(books: Book[]): Promise<Map<string, string>> {
   const results = new Map<string, string>()
 
   // Load existing cache

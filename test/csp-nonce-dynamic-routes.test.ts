@@ -14,23 +14,23 @@ test('interactive and library layouts opt into dynamic rendering for nonce injec
   assert.match(
     interactiveLayout,
     /import\s+\{\s*connection\s*\}\s+from\s+["']next\/server["']/,
-    'interactive layout should import connection()'
+    'interactive layout should import connection()',
   )
   assert.match(
     interactiveLayout,
     /await\s+connection\(\)/,
-    'interactive layout should opt into dynamic rendering'
+    'interactive layout should opt into dynamic rendering',
   )
 
   assert.match(
     libraryLayout,
     /import\s+\{\s*connection\s*\}\s+from\s+["']next\/server["']/,
-    'library layout should import connection()'
+    'library layout should import connection()',
   )
   assert.match(
     libraryLayout,
     /await\s+connection\(\)/,
-    'library layout should opt into dynamic rendering'
+    'library layout should opt into dynamic rendering',
   )
 })
 
@@ -40,6 +40,6 @@ test('root layout remains static-friendly (no global connection call)', () => {
   assert.doesNotMatch(
     rootLayout,
     /await\s+connection\(\)/,
-    'root layout should not force global dynamic rendering'
+    'root layout should not force global dynamic rendering',
   )
 })

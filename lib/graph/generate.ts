@@ -17,7 +17,7 @@ function createNode(
   label: string,
   type: NodeType,
   url: string,
-  meta?: GraphNode['meta']
+  meta?: GraphNode['meta'],
 ): GraphNode {
   return {
     id,
@@ -34,7 +34,7 @@ function createEdge(
   source: string,
   target: string,
   type: GraphEdge['type'],
-  weight = 1
+  weight = 1,
 ): GraphEdge {
   return {
     id: `${source}-${target}`,
@@ -57,9 +57,7 @@ export function generateGraphData(): GraphData {
 
     const id = `tag-${tag}`
     tagNodes.set(tag, id)
-    nodes.push(
-      createNode(id, tag, 'tag', `/topics/${encodeURIComponent(tag)}`)
-    )
+    nodes.push(createNode(id, tag, 'tag', `/topics/${encodeURIComponent(tag)}`))
     return id
   }
 
@@ -72,7 +70,7 @@ export function generateGraphData(): GraphData {
         date: essay.date,
         summary: essay.summary,
         wordCount: essay.wordCount,
-      })
+      }),
     )
 
     // Connect to tags
@@ -89,7 +87,7 @@ export function generateGraphData(): GraphData {
     nodes.push(
       createNode(nodeId, label, 'note', `/notes#${encodeURIComponent(note.slug)}`, {
         date: note.date,
-      })
+      }),
     )
 
     // Connect to tags
@@ -107,7 +105,7 @@ export function generateGraphData(): GraphData {
       createNode(nodeId, book.title, 'book', `/library#${book.id}`, {
         author: book.author,
         summary: book.whyILoveIt,
-      })
+      }),
     )
 
     // Connect to topics (treat as tags)
@@ -122,17 +120,11 @@ export function generateGraphData(): GraphData {
   for (const transmission of transmissions) {
     const nodeId = `transmission-${transmission.id}`
     nodes.push(
-      createNode(
-        nodeId,
-        transmission.title,
-        'transmission',
-        transmission.url,
-        {
-          date: transmission.date,
-          summary: transmission.summary,
-          author: transmission.publication,
-        }
-      )
+      createNode(nodeId, transmission.title, 'transmission', transmission.url, {
+        date: transmission.date,
+        summary: transmission.summary,
+        author: transmission.publication,
+      }),
     )
 
     // Connect to tags

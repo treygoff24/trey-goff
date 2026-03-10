@@ -50,7 +50,7 @@ test.describe('Newsletter Subscribe Form - Subscribe Page', () => {
 
       // No validation error should be present
       const isValid = await subscribePage.emailInput.evaluate(
-        (el: HTMLInputElement) => el.validity.valid
+        (el: HTMLInputElement) => el.validity.valid,
       )
       expect(isValid).toBe(true)
     })
@@ -177,7 +177,6 @@ test.describe('Newsletter Subscribe Form - Essay Footer', () => {
   })
 
   test('should display newsletter CTA at bottom of essays', async ({ page }) => {
-    const subscribePage = new SubscribePage(page)
     // Click on first essay if available
     const essayLinks = page.locator('article a')
     const count = await essayLinks.count()
@@ -187,9 +186,7 @@ test.describe('Newsletter Subscribe Form - Essay Footer', () => {
       await expect(page.locator('article h1')).toBeVisible({ timeout: 15000 })
 
       // Newsletter CTA should be visible
-      await expect(
-        page.getByRole('heading', { name: 'Enjoyed this essay?' })
-      ).toBeVisible()
+      await expect(page.getByRole('heading', { name: 'Enjoyed this essay?' })).toBeVisible()
     } else {
       // Skip test if no essays available
       test.skip()
