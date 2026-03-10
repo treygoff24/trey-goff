@@ -3,8 +3,8 @@
  * Sci-fi aesthetic with subtle noise texture and fresnel rim.
  */
 
-import * as THREE from "three";
-import { getSharedUniforms } from "./uniforms";
+import * as THREE from 'three'
+import { getSharedUniforms } from './uniforms'
 
 const vertexShader = /* glsl */ `
 varying vec2 vUv;
@@ -22,7 +22,7 @@ void main() {
 
   gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 }
-`;
+`
 
 const fragmentShader = /* glsl */ `
 precision highp float;
@@ -100,40 +100,34 @@ void main() {
 
   gl_FragColor = vec4(color, 1.0);
 }
-`;
+`
 
 export interface MetalPanelOptions {
-	baseColor?: string;
-	roughness?: number;
-	brushDirection?: "horizontal" | "vertical";
+  baseColor?: string
+  roughness?: number
+  brushDirection?: 'horizontal' | 'vertical'
 }
 
 /**
  * Create a brushed metal panel material.
  */
-export function createMetalPanelMaterial(
-	options: MetalPanelOptions = {}
-): THREE.ShaderMaterial {
-	const {
-		baseColor = "#4a5568",
-		roughness = 0.4,
-		brushDirection = "horizontal",
-	} = options;
+export function createMetalPanelMaterial(options: MetalPanelOptions = {}): THREE.ShaderMaterial {
+  const { baseColor = '#4a5568', roughness = 0.4, brushDirection = 'horizontal' } = options
 
-	const shared = getSharedUniforms();
+  const shared = getSharedUniforms()
 
-	const material = new THREE.ShaderMaterial({
-		vertexShader,
-		fragmentShader,
-		uniforms: {
-			u_time: shared.u_time,
-			u_accentColor: shared.u_accentColor,
-			u_intensity: shared.u_intensity,
-			u_baseColor: { value: new THREE.Color(baseColor) },
-			u_roughness: { value: roughness },
-			u_brushDirection: { value: brushDirection === "horizontal" ? 0 : 1 },
-		},
-	});
+  const material = new THREE.ShaderMaterial({
+    vertexShader,
+    fragmentShader,
+    uniforms: {
+      u_time: shared.u_time,
+      u_accentColor: shared.u_accentColor,
+      u_intensity: shared.u_intensity,
+      u_baseColor: { value: new THREE.Color(baseColor) },
+      u_roughness: { value: roughness },
+      u_brushDirection: { value: brushDirection === 'horizontal' ? 0 : 1 },
+    },
+  })
 
-	return material;
+  return material
 }

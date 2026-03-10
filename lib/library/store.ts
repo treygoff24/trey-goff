@@ -1,13 +1,7 @@
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
 import type { Book } from '@/lib/books/types'
-import type {
-  ViewLevel,
-  Position3D,
-  FilterState,
-  SortBy,
-  QualityLevel,
-} from './types'
+import type { ViewLevel, Position3D, FilterState, SortBy, QualityLevel } from './types'
 
 const UNIVERSE_CAMERA_POSITION: Position3D = [0, 0, 100]
 const UNIVERSE_CAMERA_TARGET: Position3D = [0, 0, 0]
@@ -37,11 +31,7 @@ interface LibraryStoreState {
 }
 
 interface LibraryStoreActions {
-  zoomToConstellation: (
-    topic: string,
-    position: Position3D,
-    targetOffset?: Position3D
-  ) => void
+  zoomToConstellation: (topic: string, position: Position3D, targetOffset?: Position3D) => void
   selectBook: (book: Book | null, position?: Position3D) => void
   stepBack: () => void
   goToUniverse: () => void
@@ -110,11 +100,7 @@ export const useLibraryStore = create<LibraryStore>()(
 
     get isAnimating(): boolean {
       const state = get()
-      return (
-        state.isTransitioning ||
-        state.isUvPanning ||
-        state.isParticleDrifting
-      )
+      return state.isTransitioning || state.isUvPanning || state.isParticleDrifting
     },
 
     zoomToConstellation: (topic, position, targetOffset = [0, 0, 0]) => {
@@ -248,18 +234,9 @@ export const useLibraryStore = create<LibraryStore>()(
           filters.searchQuery !== undefined)
 
       set((s) => ({
-        statusFilter:
-          filters.statusFilter !== undefined
-            ? filters.statusFilter
-            : s.statusFilter,
-        topicFilter:
-          filters.topicFilter !== undefined
-            ? filters.topicFilter
-            : s.topicFilter,
-        searchQuery:
-          filters.searchQuery !== undefined
-            ? filters.searchQuery
-            : s.searchQuery,
+        statusFilter: filters.statusFilter !== undefined ? filters.statusFilter : s.statusFilter,
+        topicFilter: filters.topicFilter !== undefined ? filters.topicFilter : s.topicFilter,
+        searchQuery: filters.searchQuery !== undefined ? filters.searchQuery : s.searchQuery,
         sortBy: filters.sortBy !== undefined ? filters.sortBy : s.sortBy,
         ...(shouldZoomOut
           ? {
@@ -313,40 +290,31 @@ export const useLibraryStore = create<LibraryStore>()(
     reset: () => {
       set(initialState)
     },
-  }))
+  })),
 )
 
 export const selectViewLevel = (state: LibraryStore) => state.viewLevel
-export const selectActiveConstellation = (state: LibraryStore) =>
-  state.activeConstellation
+export const selectActiveConstellation = (state: LibraryStore) => state.activeConstellation
 export const selectSelectedBook = (state: LibraryStore) => state.selectedBook
-export const selectCameraPosition = (state: LibraryStore) =>
-  state.cameraPosition
+export const selectCameraPosition = (state: LibraryStore) => state.cameraPosition
 export const selectCameraTarget = (state: LibraryStore) => state.cameraTarget
-export const selectIsTransitioning = (state: LibraryStore) =>
-  state.isTransitioning
+export const selectIsTransitioning = (state: LibraryStore) => state.isTransitioning
 export const selectStatusFilter = (state: LibraryStore) => state.statusFilter
 export const selectTopicFilter = (state: LibraryStore) => state.topicFilter
 export const selectSearchQuery = (state: LibraryStore) => state.searchQuery
 export const selectSortBy = (state: LibraryStore) => state.sortBy
 export const selectQualityLevel = (state: LibraryStore) => state.qualityLevel
-export const selectShowClassicFallback = (state: LibraryStore) =>
-  state.showClassicFallback
+export const selectShowClassicFallback = (state: LibraryStore) => state.showClassicFallback
 
 export const selectIsFiltered = (state: LibraryStore) =>
   state.statusFilter !== null ||
   state.topicFilter !== null ||
   state.searchQuery.trim().length >= MIN_SEARCH_LENGTH
 
-export const selectTransitionPhase = (state: LibraryStore) =>
-  state.transitionPhase
+export const selectTransitionPhase = (state: LibraryStore) => state.transitionPhase
 export const selectIsUvPanning = (state: LibraryStore) => state.isUvPanning
-export const selectIsParticleDrifting = (state: LibraryStore) =>
-  state.isParticleDrifting
-export const selectPostprocessingEnabled = (state: LibraryStore) =>
-  state.postprocessingEnabled
+export const selectIsParticleDrifting = (state: LibraryStore) => state.isParticleDrifting
+export const selectPostprocessingEnabled = (state: LibraryStore) => state.postprocessingEnabled
 
 export const selectIsAnimating = (state: LibraryStore) =>
-  state.isTransitioning ||
-  state.isUvPanning ||
-  state.isParticleDrifting
+  state.isTransitioning || state.isUvPanning || state.isParticleDrifting

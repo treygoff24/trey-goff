@@ -177,7 +177,7 @@ export function fbm2D(
   octaves = 4,
   persistence = 0.5,
   lacunarity = 2,
-  seed = 0
+  seed = 0,
 ): number {
   let total = 0
   let amplitude = 1

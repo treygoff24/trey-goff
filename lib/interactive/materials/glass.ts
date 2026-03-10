@@ -3,8 +3,8 @@
  * Sci-fi transparent surfaces with optional tint.
  */
 
-import * as THREE from "three";
-import { getSharedUniforms } from "./uniforms";
+import * as THREE from 'three'
+import { getSharedUniforms } from './uniforms'
 
 const vertexShader = /* glsl */ `
 varying vec2 vUv;
@@ -25,7 +25,7 @@ void main() {
 
   gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 }
-`;
+`
 
 const fragmentShader = /* glsl */ `
 precision highp float;
@@ -109,46 +109,44 @@ void main() {
 
   gl_FragColor = vec4(color, alpha);
 }
-`;
+`
 
 export interface GlassOptions {
-	tintColor?: string;
-	opacity?: number;
-	frostAmount?: number;
-	refractionStrength?: number;
+  tintColor?: string
+  opacity?: number
+  frostAmount?: number
+  refractionStrength?: number
 }
 
 /**
  * Create a frosted glass material.
  */
-export function createGlassMaterial(
-	options: GlassOptions = {}
-): THREE.ShaderMaterial {
-	const {
-		tintColor = "#a8d8ea",
-		opacity = 0.3,
-		frostAmount = 0.4,
-		refractionStrength = 0.05,
-	} = options;
+export function createGlassMaterial(options: GlassOptions = {}): THREE.ShaderMaterial {
+  const {
+    tintColor = '#a8d8ea',
+    opacity = 0.3,
+    frostAmount = 0.4,
+    refractionStrength = 0.05,
+  } = options
 
-	const shared = getSharedUniforms();
+  const shared = getSharedUniforms()
 
-	const material = new THREE.ShaderMaterial({
-		vertexShader,
-		fragmentShader,
-		uniforms: {
-			u_time: shared.u_time,
-			u_accentColor: shared.u_accentColor,
-			u_intensity: shared.u_intensity,
-			u_tintColor: { value: new THREE.Color(tintColor) },
-			u_opacity: { value: opacity },
-			u_frostAmount: { value: frostAmount },
-			u_refractionStrength: { value: refractionStrength },
-		},
-		transparent: true,
-		side: THREE.DoubleSide,
-		depthWrite: false,
-	});
+  const material = new THREE.ShaderMaterial({
+    vertexShader,
+    fragmentShader,
+    uniforms: {
+      u_time: shared.u_time,
+      u_accentColor: shared.u_accentColor,
+      u_intensity: shared.u_intensity,
+      u_tintColor: { value: new THREE.Color(tintColor) },
+      u_opacity: { value: opacity },
+      u_frostAmount: { value: frostAmount },
+      u_refractionStrength: { value: refractionStrength },
+    },
+    transparent: true,
+    side: THREE.DoubleSide,
+    depthWrite: false,
+  })
 
-	return material;
+  return material
 }

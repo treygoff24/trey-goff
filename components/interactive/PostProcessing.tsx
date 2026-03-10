@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 /**
  * PostProcessing - Cinematic post-processing effects for Interactive route.
@@ -11,20 +11,33 @@
  * Reduced motion disables animated effects (noise, chromatic aberration, DOF).
  */
 
-import { EffectComposer, Vignette, Bloom, Noise, ChromaticAberration, DepthOfField, ToneMapping, SSAO } from "@react-three/postprocessing";
-import { BlendFunction, ToneMappingMode } from "postprocessing";
-import { getQualitySettings, applyReducedMotion, type PostProcessingSettings } from "@/lib/interactive/quality";
-import type { QualityTier } from "@/lib/interactive/capabilities";
+import {
+  EffectComposer,
+  Vignette,
+  Bloom,
+  Noise,
+  ChromaticAberration,
+  DepthOfField,
+  ToneMapping,
+  SSAO,
+} from '@react-three/postprocessing'
+import { BlendFunction, ToneMappingMode } from 'postprocessing'
+import {
+  getQualitySettings,
+  applyReducedMotion,
+  type PostProcessingSettings,
+} from '@/lib/interactive/quality'
+import type { QualityTier } from '@/lib/interactive/capabilities'
 
 // =============================================================================
 // Types
 // =============================================================================
 
 interface PostProcessingProps {
-	/** Current quality tier */
-	qualityTier: QualityTier;
-	/** Whether reduced motion is preferred */
-	reducedMotion: boolean;
+  /** Current quality tier */
+  qualityTier: QualityTier
+  /** Whether reduced motion is preferred */
+  reducedMotion: boolean
 }
 
 // =============================================================================
@@ -36,91 +49,92 @@ interface PostProcessingProps {
  * Uses separate EffectComposer configurations to avoid conditional children issues.
  */
 function EffectsRenderer({ settings }: { settings: PostProcessingSettings }) {
-	const { vignette, bloom, noise, chromaticAberration, ssao, depthOfField, toneMapping, multisampling } = settings;
+  const {
+    vignette,
+    bloom,
+    noise,
+    chromaticAberration,
+    ssao,
+    depthOfField,
+    toneMapping,
+    multisampling,
+  } = settings
 
-	// Build effect list based on what's enabled
-	const effects: React.ReactElement[] = [];
+  // Build effect list based on what's enabled
+  const effects: React.ReactElement[] = []
 
-	if (ssao) {
-		effects.push(
-			<SSAO
-				key="ssao"
-				intensity={ssao.intensity}
-				radius={ssao.radius}
-				luminanceInfluence={0.5}
-				bias={0.025}
-			/>
-		);
-	}
+  if (ssao) {
+    effects.push(
+      <SSAO
+        key="ssao"
+        intensity={ssao.intensity}
+        radius={ssao.radius}
+        luminanceInfluence={0.5}
+        bias={0.025}
+      />,
+    )
+  }
 
-	if (depthOfField) {
-		effects.push(
-			<DepthOfField
-				key="dof"
-				focusDistance={depthOfField.focusDistance}
-				focalLength={depthOfField.focalLength}
-				bokehScale={depthOfField.bokehScale}
-			/>
-		);
-	}
+  if (depthOfField) {
+    effects.push(
+      <DepthOfField
+        key="dof"
+        focusDistance={depthOfField.focusDistance}
+        focalLength={depthOfField.focalLength}
+        bokehScale={depthOfField.bokehScale}
+      />,
+    )
+  }
 
-	if (bloom) {
-		effects.push(
-			<Bloom
-				key="bloom"
-				intensity={bloom.intensity}
-				luminanceThreshold={bloom.threshold}
-				luminanceSmoothing={bloom.smoothing}
-				mipmapBlur
-			/>
-		);
-	}
+  if (bloom) {
+    effects.push(
+      <Bloom
+        key="bloom"
+        intensity={bloom.intensity}
+        luminanceThreshold={bloom.threshold}
+        luminanceSmoothing={bloom.smoothing}
+        mipmapBlur
+      />,
+    )
+  }
 
-	if (vignette) {
-		effects.push(
-			<Vignette
-				key="vignette"
-				offset={vignette.offset}
-				darkness={vignette.darkness}
-				blendFunction={BlendFunction.NORMAL}
-			/>
-		);
-	}
+  if (vignette) {
+    effects.push(
+      <Vignette
+        key="vignette"
+        offset={vignette.offset}
+        darkness={vignette.darkness}
+        blendFunction={BlendFunction.NORMAL}
+      />,
+    )
+  }
 
-	if (noise) {
-		effects.push(
-			<Noise
-				key="noise"
-				opacity={noise.opacity}
-				blendFunction={BlendFunction.OVERLAY}
-			/>
-		);
-	}
+  if (noise) {
+    effects.push(
+      <Noise key="noise" opacity={noise.opacity} blendFunction={BlendFunction.OVERLAY} />,
+    )
+  }
 
-	if (chromaticAberration) {
-		effects.push(
-			<ChromaticAberration
-				key="chromatic"
-				offset={[chromaticAberration.offset, chromaticAberration.offset]}
-				radialModulation={false}
-				modulationOffset={0.5}
-			/>
-		);
-	}
+  if (chromaticAberration) {
+    effects.push(
+      <ChromaticAberration
+        key="chromatic"
+        offset={[chromaticAberration.offset, chromaticAberration.offset]}
+        radialModulation={false}
+        modulationOffset={0.5}
+      />,
+    )
+  }
 
-	if (toneMapping) {
-		effects.push(<ToneMapping key="tonemapping" mode={ToneMappingMode.ACES_FILMIC} />);
-	}
+  if (toneMapping) {
+    effects.push(<ToneMapping key="tonemapping" mode={ToneMappingMode.ACES_FILMIC} />)
+  }
 
-	if (effects.length === 0) {
-		return null;
-	}
+  if (effects.length === 0) {
+    return null
+  }
 
-	return (
-		<EffectComposer multisampling={multisampling}>
-			{effects}
-		</EffectComposer>
-	);
+  return <EffectComposer multisampling={multisampling}>{effects}</EffectComposer>
 }
 
 // =============================================================================
@@ -128,13 +142,13 @@ function EffectsRenderer({ settings }: { settings: PostProcessingSettings }) {
 // =============================================================================
 
 export function PostProcessing({ qualityTier, reducedMotion }: PostProcessingProps) {
-	// Get settings for the current tier
-	let settings = getQualitySettings(qualityTier);
+  // Get settings for the current tier
+  let settings = getQualitySettings(qualityTier)
 
-	// Apply reduced motion overrides
-	if (reducedMotion) {
-		settings = applyReducedMotion(settings);
-	}
+  // Apply reduced motion overrides
+  if (reducedMotion) {
+    settings = applyReducedMotion(settings)
+  }
 
-	return <EffectsRenderer settings={settings.postprocessing} />;
+  return <EffectsRenderer settings={settings.postprocessing} />
 }

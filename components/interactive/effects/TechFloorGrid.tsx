@@ -1,24 +1,24 @@
-"use client";
+'use client'
 
-import { useRef, useMemo } from "react";
-import { useFrame } from "@react-three/fiber";
-import * as THREE from "three";
+import { useRef, useMemo } from 'react'
+import { useFrame } from '@react-three/fiber'
+import * as THREE from 'three'
 
 interface TechFloorGridProps {
-	/** Width of the floor */
-	width?: number;
-	/** Depth of the floor */
-	depth?: number;
-	/** Base color of the floor */
-	baseColor?: THREE.ColorRepresentation;
-	/** Grid line color */
-	gridColor?: THREE.ColorRepresentation;
-	/** Intensity of grid lines */
-	gridIntensity?: number;
-	/** Size of grid cells */
-	gridSize?: number;
-	/** Disable animations for reduced motion */
-	reducedMotion?: boolean;
+  /** Width of the floor */
+  width?: number
+  /** Depth of the floor */
+  depth?: number
+  /** Base color of the floor */
+  baseColor?: THREE.ColorRepresentation
+  /** Grid line color */
+  gridColor?: THREE.ColorRepresentation
+  /** Intensity of grid lines */
+  gridIntensity?: number
+  /** Size of grid cells */
+  gridSize?: number
+  /** Disable animations for reduced motion */
+  reducedMotion?: boolean
 }
 
 const vertexShader = /* glsl */ `
@@ -38,7 +38,7 @@ const vertexShader = /* glsl */ `
 
     gl_Position = projectionMatrix * viewMatrix * worldPos;
   }
-`;
+`
 
 const fragmentShader = /* glsl */ `
   precision highp float;
@@ -93,68 +93,68 @@ const fragmentShader = /* glsl */ `
 
     gl_FragColor = vec4(color, 1.0);
   }
-`;
+`
 
 interface TechFloorUniforms {
-	uBaseColor: THREE.IUniform<THREE.Color>;
-	uGridColor: THREE.IUniform<THREE.Color>;
-	uGridIntensity: THREE.IUniform<number>;
-	uGridSize: THREE.IUniform<number>;
-	uTime: THREE.IUniform<number>;
+  uBaseColor: THREE.IUniform<THREE.Color>
+  uGridColor: THREE.IUniform<THREE.Color>
+  uGridIntensity: THREE.IUniform<number>
+  uGridSize: THREE.IUniform<number>
+  uTime: THREE.IUniform<number>
 }
 
 export function TechFloorGrid({
-	width = 22,
-	depth = 18,
-	baseColor = "#0a0a12",
-	gridColor = "#7C5CFF",
-	gridIntensity = 0.15,
-	gridSize = 2.0,
-	reducedMotion = false,
+  width = 22,
+  depth = 18,
+  baseColor = '#0a0a12',
+  gridColor = '#7C5CFF',
+  gridIntensity = 0.15,
+  gridSize = 2.0,
+  reducedMotion = false,
 }: TechFloorGridProps) {
-	const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const materialRef = useRef<THREE.ShaderMaterial>(null)
 
-	const baseColorVec = useMemo(() => new THREE.Color(baseColor), [baseColor]);
-	const gridColorVec = useMemo(() => new THREE.Color(gridColor), [gridColor]);
+  const baseColorVec = useMemo(() => new THREE.Color(baseColor), [baseColor])
+  const gridColorVec = useMemo(() => new THREE.Color(gridColor), [gridColor])
 
-	const uniforms = useMemo(
-		() => ({
-			uBaseColor: { value: new THREE.Color() },
-			uGridColor: { value: new THREE.Color() },
-			uGridIntensity: { value: gridIntensity },
-			uGridSize: { value: gridSize },
-			uTime: { value: 0 },
-		}),
-		[gridIntensity, gridSize]
-	);
+  const uniforms = useMemo(
+    () => ({
+      uBaseColor: { value: new THREE.Color() },
+      uGridColor: { value: new THREE.Color() },
+      uGridIntensity: { value: gridIntensity },
+      uGridSize: { value: gridSize },
+      uTime: { value: 0 },
+    }),
+    [gridIntensity, gridSize],
+  )
 
-	useFrame((state) => {
-		if (!materialRef.current) return;
+  useFrame((state) => {
+    if (!materialRef.current) return
 
-		const u = materialRef.current.uniforms as unknown as TechFloorUniforms;
+    const u = materialRef.current.uniforms as unknown as TechFloorUniforms
 
-		if (!u.uBaseColor.value.equals(baseColorVec)) {
-			u.uBaseColor.value.copy(baseColorVec);
-		}
-		if (!u.uGridColor.value.equals(gridColorVec)) {
-			u.uGridColor.value.copy(gridColorVec);
-		}
+    if (!u.uBaseColor.value.equals(baseColorVec)) {
+      u.uBaseColor.value.copy(baseColorVec)
+    }
+    if (!u.uGridColor.value.equals(gridColorVec)) {
+      u.uGridColor.value.copy(gridColorVec)
+    }
 
-		if (!reducedMotion) {
-			u.uTime.value = state.clock.elapsedTime;
-		}
-	});
+    if (!reducedMotion) {
+      u.uTime.value = state.clock.elapsedTime
+    }
+  })
 
-	return (
-		<mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]} receiveShadow name="ground">
-			<planeGeometry args={[width, depth]} />
-			<shaderMaterial
-				ref={materialRef}
-				vertexShader={vertexShader}
-				fragmentShader={fragmentShader}
-				uniforms={uniforms}
-				toneMapped={false}
-			/>
-		</mesh>
-	);
+  return (
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]} receiveShadow name="ground">
+      <planeGeometry args={[width, depth]} />
+      <shaderMaterial
+        ref={materialRef}
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+        uniforms={uniforms}
+        toneMapped={false}
+      />
+    </mesh>
+  )
 }

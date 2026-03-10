@@ -3,8 +3,8 @@
  * Perfect for screens, interfaces, and futuristic displays.
  */
 
-import * as THREE from "three";
-import { getSharedUniforms } from "./uniforms";
+import * as THREE from 'three'
+import { getSharedUniforms } from './uniforms'
 
 const vertexShader = /* glsl */ `
 varying vec2 vUv;
@@ -20,7 +20,7 @@ void main() {
 
   gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 }
-`;
+`
 
 const fragmentShader = /* glsl */ `
 precision highp float;
@@ -132,47 +132,45 @@ void main() {
 
   gl_FragColor = vec4(color, alpha);
 }
-`;
+`
 
 export interface HolographicOptions {
-	scanLineSpeed?: number;
-	scanLineDensity?: number;
-	flickerAmount?: number;
-	glitchAmount?: number;
+  scanLineSpeed?: number
+  scanLineDensity?: number
+  flickerAmount?: number
+  glitchAmount?: number
 }
 
 /**
  * Create a holographic display material.
  */
-export function createHolographicMaterial(
-	options: HolographicOptions = {}
-): THREE.ShaderMaterial {
-	const {
-		scanLineSpeed = 3.0,
-		scanLineDensity = 200.0,
-		flickerAmount = 0.3,
-		glitchAmount = 0.5,
-	} = options;
+export function createHolographicMaterial(options: HolographicOptions = {}): THREE.ShaderMaterial {
+  const {
+    scanLineSpeed = 3.0,
+    scanLineDensity = 200.0,
+    flickerAmount = 0.3,
+    glitchAmount = 0.5,
+  } = options
 
-	const shared = getSharedUniforms();
+  const shared = getSharedUniforms()
 
-	const material = new THREE.ShaderMaterial({
-		vertexShader,
-		fragmentShader,
-		uniforms: {
-			u_time: shared.u_time,
-			u_accentColor: shared.u_accentColor,
-			u_intensity: shared.u_intensity,
-			u_scanLineSpeed: { value: scanLineSpeed },
-			u_scanLineDensity: { value: scanLineDensity },
-			u_flickerAmount: { value: flickerAmount },
-			u_glitchAmount: { value: glitchAmount },
-		},
-		transparent: true,
-		side: THREE.DoubleSide,
-		depthWrite: false,
-		blending: THREE.AdditiveBlending,
-	});
+  const material = new THREE.ShaderMaterial({
+    vertexShader,
+    fragmentShader,
+    uniforms: {
+      u_time: shared.u_time,
+      u_accentColor: shared.u_accentColor,
+      u_intensity: shared.u_intensity,
+      u_scanLineSpeed: { value: scanLineSpeed },
+      u_scanLineDensity: { value: scanLineDensity },
+      u_flickerAmount: { value: flickerAmount },
+      u_glitchAmount: { value: glitchAmount },
+    },
+    transparent: true,
+    side: THREE.DoubleSide,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+  })
 
-	return material;
+  return material
 }

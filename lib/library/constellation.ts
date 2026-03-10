@@ -4,12 +4,7 @@
  */
 
 import type { Book } from '@/lib/books/types'
-import type {
-  ConstellationData,
-  BookWithPosition,
-  Position3D,
-  SortBy,
-} from './types'
+import type { ConstellationData, BookWithPosition, Position3D, SortBy } from './types'
 import { getTopicColor } from './types'
 
 // =============================================================================
@@ -24,7 +19,6 @@ const CONSTELLATION_SPREAD_RADIUS = 160
 
 /** Vertical spread for constellations */
 const VERTICAL_SPREAD = 70
-
 
 // =============================================================================
 // Hashing for Deterministic Positions
@@ -62,11 +56,7 @@ function createSeededRandom(seed: number): () => number {
  * Calculate constellation position using spherical distribution.
  * Each topic gets a deterministic position based on its name hash.
  */
-function calculateConstellationPosition(
-  topic: string,
-  index: number,
-  total: number
-): Position3D {
+function calculateConstellationPosition(topic: string, index: number, total: number): Position3D {
   const seed = hashString(topic)
   const random = createSeededRandom(seed)
 
@@ -94,35 +84,30 @@ function calculateConstellationPosition(
  * Returns LOCAL position (relative to constellation center).
  * Spreads books in 3D space within the nebula sphere.
  */
-function calculateBookPosition(
-  book: Book,
-  index: number,
-  total: number
-): Position3D {
+function calculateBookPosition(book: Book, index: number, total: number): Position3D {
   // Nebula radius scales with book count (same formula as Constellation.tsx)
   const nebulaRadius = Math.max(15, Math.min(30, 10 + total * 0.5))
-  
+
   // Use seeded random for deterministic but varied positions
   const seed = hashString(book.id)
   const random = createSeededRandom(seed)
-  
+
   // Spherical distribution using fibonacci sphere for even spacing
   const goldenRatio = (1 + Math.sqrt(5)) / 2
-  const theta = 2 * Math.PI * index / goldenRatio
-  const phi = Math.acos(1 - 2 * (index + 0.5) / total)
-  
+  const theta = (2 * Math.PI * index) / goldenRatio
+  const phi = Math.acos(1 - (2 * (index + 0.5)) / total)
+
   // Vary radius so books fill the nebula volume (not just surface)
   const radiusFactor = 0.3 + random() * 0.6 // 30-90% of nebula radius
   const radius = nebulaRadius * radiusFactor * 0.7 // Stay well inside nebula
-  
+
   // Convert spherical to cartesian (LOCAL coordinates)
   const x = radius * Math.sin(phi) * Math.cos(theta)
   const y = radius * Math.sin(phi) * Math.sin(theta) * 0.6 // Flatten slightly
   const z = radius * Math.cos(phi) * 0.8 // Reduce Z spread
-  
+
   return [x, y, z]
 }
-
 
 // =============================================================================
 // Grouping Functions
@@ -135,9 +120,7 @@ const RANDOM_TOPIC = 'random'
  * Group books into constellations by primary topic.
  * Books with no topics or single-book topics go into a "Random" constellation.
  */
-export function groupBooksIntoConstellations(
-  books: Book[]
-): ConstellationData[] {
+export function groupBooksIntoConstellations(books: Book[]): ConstellationData[] {
   // Count books per primary topic
   const topicCounts = new Map<string, Book[]>()
   const orphanBooks: Book[] = []
@@ -173,61 +156,43 @@ export function groupBooksIntoConstellations(
   const totalConstellations = validTopics.length + (orphanBooks.length > 0 ? 1 : 0)
 
   // Create constellation data for regular topics
-  const constellations: ConstellationData[] = validTopics.map(
-    ([topic, topicBooks], index) => {
-      const position = calculateConstellationPosition(
-        topic,
-        index,
-        totalConstellations
-      )
-      const color = getTopicColor(topic)
+  const constellations: ConstellationData[] = validTopics.map(([topic, topicBooks], index) => {
+    const position = calculateConstellationPosition(topic, index, totalConstellations)
+    const color = getTopicColor(topic)
 
-      // Position books within constellation
-      const booksWithPosition: BookWithPosition[] = topicBooks.map(
-        (book, bookIndex) => ({
-          ...book,
-          position: calculateBookPosition(
-            book,
-            bookIndex,
-            topicBooks.length
-          ),
-          isDrifter: false,
-          primaryTopic: topic,
-        })
-      )
+    // Position books within constellation
+    const booksWithPosition: BookWithPosition[] = topicBooks.map((book, bookIndex) => ({
+      ...book,
+      position: calculateBookPosition(book, bookIndex, topicBooks.length),
+      isDrifter: false,
+      primaryTopic: topic,
+    }))
 
-      return {
-        topic,
-        label: capitalizeFirst(topic),
-        color,
-        position,
-        books: booksWithPosition,
-        bookCount: booksWithPosition.length,
-      }
+    return {
+      topic,
+      label: capitalizeFirst(topic),
+      color,
+      position,
+      books: booksWithPosition,
+      bookCount: booksWithPosition.length,
     }
-  )
+  })
 
   // Add Random constellation for orphan books
   if (orphanBooks.length > 0) {
     const randomPosition = calculateConstellationPosition(
       RANDOM_TOPIC,
       validTopics.length, // Last position
-      totalConstellations
+      totalConstellations,
     )
     const randomColor = getTopicColor(RANDOM_TOPIC)
 
-    const randomBooksWithPosition: BookWithPosition[] = orphanBooks.map(
-      (book, bookIndex) => ({
-        ...book,
-        position: calculateBookPosition(
-          book,
-          bookIndex,
-          orphanBooks.length
-        ),
-        isDrifter: false,
-        primaryTopic: RANDOM_TOPIC,
-      })
-    )
+    const randomBooksWithPosition: BookWithPosition[] = orphanBooks.map((book, bookIndex) => ({
+      ...book,
+      position: calculateBookPosition(book, bookIndex, orphanBooks.length),
+      isDrifter: false,
+      primaryTopic: RANDOM_TOPIC,
+    }))
 
     constellations.push({
       topic: RANDOM_TOPIC,
@@ -263,7 +228,7 @@ export function filterBooks(
     statusFilter: Book['status'] | null
     topicFilter: string | null
     searchQuery: string
-  }
+  },
 ): BookWithPosition[] {
   const { statusFilter, topicFilter, searchQuery } = filters
   const query = searchQuery.toLowerCase().trim()
@@ -296,10 +261,7 @@ export function filterBooks(
  * Sort books according to the specified sort type.
  * Only used when filtered (seeded positions preserved when unfiltered).
  */
-export function sortBooks(
-  books: BookWithPosition[],
-  sortBy: SortBy
-): BookWithPosition[] {
+export function sortBooks(books: BookWithPosition[], sortBy: SortBy): BookWithPosition[] {
   const sorted = [...books]
 
   switch (sortBy) {
@@ -342,7 +304,7 @@ export function sortBooks(
  */
 export function calculateFilteredPositions(
   books: BookWithPosition[],
-  sortBy: SortBy
+  sortBy: SortBy,
 ): BookWithPosition[] {
   // Sort first
   const sorted = sortBooks(books, sortBy)
@@ -359,11 +321,7 @@ export function calculateFilteredPositions(
 
     return {
       ...book,
-      position: [
-        Math.cos(angle) * radius,
-        y,
-        Math.sin(angle) * radius,
-      ] as Position3D,
+      position: [Math.cos(angle) * radius, y, Math.sin(angle) * radius] as Position3D,
     }
   })
 }
@@ -386,4 +344,3 @@ function getLastName(author: string): string {
   const parts = author.trim().split(' ')
   return parts[parts.length - 1] ?? author
 }
-

@@ -1,22 +1,22 @@
-"use client";
+'use client'
 
-import { useRef, useMemo } from "react";
-import { useFrame } from "@react-three/fiber";
-import * as THREE from "three";
+import { useRef, useMemo } from 'react'
+import { useFrame } from '@react-three/fiber'
+import * as THREE from 'three'
 
 interface HolographicScreenProps {
-	/** Base color of the hologram */
-	color?: THREE.ColorRepresentation;
-	/** Intensity of the glow effect */
-	intensity?: number;
-	/** Width of the screen */
-	width?: number;
-	/** Height of the screen */
-	height?: number;
-	/** Whether the screen is hovered/active */
-	isActive?: boolean;
-	/** Disable animations for reduced motion */
-	reducedMotion?: boolean;
+  /** Base color of the hologram */
+  color?: THREE.ColorRepresentation
+  /** Intensity of the glow effect */
+  intensity?: number
+  /** Width of the screen */
+  width?: number
+  /** Height of the screen */
+  height?: number
+  /** Whether the screen is hovered/active */
+  isActive?: boolean
+  /** Disable animations for reduced motion */
+  reducedMotion?: boolean
 }
 
 const vertexShader = /* glsl */ `
@@ -33,7 +33,7 @@ const vertexShader = /* glsl */ `
 
     gl_Position = projectionMatrix * mvPosition;
   }
-`;
+`
 
 const fragmentShader = /* glsl */ `
   precision highp float;
@@ -96,72 +96,72 @@ const fragmentShader = /* glsl */ `
 
     gl_FragColor = vec4(color, alpha);
   }
-`;
+`
 
 interface HolographicUniforms {
-	uColor: THREE.IUniform<THREE.Color>;
-	uIntensity: THREE.IUniform<number>;
-	uTime: THREE.IUniform<number>;
-	uActive: THREE.IUniform<number>;
+  uColor: THREE.IUniform<THREE.Color>
+  uIntensity: THREE.IUniform<number>
+  uTime: THREE.IUniform<number>
+  uActive: THREE.IUniform<number>
 }
 
 export function HolographicScreen({
-	color = "#7C5CFF",
-	intensity = 1.0,
-	width = 1.2,
-	height = 0.8,
-	isActive = false,
-	reducedMotion = false,
+  color = '#7C5CFF',
+  intensity = 1.0,
+  width = 1.2,
+  height = 0.8,
+  isActive = false,
+  reducedMotion = false,
 }: HolographicScreenProps) {
-	const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const materialRef = useRef<THREE.ShaderMaterial>(null)
 
-	const colorVec = useMemo(() => new THREE.Color(color), [color]);
+  const colorVec = useMemo(() => new THREE.Color(color), [color])
 
-	const uniforms = useMemo(
-		() => ({
-			uColor: { value: new THREE.Color() },
-			uIntensity: { value: 1.0 },
-			uTime: { value: 0 },
-			uActive: { value: 0 },
-		}),
-		[]
-	);
+  const uniforms = useMemo(
+    () => ({
+      uColor: { value: new THREE.Color() },
+      uIntensity: { value: 1.0 },
+      uTime: { value: 0 },
+      uActive: { value: 0 },
+    }),
+    [],
+  )
 
-	useFrame((state) => {
-		if (!materialRef.current) return;
+  useFrame((state) => {
+    if (!materialRef.current) return
 
-		const u = materialRef.current.uniforms as unknown as HolographicUniforms;
+    const u = materialRef.current.uniforms as unknown as HolographicUniforms
 
-		if (!u.uColor.value.equals(colorVec)) {
-			u.uColor.value.copy(colorVec);
-		}
+    if (!u.uColor.value.equals(colorVec)) {
+      u.uColor.value.copy(colorVec)
+    }
 
-		u.uIntensity.value = intensity;
+    u.uIntensity.value = intensity
 
-		// Smooth active transition
-		const targetActive = isActive ? 1.0 : 0.0;
-		u.uActive.value += (targetActive - u.uActive.value) * 0.1;
+    // Smooth active transition
+    const targetActive = isActive ? 1.0 : 0.0
+    u.uActive.value += (targetActive - u.uActive.value) * 0.1
 
-		// Only animate if not reduced motion
-		if (!reducedMotion) {
-			u.uTime.value = state.clock.elapsedTime;
-		}
-	});
+    // Only animate if not reduced motion
+    if (!reducedMotion) {
+      u.uTime.value = state.clock.elapsedTime
+    }
+  })
 
-	return (
-		<mesh>
-			<planeGeometry args={[width, height]} />
-			<shaderMaterial
-				ref={materialRef}
-				vertexShader={vertexShader}
-				fragmentShader={fragmentShader}
-				uniforms={uniforms}
-				transparent
-				depthWrite={false}
-				blending={THREE.AdditiveBlending}
-				side={THREE.DoubleSide}
-				toneMapped={false}
-			/>
-		</mesh>
-	);
+  return (
+    <mesh>
+      <planeGeometry args={[width, height]} />
+      <shaderMaterial
+        ref={materialRef}
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+        uniforms={uniforms}
+        transparent
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+        side={THREE.DoubleSide}
+        toneMapped={false}
+      />
+    </mesh>
+  )
 }

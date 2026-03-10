@@ -131,13 +131,13 @@ class TextureManager {
    */
   private getOrCreatePlaceholder(topics: string[]): THREE.Texture {
     const primaryTopic = topics[0]?.toLowerCase() ?? '_default'
-    
+
     // Check placeholder cache
     const cached = this.placeholderCache.get(primaryTopic)
     if (cached) {
       return cached
     }
-    
+
     // Create and cache new placeholder
     const texture = this.createPlaceholderTexture(topics)
     this.placeholderCache.set(primaryTopic, texture)
@@ -161,7 +161,7 @@ class TextureManager {
           resolve(texture)
         },
         undefined,
-        (err) => reject(err)
+        (err) => reject(err),
       )
     })
   }
@@ -185,7 +185,7 @@ class TextureManager {
       const r = parseInt(color.slice(1, 3), 16)
       const g = parseInt(color.slice(3, 5), 16)
       const b = parseInt(color.slice(5, 7), 16)
-      
+
       // Main cover gradient
       const mainGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height)
       mainGradient.addColorStop(0, color)
@@ -215,13 +215,13 @@ class TextureManager {
       // Decorative lines
       ctx.strokeStyle = 'rgba(255,255,255,0.12)'
       ctx.lineWidth = 2
-      
+
       // Top decoration
       ctx.beginPath()
       ctx.moveTo(40, 50)
       ctx.lineTo(canvas.width - 30, 50)
       ctx.stroke()
-      
+
       // Bottom decoration
       ctx.beginPath()
       ctx.moveTo(40, canvas.height - 50)

@@ -77,8 +77,7 @@ function hslToHex(h: number, s: number, l: number): string {
   const g = Math.round((g1 + m) * 255)
   const b = Math.round((b1 + m) * 255)
 
-  const toHex = (value: number) =>
-    Math.min(255, Math.max(0, value)).toString(16).padStart(2, '0')
+  const toHex = (value: number) => Math.min(255, Math.max(0, value)).toString(16).padStart(2, '0')
 
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`
 }

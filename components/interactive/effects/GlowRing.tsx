@@ -1,22 +1,22 @@
-"use client";
+'use client'
 
-import { useRef, useMemo } from "react";
-import { useFrame } from "@react-three/fiber";
-import * as THREE from "three";
+import { useRef, useMemo } from 'react'
+import { useFrame } from '@react-three/fiber'
+import * as THREE from 'three'
 
 interface GlowRingProps {
-	/** Inner radius of the ring */
-	innerRadius?: number;
-	/** Outer radius of the ring */
-	outerRadius?: number;
-	/** Ring color */
-	color?: THREE.ColorRepresentation;
-	/** Intensity of the glow */
-	intensity?: number;
-	/** Whether the ring is active/hovered */
-	isActive?: boolean;
-	/** Disable animations for reduced motion */
-	reducedMotion?: boolean;
+  /** Inner radius of the ring */
+  innerRadius?: number
+  /** Outer radius of the ring */
+  outerRadius?: number
+  /** Ring color */
+  color?: THREE.ColorRepresentation
+  /** Intensity of the glow */
+  intensity?: number
+  /** Whether the ring is active/hovered */
+  isActive?: boolean
+  /** Disable animations for reduced motion */
+  reducedMotion?: boolean
 }
 
 const vertexShader = /* glsl */ `
@@ -32,7 +32,7 @@ const vertexShader = /* glsl */ `
 
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
   }
-`;
+`
 
 const fragmentShader = /* glsl */ `
   precision highp float;
@@ -90,76 +90,76 @@ const fragmentShader = /* glsl */ `
 
     gl_FragColor = vec4(color, alpha);
   }
-`;
+`
 
 interface GlowRingUniforms {
-	uColor: THREE.IUniform<THREE.Color>;
-	uIntensity: THREE.IUniform<number>;
-	uTime: THREE.IUniform<number>;
-	uActive: THREE.IUniform<number>;
-	uInnerRadius: THREE.IUniform<number>;
-	uOuterRadius: THREE.IUniform<number>;
+  uColor: THREE.IUniform<THREE.Color>
+  uIntensity: THREE.IUniform<number>
+  uTime: THREE.IUniform<number>
+  uActive: THREE.IUniform<number>
+  uInnerRadius: THREE.IUniform<number>
+  uOuterRadius: THREE.IUniform<number>
 }
 
 export function GlowRing({
-	innerRadius = 0.9,
-	outerRadius = 1.1,
-	color = "#7C5CFF",
-	intensity = 1.0,
-	isActive = false,
-	reducedMotion = false,
+  innerRadius = 0.9,
+  outerRadius = 1.1,
+  color = '#7C5CFF',
+  intensity = 1.0,
+  isActive = false,
+  reducedMotion = false,
 }: GlowRingProps) {
-	const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const materialRef = useRef<THREE.ShaderMaterial>(null)
 
-	const colorVec = useMemo(() => new THREE.Color(color), [color]);
+  const colorVec = useMemo(() => new THREE.Color(color), [color])
 
-	const uniforms = useMemo(
-		() => ({
-			uColor: { value: new THREE.Color() },
-			uIntensity: { value: intensity },
-			uTime: { value: 0 },
-			uActive: { value: 0 },
-			uInnerRadius: { value: innerRadius },
-			uOuterRadius: { value: outerRadius },
-		}),
-		[intensity, innerRadius, outerRadius]
-	);
+  const uniforms = useMemo(
+    () => ({
+      uColor: { value: new THREE.Color() },
+      uIntensity: { value: intensity },
+      uTime: { value: 0 },
+      uActive: { value: 0 },
+      uInnerRadius: { value: innerRadius },
+      uOuterRadius: { value: outerRadius },
+    }),
+    [intensity, innerRadius, outerRadius],
+  )
 
-	useFrame((state) => {
-		if (!materialRef.current) return;
+  useFrame((state) => {
+    if (!materialRef.current) return
 
-		const u = materialRef.current.uniforms as unknown as GlowRingUniforms;
+    const u = materialRef.current.uniforms as unknown as GlowRingUniforms
 
-		if (!u.uColor.value.equals(colorVec)) {
-			u.uColor.value.copy(colorVec);
-		}
+    if (!u.uColor.value.equals(colorVec)) {
+      u.uColor.value.copy(colorVec)
+    }
 
-		// Smooth active transition
-		const targetActive = isActive ? 1.0 : 0.0;
-		u.uActive.value += (targetActive - u.uActive.value) * 0.1;
+    // Smooth active transition
+    const targetActive = isActive ? 1.0 : 0.0
+    u.uActive.value += (targetActive - u.uActive.value) * 0.1
 
-		if (!reducedMotion) {
-			u.uTime.value = state.clock.elapsedTime;
-		}
-	});
+    if (!reducedMotion) {
+      u.uTime.value = state.clock.elapsedTime
+    }
+  })
 
-	// Ring size for plane (needs to cover outer radius)
-	const planeSize = outerRadius * 2.2;
+  // Ring size for plane (needs to cover outer radius)
+  const planeSize = outerRadius * 2.2
 
-	return (
-		<mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
-			<planeGeometry args={[planeSize, planeSize]} />
-			<shaderMaterial
-				ref={materialRef}
-				vertexShader={vertexShader}
-				fragmentShader={fragmentShader}
-				uniforms={uniforms}
-				transparent
-				depthWrite={false}
-				blending={THREE.AdditiveBlending}
-				side={THREE.DoubleSide}
-				toneMapped={false}
-			/>
-		</mesh>
-	);
+  return (
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
+      <planeGeometry args={[planeSize, planeSize]} />
+      <shaderMaterial
+        ref={materialRef}
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+        uniforms={uniforms}
+        transparent
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+        side={THREE.DoubleSide}
+        toneMapped={false}
+      />
+    </mesh>
+  )
 }

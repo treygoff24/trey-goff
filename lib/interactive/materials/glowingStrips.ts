@@ -3,8 +3,8 @@
  * Perfect for trim, edge lighting, and accent details.
  */
 
-import * as THREE from "three";
-import { getSharedUniforms } from "./uniforms";
+import * as THREE from 'three'
+import { getSharedUniforms } from './uniforms'
 
 const vertexShader = /* glsl */ `
 varying vec2 vUv;
@@ -20,7 +20,7 @@ void main() {
 
   gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 }
-`;
+`
 
 const fragmentShader = /* glsl */ `
 precision highp float;
@@ -65,38 +65,38 @@ void main() {
 
   gl_FragColor = vec4(color, 1.0);
 }
-`;
+`
 
 export interface GlowingStripOptions {
-	pulseSpeed?: number;
-	pulseAmount?: number;
-	glowFalloff?: number;
+  pulseSpeed?: number
+  pulseAmount?: number
+  glowFalloff?: number
 }
 
 /**
  * Create a glowing accent strip material.
  */
 export function createGlowingStripMaterial(
-	options: GlowingStripOptions = {}
+  options: GlowingStripOptions = {},
 ): THREE.ShaderMaterial {
-	const { pulseSpeed = 2.0, pulseAmount = 0.3, glowFalloff = 1.5 } = options;
+  const { pulseSpeed = 2.0, pulseAmount = 0.3, glowFalloff = 1.5 } = options
 
-	const shared = getSharedUniforms();
+  const shared = getSharedUniforms()
 
-	const material = new THREE.ShaderMaterial({
-		vertexShader,
-		fragmentShader,
-		uniforms: {
-			u_time: shared.u_time,
-			u_accentColor: shared.u_accentColor,
-			u_intensity: shared.u_intensity,
-			u_pulseSpeed: { value: pulseSpeed },
-			u_pulseAmount: { value: pulseAmount },
-			u_glowFalloff: { value: glowFalloff },
-		},
-		transparent: true,
-		side: THREE.DoubleSide,
-	});
+  const material = new THREE.ShaderMaterial({
+    vertexShader,
+    fragmentShader,
+    uniforms: {
+      u_time: shared.u_time,
+      u_accentColor: shared.u_accentColor,
+      u_intensity: shared.u_intensity,
+      u_pulseSpeed: { value: pulseSpeed },
+      u_pulseAmount: { value: pulseAmount },
+      u_glowFalloff: { value: glowFalloff },
+    },
+    transparent: true,
+    side: THREE.DoubleSide,
+  })
 
-	return material;
+  return material
 }
