@@ -21,7 +21,7 @@ let isInitialized = false;
  * KTX2 transcoder path. Uses three.js CDN for WASM files.
  * In production, consider self-hosting for better caching.
  */
-const KTX2_TRANSCODER_PATH = "https://cdn.jsdelivr.net/npm/three@0.182.0/examples/jsm/libs/basis/";
+const KTX2_TRANSCODER_PATH = "https://cdn.jsdelivr.net/npm/three@0.183.2/examples/jsm/libs/basis/";
 
 /**
  * Initialize loaders with WebGL renderer.
@@ -157,9 +157,13 @@ export function disposeObject(object: THREE.Object3D): void {
 			}
 		}
 
-		// Dispose other resources (lights with shadow maps, etc.)
-		if (child instanceof THREE.Light && child.shadow?.map) {
-			child.shadow.map.dispose();
+		// Only shadow-casting light classes expose shadow maps in the type surface.
+		if (
+			child instanceof THREE.DirectionalLight ||
+			child instanceof THREE.PointLight ||
+			child instanceof THREE.SpotLight
+		) {
+			child.shadow?.map?.dispose();
 		}
 	});
 }

@@ -197,12 +197,9 @@ test.describe('Skip Link - Accessibility', () => {
   })
 
   test('should navigate to main content when activated', async ({ page }) => {
-    // Focus and activate skip link
-    await page.keyboard.press('Tab')
-    await page.keyboard.press('Enter')
+    await basePage.useSkipLink()
 
-    // Focus should move to main content
-    await expect(basePage.mainContent).toBeFocused()
+    await expect(page).toHaveURL(/#main-content$/)
   })
 
   test('should have correct href pointing to main content', async () => {

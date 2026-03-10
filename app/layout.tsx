@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { satoshi, newsreader, monaspace } from "@/lib/fonts";
 import { TopNav } from "@/components/layout/TopNav";
 import { Footer } from "@/components/layout/Footer";
+import { SkipLink } from "@/components/layout/SkipLink";
 import { CommandPaletteProvider, CommandPalette } from "@/components/command";
 import { EasterEggs } from "@/components/easter-eggs/EasterEggs";
 import { generateOrganizationSchema } from "@/lib/structured-data";
@@ -70,13 +71,7 @@ export default function RootLayout({
 					}}
 				/>
 				<CommandPaletteProvider>
-					{/* Skip link for accessibility */}
-					<a
-						href="#main-content"
-						className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-warm focus:px-4 focus:py-2 focus:text-bg-1"
-					>
-						Skip to main content
-					</a>
+					<SkipLink />
 					<TopNav />
 					<main id="main-content" className="flex-1 outline-none" tabIndex={-1}>
 						{children}

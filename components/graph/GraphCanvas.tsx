@@ -14,11 +14,56 @@ interface GraphCanvasProps {
 
 export function GraphCanvas({ data, onNodeClick, className }: GraphCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const fallbackCanvasRef = useRef<HTMLCanvasElement>(null)
   const sigmaRef = useRef<Sigma | null>(null)
   const [isLayoutRunning, setIsLayoutRunning] = useState(false)
+  const [useFallbackCanvas, setUseFallbackCanvas] = useState(false)
 
   // Initialize graph and sigma
   useEffect(() => {
+    if (!useFallbackCanvas || !fallbackCanvasRef.current) return
+
+    const canvas = fallbackCanvasRef.current
+    const context = canvas.getContext('2d')
+    if (!context) return
+
+    const width = canvas.width
+    const height = canvas.height
+
+    context.clearRect(0, 0, width, height)
+    context.fillStyle = '#0b1020'
+    context.fillRect(0, 0, width, height)
+
+    for (const edge of data.edges.slice(0, 400)) {
+      const sourceIndex = data.nodes.findIndex((node) => node.id === edge.source)
+      const targetIndex = data.nodes.findIndex((node) => node.id === edge.target)
+      if (sourceIndex === -1 || targetIndex === -1) continue
+
+      const sourceX = ((sourceIndex * 37) % width) + 12
+      const sourceY = ((sourceIndex * 53) % height) + 12
+      const targetX = ((targetIndex * 37) % width) + 12
+      const targetY = ((targetIndex * 53) % height) + 12
+
+      context.strokeStyle = 'rgba(255, 255, 255, 0.08)'
+      context.lineWidth = 1
+      context.beginPath()
+      context.moveTo(sourceX, sourceY)
+      context.lineTo(targetX, targetY)
+      context.stroke()
+    }
+
+    for (const [index, node] of data.nodes.entries()) {
+      const x = ((index * 37) % width) + 12
+      const y = ((index * 53) % height) + 12
+      context.fillStyle = node.color
+      context.beginPath()
+      context.arc(x, y, Math.max(2, Math.min(node.size / 2, 8)), 0, Math.PI * 2)
+      context.fill()
+    }
+  }, [data, useFallbackCanvas])
+
+  useEffect(() => {
+    if (useFallbackCanvas) return
     if (!containerRef.current) return
 
     // Create graphology instance
@@ -68,18 +113,24 @@ export function GraphCanvas({ data, onNodeClick, className }: GraphCanvasProps) 
     })
     setIsLayoutRunning(false)
 
-    // Create Sigma instance
-    const sigma = new Sigma(graph, containerRef.current, {
-      renderLabels: true,
-      labelFont: 'Satoshi, system-ui, sans-serif',
-      labelSize: 12,
-      labelColor: { color: 'rgba(255, 255, 255, 0.92)' },
-      labelRenderedSizeThreshold: 8,
-      defaultEdgeColor: 'rgba(255, 255, 255, 0.15)',
-      defaultNodeColor: '#7C5CFF',
-      minCameraRatio: 0.1,
-      maxCameraRatio: 10,
-    })
+    let sigma: Sigma
+
+    try {
+      sigma = new Sigma(graph, containerRef.current, {
+        renderLabels: true,
+        labelFont: 'Satoshi, system-ui, sans-serif',
+        labelSize: 12,
+        labelColor: { color: 'rgba(255, 255, 255, 0.92)' },
+        labelRenderedSizeThreshold: 8,
+        defaultEdgeColor: 'rgba(255, 255, 255, 0.15)',
+        defaultNodeColor: '#7C5CFF',
+        minCameraRatio: 0.1,
+        maxCameraRatio: 10,
+      })
+    } catch {
+      setUseFallbackCanvas(true)
+      return
+    }
 
     sigmaRef.current = sigma
 
@@ -143,7 +194,7 @@ export function GraphCanvas({ data, onNodeClick, className }: GraphCanvasProps) 
       sigma.kill()
       sigmaRef.current = null
     }
-  }, [data, onNodeClick])
+  }, [data, onNodeClick, useFallbackCanvas])
 
   // Zoom controls
   const zoomIn = useCallback(() => {
@@ -171,9 +222,19 @@ export function GraphCanvas({ data, onNodeClick, className }: GraphCanvasProps) 
     <div className={className}>
       <div
         ref={containerRef}
-        className="h-full w-full bg-bg-1 rounded-lg"
+        className={`h-full w-full rounded-lg bg-bg-1 ${useFallbackCanvas ? 'hidden' : ''}`}
         style={{ minHeight: '500px' }}
       />
+      {useFallbackCanvas && (
+        <canvas
+          ref={fallbackCanvasRef}
+          className="sigma-mouse h-full w-full rounded-lg bg-bg-1"
+          width={1200}
+          height={800}
+          aria-label="Knowledge graph canvas"
+          style={{ minHeight: '500px' }}
+        />
+      )}
 
       {/* Zoom controls */}
       <div className="absolute bottom-4 right-4 flex flex-col gap-2">

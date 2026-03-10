@@ -26,6 +26,9 @@ export class BasePage {
 
   async goto(path: string = '/') {
     await this.page.goto(path, { waitUntil: 'domcontentloaded', timeout: 60000 })
+    if (!path.startsWith('/interactive')) {
+      await this.page.waitForSelector('html[data-command-palette-ready="true"]')
+    }
   }
 
   async openCommandPalette() {
@@ -68,9 +71,10 @@ export class BasePage {
   }
 
   async useSkipLink() {
+    await this.page.waitForSelector('html[data-command-palette-ready="true"]')
     // Focus the skip link (it's sr-only until focused)
     await this.skipLink.focus()
-    await this.skipLink.click()
+    await this.skipLink.evaluate((link: HTMLAnchorElement) => link.click())
   }
 
   async waitForPageLoad() {

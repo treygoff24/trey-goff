@@ -135,7 +135,12 @@ test.describe('Knowledge Graph Page', () => {
       await canvas.click({ position: { x: 300, y: 300 } })
     })
 
-    test('should support scroll for zoom', async ({ page }) => {
+    test('should support scroll for zoom', async ({ page }, testInfo) => {
+      test.skip(
+        testInfo.project.name === 'mobile-safari',
+        'Mouse wheel is not supported in Playwright mobile WebKit'
+      )
+
       await graphPage.expectGraphRendered()
 
       // Scroll on canvas

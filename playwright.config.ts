@@ -1,5 +1,8 @@
 import { defineConfig, devices } from '@playwright/test'
 
+const E2E_PORT = 3101
+const E2E_BASE_URL = `http://localhost:${E2E_PORT}`
+
 /**
  * Playwright configuration for trey-goff E2E tests.
  *
@@ -22,7 +25,7 @@ export default defineConfig({
   /* Shared settings for all the projects below */
   use: {
     /* Base URL to use in actions like `await page.goto('/')` */
-    baseURL: 'http://localhost:3000',
+    baseURL: E2E_BASE_URL,
     /* Collect trace when retrying the failed test */
     trace: 'on-first-retry',
     /* Take screenshot on failure */
@@ -52,9 +55,9 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'pnpm dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
+    command: `pnpm exec next dev --turbopack --port ${E2E_PORT}`,
+    url: E2E_BASE_URL,
+    reuseExistingServer: false,
     timeout: 120 * 1000,
   },
 })

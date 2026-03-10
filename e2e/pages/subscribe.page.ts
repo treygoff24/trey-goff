@@ -22,6 +22,7 @@ export class SubscribePage extends BasePage {
 
   async gotoSubscribePage() {
     await this.goto('/subscribe')
+    await this.page.waitForSelector('html[data-command-palette-ready="true"]')
   }
 
   async fillEmail(email: string) {
@@ -29,6 +30,7 @@ export class SubscribePage extends BasePage {
   }
 
   async submit() {
+    await this.page.waitForSelector('html[data-command-palette-ready="true"]')
     await this.submitButton.click()
   }
 
