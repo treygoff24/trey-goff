@@ -42,10 +42,10 @@ export function LibraryFilters({
     <div className="space-y-4">
       {/* Status filter */}
       <div>
-        <label className="mb-2 block text-sm font-medium text-text-3">
+        <p id="status-filter-label" className="mb-2 block text-sm font-medium text-text-3">
           Status
-        </label>
-        <div className="flex flex-wrap gap-2">
+        </p>
+        <div className="flex flex-wrap gap-2" role="group" aria-labelledby="status-filter-label">
           {statuses.map((status) => (
             <button
               key={status.value ?? 'all'}
@@ -55,7 +55,7 @@ export function LibraryFilters({
                 'rounded-full px-3 py-1 text-sm transition-colors',
                 statusFilter === status.value
                   ? 'bg-warm text-bg-0'
-                  : 'bg-surface-1 text-text-2 hover:bg-surface-2'
+                  : 'bg-surface-1 text-text-2 hover:bg-surface-2',
               )}
             >
               {status.label}
@@ -66,10 +66,10 @@ export function LibraryFilters({
 
       {/* Topic filter */}
       <div>
-        <label className="mb-2 block text-sm font-medium text-text-3">
+        <p id="topic-filter-label" className="mb-2 block text-sm font-medium text-text-3">
           Topic
-        </label>
-        <div className="flex flex-wrap gap-2">
+        </p>
+        <div className="flex flex-wrap gap-2" role="group" aria-labelledby="topic-filter-label">
           <button
             onClick={() => onTopicChange(null)}
             aria-pressed={topicFilter === null}
@@ -77,7 +77,7 @@ export function LibraryFilters({
               'rounded-full px-3 py-1 text-sm transition-colors',
               topicFilter === null
                 ? 'bg-warm text-bg-0'
-                : 'bg-surface-1 text-text-2 hover:bg-surface-2'
+                : 'bg-surface-1 text-text-2 hover:bg-surface-2',
             )}
           >
             All
@@ -91,7 +91,7 @@ export function LibraryFilters({
                 'rounded-full px-3 py-1 text-sm transition-colors',
                 topicFilter === topic
                   ? 'bg-warm text-bg-0'
-                  : 'bg-surface-1 text-text-2 hover:bg-surface-2'
+                  : 'bg-surface-1 text-text-2 hover:bg-surface-2',
               )}
             >
               {topic}
@@ -108,9 +108,7 @@ export function LibraryFilters({
         <select
           id="sort-select"
           value={sortBy}
-          onChange={(e) =>
-            onSortChange(e.target.value as LibraryFiltersProps['sortBy'])
-          }
+          onChange={(e) => onSortChange(e.target.value as LibraryFiltersProps['sortBy'])}
           className="rounded-lg border border-border-1 bg-surface-1 px-3 py-2 text-sm text-text-1 focus:border-warm focus:outline-none"
         >
           {sortOptions.map((option) => (

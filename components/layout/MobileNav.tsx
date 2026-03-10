@@ -12,12 +12,7 @@ interface MobileNavProps {
   currentPath: string | null
 }
 
-export function MobileNav({
-  isOpen,
-  onClose,
-  navItems,
-  currentPath,
-}: MobileNavProps) {
+export function MobileNav({ isOpen, onClose, navItems, currentPath }: MobileNavProps) {
   const prefersReducedMotion = useReducedMotion()
   const previousPath = useRef(currentPath)
 
@@ -43,11 +38,7 @@ export function MobileNav({
       return
     }
 
-    if (
-      previousPath.current &&
-      currentPath &&
-      previousPath.current !== currentPath
-    ) {
+    if (previousPath.current && currentPath && previousPath.current !== currentPath) {
       onClose()
     }
 
@@ -62,7 +53,7 @@ export function MobileNav({
       <div
         className={cn(
           'fixed inset-0 z-50 bg-black/60 backdrop-blur-sm',
-          !prefersReducedMotion && 'animate-fade-in'
+          !prefersReducedMotion && 'animate-fade-in',
         )}
         onClick={onClose}
         aria-hidden="true"
@@ -72,7 +63,7 @@ export function MobileNav({
       <nav
         className={cn(
           'fixed right-0 top-0 z-50 h-full w-72 border-l border-border-1 bg-bg-1 shadow-2xl',
-          !prefersReducedMotion && 'animate-slide-in-right'
+          !prefersReducedMotion && 'animate-slide-in-right',
         )}
         role="dialog"
         aria-modal="true"
@@ -85,12 +76,7 @@ export function MobileNav({
             className="flex h-10 w-10 items-center justify-center rounded-md text-text-2 transition-colors hover:bg-surface-1 hover:text-text-1"
             aria-label="Close menu"
           >
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -115,7 +101,7 @@ export function MobileNav({
                   !prefersReducedMotion && 'stagger-item',
                   isActive
                     ? 'bg-warm/10 text-warm border-l-2 border-warm'
-                    : 'text-text-2 hover:bg-surface-1 hover:text-text-1 hover:translate-x-1'
+                    : 'text-text-2 hover:bg-surface-1 hover:text-text-1 hover:translate-x-1',
                 )}
                 style={!prefersReducedMotion ? { animationDelay: `${index * 50}ms` } : undefined}
               >

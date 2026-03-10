@@ -41,10 +41,7 @@ function getDustTexture(): THREE.Texture {
   const ctx = canvas.getContext('2d')!
 
   // Create radial gradient for soft blob
-  const gradient = ctx.createRadialGradient(
-    size / 2, size / 2, 0,
-    size / 2, size / 2, size / 2
-  )
+  const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2)
   gradient.addColorStop(0, 'rgba(255, 255, 255, 1)')
   gradient.addColorStop(0.3, 'rgba(255, 255, 255, 0.6)')
   gradient.addColorStop(0.6, 'rgba(255, 255, 255, 0.2)')
@@ -109,7 +106,7 @@ function generateParticles(
   count: number,
   radius: number,
   topicColor: string,
-  seed: number
+  seed: number,
 ): ParticleData {
   const rng = seededRandom(seed)
   const positions = new Float32Array(count * 3)
@@ -175,7 +172,7 @@ export function NebulaDust({
   const seed = useMemo(() => hashString(topicColor + '_dust'), [topicColor])
   const particleData = useMemo(
     () => generateParticles(currentCount, radius, topicColor, seed),
-    [currentCount, radius, topicColor, seed]
+    [currentCount, radius, topicColor, seed],
   )
 
   const texture = useMemo(() => getDustTexture(), [])
@@ -231,7 +228,7 @@ export function NebulaDust({
           i,
           particleData.positions[i * 3]!,
           particleData.positions[i * 3 + 1]!,
-          particleData.positions[i * 3 + 2]!
+          particleData.positions[i * 3 + 2]!,
         )
       }
       positionAttr.needsUpdate = true

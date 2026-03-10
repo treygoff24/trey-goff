@@ -1,25 +1,25 @@
-import Link from "next/link";
-import { TagPill } from "@/components/ui/TagPill";
-import { Reveal } from "@/components/motion/Reveal";
+import Link from 'next/link'
+import { TagPill } from '@/components/ui/TagPill'
+import { Reveal } from '@/components/motion/Reveal'
 
 interface ProjectLink {
-  label: string;
-  url: string;
+  label: string
+  url: string
 }
 
 interface FeaturedProjectProps {
   project?: {
-    slug: string;
-    name: string;
-    oneLiner: string;
-    problem: string;
-    approach: string;
-    status: "active" | "shipped" | "on-hold" | "archived" | "idea";
-    type: "software" | "policy" | "professional" | "experiment";
-    roles: string[];
-    links: ProjectLink[];
-    tags: string[];
-  };
+    slug: string
+    name: string
+    oneLiner: string
+    problem: string
+    approach: string
+    status: 'active' | 'shipped' | 'on-hold' | 'archived' | 'idea'
+    type: 'software' | 'policy' | 'professional' | 'experiment'
+    roles: string[]
+    links: ProjectLink[]
+    tags: string[]
+  }
 }
 
 export function FeaturedProject({ project }: FeaturedProjectProps) {
@@ -28,9 +28,7 @@ export function FeaturedProject({ project }: FeaturedProjectProps) {
       <Reveal as="div" className="mb-8 flex items-center justify-between gap-4">
         <div>
           <p className="eyebrow text-text-3">Featured project</p>
-          <h2 className="mt-3 font-satoshi text-3xl font-medium text-text-1">
-            Selected work
-          </h2>
+          <h2 className="mt-3 font-satoshi text-3xl font-medium text-text-1">Selected work</h2>
         </div>
         <Link
           href="/projects"
@@ -49,9 +47,7 @@ export function FeaturedProject({ project }: FeaturedProjectProps) {
           <div className="flex flex-wrap items-start justify-between gap-6">
             <div className="max-w-xl">
               <p className="eyebrow text-text-3">{project.type}</p>
-              <h3 className="mt-3 font-satoshi text-2xl font-medium text-text-1">
-                {project.name}
-              </h3>
+              <h3 className="mt-3 font-satoshi text-2xl font-medium text-text-1">{project.name}</h3>
               <p className="mt-3 text-text-2">{project.oneLiner}</p>
             </div>
             <div className="flex items-center gap-2">
@@ -96,5 +92,5 @@ export function FeaturedProject({ project }: FeaturedProjectProps) {
         </div>
       )}
     </section>
-  );
+  )
 }

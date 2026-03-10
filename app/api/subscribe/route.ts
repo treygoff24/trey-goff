@@ -65,10 +65,7 @@ export async function POST(request: NextRequest) {
   // Validate API key exists
   if (!BUTTONDOWN_API_KEY) {
     console.error('BUTTONDOWN_API_KEY not configured')
-    return NextResponse.json(
-      { error: 'Newsletter service not configured' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Newsletter service not configured' }, { status: 500 })
   }
 
   try {
@@ -83,7 +80,7 @@ export async function POST(request: NextRequest) {
           headers: {
             'Retry-After': String(rateLimit.retryAfter || 60),
           },
-        }
+        },
       )
     }
 
@@ -95,41 +92,32 @@ export async function POST(request: NextRequest) {
     }
 
     if (email.length > MAX_EMAIL_LENGTH) {
-      return NextResponse.json(
-        { error: 'Email address is too long' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Email address is too long' }, { status: 400 })
     }
 
     const emailRegex =
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
     if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: 'Invalid email format' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Invalid email format' }, { status: 400 })
     }
 
     // Call Buttondown API
-    const response = await fetch(
-      'https://api.buttondown.email/v1/subscribers',
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Token ${BUTTONDOWN_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          tags: ['website'],
-        }),
-      }
-    )
+    const response = await fetch('https://api.buttondown.email/v1/subscribers', {
+      method: 'POST',
+      headers: {
+        Authorization: `Token ${BUTTONDOWN_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        tags: ['website'],
+      }),
+    })
 
     if (response.status === 201) {
       return NextResponse.json(
         { message: 'Success! Check your inbox to confirm.' },
-        { status: 200 }
+        { status: 200 },
       )
     }
 
@@ -139,32 +127,32 @@ export async function POST(request: NextRequest) {
       if (errorData.email?.some((e) => e.includes('already subscribed'))) {
         return NextResponse.json(
           { message: 'Success! Check your inbox to confirm.' },
-          { status: 200 }
+          { status: 200 },
         )
       }
 
       return NextResponse.json(
         { error: 'Unable to process subscription. Please try again.' },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
     if (response.status === 429) {
       return NextResponse.json(
         { error: 'Too many requests. Please try again later.' },
-        { status: 429 }
+        { status: 429 },
       )
     }
 
     return NextResponse.json(
       { error: 'Unable to process subscription. Please try again.' },
-      { status: 500 }
+      { status: 500 },
     )
   } catch (error) {
     console.error('Subscribe error:', error instanceof Error ? error.message : 'Unknown error')
     return NextResponse.json(
       { error: 'Unable to process subscription. Please try again.' },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

@@ -32,12 +32,7 @@ const statusBadges: Record<Book['status'], { label: string; className: string }>
   abandoned: { label: 'Abandoned', className: 'bg-error/20 text-error' },
 }
 
-export function BookCard({
-  book,
-  coverUrl,
-  onClick,
-  size = 'md',
-}: BookCardProps) {
+export function BookCard({ book, coverUrl, onClick, size = 'md' }: BookCardProps) {
   const { width, height } = coverSizes[size]
   const badge = statusBadges[book.status]
 
@@ -46,7 +41,7 @@ export function BookCard({
       type="button"
       className={cn(
         'group cursor-pointer bg-transparent text-left transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warm focus-visible:ring-offset-2 focus-visible:ring-offset-bg-1',
-        sizeClasses[size]
+        sizeClasses[size],
       )}
       onClick={onClick}
       aria-label={`View details for ${book.title}`}
@@ -75,7 +70,7 @@ export function BookCard({
         <div
           className={cn(
             'absolute left-2 top-2 rounded-full px-2 py-0.5 text-xs font-medium',
-            badge.className
+            badge.className,
           )}
         >
           {badge.label}
@@ -97,9 +92,7 @@ export function BookCard({
           {book.title}
         </h3>
         <p className="truncate text-xs text-text-3">{book.author}</p>
-        {book.year && (
-          <p className="text-xs text-text-3">{book.year}</p>
-        )}
+        {book.year && <p className="text-xs text-text-3">{book.year}</p>}
       </div>
     </button>
   )
@@ -112,10 +105,7 @@ export function RatingStars({ rating }: { rating: number }) {
       {Array.from({ length: 5 }).map((_, i) => (
         <Star
           key={i}
-          className={cn(
-            'h-4 w-4',
-            i < rating ? 'fill-warm text-warm' : 'text-text-3'
-          )}
+          className={cn('h-4 w-4', i < rating ? 'fill-warm text-warm' : 'text-text-3')}
           aria-hidden="true"
         />
       ))}

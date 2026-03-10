@@ -1,6 +1,6 @@
-import Link from "next/link";
-import { homeCta } from "@/data/home";
-import { Reveal } from "@/components/motion/Reveal";
+import Link from 'next/link'
+import { homeCta } from '@/data/home'
+import { Reveal } from '@/components/motion/Reveal'
 
 export function CTASection() {
   return (
@@ -40,5 +40,5 @@ export function CTASection() {
         </div>
       </div>
     </section>
-  );
+  )
 }

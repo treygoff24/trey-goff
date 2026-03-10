@@ -57,10 +57,7 @@ function FilteredCluster({
 // Main Component
 // =============================================================================
 
-export function Universe({
-  constellations,
-  reducedMotion,
-}: UniverseProps) {
+export function Universe({ constellations, reducedMotion }: UniverseProps) {
   // Store state
   const viewLevel = useLibraryStore((s) => s.viewLevel)
   const activeConstellation = useLibraryStore((s) => s.activeConstellation)
@@ -113,7 +110,7 @@ export function Universe({
       }
       return 1
     },
-    [viewLevel, activeConstellation, isFiltered]
+    [viewLevel, activeConstellation, isFiltered],
   )
 
   return (
@@ -122,10 +119,7 @@ export function Universe({
       <StarField reducedMotion={reducedMotion} />
 
       {/* Invisible backdrop for click-to-go-back */}
-      <mesh
-        position={[0, 0, -500]}
-        onClick={handleBackdropClick}
-      >
+      <mesh position={[0, 0, -500]} onClick={handleBackdropClick}>
         <planeGeometry args={[2000, 2000]} />
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>

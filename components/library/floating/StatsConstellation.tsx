@@ -55,12 +55,8 @@ function StatCard({ label, value, subtext, position, delay = 0 }: StatCardProps)
         }}
       >
         <div className="rounded-lg bg-surface-1/95 px-4 py-3 text-center backdrop-blur-sm">
-          <div className="text-xs font-medium uppercase tracking-wider text-text-3">
-            {label}
-          </div>
-          <div className="font-newsreader text-3xl font-medium text-text-1">
-            {value}
-          </div>
+          <div className="text-xs font-medium uppercase tracking-wider text-text-3">{label}</div>
+          <div className="font-newsreader text-3xl font-medium text-text-1">{value}</div>
           {subtext && <div className="text-xs text-text-2">{subtext}</div>}
         </div>
       </Html>
@@ -179,11 +175,7 @@ function RatingDisplay({ distribution, position }: RatingDisplayProps) {
 // Main Component
 // =============================================================================
 
-export function StatsConstellation({
-  books,
-  position,
-  reducedMotion,
-}: StatsConstellationProps) {
+export function StatsConstellation({ books, position, reducedMotion }: StatsConstellationProps) {
   const viewLevel = useLibraryStore((s) => s.viewLevel)
   const activeConstellation = useLibraryStore((s) => s.activeConstellation)
   const isFiltered = useLibraryStore((s) => s.isFiltered)
@@ -228,18 +220,17 @@ export function StatsConstellation({
       {isActive && (
         <>
           {/* Total books */}
-          <StatCard
-            label="Total Books"
-            value={stats.total}
-            position={[-8, 5, 0]}
-            delay={0}
-          />
+          <StatCard label="Total Books" value={stats.total} position={[-8, 5, 0]} delay={0} />
 
           {/* Books read */}
           <StatCard
             label="Books Read"
             value={stats.read}
-            subtext={stats.total > 0 ? `${Math.round((stats.read / stats.total) * 100)}% of library` : '0% of library'}
+            subtext={
+              stats.total > 0
+                ? `${Math.round((stats.read / stats.total) * 100)}% of library`
+                : '0% of library'
+            }
             position={[0, 8, 0]}
             delay={100}
           />
@@ -254,31 +245,16 @@ export function StatsConstellation({
           />
 
           {/* Currently reading */}
-          <StatCard
-            label="Reading Now"
-            value={stats.reading}
-            position={[-6, -2, 0]}
-            delay={300}
-          />
+          <StatCard label="Reading Now" value={stats.reading} position={[-6, -2, 0]} delay={300} />
 
           {/* Want to read */}
-          <StatCard
-            label="Want to Read"
-            value={stats.want}
-            position={[6, -2, 0]}
-            delay={400}
-          />
+          <StatCard label="Want to Read" value={stats.want} position={[6, -2, 0]} delay={400} />
 
           {/* Year timeline */}
-          {yearData.length > 0 && (
-            <YearTimeline data={yearData} position={[0, -8, 0]} />
-          )}
+          {yearData.length > 0 && <YearTimeline data={yearData} position={[0, -8, 0]} />}
 
           {/* Rating distribution */}
-          <RatingDisplay
-            distribution={ratingDistribution}
-            position={[12, 0, 0]}
-          />
+          <RatingDisplay distribution={ratingDistribution} position={[12, 0, 0]} />
         </>
       )}
     </group>

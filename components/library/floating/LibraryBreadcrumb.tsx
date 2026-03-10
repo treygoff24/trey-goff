@@ -47,9 +47,7 @@ export function LibraryBreadcrumb() {
       <button
         onClick={handleLibraryClick}
         className={`flex items-center gap-1.5 transition-colors ${
-          viewLevel === 'universe'
-            ? 'text-warm'
-            : 'text-text-2 hover:text-text-1'
+          viewLevel === 'universe' ? 'text-warm' : 'text-text-2 hover:text-text-1'
         }`}
         aria-current={viewLevel === 'universe' ? 'page' : undefined}
       >
@@ -64,9 +62,7 @@ export function LibraryBreadcrumb() {
           <button
             onClick={handleConstellationClick}
             className={`transition-colors ${
-              viewLevel === 'constellation'
-                ? 'text-warm'
-                : 'text-text-2 hover:text-text-1'
+              viewLevel === 'constellation' ? 'text-warm' : 'text-text-2 hover:text-text-1'
             }`}
             aria-current={viewLevel === 'constellation' ? 'page' : undefined}
           >

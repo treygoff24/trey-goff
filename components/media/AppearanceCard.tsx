@@ -11,10 +11,7 @@ interface AppearanceCardProps {
   variant?: 'featured' | 'list'
 }
 
-const typeConfig: Record<
-  AppearanceType,
-  { label: string; icon: typeof Mic; className: string }
-> = {
+const typeConfig: Record<AppearanceType, { label: string; icon: typeof Mic; className: string }> = {
   podcast: {
     label: 'Podcast',
     icon: Mic,
@@ -37,10 +34,7 @@ const typeConfig: Record<
   },
 }
 
-export function AppearanceCard({
-  appearance,
-  variant = 'list',
-}: AppearanceCardProps) {
+export function AppearanceCard({ appearance, variant = 'list' }: AppearanceCardProps) {
   const thumbnail = getAppearanceThumbnail(appearance)
   const config = typeConfig[appearance.type]
   const Icon = config.icon
@@ -54,15 +48,13 @@ export function AppearanceCard({
       className={cn(
         'group block overflow-hidden rounded-lg border border-border-1 bg-surface-1 card-interactive',
         'hover:border-warm/30 hover:shadow-[0_8px_30px_-8px_rgba(255,184,107,0.15)]',
-        isFeatured ? 'flex flex-col md:flex-row' : ''
+        isFeatured ? 'flex flex-col md:flex-row' : '',
       )}
     >
       <div
         className={cn(
           'relative overflow-hidden bg-surface-2',
-          isFeatured
-            ? 'aspect-video md:aspect-auto md:w-80 md:shrink-0'
-            : 'aspect-video'
+          isFeatured ? 'aspect-video md:aspect-auto md:w-80 md:shrink-0' : 'aspect-video',
         )}
       >
         {thumbnail ? (
@@ -82,7 +74,7 @@ export function AppearanceCard({
         <div
           className={cn(
             'absolute left-3 top-3 flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium',
-            config.className
+            config.className,
           )}
         >
           <Icon className="h-3 w-3" />
@@ -100,16 +92,14 @@ export function AppearanceCard({
         <h3
           className={cn(
             'font-satoshi font-medium text-text-1 group-hover:text-warm',
-            isFeatured ? 'mb-3 text-xl' : 'mb-2 text-base'
+            isFeatured ? 'mb-3 text-xl' : 'mb-2 text-base',
           )}
         >
           {appearance.title}
         </h3>
 
         {isFeatured && appearance.summary && (
-          <p className="mb-4 line-clamp-3 flex-1 text-sm text-text-2">
-            {appearance.summary}
-          </p>
+          <p className="mb-4 line-clamp-3 flex-1 text-sm text-text-2">{appearance.summary}</p>
         )}
 
         <div className="mt-auto flex items-center gap-1 text-sm text-text-3 group-hover:text-warm">

@@ -11,77 +11,69 @@ export const alt = 'Essay preview'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
-export default async function OGImage({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
+export default async function OGImage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const essay = visibleEssays.find((e) => e.slug === slug)
 
   if (!essay) {
     return new ImageResponse(
-      (
-        <div
-          style={{
-            background: '#0A0F1C',
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <span style={{ color: '#F5A25A', fontSize: 48 }}>Essay Not Found</span>
-        </div>
-      ),
-      { ...size }
+      <div
+        style={{
+          background: '#0A0F1C',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <span style={{ color: '#F5A25A', fontSize: 48 }}>Essay Not Found</span>
+      </div>,
+      { ...size },
     )
   }
 
   return new ImageResponse(
-    (
+    <div
+      style={{
+        background: 'linear-gradient(to bottom, #05060A, #0A0F1C)',
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        padding: '80px',
+      }}
+    >
       <div
         style={{
-          background: 'linear-gradient(to bottom, #05060A, #0A0F1C)',
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          padding: '80px',
+          fontSize: 64,
+          fontWeight: 600,
+          color: 'rgba(255, 255, 255, 0.92)',
+          marginBottom: 24,
+          lineHeight: 1.2,
         }}
       >
-        <div
-          style={{
-            fontSize: 64,
-            fontWeight: 600,
-            color: 'rgba(255, 255, 255, 0.92)',
-            marginBottom: 24,
-            lineHeight: 1.2,
-          }}
-        >
-          {essay.title}
-        </div>
-        <div
-          style={{
-            fontSize: 28,
-            color: 'rgba(255, 255, 255, 0.72)',
-            marginBottom: 48,
-          }}
-        >
-          {essay.summary}
-        </div>
-        <div
-          style={{
-            fontSize: 24,
-            color: '#F5A25A',
-          }}
-        >
-          trey.world
-        </div>
+        {essay.title}
       </div>
-    ),
-    { ...size }
+      <div
+        style={{
+          fontSize: 28,
+          color: 'rgba(255, 255, 255, 0.72)',
+          marginBottom: 48,
+        }}
+      >
+        {essay.summary}
+      </div>
+      <div
+        style={{
+          fontSize: 24,
+          color: '#F5A25A',
+        }}
+      >
+        trey.world
+      </div>
+    </div>,
+    { ...size },
   )
 }

@@ -21,9 +21,7 @@ export function NodeInspector({ node }: NodeInspectorProps) {
   if (!node) {
     return (
       <div className="rounded-lg border border-border-1 bg-surface-1 p-6">
-        <p className="text-center text-text-3">
-          Click a node to view details
-        </p>
+        <p className="text-center text-text-3">Click a node to view details</p>
       </div>
     )
   }
@@ -48,9 +46,7 @@ export function NodeInspector({ node }: NodeInspectorProps) {
       </div>
 
       {/* Title */}
-      <h3 className="mb-2 font-satoshi text-lg font-medium text-text-1">
-        {node.label}
-      </h3>
+      <h3 className="mb-2 font-satoshi text-lg font-medium text-text-1">{node.label}</h3>
 
       {/* Metadata */}
       {node.meta && (
@@ -62,14 +58,12 @@ export function NodeInspector({ node }: NodeInspectorProps) {
           )}
           {node.meta.date && (
             <p>
-              <span className="text-text-3">Date:</span>{' '}
-              {formatDate(node.meta.date)}
+              <span className="text-text-3">Date:</span> {formatDate(node.meta.date)}
             </p>
           )}
           {node.meta.wordCount && (
             <p>
-              <span className="text-text-3">Words:</span>{' '}
-              {node.meta.wordCount.toLocaleString()}
+              <span className="text-text-3">Words:</span> {node.meta.wordCount.toLocaleString()}
             </p>
           )}
         </div>
@@ -77,9 +71,7 @@ export function NodeInspector({ node }: NodeInspectorProps) {
 
       {/* Summary */}
       {node.meta?.summary && (
-        <p className="mb-4 text-sm text-text-2 line-clamp-3">
-          {node.meta.summary}
-        </p>
+        <p className="mb-4 text-sm text-text-2 line-clamp-3">{node.meta.summary}</p>
       )}
 
       {/* Link */}
@@ -89,12 +81,7 @@ export function NodeInspector({ node }: NodeInspectorProps) {
           className="inline-flex items-center gap-2 rounded-md bg-warm px-4 py-2 text-sm font-medium text-bg-1 transition-colors hover:bg-warm/90"
         >
           View {TYPE_LABELS[node.type]?.toLowerCase() || 'content'}
-          <svg
-            className="h-4 w-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -111,12 +98,7 @@ export function NodeInspector({ node }: NodeInspectorProps) {
           className="inline-flex items-center gap-2 text-sm text-warm hover:underline"
         >
           View all content with this tag
-          <svg
-            className="h-4 w-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"

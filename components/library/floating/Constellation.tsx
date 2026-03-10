@@ -3,10 +3,7 @@
 import { useCallback } from 'react'
 import { Html } from '@react-three/drei'
 import type { ConstellationData } from '@/lib/library/types'
-import {
-  useLibraryStore,
-  selectTransitionPhase,
-} from '@/lib/library/store'
+import { useLibraryStore, selectTransitionPhase } from '@/lib/library/store'
 import { FloatingBook } from './FloatingBook'
 import { LivingNebula } from './LivingNebula'
 
@@ -101,12 +98,7 @@ export function Constellation({
       </Html>
 
       {books.map((book) => (
-        <FloatingBook
-          key={book.id}
-          book={book}
-          reducedMotion={reducedMotion}
-          opacity={opacity}
-        />
+        <FloatingBook key={book.id} book={book} reducedMotion={reducedMotion} opacity={opacity} />
       ))}
     </group>
   )

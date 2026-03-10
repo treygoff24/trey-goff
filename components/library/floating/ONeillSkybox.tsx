@@ -336,7 +336,7 @@ export function ONeillSkybox({
       uGroundColor: { value: DEFAULT_GROUND_COLOR.clone() },
       uWaterColor: { value: DEFAULT_WATER_COLOR.clone() },
     }),
-    [radius, length, numStrips, sunAngle]
+    [radius, length, numStrips, sunAngle],
   )
 
   useFrame((state) => {

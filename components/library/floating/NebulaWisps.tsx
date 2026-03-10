@@ -211,7 +211,7 @@ function SingleWisp({ data, color, opacity, reducedMotion }: SingleWispProps) {
       uTime: { value: 0 },
       uUvOffset: { value: new THREE.Vector2() },
     }),
-    []
+    [],
   )
 
   useFrame((state) => {
@@ -265,10 +265,7 @@ export function NebulaWisps({
   const colorObj = useMemo(() => new THREE.Color(color), [color])
   const setIsUvPanning = useLibraryStore((s) => s.setIsUvPanning)
 
-  const wisps = useMemo(
-    () => generateWispData(topic, count, radius),
-    [topic, count, radius]
-  )
+  const wisps = useMemo(() => generateWispData(topic, count, radius), [topic, count, radius])
 
   // Register animation state with store - AnimationDriver handles invalidation
   useEffect(() => {

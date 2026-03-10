@@ -27,9 +27,9 @@ interface LibraryClientProps {
 export function LibraryClient({ books }: LibraryClientProps) {
   const [statusFilter, setStatusFilter] = useState<BookStatus | null>(null)
   const [topicFilter, setTopicFilter] = useState<string | null>(null)
-  const [sortBy, setSortBy] = useState<
-    'title' | 'author' | 'year' | 'rating' | 'dateRead'
-  >('rating')
+  const [sortBy, setSortBy] = useState<'title' | 'author' | 'year' | 'rating' | 'dateRead'>(
+    'rating',
+  )
   const [selectedBook, setSelectedBook] = useState<Book | null>(null)
   const [coverMap, setCoverMap] = useState<CoverMap>({})
 
@@ -56,10 +56,7 @@ export function LibraryClient({ books }: LibraryClientProps) {
   }, [books])
 
   const booksPerYear = useMemo(() => getBooksReadByYear(books), [books])
-  const ratingDistribution = useMemo(
-    () => getRatingDistribution(books),
-    [books]
-  )
+  const ratingDistribution = useMemo(() => getRatingDistribution(books), [books])
   const topicBreakdown = useMemo(() => getTopicBreakdown(books), [books])
 
   const filteredBooks = useMemo(() => {
@@ -81,16 +78,8 @@ export function LibraryClient({ books }: LibraryClientProps) {
     <>
       {/* Stats */}
       <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
-        <StatCard
-          icon={<BookIcon className="h-5 w-5" />}
-          label="Total Books"
-          value={stats.total}
-        />
-        <StatCard
-          icon={<TrendingUp className="h-5 w-5" />}
-          label="Books Read"
-          value={stats.read}
-        />
+        <StatCard icon={<BookIcon className="h-5 w-5" />} label="Total Books" value={stats.total} />
+        <StatCard icon={<TrendingUp className="h-5 w-5" />} label="Books Read" value={stats.read} />
         <StatCard
           icon={<Star className="h-5 w-5" />}
           label="5-Star Books"

@@ -49,19 +49,11 @@ export function ProjectCard({ project }: ProjectCardProps) {
         <div className="space-y-3">
           <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-[0.2em]">
             <span
-              className={cn(
-                'rounded-full px-3 py-1 font-semibold',
-                statusStyles[project.status]
-              )}
+              className={cn('rounded-full px-3 py-1 font-semibold', statusStyles[project.status])}
             >
               {project.status}
             </span>
-            <span
-              className={cn(
-                'rounded-full px-3 py-1 font-semibold',
-                typeStyles[project.type]
-              )}
-            >
+            <span className={cn('rounded-full px-3 py-1 font-semibold', typeStyles[project.type])}>
               {project.type}
             </span>
           </div>
@@ -69,9 +61,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
             <h2 className="font-satoshi text-2xl font-medium text-text-1 sm:text-3xl">
               {project.name}
             </h2>
-            <p className="mt-2 text-base leading-relaxed text-text-2">
-              {project.oneLiner}
-            </p>
+            <p className="mt-2 text-base leading-relaxed text-text-2">{project.oneLiner}</p>
           </div>
         </div>
         {primaryLink && (
@@ -87,17 +77,11 @@ export function ProjectCard({ project }: ProjectCardProps) {
       <dl className="mt-7 grid gap-6 md:grid-cols-2">
         <div>
           <dt className="text-xs uppercase tracking-[0.2em] text-text-3">Problem</dt>
-          <dd className="mt-2 text-sm leading-relaxed text-text-2">
-            {project.problem}
-          </dd>
+          <dd className="mt-2 text-sm leading-relaxed text-text-2">{project.problem}</dd>
         </div>
         <div>
-          <dt className="text-xs uppercase tracking-[0.2em] text-text-3">
-            Approach
-          </dt>
-          <dd className="mt-2 text-sm leading-relaxed text-text-2">
-            {project.approach}
-          </dd>
+          <dt className="text-xs uppercase tracking-[0.2em] text-text-3">Approach</dt>
+          <dd className="mt-2 text-sm leading-relaxed text-text-2">{project.approach}</dd>
         </div>
       </dl>
 

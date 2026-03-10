@@ -14,7 +14,7 @@ function hashString(str: string): number {
   let hash = 0
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i)
-    hash = ((hash << 5) - hash) + char
+    hash = (hash << 5) - hash + char
     hash = hash & hash // Convert to 32bit integer
   }
   return Math.abs(hash)
@@ -37,12 +37,7 @@ const palette = {
   bgDark: '#070A0F',
 }
 
-export function GenerativeBookCover({
-  title,
-  author,
-  width,
-  height,
-}: GenerativeBookCoverProps) {
+export function GenerativeBookCover({ title, author, width, height }: GenerativeBookCoverProps) {
   const design = useMemo(() => {
     const seed = hashString(title + author)
     const rand = (offset = 0) => seededRandom(seed + offset)
@@ -179,7 +174,14 @@ export function GenerativeBookCover({
                 height="20"
                 patternUnits="userSpaceOnUse"
               >
-                <rect width="20" height="20" fill="none" stroke={design.primary} strokeWidth="0.5" opacity="0.15" />
+                <rect
+                  width="20"
+                  height="20"
+                  fill="none"
+                  stroke={design.primary}
+                  strokeWidth="0.5"
+                  opacity="0.15"
+                />
               </pattern>
             </defs>
             <rect width={width} height={height} fill={`url(#grid-${design.seed})`} />

@@ -45,7 +45,7 @@ export function NebulaCloud({
 }: NebulaCloudProps) {
   // Check if postprocessing is enabled for HDR vs fallback emissive
   const postprocessingEnabled = useLibraryStore(selectPostprocessingEnabled)
-  
+
   // Parse color
   const baseColor = useMemo(() => new THREE.Color(color), [color])
 

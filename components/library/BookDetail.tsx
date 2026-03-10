@@ -88,33 +88,25 @@ export function BookDetail({ book, coverUrl, onClose }: BookDetailProps) {
 
             {/* Why I Love It */}
             <div>
-              <h3 className="mb-2 font-satoshi text-sm font-medium text-text-1">
-                Why I Love It
-              </h3>
+              <h3 className="mb-2 font-satoshi text-sm font-medium text-text-1">Why I Love It</h3>
               <p className="font-newsreader text-text-2">{book.whyILoveIt}</p>
             </div>
 
             {/* Review */}
             {book.review && (
               <div>
-                <h3 className="mb-2 font-satoshi text-sm font-medium text-text-1">
-                  Review
-                </h3>
+                <h3 className="mb-2 font-satoshi text-sm font-medium text-text-1">Review</h3>
                 <p className="font-newsreader text-text-2">{book.review}</p>
               </div>
             )}
 
             {/* Links */}
             <div className="flex flex-wrap gap-3 pt-2">
-              {book.amazonUrl && (
-                <ExternalLinkButton href={book.amazonUrl} label="Amazon" />
-              )}
+              {book.amazonUrl && <ExternalLinkButton href={book.amazonUrl} label="Amazon" />}
               {book.goodreadsUrl && (
                 <ExternalLinkButton href={book.goodreadsUrl} label="Goodreads" />
               )}
-              {book.bookshopUrl && (
-                <ExternalLinkButton href={book.bookshopUrl} label="Bookshop" />
-              )}
+              {book.bookshopUrl && <ExternalLinkButton href={book.bookshopUrl} label="Bookshop" />}
             </div>
           </div>
         </div>
@@ -130,7 +122,7 @@ function ExternalLinkButton({ href, label }: { href: string; label: string }) {
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
-        'flex items-center gap-1 rounded-lg border border-border-1 px-3 py-1.5 text-sm text-text-2 transition-colors hover:border-border-2 hover:text-text-1'
+        'flex items-center gap-1 rounded-lg border border-border-1 px-3 py-1.5 text-sm text-text-2 transition-colors hover:border-border-2 hover:text-text-1',
       )}
     >
       {label}

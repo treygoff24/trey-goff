@@ -34,7 +34,7 @@ export function BookDetailPanel() {
       previousFocusRef.current = document.activeElement as HTMLElement
       // Focus the first focusable element (close button)
       const firstFocusable = panelRef.current.querySelector<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
       )
       firstFocusable?.focus()
     } else if (previousFocusRef.current) {
@@ -50,7 +50,7 @@ export function BookDetailPanel() {
 
     const panel = panelRef.current
     const focusableElements = panel.querySelectorAll<HTMLElement>(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
     )
     const firstFocusable = focusableElements[0]
     const lastFocusable = focusableElements[focusableElements.length - 1]
@@ -87,9 +87,7 @@ export function BookDetailPanel() {
   }
 
   const primaryTopic = selectedBook.topics[0]?.toLowerCase()
-  const topicColor = primaryTopic
-    ? getTopicColor(primaryTopic)
-    : DEFAULT_TOPIC_COLOR
+  const topicColor = primaryTopic ? getTopicColor(primaryTopic) : DEFAULT_TOPIC_COLOR
 
   const hasValidAmazonUrl = isValidAmazonUrl(selectedBook.amazonUrl)
   const hasValidGoodreadsUrl = isValidGoodreadsUrl(selectedBook.goodreadsUrl)
@@ -127,10 +125,7 @@ export function BookDetailPanel() {
         <div className="p-6 pt-12 md:pt-6">
           {/* Header */}
           <div className="mb-6">
-            <h2
-              id="book-title"
-              className="font-newsreader text-2xl font-medium text-text-1"
-            >
+            <h2 id="book-title" className="font-newsreader text-2xl font-medium text-text-1">
               {selectedBook.title}
             </h2>
             <p className="mt-1 text-text-2">{selectedBook.author}</p>
@@ -144,16 +139,10 @@ export function BookDetailPanel() {
                 <Star
                   key={i}
                   size={18}
-                  className={
-                    i < selectedBook.rating!
-                      ? 'fill-warm text-warm'
-                      : 'text-surface-2'
-                  }
+                  className={i < selectedBook.rating! ? 'fill-warm text-warm' : 'text-surface-2'}
                 />
               ))}
-              <span className="ml-2 text-sm text-text-3">
-                {selectedBook.rating}/5
-              </span>
+              <span className="ml-2 text-sm text-text-3">{selectedBook.rating}/5</span>
             </div>
           )}
 
@@ -166,9 +155,7 @@ export function BookDetailPanel() {
                   className="rounded-full px-3 py-1 text-xs font-medium"
                   style={{
                     backgroundColor:
-                      index === 0
-                        ? `${topicColor}20`
-                        : `${getTopicColor(topic.toLowerCase())}15`,
+                      index === 0 ? `${topicColor}20` : `${getTopicColor(topic.toLowerCase())}15`,
                     color: index === 0 ? topicColor : getTopicColor(topic.toLowerCase()),
                   }}
                 >
@@ -181,9 +168,7 @@ export function BookDetailPanel() {
           {/* Why I Love It */}
           {selectedBook.whyILoveIt && (
             <div className="mb-6">
-              <h3 className="mb-2 text-sm font-medium text-text-2">
-                Why I Love It
-              </h3>
+              <h3 className="mb-2 text-sm font-medium text-text-2">Why I Love It</h3>
               <p className="font-newsreader text-text-1 leading-relaxed">
                 {selectedBook.whyILoveIt}
               </p>
@@ -194,9 +179,7 @@ export function BookDetailPanel() {
           {selectedBook.review && (
             <div className="mb-6">
               <h3 className="mb-2 text-sm font-medium text-text-2">Review</h3>
-              <p className="font-newsreader text-text-1 leading-relaxed">
-                {selectedBook.review}
-              </p>
+              <p className="font-newsreader text-text-1 leading-relaxed">{selectedBook.review}</p>
             </div>
           )}
 

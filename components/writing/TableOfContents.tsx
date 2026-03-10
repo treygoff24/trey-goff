@@ -18,9 +18,7 @@ function parseHeadingsFromDom(contentSelector: string): TocItem[] {
   const container = document.querySelector(contentSelector)
   if (!container) return []
 
-  const headingElements = Array.from(
-    container.querySelectorAll('h1, h2, h3')
-  ) as HTMLElement[]
+  const headingElements = Array.from(container.querySelectorAll('h1, h2, h3')) as HTMLElement[]
 
   return headingElements
     .map((heading) => {
@@ -61,7 +59,7 @@ export function TableOfContents({ contentSelector, sourceId }: TableOfContentsPr
       },
       {
         rootMargin: '-80px 0px -80% 0px',
-      }
+      },
     )
 
     headings.forEach((heading) => observer.observe(heading))
@@ -83,17 +81,12 @@ export function TableOfContents({ contentSelector, sourceId }: TableOfContentsPr
         </p>
         <ul className="space-y-2">
           {items.map((item) => (
-            <li
-              key={item.id}
-              style={{ paddingLeft: `${(item.level - 1) * 0.75}rem` }}
-            >
+            <li key={item.id} style={{ paddingLeft: `${(item.level - 1) * 0.75}rem` }}>
               <a
                 href={`#${item.id}`}
                 className={cn(
                   'block text-sm transition-colors hover:text-text-1',
-                  activeId === item.id
-                    ? 'text-warm font-medium'
-                    : 'text-text-3'
+                  activeId === item.id ? 'text-warm font-medium' : 'text-text-3',
                 )}
                 onClick={(e) => {
                   e.preventDefault()
@@ -115,10 +108,7 @@ export function TableOfContents({ contentSelector, sourceId }: TableOfContentsPr
 // Mobile TOC dropdown - intentionally simpler than desktop version.
 // No active heading tracking since mobile uses a collapsible dropdown
 // that closes on selection, making scroll-based highlighting unnecessary.
-export function MobileTableOfContents({
-  contentSelector,
-  sourceId,
-}: TableOfContentsProps) {
+export function MobileTableOfContents({ contentSelector, sourceId }: TableOfContentsProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [items, setItems] = useState<TocItem[]>([])
 
@@ -137,24 +127,14 @@ export function MobileTableOfContents({
         className="flex w-full items-center justify-between rounded-lg border border-border-1 bg-surface-1 px-4 py-3"
         aria-expanded={isOpen}
       >
-        <span className="font-satoshi text-sm font-medium text-text-2">
-          On this page
-        </span>
+        <span className="font-satoshi text-sm font-medium text-text-2">On this page</span>
         <svg
-          className={cn(
-            'h-4 w-4 text-text-3 transition-transform',
-            isOpen && 'rotate-180'
-          )}
+          className={cn('h-4 w-4 text-text-3 transition-transform', isOpen && 'rotate-180')}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
 
@@ -162,10 +142,7 @@ export function MobileTableOfContents({
         <div className="mt-2 rounded-lg border border-border-1 bg-surface-1 p-4">
           <ul className="space-y-2">
             {items.map((item) => (
-              <li
-                key={item.id}
-                style={{ paddingLeft: `${(item.level - 1) * 0.75}rem` }}
-              >
+              <li key={item.id} style={{ paddingLeft: `${(item.level - 1) * 0.75}rem` }}>
                 <a
                   href={`#${item.id}`}
                   className="block text-sm text-text-2 hover:text-text-1"

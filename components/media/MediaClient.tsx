@@ -34,16 +34,10 @@ export function MediaClient({
     <>
       {featuredAppearances.length > 0 && (
         <section className="mb-12">
-          <h2 className="mb-6 font-satoshi text-xl font-medium text-text-1">
-            Featured
-          </h2>
+          <h2 className="mb-6 font-satoshi text-xl font-medium text-text-1">Featured</h2>
           <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
             {featuredAppearances.map((appearance) => (
-              <AppearanceCard
-                key={appearance.id}
-                appearance={appearance}
-                variant="featured"
-              />
+              <AppearanceCard key={appearance.id} appearance={appearance} variant="featured" />
             ))}
           </div>
         </section>

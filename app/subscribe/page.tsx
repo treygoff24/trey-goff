@@ -29,9 +29,7 @@ export default function SubscribePage() {
             </span>
           </div>
 
-          <h1 className="mb-4 font-satoshi text-4xl font-medium text-text-1">
-            Subscribe
-          </h1>
+          <h1 className="mb-4 font-satoshi text-4xl font-medium text-text-1">Subscribe</h1>
           <p className="text-lg text-text-2">
             Essays on governance, institutional innovation, and building better systems.
             <br />
@@ -59,8 +57,18 @@ export default function SubscribePage() {
           <div className="grid gap-4 sm:grid-cols-3">
             <div className="group rounded-lg border border-border-1 bg-surface-1/30 p-4 transition-colors hover:border-warm/30 hover:bg-surface-1/50">
               <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-warm/10 text-warm">
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"
+                  />
                 </svg>
               </div>
               <h3 className="mb-1 font-satoshi text-sm font-medium text-text-1">
@@ -73,13 +81,21 @@ export default function SubscribePage() {
 
             <div className="group rounded-lg border border-border-1 bg-surface-1/30 p-4 transition-colors hover:border-accent/30 hover:bg-surface-1/50">
               <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 text-accent">
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
+                  />
                 </svg>
               </div>
-              <h3 className="mb-1 font-satoshi text-sm font-medium text-text-1">
-                Field Notes
-              </h3>
+              <h3 className="mb-1 font-satoshi text-sm font-medium text-text-1">Field Notes</h3>
               <p className="text-xs leading-relaxed text-text-3">
                 Quick dispatches from ongoing research and projects.
               </p>
@@ -87,13 +103,21 @@ export default function SubscribePage() {
 
             <div className="group rounded-lg border border-border-1 bg-surface-1/30 p-4 transition-colors hover:border-success/30 hover:bg-surface-1/50">
               <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-success/10 text-success">
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"
+                  />
                 </svg>
               </div>
-              <h3 className="mb-1 font-satoshi text-sm font-medium text-text-1">
-                Early Access
-              </h3>
+              <h3 className="mb-1 font-satoshi text-sm font-medium text-text-1">Early Access</h3>
               <p className="text-xs leading-relaxed text-text-3">
                 First look at new projects and ideas before they launch.
               </p>

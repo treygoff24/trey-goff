@@ -64,11 +64,7 @@ export function NoteCard({
       </div>
 
       {/* Title (if present) */}
-      {title && (
-        <h3 className="mb-2 font-satoshi text-lg font-medium text-text-1">
-          {title}
-        </h3>
-      )}
+      {title && <h3 className="mb-2 font-satoshi text-lg font-medium text-text-1">{title}</h3>}
 
       {/* Content */}
       <div className="text-text-2 prose prose-sm max-w-none">
@@ -84,12 +80,7 @@ export function NoteCard({
           className="mt-4 flex items-center gap-2 text-sm text-warm hover:underline"
         >
           <span>{sourceTitle || source}</span>
-          <svg
-            className="h-3 w-3"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -104,11 +95,7 @@ export function NoteCard({
       {tags.length > 0 && (
         <div className="mt-4 flex flex-wrap gap-2">
           {tags.map((tag) => (
-            <TagPill
-              key={tag}
-              tag={tag}
-              href={`/topics/${encodeURIComponent(tag)}`}
-            />
+            <TagPill key={tag} tag={tag} href={`/topics/${encodeURIComponent(tag)}`} />
           ))}
         </div>
       )}

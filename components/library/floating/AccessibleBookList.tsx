@@ -35,10 +35,7 @@ export function AccessibleBookList({ books }: AccessibleBookListProps) {
     for (const book of books) {
       // Apply filters
       if (statusFilter && book.status !== statusFilter) continue
-      if (
-        topicFilter &&
-        !book.topics.some((t) => t.toLowerCase() === topicFilter.toLowerCase())
-      ) {
+      if (topicFilter && !book.topics.some((t) => t.toLowerCase() === topicFilter.toLowerCase())) {
         continue
       }
       const trimmedQuery = searchQuery.trim()
@@ -75,8 +72,8 @@ export function AccessibleBookList({ books }: AccessibleBookListProps) {
     >
       <h2>Library Books</h2>
       <p>
-        This is an accessible list of all books in the library. Use your screen
-        reader&apos;s list navigation to browse books by topic.
+        This is an accessible list of all books in the library. Use your screen reader&apos;s list
+        navigation to browse books by topic.
       </p>
 
       {topics.map((topic) => {
@@ -98,8 +95,7 @@ export function AccessibleBookList({ books }: AccessibleBookListProps) {
                       book.rating ? `, rated ${book.rating} out of 5` : ''
                     }`}
                   >
-                    <span className="font-medium">{book.title}</span> by{' '}
-                    {book.author}
+                    <span className="font-medium">{book.title}</span> by {book.author}
                     {book.rating && ` (${book.rating}/5)`}
                   </button>
                 </li>
@@ -111,9 +107,7 @@ export function AccessibleBookList({ books }: AccessibleBookListProps) {
 
       {groupedBooks.orphans.length > 0 && (
         <section aria-labelledby="topic-uncategorized">
-          <h3 id="topic-uncategorized">
-            Uncategorized ({groupedBooks.orphans.length} books)
-          </h3>
+          <h3 id="topic-uncategorized">Uncategorized ({groupedBooks.orphans.length} books)</h3>
           <ul>
             {groupedBooks.orphans.map((book) => (
               <li key={book.id}>
@@ -124,8 +118,7 @@ export function AccessibleBookList({ books }: AccessibleBookListProps) {
                     book.rating ? `, rated ${book.rating} out of 5` : ''
                   }`}
                 >
-                  <span className="font-medium">{book.title}</span> by{' '}
-                  {book.author}
+                  <span className="font-medium">{book.title}</span> by {book.author}
                   {book.rating && ` (${book.rating}/5)`}
                 </button>
               </li>

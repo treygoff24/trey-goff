@@ -1,6 +1,6 @@
-import { homeSignals } from "@/data/home";
-import { HolographicTile } from "@/components/home/HolographicTile";
-import { Reveal } from "@/components/motion/Reveal";
+import { homeSignals } from '@/data/home'
+import { HolographicTile } from '@/components/home/HolographicTile'
+import { Reveal } from '@/components/motion/Reveal'
 
 const icons = {
   writing: (
@@ -67,7 +67,7 @@ const icons = {
       />
     </svg>
   ),
-} as const;
+} as const
 
 export function SignalGrid() {
   return (
@@ -97,5 +97,5 @@ export function SignalGrid() {
         ))}
       </div>
     </section>
-  );
+  )
 }

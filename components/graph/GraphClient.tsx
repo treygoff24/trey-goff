@@ -7,17 +7,14 @@ import { NODE_COLORS } from '@/lib/graph/types'
 import { NodeInspector } from './NodeInspector'
 
 // Dynamic import for GraphCanvas to avoid SSR issues with Sigma
-const GraphCanvas = dynamic(
-  () => import('./GraphCanvas').then((mod) => mod.GraphCanvas),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="flex h-[600px] items-center justify-center rounded-lg border border-border-1 bg-surface-1">
-        <div className="text-text-2">Loading graph...</div>
-      </div>
-    ),
-  }
-)
+const GraphCanvas = dynamic(() => import('./GraphCanvas').then((mod) => mod.GraphCanvas), {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-[600px] items-center justify-center rounded-lg border border-border-1 bg-surface-1">
+      <div className="text-text-2">Loading graph...</div>
+    </div>
+  ),
+})
 
 interface GraphClientProps {
   data: GraphData
@@ -35,17 +32,15 @@ const TYPE_LABELS: Record<NodeType, string> = {
 export function GraphClient({ data }: GraphClientProps) {
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null)
   const [visibleTypes, setVisibleTypes] = useState<Set<NodeType>>(
-    new Set(['essay', 'note', 'book', 'tag', 'idea', 'transmission'])
+    new Set(['essay', 'note', 'book', 'tag', 'idea', 'transmission']),
   )
 
   // Filter data based on visible types
   const filteredData = useMemo(() => {
-    const filteredNodes = data.nodes.filter((node) =>
-      visibleTypes.has(node.type)
-    )
+    const filteredNodes = data.nodes.filter((node) => visibleTypes.has(node.type))
     const nodeIds = new Set(filteredNodes.map((n) => n.id))
     const filteredEdges = data.edges.filter(
-      (edge) => nodeIds.has(edge.source) && nodeIds.has(edge.target)
+      (edge) => nodeIds.has(edge.source) && nodeIds.has(edge.target),
     )
     return { nodes: filteredNodes, edges: filteredEdges }
   }, [data, visibleTypes])

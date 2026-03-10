@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import { InteractiveShell } from "@/components/interactive/InteractiveShell";
+import { InteractiveShell } from '@/components/interactive/InteractiveShell'
 
 /**
  * Interactive World entry page.
@@ -10,5 +10,5 @@ import { InteractiveShell } from "@/components/interactive/InteractiveShell";
  * in InteractiveShell to maintain bundle isolation.
  */
 export default function InteractivePage() {
-	return <InteractiveShell />;
+  return <InteractiveShell />
 }

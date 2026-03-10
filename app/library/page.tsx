@@ -26,7 +26,7 @@ export default function LibraryPage() {
                 url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://trey.world'}/library#${book.id}`,
                 coverUrl: book.coverUrl,
                 year: book.year,
-              })
+              }),
             ),
           }}
         />

@@ -38,15 +38,11 @@ export default function TopicsPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-16">
       <header className="mb-12">
-        <p className="text-sm uppercase tracking-[0.3em] text-text-3">
-          Signal Index
-        </p>
-        <h1 className="mt-4 font-satoshi text-4xl font-medium text-text-1">
-          Topics
-        </h1>
+        <p className="text-sm uppercase tracking-[0.3em] text-text-3">Signal Index</p>
+        <h1 className="mt-4 font-satoshi text-4xl font-medium text-text-1">Topics</h1>
         <p className="mt-3 max-w-2xl text-lg text-text-2">
-          A live map of themes across essays, notes, and the library. Each topic
-          is a signal you can follow deeper.
+          A live map of themes across essays, notes, and the library. Each topic is a signal you can
+          follow deeper.
         </p>
       </header>
 
@@ -71,12 +67,8 @@ export default function TopicsPage() {
             <div className="relative z-10">
               <div className="flex flex-wrap items-end justify-between gap-4">
                 <div>
-                  <h2 className="font-satoshi text-2xl font-medium text-text-1">
-                    Signal Field
-                  </h2>
-                  <p className="mt-2 text-sm text-text-3">
-                    The most active topics right now.
-                  </p>
+                  <h2 className="font-satoshi text-2xl font-medium text-text-1">Signal Field</h2>
+                  <p className="mt-2 text-sm text-text-3">The most active topics right now.</p>
                 </div>
                 <div className="text-sm text-text-3">
                   {topics.length} topics / {totalSignals} signals
@@ -86,8 +78,7 @@ export default function TopicsPage() {
               <div className="mt-8 flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {spotlight.map((topic, index) => {
                   const style =
-                    spotlightStyles[index % spotlightStyles.length] ??
-                    spotlightStyles[0]!
+                    spotlightStyles[index % spotlightStyles.length] ?? spotlightStyles[0]!
                   return (
                     <TopicSpotlightCard
                       key={topic.tag}
@@ -104,16 +95,10 @@ export default function TopicsPage() {
           <section className="mt-12">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
-                <h2 className="font-satoshi text-2xl font-medium text-text-1">
-                  All Topics
-                </h2>
-                <p className="mt-2 text-sm text-text-3">
-                  Explore the full signal archive.
-                </p>
+                <h2 className="font-satoshi text-2xl font-medium text-text-1">All Topics</h2>
+                <p className="mt-2 text-sm text-text-3">Explore the full signal archive.</p>
               </div>
-              <p className="text-xs uppercase tracking-[0.2em] text-text-3">
-                Sorted by activity
-              </p>
+              <p className="text-xs uppercase tracking-[0.2em] text-text-3">Sorted by activity</p>
             </div>
 
             <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -147,9 +132,7 @@ function TopicSpotlightCard({
       href={getTopicHref(topic.tag)}
       className={`group relative min-w-[240px] flex-1 snap-start overflow-hidden rounded-2xl border bg-surface-1/40 p-5 transition-all hover:-translate-y-1 hover:border-border-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warm focus-visible:ring-offset-2 focus-visible:ring-offset-bg-1 ${style.ring} ${style.glow}`}
     >
-      <div
-        className={`absolute inset-0 bg-gradient-to-br opacity-60 ${style.gradient}`}
-      />
+      <div className={`absolute inset-0 bg-gradient-to-br opacity-60 ${style.gradient}`} />
       <div className="absolute inset-0 opacity-60 mix-blend-screen" />
 
       <div className="relative z-10">
@@ -179,10 +162,8 @@ function TopicSpotlightCard({
             <span>
               Latest: {formatSignalLabel(topic.latest)}
               {topic.latest.date && (
-                  <span className="ml-2 text-text-3">
-                    / {formatDateShort(topic.latest.date)}
-                  </span>
-                )}
+                <span className="ml-2 text-text-3">/ {formatDateShort(topic.latest.date)}</span>
+              )}
             </span>
           ) : (
             <span>Awaiting first signal.</span>
@@ -193,13 +174,7 @@ function TopicSpotlightCard({
   )
 }
 
-function TopicCard({
-  topic,
-  maxSignal,
-}: {
-  topic: TopicEntry
-  maxSignal: number
-}) {
+function TopicCard({ topic, maxSignal }: { topic: TopicEntry; maxSignal: number }) {
   return (
     <Link
       href={getTopicHref(topic.tag)}
@@ -207,12 +182,8 @@ function TopicCard({
     >
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h3 className="font-satoshi text-lg font-medium text-text-1">
-            {topic.tag}
-          </h3>
-          <p className="mt-1 text-xs text-text-3">
-            {topic.counts.total} signals
-          </p>
+          <h3 className="font-satoshi text-lg font-medium text-text-1">{topic.tag}</h3>
+          <p className="mt-1 text-xs text-text-3">{topic.counts.total} signals</p>
         </div>
         <span className="rounded-full border border-border-1 bg-bg-1/60 px-2 py-1 text-[10px] uppercase tracking-[0.3em] text-text-3">
           Topic
@@ -220,8 +191,7 @@ function TopicCard({
       </div>
 
       <div className="mt-4 text-xs text-text-3">
-        Essays {topic.counts.essays} / Notes {topic.counts.notes} / Books{' '}
-        {topic.counts.books}
+        Essays {topic.counts.essays} / Notes {topic.counts.notes} / Books {topic.counts.books}
       </div>
 
       <div className="mt-4">

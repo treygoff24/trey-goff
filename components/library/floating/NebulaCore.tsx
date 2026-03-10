@@ -101,10 +101,7 @@ export function NebulaCore({
     }
   }, [shouldAnimate, setIsUvPanning])
 
-  const geometry = useMemo(
-    () => new THREE.IcosahedronGeometry(1, GEOMETRY_DETAIL),
-    []
-  )
+  const geometry = useMemo(() => new THREE.IcosahedronGeometry(1, GEOMETRY_DETAIL), [])
 
   const uniforms = useMemo(
     () => ({
@@ -114,7 +111,7 @@ export function NebulaCore({
       uBreathingSpeed: { value: BREATHING_SPEED },
       uBreathingAmount: { value: BREATHING_AMOUNT },
     }),
-    []
+    [],
   )
 
   useFrame((state) => {

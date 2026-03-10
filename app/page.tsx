@@ -1,46 +1,44 @@
-import type { Metadata } from "next";
-import { allEssays, allProjects } from "content-collections";
-import { HeroSection } from "@/components/home/HeroSection";
-import { SignalGrid } from "@/components/home/SignalGrid";
-import { FeaturedProject } from "@/components/home/FeaturedProject";
-import { FeaturedWriting } from "@/components/home/FeaturedWriting";
-import { CTASection } from "@/components/home/CTASection";
-import { StarfieldClient } from "@/components/home/StarfieldClient";
+import type { Metadata } from 'next'
+import { allEssays, allProjects } from 'content-collections'
+import { HeroSection } from '@/components/home/HeroSection'
+import { SignalGrid } from '@/components/home/SignalGrid'
+import { FeaturedProject } from '@/components/home/FeaturedProject'
+import { FeaturedWriting } from '@/components/home/FeaturedWriting'
+import { CTASection } from '@/components/home/CTASection'
+import { StarfieldClient } from '@/components/home/StarfieldClient'
 
 export const metadata: Metadata = {
-	title: "Trey Goff — Writer, Builder, Explorer",
-	description:
-		"Personal site of Trey Goff. Essays on governance, technology, and building. Books, projects, and a 3D floating library.",
-	openGraph: {
-		title: "Trey Goff — Writer, Builder, Explorer",
-		description:
-			"Personal site of Trey Goff. Essays on governance, technology, and building.",
-		type: "website",
-	},
-};
+  title: 'Trey Goff — Writer, Builder, Explorer',
+  description:
+    'Personal site of Trey Goff. Essays on governance, technology, and building. Books, projects, and a 3D floating library.',
+  openGraph: {
+    title: 'Trey Goff — Writer, Builder, Explorer',
+    description: 'Personal site of Trey Goff. Essays on governance, technology, and building.',
+    type: 'website',
+  },
+}
 
 export default function HomePage() {
-  const isProduction = process.env.NODE_ENV === "production";
+  const isProduction = process.env.NODE_ENV === 'production'
   const visibleEssays = isProduction
-    ? allEssays.filter((essay) => essay.status !== "draft")
-    : allEssays;
+    ? allEssays.filter((essay) => essay.status !== 'draft')
+    : allEssays
 
   const sortedEssays = [...visibleEssays].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
-  const featuredPool = sortedEssays.filter((essay) => essay.featured);
-  const fallbackPool = sortedEssays.filter((essay) => !essay.featured);
-  const featuredEssays = (featuredPool.length
-    ? [...featuredPool, ...fallbackPool]
-    : sortedEssays
-  ).slice(0, 3);
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+  )
+  const featuredPool = sortedEssays.filter((essay) => essay.featured)
+  const fallbackPool = sortedEssays.filter((essay) => !essay.featured)
+  const featuredEssays = (
+    featuredPool.length ? [...featuredPool, ...fallbackPool] : sortedEssays
+  ).slice(0, 3)
 
   const featuredProject = [...allProjects].sort((a, b) => {
     if (a.featuredRank !== b.featuredRank) {
-      return a.featuredRank - b.featuredRank;
+      return a.featuredRank - b.featuredRank
     }
-    return a.name.localeCompare(b.name);
-  })[0];
+    return a.name.localeCompare(b.name)
+  })[0]
 
   return (
     <>
@@ -56,5 +54,5 @@ export default function HomePage() {
         </div>
       </div>
     </>
-  );
+  )
 }

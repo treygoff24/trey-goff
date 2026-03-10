@@ -62,7 +62,7 @@ function seededRandom(seed: number): () => number {
 function calculateLODTier(
   viewLevel: ViewLevel,
   isActive: boolean,
-  transitionPhase: number
+  transitionPhase: number,
 ): LODTier {
   switch (viewLevel) {
     case 'universe':
@@ -82,11 +82,7 @@ function calculateLODTier(
 function getEllipsoidScale(topic: string): [number, number, number] {
   const seed = hashString(topic + '_shape')
   const rng = seededRandom(seed)
-  return [
-    0.85 + rng() * 0.3,
-    0.7 + rng() * 0.3,
-    0.85 + rng() * 0.3,
-  ]
+  return [0.85 + rng() * 0.3, 0.7 + rng() * 0.3, 0.85 + rng() * 0.3]
 }
 
 export function LivingNebula({
@@ -108,22 +104,15 @@ export function LivingNebula({
   const ellipsoidScale = useMemo(() => getEllipsoidScale(topic), [topic])
 
   const coreScale: [number, number, number] = useMemo(
-    () => [
-      radius * ellipsoidScale[0],
-      radius * ellipsoidScale[1],
-      radius * ellipsoidScale[2],
-    ],
-    [radius, ellipsoidScale]
+    () => [radius * ellipsoidScale[0], radius * ellipsoidScale[1], radius * ellipsoidScale[2]],
+    [radius, ellipsoidScale],
   )
 
   const baseIntensity = CORE_INTENSITY[lodTier]
-  const intensity = postprocessingEnabled
-    ? baseIntensity * HDR_BOOST
-    : baseIntensity
+  const intensity = postprocessingEnabled ? baseIntensity * HDR_BOOST : baseIntensity
 
-  const transitionBoost = isActive && transitionPhase > 0 && transitionPhase < 1
-    ? 1 + transitionPhase * 0.3
-    : 1
+  const transitionBoost =
+    isActive && transitionPhase > 0 && transitionPhase < 1 ? 1 + transitionPhase * 0.3 : 1
 
   const wispCount = WISP_COUNTS[lodTier]
   const showParticles = lodTier >= 2 && qualityLevel !== 'minimal'

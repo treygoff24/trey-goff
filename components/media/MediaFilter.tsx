@@ -16,11 +16,7 @@ const typeLabels: Record<AppearanceType, string> = {
   interview: 'Interviews',
 }
 
-export function MediaFilter({
-  activeFilter,
-  onFilterChange,
-  availableTypes,
-}: MediaFilterProps) {
+export function MediaFilter({ activeFilter, onFilterChange, availableTypes }: MediaFilterProps) {
   return (
     <div className="flex flex-wrap gap-2" role="group" aria-label="Media type filter">
       <button
@@ -31,7 +27,7 @@ export function MediaFilter({
           'rounded-full px-3 py-1 text-sm transition-colors',
           activeFilter === null
             ? 'bg-warm text-bg-0'
-            : 'bg-surface-1 text-text-2 hover:bg-surface-2'
+            : 'bg-surface-1 text-text-2 hover:bg-surface-2',
         )}
       >
         All
@@ -46,7 +42,7 @@ export function MediaFilter({
             'rounded-full px-3 py-1 text-sm transition-colors',
             activeFilter === type
               ? 'bg-warm text-bg-0'
-              : 'bg-surface-1 text-text-2 hover:bg-surface-2'
+              : 'bg-surface-1 text-text-2 hover:bg-surface-2',
           )}
         >
           {typeLabels[type]}

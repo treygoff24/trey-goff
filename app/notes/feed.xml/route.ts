@@ -19,7 +19,7 @@ export async function GET() {
   })
 
   const sortedNotes = allNotes.sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   )
 
   for (const note of sortedNotes) {

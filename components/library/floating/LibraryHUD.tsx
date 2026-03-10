@@ -109,8 +109,7 @@ function TopicSelect({ value, topics, onChange }: TopicSelectProps) {
         <div
           className="absolute left-1.5 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full"
           style={{
-            backgroundColor:
-              TOPIC_COLORS[value.toLowerCase()] ?? DEFAULT_TOPIC_COLOR,
+            backgroundColor: TOPIC_COLORS[value.toLowerCase()] ?? DEFAULT_TOPIC_COLOR,
           }}
         />
       )}
@@ -217,7 +216,7 @@ export function LibraryHUD({ books }: LibraryHUDProps) {
     (value: StatusOption) => {
       setFilters({ statusFilter: value })
     },
-    [setFilters]
+    [setFilters],
   )
 
   // Handle topic filter change
@@ -225,7 +224,7 @@ export function LibraryHUD({ books }: LibraryHUDProps) {
     (value: string | null) => {
       setFilters({ topicFilter: value })
     },
-    [setFilters]
+    [setFilters],
   )
 
   // Handle sort change
@@ -235,16 +234,13 @@ export function LibraryHUD({ books }: LibraryHUDProps) {
         setFilters({ sortBy: value })
       }
     },
-    [setFilters]
+    [setFilters],
   )
 
   // Handle search input
-  const handleSearchInput = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setLocalSearch(e.target.value)
-    },
-    []
-  )
+  const handleSearchInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocalSearch(e.target.value)
+  }, [])
 
   // Handle search clear
   const handleSearchClear = useCallback(() => {
@@ -266,10 +262,7 @@ export function LibraryHUD({ books }: LibraryHUDProps) {
     >
       {/* Search input */}
       <div className="relative">
-        <Search
-          size={16}
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-text-3"
-        />
+        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-3" />
         <input
           type="search"
           value={localSearch}

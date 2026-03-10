@@ -14,12 +14,10 @@ export default function GraphPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-16">
       <header className="mb-8">
-        <h1 className="mb-4 font-satoshi text-4xl font-medium text-text-1">
-          Knowledge Graph
-        </h1>
+        <h1 className="mb-4 font-satoshi text-4xl font-medium text-text-1">Knowledge Graph</h1>
         <p className="text-lg text-text-2">
-          An interactive visualization of how ideas connect across essays,
-          books, and notes. Click on nodes to explore, hover to see connections.
+          An interactive visualization of how ideas connect across essays, books, and notes. Click
+          on nodes to explore, hover to see connections.
         </p>
       </header>
 

@@ -1,4 +1,4 @@
-import type { Variants } from "framer-motion";
+import type { Variants } from 'framer-motion'
 
 export const fadeInUpVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -11,7 +11,7 @@ export const fadeInUpVariants: Variants = {
       delay,
     },
   }),
-};
+}
 
 export const heroEntranceVariants: Variants = {
   hidden: { opacity: 0, y: 24, scale: 0.98 },
@@ -25,7 +25,7 @@ export const heroEntranceVariants: Variants = {
       delay,
     },
   }),
-};
+}
 
 export const staggerContainerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -33,7 +33,7 @@ export const staggerContainerVariants: Variants = {
     opacity: 1,
     transition: { staggerChildren: 0.12, delayChildren: 0.08 },
   },
-};
+}
 
 export const staggerItemVariants: Variants = {
   hidden: { opacity: 0, y: 16 },
@@ -42,4 +42,4 @@ export const staggerItemVariants: Variants = {
     y: 0,
     transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] },
   },
-};
+}

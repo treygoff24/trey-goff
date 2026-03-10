@@ -14,8 +14,7 @@ export async function GET() {
   const { Feed } = await getFeedModule()
   const feed = new Feed({
     title: 'Trey Goff',
-    description:
-      'Essays and notes on governance, technology, and institutional innovation.',
+    description: 'Essays and notes on governance, technology, and institutional innovation.',
     id: siteUrl,
     link: siteUrl,
     language: 'en',
@@ -45,7 +44,7 @@ export async function GET() {
 
   // Add notes
   const sortedNotes = allNotes.sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   )
 
   for (const note of sortedNotes) {

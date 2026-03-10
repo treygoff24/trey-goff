@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  createContext,
-  useContext,
-  useCallback,
-  useEffect,
-  useState,
-  type ReactNode,
-} from 'react'
+import { createContext, useContext, useCallback, useEffect, useState, type ReactNode } from 'react'
 
 interface CommandPaletteContextValue {
   open: boolean
@@ -15,9 +8,7 @@ interface CommandPaletteContextValue {
   toggle: () => void
 }
 
-const CommandPaletteContext = createContext<CommandPaletteContextValue | null>(
-  null
-)
+const CommandPaletteContext = createContext<CommandPaletteContextValue | null>(null)
 
 export function CommandPaletteProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false)
@@ -51,9 +42,7 @@ export function CommandPaletteProvider({ children }: { children: ReactNode }) {
 export function useCommandPalette() {
   const context = useContext(CommandPaletteContext)
   if (!context) {
-    throw new Error(
-      'useCommandPalette must be used within CommandPaletteProvider'
-    )
+    throw new Error('useCommandPalette must be used within CommandPaletteProvider')
   }
   return context
 }

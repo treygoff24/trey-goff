@@ -2,10 +2,7 @@ import { notFound } from 'next/navigation'
 import { allEssays } from 'content-collections'
 import { formatDate } from '@/lib/utils'
 import { TagPill } from '@/components/ui/TagPill'
-import {
-  TableOfContents,
-  MobileTableOfContents,
-} from '@/components/writing/TableOfContents'
+import { TableOfContents, MobileTableOfContents } from '@/components/writing/TableOfContents'
 import { Prose } from '@/components/content/Prose'
 import { RelatedLinks } from '@/components/content/RelatedLinks'
 import { SubscribeForm } from '@/components/newsletter/SubscribeForm'
@@ -88,9 +85,7 @@ export default async function EssayPage({ params }: PageProps) {
             </span>
           )}
 
-          <h1 className="font-satoshi text-4xl font-medium text-text-1 mb-4">
-            {essay.title}
-          </h1>
+          <h1 className="font-satoshi text-4xl font-medium text-text-1 mb-4">{essay.title}</h1>
 
           <p className="text-xl text-text-2 mb-6">{essay.summary}</p>
 
@@ -105,29 +100,19 @@ export default async function EssayPage({ params }: PageProps) {
           {essay.tags.length > 0 && (
             <div className="mt-6 flex flex-wrap gap-2">
               {essay.tags.map((tag) => (
-                <TagPill
-                  key={tag}
-                  tag={tag}
-                  href={`/writing?tag=${encodeURIComponent(tag)}`}
-                />
+                <TagPill key={tag} tag={tag} href={`/writing?tag=${encodeURIComponent(tag)}`} />
               ))}
             </div>
           )}
         </header>
 
         {/* Mobile TOC */}
-        <MobileTableOfContents
-          contentSelector="#essay-content"
-          sourceId={essay.slug}
-        />
+        <MobileTableOfContents contentSelector="#essay-content" sourceId={essay.slug} />
 
         {/* Content with desktop TOC */}
         <div className="grid gap-12 lg:grid-cols-[1fr_200px]">
           <Prose>
-            <div
-              id="essay-content"
-              dangerouslySetInnerHTML={{ __html: contentHtml }}
-            />
+            <div id="essay-content" dangerouslySetInnerHTML={{ __html: contentHtml }} />
           </Prose>
 
           <TableOfContents contentSelector="#essay-content" sourceId={essay.slug} />
@@ -135,9 +120,7 @@ export default async function EssayPage({ params }: PageProps) {
 
         {(outgoingLinks.length > 0 || backlinks.length > 0) && (
           <section className="mt-12 rounded-lg border border-border-1 bg-surface-1 p-6">
-            <h2 className="mb-4 font-satoshi text-lg font-medium text-text-1">
-              Connections
-            </h2>
+            <h2 className="mb-4 font-satoshi text-lg font-medium text-text-1">Connections</h2>
             <div className="grid gap-6 md:grid-cols-2">
               <RelatedLinks title="Links out" links={outgoingLinks} />
               <RelatedLinks title="Backlinks" links={backlinks} />
@@ -147,9 +130,7 @@ export default async function EssayPage({ params }: PageProps) {
 
         {/* Newsletter CTA */}
         <div className="mt-16 rounded-lg border border-border-1 bg-surface-1 p-6">
-          <h3 className="mb-2 font-satoshi text-lg font-medium text-text-1">
-            Enjoyed this essay?
-          </h3>
+          <h3 className="mb-2 font-satoshi text-lg font-medium text-text-1">Enjoyed this essay?</h3>
           <p className="mb-4 text-sm text-text-2">
             Subscribe to get new essays delivered to your inbox.
           </p>
@@ -158,9 +139,7 @@ export default async function EssayPage({ params }: PageProps) {
 
         {/* Footer */}
         <footer className="mt-8 border-t border-border-1 pt-8">
-          <p className="text-sm text-text-3">
-            Last updated: {formatDate(essay.date)}
-          </p>
+          <p className="text-sm text-text-3">Last updated: {formatDate(essay.date)}</p>
         </footer>
       </article>
     </>

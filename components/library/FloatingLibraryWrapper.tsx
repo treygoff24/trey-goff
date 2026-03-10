@@ -11,10 +11,7 @@ import { LibraryClient } from './LibraryClient'
 
 // Dynamic import FloatingLibrary to avoid SSR issues with Three.js
 const FloatingLibrary = dynamic(
-  () =>
-    import('@/components/library/floating/FloatingLibrary').then(
-      (mod) => mod.FloatingLibrary
-    ),
+  () => import('@/components/library/floating/FloatingLibrary').then((mod) => mod.FloatingLibrary),
   {
     ssr: false,
     loading: () => (
@@ -25,7 +22,7 @@ const FloatingLibrary = dynamic(
         </div>
       </div>
     ),
-  }
+  },
 )
 
 interface FloatingLibraryWrapperProps {
@@ -39,12 +36,9 @@ function ClassicLibraryFallback({ books }: { books: Book[] }) {
   return (
     <div className="mx-auto max-w-6xl px-4 py-16">
       <header className="mb-12">
-        <h1 className="mb-4 font-satoshi text-4xl font-medium text-text-1">
-          Library
-        </h1>
+        <h1 className="mb-4 font-satoshi text-4xl font-medium text-text-1">Library</h1>
         <p className="max-w-2xl text-lg text-text-2">
-          Books that have shaped my thinking on governance, economics, and
-          building better systems.
+          Books that have shaped my thinking on governance, economics, and building better systems.
         </p>
       </header>
 
@@ -54,7 +48,5 @@ function ClassicLibraryFallback({ books }: { books: Book[] }) {
 }
 
 export function FloatingLibraryWrapper({ books }: FloatingLibraryWrapperProps) {
-  return (
-    <FloatingLibrary books={books} fallback={<ClassicLibraryFallback books={books} />} />
-  )
+  return <FloatingLibrary books={books} fallback={<ClassicLibraryFallback books={books} />} />
 }

@@ -10,7 +10,7 @@ export const metadata = {
 
 export default async function NotesPage() {
   const sortedNotes = allNotes.sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   )
 
   // Convert raw markdown to HTML. This runs at build time (static generation)
@@ -22,15 +22,13 @@ export default async function NotesPage() {
       html: await markdownToHtml(note.content),
       backlinks: getBacklinksForNote(note.slug),
       outgoing: getOutgoingLinksForNote(note.slug),
-    }))
+    })),
   )
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-16">
       <header className="mb-12">
-        <h1 className="font-satoshi text-4xl font-medium text-text-1 mb-4">
-          Notes
-        </h1>
+        <h1 className="font-satoshi text-4xl font-medium text-text-1 mb-4">Notes</h1>
         <p className="text-lg text-text-2">
           Quick thoughts, dispatches from the field, and interesting links.
         </p>
@@ -43,22 +41,22 @@ export default async function NotesPage() {
       ) : (
         <div className="space-y-6">
           {notesWithHtml.map((note) => (
-              <NoteCard
-                key={note.slug}
-                slug={note.slug}
-                date={note.date}
-                type={note.type}
-                title={note.title}
-                content={note.html}
-                tags={note.tags}
-                source={note.source}
-                sourceTitle={note.sourceTitle}
-                backlinks={note.backlinks}
-                outgoing={note.outgoing}
-              />
-            ))}
-          </div>
-        )}
+            <NoteCard
+              key={note.slug}
+              slug={note.slug}
+              date={note.date}
+              type={note.type}
+              title={note.title}
+              content={note.html}
+              tags={note.tags}
+              source={note.source}
+              sourceTitle={note.sourceTitle}
+              backlinks={note.backlinks}
+              outgoing={note.outgoing}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }

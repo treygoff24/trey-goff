@@ -42,11 +42,7 @@ interface PostProcessingEffectsProps {
 /**
  * EffectComposer with DOF enabled - used when DOF is active.
  */
-function EffectsWithDOF({
-  viewLevel,
-}: {
-  viewLevel: ViewLevel
-}) {
+function EffectsWithDOF({ viewLevel }: { viewLevel: ViewLevel }) {
   const config = VIEW_POSTPROCESSING[viewLevel]
   const { bloom, dof, vignette, noise } = config
 
@@ -76,11 +72,7 @@ function EffectsWithDOF({
 /**
  * EffectComposer without DOF - used when DOF is disabled (filter mode).
  */
-function EffectsWithoutDOF({
-  viewLevel,
-}: {
-  viewLevel: ViewLevel
-}) {
+function EffectsWithoutDOF({ viewLevel }: { viewLevel: ViewLevel }) {
   const config = VIEW_POSTPROCESSING[viewLevel]
   const { bloom, vignette, noise } = config
 

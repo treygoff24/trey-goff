@@ -1,8 +1,8 @@
-import Link from "next/link";
-import { homeHero } from "@/data/home";
-import { CommandHero } from "@/components/home/CommandHero";
-import { TagPill } from "@/components/ui/TagPill";
-import { Reveal } from "@/components/motion/Reveal";
+import Link from 'next/link'
+import { homeHero } from '@/data/home'
+import { CommandHero } from '@/components/home/CommandHero'
+import { TagPill } from '@/components/ui/TagPill'
+import { Reveal } from '@/components/motion/Reveal'
 
 export function HeroSection() {
   return (
@@ -55,5 +55,5 @@ export function HeroSection() {
         <CommandHero />
       </div>
     </section>
-  );
+  )
 }

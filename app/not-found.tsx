@@ -19,7 +19,7 @@ export default function NotFound() {
           .map((char) =>
             Math.random() > 0.7
               ? glitchChars[Math.floor(Math.random() * glitchChars.length)]
-              : char
+              : char,
           )
           .join('')
         setGlitchText(glitched)
@@ -66,7 +66,8 @@ export default function NotFound() {
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background: 'radial-gradient(ellipse at center, transparent 0%, rgba(7, 10, 15, 0.8) 100%)',
+          background:
+            'radial-gradient(ellipse at center, transparent 0%, rgba(7, 10, 15, 0.8) 100%)',
         }}
       />
 
@@ -115,20 +116,15 @@ export default function NotFound() {
 
         {/* Coordinates */}
         <div className="mb-6 font-mono text-xs text-text-3">
-          <span className="text-warm">COORD:</span>{' '}
-          <span className="text-text-2">NULL</span>
+          <span className="text-warm">COORD:</span> <span className="text-text-2">NULL</span>
           <span className="mx-3 text-border-2">|</span>
-          <span className="text-warm">SECTOR:</span>{' '}
-          <span className="text-text-2">UNKNOWN</span>
+          <span className="text-warm">SECTOR:</span> <span className="text-text-2">UNKNOWN</span>
           <span className="mx-3 text-border-2">|</span>
-          <span className="text-warm">STATUS:</span>{' '}
-          <span className="text-error">OFFLINE</span>
+          <span className="text-warm">STATUS:</span> <span className="text-error">OFFLINE</span>
         </div>
 
         {/* Message */}
-        <p className="mb-2 text-xl text-text-2">
-          The requested coordinates could not be found.
-        </p>
+        <p className="mb-2 text-xl text-text-2">The requested coordinates could not be found.</p>
         <p className="mb-8 text-text-3">
           The page may have moved, or the signal was lost in transmission.
         </p>
@@ -155,18 +151,14 @@ export default function NotFound() {
             className="flex items-center gap-2 rounded-lg border border-border-1 bg-surface-1 px-6 py-3 text-text-2 transition-all hover:border-border-2 hover:bg-surface-2 hover:text-text-1"
           >
             <span>Search</span>
-            <kbd className="rounded bg-bg-0 px-2 py-0.5 font-mono text-xs text-text-3">
-              ⌘K
-            </kbd>
+            <kbd className="rounded bg-bg-0 px-2 py-0.5 font-mono text-xs text-text-3">⌘K</kbd>
           </button>
         </div>
 
         {/* Decorative elements */}
         <div className="mt-16 flex justify-center gap-8 text-text-3/30">
           <div className="h-px w-24 self-center bg-gradient-to-r from-transparent to-border-1" />
-          <span className="font-mono text-[10px] uppercase tracking-[0.5em]">
-            End Transmission
-          </span>
+          <span className="font-mono text-[10px] uppercase tracking-[0.5em]">End Transmission</span>
           <div className="h-px w-24 self-center bg-gradient-to-l from-transparent to-border-1" />
         </div>
       </div>

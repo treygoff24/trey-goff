@@ -2,14 +2,7 @@
 
 import { CommandGroup, CommandItem } from '@/components/ui/command'
 import type { SearchResult } from '@/lib/search/orama'
-import {
-  Home,
-  FileText,
-  BookOpen,
-  Book,
-  Folder,
-  Zap,
-} from 'lucide-react'
+import { Home, FileText, BookOpen, Book, Folder, Zap } from 'lucide-react'
 
 interface CommandResultsProps {
   results: SearchResult[]
@@ -43,7 +36,7 @@ export function CommandResults({ results, onSelect }: CommandResultsProps) {
       acc[type].push(result)
       return acc
     },
-    {} as Record<string, SearchResult[]>
+    {} as Record<string, SearchResult[]>,
   )
 
   // Order: pages first, then essays, notes, books, projects, actions
@@ -58,18 +51,12 @@ export function CommandResults({ results, onSelect }: CommandResultsProps) {
         return (
           <CommandGroup key={type} heading={typeLabels[type]}>
             {items.map((result) => (
-              <CommandItem
-                key={result.id}
-                value={result.id}
-                onSelect={() => onSelect(result.url)}
-              >
+              <CommandItem key={result.id} value={result.id} onSelect={() => onSelect(result.url)}>
                 {typeIcons[type]}
                 <div className="flex flex-col">
                   <span>{result.title}</span>
                   {result.description && (
-                    <span className="line-clamp-1 text-xs text-text-3">
-                      {result.description}
-                    </span>
+                    <span className="line-clamp-1 text-xs text-text-3">{result.description}</span>
                   )}
                 </div>
               </CommandItem>

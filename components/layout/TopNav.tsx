@@ -23,7 +23,10 @@ export function TopNav() {
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-border-1 bg-bg-1/80 backdrop-blur-sm">
-        <nav className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4" aria-label="Main navigation">
+        <nav
+          className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4"
+          aria-label="Main navigation"
+        >
           <Link
             href="/"
             className="font-satoshi text-lg font-medium text-text-1 transition-colors hover:text-warm"

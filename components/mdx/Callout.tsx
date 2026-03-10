@@ -33,14 +33,7 @@ export function Callout({ type = 'info', title, children }: CalloutProps) {
   const styles = typeStyles[type]
 
   return (
-    <aside
-      className={cn(
-        'my-6 rounded-lg border-l-4 p-4',
-        styles.border,
-        styles.bg
-      )}
-      role="note"
-    >
+    <aside className={cn('my-6 rounded-lg border-l-4 p-4', styles.border, styles.bg)} role="note">
       {title && (
         <div className="mb-2 flex items-center gap-2 font-satoshi font-medium text-text-1">
           <span aria-hidden="true">{styles.icon}</span>

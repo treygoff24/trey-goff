@@ -24,8 +24,8 @@ export default function ProjectsPage() {
             Projects that move from idea to deployment.
           </h1>
           <p className="max-w-2xl text-lg leading-relaxed text-text-2 sm:text-xl">
-            Case studies and experiments across software, policy, and institutional
-            innovation—built to ship, measured in practice, and iterated in public.
+            Case studies and experiments across software, policy, and institutional innovation—built
+            to ship, measured in practice, and iterated in public.
           </p>
         </div>
         <div className="flex flex-wrap gap-3">

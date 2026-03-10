@@ -59,7 +59,7 @@ const COLORS = {
 }
 
 /** Probability thresholds */
-const WARM_THRESHOLD = 0.90 // 90% white, then warm
+const WARM_THRESHOLD = 0.9 // 90% white, then warm
 const COOL_THRESHOLD = 0.95 // 5% warm, 5% cool
 const BRIGHT_PROBABILITY = 1 / 50 // 1 in 50 are bright
 
@@ -192,7 +192,8 @@ function StarLayer({
     const warpChanged = warpDelta > 0.001
 
     // Determine if update needed
-    const shouldUpdate = needsUpdateRef.current || cameraMovedSignificantly || warpChanged || isTransitioning
+    const shouldUpdate =
+      needsUpdateRef.current || cameraMovedSignificantly || warpChanged || isTransitioning
 
     if (!shouldUpdate) return
 
@@ -222,11 +223,7 @@ function StarLayer({
       const size = starData.sizes[i]!
 
       // Apply parallax offset
-      position.set(
-        basePos.x + offset.x,
-        basePos.y + offset.y,
-        basePos.z + offset.z
-      )
+      position.set(basePos.x + offset.x, basePos.y + offset.y, basePos.z + offset.z)
 
       // Apply warp stretch in Z direction
       const warpZ = reducedMotion ? 1 : 1 + warpFactor * 0.5
@@ -250,11 +247,7 @@ function StarLayer({
   }, [])
 
   return (
-    <instancedMesh
-      ref={meshRef}
-      args={[undefined, undefined, config.count]}
-      frustumCulled={false}
-    >
+    <instancedMesh ref={meshRef} args={[undefined, undefined, config.count]} frustumCulled={false}>
       <sphereGeometry args={[1, 4, 4]} />
       <meshBasicMaterial
         transparent
@@ -264,10 +257,7 @@ function StarLayer({
         blending={THREE.AdditiveBlending}
         toneMapped={false}
       />
-      <instancedBufferAttribute
-        attach="instanceColor"
-        args={[colorBuffer, 3]}
-      />
+      <instancedBufferAttribute attach="instanceColor" args={[colorBuffer, 3]} />
     </instancedMesh>
   )
 }

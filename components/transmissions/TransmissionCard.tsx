@@ -10,10 +10,7 @@ interface TransmissionCardProps {
   variant?: 'featured' | 'list'
 }
 
-export function TransmissionCard({
-  transmission,
-  variant = 'list',
-}: TransmissionCardProps) {
+export function TransmissionCard({ transmission, variant = 'list' }: TransmissionCardProps) {
   const isFeatured = variant === 'featured'
 
   return (
@@ -27,7 +24,7 @@ export function TransmissionCard({
         'transition-all duration-300 motion-reduce:transition-none',
         'hover:border-warm/40 hover:bg-surface-1',
         'hover:shadow-[0_0_40px_-10px_rgba(255,184,107,0.25)]',
-        isFeatured && 'md:flex md:items-stretch'
+        isFeatured && 'md:flex md:items-stretch',
       )}
     >
       {/* Signal wave effect - left edge */}
@@ -39,7 +36,10 @@ export function TransmissionCard({
           <div className="signal-ring signal-ring-1" />
           <div className="signal-ring signal-ring-2" />
           <div className="signal-ring signal-ring-3" />
-          <Radio className="relative z-10 h-4 w-4 text-text-3 group-hover:text-warm transition-colors duration-300 motion-reduce:transition-none" aria-hidden="true" />
+          <Radio
+            className="relative z-10 h-4 w-4 text-text-3 group-hover:text-warm transition-colors duration-300 motion-reduce:transition-none"
+            aria-hidden="true"
+          />
         </div>
       </div>
 
@@ -58,7 +58,7 @@ export function TransmissionCard({
         <h3
           className={cn(
             'font-satoshi font-medium text-text-1 group-hover:text-warm transition-colors duration-200 motion-reduce:transition-none',
-            isFeatured ? 'text-xl mb-2' : 'text-lg mb-1.5'
+            isFeatured ? 'text-xl mb-2' : 'text-lg mb-1.5',
           )}
         >
           {transmission.title}
@@ -71,10 +71,7 @@ export function TransmissionCard({
 
         {/* Summary - shown for featured or always if short */}
         {(isFeatured || transmission.summary.length < 150) && (
-          <p className={cn(
-            'text-sm text-text-3 mb-4 line-clamp-2',
-            isFeatured && 'line-clamp-3'
-          )}>
+          <p className={cn('text-sm text-text-3 mb-4 line-clamp-2', isFeatured && 'line-clamp-3')}>
             {transmission.summary}
           </p>
         )}
@@ -91,7 +88,10 @@ export function TransmissionCard({
         {/* External link indicator */}
         <div className="flex items-center gap-2 text-sm text-text-3 group-hover:text-warm transition-colors duration-200 motion-reduce:transition-none">
           <span>Read on {transmission.publication}</span>
-          <ExternalLink className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none" aria-hidden="true" />
+          <ExternalLink
+            className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none"
+            aria-hidden="true"
+          />
         </div>
       </div>
 

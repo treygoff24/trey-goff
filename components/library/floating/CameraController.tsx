@@ -120,9 +120,7 @@ export function CameraController({ reducedMotion }: CameraControllerProps) {
     // Calculate and update transition phase (0-1)
     const currentDistance = camera.position.distanceTo(targetPosition)
     const totalDistance = totalDistanceRef.current
-    const phase = totalDistance > 0
-      ? Math.min(1, 1 - currentDistance / totalDistance)
-      : 1
+    const phase = totalDistance > 0 ? Math.min(1, 1 - currentDistance / totalDistance) : 1
 
     // Only update store when phase changes significantly (reduces re-renders)
     if (Math.abs(phase - lastEmittedPhaseRef.current) > 0.02) {

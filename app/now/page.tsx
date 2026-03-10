@@ -36,16 +36,10 @@ export default function NowPage() {
         </ul>
 
         <h2>Reading</h2>
-        <p>
-          Political economy, institutional design, economic history, and
-          systems thinking.
-        </p>
+        <p>Political economy, institutional design, economic history, and systems thinking.</p>
 
         <h2>Travel</h2>
-        <p>
-          Keeping travel light and focused while I build and write. Updates as
-          plans solidify.
-        </p>
+        <p>Keeping travel light and focused while I build and write. Updates as plans solidify.</p>
       </Prose>
     </div>
   )

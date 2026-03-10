@@ -26,12 +26,10 @@ export default function TransmissionsPage() {
           <div className="h-px flex-1 bg-gradient-to-r from-warm/30 via-border-1 to-transparent" />
         </div>
 
-        <h1 className="font-satoshi text-4xl font-medium text-text-1 mb-4">
-          Transmissions
-        </h1>
+        <h1 className="font-satoshi text-4xl font-medium text-text-1 mb-4">Transmissions</h1>
         <p className="text-lg text-text-2 max-w-2xl">
-          Writing broadcast elsewhere across the network. Ideas that found homes
-          in other publications, sent out into the world.
+          Writing broadcast elsewhere across the network. Ideas that found homes in other
+          publications, sent out into the world.
         </p>
 
         {/* Status indicator */}
@@ -74,10 +72,7 @@ export default function TransmissionsPage() {
           </h2>
           <div className="space-y-4">
             {regularTransmissions.map((transmission) => (
-              <TransmissionCard
-                key={transmission.id}
-                transmission={transmission}
-              />
+              <TransmissionCard key={transmission.id} transmission={transmission} />
             ))}
           </div>
         </section>
@@ -88,9 +83,7 @@ export default function TransmissionsPage() {
         <div className="rounded-lg border border-dashed border-border-2 bg-surface-1/50 p-12 text-center">
           <Radio className="mx-auto h-12 w-12 text-text-3 mb-4" />
           <p className="text-text-2 mb-2">No transmissions yet</p>
-          <p className="text-sm text-text-3">
-            External publications will appear here once added.
-          </p>
+          <p className="text-sm text-text-3">External publications will appear here once added.</p>
         </div>
       )}
     </div>

@@ -6,11 +6,7 @@ import * as THREE from 'three'
 import React from 'react'
 import type { Book } from '@/lib/books/types'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
-import {
-  useLibraryStore,
-  selectPostprocessingEnabled,
-  selectIsFiltered,
-} from '@/lib/library/store'
+import { useLibraryStore, selectPostprocessingEnabled, selectIsFiltered } from '@/lib/library/store'
 import { groupBooksIntoConstellations } from '@/lib/library/constellation'
 import { CameraController } from './CameraController'
 import { Universe } from './Universe'
@@ -130,10 +126,7 @@ export function FloatingLibrary({ books, fallback }: FloatingLibraryProps) {
     glRef.current.toneMappingExposure = 1.0
   }, [postprocessingEnabled])
 
-  const constellations = useMemo(
-    () => groupBooksIntoConstellations(books),
-    [books]
-  )
+  const constellations = useMemo(() => groupBooksIntoConstellations(books), [books])
 
   const handleReady = useCallback(() => {
     setIsReady(true)
@@ -191,25 +184,22 @@ export function FloatingLibrary({ books, fallback }: FloatingLibraryProps) {
             }}
             aria-hidden="true"
           >
-          <Suspense fallback={null}>
-            <AnimationDriver />
-            <CameraController reducedMotion={reducedMotion} />
-            <Universe
-              constellations={constellations}
-              reducedMotion={reducedMotion}
-            />
+            <Suspense fallback={null}>
+              <AnimationDriver />
+              <CameraController reducedMotion={reducedMotion} />
+              <Universe constellations={constellations} reducedMotion={reducedMotion} />
 
-            <ambientLight intensity={0.5} />
-            <directionalLight position={[50, 80, 50]} intensity={0.6} />
-            <directionalLight position={[-30, -20, -40]} intensity={0.3} color="#6366f1" />
+              <ambientLight intensity={0.5} />
+              <directionalLight position={[50, 80, 50]} intensity={0.6} />
+              <directionalLight position={[-30, -20, -40]} intensity={0.3} color="#6366f1" />
 
-            <PostProcessingEffects
-              viewLevel={viewLevel}
-              enabled={postprocessingEnabled}
-              disableDOF={isFiltered}
-            />
-          </Suspense>
-        </Canvas>
+              <PostProcessingEffects
+                viewLevel={viewLevel}
+                enabled={postprocessingEnabled}
+                disableDOF={isFiltered}
+              />
+            </Suspense>
+          </Canvas>
         </div>
 
         {isReady && <LibraryBreadcrumb />}

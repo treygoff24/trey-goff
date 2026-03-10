@@ -2,10 +2,7 @@ import { notFound } from 'next/navigation'
 import { allEssays } from 'content-collections'
 import { formatDate } from '@/lib/utils'
 import { TagPill } from '@/components/ui/TagPill'
-import {
-  TableOfContents,
-  MobileTableOfContents,
-} from '@/components/writing/TableOfContents'
+import { TableOfContents, MobileTableOfContents } from '@/components/writing/TableOfContents'
 import { Prose } from '@/components/content/Prose'
 import { markdownToHtml } from '@/lib/markdown'
 import { canAccessDraftPreview } from '@/lib/preview-auth'
@@ -24,10 +21,7 @@ interface PageProps {
   searchParams: Promise<{ secret?: string | string[] }>
 }
 
-export default async function EssayPreviewPage({
-  params,
-  searchParams,
-}: PageProps) {
+export default async function EssayPreviewPage({ params, searchParams }: PageProps) {
   const { slug } = await params
   const searchParamsResolved = await searchParams
   const secretParam = Array.isArray(searchParamsResolved?.secret)
@@ -73,9 +67,7 @@ export default async function EssayPreviewPage({
           </span>
         )}
 
-        <h1 className="font-satoshi text-4xl font-medium text-text-1 mb-4">
-          {essay.title}
-        </h1>
+        <h1 className="font-satoshi text-4xl font-medium text-text-1 mb-4">{essay.title}</h1>
 
         <p className="text-xl text-text-2 mb-6">{essay.summary}</p>
 
@@ -90,11 +82,7 @@ export default async function EssayPreviewPage({
         {essay.tags.length > 0 && (
           <div className="mt-6 flex flex-wrap gap-2">
             {essay.tags.map((tag) => (
-              <TagPill
-                key={tag}
-                tag={tag}
-                href={`/writing?tag=${encodeURIComponent(tag)}`}
-              />
+              <TagPill key={tag} tag={tag} href={`/writing?tag=${encodeURIComponent(tag)}`} />
             ))}
           </div>
         )}

@@ -22,12 +22,7 @@ const typeLabels: Record<string, string> = {
   topic: 'Topic',
 }
 
-export function RelatedLinks({
-  title,
-  links,
-  size = 'md',
-  className,
-}: RelatedLinksProps) {
+export function RelatedLinks({ title, links, size = 'md', className }: RelatedLinksProps) {
   if (links.length === 0) return null
 
   const titleClass =
@@ -41,14 +36,8 @@ export function RelatedLinks({
       <p className={titleClass}>{title}</p>
       <ul className={listClass}>
         {links.map((link) => (
-          <li
-            key={link.id ?? link.url}
-            className="flex items-center justify-between gap-3"
-          >
-            <Link
-              href={link.url}
-              className="text-text-2 transition-colors hover:text-text-1"
-            >
+          <li key={link.id ?? link.url} className="flex items-center justify-between gap-3">
+            <Link href={link.url} className="text-text-2 transition-colors hover:text-text-1">
               {link.title}
             </Link>
             <span className="text-[10px] uppercase tracking-[0.2em] text-text-3">

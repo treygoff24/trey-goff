@@ -18,16 +18,14 @@ export default async function WritingPage({ searchParams }: WritingPageProps) {
     ? allEssays.filter((essay) => essay.status !== 'draft')
     : allEssays
 
-  const activeTag = Array.isArray(params?.tag)
-    ? params?.tag[0]
-    : params?.tag
+  const activeTag = Array.isArray(params?.tag) ? params?.tag[0] : params?.tag
 
-  const allTags = Array.from(
-    new Set(visibleEssays.flatMap((essay) => essay.tags))
-  ).sort((a, b) => a.localeCompare(b))
+  const allTags = Array.from(new Set(visibleEssays.flatMap((essay) => essay.tags))).sort((a, b) =>
+    a.localeCompare(b),
+  )
 
   const sortedEssays = [...visibleEssays].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   )
 
   const filteredEssays = activeTag
@@ -40,12 +38,10 @@ export default async function WritingPage({ searchParams }: WritingPageProps) {
   return (
     <div className="mx-auto max-w-4xl px-4 py-16">
       <header className="mb-12">
-        <h1 className="font-satoshi text-4xl font-medium text-text-1 mb-4">
-          Writing
-        </h1>
+        <h1 className="font-satoshi text-4xl font-medium text-text-1 mb-4">Writing</h1>
         <p className="text-lg text-text-2 max-w-2xl">
-          Long-form essays on governance reform, technology policy, and building
-          better institutions.
+          Long-form essays on governance reform, technology policy, and building better
+          institutions.
         </p>
       </header>
 
@@ -66,9 +62,7 @@ export default async function WritingPage({ searchParams }: WritingPageProps) {
       {filteredEssays.length === 0 ? (
         <div className="rounded-lg border border-border-1 bg-surface-1 p-8 text-center">
           <p className="text-text-3">
-            {activeTag
-              ? `No essays tagged "${activeTag}" yet.`
-              : 'Essays coming soon.'}
+            {activeTag ? `No essays tagged "${activeTag}" yet.` : 'Essays coming soon.'}
           </p>
         </div>
       ) : (
@@ -80,9 +74,7 @@ export default async function WritingPage({ searchParams }: WritingPageProps) {
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-text-3">
                     Featured
                   </p>
-                  <h2 className="mt-2 font-satoshi text-2xl font-medium text-text-1">
-                    Start here
-                  </h2>
+                  <h2 className="mt-2 font-satoshi text-2xl font-medium text-text-1">Start here</h2>
                 </div>
               </div>
               <div className="space-y-6">
@@ -103,19 +95,13 @@ export default async function WritingPage({ searchParams }: WritingPageProps) {
             </section>
           )}
 
-          {(showFeaturedSection ? nonFeaturedEssays : filteredEssays).length >
-            0 && (
+          {(showFeaturedSection ? nonFeaturedEssays : filteredEssays).length > 0 && (
             <section>
               {showFeaturedSection && (
-                <h2 className="mb-4 font-satoshi text-2xl font-medium text-text-1">
-                  All essays
-                </h2>
+                <h2 className="mb-4 font-satoshi text-2xl font-medium text-text-1">All essays</h2>
               )}
               <div className="space-y-6">
-                {(showFeaturedSection
-                  ? nonFeaturedEssays
-                  : filteredEssays
-                ).map((essay) => (
+                {(showFeaturedSection ? nonFeaturedEssays : filteredEssays).map((essay) => (
                   <EssayCard
                     key={essay.slug}
                     title={essay.title}

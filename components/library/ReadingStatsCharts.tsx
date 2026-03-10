@@ -75,13 +75,9 @@ function ChartCard({
     <div className="rounded-2xl border border-border-1 bg-surface-1 p-5">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h3 className="font-satoshi text-lg font-medium text-text-1">
-            {title}
-          </h3>
+          <h3 className="font-satoshi text-lg font-medium text-text-1">{title}</h3>
           {subtitle && (
-            <p className="mt-1 text-xs uppercase tracking-[0.2em] text-text-3">
-              {subtitle}
-            </p>
+            <p className="mt-1 text-xs uppercase tracking-[0.2em] text-text-3">{subtitle}</p>
           )}
         </div>
       </div>
@@ -139,8 +135,7 @@ function TopicBreakdownChart({ data }: { data: TopicCount[] }) {
         <div
           className="absolute inset-0 rounded-full"
           style={{
-            background:
-              total > 0 ? `conic-gradient(${segments.join(', ')})` : undefined,
+            background: total > 0 ? `conic-gradient(${segments.join(', ')})` : undefined,
           }}
         />
         <div className="absolute inset-4 rounded-full border border-border-1 bg-bg-1" />
@@ -172,14 +167,9 @@ function RatingDistributionChart({ data }: { data: RatingCount[] }) {
           <div key={entry.rating} className="flex items-center gap-3 text-xs">
             <span className="w-12 text-text-3">{entry.rating} star</span>
             <div className="h-2 flex-1 rounded-full bg-bg-1">
-              <div
-                className="h-2 rounded-full bg-warm/70"
-                style={{ width: `${width}%` }}
-              />
+              <div className="h-2 rounded-full bg-warm/70" style={{ width: `${width}%` }} />
             </div>
-            <span className="w-6 text-right text-text-2">
-              {entry.count}
-            </span>
+            <span className="w-6 text-right text-text-2">{entry.count}</span>
           </div>
         )
       })}
