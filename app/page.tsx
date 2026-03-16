@@ -45,7 +45,7 @@ export default function HomePage() {
       <StarfieldClient />
 
       <div className="relative flex min-h-[calc(100vh-4rem)] flex-col">
-        <div className="mx-auto w-full max-w-5xl px-4 py-24 sm:py-32">
+        <div className="mx-auto w-full max-w-5xl px-4 py-16 sm:py-24 md:py-28">
           <HeroSection />
           <SignalGrid />
           <FeaturedProject project={featuredProject} />

@@ -10,9 +10,10 @@ interface GraphCanvasProps {
   data: GraphData
   onNodeClick?: (node: GraphNode | null) => void
   className?: string
+  isMobile?: boolean
 }
 
-export function GraphCanvas({ data, onNodeClick, className }: GraphCanvasProps) {
+export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: GraphCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const fallbackCanvasRef = useRef<HTMLCanvasElement>(null)
   const sigmaRef = useRef<Sigma | null>(null)
@@ -119,13 +120,13 @@ export function GraphCanvas({ data, onNodeClick, className }: GraphCanvasProps) 
       sigma = new Sigma(graph, containerRef.current, {
         renderLabels: true,
         labelFont: 'Satoshi, system-ui, sans-serif',
-        labelSize: 12,
+        labelSize: isMobile ? 10 : 12,
         labelColor: { color: 'rgba(255, 255, 255, 0.92)' },
-        labelRenderedSizeThreshold: 8,
+        labelRenderedSizeThreshold: isMobile ? 14 : 8,
         defaultEdgeColor: 'rgba(255, 255, 255, 0.15)',
         defaultNodeColor: '#7C5CFF',
         minCameraRatio: 0.1,
-        maxCameraRatio: 10,
+        maxCameraRatio: isMobile ? 14 : 10,
       })
     } catch {
       setUseFallbackCanvas(true)
@@ -194,7 +195,7 @@ export function GraphCanvas({ data, onNodeClick, className }: GraphCanvasProps) 
       sigma.kill()
       sigmaRef.current = null
     }
-  }, [data, onNodeClick, useFallbackCanvas])
+  }, [data, isMobile, onNodeClick, useFallbackCanvas])
 
   // Zoom controls
   const zoomIn = useCallback(() => {
@@ -223,7 +224,7 @@ export function GraphCanvas({ data, onNodeClick, className }: GraphCanvasProps) 
       <div
         ref={containerRef}
         className={`h-full w-full rounded-lg bg-bg-1 ${useFallbackCanvas ? 'hidden' : ''}`}
-        style={{ minHeight: '500px' }}
+        style={{ minHeight: isMobile ? '360px' : '500px' }}
       />
       {useFallbackCanvas && (
         <canvas
@@ -232,7 +233,7 @@ export function GraphCanvas({ data, onNodeClick, className }: GraphCanvasProps) 
           width={1200}
           height={800}
           aria-label="Knowledge graph canvas"
-          style={{ minHeight: '500px' }}
+          style={{ minHeight: isMobile ? '360px' : '500px' }}
         />
       )}
 
@@ -240,28 +241,46 @@ export function GraphCanvas({ data, onNodeClick, className }: GraphCanvasProps) 
       <div className="absolute bottom-4 right-4 flex flex-col gap-2">
         <button
           onClick={zoomIn}
-          className="rounded-md bg-surface-2 p-2 text-text-1 hover:bg-surface-3 transition-colors"
+          className="flex h-11 w-11 items-center justify-center rounded-xl bg-surface-2 text-text-1 transition-colors hover:bg-surface-3"
           aria-label="Zoom in"
         >
-          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            className="h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
         </button>
         <button
           onClick={zoomOut}
-          className="rounded-md bg-surface-2 p-2 text-text-1 hover:bg-surface-3 transition-colors"
+          className="flex h-11 w-11 items-center justify-center rounded-xl bg-surface-2 text-text-1 transition-colors hover:bg-surface-3"
           aria-label="Zoom out"
         >
-          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            className="h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
           </svg>
         </button>
         <button
           onClick={resetView}
-          className="rounded-md bg-surface-2 p-2 text-text-1 hover:bg-surface-3 transition-colors"
+          className="flex h-11 w-11 items-center justify-center rounded-xl bg-surface-2 text-text-1 transition-colors hover:bg-surface-3"
           aria-label="Reset view"
         >
-          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            className="h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"

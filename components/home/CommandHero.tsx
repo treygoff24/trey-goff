@@ -22,7 +22,7 @@ export function CommandHero() {
       initial={reducedMotion ? false : { opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={reducedMotion ? { duration: 0 } : { delay: 0.1, duration: 0.5 }}
-      className="relative mx-auto mb-12 w-full max-w-lg group"
+      className="group relative mx-auto mb-8 w-full max-w-lg sm:mb-12"
     >
       {/* Pulse Effect Container */}
       <motion.div
@@ -41,7 +41,7 @@ export function CommandHero() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="relative flex w-full items-center gap-4 rounded-xl border border-white/10 bg-white/[0.03] px-6 py-5 text-left text-text-3 backdrop-blur-md transition-all duration-300 hover:border-warm/30 hover:bg-white/[0.05] hover:shadow-[0_0_30px_-5px_rgba(255,184,107,0.15)] group-hover:border-warm/30 overflow-hidden"
+          className="relative flex w-full items-center gap-3 overflow-hidden rounded-xl border border-white/10 bg-white/[0.03] px-4 py-4 text-left text-text-3 backdrop-blur-md transition-all duration-300 hover:border-warm/30 hover:bg-white/[0.05] hover:shadow-[0_0_30px_-5px_rgba(255,184,107,0.15)] group-hover:border-warm/30 sm:gap-4 sm:px-6 sm:py-5"
           aria-label="Open search"
         >
           {/* Scanning Line Animation - only show if motion is allowed */}
@@ -60,17 +60,17 @@ export function CommandHero() {
           )}
 
           <Search
-            className="h-6 w-6 text-text-3 transition-colors group-hover:text-warm"
+            className="h-5 w-5 text-text-3 transition-colors group-hover:text-warm sm:h-6 sm:w-6"
             strokeWidth={1.5}
           />
 
-          <span className="text-lg font-light text-text-2 group-hover:text-text-1 transition-colors">
+          <span className="text-base font-light text-text-2 transition-colors group-hover:text-text-1 sm:text-lg">
             Search everything...
             {!reducedMotion && (
               <motion.span
                 animate={{ opacity: [1, 0, 1] }}
                 transition={{ duration: 1, repeat: Infinity }}
-                className="ml-0.5 inline-block w-[2px] h-5 align-middle bg-warm"
+                className="ml-0.5 inline-block h-5 w-[2px] align-middle bg-warm"
               />
             )}
           </span>

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { MobileNav } from './MobileNav'
 import { useCommandPalette } from '@/components/command'
 
@@ -19,6 +19,7 @@ export function TopNav() {
   const pathname = usePathname()
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
   const { setOpen } = useCommandPalette()
+  const mobileMenuButtonRef = useRef<HTMLButtonElement>(null)
 
   return (
     <>
@@ -71,7 +72,7 @@ export function TopNav() {
             {/* Search button - opens command palette */}
             <button
               onClick={() => setOpen(true)}
-              className="flex h-10 w-10 items-center justify-center rounded-md text-text-2 transition-colors hover:bg-surface-1 hover:text-text-1"
+              className="flex h-11 w-11 items-center justify-center rounded-md text-text-2 transition-colors hover:bg-surface-1 hover:text-text-1"
               aria-label="Search"
             >
               <svg
@@ -92,8 +93,9 @@ export function TopNav() {
 
             {/* Hamburger button */}
             <button
+              ref={mobileMenuButtonRef}
               onClick={() => setMobileNavOpen(true)}
-              className="flex h-10 w-10 items-center justify-center rounded-md text-text-2 transition-colors hover:bg-surface-1 hover:text-text-1"
+              className="flex h-11 w-11 items-center justify-center rounded-md text-text-2 transition-colors hover:bg-surface-1 hover:text-text-1"
               aria-label="Open menu"
               aria-expanded={mobileNavOpen}
             >
@@ -122,6 +124,7 @@ export function TopNav() {
         onClose={() => setMobileNavOpen(false)}
         navItems={navItems}
         currentPath={pathname}
+        triggerRef={mobileMenuButtonRef}
       />
     </>
   )

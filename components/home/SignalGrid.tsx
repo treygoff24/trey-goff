@@ -71,12 +71,16 @@ const icons = {
 
 export function SignalGrid() {
   return (
-    <section className="mt-16">
-      <div className="mb-10 max-w-2xl">
+    <section className="mt-12 sm:mt-16">
+      <div className="mb-8 max-w-2xl sm:mb-10">
         <Reveal as="p" className="eyebrow text-text-3">
           {homeSignals.eyebrow}
         </Reveal>
-        <Reveal as="h2" delay={0.05} className="mt-4 font-satoshi text-3xl font-medium text-text-1">
+        <Reveal
+          as="h2"
+          delay={0.05}
+          className="mt-4 font-satoshi text-2xl font-medium text-text-1 sm:text-3xl"
+        >
           {homeSignals.title}
         </Reveal>
         <Reveal as="p" delay={0.1} className="mt-3 text-text-2">
@@ -84,7 +88,7 @@ export function SignalGrid() {
         </Reveal>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
         {homeSignals.items.map((item, index) => (
           <HolographicTile
             key={item.href}

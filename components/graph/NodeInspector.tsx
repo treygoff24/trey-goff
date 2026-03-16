@@ -7,6 +7,7 @@ import { formatDate } from '@/lib/utils'
 
 interface NodeInspectorProps {
   node: GraphNode | null
+  isMobile?: boolean
 }
 
 const TYPE_LABELS: Record<string, string> = {
@@ -17,17 +18,21 @@ const TYPE_LABELS: Record<string, string> = {
   idea: 'Idea',
 }
 
-export function NodeInspector({ node }: NodeInspectorProps) {
+export function NodeInspector({ node, isMobile = false }: NodeInspectorProps) {
   if (!node) {
     return (
-      <div className="rounded-lg border border-border-1 bg-surface-1 p-6">
-        <p className="text-center text-text-3">Click a node to view details</p>
+      <div className="rounded-2xl border border-border-1 bg-surface-1 p-5 sm:p-6">
+        <p className="text-center text-sm text-text-3 sm:text-base">
+          {isMobile
+            ? 'Pick a lens, tap a quick entry point, or press on a bright node to see details.'
+            : 'Click a node to view details.'}
+        </p>
       </div>
     )
   }
 
   return (
-    <div className="rounded-lg border border-border-1 bg-surface-1 p-6">
+    <div className="rounded-2xl border border-border-1 bg-surface-1 p-5 sm:p-6">
       {/* Type badge */}
       <div className="mb-4">
         <span

@@ -24,11 +24,13 @@ interface FeaturedProjectProps {
 
 export function FeaturedProject({ project }: FeaturedProjectProps) {
   return (
-    <section className="mt-20">
+    <section className="mt-14 sm:mt-20">
       <Reveal as="div" className="mb-8 flex items-center justify-between gap-4">
         <div>
           <p className="eyebrow text-text-3">Featured project</p>
-          <h2 className="mt-3 font-satoshi text-3xl font-medium text-text-1">Selected work</h2>
+          <h2 className="mt-3 font-satoshi text-2xl font-medium text-text-1 sm:text-3xl">
+            Selected work
+          </h2>
         </div>
         <Link
           href="/projects"

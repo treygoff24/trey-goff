@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, type RefObject } from 'react'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 import { isNewsletterEnabled } from '@/lib/site-config'
 import { cn } from '@/lib/utils'
@@ -11,11 +11,26 @@ interface MobileNavProps {
   onClose: () => void
   navItems: Array<{ href: string; label: string }>
   currentPath: string | null
+  triggerRef: RefObject<HTMLButtonElement | null>
 }
 
-export function MobileNav({ isOpen, onClose, navItems, currentPath }: MobileNavProps) {
+export function MobileNav({ isOpen, onClose, navItems, currentPath, triggerRef }: MobileNavProps) {
   const prefersReducedMotion = useReducedMotion()
   const previousPath = useRef(currentPath)
+  const drawerRef = useRef<HTMLElement>(null)
+  const previousFocusRef = useRef<HTMLElement | null>(null)
+
+  // Save focus on open and restore it on close
+  useEffect(() => {
+    if (isOpen) {
+      previousFocusRef.current = document.activeElement as HTMLElement
+      return
+    }
+
+    const elementToRestore = previousFocusRef.current ?? triggerRef.current
+    elementToRestore?.focus()
+    previousFocusRef.current = null
+  }, [isOpen, triggerRef])
 
   // Close on escape key
   useEffect(() => {
@@ -46,6 +61,58 @@ export function MobileNav({ isOpen, onClose, navItems, currentPath }: MobileNavP
     previousPath.current = currentPath
   }, [currentPath, isOpen, onClose])
 
+  // Move focus into the drawer when it opens
+  useEffect(() => {
+    if (!isOpen || !drawerRef.current) return
+
+    const focusableElements = drawerRef.current.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    )
+
+    focusableElements[0]?.focus()
+  }, [isOpen])
+
+  // Prevent tabbing outside the drawer while it is open
+  useEffect(() => {
+    if (!isOpen || !drawerRef.current) return
+
+    const getFocusableElements = () =>
+      Array.from(
+        drawerRef.current?.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        ) ?? [],
+      )
+
+    const handleTab = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return
+
+      const focusableElements = getFocusableElements()
+      const firstElement = focusableElements[0]
+      const lastElement = focusableElements[focusableElements.length - 1]
+
+      if (!firstElement || !lastElement) return
+
+      const activeElement = document.activeElement
+
+      if (!drawerRef.current?.contains(activeElement)) {
+        e.preventDefault()
+        ;(e.shiftKey ? lastElement : firstElement).focus()
+        return
+      }
+
+      if (e.shiftKey && activeElement === firstElement) {
+        e.preventDefault()
+        lastElement.focus()
+      } else if (!e.shiftKey && activeElement === lastElement) {
+        e.preventDefault()
+        firstElement.focus()
+      }
+    }
+
+    document.addEventListener('keydown', handleTab)
+    return () => document.removeEventListener('keydown', handleTab)
+  }, [isOpen])
+
   if (!isOpen) return null
 
   return (
@@ -62,6 +129,7 @@ export function MobileNav({ isOpen, onClose, navItems, currentPath }: MobileNavP
 
       {/* Drawer */}
       <nav
+        ref={drawerRef}
         className={cn(
           'fixed right-0 top-0 z-50 h-full w-72 border-l border-border-1 bg-bg-1 shadow-2xl',
           !prefersReducedMotion && 'animate-slide-in-right',
@@ -69,12 +137,13 @@ export function MobileNav({ isOpen, onClose, navItems, currentPath }: MobileNavP
         role="dialog"
         aria-modal="true"
         aria-label="Navigation menu"
+        tabIndex={-1}
       >
         {/* Close button */}
         <div className="flex h-16 items-center justify-end border-b border-border-1 px-4">
           <button
             onClick={onClose}
-            className="flex h-10 w-10 items-center justify-center rounded-md text-text-2 transition-colors hover:bg-surface-1 hover:text-text-1"
+            className="flex h-11 w-11 items-center justify-center rounded-md text-text-2 transition-colors hover:bg-surface-1 hover:text-text-1"
             aria-label="Close menu"
           >
             <svg
@@ -104,7 +173,7 @@ export function MobileNav({ isOpen, onClose, navItems, currentPath }: MobileNavP
                 href={item.href}
                 onClick={onClose}
                 className={cn(
-                  'rounded-lg px-4 py-3 text-base font-medium transition-all',
+                  'min-h-11 rounded-lg px-4 py-3 text-base font-medium transition-all',
                   !prefersReducedMotion && 'stagger-item',
                   isActive
                     ? 'bg-warm/10 text-warm border-l-2 border-warm'
@@ -124,7 +193,7 @@ export function MobileNav({ isOpen, onClose, navItems, currentPath }: MobileNavP
             <Link
               href="/now"
               onClick={onClose}
-              className="px-4 py-2 text-sm text-text-3 transition-colors hover:text-text-2"
+              className="min-h-11 px-4 py-2 text-sm text-text-3 transition-colors hover:text-text-2"
             >
               Now
             </Link>
@@ -132,7 +201,7 @@ export function MobileNav({ isOpen, onClose, navItems, currentPath }: MobileNavP
               <Link
                 href="/subscribe"
                 onClick={onClose}
-                className="px-4 py-2 text-sm text-text-3 transition-colors hover:text-text-2"
+                className="min-h-11 px-4 py-2 text-sm text-text-3 transition-colors hover:text-text-2"
               >
                 Subscribe
               </Link>
@@ -140,7 +209,7 @@ export function MobileNav({ isOpen, onClose, navItems, currentPath }: MobileNavP
             <Link
               href="/colophon"
               onClick={onClose}
-              className="px-4 py-2 text-sm text-text-3 transition-colors hover:text-text-2"
+              className="min-h-11 px-4 py-2 text-sm text-text-3 transition-colors hover:text-text-2"
             >
               Colophon
             </Link>
