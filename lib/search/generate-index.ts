@@ -2,6 +2,7 @@ import { allEssays, allNotes, allProjects } from 'content-collections'
 import { readFileSync } from 'fs'
 import type { SearchDocument, SearchIndex } from './types'
 import type { BooksData } from '@/lib/books/types'
+import { isNewsletterEnabled } from '@/lib/site-config'
 
 // Load books data
 function loadBooks(): BooksData['books'] {
@@ -80,14 +81,6 @@ const navigationPages: SearchDocument[] = [
     priority: 8,
   },
   {
-    id: 'nav-subscribe',
-    type: 'page',
-    title: 'Subscribe',
-    description: 'Newsletter signup',
-    url: '/subscribe',
-    priority: 8,
-  },
-  {
     id: 'nav-colophon',
     type: 'page',
     title: 'Colophon',
@@ -104,6 +97,17 @@ const navigationPages: SearchDocument[] = [
     priority: 6,
   },
 ]
+
+if (isNewsletterEnabled) {
+  navigationPages.splice(8, 0, {
+    id: 'nav-subscribe',
+    type: 'page',
+    title: 'Subscribe',
+    description: 'Newsletter signup',
+    url: '/subscribe',
+    priority: 8,
+  })
+}
 
 // Quick actions
 const quickActions: SearchDocument[] = [

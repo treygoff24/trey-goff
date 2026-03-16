@@ -28,11 +28,8 @@ export class LibraryPage extends BasePage {
     this.statusFilterButtons = page.locator('text=Status').locator('..').locator('button')
     this.topicFilterButtons = page.locator('text=Topic').locator('..').locator('button')
     this.sortSelect = page.getByLabel('Sort by')
-    this.bookDetailModal = page.locator('.fixed.inset-0').filter({ has: page.locator('h2') })
-    this.modalCloseButton = page
-      .locator('.fixed button')
-      .filter({ has: page.locator('svg') })
-      .first()
+    this.bookDetailModal = page.getByRole('dialog')
+    this.modalCloseButton = page.getByRole('button', { name: 'Close' }).first()
     this.noResultsMessage = page.getByText('No books match the current filters.')
     this.statsCards = page.locator('.grid.grid-cols-2.md\\:grid-cols-4 > div')
   }
@@ -52,18 +49,30 @@ export class LibraryPage extends BasePage {
   }
 
   async filterByStatus(status: 'All' | 'Read' | 'Reading' | 'Want to Read' | 'Abandoned') {
-    await this.page.getByRole('button', { name: status, exact: true }).click()
+    const button = this.page.getByRole('group', { name: 'Status' }).getByRole('button', {
+      name: status,
+      exact: true,
+    })
+    await button.scrollIntoViewIfNeeded()
+    await button.click()
   }
 
   async filterByTopic(topic: string) {
-    // Topic filters are in a specific section
-    const topicSection = this.page.locator('text=Topic').locator('..')
-    await topicSection.getByRole('button', { name: topic, exact: true }).click()
+    const button = this.page.getByRole('group', { name: 'Topic' }).getByRole('button', {
+      name: topic,
+      exact: true,
+    })
+    await button.scrollIntoViewIfNeeded()
+    await button.click()
   }
 
   async clearTopicFilter() {
-    const topicSection = this.page.locator('text=Topic').locator('..')
-    await topicSection.getByRole('button', { name: 'All', exact: true }).click()
+    const button = this.page.getByRole('group', { name: 'Topic' }).getByRole('button', {
+      name: 'All',
+      exact: true,
+    })
+    await button.scrollIntoViewIfNeeded()
+    await button.click()
   }
 
   async sortBy(option: 'Title' | 'Author' | 'Year' | 'Rating' | 'Date Read') {
@@ -87,7 +96,7 @@ export class LibraryPage extends BasePage {
     // Click the close button or click outside
     await this.page.keyboard.press('Escape')
     // If that doesn't work, try clicking the backdrop
-    const backdrop = this.page.locator('.fixed.inset-0.bg-black\\/80')
+    const backdrop = this.page.locator('.fixed.inset-0.bg-black\\/80').first()
     if (await backdrop.isVisible()) {
       await backdrop.click({ position: { x: 10, y: 10 } })
     }
@@ -111,12 +120,11 @@ export class LibraryPage extends BasePage {
   }
 
   async expectBookDetailVisible() {
-    // The modal should have book title (h2)
-    await expect(this.page.locator('.fixed h2')).toBeVisible()
+    await expect(this.bookDetailModal).toBeVisible()
   }
 
   async expectBookDetailHidden() {
-    await expect(this.page.locator('.fixed h2')).not.toBeVisible()
+    await expect(this.bookDetailModal).not.toBeVisible()
   }
 
   async getBookCount(): Promise<number> {

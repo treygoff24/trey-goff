@@ -1,3 +1,5 @@
+import { isNewsletterEnabled } from '@/lib/site-config'
+
 export const homeHero = {
   eyebrow: "Governance + Institutional Design",
   headline: "Designing the systems that let progress compound.",
@@ -11,7 +13,9 @@ export const homeHero = {
   ctas: {
     primary: { label: "Read the work", href: "/writing" },
     secondary: { label: "Explore projects", href: "/projects" },
-    tertiary: { label: "Subscribe", href: "/subscribe" },
+    tertiary: isNewsletterEnabled
+      ? { label: "Subscribe", href: "/subscribe" }
+      : { label: "See what's current", href: "/now" },
   },
 };
 
@@ -49,10 +53,15 @@ export const homeSignals = {
 };
 
 export const homeCta = {
-  eyebrow: "Open channel",
-  title: "Get the signal",
-  description:
-    "Essays, dispatches, and project notes on building the next generation of governance.",
-  primary: { label: "Subscribe for updates", href: "/subscribe" },
-  secondary: { label: "See the latest essay", href: "/writing" },
+  eyebrow: isNewsletterEnabled ? "Open channel" : "Keep exploring",
+  title: isNewsletterEnabled ? "Get the signal" : "Keep up with the work",
+  description: isNewsletterEnabled
+    ? "Essays, dispatches, and project notes on building the next generation of governance."
+    : "Start with the essays, browse the projects, and follow the threads connecting the work.",
+  primary: isNewsletterEnabled
+    ? { label: "Subscribe for updates", href: "/subscribe" }
+    : { label: "Read the latest essays", href: "/writing" },
+  secondary: isNewsletterEnabled
+    ? { label: "See the latest essay", href: "/writing" }
+    : { label: "Browse projects", href: "/projects" },
 };

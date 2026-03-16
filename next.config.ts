@@ -4,6 +4,9 @@ import { withContentCollections } from '@content-collections/next'
 export const nextConfig: NextConfig = {
   // Enable React strict mode for better development experience
   reactStrictMode: true,
+  turbopack: {
+    root: process.cwd(),
+  },
 
   // Static security headers (CSP is set dynamically in middleware with a per-request nonce)
   async headers() {

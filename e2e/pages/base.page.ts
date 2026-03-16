@@ -12,6 +12,7 @@ export class BasePage {
   readonly searchButton: Locator
   readonly mobileMenuButton: Locator
   readonly mobileNav: Locator
+  readonly commandPaletteReady: Locator
 
   constructor(page: Page) {
     this.page = page
@@ -22,17 +23,19 @@ export class BasePage {
     this.searchButton = page.getByRole('button', { name: /search|command k/i })
     this.mobileMenuButton = page.getByRole('button', { name: 'Open menu' })
     this.mobileNav = page.getByRole('dialog', { name: 'Navigation menu' })
+    this.commandPaletteReady = page.locator('html[data-command-palette-ready="true"]')
   }
 
   async goto(path: string = '/') {
     await this.page.goto(path, { waitUntil: 'domcontentloaded', timeout: 60000 })
     if (!path.startsWith('/interactive')) {
-      await this.page.waitForSelector('html[data-command-palette-ready="true"]')
+      await expect(this.topNav).toBeVisible({ timeout: 60000 })
+      await expect(this.commandPaletteReady).toBeVisible({ timeout: 60000 })
     }
   }
 
   async openCommandPalette() {
-    await this.page.waitForSelector('html[data-command-palette-ready="true"]')
+    await expect(this.searchButton.first()).toBeVisible({ timeout: 60000 })
     // Use keyboard shortcut
     await this.page.keyboard.press('Meta+k')
     // Wait for the dialog to be visible
@@ -40,7 +43,7 @@ export class BasePage {
   }
 
   async openCommandPaletteByClick() {
-    await this.page.waitForSelector('html[data-command-palette-ready="true"]')
+    await expect(this.searchButton.first()).toBeVisible({ timeout: 60000 })
     await this.searchButton.first().click()
     await expect(this.page.getByRole('dialog')).toBeVisible()
   }
@@ -51,7 +54,7 @@ export class BasePage {
   }
 
   async openMobileNav() {
-    await this.page.waitForSelector('html[data-command-palette-ready="true"]')
+    await expect(this.mobileMenuButton).toBeVisible({ timeout: 60000 })
     await this.mobileMenuButton.click()
     await expect(this.mobileNav).toBeVisible()
   }
@@ -71,7 +74,7 @@ export class BasePage {
   }
 
   async useSkipLink() {
-    await this.page.waitForSelector('html[data-command-palette-ready="true"]')
+    await expect(this.skipLink).toBeAttached({ timeout: 60000 })
     // Focus the skip link (it's sr-only until focused)
     await this.skipLink.focus()
     await this.skipLink.evaluate((link: HTMLAnchorElement) => link.click())

@@ -44,7 +44,7 @@ test.describe('Static content pages', () => {
     await basePage.goto('/projects')
 
     await expect(page.getByRole('heading', { name: 'Projects' })).toBeVisible()
-    await expect(page.getByRole('link', { name: 'Get project updates' })).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Read the writing' })).toBeVisible()
 
     const cards = page.locator('article')
     const cardCount = await cards.count()
@@ -55,5 +55,13 @@ test.describe('Static content pages', () => {
     } else {
       await expect(page.getByText(/Projects coming soon/i)).toBeVisible()
     }
+  })
+
+  test('Subscribe route is hidden when newsletter is disabled', async ({ page }) => {
+    const basePage = new BasePage(page)
+    await basePage.goto('/subscribe')
+
+    await expect(page.getByText('Signal Lost')).toBeVisible()
+    await expect(page.getByText('The requested coordinates could not be found.')).toBeVisible()
   })
 })

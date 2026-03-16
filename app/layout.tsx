@@ -6,6 +6,7 @@ import { SkipLink } from '@/components/layout/SkipLink'
 import { CommandPaletteProvider, CommandPalette } from '@/components/command'
 import { EasterEggs } from '@/components/easter-eggs/EasterEggs'
 import { generateOrganizationSchema } from '@/lib/structured-data'
+import { siteUrl } from '@/lib/site-config'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -14,9 +15,9 @@ export const metadata: Metadata = {
     template: '%s — Trey',
   },
   description: 'Governance, acceleration zones, and institutional innovation for a faster future.',
-  metadataBase: new URL('https://trey.world'),
+  metadataBase: new URL(siteUrl),
   alternates: {
-    canonical: 'https://trey.world',
+    canonical: siteUrl,
     types: {
       'application/rss+xml': [
         { url: '/feed.xml', title: 'Trey Goff RSS Feed' },
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://trey.world',
+    url: siteUrl,
     siteName: 'Trey Goff',
     images: [
       {

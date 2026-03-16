@@ -1,4 +1,4 @@
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://trey.world'
+import { siteUrl } from '@/lib/site-config'
 
 export function generateOrganizationSchema() {
   return {

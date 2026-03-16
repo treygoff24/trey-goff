@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { allEssays, allNotes } from 'content-collections'
 import { getTopicsIndex } from '@/lib/topics'
+import { isNewsletterEnabled } from '@/lib/site-config'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://trey.world'
 
@@ -19,10 +20,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/projects',
     '/about',
     '/now',
-    '/subscribe',
     '/colophon',
     '/topics',
   ]
+
+  if (isNewsletterEnabled) {
+    staticPages.splice(8, 0, '/subscribe')
+  }
 
   const staticEntries = staticPages.map((route) => ({
     url: `${siteUrl}${route}`,

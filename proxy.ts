@@ -8,12 +8,13 @@ function createNonce(): string {
   return btoa(String.fromCharCode(...bytes))
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   const strictRoute = isInteractiveLibraryPath(pathname)
   const nonce = strictRoute ? createNonce() : ''
   const requestHeaders = new Headers(request.headers)
   const csp = buildCsp({
+    isDevelopment: process.env.NODE_ENV === 'development',
     pathname,
     nonce,
   })

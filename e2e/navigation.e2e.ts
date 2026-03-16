@@ -151,8 +151,8 @@ test.describe('Navigation - Mobile', () => {
       await basePage.openMobileNav()
 
       await expect(basePage.mobileNav.getByRole('link', { name: 'Now' })).toBeVisible()
-      await expect(basePage.mobileNav.getByRole('link', { name: 'Subscribe' })).toBeVisible()
       await expect(basePage.mobileNav.getByRole('link', { name: 'Colophon' })).toBeVisible()
+      await expect(basePage.mobileNav.getByRole('link', { name: 'Subscribe' })).toHaveCount(0)
     })
 
     test('should close drawer when clicking backdrop', async ({ page }) => {
@@ -223,7 +223,7 @@ test.describe('Navigation - Sticky header', () => {
     await basePage.goto('/')
 
     // Header should be sticky
-    const header = page.locator('header')
+    const header = page.getByRole('banner')
     await expect(header).toHaveClass(/sticky/)
   })
 
@@ -235,7 +235,7 @@ test.describe('Navigation - Sticky header', () => {
     await page.evaluate(() => window.scrollBy(0, 500))
 
     // Header should still be visible
-    const header = page.locator('header')
+    const header = page.getByRole('banner')
     await expect(header).toBeVisible()
     await expect(header).toBeInViewport()
   })

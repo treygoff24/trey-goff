@@ -158,10 +158,10 @@ test.describe('Library Page - Classic', () => {
       const firstBook = page.locator('.grid .cursor-pointer').first()
       await firstBook.click()
 
-      await expect(page.locator('.fixed h2')).toBeVisible()
-
-      const modal = page.locator('.fixed.inset-0').filter({ has: page.locator('h2') })
-      await expect(modal.locator('p.text-lg')).toBeVisible()
+      const modal = page.getByRole('dialog')
+      await expect(modal).toBeVisible()
+      await expect(modal.getByRole('heading', { level: 2 })).toBeVisible()
+      await expect(modal.locator('p').first()).toBeVisible()
     })
 
     test('should close modal when clicking backdrop', async ({ page }) => {
@@ -171,7 +171,7 @@ test.describe('Library Page - Classic', () => {
 
       await libraryPage.expectBookDetailVisible()
 
-      const backdrop = page.locator('.fixed.inset-0 > .absolute.inset-0')
+      const backdrop = page.locator('.fixed.inset-0.bg-black\\/80').first()
       const box = await backdrop.boundingBox()
       if (box) {
         await page.mouse.click(box.x + 20, box.y + 20)
@@ -187,10 +187,7 @@ test.describe('Library Page - Classic', () => {
 
       await libraryPage.expectBookDetailVisible()
 
-      const closeButton = page
-        .locator('.fixed button')
-        .filter({ has: page.locator('svg') })
-        .first()
+      const closeButton = page.getByRole('button', { name: 'Close' }).first()
       await closeButton.click()
 
       await libraryPage.expectBookDetailHidden()
@@ -276,6 +273,7 @@ test.describe('Library Page - Mobile (Classic)', () => {
     }
 
     const firstBook = page.locator('.grid .cursor-pointer').first()
+    await firstBook.scrollIntoViewIfNeeded()
     await firstBook.click()
 
     await libraryPage.expectBookDetailVisible()
@@ -289,7 +287,13 @@ test.describe('Library Page - Mobile (Classic)', () => {
       test.skip(true, '3D library active')
     }
 
-    await expect(page.getByRole('button', { name: 'All', exact: true })).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Read', exact: true })).toBeVisible()
+    await expect(
+      page.getByRole('group', { name: 'Status' }).getByRole('button', { name: 'All', exact: true }),
+    ).toBeVisible()
+    await expect(
+      page
+        .getByRole('group', { name: 'Status' })
+        .getByRole('button', { name: 'Read', exact: true }),
+    ).toBeVisible()
   })
 })

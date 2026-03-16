@@ -33,7 +33,7 @@ export default function LibraryPage() {
       ))}
 
       {/* Full-viewport 3D library experience */}
-      <div className="fixed inset-0 h-screen w-screen bg-bg-0">
+      <div className="fixed inset-0 z-10 h-screen w-screen bg-bg-0">
         <FloatingLibraryWrapper books={books} />
       </div>
     </>

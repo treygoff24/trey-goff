@@ -293,23 +293,30 @@ test.describe('Essay Detail Page', () => {
     })
   })
 
-  test.describe('Newsletter CTA', () => {
-    test('should display newsletter CTA at bottom', async ({ page }) => {
+  test.describe('Continue exploring section', () => {
+    test('should display follow-up navigation at the bottom', async ({ page }) => {
       const opened = await openFirstEssay(page, essayPage)
 
       if (opened) {
-        await essayPage.expectNewsletterCtaVisible()
+        await essayPage.expectContinueExploringVisible()
       } else {
         test.skip()
       }
     })
 
-    test('should have subscribe form in CTA', async ({ page }) => {
+    test('should link to more essays, topics, and projects', async ({ page }) => {
       const opened = await openFirstEssay(page, essayPage)
 
       if (opened) {
-        await expect(essayPage.newsletterCta.locator('input[type="email"]')).toBeVisible()
-        await expect(essayPage.newsletterCta.locator('button[type="submit"]')).toBeVisible()
+        await expect(
+          essayPage.continueExploring.getByRole('link', { name: 'More essays' }),
+        ).toBeVisible()
+        await expect(
+          essayPage.continueExploring.getByRole('link', { name: 'Browse topics' }),
+        ).toBeVisible()
+        await expect(
+          essayPage.continueExploring.getByRole('link', { name: 'See projects' }),
+        ).toBeVisible()
       } else {
         test.skip()
       }

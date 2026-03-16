@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { allProjects } from 'content-collections'
 import { ProjectCard } from '@/components/projects/ProjectCard'
+import { isNewsletterEnabled } from '@/lib/site-config'
 
 export const metadata = {
   title: 'Projects',
@@ -30,10 +31,10 @@ export default function ProjectsPage() {
         </div>
         <div className="flex flex-wrap gap-3">
           <Link
-            href="/subscribe"
+            href={isNewsletterEnabled ? '/subscribe' : '/writing'}
             className="inline-flex items-center justify-center rounded-full bg-warm px-6 py-3 text-sm font-semibold text-bg-0 shadow-lg shadow-warm/25 transition hover:-translate-y-0.5 hover:shadow-warm/40"
           >
-            Get project updates
+            {isNewsletterEnabled ? 'Get project updates' : 'Read the writing'}
           </Link>
         </div>
       </header>

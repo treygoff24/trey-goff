@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { isNewsletterEnabled } from '@/lib/site-config'
 
 const BUTTONDOWN_API_KEY = process.env.BUTTONDOWN_API_KEY
 const MAX_EMAIL_LENGTH = 320
@@ -20,6 +21,14 @@ interface RateLimitEntry {
 // protection, use distributed rate limiting (e.g. Upstash/Redis).
 const rateLimitMap = new Map<string, RateLimitEntry>()
 
+function pruneExpiredRateLimits(now: number) {
+  for (const [ip, entry] of rateLimitMap.entries()) {
+    if (now >= entry.resetAt) {
+      rateLimitMap.delete(ip)
+    }
+  }
+}
+
 function getClientIP(request: NextRequest): string {
   return (
     request.headers.get('x-forwarded-for')?.split(',')[0] ||
@@ -30,6 +39,7 @@ function getClientIP(request: NextRequest): string {
 
 function checkRateLimit(ip: string): { allowed: boolean; retryAfter?: number } {
   const now = Date.now()
+  pruneExpiredRateLimits(now)
   const entry = rateLimitMap.get(ip)
 
   if (entry && now >= entry.resetAt) {
@@ -51,17 +61,11 @@ function checkRateLimit(ip: string): { allowed: boolean; retryAfter?: number } {
   return { allowed: true }
 }
 
-setInterval(() => {
-  const now = Date.now()
-  const entries = Array.from(rateLimitMap.entries())
-  for (const [ip, entry] of entries) {
-    if (now >= entry.resetAt) {
-      rateLimitMap.delete(ip)
-    }
-  }
-}, RATE_LIMIT_WINDOW_MS)
-
 export async function POST(request: NextRequest) {
+  if (!isNewsletterEnabled) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  }
+
   // Validate API key exists
   if (!BUTTONDOWN_API_KEY) {
     console.error('BUTTONDOWN_API_KEY not configured')

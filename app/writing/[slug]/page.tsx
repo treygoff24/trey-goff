@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { allEssays } from 'content-collections'
 import { formatDate } from '@/lib/utils'
@@ -9,6 +10,7 @@ import { SubscribeForm } from '@/components/newsletter/SubscribeForm'
 import { markdownToHtml } from '@/lib/markdown'
 import { generateArticleSchema, generateBreadcrumbSchema } from '@/lib/structured-data'
 import { getBacklinksForEssay, getOutgoingLinksForEssay } from '@/lib/backlinks'
+import { isNewsletterEnabled } from '@/lib/site-config'
 
 const isProduction = process.env.NODE_ENV === 'production'
 const visibleEssays = isProduction
@@ -128,14 +130,50 @@ export default async function EssayPage({ params }: PageProps) {
           </section>
         )}
 
-        {/* Newsletter CTA */}
-        <div className="mt-16 rounded-lg border border-border-1 bg-surface-1 p-6">
-          <h3 className="mb-2 font-satoshi text-lg font-medium text-text-1">Enjoyed this essay?</h3>
-          <p className="mb-4 text-sm text-text-2">
-            Subscribe to get new essays delivered to your inbox.
-          </p>
-          <SubscribeForm compact />
-        </div>
+        {isNewsletterEnabled ? (
+          <div className="mt-16 rounded-lg border border-border-1 bg-surface-1 p-6">
+            <h3 className="mb-2 font-satoshi text-lg font-medium text-text-1">
+              Enjoyed this essay?
+            </h3>
+            <p className="mb-4 text-sm text-text-2">
+              Subscribe to get new essays delivered to your inbox.
+            </p>
+            <SubscribeForm compact />
+          </div>
+        ) : (
+          <section className="mt-16 rounded-2xl border border-border-1 bg-surface-1 p-6 sm:p-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-text-3">
+              Continue exploring
+            </p>
+            <h3 className="mt-3 font-satoshi text-2xl font-medium text-text-1">
+              Follow the thread from here.
+            </h3>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-text-2">
+              Move into the wider archive, browse connected topics, or jump over to the projects
+              turning these ideas into something concrete.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link
+                href="/writing"
+                className="inline-flex items-center justify-center rounded-full bg-warm px-5 py-2.5 text-sm font-semibold text-bg-0 transition hover:-translate-y-0.5"
+              >
+                More essays
+              </Link>
+              <Link
+                href="/topics"
+                className="inline-flex items-center justify-center rounded-full border border-border-1 px-5 py-2.5 text-sm font-medium text-text-1 transition hover:border-warm/40 hover:text-warm"
+              >
+                Browse topics
+              </Link>
+              <Link
+                href="/projects"
+                className="inline-flex items-center justify-center rounded-full border border-border-1 px-5 py-2.5 text-sm font-medium text-text-1 transition hover:border-warm/40 hover:text-warm"
+              >
+                See projects
+              </Link>
+            </div>
+          </section>
+        )}
 
         {/* Footer */}
         <footer className="mt-8 border-t border-border-1 pt-8">

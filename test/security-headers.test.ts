@@ -36,16 +36,16 @@ test('next config includes static security headers and no static CSP', async () 
   assert.equal(
     headerMap.has('Content-Security-Policy'),
     false,
-    'CSP should be set dynamically in middleware with per-request nonce',
+    'CSP should be set dynamically in proxy with per-request nonce',
   )
 })
 
 test('CSP uses strict nonce policy on interactive/library and static-friendly policy elsewhere', () => {
   const nonce = 'test-nonce-value'
 
-  const defaultCsp = buildCsp({ pathname: '/about', nonce })
-  const interactiveCsp = buildCsp({ pathname: '/interactive', nonce })
-  const libraryCsp = buildCsp({ pathname: '/library', nonce })
+  const defaultCsp = buildCsp({ pathname: '/about', nonce, isDevelopment: false })
+  const interactiveCsp = buildCsp({ pathname: '/interactive', nonce, isDevelopment: false })
+  const libraryCsp = buildCsp({ pathname: '/library', nonce, isDevelopment: false })
 
   const defaultScriptSrc = toDirectiveMap(defaultCsp).get('script-src') || ''
   const interactiveScriptSrc = toDirectiveMap(interactiveCsp).get('script-src') || ''
@@ -73,6 +73,23 @@ test('CSP uses strict nonce policy on interactive/library and static-friendly po
     )
     assert.match(scriptSrc, /'unsafe-eval'/, 'strict routes should allow unsafe-eval')
   }
+})
+
+test('CSP relaxes script and connect sources in development for the webpack runtime', () => {
+  const nonce = 'test-nonce-value'
+  const defaultCsp = buildCsp({ pathname: '/about', nonce, isDevelopment: true })
+  const directiveMap = toDirectiveMap(defaultCsp)
+
+  assert.match(
+    directiveMap.get('script-src') || '',
+    /'unsafe-eval'/,
+    'development routes should allow unsafe-eval for the dev runtime',
+  )
+  assert.equal(
+    directiveMap.get('connect-src'),
+    "'self' ws: wss:",
+    'development routes should allow websocket connections for HMR',
+  )
 })
 
 test('interactive/library route classification includes roots and subpaths only', () => {

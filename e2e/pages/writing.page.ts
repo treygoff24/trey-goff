@@ -62,7 +62,7 @@ export class EssayDetailPage extends BasePage {
   readonly readingTime: Locator
   readonly wordCount: Locator
   readonly publishDate: Locator
-  readonly newsletterCta: Locator
+  readonly continueExploring: Locator
   readonly evergreenBadge: Locator
 
   constructor(page: Page) {
@@ -77,7 +77,9 @@ export class EssayDetailPage extends BasePage {
     this.readingTime = page.getByText(/\d+ min read/)
     this.wordCount = page.getByText(/\d+,?\d* words/)
     this.publishDate = page.locator('article time')
-    this.newsletterCta = page.getByRole('heading', { name: 'Enjoyed this essay?' }).locator('..')
+    this.continueExploring = page
+      .getByRole('heading', { name: 'Follow the thread from here.' })
+      .locator('..')
     this.evergreenBadge = page.getByText('Evergreen')
   }
 
@@ -114,8 +116,8 @@ export class EssayDetailPage extends BasePage {
     await this.mobileTocDropdown.getByRole('link', { name: text }).click()
   }
 
-  async expectNewsletterCtaVisible() {
-    await expect(this.newsletterCta).toBeVisible()
+  async expectContinueExploringVisible() {
+    await expect(this.continueExploring).toBeVisible()
   }
 
   async getHeadings(): Promise<string[]> {

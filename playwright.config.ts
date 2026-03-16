@@ -12,6 +12,8 @@ export default defineConfig({
   testDir: './e2e',
   /* Match .e2e.ts files */
   testMatch: '**/*.e2e.ts',
+  /* Webpack-backed dev startup can be slower on the first route compile */
+  timeout: 60 * 1000,
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code */
@@ -55,7 +57,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: `pnpm exec next dev --turbopack --port ${E2E_PORT}`,
+    command: `pnpm exec next dev --webpack --port ${E2E_PORT}`,
     url: E2E_BASE_URL,
     reuseExistingServer: false,
     timeout: 120 * 1000,

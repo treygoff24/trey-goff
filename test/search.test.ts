@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import test, { describe } from 'node:test'
 import { generateSearchIndex } from '@/lib/search/generate-index'
+import { isNewsletterEnabled } from '@/lib/site-config'
 
 // ============================================
 // Search index structure tests
@@ -81,6 +82,19 @@ describe('search document structure', () => {
 // ============================================
 
 describe('navigation pages in search index', () => {
+  test('subscribe page respects the newsletter feature flag', () => {
+    const { documents } = generateSearchIndex()
+    const subscribe = documents.find((d) => d.id === 'nav-subscribe')
+
+    if (isNewsletterEnabled) {
+      assert.ok(subscribe, 'Should have Subscribe navigation page when newsletter is enabled')
+      assert.equal(subscribe.url, '/subscribe')
+      return
+    }
+
+    assert.equal(subscribe, undefined)
+  })
+
   test('includes Home page', () => {
     const { documents } = generateSearchIndex()
     const home = documents.find((d) => d.id === 'nav-home')

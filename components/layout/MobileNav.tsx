@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useEffect, useRef } from 'react'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
+import { isNewsletterEnabled } from '@/lib/site-config'
 import { cn } from '@/lib/utils'
 
 interface MobileNavProps {
@@ -76,7 +77,13 @@ export function MobileNav({ isOpen, onClose, navItems, currentPath }: MobileNavP
             className="flex h-10 w-10 items-center justify-center rounded-md text-text-2 transition-colors hover:bg-surface-1 hover:text-text-1"
             aria-label="Close menu"
           >
-            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              className="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -121,13 +128,15 @@ export function MobileNav({ isOpen, onClose, navItems, currentPath }: MobileNavP
             >
               Now
             </Link>
-            <Link
-              href="/subscribe"
-              onClick={onClose}
-              className="px-4 py-2 text-sm text-text-3 transition-colors hover:text-text-2"
-            >
-              Subscribe
-            </Link>
+            {isNewsletterEnabled && (
+              <Link
+                href="/subscribe"
+                onClick={onClose}
+                className="px-4 py-2 text-sm text-text-3 transition-colors hover:text-text-2"
+              >
+                Subscribe
+              </Link>
+            )}
             <Link
               href="/colophon"
               onClick={onClose}

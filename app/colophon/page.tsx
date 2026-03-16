@@ -18,7 +18,7 @@ export default function ColophonPage() {
         <h2>Stack</h2>
         <ul>
           <li>
-            <strong>Framework:</strong> Next.js 15 (App Router)
+            <strong>Framework:</strong> Next.js 16 (App Router)
           </li>
           <li>
             <strong>Styling:</strong> Tailwind CSS v4

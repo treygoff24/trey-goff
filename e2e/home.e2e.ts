@@ -21,7 +21,7 @@ test.describe('Home', () => {
     await expect(page.getByRole('heading', { name: 'Four paths into the work' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Selected work' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Featured essays' })).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Get the signal' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Keep up with the work' })).toBeVisible()
   })
 
   test('should surface primary CTAs and featured content', async ({ page }) => {
@@ -34,7 +34,7 @@ test.describe('Home', () => {
 
     await expect(heroSection.getByRole('link', { name: 'Read the work' })).toBeVisible()
     await expect(heroSection.getByRole('link', { name: 'Explore projects' })).toBeVisible()
-    await expect(heroSection.getByRole('link', { name: 'Subscribe' })).toBeVisible()
+    await expect(heroSection.getByRole('link', { name: "See what's current" })).toBeVisible()
 
     const featuredProjectSection = page.locator('section').filter({
       has: page.getByRole('heading', { name: 'Selected work' }),
@@ -48,10 +48,10 @@ test.describe('Home', () => {
     await expect(featuredWritingSection.locator('article')).toHaveCount(3)
 
     const ctaSection = page.locator('section').filter({
-      has: page.getByRole('heading', { name: 'Get the signal' }),
+      has: page.getByRole('heading', { name: 'Keep up with the work' }),
     })
-    await expect(ctaSection.getByRole('link', { name: 'Subscribe for updates' })).toBeVisible()
-    await expect(ctaSection.getByRole('link', { name: 'See the latest essay' })).toBeVisible()
+    await expect(ctaSection.getByRole('link', { name: 'Read the latest essays' })).toBeVisible()
+    await expect(ctaSection.getByRole('link', { name: 'Browse projects' })).toBeVisible()
   })
 
   test('should show the four signal tiles', async ({ page }) => {

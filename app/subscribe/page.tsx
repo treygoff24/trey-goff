@@ -1,4 +1,6 @@
+import { notFound } from 'next/navigation'
 import { SubscribeForm } from '@/components/newsletter/SubscribeForm'
+import { isNewsletterEnabled } from '@/lib/site-config'
 
 export const metadata = {
   title: 'Subscribe',
@@ -7,6 +9,10 @@ export const metadata = {
 }
 
 export default function SubscribePage() {
+  if (!isNewsletterEnabled) {
+    notFound()
+  }
+
   return (
     <main className="relative mx-auto max-w-xl px-4 py-24">
       {/* Decorative background elements */}

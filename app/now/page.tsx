@@ -6,7 +6,7 @@ export const metadata = {
 }
 
 export default function NowPage() {
-  const lastUpdated = '2024-01-15'
+  const lastUpdated = '2026-03-16'
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-16">

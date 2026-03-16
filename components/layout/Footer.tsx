@@ -1,9 +1,9 @@
 import Link from 'next/link'
+import { isNewsletterEnabled } from '@/lib/site-config'
 
 const footerLinks = [
   { href: '/colophon', label: 'Colophon' },
   { href: '/feed.xml', label: 'RSS' },
-  { href: '/subscribe', label: 'Subscribe' },
 ]
 
 const socialLinks = [
@@ -85,13 +85,15 @@ export function Footer() {
                   {link.label}
                 </a>
               ))}
-              <Link
-                href="/subscribe"
-                className="inline-flex items-center gap-2 text-sm text-text-2 transition-colors hover:text-warm"
-              >
-                <MailIcon className="h-4 w-4" />
-                Newsletter
-              </Link>
+              {isNewsletterEnabled && (
+                <Link
+                  href="/subscribe"
+                  className="inline-flex items-center gap-2 text-sm text-text-2 transition-colors hover:text-warm"
+                >
+                  <MailIcon className="h-4 w-4" />
+                  Newsletter
+                </Link>
+              )}
             </div>
           </div>
         </div>

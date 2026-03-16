@@ -1,10 +1,18 @@
 import { test, expect } from '@playwright/test'
 import { BasePage } from './pages'
 
+const interactiveWorldEnabled = process.env.NEXT_PUBLIC_ENABLE_INTERACTIVE_WORLD === 'true'
+
 test.describe('Interactive entry', () => {
-  test('renders entry, fallback, or error state with return links', async ({ page }) => {
+  test('respects the interactive feature flag', async ({ page }) => {
     const basePage = new BasePage(page)
     await basePage.goto('/interactive')
+
+    if (!interactiveWorldEnabled) {
+      await expect(page.getByRole('heading', { name: /404/, level: 1 })).toBeVisible()
+      await expect(page.getByRole('link', { name: 'Return to Base' })).toBeVisible()
+      return
+    }
 
     const heading = page.locator('h1', {
       hasText: /Enter the World|WebGL Not Available|Something Went Wrong/i,

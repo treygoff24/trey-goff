@@ -1,6 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import sitemap from '@/app/sitemap'
+import { isNewsletterEnabled } from '@/lib/site-config'
 
 test('sitemap includes core routes', () => {
   const entries = sitemap()
@@ -11,6 +12,9 @@ test('sitemap includes core routes', () => {
   assert.ok(urls.some((url) => url.endsWith('/notes')))
   assert.ok(urls.some((url) => url.endsWith('/library')))
   assert.ok(urls.some((url) => url.endsWith('/topics')))
+
+  const hasSubscribe = urls.some((url) => url.endsWith('/subscribe'))
+  assert.equal(hasSubscribe, isNewsletterEnabled)
 })
 
 test('sitemap entries include required metadata', () => {

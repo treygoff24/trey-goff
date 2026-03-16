@@ -13,14 +13,14 @@ test.describe('Command Palette', () => {
 
   test.describe('Opening and closing', () => {
     test('should open with Cmd+K keyboard shortcut', async ({ page }) => {
-      await page.waitForSelector('html[data-command-palette-ready="true"]')
+      await expect(commandPalette.searchButton.first()).toBeVisible({ timeout: 60000 })
       await page.keyboard.press('Meta+k')
       await expect(commandPalette.dialog).toBeVisible()
       await expect(commandPalette.searchInput).toBeFocused()
     })
 
     test('should open with Ctrl+K keyboard shortcut', async ({ page }) => {
-      await page.waitForSelector('html[data-command-palette-ready="true"]')
+      await expect(commandPalette.searchButton.first()).toBeVisible({ timeout: 60000 })
       await page.keyboard.press('Control+k')
       await expect(commandPalette.dialog).toBeVisible()
     })

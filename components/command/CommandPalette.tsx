@@ -15,6 +15,7 @@ import {
 import { useCommandPalette } from './CommandProvider'
 import { useSearch } from '@/hooks/useSearch'
 import { CommandResults } from './CommandResults'
+import { isNewsletterEnabled } from '@/lib/site-config'
 import {
   FileText,
   Book,
@@ -180,10 +181,12 @@ function QuickActions({ onSelect }: { onSelect: (url: string) => void }) {
           <Clock className="mr-2 h-4 w-4 text-text-3" />
           <span>Now</span>
         </CommandItem>
-        <CommandItem onSelect={() => onSelect('/subscribe')}>
-          <Mail className="mr-2 h-4 w-4 text-text-3" />
-          <span>Subscribe</span>
-        </CommandItem>
+        {isNewsletterEnabled && (
+          <CommandItem onSelect={() => onSelect('/subscribe')}>
+            <Mail className="mr-2 h-4 w-4 text-text-3" />
+            <span>Subscribe</span>
+          </CommandItem>
+        )}
       </CommandGroup>
 
       <CommandSeparator />
