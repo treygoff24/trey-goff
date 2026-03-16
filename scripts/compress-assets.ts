@@ -16,6 +16,7 @@ import { execFileSync } from 'child_process'
 import { createHash } from 'crypto'
 import * as fs from 'fs'
 import * as path from 'path'
+import { writeStableJsonFile } from './lib/stable-json'
 
 // =============================================================================
 // Configuration
@@ -211,8 +212,14 @@ function generateAssetManifest(results: CompressionResult[]): void {
   }
 
   const manifestPath = path.join(CONFIG.manifestDir, 'assets.manifest.json')
-  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2))
-  console.log(`\nGenerated asset manifest: ${manifestPath}`)
+  const result = writeStableJsonFile(manifestPath, manifest as Record<string, unknown>, {
+    preserveKeys: ['generated'],
+  })
+  console.log(
+    `\n${result.changed ? 'Generated' : 'Asset manifest unchanged:'} ${manifestPath}${
+      result.preservedTimestamp ? ' (preserved generated)' : ''
+    }`,
+  )
 }
 
 // =============================================================================
@@ -245,8 +252,14 @@ async function main(): Promise<void> {
       props: {},
     }
     const manifestPath = path.join(CONFIG.manifestDir, 'assets.manifest.json')
-    fs.writeFileSync(manifestPath, JSON.stringify(emptyManifest, null, 2))
-    console.log(`Created empty asset manifest: ${manifestPath}`)
+    const result = writeStableJsonFile(manifestPath, emptyManifest as Record<string, unknown>, {
+      preserveKeys: ['generated'],
+    })
+    console.log(
+      `${result.changed ? 'Created empty asset manifest' : 'Empty asset manifest unchanged'}: ${manifestPath}${
+        result.preservedTimestamp ? ' (preserved generated)' : ''
+      }`,
+    )
     return
   }
 

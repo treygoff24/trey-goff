@@ -4,7 +4,7 @@
  */
 
 import { allEssays, allProjects } from 'content-collections'
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs'
+import { readFileSync, mkdirSync, existsSync } from 'fs'
 import type { BooksData } from '@/lib/books/types'
 import type {
   EssaysManifest,
@@ -19,6 +19,7 @@ import type {
   LiftName,
   LiftRecord,
 } from '@/lib/interactive/manifest-types'
+import { writeStableJsonFile } from './lib/stable-json'
 
 const MANIFEST_VERSION = '1.0.0'
 const MANIFESTS_DIR = './public/manifests'
@@ -245,10 +246,28 @@ function main() {
   const lifts = generateLiftsManifest()
 
   // Write manifests
-  writeFileSync(`${MANIFESTS_DIR}/essays.manifest.json`, JSON.stringify(essays, null, 2))
-  writeFileSync(`${MANIFESTS_DIR}/books.manifest.json`, JSON.stringify(books, null, 2))
-  writeFileSync(`${MANIFESTS_DIR}/projects.manifest.json`, JSON.stringify(projects, null, 2))
-  writeFileSync(`${MANIFESTS_DIR}/lifts.manifest.json`, JSON.stringify(lifts, null, 2))
+  const writes = [
+    writeStableJsonFile(
+      `${MANIFESTS_DIR}/essays.manifest.json`,
+      essays as Record<string, unknown>,
+      {
+        preserveKeys: ['generated'],
+      },
+    ),
+    writeStableJsonFile(`${MANIFESTS_DIR}/books.manifest.json`, books as Record<string, unknown>, {
+      preserveKeys: ['generated'],
+    }),
+    writeStableJsonFile(
+      `${MANIFESTS_DIR}/projects.manifest.json`,
+      projects as Record<string, unknown>,
+      {
+        preserveKeys: ['generated'],
+      },
+    ),
+    writeStableJsonFile(`${MANIFESTS_DIR}/lifts.manifest.json`, lifts as Record<string, unknown>, {
+      preserveKeys: ['generated'],
+    }),
+  ]
 
   // Summary
   console.log('Generated Interactive manifests:')
@@ -258,6 +277,9 @@ function main() {
   console.log(
     `  - lifts.manifest.json: ${lifts.lifts.length} lifts, total: ${lifts.total.weight}${lifts.total.unit}`,
   )
+  if (writes.every((write) => !write.changed)) {
+    console.log('  All manifests unchanged')
+  }
 }
 
 main()
