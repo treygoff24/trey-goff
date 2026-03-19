@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 // @ts-expect-error -- ts extension import works at runtime with tsx
 import { nextConfig } from '../next.config.ts'
-import { buildCsp, isInteractiveLibraryPath } from '@/lib/security/csp'
+import { buildCsp, isInteractiveLibraryPath, isMediaPath } from '@/lib/security/csp'
 
 function toDirectiveMap(csp: string): Map<string, string> {
   return new Map(
@@ -46,10 +46,13 @@ test('CSP uses strict nonce policy on interactive/library and static-friendly po
   const defaultCsp = buildCsp({ pathname: '/about', nonce, isDevelopment: false })
   const interactiveCsp = buildCsp({ pathname: '/interactive', nonce, isDevelopment: false })
   const libraryCsp = buildCsp({ pathname: '/library', nonce, isDevelopment: false })
+  const mediaCsp = buildCsp({ pathname: '/media', nonce, isDevelopment: false })
 
   const defaultScriptSrc = toDirectiveMap(defaultCsp).get('script-src') || ''
   const interactiveScriptSrc = toDirectiveMap(interactiveCsp).get('script-src') || ''
   const libraryScriptSrc = toDirectiveMap(libraryCsp).get('script-src') || ''
+  const defaultImgSrc = toDirectiveMap(defaultCsp).get('img-src') || ''
+  const mediaImgSrc = toDirectiveMap(mediaCsp).get('img-src') || ''
 
   // Default routes remain static-friendly for caching and do not require nonce.
   assert.match(defaultScriptSrc, /'unsafe-inline'/, 'default routes should allow inline scripts')
@@ -73,6 +76,27 @@ test('CSP uses strict nonce policy on interactive/library and static-friendly po
     )
     assert.match(scriptSrc, /'unsafe-eval'/, 'strict routes should allow unsafe-eval')
   }
+
+  assert.equal(
+    defaultImgSrc,
+    "'self' data: blob:",
+    'default routes should keep a local-only image policy',
+  )
+  assert.match(
+    mediaImgSrc,
+    /https:\/\/img\.youtube\.com/,
+    'media routes should allow YouTube thumbnails',
+  )
+  assert.match(
+    mediaImgSrc,
+    /https:\/\/i\.ytimg\.com/,
+    'media routes should allow the alternate YouTube thumbnail host',
+  )
+  assert.match(
+    mediaImgSrc,
+    /https:\/\/\*\.mzstatic\.com/,
+    'media routes should allow Apple podcast artwork hosts',
+  )
 })
 
 test('CSP relaxes script and connect sources in development for the webpack runtime', () => {
@@ -101,4 +125,13 @@ test('interactive/library route classification includes roots and subpaths only'
   assert.equal(isInteractiveLibraryPath('/about'), false)
   assert.equal(isInteractiveLibraryPath('/interactive-playground'), false)
   assert.equal(isInteractiveLibraryPath('/library-tools'), false)
+})
+
+test('media route classification includes roots and subpaths only', () => {
+  assert.equal(isMediaPath('/media'), true)
+  assert.equal(isMediaPath('/media/podcast'), true)
+
+  assert.equal(isMediaPath('/about'), false)
+  assert.equal(isMediaPath('/media-playground'), false)
+  assert.equal(isMediaPath('/medias'), false)
 })

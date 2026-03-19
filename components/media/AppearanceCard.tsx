@@ -64,6 +64,7 @@ export function AppearanceCard({ appearance, variant = 'list' }: AppearanceCardP
             aria-hidden="true"
             fill
             className="object-cover transition-transform group-hover:scale-105"
+            loading={isFeatured ? 'eager' : 'lazy'}
             unoptimized
           />
         ) : (

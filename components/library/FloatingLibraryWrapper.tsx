@@ -7,6 +7,7 @@
 
 import dynamic from 'next/dynamic'
 import type { Book } from '@/lib/books/types'
+import { useId } from 'react'
 import { LibraryClient } from './LibraryClient'
 
 // Dynamic import FloatingLibrary to avoid SSR issues with Three.js
@@ -27,21 +28,28 @@ const FloatingLibrary = dynamic(
 
 interface FloatingLibraryWrapperProps {
   books: Book[]
+  title: string
+  description: string
 }
 
 /**
  * Classic library fallback - used when WebGL not supported or user preference
  */
-function ClassicLibraryFallback({ books }: { books: Book[] }) {
+function ClassicLibraryFallback({
+  books,
+  title,
+  description,
+}: {
+  books: Book[]
+  title: string
+  description: string
+}) {
   return (
     <div className="h-full overflow-y-auto">
       <div className="mx-auto max-w-6xl px-4 py-16">
         <header className="mb-12">
-          <h1 className="mb-4 font-satoshi text-4xl font-medium text-text-1">Library</h1>
-          <p className="max-w-2xl text-lg text-text-2">
-            Books that have shaped my thinking on governance, economics, and building better
-            systems.
-          </p>
+          <h2 className="mb-4 font-satoshi text-4xl font-medium text-text-1">{title}</h2>
+          <p className="max-w-2xl text-lg text-text-2">{description}</p>
         </header>
 
         <LibraryClient books={books} />
@@ -50,6 +58,29 @@ function ClassicLibraryFallback({ books }: { books: Book[] }) {
   )
 }
 
-export function FloatingLibraryWrapper({ books }: FloatingLibraryWrapperProps) {
-  return <FloatingLibrary books={books} fallback={<ClassicLibraryFallback books={books} />} />
+export function FloatingLibraryWrapper({
+  books,
+  title,
+  description,
+}: FloatingLibraryWrapperProps) {
+  const titleId = useId()
+  const descriptionId = useId()
+
+  return (
+    <section
+      className="fixed inset-0 z-10 h-screen w-screen bg-bg-0"
+      aria-labelledby={titleId}
+      aria-describedby={descriptionId}
+    >
+      <header className="sr-only">
+        <h1 id={titleId}>{title}</h1>
+        <p id={descriptionId}>{description}</p>
+      </header>
+
+      <FloatingLibrary
+        books={books}
+        fallback={<ClassicLibraryFallback books={books} title={title} description={description} />}
+      />
+    </section>
+  )
 }

@@ -6,6 +6,8 @@ import { useRef, useState, useEffect, useMemo } from 'react'
 import * as THREE from 'three'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 
+const enablePostProcessing = process.env.NODE_ENV === 'production'
+
 // =============================================================================
 // Configuration Constants
 // =============================================================================
@@ -736,21 +738,23 @@ function SpaceScene() {
         rotationIndex={2}
       />
 
-      {/* Post Processing */}
-      <EffectComposer>
-        <Bloom
-          luminanceThreshold={CONFIG.postProcessing.bloom.threshold}
-          mipmapBlur
-          intensity={CONFIG.postProcessing.bloom.intensity}
-          radius={CONFIG.postProcessing.bloom.radius}
-        />
-        <Noise opacity={CONFIG.postProcessing.noise.opacity} />
-        <Vignette
-          eskil={false}
-          offset={CONFIG.postProcessing.vignette.offset}
-          darkness={CONFIG.postProcessing.vignette.darkness}
-        />
-      </EffectComposer>
+      {/* Dev QA runs without postprocessing to avoid dependency-level three.js Clock warnings. */}
+      {enablePostProcessing && (
+        <EffectComposer multisampling={0}>
+          <Bloom
+            luminanceThreshold={CONFIG.postProcessing.bloom.threshold}
+            mipmapBlur
+            intensity={CONFIG.postProcessing.bloom.intensity}
+            radius={CONFIG.postProcessing.bloom.radius}
+          />
+          <Noise opacity={CONFIG.postProcessing.noise.opacity} />
+          <Vignette
+            eskil={false}
+            offset={CONFIG.postProcessing.vignette.offset}
+            darkness={CONFIG.postProcessing.vignette.darkness}
+          />
+        </EffectComposer>
+      )}
 
       <fog
         attach="fog"

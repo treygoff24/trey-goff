@@ -2,9 +2,13 @@ import { getAllBooks } from '@/lib/books'
 import { generateBookSchema } from '@/lib/structured-data'
 import { FloatingLibraryWrapper } from '@/components/library/FloatingLibraryWrapper'
 
+const libraryTitle = 'Library'
+const libraryDescription =
+  'Books that have shaped my thinking on governance, economics, and building better systems.'
+
 export const metadata = {
-  title: 'Library',
-  description: "Books I've read, am reading, and want to read.",
+  title: libraryTitle,
+  description: libraryDescription,
 }
 
 export default function LibraryPage() {
@@ -32,10 +36,11 @@ export default function LibraryPage() {
         />
       ))}
 
-      {/* Full-viewport 3D library experience */}
-      <div className="fixed inset-0 z-10 h-screen w-screen bg-bg-0">
-        <FloatingLibraryWrapper books={books} />
-      </div>
+      <FloatingLibraryWrapper
+        books={books}
+        title={libraryTitle}
+        description={libraryDescription}
+      />
     </>
   )
 }

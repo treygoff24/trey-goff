@@ -22,6 +22,8 @@ import {
 import { ToneMappingMode } from 'postprocessing'
 import { VIEW_POSTPROCESSING, type ViewLevel } from '@/lib/library/types'
 
+const enablePostProcessing = process.env.NODE_ENV === 'production'
+
 // =============================================================================
 // Types
 // =============================================================================
@@ -104,7 +106,7 @@ export function PostProcessingEffects({
   const config = useMemo(() => VIEW_POSTPROCESSING[viewLevel], [viewLevel])
 
   // Don't render if disabled
-  if (!enabled) {
+  if (!enabled || !enablePostProcessing) {
     return null
   }
 
