@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
+import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 const StarfieldBackground = dynamic(
   () => import('@/components/ui/StarfieldBackground').then((m) => m.StarfieldBackground),
@@ -10,11 +11,6 @@ const StarfieldBackground = dynamic(
     loading: () => <div className="fixed inset-0 -z-10 bg-bg-0" />,
   },
 )
-
-function readReducedMotion(): boolean {
-  if (typeof window === 'undefined') return false
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
-}
 
 function StaticBackdrop() {
   return (
@@ -25,12 +21,8 @@ function StaticBackdrop() {
 }
 
 export function StarfieldClient() {
-  const [reducedMotion, setReducedMotion] = useState(false)
+  const reducedMotion = useReducedMotion()
   const [deferDone, setDeferDone] = useState(false)
-
-  useEffect(() => {
-    setReducedMotion(readReducedMotion())
-  }, [])
 
   useEffect(() => {
     if (reducedMotion) return
