@@ -9,7 +9,6 @@ function read(path: string): string {
 
 test('library page provides a semantic heading and description for the interactive route', () => {
   const page = read('app/library/page.tsx')
-  const wrapper = read('components/library/FloatingLibraryWrapper.tsx')
 
   assert.match(page, /const\s+libraryTitle\s*=\s*'Library'/)
   assert.match(
@@ -18,15 +17,15 @@ test('library page provides a semantic heading and description for the interacti
   )
   assert.match(
     page,
-    /<FloatingLibraryWrapper[\s\S]*title=\{libraryTitle\}[\s\S]*description=\{libraryDescription\}[\s\S]*\/>/,
-    'library page should pass semantic text into the wrapper',
+    /<StackLibrary[\s\S]*books=\{books\}[\s\S]*\/>/,
+    'library page should render StackLibrary with books prop',
   )
+})
 
-  assert.match(wrapper, /import\s+\{\s*useId\s*\}\s+from\s+['"]react['"]/)
-  assert.match(wrapper, /aria-labelledby=\{titleId\}/)
-  assert.match(wrapper, /aria-describedby=\{descriptionId\}/)
-  assert.match(wrapper, /const\s+titleId\s*=\s*useId\(\)/)
-  assert.match(wrapper, /const\s+descriptionId\s*=\s*useId\(\)/)
-  assert.match(wrapper, /<header className="sr-only">[\s\S]*<h1 id=\{titleId\}>/s)
-  assert.match(wrapper, /<h2[^>]*className="mb-4 font-satoshi text-4xl font-medium text-text-1"/)
+test('StackLibrary component has accessible book stripes', () => {
+  const stripe = read('components/library/BookStripe.tsx')
+
+  assert.match(stripe, /role='button'/, 'each stripe should have role="button"')
+  assert.match(stripe, /tabIndex=\{0\}/, 'each stripe should be focusable')
+  assert.match(stripe, /aria-label=\{book\.title\}/, 'each stripe should have an aria-label')
 })

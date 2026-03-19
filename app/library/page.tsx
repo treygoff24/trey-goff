@@ -1,8 +1,10 @@
 import { getAllBooks } from '@/lib/books'
+import { loadBookColors } from '@/lib/library/colors'
 import { generateBookSchema } from '@/lib/structured-data'
 import { siteUrl } from '@/lib/site-config'
 import { serializeJsonLd } from '@/lib/safe-json-ld'
-import { FloatingLibraryWrapper } from '@/components/library/FloatingLibraryWrapper'
+import { StackLibrary } from '@/components/library/StackLibrary'
+import coverMapData from '@/public/cover-map.json'
 
 const libraryTitle = 'Library'
 const libraryDescription =
@@ -13,16 +15,17 @@ export const metadata = {
   description: libraryDescription,
 }
 
-export default function LibraryPage() {
+export default async function LibraryPage() {
   const books = getAllBooks()
+  const colors = await loadBookColors()
+  const coverMap = coverMapData as Record<string, string>
 
   return (
     <>
-      {/* Structured data for SEO */}
       {books.map((book) => (
         <script
           key={book.id}
-          type="application/ld+json"
+          type='application/ld+json'
           dangerouslySetInnerHTML={{
             __html: serializeJsonLd(
               generateBookSchema({
@@ -38,7 +41,7 @@ export default function LibraryPage() {
         />
       ))}
 
-      <FloatingLibraryWrapper books={books} title={libraryTitle} description={libraryDescription} />
+      <StackLibrary books={books} colors={colors} coverMap={coverMap} />
     </>
   )
 }
