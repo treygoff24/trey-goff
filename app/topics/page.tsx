@@ -246,7 +246,7 @@ function SignalBars({
         const ratio = entry.value / scale
         const height = Math.max(0.2, ratio)
         return (
-          <div key={entry.key} className="flex flex-1 items-end">
+          <div key={entry.key} className="flex h-full flex-1 items-end">
             <div
               className={`w-full rounded-full ${entry.className}`}
               style={{ height: `${height * 100}%` }}
