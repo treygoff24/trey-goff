@@ -212,7 +212,7 @@ function generateAssetManifest(results: CompressionResult[]): void {
   }
 
   const manifestPath = path.join(CONFIG.manifestDir, 'assets.manifest.json')
-  const result = writeStableJsonFile(manifestPath, manifest as Record<string, unknown>, {
+  const result = writeStableJsonFile(manifestPath, manifest as unknown as Record<string, unknown>, {
     preserveKeys: ['generated'],
   })
   console.log(
@@ -252,7 +252,7 @@ async function main(): Promise<void> {
       props: {},
     }
     const manifestPath = path.join(CONFIG.manifestDir, 'assets.manifest.json')
-    const result = writeStableJsonFile(manifestPath, emptyManifest as Record<string, unknown>, {
+    const result = writeStableJsonFile(manifestPath, emptyManifest as unknown as Record<string, unknown>, {
       preserveKeys: ['generated'],
     })
     console.log(

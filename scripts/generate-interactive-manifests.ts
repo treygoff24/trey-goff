@@ -249,22 +249,22 @@ function main() {
   const writes = [
     writeStableJsonFile(
       `${MANIFESTS_DIR}/essays.manifest.json`,
-      essays as Record<string, unknown>,
+      essays as unknown as Record<string, unknown>,
       {
         preserveKeys: ['generated'],
       },
     ),
-    writeStableJsonFile(`${MANIFESTS_DIR}/books.manifest.json`, books as Record<string, unknown>, {
+    writeStableJsonFile(`${MANIFESTS_DIR}/books.manifest.json`, books as unknown as Record<string, unknown>, {
       preserveKeys: ['generated'],
     }),
     writeStableJsonFile(
       `${MANIFESTS_DIR}/projects.manifest.json`,
-      projects as Record<string, unknown>,
+      projects as unknown as Record<string, unknown>,
       {
         preserveKeys: ['generated'],
       },
     ),
-    writeStableJsonFile(`${MANIFESTS_DIR}/lifts.manifest.json`, lifts as Record<string, unknown>, {
+    writeStableJsonFile(`${MANIFESTS_DIR}/lifts.manifest.json`, lifts as unknown as Record<string, unknown>, {
       preserveKeys: ['generated'],
     }),
   ]
