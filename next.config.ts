@@ -7,6 +7,9 @@ const projectRoot = fileURLToPath(new URL('.', import.meta.url))
 export const nextConfig: NextConfig = {
   // Enable React strict mode for better development experience
   reactStrictMode: true,
+  // Must match `turbopack.root` — Next warns if tracing root and Turbopack root differ.
+  // Both anchor to this app so a parent-level lockfile does not widen the workspace root.
+  outputFileTracingRoot: projectRoot,
   turbopack: {
     // Anchor Turbopack to the actual project directory instead of letting it infer
     // the workspace root from the parent-level lockfile in /Users/treygoff.
