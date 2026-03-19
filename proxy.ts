@@ -1,5 +1,10 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
+import {
+  arePreviewSecretsEqual,
+  PREVIEW_SESSION_COOKIE,
+  previewSessionToken,
+} from '@/lib/preview-auth'
 import { buildCsp, isInteractiveLibraryPath, NONCE_REQUEST_HEADER } from '@/lib/security/csp'
 
 function createNonce(): string {
@@ -8,7 +13,65 @@ function createNonce(): string {
   return btoa(String.fromCharCode(...bytes))
 }
 
+function tryPreviewSecretBootstrap(request: NextRequest): NextResponse | null {
+  const pathname = request.nextUrl.pathname
+  if (!pathname.startsWith('/preview/') || !request.nextUrl.searchParams.has('secret')) {
+    return null
+  }
+
+  const secret = request.nextUrl.searchParams.get('secret') ?? ''
+  const previewSecret = process.env.DRAFT_PREVIEW_SECRET ?? ''
+  const nodeEnv = process.env.NODE_ENV
+  const allowDraftPreview = process.env.ALLOW_DRAFT_PREVIEW === 'true'
+
+  const cleanUrl = request.nextUrl.clone()
+  cleanUrl.searchParams.delete('secret')
+
+  if (nodeEnv === 'production') {
+    if (!allowDraftPreview || !previewSecret) {
+      return NextResponse.redirect(cleanUrl)
+    }
+    if (!arePreviewSecretsEqual(secret, previewSecret)) {
+      return NextResponse.redirect(cleanUrl)
+    }
+    const token = previewSessionToken(previewSecret)
+    const res = NextResponse.redirect(cleanUrl)
+    res.cookies.set(PREVIEW_SESSION_COOKIE, token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 8,
+    })
+    return res
+  }
+
+  if (previewSecret && !arePreviewSecretsEqual(secret, previewSecret)) {
+    return NextResponse.redirect(cleanUrl)
+  }
+
+  if (previewSecret) {
+    const token = previewSessionToken(previewSecret)
+    const res = NextResponse.redirect(cleanUrl)
+    res.cookies.set(PREVIEW_SESSION_COOKIE, token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 8,
+    })
+    return res
+  }
+
+  return NextResponse.redirect(cleanUrl)
+}
+
 export function proxy(request: NextRequest) {
+  const bootstrap = tryPreviewSecretBootstrap(request)
+  if (bootstrap) {
+    return bootstrap
+  }
+
   const pathname = request.nextUrl.pathname
   const strictRoute = isInteractiveLibraryPath(pathname)
   const nonce = strictRoute ? createNonce() : ''

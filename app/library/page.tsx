@@ -1,5 +1,7 @@
 import { getAllBooks } from '@/lib/books'
 import { generateBookSchema } from '@/lib/structured-data'
+import { siteUrl } from '@/lib/site-config'
+import { serializeJsonLd } from '@/lib/safe-json-ld'
 import { FloatingLibraryWrapper } from '@/components/library/FloatingLibraryWrapper'
 
 const libraryTitle = 'Library'
@@ -22,12 +24,12 @@ export default function LibraryPage() {
           key={book.id}
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(
+            __html: serializeJsonLd(
               generateBookSchema({
                 title: book.title,
                 author: book.author,
                 isbn13: book.isbn13,
-                url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://trey.world'}/library#${book.id}`,
+                url: `${siteUrl}/library#${book.id}`,
                 coverUrl: book.coverUrl,
                 year: book.year,
               }),
@@ -36,11 +38,7 @@ export default function LibraryPage() {
         />
       ))}
 
-      <FloatingLibraryWrapper
-        books={books}
-        title={libraryTitle}
-        description={libraryDescription}
-      />
+      <FloatingLibraryWrapper books={books} title={libraryTitle} description={libraryDescription} />
     </>
   )
 }

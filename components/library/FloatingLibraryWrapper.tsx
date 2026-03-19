@@ -58,11 +58,7 @@ function ClassicLibraryFallback({
   )
 }
 
-export function FloatingLibraryWrapper({
-  books,
-  title,
-  description,
-}: FloatingLibraryWrapperProps) {
+export function FloatingLibraryWrapper({ books, title, description }: FloatingLibraryWrapperProps) {
   const titleId = useId()
   const descriptionId = useId()
 

@@ -36,7 +36,7 @@ test('next config includes static security headers and no static CSP', async () 
   assert.equal(
     headerMap.has('Content-Security-Policy'),
     false,
-    'CSP should be set dynamically in proxy with per-request nonce',
+    'CSP should be set dynamically in root proxy with per-request nonce on strict routes',
   )
 })
 

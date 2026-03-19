@@ -11,6 +11,18 @@ interface AppearanceCardProps {
   variant?: 'featured' | 'list'
 }
 
+function thumbnailShouldUseUnoptimized(src: string): boolean {
+  if (src.startsWith('/') || src.startsWith('data:')) return false
+  try {
+    const host = new URL(src).hostname
+    if (host === 'img.youtube.com' || host === 'i.ytimg.com') return false
+    if (host.endsWith('.mzstatic.com')) return false
+    return true
+  } catch {
+    return true
+  }
+}
+
 const typeConfig: Record<AppearanceType, { label: string; icon: typeof Mic; className: string }> = {
   podcast: {
     label: 'Podcast',
@@ -63,9 +75,15 @@ export function AppearanceCard({ appearance, variant = 'list' }: AppearanceCardP
             alt=""
             aria-hidden="true"
             fill
+            sizes={
+              isFeatured
+                ? '(max-width: 768px) 100vw, 320px'
+                : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
+            }
             className="object-cover transition-transform group-hover:scale-105"
             loading={isFeatured ? 'eager' : 'lazy'}
-            unoptimized
+            priority={isFeatured}
+            unoptimized={thumbnailShouldUseUnoptimized(thumbnail)}
           />
         ) : (
           <div className="flex h-full items-center justify-center">

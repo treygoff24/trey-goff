@@ -1,3 +1,4 @@
+import { cookies } from 'next/headers'
 import { notFound } from 'next/navigation'
 import { allEssays } from 'content-collections'
 import { formatDate } from '@/lib/utils'
@@ -5,7 +6,7 @@ import { TagPill } from '@/components/ui/TagPill'
 import { TableOfContents, MobileTableOfContents } from '@/components/writing/TableOfContents'
 import { Prose } from '@/components/content/Prose'
 import { markdownToHtml } from '@/lib/markdown'
-import { canAccessDraftPreview } from '@/lib/preview-auth'
+import { canAccessDraftPreview, PREVIEW_SESSION_COOKIE } from '@/lib/preview-auth'
 
 export const dynamic = 'force-dynamic'
 
@@ -18,20 +19,18 @@ export const metadata = {
 
 interface PageProps {
   params: Promise<{ slug: string }>
-  searchParams: Promise<{ secret?: string | string[] }>
 }
 
-export default async function EssayPreviewPage({ params, searchParams }: PageProps) {
+export default async function EssayPreviewPage({ params }: PageProps) {
   const { slug } = await params
-  const searchParamsResolved = await searchParams
-  const secretParam = Array.isArray(searchParamsResolved?.secret)
-    ? searchParamsResolved?.secret[0]
-    : searchParamsResolved?.secret
+  const cookieStore = await cookies()
+  const sessionCookie = cookieStore.get(PREVIEW_SESSION_COOKIE)?.value
 
   const canPreview = canAccessDraftPreview({
     nodeEnv: process.env.NODE_ENV,
-    providedSecret: secretParam,
+    allowDraftPreview: process.env.ALLOW_DRAFT_PREVIEW === 'true',
     previewSecret: process.env.DRAFT_PREVIEW_SECRET,
+    sessionCookie,
   })
 
   if (!canPreview) {

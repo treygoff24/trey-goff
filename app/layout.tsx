@@ -5,7 +5,9 @@ import { Footer } from '@/components/layout/Footer'
 import { SkipLink } from '@/components/layout/SkipLink'
 import { CommandPaletteProvider, CommandPalette } from '@/components/command'
 import { EasterEggs } from '@/components/easter-eggs/EasterEggs'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import { generateOrganizationSchema } from '@/lib/structured-data'
+import { serializeJsonLd } from '@/lib/safe-json-ld'
 import { siteUrl } from '@/lib/site-config'
 import './globals.css'
 
@@ -64,7 +66,7 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationSchema),
+            __html: serializeJsonLd(organizationSchema),
           }}
         />
         <CommandPaletteProvider>
@@ -76,6 +78,7 @@ export default function RootLayout({
           <Footer />
           <CommandPalette />
           <EasterEggs />
+          <SpeedInsights />
         </CommandPaletteProvider>
       </body>
     </html>

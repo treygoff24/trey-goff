@@ -8,6 +8,8 @@ import { cn } from '@/lib/utils'
 import { getTopicContent, getTopicsIndex } from '@/lib/topics'
 import { getBacklinksForNote, getOutgoingLinksForNote } from '@/lib/backlinks'
 import { generateBreadcrumbSchema } from '@/lib/structured-data'
+import { siteUrl } from '@/lib/site-config'
+import { serializeJsonLd } from '@/lib/safe-json-ld'
 import type { Book } from '@/lib/books/types'
 
 interface PageProps {
@@ -96,9 +98,9 @@ export default async function TopicPage({ params }: PageProps) {
   )
 
   const breadcrumbSchema = generateBreadcrumbSchema([
-    { name: 'Home', url: 'https://trey.world' },
-    { name: 'Topics', url: 'https://trey.world/topics' },
-    { name: topicTag, url: `https://trey.world/topics/${topicTag}` },
+    { name: 'Home', url: siteUrl },
+    { name: 'Topics', url: `${siteUrl}/topics` },
+    { name: topicTag, url: `${siteUrl}/topics/${topicTag}` },
   ])
 
   return (
@@ -106,7 +108,7 @@ export default async function TopicPage({ params }: PageProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(breadcrumbSchema),
+          __html: serializeJsonLd(breadcrumbSchema),
         }}
       />
       <div className="mx-auto max-w-5xl px-4 py-16">

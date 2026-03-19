@@ -1,15 +1,12 @@
 #!/usr/bin/env tsx
 /**
- * Bundle isolation verification for Interactive route.
- * Ensures Three.js is not included in Normal site bundles.
+ * Bundle isolation: keep Three.js out of most static route bundles.
  *
- * Usage:
- *   pnpm check-bundle-isolation
+ * The homepage loads Three.js only via a deferred `next/dynamic` starfield; it is
+ * intentionally excluded from `protectedRoutes` below. `/interactive` (when enabled)
+ * is the primary heavy 3D surface.
  *
- * This script:
- * 1. Analyzes .next/static/chunks to find Three.js chunks
- * 2. Verifies Three.js chunks are only loaded by /interactive route
- * 3. Checks that Normal pages don't import Three.js
+ * Usage: `pnpm check-bundle-isolation` (runs in postbuild).
  */
 
 import * as fs from 'fs'
@@ -32,20 +29,11 @@ const CONFIG = {
     'troika-three-text', // Three.js text rendering
   ],
 
-  // Routes that are allowed to have Three.js
+  // Reference: `/` and `/interactive` may load Three via dynamic imports.
   allowedRoutes: ['/interactive'],
 
-  // Routes that must NOT have Three.js
-  protectedRoutes: [
-    '/',
-    '/writing',
-    '/library',
-    '/projects',
-    '/about',
-    '/notes',
-    '/graph',
-    '/media',
-  ],
+  // App routes that must not pull Three.js into their primary page chunks (excludes `/`; see header).
+  protectedRoutes: ['/writing', '/library', '/projects', '/about', '/notes', '/graph', '/media'],
 }
 
 // =============================================================================
@@ -268,7 +256,9 @@ function runAnalysis(): AnalysisResult {
 
   if (passed) {
     console.log('\n✓ Bundle isolation verified!')
-    console.log('  Three.js is only loaded by /interactive route')
+    console.log(
+      '  Three.js is not in protected route bundles (homepage uses deferred dynamic import)',
+    )
   } else {
     console.log('\n✗ Bundle isolation FAILED')
     console.log('  Three.js is leaking into protected routes')

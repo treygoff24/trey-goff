@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { isNewsletterEnabled } from '@/lib/site-config'
+import {
+  getTrustedClientIp,
+  isJsonContentType,
+  parseSubscribePostBody,
+  SUBSCRIBE_MAX_BODY_BYTES,
+} from '@/lib/subscribe-request'
 
 const BUTTONDOWN_API_KEY = process.env.BUTTONDOWN_API_KEY
-const MAX_EMAIL_LENGTH = 320
 const RATE_LIMIT_MAX_REQUESTS = 5
 const RATE_LIMIT_WINDOW_MS = 60000
 
@@ -27,14 +32,6 @@ function pruneExpiredRateLimits(now: number) {
       rateLimitMap.delete(ip)
     }
   }
-}
-
-function getClientIP(request: NextRequest): string {
-  return (
-    request.headers.get('x-forwarded-for')?.split(',')[0] ||
-    request.headers.get('x-real-ip') ||
-    'unknown'
-  )
 }
 
 function checkRateLimit(ip: string): { allowed: boolean; retryAfter?: number } {
@@ -66,14 +63,22 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 })
   }
 
-  // Validate API key exists
   if (!BUTTONDOWN_API_KEY) {
     console.error('BUTTONDOWN_API_KEY not configured')
     return NextResponse.json({ error: 'Newsletter service not configured' }, { status: 500 })
   }
 
+  if (!isJsonContentType(request)) {
+    return NextResponse.json({ error: 'Content-Type must be application/json' }, { status: 415 })
+  }
+
+  const contentLength = request.headers.get('content-length')
+  if (contentLength !== null && Number(contentLength) > SUBSCRIBE_MAX_BODY_BYTES) {
+    return NextResponse.json({ error: 'Request body too large' }, { status: 413 })
+  }
+
   try {
-    const clientIP = getClientIP(request)
+    const clientIP = getTrustedClientIp(request)
     const rateLimit = checkRateLimit(clientIP)
 
     if (!rateLimit.allowed) {
@@ -88,24 +93,15 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const body = await request.json()
-    const { email } = body
+    const rawBody = await request.text()
+    const parsed = parseSubscribePostBody(rawBody)
 
-    if (!email || typeof email !== 'string') {
-      return NextResponse.json({ error: 'Email is required' }, { status: 400 })
+    if (!parsed.ok) {
+      return NextResponse.json({ error: parsed.error }, { status: parsed.status })
     }
 
-    if (email.length > MAX_EMAIL_LENGTH) {
-      return NextResponse.json({ error: 'Email address is too long' }, { status: 400 })
-    }
+    const { email } = parsed
 
-    const emailRegex =
-      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
-    if (!emailRegex.test(email)) {
-      return NextResponse.json({ error: 'Invalid email format' }, { status: 400 })
-    }
-
-    // Call Buttondown API
     const response = await fetch('https://api.buttondown.email/v1/subscribers', {
       method: 'POST',
       headers: {

@@ -810,7 +810,7 @@ function WarpHint({ visible }: { visible: boolean }) {
     <div className="pointer-events-none absolute bottom-8 left-1/2 -translate-x-1/2 z-20">
       <div className="flex items-center gap-2 rounded-full border border-white/10 bg-black/40 px-4 py-2 backdrop-blur-md animate-pulse">
         <div className="h-2 w-2 rounded-full bg-warm/70 animate-ping" />
-        <span className="text-xs text-text-3 font-light tracking-wide">
+        <span className="text-xs text-text-3 font-normal tracking-wide">
           Hold anywhere for warp speed
         </span>
       </div>

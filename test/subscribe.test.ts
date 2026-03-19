@@ -1,16 +1,10 @@
 import assert from 'node:assert/strict'
 import test, { describe } from 'node:test'
+import { parseSubscribePostBody } from '@/lib/subscribe-request'
 
 /**
- * Tests for the subscribe API route validation logic.
- *
- * Since the actual route handler requires Next.js runtime objects,
- * we test the validation logic and email regex patterns directly.
- * For full integration testing of the API route, consider using
- * a framework like Playwright or the Next.js test utilities.
+ * Subscribe API: shared parsing lives in `lib/subscribe-request.ts` (TDD).
  */
-
-// Extract the email regex pattern used in the route
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 // ============================================
@@ -92,76 +86,53 @@ describe('email validation regex', () => {
 // Request body validation tests
 // ============================================
 
-describe('request body validation', () => {
-  // Simulate the validation logic from the route
-  function validateRequestBody(body: unknown): { valid: boolean; error?: string } {
-    if (!body || typeof body !== 'object') {
-      return { valid: false, error: 'Invalid request body' }
-    }
-
-    const { email } = body as { email?: unknown }
-
-    if (!email || typeof email !== 'string') {
-      return { valid: false, error: 'Email is required' }
-    }
-
-    if (!EMAIL_REGEX.test(email)) {
-      return { valid: false, error: 'Invalid email format' }
-    }
-
-    return { valid: true }
-  }
-
-  test('rejects null body', () => {
-    const result = validateRequestBody(null)
-    assert.equal(result.valid, false)
-  })
-
-  test('rejects undefined body', () => {
-    const result = validateRequestBody(undefined)
-    assert.equal(result.valid, false)
+describe('parseSubscribePostBody (JSON string)', () => {
+  test('rejects invalid JSON', () => {
+    const r = parseSubscribePostBody('')
+    assert.equal(r.ok, false)
+    if (!r.ok) assert.equal(r.error, 'Invalid JSON')
   })
 
   test('rejects empty object', () => {
-    const result = validateRequestBody({})
-    assert.equal(result.valid, false)
-    assert.equal(result.error, 'Email is required')
+    const r = parseSubscribePostBody('{}')
+    assert.equal(r.ok, false)
+    if (!r.ok) assert.equal(r.error, 'Email is required')
   })
 
   test('rejects missing email', () => {
-    const result = validateRequestBody({ name: 'Test' })
-    assert.equal(result.valid, false)
-    assert.equal(result.error, 'Email is required')
+    const r = parseSubscribePostBody(JSON.stringify({ name: 'Test' }))
+    assert.equal(r.ok, false)
+    if (!r.ok) assert.equal(r.error, 'Email is required')
   })
 
   test('rejects null email', () => {
-    const result = validateRequestBody({ email: null })
-    assert.equal(result.valid, false)
-    assert.equal(result.error, 'Email is required')
+    const r = parseSubscribePostBody(JSON.stringify({ email: null }))
+    assert.equal(r.ok, false)
+    if (!r.ok) assert.equal(r.error, 'Email is required')
   })
 
   test('rejects numeric email', () => {
-    const result = validateRequestBody({ email: 12345 })
-    assert.equal(result.valid, false)
-    assert.equal(result.error, 'Email is required')
+    const r = parseSubscribePostBody(JSON.stringify({ email: 12345 }))
+    assert.equal(r.ok, false)
+    if (!r.ok) assert.equal(r.error, 'Email is required')
   })
 
   test('rejects array email', () => {
-    const result = validateRequestBody({ email: ['test@example.com'] })
-    assert.equal(result.valid, false)
-    assert.equal(result.error, 'Email is required')
+    const r = parseSubscribePostBody(JSON.stringify({ email: ['test@example.com'] }))
+    assert.equal(r.ok, false)
+    if (!r.ok) assert.equal(r.error, 'Email is required')
   })
 
   test('rejects invalid email format', () => {
-    const result = validateRequestBody({ email: 'notanemail' })
-    assert.equal(result.valid, false)
-    assert.equal(result.error, 'Invalid email format')
+    const r = parseSubscribePostBody(JSON.stringify({ email: 'notanemail' }))
+    assert.equal(r.ok, false)
+    if (!r.ok) assert.equal(r.error, 'Invalid email format')
   })
 
   test('accepts valid email', () => {
-    const result = validateRequestBody({ email: 'test@example.com' })
-    assert.equal(result.valid, true)
-    assert.equal(result.error, undefined)
+    const r = parseSubscribePostBody(JSON.stringify({ email: 'test@example.com' }))
+    assert.equal(r.ok, true)
+    if (r.ok) assert.equal(r.email, 'test@example.com')
   })
 })
 

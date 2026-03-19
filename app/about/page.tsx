@@ -1,5 +1,6 @@
 import { Prose } from '@/components/content/Prose'
 import { generatePersonSchema } from '@/lib/structured-data'
+import { serializeJsonLd } from '@/lib/safe-json-ld'
 
 export const metadata = {
   title: 'About',
@@ -12,7 +13,7 @@ export default function AboutPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(generatePersonSchema()),
+          __html: serializeJsonLd(generatePersonSchema()),
         }}
       />
       <div className="mx-auto max-w-4xl px-4 py-16">

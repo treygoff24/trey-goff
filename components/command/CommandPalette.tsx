@@ -55,7 +55,6 @@ export function CommandPalette() {
   const handleSelect = async (url: string) => {
     setOpen(false)
 
-    // Handle special actions
     if (url === '#copy-url') {
       try {
         await navigator.clipboard.writeText(window.location.href)
@@ -69,8 +68,12 @@ export function CommandPalette() {
     router.push(url)
   }
 
+  if (!open) {
+    return null
+  }
+
   return (
-    <CommandDialog open={open} onOpenChange={setOpen}>
+    <CommandDialog open onOpenChange={setOpen}>
       <CommandInput placeholder="Search everything..." value={query} onValueChange={setQuery} />
       <CommandList>
         {isLoading && (

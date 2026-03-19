@@ -254,9 +254,13 @@ function main() {
         preserveKeys: ['generated'],
       },
     ),
-    writeStableJsonFile(`${MANIFESTS_DIR}/books.manifest.json`, books as unknown as Record<string, unknown>, {
-      preserveKeys: ['generated'],
-    }),
+    writeStableJsonFile(
+      `${MANIFESTS_DIR}/books.manifest.json`,
+      books as unknown as Record<string, unknown>,
+      {
+        preserveKeys: ['generated'],
+      },
+    ),
     writeStableJsonFile(
       `${MANIFESTS_DIR}/projects.manifest.json`,
       projects as unknown as Record<string, unknown>,
@@ -264,9 +268,13 @@ function main() {
         preserveKeys: ['generated'],
       },
     ),
-    writeStableJsonFile(`${MANIFESTS_DIR}/lifts.manifest.json`, lifts as unknown as Record<string, unknown>, {
-      preserveKeys: ['generated'],
-    }),
+    writeStableJsonFile(
+      `${MANIFESTS_DIR}/lifts.manifest.json`,
+      lifts as unknown as Record<string, unknown>,
+      {
+        preserveKeys: ['generated'],
+      },
+    ),
   ]
 
   // Summary

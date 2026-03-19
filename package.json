@@ -48,6 +48,7 @@
     "@react-three/fiber": "^9.5.0",
     "@react-three/postprocessing": "^3.0.4",
     "@react-three/rapier": "^2.2.0",
+    "@vercel/speed-insights": "^2.0.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "ecctrl": "^1.0.97",
@@ -78,11 +79,11 @@
     "zustand": "^5.0.11"
   },
   "devDependencies": {
-    "@oxlint/migrate": "1.51.0",
     "@eslint/eslintrc": "^3.3.5",
     "@gltf-transform/cli": "^4.3.0",
     "@gltf-transform/extensions": "^4.3.0",
     "@gltf-transform/functions": "^4.3.0",
+    "@oxlint/migrate": "1.51.0",
     "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4.2.1",
     "@types/node": "^25.4.0",

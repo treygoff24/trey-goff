@@ -18,6 +18,11 @@ This repo is Trey Goff's Next.js 16 personal site with MDX content, generated se
 - Preserve postbuild checks such as asset budgets and bundle isolation when touching interactive or heavy frontend code.
 - Keep visual changes aligned with the established App Router, MDX, and content-generation structure instead of scattering one-off scripts or assets.
 
+## Draft preview (production)
+
+- Set `ALLOW_DRAFT_PREVIEW=true`, `DRAFT_PREVIEW_SECRET`, then open a preview URL **once** with `?secret=…`. `proxy.ts` strips the query, sets an HttpOnly session cookie, and redirects so the secret is not left in the address bar.
+- Local / non-`production` builds stay open without the flag (authoring convenience).
+
 ## Repo Notes
 
 - Key paths: `app/`, `components/`, `content/`, `lib/`, `scripts/`, `test/`, `e2e/`, `public/`.
