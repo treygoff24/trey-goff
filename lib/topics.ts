@@ -1,11 +1,12 @@
-import { allEssays, allNotes } from 'content-collections'
+import { allEssays, allNotes, allProjects } from 'content-collections'
 import { getAllBooks } from '@/lib/books'
 import type { Book } from '@/lib/books/types'
 
 type Essay = (typeof allEssays)[number]
 type Note = (typeof allNotes)[number]
+export type Project = (typeof allProjects)[number]
 
-export type TopicSource = 'essay' | 'note' | 'book'
+export type TopicSource = 'essay' | 'note' | 'book' | 'project'
 
 export interface TopicSignal {
   type: TopicSource
@@ -20,6 +21,7 @@ export interface TopicEntry {
     essays: number
     notes: number
     books: number
+    projects: number
     total: number
   }
   latest?: TopicSignal
@@ -29,6 +31,7 @@ export interface TopicContent {
   essays: Essay[]
   notes: Note[]
   books: Book[]
+  projects: Project[]
 }
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -64,18 +67,22 @@ function addSignal(
 ) {
   const existing = map.get(tag) ?? {
     tag,
-    counts: { essays: 0, notes: 0, books: 0, total: 0 },
+    counts: { essays: 0, notes: 0, books: 0, projects: 0, total: 0 },
     latestTimestamp: 0,
   }
 
   if (signal.type === 'essay') existing.counts.essays += 1
   if (signal.type === 'note') existing.counts.notes += 1
   if (signal.type === 'book') existing.counts.books += 1
+  if (signal.type === 'project') existing.counts.projects += 1
   existing.counts.total += 1
 
   if (timestamp > existing.latestTimestamp) {
     existing.latestTimestamp = timestamp
     existing.latest = signal
+  } else if (existing.latest === undefined) {
+    existing.latest = signal
+    existing.latestTimestamp = timestamp
   }
 
   map.set(tag, existing)
@@ -125,6 +132,18 @@ export function getTopicsIndex(): TopicEntry[] {
     }
   }
 
+  for (const project of allProjects) {
+    const signal: TopicSignal = {
+      type: 'project',
+      title: project.name,
+      url: `/projects#${project.slug}`,
+    }
+    const timestamp = 0
+    for (const tag of project.tags) {
+      addSignal(topicMap, tag, signal, timestamp)
+    }
+  }
+
   return Array.from(topicMap.values())
     .map((entry) => {
       const { latestTimestamp, ...topic } = entry
@@ -143,5 +162,6 @@ export function getTopicContent(tag: string): TopicContent {
   const essays = visibleEssays.filter((essay) => essay.tags.includes(tag))
   const notes = allNotes.filter((note) => note.tags.includes(tag))
   const books = getAllBooks().filter((book) => book.topics.includes(tag))
-  return { essays, notes, books }
+  const projects = allProjects.filter((project) => project.tags.includes(tag))
+  return { essays, notes, books, projects }
 }

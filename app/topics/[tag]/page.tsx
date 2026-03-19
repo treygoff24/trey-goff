@@ -6,6 +6,7 @@ import { TagPill } from '@/components/ui/TagPill'
 import { markdownToHtml } from '@/lib/markdown'
 import { cn } from '@/lib/utils'
 import { getTopicContent, getTopicsIndex } from '@/lib/topics'
+import type { Project } from '@/lib/topics'
 import { getBacklinksForNote, getOutgoingLinksForNote } from '@/lib/backlinks'
 import { generateBreadcrumbSchema } from '@/lib/structured-data'
 import { siteUrl } from '@/lib/site-config'
@@ -53,7 +54,7 @@ export async function generateMetadata({ params }: PageProps) {
 
   return {
     title: `${topicTag} - Topics`,
-    description: `Signals about ${topicTag} across essays, notes, and books.`,
+    description: `Signals about ${topicTag} across essays, notes, projects, and books.`,
     openGraph: {
       ...(latestDate ? { modifiedTime: latestDate } : {}),
     },
@@ -70,9 +71,14 @@ const statusBadges: Record<Book['status'], { label: string; className: string }>
 export default async function TopicPage({ params }: PageProps) {
   const { tag } = await params
   const topicTag = tag
-  const { essays, notes, books } = getTopicContent(topicTag)
+  const { essays, notes, books, projects } = getTopicContent(topicTag)
 
-  if (essays.length === 0 && notes.length === 0 && books.length === 0) {
+  if (
+    essays.length === 0 &&
+    notes.length === 0 &&
+    books.length === 0 &&
+    projects.length === 0
+  ) {
     notFound()
   }
 
@@ -86,6 +92,13 @@ export default async function TopicPage({ params }: PageProps) {
     const aDate = a.dateRead || a.dateStarted || `${a.year}-01-01`
     const bDate = b.dateRead || b.dateStarted || `${b.year}-01-01`
     return new Date(bDate).getTime() - new Date(aDate).getTime()
+  })
+
+  const sortedProjects = [...projects].sort((a, b) => {
+    if (a.featuredRank !== b.featuredRank) {
+      return a.featuredRank - b.featuredRank
+    }
+    return a.name.localeCompare(b.name)
   })
 
   const notesWithHtml = await Promise.all(
@@ -120,18 +133,20 @@ export default async function TopicPage({ params }: PageProps) {
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <TagPill tag={topicTag} active size="md" />
             <span className="text-sm text-text-3">
-              {essays.length} essays / {notes.length} notes / {books.length} books
+              {essays.length} essays / {notes.length} notes / {projects.length} projects /{' '}
+              {books.length} books
             </span>
           </div>
 
           <h1 className="mt-4 font-satoshi text-4xl font-medium text-text-1">{topicTag}</h1>
           <p className="mt-3 max-w-2xl text-lg text-text-2">
-            Trace this topic across long-form essays, field notes, and the reading list.
+            Trace this topic across long-form essays, field notes, projects, and the reading list.
           </p>
 
-          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <TopicStat label="Essays" value={essays.length} />
             <TopicStat label="Notes" value={notes.length} />
+            <TopicStat label="Projects" value={projects.length} />
             <TopicStat label="Books" value={books.length} />
           </div>
         </header>
@@ -184,6 +199,19 @@ export default async function TopicPage({ params }: PageProps) {
         </section>
 
         <section className="mt-12">
+          <SectionHeader title="Projects" count={sortedProjects.length} />
+          {sortedProjects.length === 0 ? (
+            <EmptyState message="No projects tagged yet." />
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2">
+              {sortedProjects.map((project) => (
+                <TopicProjectRow key={project.slug} project={project} />
+              ))}
+            </div>
+          )}
+        </section>
+
+        <section className="mt-12">
           <SectionHeader title="Books" count={sortedBooks.length} />
           {sortedBooks.length === 0 ? (
             <EmptyState message="No books tagged yet." />
@@ -223,6 +251,37 @@ function EmptyState({ message }: { message: string }) {
     <div className="rounded-2xl border border-border-1 bg-surface-1 p-8 text-center text-text-3">
       {message}
     </div>
+  )
+}
+
+const projectStatusBadges: Record<
+  Project['status'],
+  { label: string; className: string }
+> = {
+  active: { label: 'Active', className: 'bg-warm/20 text-warm' },
+  shipped: { label: 'Shipped', className: 'bg-success/20 text-success' },
+  'on-hold': { label: 'On hold', className: 'bg-warning/20 text-warning' },
+  archived: { label: 'Archived', className: 'bg-surface-2 text-text-3' },
+  idea: { label: 'Idea', className: 'bg-accent/20 text-accent' },
+}
+
+function TopicProjectRow({ project }: { project: Project }) {
+  const badge = projectStatusBadges[project.status]
+  return (
+    <Link
+      href={`/projects#${project.slug}`}
+      className="group rounded-2xl border border-border-1 bg-surface-1 p-5 transition-all hover:border-border-2 hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warm focus-visible:ring-offset-2 focus-visible:ring-offset-bg-1"
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h3 className="font-satoshi text-lg font-medium text-text-1">{project.name}</h3>
+          <p className="mt-1 text-sm text-text-3 line-clamp-2">{project.oneLiner}</p>
+        </div>
+        <span className={cn('shrink-0 rounded-full px-2 py-1 text-xs font-medium', badge.className)}>
+          {badge.label}
+        </span>
+      </div>
+    </Link>
   )
 }
 

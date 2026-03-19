@@ -5,7 +5,7 @@ import type { TopicEntry } from '@/lib/topics'
 
 export const metadata = {
   title: 'Topics',
-  description: 'Signals across essays, notes, and books.',
+  description: 'Signals across essays, notes, projects, and books.',
 }
 
 const spotlightStyles = [
@@ -41,8 +41,8 @@ export default function TopicsPage() {
         <p className="text-sm uppercase tracking-[0.3em] text-text-3">Signal Index</p>
         <h1 className="mt-4 font-satoshi text-4xl font-medium text-text-1">Topics</h1>
         <p className="mt-3 max-w-2xl text-lg text-text-2">
-          A live map of themes across essays, notes, and the library. Each topic is a signal you can
-          follow deeper.
+          A live map of themes across essays, notes, projects, and the library. Each topic is a
+          signal you can follow deeper.
         </p>
       </header>
 
@@ -145,10 +145,12 @@ function TopicSpotlightCard({
           {topic.tag}
         </h3>
 
-        <div className="mt-4 flex items-center gap-2 text-xs text-text-3">
+        <div className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-text-3">
           <span className={style.label}>Essays {topic.counts.essays}</span>
           <span>/</span>
           <span>Notes {topic.counts.notes}</span>
+          <span>/</span>
+          <span>Projects {topic.counts.projects}</span>
           <span>/</span>
           <span>Books {topic.counts.books}</span>
         </div>
@@ -191,7 +193,8 @@ function TopicCard({ topic, maxSignal }: { topic: TopicEntry; maxSignal: number 
       </div>
 
       <div className="mt-4 text-xs text-text-3">
-        Essays {topic.counts.essays} / Notes {topic.counts.notes} / Books {topic.counts.books}
+        Essays {topic.counts.essays} / Notes {topic.counts.notes} / Projects{' '}
+        {topic.counts.projects} / Books {topic.counts.books}
       </div>
 
       <div className="mt-4">
@@ -227,6 +230,7 @@ function SignalBars({
   const entries = [
     { key: 'essays', value: counts.essays, className: 'bg-warm/70' },
     { key: 'notes', value: counts.notes, className: 'bg-accent/70' },
+    { key: 'projects', value: counts.projects, className: 'bg-text-2/70' },
     { key: 'books', value: counts.books, className: 'bg-success/70' },
   ]
 

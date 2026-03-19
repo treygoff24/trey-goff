@@ -6,6 +6,7 @@ This repo is Trey Goff's Next.js 16 personal site with MDX content, generated se
 
 - Canonical package manager: `pnpm@9.15.1`
 - Main commands: `pnpm dev`, `pnpm build`, `pnpm fmt`, `pnpm fmt:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm test:e2e`, `pnpm prebuild`, `pnpm content:sync`
+- `pnpm dev` runs `content:sync` before `next dev` so content-collections output (essays, notes, projects) is always fresh for local browsing (topics index, writing, etc.).
 - Additional generators: `pnpm generate-search`, `pnpm covers`, `pnpm generate-manifests`, `pnpm compress-assets`
 
 ## Working Rules

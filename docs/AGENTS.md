@@ -10,8 +10,8 @@
 
 ## Build, Test, and Development Commands
 - `pnpm install`: install dependencies (repo uses `pnpm@9`).
-- `pnpm dev`: run the local dev server (Next.js + Turbopack).
-- `pnpm content:sync`: build `.content-collections/generated` before TS7/test/build work in a clean checkout.
+- `pnpm dev`: run `content:sync`, then the local dev server (Next.js + Turbopack), so MDX-backed routes stay in sync.
+- `pnpm content:sync`: build `.content-collections/generated` before TS7/test/build work in a clean checkout (also invoked automatically by `pnpm dev`).
 - `pnpm fmt` / `pnpm fmt:check`: run Oxfmt on the repo's scoped code surface.
 - `pnpm lint`: run Oxlint as the default linter.
 - `pnpm lint:type-aware`: run the blocking Oxlint type-aware lane after `pnpm content:sync` + `pnpm exec next typegen`.
