@@ -39,12 +39,15 @@ export function StackDetailPanel({ books, hoveredBook, selectedBook, coverMap, c
 
     return (
       <div className='space-y-8 p-8'>
-        <p className='max-w-md text-base leading-relaxed text-text-2'>
-          A living inventory of {books.length} books on the shelf. Hover the stack to explore, or change the sort to watch them rearrange.
-        </p>
+        <div className='space-y-3'>
+          <div className='font-mono text-[10px] uppercase tracking-[0.22em] text-text-3'>Stack detail</div>
+          <p className='max-w-md text-base leading-relaxed text-text-2'>
+            Hover a spine for a quick preview, or click one to pin it here while you keep roaming the shelf.
+          </p>
+        </div>
 
         <section className='space-y-4'>
-          <h2 className='font-mono text-[11px] uppercase tracking-[0.15em] text-text-3'>Top topics</h2>
+          <h2 className='font-mono text-[11px] uppercase tracking-[0.18em] text-text-3'>Top topics</h2>
           <div className='space-y-2.5'>
             {topics.map(([topic, count]) => (
               <div key={topic} className='flex items-center gap-3'>
@@ -56,7 +59,7 @@ export function StackDetailPanel({ books, hoveredBook, selectedBook, coverMap, c
                     animate={{ scaleX: 1 }}
                     transition={{ duration: 0.6, ease: 'easeOut' }}
                     style={{
-                      background: 'linear-gradient(90deg, #3ed6c8, #3ed6c8cc)',
+                      background: 'linear-gradient(90deg, #3ed6c8, rgba(62,214,200,0.6))',
                       width: `${(count / (topics[0]?.[1] ?? 1)) * 100}%`,
                       transformOrigin: 'left',
                     }}
@@ -69,22 +72,22 @@ export function StackDetailPanel({ books, hoveredBook, selectedBook, coverMap, c
         </section>
 
         <section className='space-y-4'>
-          <h2 className='font-mono text-[11px] uppercase tracking-[0.15em] text-text-3'>Books by decade</h2>
-          <div className='flex items-end gap-1.5'>
-            {decades.map(([decade, count]) => (
-              <div key={decade} className='flex flex-col items-center gap-1.5'>
-                <motion.div
-                  className='w-4 rounded-sm'
-                  style={{
-                    background: 'linear-gradient(180deg, #f5a25a, #f5a25a88)',
-                  }}
-                  initial={{ height: 0 }}
-                  animate={{ height: Math.max(4, (count / maxDecadeCount) * 72) }}
-                  transition={{ duration: 0.5, delay: 0.02 * (decades.findIndex(d => d[0] === decade)), ease: 'easeOut' }}
-                />
-                <span className='font-mono text-[9px] text-text-3'>{String(decade).slice(2)}s</span>
-              </div>
-            ))}
+          <h2 className='font-mono text-[11px] uppercase tracking-[0.18em] text-text-3'>Books by decade</h2>
+          <div className='rounded-[20px] border border-white/[0.04] bg-white/[0.015] px-4 py-5'>
+            <div className='flex items-end gap-1.5'>
+              {decades.map(([decade, count], index) => (
+                <div key={decade} className='flex flex-col items-center gap-1.5'>
+                  <motion.div
+                    className='w-4 rounded-sm'
+                    style={{ background: 'linear-gradient(180deg, #f5a25a, rgba(245,162,90,0.5))' }}
+                    initial={{ height: 0 }}
+                    animate={{ height: Math.max(4, (count / maxDecadeCount) * 72) }}
+                    transition={{ duration: 0.5, delay: 0.02 * index, ease: 'easeOut' }}
+                  />
+                  <span className='font-mono text-[9px] text-text-3'>{String(decade).slice(2)}s</span>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       </div>
@@ -100,63 +103,87 @@ export function StackDetailPanel({ books, hoveredBook, selectedBook, coverMap, c
       <AnimatePresence mode='wait'>
         <motion.div
           key={activeBook.id}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.2 }}
+          initial={{ opacity: 0, y: 10, scale: 0.985 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -10, scale: 0.985 }}
+          transition={{ duration: 0.22, ease: 'easeOut' }}
           className='space-y-6'
         >
-          <div className='flex gap-6'>
-            <img
-              src={cover}
-              alt={activeBook.title}
-              loading='lazy'
-              className='h-auto w-56 rounded-2xl object-cover shadow-2xl shadow-black/40'
-            />
-            <div className='flex-1 space-y-3 py-1'>
-              <div className='font-newsreader text-3xl leading-tight text-text-1'>{activeBook.title}</div>
-              <div className='font-satoshi text-lg text-text-2'>{activeBook.author}</div>
-              <div className='font-mono text-sm text-text-3'>{activeBook.year}</div>
-              {bookColor ? (
-                <div className='mt-2 h-1 w-24 rounded-full' style={{ backgroundColor: bookColor }} />
-              ) : null}
+          <div className='flex items-center justify-between gap-3'>
+            <span className='font-mono text-[10px] uppercase tracking-[0.22em] text-text-3'>
+              {selectedBook ? 'Pinned selection' : 'Hover preview'}
+            </span>
+            {bookColor ? (
+              <span className='inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-text-3'>
+                <span className='h-2 w-2 rounded-full' style={{ backgroundColor: bookColor }} />
+                Shelf color
+              </span>
+            ) : null}
+          </div>
+
+          <div className='overflow-hidden rounded-[24px] border border-white/[0.05] bg-white/[0.015] p-4 shadow-[0_22px_70px_-44px_rgba(0,0,0,0.9)]'>
+            <div className='flex gap-5'>
+              <div className='relative shrink-0 overflow-hidden rounded-[20px] border border-white/[0.06] bg-black/20'>
+                <img
+                  src={cover}
+                  alt={activeBook.title}
+                  loading='lazy'
+                  className='h-auto w-40 object-cover shadow-2xl shadow-black/40'
+                />
+              </div>
+
+              <div className='min-w-0 flex-1 space-y-3 py-1'>
+                <div>
+                  <div className='font-newsreader text-3xl leading-tight text-text-1'>
+                    {activeBook.title}
+                  </div>
+                  <div className='mt-2 font-satoshi text-lg text-text-2'>{activeBook.author}</div>
+                </div>
+
+                <div className='flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.18em] text-text-3'>
+                  <span>{activeBook.year}</span>
+                  {activeBook.genre ? <span>{activeBook.genre}</span> : null}
+                </div>
+
+                {(activeBook.topics ?? []).length > 0 ? (
+                  <div className='flex flex-wrap gap-2 pt-1'>
+                    <span className='rounded-full bg-[#3ed6c8]/16 px-3 py-1 font-mono text-[11px] text-[#3ed6c8]'>
+                      {activeBook.topics![0]}
+                    </span>
+                    {extraTopics.map((topic) => (
+                      <span
+                        key={topic}
+                        className='rounded-full bg-white/[0.04] px-3 py-1 font-mono text-[11px] text-text-2'
+                      >
+                        {topic}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
             </div>
           </div>
 
-          {/* Primary topic pill */}
-          <div className='flex flex-wrap gap-2'>
-            {(activeBook.topics ?? []).length > 0 && (
-              <span className='rounded-full bg-accent/20 px-3 py-1 font-mono text-xs text-accent'>
-                {activeBook.topics![0]}
-              </span>
-            )}
-          </div>
-
-          {/* Cross-topic indicator */}
-          {extraTopics.length > 0 && (
-            <div className='flex items-center gap-2'>
-              <span className='font-mono text-[10px] uppercase tracking-wider text-text-3'>Also in</span>
-              <div className='flex flex-wrap gap-1.5'>
+          {extraTopics.length > 0 ? (
+            <div className='space-y-2'>
+              <div className='font-mono text-[10px] uppercase tracking-[0.22em] text-text-3'>Also in</div>
+              <div className='flex flex-wrap gap-2'>
                 {extraTopics.map((topic) => (
                   <span
                     key={topic}
-                    className='rounded-full bg-surface-1 px-2.5 py-0.5 font-mono text-[10px] text-text-2'
+                    className='rounded-full bg-white/[0.04] px-3 py-1 font-mono text-[11px] text-text-2'
                   >
                     {topic}
                   </span>
                 ))}
               </div>
             </div>
-          )}
-
-          {activeBook.genre ? (
-            <div className='inline-flex rounded-full bg-surface-1 px-3 py-1 font-mono text-xs uppercase tracking-wider text-text-2'>
-              {activeBook.genre}
-            </div>
           ) : null}
 
           {activeBook.whyILoveIt ? (
-            <p className='max-w-2xl text-sm leading-6 text-text-2'>{activeBook.whyILoveIt}</p>
+            <div className='rounded-[20px] border border-white/[0.04] bg-white/[0.015] p-5'>
+              <p className='text-sm leading-6 text-text-2'>{activeBook.whyILoveIt}</p>
+            </div>
           ) : null}
         </motion.div>
       </AnimatePresence>

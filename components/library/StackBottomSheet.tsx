@@ -1,6 +1,5 @@
 'use client'
 
-import clsx from 'clsx'
 import { AnimatePresence, motion } from 'framer-motion'
 import type { Book } from '@/lib/books/types'
 

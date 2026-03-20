@@ -9,15 +9,15 @@ import { getBookColor } from '@/lib/library/colors'
 import type { SortMode } from '@/lib/library/sorting'
 import { SORT_MODES } from '@/lib/library/sorting'
 import {
-  groupBooksByFamily,
-  groupBooksByDecade,
   groupBooksByAuthor,
+  groupBooksByDecade,
+  groupBooksByFamily,
   groupBooksByGenre,
 } from '@/lib/library/topics'
 import { BookStripe } from '@/components/library/BookStripe'
+import { StackBottomSheet } from '@/components/library/StackBottomSheet'
 import { StackDetailPanel } from '@/components/library/StackDetailPanel'
 import { StackSortControls } from '@/components/library/StackSortControls'
-import { StackBottomSheet } from '@/components/library/StackBottomSheet'
 
 type StackLibraryProps = {
   books: Book[]
@@ -32,9 +32,6 @@ type StackGroup = {
   books: Book[]
 }
 
-/**
- * Build groups for the current sort mode.
- */
 function buildGroups(books: Book[], sortMode: SortMode): StackGroup[] {
   switch (sortMode) {
     case 'topic': {
@@ -73,69 +70,12 @@ function buildGroups(books: Book[], sortMode: SortMode): StackGroup[] {
   }
 }
 
-/**
- * Distribute groups into N columns using a greedy tallest-first algorithm
- * with a round-robin fallback for better balance.
- */
-function distributeColumns(groups: StackGroup[], numColumns: number): StackGroup[][] {
-  const columns: StackGroup[][] = Array.from({ length: numColumns }, () => [])
-  const columnHeights = new Array(numColumns).fill(0)
-
-  // Sort groups tallest-first for better distribution
-  const sorted = [...groups].sort((a, b) => b.books.length - a.books.length)
-
-  for (const group of sorted) {
-    // Find the shortest column
-    let minIdx = 0
-    for (let i = 1; i < numColumns; i++) {
-      if (columnHeights[i] < columnHeights[minIdx]) minIdx = i
-    }
-    // Push to the shortest column and sort within that column by original order
-    columns[minIdx]!.push(group)
-    columnHeights[minIdx]! += group.books.length
-  }
-
-  // Refinement pass: try swapping pairs between columns to improve balance
-  for (let iter = 0; iter < 10; iter++) {
-    let improved = false
-    for (let i = 0; i < numColumns; i++) {
-      for (let j = i + 1; j < numColumns; j++) {
-        const diffBefore = Math.abs(columnHeights[i]! - columnHeights[j]!)
-        if (diffBefore <= 1) continue
-
-        // Find best single swap
-        for (let ai = 0; ai < columns[i]!.length; ai++) {
-          for (let aj = 0; aj < columns[j]!.length; aj++) {
-            const a = columns[i]![ai]!.books.length
-            const b = columns[j]![aj]!.books.length
-            const diffAfter = Math.abs((columnHeights[i]! - a + b) - (columnHeights[j]! - b + a))
-            if (diffAfter < diffBefore) {
-              // Swap
-              const tmp = columns[i]![ai]!
-              columns[i]![ai] = columns[j]![aj]!
-              columns[j]![aj] = tmp
-              columnHeights[i] = columnHeights[i]! - a + b
-              columnHeights[j] = columnHeights[j]! - b + a
-              improved = true
-              break
-            }
-          }
-          if (improved) break
-        }
-      }
-    }
-    if (!improved) break
-  }
-
-  return columns
-}
-
 function MobileView({
   books,
   colors,
   sortMode,
   onSortChange,
-  mobileSelectedBook,
+  selectedBook,
   onMobileSelect,
   onMobileClose,
   coverMap,
@@ -144,28 +84,27 @@ function MobileView({
   colors: BookColorMap
   sortMode: SortMode
   onSortChange: (mode: SortMode) => void
-  mobileSelectedBook: Book | null
+  selectedBook: Book | null
   onMobileSelect: (book: Book) => void
   onMobileClose: () => void
   coverMap: Record<string, string>
 }) {
   const groups = useMemo(() => buildGroups(books, sortMode), [books, sortMode])
-  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set())
-
-  const toggleGroup = useCallback((id: string) => {
-    setCollapsedGroups((prev) => {
-      const next = new Set(prev)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
-      return next
-    })
-  }, [])
 
   return (
     <div className='px-4 py-6 md:hidden'>
-      <div className='font-newsreader text-sm italic text-text-2'>{books.length} books</div>
+      <div className='flex items-end justify-between gap-4'>
+        <div>
+          <div className='font-newsreader text-2xl italic tracking-tight text-text-1'>
+            {books.length} books
+          </div>
+          <p className='mt-1 max-w-[18rem] font-mono text-[10px] uppercase tracking-[0.18em] text-text-3'>
+            Swipe sideways through the shelf
+          </p>
+        </div>
+      </div>
 
-      <div className='mt-3 overflow-x-auto pb-1'>
+      <div className='mt-4 overflow-x-auto pb-1'>
         <div className='flex min-w-max gap-2 whitespace-nowrap'>
           {SORT_MODES.map((mode) => {
             const active = mode.key === sortMode
@@ -186,54 +125,35 @@ function MobileView({
         </div>
       </div>
 
-      <div className='mt-4 space-y-4'>
-        <LayoutGroup>
-          {groups.map((group) => {
-            const collapsed = collapsedGroups.has(group.id)
-            return (
-              <div key={group.id}>
-                <button
-                  type='button'
-                  onClick={() => toggleGroup(group.id)}
-                  className='flex w-full items-baseline gap-2 py-2 text-left'
-                >
-                  <div
-                    className='h-4 w-[2px] shrink-0 rounded-full'
-                    style={{ backgroundColor: group.color, opacity: 0.5 }}
-                  />
-                  <span className='font-newsreader text-base italic text-text-1'>{group.label}</span>
-                  <span className='font-mono text-[10px] text-text-3'>{group.books.length}</span>
-                  <span className='ml-auto font-mono text-[10px] text-text-3'>
-                    {collapsed ? '+' : '\u2013'}
-                  </span>
-                </button>
-                {!collapsed && (
-                  <div className='space-y-[1px]'>
-                    {group.books.map((book) => (
-                      <BookStripe
-                        key={book.id}
-                        book={book}
-                        color={getBookColor(colors, book.id)}
-                        isHovered={false}
-                        isSelected={false}
-                        isMultiTopic={(book.topics?.length ?? 0) > 1}
-                        onHover={() => {}}
-                        onSelect={() => onMobileSelect(book)}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            )
-          })}
-        </LayoutGroup>
+      <div className='relative mt-5 rounded-[28px] border border-white/[0.06] bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.012))] p-3 shadow-[0_20px_80px_-50px_rgba(0,0,0,0.92)]'>
+        <div className='pointer-events-none absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-white/14 to-transparent' />
+        <div className='pointer-events-none absolute inset-x-5 bottom-3 h-px bg-gradient-to-r from-transparent via-[#f5a25a]/25 to-transparent' />
+
+        <div className='stack-scrollbar overflow-x-auto overscroll-x-contain pb-4 pr-2 touch-pan-x'>
+          <LayoutGroup id='stack-library-mobile'>
+            <div className='flex min-w-max items-start gap-4 px-1 pt-1'>
+              {groups.map((group) => (
+                <TopicStack
+                  key={group.id}
+                  group={group}
+                  colors={colors}
+                  hoveredBookId={null}
+                  selectedBookId={selectedBook?.id ?? null}
+                  onHover={() => {}}
+                  onSelect={(id) => {
+                    const book = group.books.find((entry) => entry.id === id)
+                    if (book) onMobileSelect(book)
+                  }}
+                  widthClass='w-[182px]'
+                  compact
+                />
+              ))}
+            </div>
+          </LayoutGroup>
+        </div>
       </div>
 
-      <StackBottomSheet
-        book={mobileSelectedBook}
-        coverMap={coverMap}
-        onClose={onMobileClose}
-      />
+      <StackBottomSheet book={selectedBook} coverMap={coverMap} onClose={onMobileClose} />
     </div>
   )
 }
@@ -245,115 +165,118 @@ export function StackLibrary({ books, colors, coverMap }: StackLibraryProps) {
   const [mobileSelectedBook, setMobileSelectedBook] = useState<Book | null>(null)
 
   const groups = useMemo(() => buildGroups(books, sortMode), [books, sortMode])
-  const columns = useMemo(() => distributeColumns(groups, 3), [groups])
-
   const hoveredBook = useMemo(() => books.find((b) => b.id === hoveredBookId) ?? null, [books, hoveredBookId])
   const selectedBook = useMemo(() => books.find((b) => b.id === selectedBookId) ?? null, [books, selectedBookId])
 
-  const handleMobileSelect = useCallback((book: Book) => setMobileSelectedBook(book), [])
-  const handleMobileClose = useCallback(() => setMobileSelectedBook(null), [])
+  const handleSelect = useCallback((id: string) => {
+    setSelectedBookId((current) => (current === id ? null : id))
+  }, [])
 
-  // Summary of top topics for the header
+  const handleMobileSelect = useCallback((book: Book) => {
+    setMobileSelectedBook(book)
+  }, [])
+
+  const handleMobileClose = useCallback(() => {
+    setMobileSelectedBook(null)
+  }, [])
+
   const topTopics = useMemo(() => {
     const topicCounts = new Map<string, number>()
     for (const book of books) {
-      for (const t of book.topics ?? []) {
-        topicCounts.set(t, (topicCounts.get(t) ?? 0) + 1)
+      for (const topic of book.topics ?? []) {
+        topicCounts.set(topic, (topicCounts.get(topic) ?? 0) + 1)
       }
     }
     return [...topicCounts.entries()]
       .sort((a, b) => b[1] - a[1])
       .slice(0, 5)
-      .map(([t]) => t)
+      .map(([topic]) => topic)
   }, [books])
 
   return (
     <div className='min-h-screen bg-bg-0 text-text-1'>
-      {/* Mobile view */}
       <MobileView
         books={books}
         colors={colors}
         sortMode={sortMode}
         onSortChange={setSortMode}
-        mobileSelectedBook={mobileSelectedBook}
+        selectedBook={mobileSelectedBook}
         onMobileSelect={handleMobileSelect}
         onMobileClose={handleMobileClose}
         coverMap={coverMap}
       />
 
-      {/* Desktop layout */}
-      <div className='mx-auto hidden max-w-[1800px] flex-col px-6 py-8 md:flex'>
-        {/* Header */}
-        <div className='mb-8'>
-          <div className='flex items-baseline justify-between'>
-            <span className='font-newsreader text-2xl italic tracking-tight text-text-1'>
+      <div className='mx-auto hidden max-w-[2200px] px-6 py-8 md:block'>
+        <div className='mb-8 flex items-end justify-between gap-6'>
+          <div className='max-w-2xl'>
+            <div className='font-newsreader text-[2rem] italic leading-none tracking-tight text-text-1'>
               {books.length} books
-            </span>
+            </div>
+            <p className='mt-2 max-w-xl font-mono text-[10px] uppercase tracking-[0.22em] text-text-3'>
+              {topTopics.join(' · ')}
+            </p>
+            <p className='mt-3 max-w-2xl text-sm leading-6 text-text-2'>
+              One long shelf, thirteen stacks, every book close enough to pull free.
+              Scroll sideways, then click a spine to keep it on the table.
+            </p>
+          </div>
+
+          <div className='shrink-0 rounded-full border border-white/[0.06] bg-white/[0.02] p-1 shadow-[0_12px_40px_-28px_rgba(0,0,0,0.85)]'>
             <StackSortControls activeSort={sortMode} onSortChange={setSortMode} />
           </div>
-          <p className='mt-1 font-mono text-xs text-text-3'>
-            {topTopics.join(' \u00b7 ')}
-          </p>
         </div>
 
-        <div className='flex gap-6'>
-          {/* Masonry columns */}
-          <div className='flex-1'>
-            <div
-              className='stack-scrollbar max-h-[calc(100vh-160px)] overflow-y-auto'
-              style={{
-                scrollbarWidth: 'thin',
-                scrollbarColor: 'rgba(255,255,255,0.12) transparent',
-              }}
-            >
-              {/* Top fade */}
-              <div className='pointer-events-none sticky top-0 z-10 h-4 w-full bg-gradient-to-b from-bg-0 to-transparent' />
-
-              <div className='flex gap-6'>
-                <LayoutGroup>
-                  {columns.map((colGroups, colIdx) => (
-                    <div key={colIdx} className='flex-1 space-y-6'>
-                      {colGroups.map((group) => (
-                        <TopicStack
-                          key={group.id}
-                          group={group}
-                          colors={colors}
-                          hoveredBookId={hoveredBookId}
-                          selectedBookId={selectedBookId}
-                          onHover={setHoveredBookId}
-                          onSelect={setSelectedBookId}
-                        />
-                      ))}
-                    </div>
-                  ))}
-                </LayoutGroup>
+        <div className='flex items-start gap-6 xl:gap-8'>
+          <section className='min-w-0 flex-1'>
+            <div className='relative overflow-hidden rounded-[32px] border border-white/[0.06] bg-[radial-gradient(circle_at_top_left,rgba(62,214,200,0.08),transparent_28%),radial-gradient(circle_at_top_right,rgba(245,162,90,0.08),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.012))] shadow-[0_28px_120px_-60px_rgba(0,0,0,0.96)]'>
+              <div className='pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white/14 to-transparent' />
+              <div className='pointer-events-none absolute inset-x-8 bottom-8 h-px bg-gradient-to-r from-transparent via-[#f5a25a]/25 to-transparent' />
+              <div className='pointer-events-none absolute left-8 top-6 font-mono text-[10px] uppercase tracking-[0.22em] text-text-3/80'>
+                Shelf view
+              </div>
+              <div className='pointer-events-none absolute right-8 top-6 font-mono text-[10px] uppercase tracking-[0.22em] text-text-3/80'>
+                Scroll →
               </div>
 
-              {/* Bottom fade */}
-              <div className='pointer-events-none sticky bottom-0 z-10 h-8 w-full bg-gradient-to-t from-bg-0 to-transparent' />
+              <div className='stack-scrollbar max-h-[calc(100vh-230px)] overflow-x-auto overflow-y-auto overscroll-x-contain overscroll-y-contain px-6 pb-8 pt-14 touch-pan-x'>
+                <LayoutGroup id='stack-library-desktop'>
+                  <div className='flex min-w-max items-start gap-5 pr-4 xl:gap-6'>
+                    {groups.map((group) => (
+                      <TopicStack
+                        key={group.id}
+                        group={group}
+                        colors={colors}
+                        hoveredBookId={hoveredBookId}
+                        selectedBookId={selectedBookId}
+                        onHover={setHoveredBookId}
+                        onSelect={handleSelect}
+                        widthClass='w-[240px] xl:w-[260px]'
+                      />
+                    ))}
+                  </div>
+                </LayoutGroup>
+              </div>
             </div>
-          </div>
+          </section>
 
-          {/* Detail panel */}
-          <div className='sticky top-24 h-fit w-[420px] shrink-0 self-start overflow-hidden rounded-2xl border border-white/[0.02] bg-[rgba(255,255,255,0.012)] shadow-[0_4px_60px_-12px_rgba(0,0,0,0.6)] backdrop-blur-sm'>
-            <div className='h-[1px] w-full bg-gradient-to-r from-transparent via-warm/30 to-transparent' />
-            <StackDetailPanel
-              books={books}
-              hoveredBook={hoveredBook}
-              selectedBook={selectedBook}
-              coverMap={coverMap}
-              colors={colors}
-            />
-          </div>
+          <aside className='sticky top-24 w-[380px] shrink-0 self-start xl:w-[430px]'>
+            <div className='overflow-hidden rounded-[28px] border border-white/[0.06] bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.012))] shadow-[0_30px_90px_-55px_rgba(0,0,0,0.96)] backdrop-blur-md'>
+              <div className='h-px w-full bg-gradient-to-r from-transparent via-[#f5a25a]/35 to-transparent' />
+              <StackDetailPanel
+                books={books}
+                hoveredBook={hoveredBook}
+                selectedBook={selectedBook}
+                coverMap={coverMap}
+                colors={colors}
+              />
+            </div>
+          </aside>
         </div>
       </div>
     </div>
   )
 }
 
-/**
- * A single topic stack — a header + vertical list of book spines.
- */
 function TopicStack({
   group,
   colors,
@@ -361,6 +284,8 @@ function TopicStack({
   selectedBookId,
   onHover,
   onSelect,
+  widthClass,
+  compact = false,
 }: {
   group: StackGroup
   colors: BookColorMap
@@ -368,20 +293,32 @@ function TopicStack({
   selectedBookId: string | null
   onHover: (id: string | null) => void
   onSelect: (id: string) => void
+  widthClass: string
+  compact?: boolean
 }) {
+  const hoveredIndex = hoveredBookId ? group.books.findIndex((book) => book.id === hoveredBookId) : -1
+
   return (
-    <div className='relative'>
-      {/* Topic header */}
-      <div className='mb-2 flex items-baseline gap-2'>
-        <h2 className='font-newsreader text-sm italic text-text-1'>{group.label}</h2>
-        <span className='font-mono text-[10px] text-text-3'>{group.books.length}</span>
-        <div className='ml-2 h-[1px] flex-1 bg-white/[0.04]' />
+    <section className={clsx('relative shrink-0', widthClass)}>
+      <div className='mb-3 flex items-baseline gap-3'>
+        <div
+          className='h-5 w-[3px] shrink-0 rounded-full shadow-[0_0_18px_currentColor]'
+          style={{ backgroundColor: group.color, color: group.color }}
+        />
+        <div className='min-w-0'>
+          <h2 className={clsx('truncate font-newsreader italic text-text-1', compact ? 'text-sm' : 'text-lg')}>
+            {group.label}
+          </h2>
+          <span className='font-mono text-[10px] uppercase tracking-[0.16em] text-text-3'>
+            {group.books.length} books
+          </span>
+        </div>
       </div>
 
-      {/* Vertical accent line + book spines */}
-      <div className='border-l-[2px] pl-[6px]' style={{ borderColor: group.color + '55' }}>
-        <div className='space-y-[1px]'>
-          {group.books.map((book) => (
+      <div className='relative rounded-[22px] border border-white/[0.05] bg-white/[0.02] p-2 shadow-[0_18px_60px_-44px_rgba(0,0,0,0.9)]'>
+        <div className='pointer-events-none absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent' />
+        <div className='space-y-[2px]'>
+          {group.books.map((book, index) => (
             <BookStripe
               key={book.id}
               book={book}
@@ -389,12 +326,16 @@ function TopicStack({
               isHovered={hoveredBookId === book.id}
               isSelected={selectedBookId === book.id}
               isMultiTopic={(book.topics?.length ?? 0) > 1}
+              hoverDistance={hoveredIndex >= 0 ? Math.abs(index - hoveredIndex) : null}
+              compact={compact}
               onHover={onHover}
               onSelect={onSelect}
             />
           ))}
         </div>
       </div>
-    </div>
+
+      <div className='mx-3 mt-2 h-[5px] rounded-full bg-[linear-gradient(90deg,rgba(255,255,255,0.015),rgba(255,255,255,0.09),rgba(245,162,90,0.12),rgba(255,255,255,0.015))]' />
+    </section>
   )
 }

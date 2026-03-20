@@ -708,9 +708,10 @@ html[data-konami='true'] a {
   opacity: 1;
 }
 
-/* Stack Library — thin custom scrollbar for the stripe container */
+/* Stack Library — thin custom scrollbar for shelf scrolling */
 .stack-scrollbar::-webkit-scrollbar {
-  width: 4px;
+  width: 6px;
+  height: 6px;
 }
 
 .stack-scrollbar::-webkit-scrollbar-track {
@@ -718,10 +719,10 @@ html[data-konami='true'] a {
 }
 
 .stack-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
 }
 
 .stack-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.22);
 }
