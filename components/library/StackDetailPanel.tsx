@@ -1,7 +1,6 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import clsx from 'clsx'
 import type { Book } from '@/lib/books/types'
 import type { BookColorMap } from '@/lib/library/colors'
 
@@ -57,7 +56,7 @@ export function StackDetailPanel({ books, hoveredBook, selectedBook, coverMap, c
                     animate={{ scaleX: 1 }}
                     transition={{ duration: 0.6, ease: 'easeOut' }}
                     style={{
-                      background: `linear-gradient(90deg, #3ed6c8, #3ed6c8cc)`,
+                      background: 'linear-gradient(90deg, #3ed6c8, #3ed6c8cc)',
                       width: `${(count / (topics[0]?.[1] ?? 1)) * 100}%`,
                       transformOrigin: 'left',
                     }}
@@ -77,7 +76,7 @@ export function StackDetailPanel({ books, hoveredBook, selectedBook, coverMap, c
                 <motion.div
                   className='w-4 rounded-sm'
                   style={{
-                    background: `linear-gradient(180deg, #f5a25a, #f5a25a88)`,
+                    background: 'linear-gradient(180deg, #f5a25a, #f5a25a88)',
                   }}
                   initial={{ height: 0 }}
                   animate={{ height: Math.max(4, (count / maxDecadeCount) * 72) }}
@@ -94,6 +93,7 @@ export function StackDetailPanel({ books, hoveredBook, selectedBook, coverMap, c
 
   const cover = coverMap[activeBook.id] ?? activeBook.coverUrl
   const bookColor = colors[activeBook.id]
+  const extraTopics = (activeBook.topics ?? []).slice(1)
 
   return (
     <div className='p-8'>
@@ -123,13 +123,31 @@ export function StackDetailPanel({ books, hoveredBook, selectedBook, coverMap, c
             </div>
           </div>
 
+          {/* Primary topic pill */}
           <div className='flex flex-wrap gap-2'>
-            {(activeBook.topics ?? []).map((topic) => (
-              <span key={topic} className='rounded-full bg-accent/15 px-3 py-1 font-mono text-xs text-accent'>
-                {topic}
+            {(activeBook.topics ?? []).length > 0 && (
+              <span className='rounded-full bg-accent/20 px-3 py-1 font-mono text-xs text-accent'>
+                {activeBook.topics![0]}
               </span>
-            ))}
+            )}
           </div>
+
+          {/* Cross-topic indicator */}
+          {extraTopics.length > 0 && (
+            <div className='flex items-center gap-2'>
+              <span className='font-mono text-[10px] uppercase tracking-wider text-text-3'>Also in</span>
+              <div className='flex flex-wrap gap-1.5'>
+                {extraTopics.map((topic) => (
+                  <span
+                    key={topic}
+                    className='rounded-full bg-surface-1 px-2.5 py-0.5 font-mono text-[10px] text-text-2'
+                  >
+                    {topic}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
 
           {activeBook.genre ? (
             <div className='inline-flex rounded-full bg-surface-1 px-3 py-1 font-mono text-xs uppercase tracking-wider text-text-2'>

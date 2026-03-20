@@ -1,23 +1,19 @@
 import type { Book } from '@/lib/books/types'
 
-export type SortMode = 'reading-order' | 'topic' | 'author' | 'year' | 'genre'
+export type SortMode = 'topic' | 'year' | 'author' | 'genre'
 
 export const SORT_MODES: { key: SortMode; label: string }[] = [
-  { key: 'reading-order', label: 'Reading Order' },
   { key: 'topic', label: 'Topic' },
-  { key: 'author', label: 'Author' },
   { key: 'year', label: 'Year' },
+  { key: 'author', label: 'Author' },
   { key: 'genre', label: 'Genre' },
 ]
 
 /**
  * Sort books by the given mode.
- * Reading order = original array order (by index).
- * All other sorts are stable (preserve relative order within ties).
+ * All sorts are stable (preserve relative order within ties).
  */
 export function sortLibrary(books: Book[], mode: SortMode): Book[] {
-  if (mode === 'reading-order') return books
-
   const sorted = [...books]
 
   switch (mode) {
