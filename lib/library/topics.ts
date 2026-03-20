@@ -13,9 +13,15 @@ export interface TopicFamily {
 
 export const TOPIC_FAMILIES: TopicFamily[] = [
   {
-    id: 'fiction',
-    label: 'Fiction & Fantasy',
-    topics: ['science-fiction', 'fantasy', 'fiction', 'literary-fiction', 'thriller', 'horror', 'mystery', 'dystopia', 'cyberpunk', 'humor', 'adventure', 'young-adult', 'classic'],
+    id: 'science-fiction',
+    label: 'Science Fiction',
+    topics: ['science-fiction', 'cyberpunk', 'dystopia'],
+    color: '#E11D48',
+  },
+  {
+    id: 'fantasy',
+    label: 'Fantasy & Fiction',
+    topics: ['fantasy', 'fiction', 'literary-fiction', 'thriller', 'horror', 'mystery', 'humor', 'adventure', 'young-adult', 'classic'],
     color: '#F43F5E',
   },
   {
