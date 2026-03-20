@@ -59,11 +59,12 @@ export const BookStripe = memo(function BookStripe({
       className={clsx(
         'relative flex w-full cursor-pointer items-center overflow-hidden text-left outline-none',
         'focus-visible:ring-2 focus-visible:ring-warm focus-visible:ring-offset-1 focus-visible:ring-offset-bg-0',
-        expanded && 'rounded-md shadow-[0_0_20px_rgba(245,162,90,0.12)]',
+        expanded && 'rounded-md shadow-[0_0_28px_rgba(245,162,90,0.22),0_0_8px_rgba(245,162,90,0.15),inset_0_0_0_1px_rgba(245,162,90,0.15)]',
       )}
       style={{
         backgroundColor: color,
         willChange: 'transform',
+        boxShadow: expanded ? undefined : 'inset 0 0 0 0.5px rgba(255,255,255,0.04)',
       }}
     >
       {expanded && (

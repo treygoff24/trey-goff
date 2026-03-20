@@ -707,3 +707,21 @@ html[data-konami='true'] a {
 .transmission-border:hover::before {
   opacity: 1;
 }
+
+/* Stack Library — thin custom scrollbar for the stripe container */
+.stack-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.stack-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.stack-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.stack-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}

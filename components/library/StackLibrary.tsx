@@ -51,14 +51,23 @@ export function StackLibrary({ books, colors, coverMap }: StackLibraryProps) {
 
       {/* Desktop layout */}
       <div className='mx-auto hidden max-w-[1800px] flex-col px-6 py-8 md:flex'>
-        <div className='mb-4 flex items-center justify-between'>
-          <span className='font-newsreader text-lg italic text-text-2'>{books.length} books</span>
+        <div className='mb-5 flex items-baseline justify-between'>
+          <span className='font-newsreader text-2xl italic tracking-tight text-text-1'>{books.length} books</span>
           <StackSortControls activeSort={sortMode} onSortChange={setSortMode} />
         </div>
 
-        <div className='flex gap-8'>
+        <div className='flex gap-6'>
+          {/* Stack column */}
           <div className='w-[40%]'>
-            <div className='max-h-[calc(100vh-140px)] overflow-y-auto'>
+            <div
+              className='stack-scrollbar relative max-h-[calc(100vh-160px)] overflow-y-auto'
+              style={{
+                scrollbarWidth: 'thin',
+                scrollbarColor: 'rgba(255,255,255,0.12) transparent',
+              }}
+            >
+              {/* Top fade gradient */}
+              <div className='pointer-events-none sticky top-0 z-10 h-4 w-full bg-gradient-to-b from-bg-0 to-transparent' />
               <LayoutGroup>
                 {sortedBooks.map((book) => (
                   <BookStripe
@@ -72,10 +81,15 @@ export function StackLibrary({ books, colors, coverMap }: StackLibraryProps) {
                   />
                 ))}
               </LayoutGroup>
+              {/* Bottom fade gradient */}
+              <div className='pointer-events-none sticky bottom-0 z-10 h-8 w-full bg-gradient-to-t from-bg-0 to-transparent' />
             </div>
           </div>
 
-          <div className='sticky top-24 h-fit w-[60%] self-start rounded-2xl border border-white/5 bg-surface-1/30'>
+          {/* Detail panel — sticky right column */}
+          <div className='sticky top-24 h-fit w-[60%] self-start overflow-hidden rounded-2xl border border-white/[0.02] bg-[rgba(255,255,255,0.012)] shadow-[0_4px_60px_-12px_rgba(0,0,0,0.6)] backdrop-blur-sm'>
+            {/* Subtle warm accent top edge */}
+            <div className='h-[1px] w-full bg-gradient-to-r from-transparent via-warm/30 to-transparent' />
             <StackDetailPanel
               books={books}
               hoveredBook={hoveredBook}
