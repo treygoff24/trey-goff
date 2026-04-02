@@ -6,7 +6,7 @@
 - `lib/`: domain logic and utilities (notably `lib/search/`, `lib/books/`, `lib/graph/`).
 - `content/`: MDX + data (`content/essays/*.mdx`, `content/notes/*.mdx`, `content/library/books.json`).
 - `scripts/`: build-time generators and validation steps for search, covers, manifests, asset compression, and postbuild checks.
-- `public/`: static assets plus generated artifacts such as `search-index.json`, `book-covers.json`, `appearance-covers.json`, and `interactive-manifests.json`.
+- `public/`: static assets plus generated artifacts such as `search-index.json`, `book-covers.json`, `book-colors.json`, `appearance-covers.json`, and `interactive-manifests.json`.
 
 ## Build, Test, and Development Commands
 - `pnpm install`: install dependencies (repo uses `pnpm@9`).
@@ -18,7 +18,7 @@
 - `pnpm typecheck`: run the authoritative TS7 check after `pnpm content:sync` + `pnpm exec next typegen`.
 - `pnpm lint:legacy` / `pnpm typecheck:legacy`: run comparison-only ESLint + `tsc --noEmit` lanes.
 - `pnpm build`: production build; this runs `prebuild` first and then postbuild validation.
-- `pnpm prebuild`: regenerate covers, search index, interactive manifests, and compressed assets.
+- `pnpm prebuild`: regenerate covers, dominant cover colors (`book-colors.json`), search index, interactive manifests, and compressed assets.
 - `pnpm test`: run the Node.js native test runner via `node --test` with `tsx`.
 - `pnpm test:e2e`: run the Playwright E2E suite.
 - `pnpm generate-search` / `pnpm covers` / `pnpm generate-manifests` / `pnpm compress-assets`: run generators individually.

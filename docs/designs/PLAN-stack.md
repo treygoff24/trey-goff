@@ -1,17 +1,19 @@
 # The Stack — Build Plan
 
-## Phase 1: Color Extraction
-- [ ] Create `scripts/extract-book-colors.ts` build script
-- [ ] Generate `public/book-colors.json`
+## Phase 1: Color extraction _(done)_
 
-## Phase 2: Core Components (parallel)
-- [ ] `lib/library/colors.ts` + `lib/library/sorting.ts` — utility modules
-- [ ] `components/library/StackLibrary.tsx` — main client component + `app/library/page.tsx` update
-- [ ] `components/library/BookStripe.tsx` — individual stripe with hover expand
-- [ ] `components/library/StackDetailPanel.tsx` — right panel with stats + book detail
-- [ ] `components/library/StackSortControls.tsx` — sort pill buttons
-- [ ] `components/library/StackMobileBarcode.tsx` + `components/library/StackBottomSheet.tsx` — mobile
+- [x] `scripts/extract-book-colors.ts`
+- [x] `public/book-colors.json` + **`pnpm prebuild`** wiring
 
-## Phase 3: Integration & Verification
-- [ ] Integration: wire all components, verify typecheck/lint/test pass
-- [ ] Commit all changes
+## Phase 2: Core components _(done)_
+
+- [x] `lib/library/colors.ts`, `lib/library/sorting.ts`, `lib/library/topics.ts`
+- [x] `components/library/StackLibrary.tsx` + `app/library/page.tsx`
+- [x] `BookStripe.tsx`, `StackDetailPanel.tsx`, `StackSortControls.tsx`
+- [x] `StackBottomSheet.tsx` (modal sheet)
+- [x] Mobile: compact stripes inside stack columns (no separate barcode-only component)
+
+## Phase 3: Integration & verification _(ongoing)_
+
+- [x] Typecheck / lint / tests / build
+- [x] Spec aligned with shipped UI (`SPEC-stack.md`)

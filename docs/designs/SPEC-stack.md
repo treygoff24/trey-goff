@@ -1,118 +1,68 @@
-# THE STACK — Build Spec
+# THE STACK — Build Spec (authoritative)
 
 ## Overview
-Replace the existing 3D WebGL library page with "The Stack" — a design where every book is a thin colored horizontal stripe (dominant color extracted from its cover), stacked vertically like a physical pile of 334 books. The hero interaction: change sort order and watch all 334 items simultaneously animate to new positions via Framer Motion layout animations.
 
-## The Core Experience
+The `/library` route is **“The Stack”**: books appear as thin **horizontal spine stripes** (dominant color from each cover, from `public/book-colors.json`). Stripes are grouped into **multiple vertical stacks** (columns)—primarily by **topic family**—on a wide **sideways-scrollable shelf**. A **detail panel** on desktop shows aggregate stats when nothing is focused, and **hover / click-to-pin** book detail when a spine is active. **Framer Motion** `layout` + shared **`layoutId` per `book.id`** animates stripes when **sort mode** changes so books move cleanly between stacks.
 
-### What the user sees on page load
-A full-viewport page. Left 40%: a tall colored column of 334 thin horizontal stripes — each stripe is one book, colored by its dominant cover color. It looks like a Gerhard Richter color-field painting. Right 60%: a detail/stats panel.
+## Layout & sort modes
 
-Sort control pills float above the stack: "Reading Order · Topic · Author · Year · Genre"
+- **Desktop (md+):** Shelf region (scroll X/Y within a capped viewport) + **sticky** detail panel (`~380–430px` wide).
+- **Mobile:** Same stripe metaphor inside a **compact** column width; horizontal scroll through **stack columns**; **sort pills** in a horizontal chip row; **tap a spine** → **bottom sheet** with cover and metadata.
+- **Sort modes** (`SORT_MODES`): **Topic** (topic families), **Year** (decade buckets), **Author** (initial-range bins), **Genre**. There is no separate “reading order” mode in the shipped UI.
 
-At the very top: "334 books" in Newsreader italic, understated.
+## Topic families
 
-### The Hero Moment — Sort Animation
-When the user clicks a different sort mode, ALL 334 books simultaneously animate to their new positions using Framer Motion `layout` + `layoutId`. This is THE showstopper. 334 colored stripes reshuffling in real-time like a deck of cards being machine-sorted. This MUST be smooth (60fps). Use `layoutId` per book keyed to `book.id`.
+Books are bucketed using **`lib/library/topics.ts`**: each book’s **primary topic** (`topics[0]`) maps to a **`TopicFamily`** (label, color, member topic tags). Unmatched books land in **Miscellaneous**.
 
-### Stack Interaction
-- Each stripe is 4-6px tall by default (enough to see color, show all 334 in a scrollable container)
-- On hover, the hovered stripe expands to ~40px, showing the book title in small IBM Plex Mono text
-- Adjacent stripes compress slightly to make room (spring physics)
-- Running your cursor up and down the stack creates a flowing, living interaction
+## Hero & copy
 
-### Detail Panel (right 60%)
-- **Default state (nothing hovered):** Shows aggregate stats — total books, top 10 topics as a minimal horizontal bar chart, a reading-by-year dot timeline
-- **On hover/select:** Shows the book cover at generous size (200px+), title in Newsreader serif, author in Geologica, topic pills styled with the site's accent colors, and year in IBM Plex Mono
-- Cover images crossfade between books with a subtle scale transition
+- **Title:** Visible **`<h1>`** with the page title (**Library**).
+- **Counts:** **Total book count** and **current stack count** (`groups.length` after grouping) are shown and update with sort mode.
+- **Description:** Server-provided short description (same theme as metadata) plus a single UX line about scrolling and pinning in the detail panel.
 
-### Mobile Layout
-The stack rotates horizontal — a wide, horizontally-scrollable strip of thin VERTICAL stripes (each book is a thin vertical colored line). It becomes a "color barcode" of your reading life. Tapping any stripe opens a bottom sheet with book details (cover, title, author, topics). Sort pills become a horizontal scroll above the barcode.
+## Components (implemented)
 
-## Technical Requirements
-
-### Pre-computation: Dominant Color Extraction
-Create a build script at `scripts/extract-book-colors.ts` that:
-1. Reads each cover JPG from `public/covers/[slug].jpg`
-2. Extracts the dominant color (use canvas sampling — load image, draw to small canvas, average the center pixels, or use a simple k-means with k=1)
-3. Writes output to `public/book-colors.json` as `{ [bookId]: "#hexcolor" }`
-4. Run this as part of `pnpm prebuild`
-
-### File Structure
 ```
-app/library/page.tsx          — Server component, loads book data + colors
+app/library/page.tsx          — Server component: load books, book colors, cover map; JSON-LD; pass props
 components/library/
-  StackLibrary.tsx             — Main client component
-  BookStripe.tsx               — Individual stripe (motion.div with layoutId)
-  StackDetailPanel.tsx         — Right panel with stats/book detail
-  StackSortControls.tsx        — Sort pill buttons
-  StackMobileBarcode.tsx       — Mobile horizontal barcode view
-  StackBottomSheet.tsx         — Mobile book detail bottom sheet
+  StackLibrary.tsx            — Shelf + mobile/desktop chrome, grouping, sort state
+  BookStripe.tsx              — motion.button stripe; layoutId; hover/selected; reduced-motion aware
+  StackDetailPanel.tsx        — Stats default; book detail on hover / pinned selection
+  StackSortControls.tsx       — Sort pills (desktop chrome)
+  StackBottomSheet.tsx        — Radix Dialog–based sheet (focus trap, Esc, overlay)
 lib/library/
-  colors.ts                    — Load book-colors.json, fallback color logic
-  sorting.ts                   — Sort functions (reading-order, topic, author, year, genre)
+  colors.ts                   — loadBookColors(), getBookColor()
+  sorting.ts                  — SortMode + SORT_MODES
+  topics.ts                   — families, groupBooksByFamily, decade/author/genre helpers
+scripts/extract-book-colors.ts — Generates public/book-colors.json from cover JPGs
 ```
 
-### Design Tokens (use these exactly)
-```
-Background: bg-0 (#05060a)
-Surface: surface-1, surface-2
-Text: text-1 (95% white), text-2 (74%), text-3 (55%)
-Warm accent: #f5a25a (active sort pill, hover glow)
-Cool accent: #3ed6c8 (topic pills)
-Fonts: font-satoshi (Geologica) for UI, font-newsreader for titles, font-mono for data
-```
+Mobile does **not** use a separate “barcode-only” component; stacks use the same **`BookStripe`** in **`compact`** mode.
 
-### Animation Specs
-- Sort transition: Framer Motion `layout` prop on each stripe, `transition={{ type: "spring", stiffness: 300, damping: 30 }}`
-- Stripe hover expand: `animate={{ height }}` with spring physics
-- Detail panel crossfade: `AnimatePresence` with `mode="wait"`, 200ms duration
-- Initial load: stripes cascade from bottom, 5ms stagger per item (334 × 5ms = 1.67s)
-- Mobile barcode: horizontal scroll with `scroll-snap-type: x proximity`
+## Build pipeline
 
-### Performance Critical
-- 334 simultaneous layout animations MUST be smooth. Tips:
-  - Each BookStripe should be a simple div with NO complex children during animation
-  - Use `will-change: transform` on stripes
-  - Avoid re-renders during animation — sort state should update once, not per-frame
-  - Consider using `motion.div` with `layout="position"` instead of full layout if perf issues
-  - Test on throttled CPU (Chrome DevTools 4x slowdown)
+1. **`pnpm prebuild`** runs **`tsx scripts/extract-book-colors.ts`** after cover resolution so **`public/book-colors.json`** stays aligned with **`public/cover-map.json`** and JPGs.
+2. **`loadBookColors()`** reads `book-colors.json` at request/build time; missing file or parse errors → **empty map** and **fallback hex** per book.
 
-### Data
-- Books: `content/library/books.json` (334 books with id, title, author, year, status, topics, genre)
-- Covers: `public/covers/[slug].jpg` (327 real JPGs)
-- Cover map: `public/cover-map.json` (maps book id → cover path)
-- Colors: `public/book-colors.json` (will be generated by build script)
+## Animation & performance
 
-### Existing Site Integration
-- The page must use the existing layout (TopNav, Footer via app/layout.tsx)
-- Use existing font variables (--font-satoshi-font, --font-newsreader-font, --font-mono-font)
-- Use existing Tailwind theme tokens from globals.css
-- Keep the existing `app/library/layout.tsx` and `app/library/opengraph-image.tsx`
-- The existing floating library components under `components/library/floating/` should NOT be deleted yet — just don't import them
+- Stripes use **`layout="position"`** and **`layoutId={book.id}`** inside **`LayoutGroup`** scopes (`stack-library-desktop`, `stack-library-mobile`).
+- **Hover / selection:** Spring motion on translate/scale; **`prefers-reduced-motion: reduce`** short-circuits aggressive springs on **`BookStripe`**.
+- **Detail panel:** `AnimatePresence` + short fade/slide between books.
 
-### Quality Bar
-- Must pass `pnpm typecheck` and `pnpm lint`
-- Must pass `pnpm test` (existing tests)
-- Must work on desktop (1440px+) and mobile (375px)
-- No new heavy dependencies — only Framer Motion (already installed) for animation
-- Sort animation must be 60fps on M1 MacBook (test with 4x CPU throttle)
-- Book covers must be lazy-loaded with intersection observer
-- Accessible: keyboard navigation through stripes, screen reader labels
+## Accessibility
 
-### Dev Server
-```bash
-cd ~/Development/trey-goff-stack
-pnpm install
-pnpm dev
-# Visit http://localhost:3000/library
-```
+- Spine buttons: **keyboard focusable**, **`aria-label`** = title.
+- Bottom sheet: **`DialogPrimitive`** (modal focus management, **Esc**, **overlay** close); **Title/Description** primitives for SR; cover image **`alt=""`** when title is read by dialog naming.
+- Library route exposes a real **document `<h1>`**.
 
-Port: run `pnpm dev` and use whatever port Next.js assigns (likely 3000, or 3001+ if occupied).
+## Data sources
 
-## What "Done" Looks Like
-1. Visit /library → see the full stack of 334 colored stripes
-2. Click sort pills → watch 334 items animate to new positions smoothly
-3. Hover stripes → see them expand with title, detail panel updates
-4. Resize to mobile → see horizontal color barcode with bottom sheet
-5. `pnpm typecheck && pnpm lint && pnpm test` all pass
+- Books: `content/library/books.json`
+- Covers / map: `public/covers/*.jpg`, `public/cover-map.json`
+- Colors: `public/book-colors.json` (generated)
+
+## Quality bar
+
+- Pass **`pnpm ci:quality`** (fmt, lint, typecheck, test, build).
+- Visual check desktop + mobile after meaningful UI changes.

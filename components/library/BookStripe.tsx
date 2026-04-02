@@ -4,6 +4,7 @@ import { memo } from 'react'
 import { motion } from 'framer-motion'
 import clsx from 'clsx'
 import type { Book } from '@/lib/books/types'
+import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 type BookStripeProps = {
   book: Book
@@ -40,42 +41,44 @@ export const BookStripe = memo(function BookStripe({
   onHover,
   onSelect,
 }: BookStripeProps) {
+  const reducedMotion = useReducedMotion()
   const active = isHovered || isSelected
   const isAdjacent = hoverDistance === 1
   const isNearby = hoverDistance === 2
   const textColor = textColorForBg(color)
 
+  const springTransition = { type: 'spring' as const, stiffness: 320, damping: 28, mass: 0.7 }
+  const instantTransition = { duration: 0 }
+
   return (
     <motion.button
-      type='button'
-      role='button'
+      type="button"
       tabIndex={0}
-      layout='position'
-      layoutId={book.id}
+      layout={reducedMotion ? false : 'position'}
+      layoutId={reducedMotion ? undefined : book.id}
       aria-label={book.title}
       onMouseEnter={() => onHover(book.id)}
       onMouseLeave={() => onHover(null)}
       onFocus={() => onHover(book.id)}
       onBlur={() => onHover(null)}
       onClick={() => onSelect(book.id)}
-      whileHover={{
-        x: compact ? 6 : 10,
-        scaleY: compact ? 1.015 : 1.025,
-        transition: { type: 'spring', stiffness: 340, damping: 24, mass: 0.65 },
-      }}
-      whileTap={{ scaleY: 0.99, x: compact ? 5 : 9 }}
+      whileHover={
+        reducedMotion
+          ? {}
+          : {
+              x: compact ? 6 : 10,
+              scaleY: compact ? 1.015 : 1.025,
+              transition: { type: 'spring', stiffness: 340, damping: 24, mass: 0.65 },
+            }
+      }
+      whileTap={reducedMotion ? {} : { scaleY: 0.99, x: compact ? 5 : 9 }}
       animate={{
         x: isSelected ? (compact ? 6 : 10) : isAdjacent ? -1 : 0,
         scaleY: isSelected ? (compact ? 1.015 : 1.025) : isAdjacent ? 0.985 : isNearby ? 0.992 : 1,
         scaleX: isAdjacent ? 0.997 : 1,
         zIndex: active ? 20 : isAdjacent ? 8 : 2,
       }}
-      transition={{
-        type: 'spring',
-        stiffness: 320,
-        damping: 28,
-        mass: 0.7,
-      }}
+      transition={reducedMotion ? instantTransition : springTransition}
       className={clsx(
         'group relative flex w-full items-center overflow-hidden rounded-[7px] border text-left outline-none will-change-transform',
         compact ? 'h-[24px]' : 'h-[26px]',
@@ -91,17 +94,17 @@ export const BookStripe = memo(function BookStripe({
       }}
     >
       <span
-        aria-hidden='true'
-        className='pointer-events-none absolute inset-0 opacity-[0.04]'
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.04]"
         style={{ backgroundImage: NOISE_TEXTURE, backgroundSize: '120px 26px' }}
       />
       <span
-        aria-hidden='true'
-        className='pointer-events-none absolute inset-x-0 top-0 h-px bg-white/15'
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/15"
       />
       <span
-        aria-hidden='true'
-        className='pointer-events-none absolute inset-y-[2px] right-0 w-[14px] opacity-0 transition-opacity duration-200 group-hover:opacity-100'
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-[2px] right-0 w-[14px] opacity-0 transition-opacity duration-200 group-hover:opacity-100"
         style={{
           background:
             'linear-gradient(90deg, rgba(245,162,90,0), rgba(245,162,90,0.22) 50%, rgba(255,255,255,0.15) 100%)',
@@ -139,8 +142,8 @@ export const BookStripe = memo(function BookStripe({
 
       {isMultiTopic ? (
         <span
-          aria-hidden='true'
-          className='relative z-[1] mr-2 inline-block h-[5px] w-[5px] shrink-0 rounded-full'
+          aria-hidden="true"
+          className="relative z-[1] mr-2 inline-block h-[5px] w-[5px] shrink-0 rounded-full"
           style={{ backgroundColor: textColor, opacity: active ? 0.75 : 0.45 }}
         />
       ) : null}

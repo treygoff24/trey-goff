@@ -25,7 +25,7 @@ export default async function LibraryPage() {
       {books.map((book) => (
         <script
           key={book.id}
-          type='application/ld+json'
+          type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: serializeJsonLd(
               generateBookSchema({
@@ -41,7 +41,13 @@ export default async function LibraryPage() {
         />
       ))}
 
-      <StackLibrary books={books} colors={colors} coverMap={coverMap} />
+      <StackLibrary
+        books={books}
+        colors={colors}
+        coverMap={coverMap}
+        title={libraryTitle}
+        description={libraryDescription}
+      />
     </>
   )
 }

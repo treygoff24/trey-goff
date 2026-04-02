@@ -23,6 +23,8 @@ type StackLibraryProps = {
   books: Book[]
   colors: BookColorMap
   coverMap: Record<string, string>
+  title: string
+  description: string
 }
 
 type StackGroup = {
@@ -79,6 +81,8 @@ function MobileView({
   onMobileSelect,
   onMobileClose,
   coverMap,
+  title,
+  stackCount,
 }: {
   books: Book[]
   colors: BookColorMap
@@ -88,30 +92,35 @@ function MobileView({
   onMobileSelect: (book: Book) => void
   onMobileClose: () => void
   coverMap: Record<string, string>
+  title: string
+  stackCount: number
 }) {
   const groups = useMemo(() => buildGroups(books, sortMode), [books, sortMode])
 
   return (
-    <div className='px-4 py-6 md:hidden'>
-      <div className='flex items-end justify-between gap-4'>
+    <div className="px-4 py-6 md:hidden">
+      <div className="flex items-end justify-between gap-4">
         <div>
-          <div className='font-newsreader text-2xl italic tracking-tight text-text-1'>
-            {books.length} books
-          </div>
-          <p className='mt-1 max-w-[18rem] font-mono text-[10px] uppercase tracking-[0.18em] text-text-3'>
+          <h1 className="font-newsreader text-2xl italic leading-tight tracking-tight text-text-1">
+            {title}
+          </h1>
+          <p className="mt-1 font-mono text-xs text-text-2">
+            {books.length} books · {stackCount} stacks
+          </p>
+          <p className="mt-1 max-w-[18rem] font-mono text-[10px] uppercase tracking-[0.18em] text-text-3">
             Swipe sideways through the shelf
           </p>
         </div>
       </div>
 
-      <div className='mt-4 overflow-x-auto pb-1'>
-        <div className='flex min-w-max gap-2 whitespace-nowrap'>
+      <div className="mt-4 overflow-x-auto pb-1">
+        <div className="flex min-w-max gap-2 whitespace-nowrap">
           {SORT_MODES.map((mode) => {
             const active = mode.key === sortMode
             return (
               <button
                 key={mode.key}
-                type='button'
+                type="button"
                 onClick={() => onSortChange(mode.key)}
                 className={clsx(
                   'rounded-full px-3 py-1.5 font-mono text-xs uppercase tracking-wider transition-colors',
@@ -125,13 +134,13 @@ function MobileView({
         </div>
       </div>
 
-      <div className='relative mt-5 rounded-[28px] border border-white/[0.06] bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.012))] p-3 shadow-[0_20px_80px_-50px_rgba(0,0,0,0.92)]'>
-        <div className='pointer-events-none absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-white/14 to-transparent' />
-        <div className='pointer-events-none absolute inset-x-5 bottom-3 h-px bg-gradient-to-r from-transparent via-[#f5a25a]/25 to-transparent' />
+      <div className="relative mt-5 rounded-[28px] border border-white/[0.06] bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.012))] p-3 shadow-[0_20px_80px_-50px_rgba(0,0,0,0.92)]">
+        <div className="pointer-events-none absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-white/14 to-transparent" />
+        <div className="pointer-events-none absolute inset-x-5 bottom-3 h-px bg-gradient-to-r from-transparent via-[#f5a25a]/25 to-transparent" />
 
-        <div className='stack-scrollbar overflow-x-auto overscroll-x-contain pb-4 pr-2 touch-pan-x'>
-          <LayoutGroup id='stack-library-mobile'>
-            <div className='flex min-w-max items-start gap-4 px-1 pt-1'>
+        <div className="stack-scrollbar overflow-x-auto overscroll-x-contain pb-4 pr-2 touch-pan-x">
+          <LayoutGroup id="stack-library-mobile">
+            <div className="flex min-w-max items-start gap-4 px-1 pt-1">
               {groups.map((group) => (
                 <TopicStack
                   key={group.id}
@@ -144,7 +153,7 @@ function MobileView({
                     const book = group.books.find((entry) => entry.id === id)
                     if (book) onMobileSelect(book)
                   }}
-                  widthClass='w-[182px]'
+                  widthClass="w-[182px]"
                   compact
                 />
               ))}
@@ -158,15 +167,21 @@ function MobileView({
   )
 }
 
-export function StackLibrary({ books, colors, coverMap }: StackLibraryProps) {
+export function StackLibrary({ books, colors, coverMap, title, description }: StackLibraryProps) {
   const [sortMode, setSortMode] = useState<SortMode>('topic')
   const [hoveredBookId, setHoveredBookId] = useState<string | null>(null)
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null)
   const [mobileSelectedBook, setMobileSelectedBook] = useState<Book | null>(null)
 
   const groups = useMemo(() => buildGroups(books, sortMode), [books, sortMode])
-  const hoveredBook = useMemo(() => books.find((b) => b.id === hoveredBookId) ?? null, [books, hoveredBookId])
-  const selectedBook = useMemo(() => books.find((b) => b.id === selectedBookId) ?? null, [books, selectedBookId])
+  const hoveredBook = useMemo(
+    () => books.find((b) => b.id === hoveredBookId) ?? null,
+    [books, hoveredBookId],
+  )
+  const selectedBook = useMemo(
+    () => books.find((b) => b.id === selectedBookId) ?? null,
+    [books, selectedBookId],
+  )
 
   const handleSelect = useCallback((id: string) => {
     setSelectedBookId((current) => (current === id ? null : id))
@@ -194,7 +209,7 @@ export function StackLibrary({ books, colors, coverMap }: StackLibraryProps) {
   }, [books])
 
   return (
-    <div className='min-h-screen bg-bg-0 text-text-1'>
+    <div className="min-h-screen bg-bg-0 text-text-1">
       <MobileView
         books={books}
         colors={colors}
@@ -204,43 +219,48 @@ export function StackLibrary({ books, colors, coverMap }: StackLibraryProps) {
         onMobileSelect={handleMobileSelect}
         onMobileClose={handleMobileClose}
         coverMap={coverMap}
+        title={title}
+        stackCount={groups.length}
       />
 
-      <div className='mx-auto hidden max-w-[2200px] px-6 py-8 md:block'>
-        <div className='mb-8 flex items-end justify-between gap-6'>
-          <div className='max-w-2xl'>
-            <div className='font-newsreader text-[2rem] italic leading-none tracking-tight text-text-1'>
-              {books.length} books
-            </div>
-            <p className='mt-2 max-w-xl font-mono text-[10px] uppercase tracking-[0.22em] text-text-3'>
+      <div className="mx-auto hidden max-w-[2200px] px-6 py-8 md:block">
+        <div className="mb-8 flex items-end justify-between gap-6">
+          <div className="max-w-2xl">
+            <h1 className="font-newsreader text-[2rem] italic leading-none tracking-tight text-text-1">
+              {title}
+            </h1>
+            <p className="mt-2 font-mono text-xs text-text-2">
+              {books.length} books · {groups.length} stacks
+            </p>
+            <p className="mt-2 max-w-xl font-mono text-[10px] uppercase tracking-[0.22em] text-text-3">
               {topTopics.join(' · ')}
             </p>
-            <p className='mt-3 max-w-2xl text-sm leading-6 text-text-2'>
-              One long shelf, thirteen stacks, every book close enough to pull free.
-              Scroll sideways, then click a spine to keep it on the table.
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-text-2">
+              {description} Scroll sideways through {groups.length} stacks, then click a spine to
+              pin it in the detail panel.
             </p>
           </div>
 
-          <div className='shrink-0 rounded-full border border-white/[0.06] bg-white/[0.02] p-1 shadow-[0_12px_40px_-28px_rgba(0,0,0,0.85)]'>
+          <div className="shrink-0 rounded-full border border-white/[0.06] bg-white/[0.02] p-1 shadow-[0_12px_40px_-28px_rgba(0,0,0,0.85)]">
             <StackSortControls activeSort={sortMode} onSortChange={setSortMode} />
           </div>
         </div>
 
-        <div className='flex items-start gap-6 xl:gap-8'>
-          <section className='min-w-0 flex-1'>
-            <div className='relative overflow-hidden rounded-[32px] border border-white/[0.06] bg-[radial-gradient(circle_at_top_left,rgba(62,214,200,0.08),transparent_28%),radial-gradient(circle_at_top_right,rgba(245,162,90,0.08),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.012))] shadow-[0_28px_120px_-60px_rgba(0,0,0,0.96)]'>
-              <div className='pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white/14 to-transparent' />
-              <div className='pointer-events-none absolute inset-x-8 bottom-8 h-px bg-gradient-to-r from-transparent via-[#f5a25a]/25 to-transparent' />
-              <div className='pointer-events-none absolute left-8 top-6 font-mono text-[10px] uppercase tracking-[0.22em] text-text-3/80'>
+        <div className="flex items-start gap-6 xl:gap-8">
+          <section className="min-w-0 flex-1">
+            <div className="relative overflow-hidden rounded-[32px] border border-white/[0.06] bg-[radial-gradient(circle_at_top_left,rgba(62,214,200,0.08),transparent_28%),radial-gradient(circle_at_top_right,rgba(245,162,90,0.08),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.012))] shadow-[0_28px_120px_-60px_rgba(0,0,0,0.96)]">
+              <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white/14 to-transparent" />
+              <div className="pointer-events-none absolute inset-x-8 bottom-8 h-px bg-gradient-to-r from-transparent via-[#f5a25a]/25 to-transparent" />
+              <div className="pointer-events-none absolute left-8 top-6 font-mono text-[10px] uppercase tracking-[0.22em] text-text-3/80">
                 Shelf view
               </div>
-              <div className='pointer-events-none absolute right-8 top-6 font-mono text-[10px] uppercase tracking-[0.22em] text-text-3/80'>
+              <div className="pointer-events-none absolute right-8 top-6 font-mono text-[10px] uppercase tracking-[0.22em] text-text-3/80">
                 Scroll →
               </div>
 
-              <div className='stack-scrollbar max-h-[calc(100vh-230px)] overflow-x-auto overflow-y-auto overscroll-x-contain overscroll-y-contain px-6 pb-8 pt-14 touch-pan-x'>
-                <LayoutGroup id='stack-library-desktop'>
-                  <div className='flex min-w-max items-start gap-5 pr-4 xl:gap-6'>
+              <div className="stack-scrollbar max-h-[calc(100vh-230px)] overflow-x-auto overflow-y-auto overscroll-x-contain overscroll-y-contain px-6 pb-8 pt-14 touch-pan-x">
+                <LayoutGroup id="stack-library-desktop">
+                  <div className="flex min-w-max items-start gap-5 pr-4 xl:gap-6">
                     {groups.map((group) => (
                       <TopicStack
                         key={group.id}
@@ -250,7 +270,7 @@ export function StackLibrary({ books, colors, coverMap }: StackLibraryProps) {
                         selectedBookId={selectedBookId}
                         onHover={setHoveredBookId}
                         onSelect={handleSelect}
-                        widthClass='w-[240px] xl:w-[260px]'
+                        widthClass="w-[240px] xl:w-[260px]"
                       />
                     ))}
                   </div>
@@ -259,9 +279,9 @@ export function StackLibrary({ books, colors, coverMap }: StackLibraryProps) {
             </div>
           </section>
 
-          <aside className='sticky top-24 w-[380px] shrink-0 self-start xl:w-[430px]'>
-            <div className='overflow-hidden rounded-[28px] border border-white/[0.06] bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.012))] shadow-[0_30px_90px_-55px_rgba(0,0,0,0.96)] backdrop-blur-md'>
-              <div className='h-px w-full bg-gradient-to-r from-transparent via-[#f5a25a]/35 to-transparent' />
+          <aside className="sticky top-24 w-[380px] shrink-0 self-start xl:w-[430px]">
+            <div className="overflow-hidden rounded-[28px] border border-white/[0.06] bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.012))] shadow-[0_30px_90px_-55px_rgba(0,0,0,0.96)] backdrop-blur-md">
+              <div className="h-px w-full bg-gradient-to-r from-transparent via-[#f5a25a]/35 to-transparent" />
               <StackDetailPanel
                 books={books}
                 hoveredBook={hoveredBook}
@@ -296,28 +316,35 @@ function TopicStack({
   widthClass: string
   compact?: boolean
 }) {
-  const hoveredIndex = hoveredBookId ? group.books.findIndex((book) => book.id === hoveredBookId) : -1
+  const hoveredIndex = hoveredBookId
+    ? group.books.findIndex((book) => book.id === hoveredBookId)
+    : -1
 
   return (
     <section className={clsx('relative shrink-0', widthClass)}>
-      <div className='mb-3 flex items-baseline gap-3'>
+      <div className="mb-3 flex items-baseline gap-3">
         <div
-          className='h-5 w-[3px] shrink-0 rounded-full shadow-[0_0_18px_currentColor]'
+          className="h-5 w-[3px] shrink-0 rounded-full shadow-[0_0_18px_currentColor]"
           style={{ backgroundColor: group.color, color: group.color }}
         />
-        <div className='min-w-0'>
-          <h2 className={clsx('truncate font-newsreader italic text-text-1', compact ? 'text-sm' : 'text-lg')}>
+        <div className="min-w-0">
+          <h2
+            className={clsx(
+              'truncate font-newsreader italic text-text-1',
+              compact ? 'text-sm' : 'text-lg',
+            )}
+          >
             {group.label}
           </h2>
-          <span className='font-mono text-[10px] uppercase tracking-[0.16em] text-text-3'>
+          <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-text-3">
             {group.books.length} books
           </span>
         </div>
       </div>
 
-      <div className='relative rounded-[22px] border border-white/[0.05] bg-white/[0.02] p-2 shadow-[0_18px_60px_-44px_rgba(0,0,0,0.9)]'>
-        <div className='pointer-events-none absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent' />
-        <div className='space-y-[2px]'>
+      <div className="relative rounded-[22px] border border-white/[0.05] bg-white/[0.02] p-2 shadow-[0_18px_60px_-44px_rgba(0,0,0,0.9)]">
+        <div className="pointer-events-none absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
+        <div className="space-y-[2px]">
           {group.books.map((book, index) => (
             <BookStripe
               key={book.id}
@@ -335,7 +362,7 @@ function TopicStack({
         </div>
       </div>
 
-      <div className='mx-3 mt-2 h-[5px] rounded-full bg-[linear-gradient(90deg,rgba(255,255,255,0.015),rgba(255,255,255,0.09),rgba(245,162,90,0.12),rgba(255,255,255,0.015))]' />
+      <div className="mx-3 mt-2 h-[5px] rounded-full bg-[linear-gradient(90deg,rgba(255,255,255,0.015),rgba(255,255,255,0.09),rgba(245,162,90,0.12),rgba(255,255,255,0.015))]" />
     </section>
   )
 }

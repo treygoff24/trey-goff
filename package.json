@@ -7,7 +7,7 @@
     "content:sync": "tsx scripts/sync-content-collections.ts",
     "prepare:quality": "pnpm content:sync && pnpm exec next typegen",
     "covers": "tsx scripts/resolve-book-covers.ts && tsx scripts/resolve-appearance-covers.ts",
-    "prebuild": "pnpm content:sync && tsx scripts/resolve-book-covers.ts && tsx scripts/resolve-appearance-covers.ts && tsx scripts/generate-search-index.ts && tsx scripts/generate-interactive-manifests.ts && tsx scripts/compress-assets.ts",
+    "prebuild": "pnpm content:sync && tsx scripts/resolve-book-covers.ts && tsx scripts/resolve-appearance-covers.ts && tsx scripts/extract-book-colors.ts && tsx scripts/generate-search-index.ts && tsx scripts/generate-interactive-manifests.ts && tsx scripts/compress-assets.ts",
     "generate-manifests": "tsx scripts/generate-interactive-manifests.ts",
     "build": "next build",
     "postbuild": "tsx scripts/validate-asset-budgets.ts && tsx scripts/check-bundle-isolation.ts",

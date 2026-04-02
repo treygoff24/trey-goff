@@ -12,10 +12,7 @@ describe('topic helpers', () => {
     const topics = getTopicsIndex()
     for (const topic of topics) {
       const total =
-        topic.counts.essays +
-        topic.counts.notes +
-        topic.counts.books +
-        topic.counts.projects
+        topic.counts.essays + topic.counts.notes + topic.counts.books + topic.counts.projects
       assert.equal(topic.counts.total, total)
     }
   })

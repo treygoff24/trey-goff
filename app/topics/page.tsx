@@ -193,8 +193,8 @@ function TopicCard({ topic, maxSignal }: { topic: TopicEntry; maxSignal: number 
       </div>
 
       <div className="mt-4 text-xs text-text-3">
-        Essays {topic.counts.essays} / Notes {topic.counts.notes} / Projects{' '}
-        {topic.counts.projects} / Books {topic.counts.books}
+        Essays {topic.counts.essays} / Notes {topic.counts.notes} / Projects {topic.counts.projects}{' '}
+        / Books {topic.counts.books}
       </div>
 
       <div className="mt-4">

@@ -54,7 +54,9 @@ describe('isJsonContentType', () => {
   })
 
   test('rejects text/plain', () => {
-    const r = { headers: { get: () => 'text/plain' } } as unknown as import('next/server').NextRequest
+    const r = {
+      headers: { get: () => 'text/plain' },
+    } as unknown as import('next/server').NextRequest
     assert.equal(isJsonContentType(r), false)
   })
 
