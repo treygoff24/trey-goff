@@ -28,3 +28,11 @@ This repo is Trey Goff's Next.js 16 personal site with MDX content, generated se
 
 - Key paths: `app/`, `components/`, `content/`, `lib/`, `scripts/`, `test/`, `e2e/`, `public/`.
 - `docs/AGENTS.md` contains additional repo guidance; keep the root file authoritative and update both only when the guidance truly diverges.
+
+## Frontend Delight Workflow
+
+- Use the `frontend-delight` skill for portfolio pages, editorial layouts, landing pages, interactive essays, and major visual updates to 3D or motion-heavy surfaces.
+- Start with a `visual thesis`, `content plan`, and `interaction thesis`. This site should feel authored and editorial, not like a generic component demo.
+- Use real content and established site voice. Avoid placeholder startup copy, generic card grids, and interchangeable hero patterns.
+- Preserve token-driven styling from `app/globals.css`, but push composition, typography, imagery, and motion with intention. One strong visual idea per section beats many small effects.
+- Verify every meaningful visual change in the browser on desktop and mobile. For heavy motion or 3D work, also watch performance budgets and keep postbuild asset checks green.

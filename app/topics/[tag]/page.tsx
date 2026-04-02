@@ -73,12 +73,7 @@ export default async function TopicPage({ params }: PageProps) {
   const topicTag = tag
   const { essays, notes, books, projects } = getTopicContent(topicTag)
 
-  if (
-    essays.length === 0 &&
-    notes.length === 0 &&
-    books.length === 0 &&
-    projects.length === 0
-  ) {
+  if (essays.length === 0 && notes.length === 0 && books.length === 0 && projects.length === 0) {
     notFound()
   }
 
@@ -254,10 +249,7 @@ function EmptyState({ message }: { message: string }) {
   )
 }
 
-const projectStatusBadges: Record<
-  Project['status'],
-  { label: string; className: string }
-> = {
+const projectStatusBadges: Record<Project['status'], { label: string; className: string }> = {
   active: { label: 'Active', className: 'bg-warm/20 text-warm' },
   shipped: { label: 'Shipped', className: 'bg-success/20 text-success' },
   'on-hold': { label: 'On hold', className: 'bg-warning/20 text-warning' },
@@ -277,7 +269,9 @@ function TopicProjectRow({ project }: { project: Project }) {
           <h3 className="font-satoshi text-lg font-medium text-text-1">{project.name}</h3>
           <p className="mt-1 text-sm text-text-3 line-clamp-2">{project.oneLiner}</p>
         </div>
-        <span className={cn('shrink-0 rounded-full px-2 py-1 text-xs font-medium', badge.className)}>
+        <span
+          className={cn('shrink-0 rounded-full px-2 py-1 text-xs font-medium', badge.className)}
+        >
           {badge.label}
         </span>
       </div>

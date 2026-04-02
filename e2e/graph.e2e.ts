@@ -38,13 +38,15 @@ test.describe('Knowledge Graph Page', () => {
   })
 
   test.describe('Filter controls', () => {
-    test('should display filter buttons for all node types', async ({ page }) => {
+    test('should display filter buttons for all node types', async () => {
       await graphPage.expectGraphRendered()
 
-      await expect(page.getByRole('button', { name: /Essays/ })).toBeVisible()
-      await expect(page.getByRole('button', { name: /Notes/ })).toBeVisible()
-      await expect(page.getByRole('button', { name: /Books/ })).toBeVisible()
-      await expect(page.getByRole('button', { name: /Tags/ })).toBeVisible()
+      await expect(graphPage.filterChip('Essays')).toBeVisible()
+      await expect(graphPage.filterChip('Notes')).toBeVisible()
+      await expect(graphPage.filterChip('Books')).toBeVisible()
+      await expect(graphPage.filterChip('Tags')).toBeVisible()
+      await expect(graphPage.filterChip('Ideas')).toBeVisible()
+      await expect(graphPage.filterChip('Transmissions')).toBeVisible()
     })
 
     test('should toggle node type visibility when clicking filter', async () => {
@@ -90,19 +92,15 @@ test.describe('Knowledge Graph Page', () => {
       expect(filteredConnectionCount).toBeLessThanOrEqual(initialConnectionCount)
     })
 
-    test('should show count for each node type in filter button', async ({ page }) => {
+    test('should show count for each node type in filter button', async () => {
       await graphPage.expectGraphRendered()
 
-      // Each filter button should show count in parentheses
-      const essaysButton = page.getByRole('button', { name: /Essays.*\(\d+\)/ })
-      const notesButton = page.getByRole('button', { name: /Notes.*\(\d+\)/ })
-      const booksButton = page.getByRole('button', { name: /Books.*\(\d+\)/ })
-      const tagsButton = page.getByRole('button', { name: /Tags.*\(\d+\)/ })
-
-      await expect(essaysButton).toBeVisible()
-      await expect(notesButton).toBeVisible()
-      await expect(booksButton).toBeVisible()
-      await expect(tagsButton).toBeVisible()
+      await expect(graphPage.filterChip('Essays')).toBeVisible()
+      await expect(graphPage.filterChip('Notes')).toBeVisible()
+      await expect(graphPage.filterChip('Books')).toBeVisible()
+      await expect(graphPage.filterChip('Tags')).toBeVisible()
+      await expect(graphPage.filterChip('Ideas')).toBeVisible()
+      await expect(graphPage.filterChip('Transmissions')).toBeVisible()
     })
   })
 
@@ -179,6 +177,8 @@ test.describe('Knowledge Graph Page', () => {
       await expect(graphPage.legend.getByText('Notes', { exact: true })).toBeVisible()
       await expect(graphPage.legend.getByText('Books', { exact: true })).toBeVisible()
       await expect(graphPage.legend.getByText('Tags', { exact: true })).toBeVisible()
+      await expect(graphPage.legend.getByText('Ideas', { exact: true })).toBeVisible()
+      await expect(graphPage.legend.getByText('Transmissions', { exact: true })).toBeVisible()
     })
 
     test('should display colored indicators for each type', async () => {
@@ -188,7 +188,7 @@ test.describe('Knowledge Graph Page', () => {
       const colorIndicators = graphPage.legend.locator('.rounded-full')
 
       const count = await colorIndicators.count()
-      expect(count).toBeGreaterThanOrEqual(4) // At least 4 node types
+      expect(count).toBeGreaterThanOrEqual(6)
     })
   })
 
@@ -233,8 +233,7 @@ test.describe('Knowledge Graph Page - Mobile', () => {
     await graphPage.gotoGraphPage()
     await graphPage.expectGraphRendered()
 
-    // Filter buttons should be visible and clickable
-    await expect(page.getByRole('button', { name: /Essays/ })).toBeVisible()
+    await expect(graphPage.filterChip('Essays')).toBeVisible()
 
     await graphPage.toggleFilter('Essays')
     await graphPage.expectFilterInactive('Essays')

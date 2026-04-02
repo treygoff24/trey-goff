@@ -1,6 +1,13 @@
 'use client'
 
-import { createContext, useContext, useCallback, useEffect, useState, type ReactNode } from 'react'
+import {
+  createContext,
+  useContext,
+  useCallback,
+  useLayoutEffect,
+  useState,
+  type ReactNode,
+} from 'react'
 
 interface CommandPaletteContextValue {
   open: boolean
@@ -16,8 +23,7 @@ export function CommandPaletteProvider({ children }: { children: ReactNode }) {
   const toggle = useCallback(() => setOpen((prev) => !prev), [])
 
   // Global keyboard shortcut: Cmd+K / Ctrl+K
-  useEffect(() => {
-    document.documentElement.dataset.commandPaletteReady = 'true'
+  useLayoutEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault()
@@ -26,10 +32,7 @@ export function CommandPaletteProvider({ children }: { children: ReactNode }) {
     }
 
     document.addEventListener('keydown', handleKeyDown)
-    return () => {
-      delete document.documentElement.dataset.commandPaletteReady
-      document.removeEventListener('keydown', handleKeyDown)
-    }
+    return () => document.removeEventListener('keydown', handleKeyDown)
   }, [toggle])
 
   return (

@@ -12,7 +12,6 @@ export class BasePage {
   readonly searchButton: Locator
   readonly mobileMenuButton: Locator
   readonly mobileNav: Locator
-  readonly commandPaletteReady: Locator
 
   constructor(page: Page) {
     this.page = page
@@ -23,14 +22,19 @@ export class BasePage {
     this.searchButton = page.getByRole('button', { name: /search|command k/i })
     this.mobileMenuButton = page.getByRole('button', { name: 'Open menu' })
     this.mobileNav = page.getByRole('dialog', { name: 'Navigation menu' })
-    this.commandPaletteReady = page.locator('html[data-command-palette-ready="true"]')
   }
 
   async goto(path: string = '/') {
     await this.page.goto(path, { waitUntil: 'domcontentloaded', timeout: 60000 })
     if (!path.startsWith('/interactive')) {
       await expect(this.topNav).toBeVisible({ timeout: 60000 })
-      await expect(this.commandPaletteReady).toBeVisible({ timeout: 60000 })
+      await expect(this.page.locator('html')).toHaveAttribute(
+        'data-command-palette-ready',
+        'true',
+        {
+          timeout: 60000,
+        },
+      )
     }
   }
 

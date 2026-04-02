@@ -27,6 +27,6 @@ test('library page provides a semantic heading and description for the interacti
   assert.match(wrapper, /aria-describedby=\{descriptionId\}/)
   assert.match(wrapper, /const\s+titleId\s*=\s*useId\(\)/)
   assert.match(wrapper, /const\s+descriptionId\s*=\s*useId\(\)/)
-  assert.match(wrapper, /<header className="sr-only">[\s\S]*<h1 id=\{titleId\}>/s)
+  assert.match(wrapper, /<header className="sr-only">[\s\S]*<h1 id=\{titleId\}>/)
   assert.match(wrapper, /<h2[^>]*className="mb-4 font-satoshi text-4xl font-medium text-text-1"/)
 })

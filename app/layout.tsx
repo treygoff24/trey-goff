@@ -61,7 +61,11 @@ export default function RootLayout({
   const organizationSchema = generateOrganizationSchema()
 
   return (
-    <html lang="en" className={`${satoshi.variable} ${newsreader.variable} ${monaspace.variable}`}>
+    <html
+      lang="en"
+      data-command-palette-ready="true"
+      className={`${satoshi.variable} ${newsreader.variable} ${monaspace.variable}`}
+    >
       <body className="flex min-h-screen flex-col isolate">
         <script
           type="application/ld+json"

@@ -4,9 +4,19 @@ import { BasePage } from './base.page'
 /**
  * Page object model for the Knowledge Graph page.
  */
+export type GraphNodeTypeFilterLabel =
+  | 'Essays'
+  | 'Notes'
+  | 'Books'
+  | 'Tags'
+  | 'Ideas'
+  | 'Transmissions'
+
 export class GraphPage extends BasePage {
   readonly pageTitle: Locator
   readonly graphCanvas: Locator
+  /** Filter chips above the canvas (not mobile lens node list buttons). */
+  readonly nodeTypeFilterGroup: Locator
   readonly filterButtons: Locator
   readonly nodeInspector: Locator
   readonly legend: Locator
@@ -19,7 +29,8 @@ export class GraphPage extends BasePage {
     super(page)
     this.pageTitle = page.getByRole('heading', { name: /Knowledge Graph/i, level: 1 })
     this.graphCanvas = page.locator('canvas.sigma-mouse')
-    this.filterButtons = page.locator('button').filter({ hasText: /Essays|Notes|Books|Tags|Ideas/ })
+    this.nodeTypeFilterGroup = page.getByRole('group', { name: 'Visible graph node types' })
+    this.filterButtons = this.nodeTypeFilterGroup.getByRole('button')
     this.nodeInspector = page.locator('text=Select a node').locator('..').locator('..')
     this.legend = this.mainContent.getByRole('heading', { name: 'Legend' }).locator('..')
     this.legendItems = this.legend.locator('.text-text-2')
@@ -45,18 +56,24 @@ export class GraphPage extends BasePage {
     await expect(this.graphCanvas).toBeVisible()
   }
 
-  async toggleFilter(filterName: 'Essays' | 'Notes' | 'Books' | 'Tags' | 'Ideas') {
-    await this.page.getByRole('button', { name: new RegExp(filterName) }).click()
+  filterChip(label: GraphNodeTypeFilterLabel): Locator {
+    return this.nodeTypeFilterGroup.getByRole('button', {
+      name: new RegExp(`^${label} \\(\\d+\\)$`),
+    })
   }
 
-  async expectFilterActive(filterName: string) {
-    const button = this.page.getByRole('button', { name: new RegExp(filterName) })
+  async toggleFilter(filterName: GraphNodeTypeFilterLabel) {
+    await this.filterChip(filterName).click()
+  }
+
+  async expectFilterActive(filterName: GraphNodeTypeFilterLabel) {
+    const button = this.filterChip(filterName)
     // Active filters have different styling - not dimmed
     await expect(button).not.toHaveClass(/opacity-50/)
   }
 
-  async expectFilterInactive(filterName: string) {
-    const button = this.page.getByRole('button', { name: new RegExp(filterName) })
+  async expectFilterInactive(filterName: GraphNodeTypeFilterLabel) {
+    const button = this.filterChip(filterName)
     // Inactive filters are dimmed
     await expect(button).toHaveClass(/opacity-50/)
   }
@@ -94,6 +111,8 @@ export class GraphPage extends BasePage {
     await expect(this.legendItems.getByText('Notes', { exact: true })).toBeVisible()
     await expect(this.legendItems.getByText('Books', { exact: true })).toBeVisible()
     await expect(this.legendItems.getByText('Tags', { exact: true })).toBeVisible()
+    await expect(this.legendItems.getByText('Ideas', { exact: true })).toBeVisible()
+    await expect(this.legendItems.getByText('Transmissions', { exact: true })).toBeVisible()
   }
 
   async expectNavigationHelpVisible() {
