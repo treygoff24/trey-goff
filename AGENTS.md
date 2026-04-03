@@ -15,7 +15,7 @@ This repo is Trey Goff's Next.js 16 personal site with MDX content, generated se
 - Treat `pnpm ci:quality` as the baseline verification gate.
 - `pnpm content:sync` is the authoritative generated-content bootstrap for clean-checkout typecheck, test, and build flows.
 - `pnpm lint` and `pnpm typecheck` are the authoritative Oxc/TS7 gates; `pnpm lint:legacy` and `pnpm typecheck:legacy` are comparison lanes only.
-- If you edit `content/` or `content/library/books.json`, run `pnpm prebuild` and commit the generated `public/*.json` artifacts.
+- If you edit `content/` or `content/library/books.json`, run `pnpm prebuild` and commit the generated `public/*.json` artifacts (including `book-colors.json`, produced from cover JPGs during prebuild).
 - Preserve postbuild checks such as asset budgets and bundle isolation when touching interactive or heavy frontend code.
 - Keep visual changes aligned with the established App Router, MDX, and content-generation structure instead of scattering one-off scripts or assets.
 

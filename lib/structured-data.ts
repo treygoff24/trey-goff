@@ -64,7 +64,7 @@ export function generateBreadcrumbSchema(items: Array<{ name: string; url: strin
   }
 }
 
-export function generateBookSchema(book: {
+export type BookSchemaInput = {
   title: string
   author: string
   isbn13?: string
@@ -72,10 +72,13 @@ export function generateBookSchema(book: {
   coverUrl?: string
   year?: number
   publisher?: string
-}) {
+}
+
+/** One Book node for use inside `@graph` (no root `@context`). */
+export function bookSchemaNode(book: BookSchemaInput): Record<string, unknown> {
   return {
-    '@context': 'https://schema.org',
     '@type': 'Book',
+    ...(book.url ? { '@id': book.url } : {}),
     name: book.title,
     author: {
       '@type': 'Person',
@@ -87,5 +90,23 @@ export function generateBookSchema(book: {
     ...(book.year ? { datePublished: `${book.year}` } : {}),
     ...(book.publisher ? { publisher: { '@type': 'Organization', name: book.publisher } } : {}),
     inLanguage: 'en',
+  }
+}
+
+export function generateBookSchema(book: BookSchemaInput) {
+  return {
+    '@context': 'https://schema.org',
+    ...bookSchemaNode(book),
+  }
+}
+
+/**
+ * Single JSON-LD document for many books (one script tag, smaller HTML than N scripts).
+ * @see https://json-ld.org/spec/latest/json-ld/#node-identifiers
+ */
+export function generateLibraryBooksGraph(books: BookSchemaInput[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@graph': books.map(bookSchemaNode),
   }
 }

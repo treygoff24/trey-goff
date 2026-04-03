@@ -1,6 +1,21 @@
 import assert from 'node:assert/strict'
 import test, { describe } from 'node:test'
+import { groupBooksByAuthor } from '@/lib/library/topics'
 import { getTopicHref, getTopicContent, getTopicsIndex } from '@/lib/topics'
+import type { Book } from '@/lib/books/types'
+
+function book(overrides: Partial<Book> = {}): Book {
+  return {
+    id: 'book',
+    title: 'Book',
+    author: 'Author',
+    year: 2025,
+    status: 'want',
+    topics: ['topic'],
+    whyILoveIt: 'Because.',
+    ...overrides,
+  }
+}
 
 describe('topic helpers', () => {
   test('getTopicHref encodes special characters', () => {
@@ -31,5 +46,28 @@ describe('topic helpers', () => {
     assert.equal(notes.length, topic.counts.notes)
     assert.equal(books.length, topic.counts.books)
     assert.equal(projects.length, topic.counts.projects)
+  })
+})
+
+describe('library topic grouping helpers', () => {
+  test('groupBooksByAuthor bins lowercase initials with their uppercase range', () => {
+    const groups = groupBooksByAuthor([
+      book({ id: 'qntm', author: 'qntm' }),
+      book({ id: 'ursula', author: 'Ursula K. Le Guin' }),
+    ])
+
+    const qt = groups.find((group) => group.label === 'Q–T')
+    const uz = groups.find((group) => group.label === 'U–Z')
+
+    assert.deepEqual(
+      qt?.books.map((entry) => entry.id),
+      ['qntm'],
+      'lowercase q authors should stay in the Q–T bucket',
+    )
+    assert.deepEqual(
+      uz?.books.map((entry) => entry.id),
+      ['ursula'],
+      'uppercase U authors should stay in the U–Z bucket',
+    )
   })
 })

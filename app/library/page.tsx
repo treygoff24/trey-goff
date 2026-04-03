@@ -1,8 +1,11 @@
 import { getAllBooks } from '@/lib/books'
-import { generateBookSchema } from '@/lib/structured-data'
+import type { BookColorMap } from '@/lib/library/colors'
+import { generateLibraryBooksGraph } from '@/lib/structured-data'
 import { siteUrl } from '@/lib/site-config'
 import { serializeJsonLd } from '@/lib/safe-json-ld'
-import { FloatingLibraryWrapper } from '@/components/library/FloatingLibraryWrapper'
+import { StackLibrary } from '@/components/library/StackLibrary'
+import bookColorsData from '@/public/book-colors.json'
+import coverMapData from '@/public/cover-map.json'
 
 const libraryTitle = 'Library'
 const libraryDescription =
@@ -15,30 +18,36 @@ export const metadata = {
 
 export default function LibraryPage() {
   const books = getAllBooks()
+  const colors = bookColorsData as BookColorMap
+  const coverMap = coverMapData as Record<string, string>
+
+  const libraryJsonLd = generateLibraryBooksGraph(
+    books.map((book) => ({
+      title: book.title,
+      author: book.author,
+      isbn13: book.isbn13,
+      url: `${siteUrl}/library#${book.id}`,
+      coverUrl: book.coverUrl,
+      year: book.year,
+    })),
+  )
 
   return (
     <>
-      {/* Structured data for SEO */}
-      {books.map((book) => (
-        <script
-          key={book.id}
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: serializeJsonLd(
-              generateBookSchema({
-                title: book.title,
-                author: book.author,
-                isbn13: book.isbn13,
-                url: `${siteUrl}/library#${book.id}`,
-                coverUrl: book.coverUrl,
-                year: book.year,
-              }),
-            ),
-          }}
-        />
-      ))}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: serializeJsonLd(libraryJsonLd),
+        }}
+      />
 
-      <FloatingLibraryWrapper books={books} title={libraryTitle} description={libraryDescription} />
+      <StackLibrary
+        books={books}
+        colors={colors}
+        coverMap={coverMap}
+        title={libraryTitle}
+        description={libraryDescription}
+      />
     </>
   )
 }
