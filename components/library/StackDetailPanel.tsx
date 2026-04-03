@@ -46,8 +46,8 @@ function decadeLabelIndicesFromData(
   const n = decades.length
   if (n === 0) return new Set()
   if (n <= 5) return new Set([...Array(n).keys()])
-  const minD = decades[0][0]
-  const maxD = decades[n - 1][0]
+  const minD = decades[0]![0]
+  const maxD = decades[n - 1]![0]
   const span = maxD - minD || 1
   const raw = new Set<number>()
   for (let t = 0; t < 5; t++) {
@@ -55,7 +55,7 @@ function decadeLabelIndicesFromData(
     let bestIdx = 0
     let bestDist = Infinity
     for (let i = 0; i < n; i++) {
-      const dist = Math.abs(decades[i][0] - target)
+      const dist = Math.abs(decades[i]![0] - target)
       if (dist < bestDist) {
         bestDist = dist
         bestIdx = i
@@ -65,14 +65,15 @@ function decadeLabelIndicesFromData(
   }
   raw.add(0)
   raw.add(n - 1)
-  const ordered = [...raw].sort((a, b) => barCenterXs[a] - barCenterXs[b])
+  const ordered = [...raw].sort((a, b) => barCenterXs[a]! - barCenterXs[b]!)
   const pick = new Set<number>()
   let lastX = -Infinity
   for (const i of ordered) {
     const edge = i === 0 || i === n - 1
-    if (edge || barCenterXs[i] - lastX >= DECADE_LABEL_MIN_X_GAP) {
+    const x = barCenterXs[i]!
+    if (edge || x - lastX >= DECADE_LABEL_MIN_X_GAP) {
       pick.add(i)
-      lastX = barCenterXs[i]
+      lastX = x
     }
   }
   return pick
@@ -88,8 +89,8 @@ function DecadeDistributionChart({ decades, maxCount, reducedMotion }: DecadeCha
   const gradientId = useId().replace(/:/g, '')
   if (decades.length === 0) return null
 
-  const minD = decades[0][0]
-  const maxD = decades[decades.length - 1][0]
+  const minD = decades[0]![0]
+  const maxD = decades[decades.length - 1]![0]
   const span = maxD - minD || 1
 
   const VB = { w: 320, baseline: 56, labelY: 74, maxBar: 42, padX: 14 }
@@ -98,8 +99,8 @@ function DecadeDistributionChart({ decades, maxCount, reducedMotion }: DecadeCha
   const xs = decades.map(([d]) => xAt(d))
 
   const barWidths = xs.map((x, i) => {
-    const left = i === 0 ? x - VB.padX : x - xs[i - 1]
-    const right = i === xs.length - 1 ? VB.padX + plotW - x : xs[i + 1] - x
+    const left = i === 0 ? x - VB.padX : x - xs[i - 1]!
+    const right = i === xs.length - 1 ? VB.padX + plotW - x : xs[i + 1]! - x
     const slot = Math.min(left, right)
     if (decades.length === 1) return Math.min(14, plotW * 0.2)
     return Math.min(11, Math.max(3.5, slot * 0.9))
@@ -137,8 +138,8 @@ function DecadeDistributionChart({ decades, maxCount, reducedMotion }: DecadeCha
           vectorEffect="non-scaling-stroke"
         />
         {decades.map(([decade, count], index) => {
-          const x = xs[index]
-          const w = barWidths[index]
+          const x = xs[index]!
+          const w = barWidths[index]!
           const h = Math.max(3, (count / maxCount) * VB.maxBar)
           const showTick = labelAt.has(index)
           const title = `${formatDecadeLabel(decade)} — ${count} book${count === 1 ? '' : 's'}`
