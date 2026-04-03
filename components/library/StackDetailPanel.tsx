@@ -2,9 +2,10 @@
 
 import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
+import { useId } from 'react'
 import type { Book } from '@/lib/books/types'
 import type { BookColorMap } from '@/lib/library/colors'
-import { formatDecadeChartTick, formatLibraryYear } from '@/lib/library/topics'
+import { formatDecadeChartTick, formatDecadeLabel, formatLibraryYear } from '@/lib/library/topics'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 type StackDetailPanelProps = {
@@ -32,6 +33,146 @@ function getDecadeCounts(books: Book[]) {
   return [...counts.entries()].sort((a, b) => a[0] - b[0])
 }
 
+const DECADE_LABEL_MIN_X_GAP = 40 /** viewBox units — prevents tick text overlap in the sidebar */
+
+/**
+ * Prefer labels at five evenly spaced points in time, then drop any whose x is too close to a
+ * neighbor so dense modern decades do not stack illegible ticks.
+ */
+function decadeLabelIndicesFromData(
+  decades: [number, number][],
+  barCenterXs: number[],
+): Set<number> {
+  const n = decades.length
+  if (n === 0) return new Set()
+  if (n <= 5) return new Set([...Array(n).keys()])
+  const minD = decades[0][0]
+  const maxD = decades[n - 1][0]
+  const span = maxD - minD || 1
+  const raw = new Set<number>()
+  for (let t = 0; t < 5; t++) {
+    const target = minD + (t / 4) * span
+    let bestIdx = 0
+    let bestDist = Infinity
+    for (let i = 0; i < n; i++) {
+      const dist = Math.abs(decades[i][0] - target)
+      if (dist < bestDist) {
+        bestDist = dist
+        bestIdx = i
+      }
+    }
+    raw.add(bestIdx)
+  }
+  raw.add(0)
+  raw.add(n - 1)
+  const ordered = [...raw].sort((a, b) => barCenterXs[a] - barCenterXs[b])
+  const pick = new Set<number>()
+  let lastX = -Infinity
+  for (const i of ordered) {
+    const edge = i === 0 || i === n - 1
+    if (edge || barCenterXs[i] - lastX >= DECADE_LABEL_MIN_X_GAP) {
+      pick.add(i)
+      lastX = barCenterXs[i]
+    }
+  }
+  return pick
+}
+
+type DecadeChartProps = {
+  decades: [number, number][]
+  maxCount: number
+  reducedMotion: boolean
+}
+
+function DecadeDistributionChart({ decades, maxCount, reducedMotion }: DecadeChartProps) {
+  const gradientId = useId().replace(/:/g, '')
+  if (decades.length === 0) return null
+
+  const minD = decades[0][0]
+  const maxD = decades[decades.length - 1][0]
+  const span = maxD - minD || 1
+
+  const VB = { w: 320, baseline: 56, labelY: 74, maxBar: 42, padX: 14 }
+  const plotW = VB.w - VB.padX * 2
+  const xAt = (decade: number) => VB.padX + ((decade - minD) / span) * plotW
+  const xs = decades.map(([d]) => xAt(d))
+
+  const barWidths = xs.map((x, i) => {
+    const left = i === 0 ? x - VB.padX : x - xs[i - 1]
+    const right = i === xs.length - 1 ? VB.padX + plotW - x : xs[i + 1] - x
+    const slot = Math.min(left, right)
+    if (decades.length === 1) return Math.min(14, plotW * 0.2)
+    return Math.min(11, Math.max(3.5, slot * 0.9))
+  })
+
+  const labelAt = decadeLabelIndicesFromData(decades, xs)
+  const barTransition = (index: number) =>
+    reducedMotion
+      ? { duration: 0 }
+      : { duration: 0.5, delay: 0.02 * index, ease: 'easeOut' as const }
+
+  const totalBooks = decades.reduce((s, [, c]) => s + c, 0)
+
+  return (
+    <div className="rounded-[20px] border border-white/[0.04] bg-white/[0.015] px-3 py-4">
+      <svg
+        viewBox={`0 0 ${VB.w} 82`}
+        className="w-full text-text-3"
+        role="img"
+        aria-label={`Books by publication decade, ${totalBooks} books across ${decades.length} decades.`}
+      >
+        <defs>
+          <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f5a25a" />
+            <stop offset="100%" stopColor="rgba(245,162,90,0.45)" />
+          </linearGradient>
+        </defs>
+        <line
+          x1={VB.padX}
+          y1={VB.baseline}
+          x2={VB.w - VB.padX}
+          y2={VB.baseline}
+          stroke="rgba(255,255,255,0.07)"
+          strokeWidth={1}
+          vectorEffect="non-scaling-stroke"
+        />
+        {decades.map(([decade, count], index) => {
+          const x = xs[index]
+          const w = barWidths[index]
+          const h = Math.max(3, (count / maxCount) * VB.maxBar)
+          const showTick = labelAt.has(index)
+          const title = `${formatDecadeLabel(decade)} — ${count} book${count === 1 ? '' : 's'}`
+          return (
+            <g key={decade}>
+              <title>{title}</title>
+              <motion.rect
+                x={x - w / 2}
+                width={w}
+                rx={1.5}
+                fill={`url(#${gradientId})`}
+                initial={reducedMotion ? { height: h, y: VB.baseline - h } : { height: 0, y: VB.baseline }}
+                animate={{ height: h, y: VB.baseline - h }}
+                transition={barTransition(index)}
+              />
+              {showTick ? (
+                <text
+                  x={x}
+                  y={VB.labelY}
+                  textAnchor="middle"
+                  style={{ fontFamily: 'var(--font-mono)', fontSize: 9 }}
+                  fill="currentColor"
+                >
+                  {formatDecadeChartTick(decade)}
+                </text>
+              ) : null}
+            </g>
+          )
+        })}
+      </svg>
+    </div>
+  )
+}
+
 export function StackDetailPanel({
   books,
   hoveredBook,
@@ -49,10 +190,6 @@ export function StackDetailPanel({
     const chartTransition = reducedMotion
       ? { duration: 0 }
       : { duration: 0.6, ease: 'easeOut' as const }
-    const barTransition = (index: number) =>
-      reducedMotion
-        ? { duration: 0 }
-        : { duration: 0.5, delay: 0.02 * index, ease: 'easeOut' as const }
 
     return (
       <div className="space-y-8 p-8">
@@ -72,11 +209,14 @@ export function StackDetailPanel({
           </h2>
           <div className="space-y-2.5">
             {topics.map(([topic, count]) => (
-              <div key={topic} className="flex items-center gap-3">
-                <div className="min-w-0 max-w-[7.5rem] shrink-0 truncate font-satoshi text-sm text-text-2">
+              <div
+                key={topic}
+                className="grid grid-cols-[9.5rem_minmax(0,1fr)_2.25rem] items-center gap-x-3"
+              >
+                <div className="min-w-0 truncate font-satoshi text-sm text-text-2" title={topic}>
                   {topic}
                 </div>
-                <div className="h-2 flex-1 overflow-hidden rounded-full bg-white/[0.04]">
+                <div className="h-2 min-w-0 overflow-hidden rounded-full bg-white/[0.04]">
                   <motion.div
                     className="h-full rounded-full"
                     initial={{ scaleX: 0 }}
@@ -89,7 +229,7 @@ export function StackDetailPanel({
                     }}
                   />
                 </div>
-                <div className="w-8 text-right font-mono text-xs text-text-3">{count}</div>
+                <div className="text-right font-mono text-xs text-text-3 tabular-nums">{count}</div>
               </div>
             ))}
           </div>
@@ -99,24 +239,11 @@ export function StackDetailPanel({
           <h2 className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-3">
             Books by decade
           </h2>
-          <div className="rounded-[20px] border border-white/[0.04] bg-white/[0.015] px-4 py-5">
-            <div className="flex items-end gap-1.5">
-              {decades.map(([decade, count], index) => (
-                <div key={decade} className="flex flex-col items-center gap-1.5">
-                  <motion.div
-                    className="w-4 rounded-sm"
-                    style={{ background: 'linear-gradient(180deg, #f5a25a, rgba(245,162,90,0.5))' }}
-                    initial={{ height: 0 }}
-                    animate={{ height: Math.max(4, (count / maxDecadeCount) * 72) }}
-                    transition={barTransition(index)}
-                  />
-                  <span className="font-mono text-[9px] text-text-3">
-                    {formatDecadeChartTick(decade)}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <DecadeDistributionChart
+            decades={decades}
+            maxCount={maxDecadeCount}
+            reducedMotion={reducedMotion}
+          />
         </section>
       </div>
     )
