@@ -1,9 +1,10 @@
 import { getAllBooks } from '@/lib/books'
-import { loadBookColors } from '@/lib/library/colors'
+import type { BookColorMap } from '@/lib/library/colors'
 import { generateLibraryBooksGraph } from '@/lib/structured-data'
 import { siteUrl } from '@/lib/site-config'
 import { serializeJsonLd } from '@/lib/safe-json-ld'
 import { StackLibrary } from '@/components/library/StackLibrary'
+import bookColorsData from '@/public/book-colors.json'
 import coverMapData from '@/public/cover-map.json'
 
 const libraryTitle = 'Library'
@@ -15,9 +16,9 @@ export const metadata = {
   description: libraryDescription,
 }
 
-export default async function LibraryPage() {
+export default function LibraryPage() {
   const books = getAllBooks()
-  const colors = await loadBookColors()
+  const colors = bookColorsData as BookColorMap
   const coverMap = coverMapData as Record<string, string>
 
   const libraryJsonLd = generateLibraryBooksGraph(

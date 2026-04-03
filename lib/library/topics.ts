@@ -332,7 +332,7 @@ export function groupBooksByAuthor(books: Book[]): { label: string; books: Book[
   const sorted = [...books].sort((a, b) => a.author.localeCompare(b.author))
 
   for (const book of sorted) {
-    const initial = book.author.trim().charCodeAt(0)
+    const initial = book.author.trim().charAt(0).toUpperCase().charCodeAt(0)
     // A=65, E=69, I=73, M=77, Q=81, U=85
     if (initial < 69) ad.push(book)
     else if (initial < 73) eh.push(book)

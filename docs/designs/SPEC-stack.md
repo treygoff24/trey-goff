@@ -31,7 +31,7 @@ components/library/
   StackSortControls.tsx       — Sort pills (desktop chrome)
   StackBottomSheet.tsx        — Radix Dialog–based sheet (focus trap, Esc, overlay)
 lib/library/
-  colors.ts                   — loadBookColors(), getBookColor()
+  colors.ts                   — BookColorMap, getBookColor()
   sorting.ts                  — SortMode + SORT_MODES
   topics.ts                   — families, groupBooksByFamily, decade/author/genre helpers
 scripts/extract-book-colors.ts — Generates public/book-colors.json from cover JPGs
@@ -42,7 +42,7 @@ Mobile does **not** use a separate “barcode-only” component; stacks use the 
 ## Build pipeline
 
 1. **`pnpm prebuild`** runs **`tsx scripts/extract-book-colors.ts`** after cover resolution so **`public/book-colors.json`** stays aligned with **`public/cover-map.json`** and JPGs.
-2. **`loadBookColors()`** reads `book-colors.json` at request/build time; missing file or parse errors → **empty map** and **fallback hex** per book.
+2. `app/library/page.tsx` imports **`public/book-colors.json`** statically, the same way it imports `cover-map.json`, so the route stays prerenderable while each stripe still gets a generated dominant color with a fallback hex per book.
 
 ## Animation & performance
 
