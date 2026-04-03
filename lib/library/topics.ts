@@ -283,6 +283,25 @@ export function groupBooksByFamily(books: Book[]): [TopicFamily, Book[]][] {
     .map((g) => [g.family, g.books])
 }
 
+/** Display year for library UI (negative = BCE). */
+export function formatLibraryYear(year: number): string {
+  if (year < 0) return `${Math.abs(year)} BCE`
+  return String(year)
+}
+
+/** Display label for a decade bucket (negative = BCE). */
+export function formatDecadeLabel(decade: number): string {
+  if (decade < 0) return `${Math.abs(decade)}s BCE`
+  return `${decade}s`
+}
+
+/** Compact x-axis style for decade charts (e.g. 1990 → "90s"; BCE → "700 BCE"). */
+export function formatDecadeChartTick(decade: number): string {
+  if (decade < 0) return `${Math.abs(decade)} BCE`
+  const s = String(decade)
+  return `${s.slice(-2)}s`
+}
+
 /**
  * Group books by year into decade buckets.
  */
@@ -296,7 +315,7 @@ export function groupBooksByDecade(books: Book[]): { label: string; books: Book[
   }
   return [...groups.entries()]
     .sort((a, b) => a[0] - b[0])
-    .map(([decade, books]) => ({ label: `${decade}s`, books }))
+    .map(([decade, books]) => ({ label: formatDecadeLabel(decade), books }))
 }
 
 /**

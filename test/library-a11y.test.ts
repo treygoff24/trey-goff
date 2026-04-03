@@ -37,7 +37,11 @@ test('StackLibrary component has accessible book stripes', () => {
     'native button should not duplicate role="button"',
   )
   assert.match(stripe, /tabIndex=\{0\}/, 'each stripe should be focusable')
-  assert.match(stripe, /aria-label=\{book\.title\}/, 'each stripe should have an aria-label')
+  assert.match(
+    stripe,
+    /aria-label=\{hoverTitle\}/,
+    'each stripe should have an aria-label with title and author',
+  )
 })
 
 test('Stack bottom sheet uses an accessible dialog primitive', () => {

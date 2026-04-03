@@ -1,6 +1,6 @@
 import { getAllBooks } from '@/lib/books'
 import { loadBookColors } from '@/lib/library/colors'
-import { generateBookSchema } from '@/lib/structured-data'
+import { generateLibraryBooksGraph } from '@/lib/structured-data'
 import { siteUrl } from '@/lib/site-config'
 import { serializeJsonLd } from '@/lib/safe-json-ld'
 import { StackLibrary } from '@/components/library/StackLibrary'
@@ -20,26 +20,25 @@ export default async function LibraryPage() {
   const colors = await loadBookColors()
   const coverMap = coverMapData as Record<string, string>
 
+  const libraryJsonLd = generateLibraryBooksGraph(
+    books.map((book) => ({
+      title: book.title,
+      author: book.author,
+      isbn13: book.isbn13,
+      url: `${siteUrl}/library#${book.id}`,
+      coverUrl: book.coverUrl,
+      year: book.year,
+    })),
+  )
+
   return (
     <>
-      {books.map((book) => (
-        <script
-          key={book.id}
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: serializeJsonLd(
-              generateBookSchema({
-                title: book.title,
-                author: book.author,
-                isbn13: book.isbn13,
-                url: `${siteUrl}/library#${book.id}`,
-                coverUrl: book.coverUrl,
-                year: book.year,
-              }),
-            ),
-          }}
-        />
-      ))}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: serializeJsonLd(libraryJsonLd),
+        }}
+      />
 
       <StackLibrary
         books={books}

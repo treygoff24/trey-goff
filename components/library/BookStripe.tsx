@@ -4,7 +4,6 @@ import { memo } from 'react'
 import { motion } from 'framer-motion'
 import clsx from 'clsx'
 import type { Book } from '@/lib/books/types'
-import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 type BookStripeProps = {
   book: Book
@@ -14,6 +13,7 @@ type BookStripeProps = {
   isMultiTopic: boolean
   hoverDistance: number | null
   compact?: boolean
+  reducedMotion: boolean
   onHover: (id: string | null) => void
   onSelect: (id: string) => void
 }
@@ -22,12 +22,21 @@ const NOISE_TEXTURE =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='26' viewBox='0 0 120 26'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.05' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='26' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")"
 
 function textColorForBg(hex: string): string {
-  const value = hex.startsWith('#') ? hex : '#667085'
-  const r = parseInt(value.slice(1, 3), 16)
-  const g = parseInt(value.slice(3, 5), 16)
-  const b = parseInt(value.slice(5, 7), 16)
+  const raw = hex.startsWith('#') ? hex.slice(1) : '667085'
+  const normalized =
+    raw.length === 3
+      ? raw
+          .split('')
+          .map((c) => c + c)
+          .join('')
+      : raw
+  if (normalized.length !== 6) return 'rgba(255,255,255,0.94)'
+  const r = parseInt(normalized.slice(0, 2), 16)
+  const g = parseInt(normalized.slice(2, 4), 16)
+  const b = parseInt(normalized.slice(4, 6), 16)
+  if ([r, g, b].some((n) => Number.isNaN(n))) return 'rgba(255,255,255,0.94)'
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
-  return luminance > 0.56 ? 'rgba(6,8,12,0.9)' : 'rgba(255,255,255,0.94)'
+  return luminance > 0.52 ? 'rgba(6,8,12,0.92)' : 'rgba(255,255,255,0.94)'
 }
 
 export const BookStripe = memo(function BookStripe({
@@ -38,10 +47,10 @@ export const BookStripe = memo(function BookStripe({
   isMultiTopic,
   hoverDistance,
   compact = false,
+  reducedMotion,
   onHover,
   onSelect,
 }: BookStripeProps) {
-  const reducedMotion = useReducedMotion()
   const active = isHovered || isSelected
   const isAdjacent = hoverDistance === 1
   const isNearby = hoverDistance === 2
@@ -50,13 +59,14 @@ export const BookStripe = memo(function BookStripe({
   const springTransition = { type: 'spring' as const, stiffness: 320, damping: 28, mass: 0.7 }
   const instantTransition = { duration: 0 }
 
+  const hoverTitle = `${book.title} — ${book.author}`
+
   return (
     <motion.button
       type="button"
       tabIndex={0}
-      layout={reducedMotion ? false : 'position'}
-      layoutId={reducedMotion ? undefined : book.id}
-      aria-label={book.title}
+      title={hoverTitle}
+      aria-label={hoverTitle}
       onMouseEnter={() => onHover(book.id)}
       onMouseLeave={() => onHover(null)}
       onFocus={() => onHover(book.id)}
@@ -80,8 +90,8 @@ export const BookStripe = memo(function BookStripe({
       }}
       transition={reducedMotion ? instantTransition : springTransition}
       className={clsx(
-        'group relative flex w-full items-center overflow-hidden rounded-[7px] border text-left outline-none will-change-transform',
-        compact ? 'h-[24px]' : 'h-[26px]',
+        'group relative flex w-full touch-manipulation items-center overflow-hidden rounded-[7px] border text-left outline-none',
+        compact ? 'h-[36px]' : 'h-[26px]',
         active ? 'border-white/22' : 'border-white/6',
         'focus-visible:ring-2 focus-visible:ring-warm focus-visible:ring-offset-2 focus-visible:ring-offset-bg-0',
       )}
@@ -114,8 +124,8 @@ export const BookStripe = memo(function BookStripe({
 
       <span
         className={clsx(
-          'relative z-[1] min-w-0 truncate pl-3 pr-2 font-mono leading-none tracking-[0.01em]',
-          compact ? 'text-[10px]' : 'text-[11px]',
+          'relative z-[1] min-w-0 truncate font-mono text-[11px] leading-none tracking-[0.01em]',
+          compact ? 'flex-1 pl-2.5 pr-1' : 'pl-3 pr-2',
         )}
         style={{
           color: textColor,
@@ -128,8 +138,10 @@ export const BookStripe = memo(function BookStripe({
 
       <span
         className={clsx(
-          'relative z-[1] ml-auto shrink-0 truncate pl-2 pr-3 font-mono leading-none',
-          compact ? 'max-w-[42%] text-[9px]' : 'max-w-[46%] text-[10px]',
+          'relative z-[1] shrink-0 truncate pl-1 font-mono leading-none',
+          compact
+            ? 'max-w-[min(48%,7.5rem)] text-right text-[10px] pr-2.5'
+            : 'ml-auto max-w-[46%] pr-3 pl-2 text-[10px]',
         )}
         style={{
           color: textColor,

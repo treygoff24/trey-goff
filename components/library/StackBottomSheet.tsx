@@ -3,6 +3,7 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import Image from 'next/image'
 import type { Book } from '@/lib/books/types'
+import { formatLibraryYear } from '@/lib/library/topics'
 
 type StackBottomSheetProps = {
   book: Book | null
@@ -17,13 +18,13 @@ export function StackBottomSheet({ book, coverMap, onClose }: StackBottomSheetPr
   return (
     <DialogPrimitive.Root open={open} onOpenChange={(nextOpen) => !nextOpen && onClose()}>
       <DialogPrimitive.Portal>
-        <DialogPrimitive.Overlay className="fixed inset-0 z-40 bg-bg-0/70 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-        <DialogPrimitive.Content className="fixed inset-x-0 bottom-0 z-50 flex max-h-[80vh] flex-col overflow-hidden rounded-t-3xl border-t border-border-1 bg-bg-1 shadow-2xl shadow-black/40 outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom duration-300">
+        <DialogPrimitive.Overlay className="fixed inset-0 z-40 touch-none bg-bg-0/70 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+        <DialogPrimitive.Content className="fixed inset-x-0 bottom-0 z-50 flex max-h-[80vh] flex-col overflow-hidden rounded-t-3xl border-t border-border-1 bg-bg-1 pb-[env(safe-area-inset-bottom,0px)] shadow-2xl shadow-black/40 outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom overscroll-contain duration-300">
           {book ? (
             <>
               <DialogPrimitive.Title className="sr-only">{book.title}</DialogPrimitive.Title>
               <DialogPrimitive.Description className="sr-only">
-                {book.author}, {book.year}
+                {book.author}, {formatLibraryYear(book.year)}
                 {book.genre ? `. ${book.genre}` : ''}
               </DialogPrimitive.Description>
 
@@ -33,12 +34,12 @@ export function StackBottomSheet({ book, coverMap, onClose }: StackBottomSheetPr
                   <span aria-hidden className="h-1.5 w-12 rounded-full bg-surface-2" />
                 </DialogPrimitive.Close>
 
-                <div className="overflow-y-auto px-6 pb-8">
+                <div className="overflow-y-auto overscroll-contain px-6 pb-8">
                   <div className="mx-auto flex max-w-lg flex-col items-center text-center">
                     {coverSrc ? (
                       <Image
                         src={coverSrc}
-                        alt=""
+                        alt={`Cover: ${book.title}`}
                         width={224}
                         height={336}
                         className="mb-5 h-56 w-auto rounded-2xl object-cover shadow-2xl shadow-black/40"
@@ -54,7 +55,9 @@ export function StackBottomSheet({ book, coverMap, onClose }: StackBottomSheetPr
 
                     <h2 className="font-newsreader text-xl text-text-1">{book.title}</h2>
                     <p className="mt-1 font-satoshi text-base text-text-2">{book.author}</p>
-                    <p className="mt-1 font-mono text-sm text-text-3">{book.year}</p>
+                    <p className="mt-1 font-mono text-sm text-text-3">
+                      {formatLibraryYear(book.year)}
+                    </p>
 
                     <div className="mt-5 flex flex-wrap justify-center gap-2">
                       {(book.topics ?? []).map((topic) => (

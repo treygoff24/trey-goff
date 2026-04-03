@@ -1,7 +1,6 @@
 'use client'
 
 import { useCallback, useMemo, useState } from 'react'
-import { LayoutGroup } from 'framer-motion'
 import clsx from 'clsx'
 import type { Book } from '@/lib/books/types'
 import type { BookColorMap } from '@/lib/library/colors'
@@ -18,6 +17,7 @@ import { BookStripe } from '@/components/library/BookStripe'
 import { StackBottomSheet } from '@/components/library/StackBottomSheet'
 import { StackDetailPanel } from '@/components/library/StackDetailPanel'
 import { StackSortControls } from '@/components/library/StackSortControls'
+import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 type StackLibraryProps = {
   books: Book[]
@@ -83,6 +83,8 @@ function MobileView({
   coverMap,
   title,
   stackCount,
+  bookById,
+  reducedMotion,
 }: {
   books: Book[]
   colors: BookColorMap
@@ -94,6 +96,8 @@ function MobileView({
   coverMap: Record<string, string>
   title: string
   stackCount: number
+  bookById: Map<string, Book>
+  reducedMotion: boolean
 }) {
   const groups = useMemo(() => buildGroups(books, sortMode), [books, sortMode])
 
@@ -113,17 +117,22 @@ function MobileView({
         </div>
       </div>
 
-      <div className="mt-4 overflow-x-auto pb-1">
-        <div className="flex min-w-max gap-2 whitespace-nowrap">
+      <div className="mt-4 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch]">
+        <div
+          className="flex min-w-max gap-2 whitespace-nowrap"
+          role="toolbar"
+          aria-label="Sort book stacks"
+        >
           {SORT_MODES.map((mode) => {
             const active = mode.key === sortMode
             return (
               <button
                 key={mode.key}
                 type="button"
+                aria-pressed={active}
                 onClick={() => onSortChange(mode.key)}
                 className={clsx(
-                  'rounded-full px-3 py-1.5 font-mono text-xs uppercase tracking-wider transition-colors',
+                  'touch-manipulation rounded-full px-3 py-1.5 font-mono text-xs uppercase tracking-wider transition-colors',
                   active ? 'bg-warm text-bg-0' : 'bg-surface-1 text-text-2 hover:bg-surface-2',
                 )}
               >
@@ -139,26 +148,25 @@ function MobileView({
         <div className="pointer-events-none absolute inset-x-5 bottom-3 h-px bg-gradient-to-r from-transparent via-[#f5a25a]/25 to-transparent" />
 
         <div className="stack-scrollbar overflow-x-auto overscroll-x-contain pb-4 pr-2 touch-pan-x">
-          <LayoutGroup id="stack-library-mobile">
-            <div className="flex min-w-max items-start gap-4 px-1 pt-1">
-              {groups.map((group) => (
-                <TopicStack
-                  key={group.id}
-                  group={group}
-                  colors={colors}
-                  hoveredBookId={null}
-                  selectedBookId={selectedBook?.id ?? null}
-                  onHover={() => {}}
-                  onSelect={(id) => {
-                    const book = group.books.find((entry) => entry.id === id)
-                    if (book) onMobileSelect(book)
-                  }}
-                  widthClass="w-[182px]"
-                  compact
-                />
-              ))}
-            </div>
-          </LayoutGroup>
+          <div className="flex min-w-max items-start gap-4 px-1 pt-1">
+            {groups.map((group) => (
+              <TopicStack
+                key={group.id}
+                group={group}
+                colors={colors}
+                hoveredBookId={null}
+                selectedBookId={selectedBook?.id ?? null}
+                reducedMotion={reducedMotion}
+                onHover={() => {}}
+                onSelect={(id) => {
+                  const book = bookById.get(id)
+                  if (book) onMobileSelect(book)
+                }}
+                widthClass="w-[222px]"
+                compact
+              />
+            ))}
+          </div>
         </div>
       </div>
 
@@ -168,20 +176,17 @@ function MobileView({
 }
 
 export function StackLibrary({ books, colors, coverMap, title, description }: StackLibraryProps) {
+  const reducedMotion = useReducedMotion()
   const [sortMode, setSortMode] = useState<SortMode>('topic')
   const [hoveredBookId, setHoveredBookId] = useState<string | null>(null)
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null)
   const [mobileSelectedBook, setMobileSelectedBook] = useState<Book | null>(null)
 
+  const bookById = useMemo(() => new Map<string, Book>(books.map((b) => [b.id, b])), [books])
+
   const groups = useMemo(() => buildGroups(books, sortMode), [books, sortMode])
-  const hoveredBook = useMemo(
-    () => books.find((b) => b.id === hoveredBookId) ?? null,
-    [books, hoveredBookId],
-  )
-  const selectedBook = useMemo(
-    () => books.find((b) => b.id === selectedBookId) ?? null,
-    [books, selectedBookId],
-  )
+  const hoveredBook = hoveredBookId ? (bookById.get(hoveredBookId) ?? null) : null
+  const selectedBook = selectedBookId ? (bookById.get(selectedBookId) ?? null) : null
 
   const handleSelect = useCallback((id: string) => {
     setSelectedBookId((current) => (current === id ? null : id))
@@ -221,6 +226,8 @@ export function StackLibrary({ books, colors, coverMap, title, description }: St
         coverMap={coverMap}
         title={title}
         stackCount={groups.length}
+        bookById={bookById}
+        reducedMotion={reducedMotion}
       />
 
       <div className="mx-auto hidden max-w-[2200px] px-6 py-8 md:block">
@@ -258,23 +265,22 @@ export function StackLibrary({ books, colors, coverMap, title, description }: St
                 Scroll →
               </div>
 
-              <div className="stack-scrollbar max-h-[calc(100vh-230px)] overflow-x-auto overflow-y-auto overscroll-x-contain overscroll-y-contain px-6 pb-8 pt-14 touch-pan-x">
-                <LayoutGroup id="stack-library-desktop">
-                  <div className="flex min-w-max items-start gap-5 pr-4 xl:gap-6">
-                    {groups.map((group) => (
-                      <TopicStack
-                        key={group.id}
-                        group={group}
-                        colors={colors}
-                        hoveredBookId={hoveredBookId}
-                        selectedBookId={selectedBookId}
-                        onHover={setHoveredBookId}
-                        onSelect={handleSelect}
-                        widthClass="w-[240px] xl:w-[260px]"
-                      />
-                    ))}
-                  </div>
-                </LayoutGroup>
+              <div className="stack-scrollbar max-h-[calc(100vh-230px)] overflow-x-auto overflow-y-auto overscroll-x-contain overscroll-y-contain px-6 pb-8 pt-16 touch-pan-x">
+                <div className="flex min-w-max items-start gap-5 pr-4 xl:gap-6">
+                  {groups.map((group) => (
+                    <TopicStack
+                      key={group.id}
+                      group={group}
+                      colors={colors}
+                      hoveredBookId={hoveredBookId}
+                      selectedBookId={selectedBookId}
+                      reducedMotion={reducedMotion}
+                      onHover={setHoveredBookId}
+                      onSelect={handleSelect}
+                      widthClass="w-[240px] xl:w-[260px]"
+                    />
+                  ))}
+                </div>
               </div>
             </div>
           </section>
@@ -302,6 +308,7 @@ function TopicStack({
   colors,
   hoveredBookId,
   selectedBookId,
+  reducedMotion,
   onHover,
   onSelect,
   widthClass,
@@ -311,6 +318,7 @@ function TopicStack({
   colors: BookColorMap
   hoveredBookId: string | null
   selectedBookId: string | null
+  reducedMotion: boolean
   onHover: (id: string | null) => void
   onSelect: (id: string) => void
   widthClass: string
@@ -322,21 +330,29 @@ function TopicStack({
 
   return (
     <section className={clsx('relative shrink-0', widthClass)}>
-      <div className="mb-3 flex items-baseline gap-3">
+      <div
+        className={clsx(
+          'mb-3 flex items-start gap-3',
+          compact ? 'min-h-[3.25rem]' : 'min-h-[3.5rem]',
+        )}
+      >
         <div
-          className="h-5 w-[3px] shrink-0 rounded-full shadow-[0_0_18px_currentColor]"
+          className={clsx(
+            'mt-1 w-[3px] shrink-0 rounded-full shadow-[0_0_18px_currentColor]',
+            compact ? 'h-4' : 'h-6',
+          )}
           style={{ backgroundColor: group.color, color: group.color }}
         />
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <h2
             className={clsx(
-              'truncate font-newsreader italic text-text-1',
+              'line-clamp-2 font-newsreader italic leading-snug text-text-1',
               compact ? 'text-sm' : 'text-lg',
             )}
           >
             {group.label}
           </h2>
-          <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-text-3">
+          <span className="mt-0.5 block font-mono text-[10px] uppercase tracking-[0.16em] text-text-3">
             {group.books.length} books
           </span>
         </div>
@@ -344,7 +360,7 @@ function TopicStack({
 
       <div className="relative rounded-[22px] border border-white/[0.05] bg-white/[0.02] p-2 shadow-[0_18px_60px_-44px_rgba(0,0,0,0.9)]">
         <div className="pointer-events-none absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
-        <div className="space-y-[2px]">
+        <div className={compact ? 'space-y-1' : 'space-y-[2px]'}>
           {group.books.map((book, index) => (
             <BookStripe
               key={book.id}
@@ -355,6 +371,7 @@ function TopicStack({
               isMultiTopic={(book.topics?.length ?? 0) > 1}
               hoverDistance={hoveredIndex >= 0 ? Math.abs(index - hoveredIndex) : null}
               compact={compact}
+              reducedMotion={reducedMotion}
               onHover={onHover}
               onSelect={onSelect}
             />

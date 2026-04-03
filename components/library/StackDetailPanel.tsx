@@ -4,6 +4,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
 import type { Book } from '@/lib/books/types'
 import type { BookColorMap } from '@/lib/library/colors'
+import { formatDecadeChartTick, formatLibraryYear } from '@/lib/library/topics'
+import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 type StackDetailPanelProps = {
   books: Book[]
@@ -37,12 +39,20 @@ export function StackDetailPanel({
   coverMap,
   colors,
 }: StackDetailPanelProps) {
+  const reducedMotion = useReducedMotion()
   const activeBook = selectedBook ?? hoveredBook
 
   if (!activeBook) {
     const topics = getTopicCounts(books)
     const decades = getDecadeCounts(books)
     const maxDecadeCount = Math.max(...decades.map(([, count]) => count), 1)
+    const chartTransition = reducedMotion
+      ? { duration: 0 }
+      : { duration: 0.6, ease: 'easeOut' as const }
+    const barTransition = (index: number) =>
+      reducedMotion
+        ? { duration: 0 }
+        : { duration: 0.5, delay: 0.02 * index, ease: 'easeOut' as const }
 
     return (
       <div className="space-y-8 p-8">
@@ -63,13 +73,15 @@ export function StackDetailPanel({
           <div className="space-y-2.5">
             {topics.map(([topic, count]) => (
               <div key={topic} className="flex items-center gap-3">
-                <div className="w-28 shrink-0 font-satoshi text-sm text-text-2">{topic}</div>
+                <div className="min-w-0 max-w-[7.5rem] shrink-0 truncate font-satoshi text-sm text-text-2">
+                  {topic}
+                </div>
                 <div className="h-2 flex-1 overflow-hidden rounded-full bg-white/[0.04]">
                   <motion.div
                     className="h-full rounded-full"
                     initial={{ scaleX: 0 }}
                     animate={{ scaleX: 1 }}
-                    transition={{ duration: 0.6, ease: 'easeOut' }}
+                    transition={chartTransition}
                     style={{
                       background: 'linear-gradient(90deg, #3ed6c8, rgba(62,214,200,0.6))',
                       width: `${(count / (topics[0]?.[1] ?? 1)) * 100}%`,
@@ -96,10 +108,10 @@ export function StackDetailPanel({
                     style={{ background: 'linear-gradient(180deg, #f5a25a, rgba(245,162,90,0.5))' }}
                     initial={{ height: 0 }}
                     animate={{ height: Math.max(4, (count / maxDecadeCount) * 72) }}
-                    transition={{ duration: 0.5, delay: 0.02 * index, ease: 'easeOut' }}
+                    transition={barTransition(index)}
                   />
                   <span className="font-mono text-[9px] text-text-3">
-                    {String(decade).slice(2)}s
+                    {formatDecadeChartTick(decade)}
                   </span>
                 </div>
               ))}
@@ -122,7 +134,7 @@ export function StackDetailPanel({
           initial={{ opacity: 0, y: 10, scale: 0.985 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -10, scale: 0.985 }}
-          transition={{ duration: 0.22, ease: 'easeOut' }}
+          transition={{ duration: reducedMotion ? 0 : 0.22, ease: 'easeOut' }}
           className="space-y-6"
         >
           <div className="flex items-center justify-between gap-3">
@@ -164,7 +176,7 @@ export function StackDetailPanel({
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.18em] text-text-3">
-                  <span>{activeBook.year}</span>
+                  <span>{formatLibraryYear(activeBook.year)}</span>
                   {activeBook.genre ? <span>{activeBook.genre}</span> : null}
                 </div>
 
