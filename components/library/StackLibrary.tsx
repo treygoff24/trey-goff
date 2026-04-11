@@ -214,7 +214,7 @@ export function StackLibrary({ books, colors, coverMap, title, description }: St
   }, [books])
 
   return (
-    <div className="min-h-screen bg-bg-0 text-text-1">
+    <div className="min-h-screen bg-transparent text-text-1">
       <MobileView
         books={books}
         colors={colors}

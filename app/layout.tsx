@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { satoshi, newsreader, monaspace } from '@/lib/fonts'
 import { TopNav } from '@/components/layout/TopNav'
 import { Footer } from '@/components/layout/Footer'
+import { InnerPageBackground } from '@/components/layout/InnerPageBackground'
 import { SkipLink } from '@/components/layout/SkipLink'
 import { CommandPaletteProvider, CommandPalette } from '@/components/command'
 import { EasterEggs } from '@/components/easter-eggs/EasterEggs'
@@ -74,15 +75,18 @@ export default function RootLayout({
           }}
         />
         <CommandPaletteProvider>
-          <SkipLink />
-          <TopNav />
-          <main id="main-content" className="flex-1 outline-none" tabIndex={-1}>
-            {children}
-          </main>
-          <Footer />
-          <CommandPalette />
-          <EasterEggs />
-          <SpeedInsights />
+          <InnerPageBackground />
+          <div className="relative z-10 flex min-h-screen flex-1 flex-col">
+            <SkipLink />
+            <TopNav />
+            <main id="main-content" className="flex-1 outline-none" tabIndex={-1}>
+              {children}
+            </main>
+            <Footer />
+            <CommandPalette />
+            <EasterEggs />
+            <SpeedInsights />
+          </div>
         </CommandPaletteProvider>
       </body>
     </html>
