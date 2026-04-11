@@ -5,7 +5,7 @@ import { SignalGrid } from '@/components/home/SignalGrid'
 import { FeaturedProject } from '@/components/home/FeaturedProject'
 import { FeaturedWriting } from '@/components/home/FeaturedWriting'
 import { CTASection } from '@/components/home/CTASection'
-import { StarfieldClient } from '@/components/home/StarfieldClient'
+import { StardustVeilClient } from '@/components/layout/StardustVeilClient'
 
 export const metadata: Metadata = {
   title: 'Trey Goff — Writer, Builder, Explorer',
@@ -16,6 +16,23 @@ export const metadata: Metadata = {
     description: 'Personal site of Trey Goff. Essays on governance, technology, and building.',
     type: 'website',
   },
+}
+
+function HomeBackdrop() {
+  return (
+    <div aria-hidden className="pointer-events-none fixed inset-0 -z-20 overflow-hidden bg-bg-0">
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: [
+            'radial-gradient(1200px 600px at 15% -10%, rgba(245, 162, 90, 0.12), transparent 60%)',
+            'radial-gradient(900px 500px at 85% 10%, rgba(62, 214, 200, 0.1), transparent 55%)',
+            'radial-gradient(700px 400px at 50% 80%, rgba(255, 255, 255, 0.06), transparent 60%)',
+          ].join(', '),
+        }}
+      />
+    </div>
+  )
 }
 
 export default function HomePage() {
@@ -42,8 +59,8 @@ export default function HomePage() {
 
   return (
     <>
-      <StarfieldClient />
-
+      <HomeBackdrop />
+      <StardustVeilClient />
       <div className="relative flex min-h-[calc(100vh-4rem)] flex-col">
         <div className="mx-auto w-full max-w-5xl px-4 py-16 sm:py-24 md:py-28">
           <HeroSection />

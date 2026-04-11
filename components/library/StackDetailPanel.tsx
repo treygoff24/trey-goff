@@ -151,7 +151,9 @@ function DecadeDistributionChart({ decades, maxCount, reducedMotion }: DecadeCha
                 width={w}
                 rx={1.5}
                 fill={`url(#${gradientId})`}
-                initial={reducedMotion ? { height: h, y: VB.baseline - h } : { height: 0, y: VB.baseline }}
+                initial={
+                  reducedMotion ? { height: h, y: VB.baseline - h } : { height: 0, y: VB.baseline }
+                }
                 animate={{ height: h, y: VB.baseline - h }}
                 transition={barTransition(index)}
               />

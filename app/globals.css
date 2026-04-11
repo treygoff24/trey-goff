@@ -64,12 +64,7 @@ html {
 
 body {
   font-family: var(--font-satoshi);
-  background-color: var(--color-bg-1);
-  background-image:
-    radial-gradient(1200px 600px at 15% -10%, rgba(245, 162, 90, 0.12), transparent 60%),
-    radial-gradient(900px 500px at 85% 10%, rgba(62, 214, 200, 0.1), transparent 55%),
-    radial-gradient(700px 400px at 50% 80%, rgba(255, 255, 255, 0.06), transparent 60%);
-  background-attachment: fixed;
+  background-color: var(--color-bg-0);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
