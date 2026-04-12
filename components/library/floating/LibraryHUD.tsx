@@ -274,7 +274,7 @@ export function LibraryHUD({ books }: LibraryHUDProps) {
     >
       <div className="glass-panel rounded-[1.5rem] p-3 sm:p-4">
         {showGuide && (
-          <div className="mb-3 rounded-[1.35rem] border border-white/10 bg-white/[0.03] p-4">
+          <div className="mb-3 rounded-[1.35rem] border border-white/10 bg-surface-1 p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="max-w-sm">
                 <p className="eyebrow text-text-3">Library</p>
@@ -289,7 +289,7 @@ export function LibraryHUD({ books }: LibraryHUDProps) {
               </div>
               <button
                 onClick={dismissGuide}
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border-1 bg-white/[0.03] text-text-3 transition hover:border-warm/40 hover:text-text-1"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border-1 bg-surface-1 text-text-3 transition hover:border-warm/40 hover:text-text-1"
                 aria-label="Dismiss library guide"
               >
                 <X size={16} />
@@ -298,31 +298,31 @@ export function LibraryHUD({ books }: LibraryHUDProps) {
 
             {isMobile ? (
               <div className="mt-4 flex flex-wrap gap-2">
-                <span className="rounded-full border border-white/8 bg-white/[0.02] px-3 py-2 text-[11px] uppercase tracking-[0.18em] text-text-2">
+                <span className="rounded-full border border-white/8 bg-surface-1 px-3 py-2 text-[11px] uppercase tracking-[0.18em] text-text-2">
                   Search first
                 </span>
-                <span className="rounded-full border border-white/8 bg-white/[0.02] px-3 py-2 text-[11px] uppercase tracking-[0.18em] text-text-2">
+                <span className="rounded-full border border-white/8 bg-surface-1 px-3 py-2 text-[11px] uppercase tracking-[0.18em] text-text-2">
                   Tap to zoom
                 </span>
-                <span className="rounded-full border border-white/8 bg-white/[0.02] px-3 py-2 text-[11px] uppercase tracking-[0.18em] text-text-2">
+                <span className="rounded-full border border-white/8 bg-surface-1 px-3 py-2 text-[11px] uppercase tracking-[0.18em] text-text-2">
                   Escape to step back
                 </span>
               </div>
             ) : (
               <div className="mt-4 grid grid-cols-3 gap-2">
-                <div className="rounded-2xl border border-white/8 bg-white/[0.02] px-3 py-3">
+                <div className="rounded-2xl border border-white/8 bg-surface-1 px-3 py-3">
                   <p className="text-[11px] uppercase tracking-[0.2em] text-text-3">Search</p>
                   <p className="mt-2 text-sm text-text-2">
                     Find a title, author, or thread instantly.
                   </p>
                 </div>
-                <div className="rounded-2xl border border-white/8 bg-white/[0.02] px-3 py-3">
+                <div className="rounded-2xl border border-white/8 bg-surface-1 px-3 py-3">
                   <p className="text-[11px] uppercase tracking-[0.2em] text-text-3">Zoom</p>
                   <p className="mt-2 text-sm text-text-2">
                     Click a constellation to move from cosmos to shelf.
                   </p>
                 </div>
-                <div className="rounded-2xl border border-white/8 bg-white/[0.02] px-3 py-3">
+                <div className="rounded-2xl border border-white/8 bg-surface-1 px-3 py-3">
                   <p className="text-[11px] uppercase tracking-[0.2em] text-text-3">Reset</p>
                   <p className="mt-2 text-sm text-text-2">
                     Use Escape or breadcrumbs to step back out.
@@ -380,7 +380,7 @@ export function LibraryHUD({ books }: LibraryHUDProps) {
 
         {/* Filter status and clear button */}
         {isFiltered && (
-          <div className="mt-3 flex flex-col gap-2 rounded-2xl border border-white/8 bg-white/[0.03] px-3 py-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-3 flex flex-col gap-2 rounded-2xl border border-white/8 bg-surface-1 px-3 py-3 sm:flex-row sm:items-center sm:justify-between">
             <span className="text-xs text-text-2">
               {filteredCount === 0 ? (
                 <span className="text-red-400">No books match the current filters.</span>

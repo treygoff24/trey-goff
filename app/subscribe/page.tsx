@@ -44,7 +44,7 @@ export default function SubscribePage() {
         </div>
 
         {/* Form card */}
-        <div className="relative overflow-hidden rounded-xl border border-border-1 bg-surface-1/50 p-8 backdrop-blur-sm">
+        <div className="relative overflow-hidden rounded-xl border border-border-1 bg-surface-1/50 p-8 backdrop-blur-md">
           {/* Corner accent */}
           <div className="absolute right-0 top-0 h-24 w-24 bg-gradient-to-bl from-warm/10 to-transparent" />
           <div className="absolute bottom-0 left-0 h-16 w-16 bg-gradient-to-tr from-accent/10 to-transparent" />
@@ -61,7 +61,7 @@ export default function SubscribePage() {
           </h2>
 
           <div className="grid gap-4 sm:grid-cols-3">
-            <div className="group rounded-lg border border-border-1 bg-surface-1/30 p-4 transition-colors hover:border-warm/30 hover:bg-surface-1/50">
+            <div className="group rounded-lg border border-border-1 bg-surface-1/30 backdrop-blur-md p-4 transition-colors hover:border-warm/30 hover:bg-surface-1/50">
               <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-warm/10 text-warm">
                 <svg
                   className="h-4 w-4"
@@ -85,7 +85,7 @@ export default function SubscribePage() {
               </p>
             </div>
 
-            <div className="group rounded-lg border border-border-1 bg-surface-1/30 p-4 transition-colors hover:border-accent/30 hover:bg-surface-1/50">
+            <div className="group rounded-lg border border-border-1 bg-surface-1/30 backdrop-blur-md p-4 transition-colors hover:border-accent/30 hover:bg-surface-1/50">
               <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 text-accent">
                 <svg
                   className="h-4 w-4"
@@ -107,7 +107,7 @@ export default function SubscribePage() {
               </p>
             </div>
 
-            <div className="group rounded-lg border border-border-1 bg-surface-1/30 p-4 transition-colors hover:border-success/30 hover:bg-surface-1/50">
+            <div className="group rounded-lg border border-border-1 bg-surface-1/30 backdrop-blur-md p-4 transition-colors hover:border-success/30 hover:bg-surface-1/50">
               <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-success/10 text-success">
                 <svg
                   className="h-4 w-4"

@@ -43,7 +43,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
   return (
     <article
       id={project.slug}
-      className="card-interactive group rounded-2xl border border-border-1 bg-surface-1 p-6 transition hover:border-warm/20 sm:p-7"
+      className="card-interactive group rounded-2xl border border-border-1 bg-surface-1 backdrop-blur-md p-6 transition hover:border-warm/20 sm:p-7"
     >
       <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
         <div className="space-y-3">

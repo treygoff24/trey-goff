@@ -26,7 +26,7 @@ export default function AboutPage() {
           </p>
         </header>
 
-        <section className="rounded-2xl border border-border-1 bg-surface-1 p-8">
+        <section className="rounded-2xl border border-border-1 bg-surface-1 backdrop-blur-md p-8">
           <p className="text-xs uppercase tracking-[0.3em] text-text-3">The Thesis</p>
 
           <div className="mt-8 space-y-8">
@@ -83,7 +83,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="mt-16">
+        <section className="mt-16 rounded-2xl border border-border-1 bg-surface-1 backdrop-blur-md p-8">
           <Prose>
             <h2>Bio</h2>
             <p>

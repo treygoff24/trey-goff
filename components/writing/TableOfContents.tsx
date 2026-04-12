@@ -124,7 +124,7 @@ export function MobileTableOfContents({ contentSelector, sourceId }: TableOfCont
     <div className="mb-8 lg:hidden">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between rounded-lg border border-border-1 bg-surface-1 px-4 py-3"
+        className="flex w-full items-center justify-between rounded-lg border border-border-1 bg-surface-1 backdrop-blur-md px-4 py-3"
         aria-expanded={isOpen}
       >
         <span className="font-satoshi text-sm font-medium text-text-2">On this page</span>
@@ -139,7 +139,7 @@ export function MobileTableOfContents({ contentSelector, sourceId }: TableOfCont
       </button>
 
       {isOpen && (
-        <div className="mt-2 rounded-lg border border-border-1 bg-surface-1 p-4">
+        <div className="mt-2 rounded-lg border border-border-1 bg-surface-1 backdrop-blur-md p-4">
           <ul className="space-y-2">
             {items.map((item) => (
               <li key={item.id} style={{ paddingLeft: `${(item.level - 1) * 0.75}rem` }}>

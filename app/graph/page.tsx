@@ -13,7 +13,7 @@ export default function GraphPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-16">
-      <header className="mb-8">
+      <header className="mb-8 rounded-2xl border border-border-1 bg-surface-1 backdrop-blur-md p-8">
         <p className="eyebrow text-text-3">Knowledge map</p>
         <h1 className="mb-4 font-satoshi text-4xl font-medium text-text-1">Knowledge Graph</h1>
         <p className="max-w-3xl text-lg text-text-2">

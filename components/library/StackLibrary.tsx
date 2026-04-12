@@ -143,7 +143,7 @@ function MobileView({
         </div>
       </div>
 
-      <div className="relative mt-5 rounded-[28px] border border-white/[0.06] bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.012))] p-3 shadow-[0_20px_80px_-50px_rgba(0,0,0,0.92)]">
+      <div className="relative mt-5 rounded-[28px] border border-white/[0.06] bg-surface-1 p-3 shadow-[0_20px_80px_-50px_rgba(0,0,0,0.92)]">
         <div className="pointer-events-none absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-white/14 to-transparent" />
         <div className="pointer-events-none absolute inset-x-5 bottom-3 h-px bg-gradient-to-r from-transparent via-[#f5a25a]/25 to-transparent" />
 
@@ -248,14 +248,14 @@ export function StackLibrary({ books, colors, coverMap, title, description }: St
             </p>
           </div>
 
-          <div className="shrink-0 rounded-full border border-white/[0.06] bg-white/[0.02] p-1 shadow-[0_12px_40px_-28px_rgba(0,0,0,0.85)]">
+          <div className="shrink-0 rounded-full border border-white/[0.06] bg-surface-1 p-1 shadow-[0_12px_40px_-28px_rgba(0,0,0,0.85)]">
             <StackSortControls activeSort={sortMode} onSortChange={setSortMode} />
           </div>
         </div>
 
         <div className="flex items-start gap-6 xl:gap-8">
           <section className="min-w-0 flex-1">
-            <div className="relative overflow-hidden rounded-[32px] border border-white/[0.06] bg-[radial-gradient(circle_at_top_left,rgba(62,214,200,0.08),transparent_28%),radial-gradient(circle_at_top_right,rgba(245,162,90,0.08),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.012))] shadow-[0_28px_120px_-60px_rgba(0,0,0,0.96)]">
+            <div className="relative overflow-hidden rounded-[32px] border border-white/[0.06] bg-[radial-gradient(circle_at_top_left,rgba(62,214,200,0.08),transparent_28%),radial-gradient(circle_at_top_right,rgba(245,162,90,0.08),transparent_30%),rgba(8,12,24,0.88)] shadow-[0_28px_120px_-60px_rgba(0,0,0,0.96)]">
               <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white/14 to-transparent" />
               <div className="pointer-events-none absolute inset-x-8 bottom-8 h-px bg-gradient-to-r from-transparent via-[#f5a25a]/25 to-transparent" />
               <div className="pointer-events-none absolute left-8 top-6 font-mono text-[10px] uppercase tracking-[0.22em] text-text-3/80">
@@ -286,7 +286,7 @@ export function StackLibrary({ books, colors, coverMap, title, description }: St
           </section>
 
           <aside className="sticky top-24 w-[380px] shrink-0 self-start xl:w-[430px]">
-            <div className="overflow-hidden rounded-[28px] border border-white/[0.06] bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.012))] shadow-[0_30px_90px_-55px_rgba(0,0,0,0.96)] backdrop-blur-md">
+            <div className="overflow-hidden rounded-[28px] border border-white/[0.06] bg-surface-1 shadow-[0_30px_90px_-55px_rgba(0,0,0,0.96)] backdrop-blur-md">
               <div className="h-px w-full bg-gradient-to-r from-transparent via-[#f5a25a]/35 to-transparent" />
               <StackDetailPanel
                 books={books}
@@ -358,7 +358,7 @@ function TopicStack({
         </div>
       </div>
 
-      <div className="relative rounded-[22px] border border-white/[0.05] bg-white/[0.02] p-2 shadow-[0_18px_60px_-44px_rgba(0,0,0,0.9)]">
+      <div className="relative rounded-[22px] border border-white/[0.05] bg-surface-1 p-2 shadow-[0_18px_60px_-44px_rgba(0,0,0,0.9)]">
         <div className="pointer-events-none absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
         <div className={compact ? 'space-y-1' : 'space-y-[2px]'}>
           {group.books.map((book, index) => (

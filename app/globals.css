@@ -5,11 +5,11 @@
   --color-bg-0: #05060a;
   --color-bg-1: #0a0f1c;
 
-  --color-surface-1: rgba(255, 255, 255, 0.05);
-  --color-surface-2: rgba(255, 255, 255, 0.12);
+  --color-surface-1: rgba(8, 12, 24, 0.88);
+  --color-surface-2: rgba(8, 12, 24, 0.94);
 
-  --color-border-1: rgba(255, 255, 255, 0.12);
-  --color-border-2: rgba(255, 255, 255, 0.22);
+  --color-border-1: rgba(255, 255, 255, 0.15);
+  --color-border-2: rgba(255, 255, 255, 0.25);
 
   --color-text-1: rgba(255, 255, 255, 0.95);
   --color-text-2: rgba(255, 255, 255, 0.74);
@@ -90,24 +90,27 @@ body {
 
 /* Decorative utilities */
 .glass-panel {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+  background: linear-gradient(135deg, rgba(10, 16, 30, 0.92), rgba(8, 12, 24, 0.90));
   border: 1px solid var(--color-border-1);
   box-shadow:
     0 20px 60px -40px rgba(0, 0, 0, 0.6),
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
 }
 
 .section-shell {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   background:
     radial-gradient(120% 120% at 10% 0%, rgba(245, 162, 90, 0.1), transparent 55%),
     radial-gradient(120% 120% at 90% 10%, rgba(62, 214, 200, 0.08), transparent 55%),
-    rgba(255, 255, 255, 0.03);
+    rgba(8, 12, 24, 0.88);
   box-shadow: 0 30px 70px -50px rgba(0, 0, 0, 0.65);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
 }
 
 .section-shell > * {

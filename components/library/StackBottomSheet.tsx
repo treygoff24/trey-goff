@@ -19,7 +19,7 @@ export function StackBottomSheet({ book, coverMap, onClose }: StackBottomSheetPr
     <DialogPrimitive.Root open={open} onOpenChange={(nextOpen) => !nextOpen && onClose()}>
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="fixed inset-0 z-40 touch-none bg-bg-0/70 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-        <DialogPrimitive.Content className="fixed inset-x-0 bottom-0 z-50 flex max-h-[80vh] flex-col overflow-hidden rounded-t-3xl border-t border-border-1 bg-bg-1 pb-[env(safe-area-inset-bottom,0px)] shadow-2xl shadow-black/40 outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom overscroll-contain duration-300">
+        <DialogPrimitive.Content className="fixed inset-x-0 bottom-0 z-50 flex max-h-[80vh] flex-col overflow-hidden rounded-t-3xl border-t border-border-1 bg-bg-1 backdrop-blur-md pb-[env(safe-area-inset-bottom,0px)] shadow-2xl shadow-black/40 outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom overscroll-contain duration-300">
           {book ? (
             <>
               <DialogPrimitive.Title className="sr-only">{book.title}</DialogPrimitive.Title>
@@ -71,7 +71,7 @@ export function StackBottomSheet({ book, coverMap, onClose }: StackBottomSheetPr
                     </div>
 
                     {book.genre ? (
-                      <div className="mt-4 inline-flex rounded-full bg-surface-1 px-3 py-1 font-mono text-xs uppercase tracking-wider text-text-2">
+                      <div className="mt-4 inline-flex rounded-full bg-surface-1 backdrop-blur-md px-3 py-1 font-mono text-xs uppercase tracking-wider text-text-2">
                         {book.genre}
                       </div>
                     ) : null}

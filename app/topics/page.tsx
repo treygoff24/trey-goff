@@ -130,7 +130,7 @@ function TopicSpotlightCard({
   return (
     <Link
       href={getTopicHref(topic.tag)}
-      className={`group relative min-w-[240px] flex-1 snap-start overflow-hidden rounded-2xl border bg-surface-1/40 p-5 transition-all hover:-translate-y-1 hover:border-border-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warm focus-visible:ring-offset-2 focus-visible:ring-offset-bg-1 ${style.ring} ${style.glow}`}
+      className={`group relative min-w-[240px] flex-1 snap-start overflow-hidden rounded-2xl border bg-surface-1/40 backdrop-blur-md p-5 transition-all hover:-translate-y-1 hover:border-border-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warm focus-visible:ring-offset-2 focus-visible:ring-offset-bg-1 ${style.ring} ${style.glow}`}
     >
       <div className={`absolute inset-0 bg-gradient-to-br opacity-60 ${style.gradient}`} />
       <div className="absolute inset-0 opacity-60 mix-blend-screen" />
@@ -180,14 +180,14 @@ function TopicCard({ topic, maxSignal }: { topic: TopicEntry; maxSignal: number 
   return (
     <Link
       href={getTopicHref(topic.tag)}
-      className="group rounded-2xl border border-border-1 bg-surface-1 p-5 transition-all hover:border-border-2 hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warm focus-visible:ring-offset-2 focus-visible:ring-offset-bg-1"
+      className="group rounded-2xl border border-border-1 bg-surface-1 backdrop-blur-md p-5 transition-all hover:border-border-2 hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warm focus-visible:ring-offset-2 focus-visible:ring-offset-bg-1"
     >
       <div className="flex items-start justify-between gap-3">
         <div>
           <h3 className="font-satoshi text-lg font-medium text-text-1">{topic.tag}</h3>
           <p className="mt-1 text-xs text-text-3">{topic.counts.total} signals</p>
         </div>
-        <span className="rounded-full border border-border-1 bg-bg-1/60 px-2 py-1 text-[10px] uppercase tracking-[0.3em] text-text-3">
+        <span className="rounded-full border border-border-1 bg-surface-1 backdrop-blur-sm px-2 py-1 text-[10px] uppercase tracking-[0.3em] text-text-3">
           Topic
         </span>
       </div>

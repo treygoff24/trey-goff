@@ -19,7 +19,7 @@ export default function TransmissionsPage() {
         <div className="flex items-center gap-3 mb-4">
           <div className="relative">
             <div className="absolute inset-0 bg-warm/20 blur-xl rounded-full" />
-            <div className="relative flex h-10 w-10 items-center justify-center rounded-full border border-warm/30 bg-surface-1">
+            <div className="relative flex h-10 w-10 items-center justify-center rounded-full border border-warm/30 bg-surface-1 backdrop-blur-md">
               <Radio className="h-5 w-5 text-warm" />
             </div>
           </div>
@@ -33,7 +33,7 @@ export default function TransmissionsPage() {
         </p>
 
         {/* Status indicator */}
-        <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-border-1 bg-surface-1 px-3 py-1.5 text-sm">
+        <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-border-1 bg-surface-1 backdrop-blur-md px-3 py-1.5 text-sm">
           <span className="relative flex h-2 w-2">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success/60" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
@@ -80,7 +80,7 @@ export default function TransmissionsPage() {
 
       {/* Empty state */}
       {allTransmissions.length === 0 && (
-        <div className="rounded-lg border border-dashed border-border-2 bg-surface-1/50 p-12 text-center">
+        <div className="rounded-lg border border-dashed border-border-2 bg-surface-1/50 backdrop-blur-md p-12 text-center">
           <Radio className="mx-auto h-12 w-12 text-text-3 mb-4" />
           <p className="text-text-2 mb-2">No transmissions yet</p>
           <p className="text-sm text-text-3">External publications will appear here once added.</p>

@@ -20,6 +20,7 @@ export default function NowPage() {
         </p>
       </header>
 
+      <div className="rounded-2xl border border-border-1 bg-surface-1 backdrop-blur-md p-8">
       <Prose>
         <h2>Current focus</h2>
         <ul>
@@ -41,6 +42,7 @@ export default function NowPage() {
         <h2>Travel</h2>
         <p>Keeping travel light and focused while I build and write. Updates as plans solidify.</p>
       </Prose>
+      </div>
     </div>
   )
 }

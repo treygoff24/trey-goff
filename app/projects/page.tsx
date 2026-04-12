@@ -53,13 +53,13 @@ export default function ProjectsPage() {
               : 'This archive favors depth over volume. Each project is meant to read like a field report, not a thumbnail gallery.'}
           </p>
           <div className="mt-4 grid grid-cols-2 gap-3 text-xs uppercase tracking-[0.16em] text-text-3">
-            <div className="rounded-2xl border border-white/8 bg-white/[0.03] px-3 py-3">
+            <div className="rounded-2xl border border-white/8 bg-surface-1 backdrop-blur-md px-3 py-3">
               <div className="text-lg font-semibold tracking-normal text-text-1">
                 {projects.length}
               </div>
               <div className="mt-1">Live case studies</div>
             </div>
-            <div className="rounded-2xl border border-white/8 bg-white/[0.03] px-3 py-3">
+            <div className="rounded-2xl border border-white/8 bg-surface-1 backdrop-blur-md px-3 py-3">
               <div className="text-lg font-semibold tracking-normal text-text-1">Essays</div>
               <div className="mt-1">Carry the thinking</div>
             </div>
@@ -68,7 +68,7 @@ export default function ProjectsPage() {
       </header>
 
       {projects.length === 0 ? (
-        <div className="rounded-2xl border border-border-1 bg-surface-1 p-10 text-center text-text-3">
+        <div className="rounded-2xl border border-border-1 bg-surface-1 backdrop-blur-md p-10 text-center text-text-3">
           Projects coming soon.
         </div>
       ) : (

@@ -72,7 +72,7 @@ function ChartCard({
   children: React.ReactNode
 }) {
   return (
-    <div className="rounded-2xl border border-border-1 bg-surface-1 p-5">
+    <div className="rounded-2xl border border-border-1 bg-surface-1 backdrop-blur-md p-5">
       <div className="flex items-start justify-between gap-4">
         <div>
           <h3 className="font-satoshi text-lg font-medium text-text-1">{title}</h3>

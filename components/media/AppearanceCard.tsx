@@ -58,7 +58,7 @@ export function AppearanceCard({ appearance, variant = 'list' }: AppearanceCardP
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
-        'group block overflow-hidden rounded-lg border border-border-1 bg-surface-1 card-interactive',
+        'group block overflow-hidden rounded-lg border border-border-1 bg-surface-1 backdrop-blur-md card-interactive',
         'hover:border-warm/30 hover:shadow-[0_8px_30px_-8px_rgba(255,184,107,0.15)]',
         isFeatured ? 'flex flex-col md:flex-row' : '',
       )}

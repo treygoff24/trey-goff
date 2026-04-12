@@ -30,7 +30,7 @@ export function HolographicTile({ href, label, description, icon, index }: Holog
     <Link href={href} className="group relative block h-full">
       <div
         onMouseMove={handleMouseMove}
-        className={`holographic-tile relative h-full overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02] p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.04] hover:shadow-2xl ${animationClass}`}
+        className={`holographic-tile relative h-full overflow-hidden rounded-xl border border-white/[0.08] bg-surface-1 p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:bg-surface-2 hover:shadow-2xl ${animationClass}`}
         style={
           {
             animationDelay,

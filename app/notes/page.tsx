@@ -35,7 +35,7 @@ export default async function NotesPage() {
       </header>
 
       {sortedNotes.length === 0 ? (
-        <div className="rounded-lg border border-border-1 bg-surface-1 p-8 text-center">
+        <div className="rounded-lg border border-border-1 bg-surface-1 backdrop-blur-md p-8 text-center">
           <p className="text-text-3">Notes coming soon.</p>
         </div>
       ) : (

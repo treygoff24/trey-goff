@@ -52,7 +52,7 @@ export function LibraryFilters({
               onClick={() => onStatusChange(status.value)}
               aria-pressed={statusFilter === status.value}
               className={cn(
-                'rounded-full px-3 py-1 text-sm transition-colors',
+                'rounded-full px-3 py-1 text-sm transition-colors backdrop-blur-md',
                 statusFilter === status.value
                   ? 'bg-warm text-bg-0'
                   : 'bg-surface-1 text-text-2 hover:bg-surface-2',
@@ -74,7 +74,7 @@ export function LibraryFilters({
             onClick={() => onTopicChange(null)}
             aria-pressed={topicFilter === null}
             className={cn(
-              'rounded-full px-3 py-1 text-sm transition-colors',
+              'rounded-full px-3 py-1 text-sm transition-colors backdrop-blur-md',
               topicFilter === null
                 ? 'bg-warm text-bg-0'
                 : 'bg-surface-1 text-text-2 hover:bg-surface-2',
@@ -88,7 +88,7 @@ export function LibraryFilters({
               onClick={() => onTopicChange(topic)}
               aria-pressed={topicFilter === topic}
               className={cn(
-                'rounded-full px-3 py-1 text-sm transition-colors',
+                'rounded-full px-3 py-1 text-sm transition-colors backdrop-blur-md',
                 topicFilter === topic
                   ? 'bg-warm text-bg-0'
                   : 'bg-surface-1 text-text-2 hover:bg-surface-2',
@@ -109,7 +109,7 @@ export function LibraryFilters({
           id="sort-select"
           value={sortBy}
           onChange={(e) => onSortChange(e.target.value as LibraryFiltersProps['sortBy'])}
-          className="rounded-lg border border-border-1 bg-surface-1 px-3 py-2 text-sm text-text-1 focus:border-warm focus:outline-none"
+          className="rounded-lg border border-border-1 bg-surface-1 backdrop-blur-md px-3 py-2 text-sm text-text-1 focus:border-warm focus:outline-none"
         >
           {sortOptions.map((option) => (
             <option key={option.value} value={option.value}>

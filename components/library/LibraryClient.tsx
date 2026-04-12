@@ -130,7 +130,7 @@ export function LibraryClient({ books }: LibraryClientProps) {
           </div>
 
           {filteredBooks.length === 0 && (
-            <div className="rounded-lg border border-border-1 bg-surface-1 p-8 text-center">
+            <div className="rounded-lg border border-border-1 bg-surface-1 backdrop-blur-md p-8 text-center">
               <p className="text-text-3">No books match the current filters.</p>
             </div>
           )}
@@ -159,7 +159,7 @@ function StatCard({
   value: number | string
 }) {
   return (
-    <div className="rounded-lg border border-border-1 bg-surface-1 p-4">
+    <div className="rounded-lg border border-border-1 bg-surface-1 backdrop-blur-md p-4">
       <div className="mb-2 flex items-center gap-2 text-text-3">
         {icon}
         <span className="text-sm">{label}</span>

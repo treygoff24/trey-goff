@@ -115,7 +115,7 @@ function DecadeDistributionChart({ decades, maxCount, reducedMotion }: DecadeCha
   const totalBooks = decades.reduce((s, [, c]) => s + c, 0)
 
   return (
-    <div className="rounded-[20px] border border-white/[0.04] bg-white/[0.015] px-3 py-4">
+    <div className="rounded-[20px] border border-white/[0.04] bg-surface-1 backdrop-blur-md px-3 py-4">
       <svg
         viewBox={`0 0 ${VB.w} 82`}
         className="w-full text-text-3"
@@ -219,7 +219,7 @@ export function StackDetailPanel({
                 <div className="min-w-0 truncate font-satoshi text-sm text-text-2" title={topic}>
                   {topic}
                 </div>
-                <div className="h-2 min-w-0 overflow-hidden rounded-full bg-white/[0.04]">
+                <div className="h-2 min-w-0 overflow-hidden rounded-full bg-surface-2">
                   <motion.div
                     className="h-full rounded-full"
                     initial={{ scaleX: 0 }}
@@ -279,7 +279,7 @@ export function StackDetailPanel({
             ) : null}
           </div>
 
-          <div className="overflow-hidden rounded-[24px] border border-white/[0.05] bg-white/[0.015] p-4 shadow-[0_22px_70px_-44px_rgba(0,0,0,0.9)]">
+          <div className="overflow-hidden rounded-[24px] border border-white/[0.05] bg-surface-1 backdrop-blur-md p-4 shadow-[0_22px_70px_-44px_rgba(0,0,0,0.9)]">
             <div className="flex gap-5">
               <div className="relative shrink-0 overflow-hidden rounded-[20px] border border-white/[0.06] bg-black/20">
                 {cover ? (
@@ -318,7 +318,7 @@ export function StackDetailPanel({
                     {extraTopics.map((topic) => (
                       <span
                         key={topic}
-                        className="rounded-full bg-white/[0.04] px-3 py-1 font-mono text-[11px] text-text-2"
+                        className="rounded-full bg-surface-2 px-3 py-1 font-mono text-[11px] text-text-2"
                       >
                         {topic}
                       </span>
@@ -330,7 +330,7 @@ export function StackDetailPanel({
           </div>
 
           {activeBook.whyILoveIt ? (
-            <div className="rounded-[20px] border border-white/[0.04] bg-white/[0.015] p-5">
+            <div className="rounded-[20px] border border-white/[0.04] bg-surface-1 backdrop-blur-md p-5">
               <p className="text-sm leading-6 text-text-2">{activeBook.whyILoveIt}</p>
             </div>
           ) : null}

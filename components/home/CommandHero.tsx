@@ -41,7 +41,7 @@ export function CommandHero() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="relative flex w-full items-center gap-3 overflow-hidden rounded-xl border border-white/10 bg-white/[0.03] px-4 py-4 text-left text-text-3 backdrop-blur-md transition-all duration-300 hover:border-warm/30 hover:bg-white/[0.05] hover:shadow-[0_0_30px_-5px_rgba(255,184,107,0.15)] group-hover:border-warm/30 sm:gap-4 sm:px-6 sm:py-5"
+          className="relative flex w-full items-center gap-3 overflow-hidden rounded-xl border border-white/10 bg-surface-1 px-4 py-4 text-left text-text-3 backdrop-blur-md transition-all duration-300 hover:border-warm/30 hover:bg-surface-2 hover:shadow-[0_0_30px_-5px_rgba(255,184,107,0.15)] group-hover:border-warm/30 sm:gap-4 sm:px-6 sm:py-5"
           aria-label="Open search"
         >
           {/* Scanning Line Animation - only show if motion is allowed */}

@@ -20,7 +20,7 @@ export function TransmissionCard({ transmission, variant = 'list' }: Transmissio
       rel="noopener noreferrer"
       className={cn(
         'group relative block overflow-hidden rounded-lg',
-        'border border-dashed border-border-2 bg-surface-1/50',
+        'border border-dashed border-border-2 bg-surface-1/50 backdrop-blur-md',
         'transition-all duration-300 motion-reduce:transition-none',
         'hover:border-warm/40 hover:bg-surface-1',
         'hover:shadow-[0_0_40px_-10px_rgba(255,184,107,0.25)]',

@@ -122,7 +122,7 @@ export default async function EssayPage({ params }: PageProps) {
         </div>
 
         {(outgoingLinks.length > 0 || backlinks.length > 0) && (
-          <section className="mt-12 rounded-lg border border-border-1 bg-surface-1 p-6">
+          <section className="mt-12 rounded-lg border border-border-1 bg-surface-1 backdrop-blur-md p-6">
             <h2 className="mb-4 font-satoshi text-lg font-medium text-text-1">Connections</h2>
             <div className="grid gap-6 md:grid-cols-2">
               <RelatedLinks title="Links out" links={outgoingLinks} />
@@ -132,7 +132,7 @@ export default async function EssayPage({ params }: PageProps) {
         )}
 
         {isNewsletterEnabled ? (
-          <div className="mt-16 rounded-lg border border-border-1 bg-surface-1 p-6">
+          <div className="mt-16 rounded-lg border border-border-1 bg-surface-1 backdrop-blur-md p-6">
             <h3 className="mb-2 font-satoshi text-lg font-medium text-text-1">
               Enjoyed this essay?
             </h3>
@@ -142,7 +142,7 @@ export default async function EssayPage({ params }: PageProps) {
             <SubscribeForm compact />
           </div>
         ) : (
-          <section className="mt-16 rounded-2xl border border-border-1 bg-surface-1 p-6 sm:p-8">
+          <section className="mt-16 rounded-2xl border border-border-1 bg-surface-1 backdrop-blur-md p-6 sm:p-8">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-text-3">
               Continue exploring
             </p>

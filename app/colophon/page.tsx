@@ -8,6 +8,7 @@ export const metadata = {
 export default function ColophonPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-16">
+      <div className="rounded-2xl border border-border-1 bg-surface-1 backdrop-blur-md p-8">
       <Prose>
         <h1>Colophon</h1>
         <p>
@@ -72,6 +73,7 @@ export default function ColophonPage() {
           is shaped by the people and projects I learn from.
         </p>
       </Prose>
+      </div>
     </div>
   )
 }
