@@ -26,7 +26,7 @@ export function EssayCard({
   const cardClasses = [
     'card-interactive relative rounded-lg border border-border-1 bg-surface-1 backdrop-blur-md p-6 transition duration-300 ease-out',
     'hover:-translate-y-1 hover:border-warm/30 hover:bg-surface-2 hover:shadow-lg hover:shadow-warm/10',
-    featured ? 'border-warm/30 bg-warm/5 shadow-sm shadow-warm/10' : '',
+    featured ? 'border-warm/30 shadow-sm shadow-warm/10' : '',
   ]
     .filter(Boolean)
     .join(' ')

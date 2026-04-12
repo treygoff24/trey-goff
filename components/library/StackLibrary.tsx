@@ -255,7 +255,7 @@ export function StackLibrary({ books, colors, coverMap, title, description }: St
 
         <div className="flex items-start gap-6 xl:gap-8">
           <section className="min-w-0 flex-1">
-            <div className="relative overflow-hidden rounded-[32px] border border-white/[0.06] bg-[radial-gradient(circle_at_top_left,rgba(62,214,200,0.08),transparent_28%),radial-gradient(circle_at_top_right,rgba(245,162,90,0.08),transparent_30%),rgba(8,12,24,0.88)] shadow-[0_28px_120px_-60px_rgba(0,0,0,0.96)]">
+            <div className="relative overflow-hidden rounded-[32px] border border-white/[0.06] bg-[radial-gradient(circle_at_top_left,rgba(62,214,200,0.08),transparent_28%),radial-gradient(circle_at_top_right,rgba(245,162,90,0.08),transparent_30%),rgba(8,12,24,0.92)] shadow-[0_28px_120px_-60px_rgba(0,0,0,0.96)] backdrop-blur-md">
               <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white/14 to-transparent" />
               <div className="pointer-events-none absolute inset-x-8 bottom-8 h-px bg-gradient-to-r from-transparent via-[#f5a25a]/25 to-transparent" />
               <div className="pointer-events-none absolute left-8 top-6 font-mono text-[10px] uppercase tracking-[0.22em] text-text-3/80">
