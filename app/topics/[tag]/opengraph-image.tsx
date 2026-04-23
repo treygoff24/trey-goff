@@ -70,7 +70,7 @@ export default function OGImage() {
             color: 'rgba(255, 255, 255, 0.72)',
           }}
         >
-          Governance, acceleration zones, and institutional innovation for a faster future.
+          Governance, institutional design, and practical experimentation for a faster future.
         </div>
       </div>
 

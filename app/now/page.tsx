@@ -24,7 +24,7 @@ export default function NowPage() {
       <Prose>
         <h2>Current focus</h2>
         <ul>
-          <li>Advancing the case for governance innovation and acceleration zones.</li>
+          <li>Advancing the case for governance innovation and institutional design.</li>
           <li>Writing essays and notes to map the field in public.</li>
           <li>Building The Control Room into a living knowledge system.</li>
         </ul>

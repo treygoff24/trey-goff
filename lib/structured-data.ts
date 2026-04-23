@@ -18,7 +18,7 @@ export function generatePersonSchema() {
     sameAs: ['https://twitter.com/treygoff', 'https://github.com/treygoff'],
     jobTitle: 'Governance Innovation',
     description:
-      'Building better governance through acceleration zones and institutional innovation.',
+      'Building better governance through institutional design and practical experimentation.',
   }
 }
 

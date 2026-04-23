@@ -856,7 +856,7 @@ export default function HomePage() {
           Trey Goff
         </h1>
         <p className="text-xl text-text-2 mb-12 max-w-xl mx-auto">
-          Building better governance through acceleration zones and institutional innovation.
+          Building better governance through institutional design and practical experimentation.
         </p>
 
         {/* Command bar placeholder */}

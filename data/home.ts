@@ -4,9 +4,9 @@ export const homeHero = {
   eyebrow: "Governance + Institutional Design",
   headline: "Designing the systems that let progress compound.",
   subhead:
-    "I work on acceleration zones, institutional innovation, and the tools that make policy experiments legible and repeatable.",
+    "I work on governance innovation, institutional design, and the tools that make policy experiments legible and repeatable.",
   highlights: [
-    "Acceleration zones",
+    "Governance innovation",
     "Institutional innovation",
     "Knowledge infrastructure",
   ],
