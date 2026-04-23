@@ -2011,7 +2011,6 @@ export function NoteCard({ note }: NoteCardProps) {
 
 **Files to create:**
 - `/content/essays/hello-world.mdx`
-- `/content/essays/governance-innovation.mdx`
 - `/content/notes/2024-01-first-note.mdx`
 - `/content/notes/2024-01-interesting-link.mdx`
 

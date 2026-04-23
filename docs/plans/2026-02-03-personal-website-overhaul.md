@@ -105,12 +105,11 @@
 
 **Parallel:** yes
 **Blocked by:** Task 1
-**Owned files:** `app/writing/page.tsx`, `components/writing/EssayCard.tsx`, `content/essays/governance-innovation.mdx`, `content/essays/peer-reviewed-paper-prospera-governance.mdx`, `content/essays/the-voluntaryist-constitution.mdx`
+**Owned files:** `app/writing/page.tsx`, `components/writing/EssayCard.tsx`, `content/essays/peer-reviewed-paper-prospera-governance.mdx`, `content/essays/the-voluntaryist-constitution.mdx`
 
 **Files:**
 - Modify: `app/writing/page.tsx`
 - Modify: `components/writing/EssayCard.tsx`
-- Modify: `content/essays/governance-innovation.mdx`
 - Modify: `content/essays/peer-reviewed-paper-prospera-governance.mdx`
 - Modify: `content/essays/the-voluntaryist-constitution.mdx`
 

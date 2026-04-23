@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "generated": "2026-04-23T18:54:11.853Z",
+  "generated": "2026-04-23T18:58:28.116Z",
   "entries": [
     {
       "id": "how-i-became-a-christian",
@@ -30,20 +30,6 @@
         "charter-cities"
       ],
       "publishedAt": "2024-04-05",
-      "readingTime": 1,
-      "status": "published"
-    },
-    {
-      "id": "governance-innovation",
-      "slug": "governance-innovation",
-      "title": "The Case for Governance Innovation",
-      "excerpt": "Why we need new approaches to governance and how institutional experimentation could help.",
-      "tags": [
-        "governance",
-        "innovation",
-        "policy"
-      ],
-      "publishedAt": "2024-01-20",
       "readingTime": 1,
       "status": "published"
     },
