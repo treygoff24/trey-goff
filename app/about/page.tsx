@@ -21,7 +21,7 @@ export default function AboutPage() {
           <p className="text-sm uppercase tracking-[0.3em] text-text-3">Mission</p>
           <h1 className="mt-4 font-satoshi text-4xl font-medium text-text-1">About</h1>
           <p className="mt-4 max-w-2xl text-lg text-text-2">
-            I work on governance innovation with a focus on acceleration zones, institutional
+            I work on governance innovation with a focus on institutional design, policy
             experimentation, and the systems that shape human agency.
           </p>
         </header>
@@ -50,7 +50,7 @@ export default function AboutPage() {
             <div>
               <h2 className="font-satoshi text-xl font-medium text-text-1">The Mechanism</h2>
               <p className="mt-3 text-lg text-text-2">
-                Acceleration zones and special economic zones create bounded, opt-in environments
+                Special economic zones and regulatory sandboxes create bounded, opt-in environments
                 where new policies can be tested, measured, and scaled without forcing a single
                 model on everyone.
               </p>
@@ -88,7 +88,7 @@ export default function AboutPage() {
             <h2>Bio</h2>
             <p>
               I work at the intersection of governance, technology, and economic development. My
-              focus is on institutional design, acceleration zones, and the practical steps needed
+              focus is on institutional design, governance experimentation, and the practical steps needed
               to make new models real.
             </p>
             <p>

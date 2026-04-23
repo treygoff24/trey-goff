@@ -37,7 +37,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-sm leading-relaxed text-text-3">
-              Building better governance through acceleration zones and institutional innovation.
+              Building better governance through institutional design and practical experimentation.
             </p>
 
             {/* Command palette hint */}

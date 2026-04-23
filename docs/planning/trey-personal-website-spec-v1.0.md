@@ -573,7 +573,7 @@ This is not a bio—it's your intellectual foundation.
 Structure:
 1. **The Problem**: Why governance failures cause unnecessary suffering
 2. **The Lever**: Why governance reform is highest-leverage
-3. **The Mechanism**: How acceleration zones / SEZs work
+3. **The Mechanism**: How experimental jurisdictions / SEZs work
 4. **The Vision**: What success looks like
 5. **The Work**: What you're specifically doing
 6. **The Philosophy**: Classical liberalism, human agency, etc.

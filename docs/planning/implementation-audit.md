@@ -250,7 +250,7 @@ export function generatePersonSchema() {
       // Add other social profiles
     ],
     jobTitle: 'Governance Innovation',
-    description: 'Building better governance through acceleration zones and institutional innovation.',
+    description: 'Building better governance through institutional design and practical experimentation.',
   }
 }
 
@@ -344,7 +344,7 @@ These pages exist but need real content per the spec.
 **Section 1: The Thesis** (manifesto-style, larger type, distinct design)
 1. **The Problem**: Why governance failures cause unnecessary suffering
 2. **The Lever**: Why governance reform is highest-leverage
-3. **The Mechanism**: How acceleration zones / SEZs work
+3. **The Mechanism**: How experimental jurisdictions / SEZs work
 4. **The Vision**: What success looks like
 5. **The Work**: What you're specifically doing
 6. **The Philosophy**: Classical liberalism, human agency, etc.
