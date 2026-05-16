@@ -43,7 +43,7 @@ export async function GET() {
   }
 
   // Add notes
-  const sortedNotes = allNotes.sort(
+  const sortedNotes = [...allNotes].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   )
 

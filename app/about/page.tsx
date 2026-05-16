@@ -88,8 +88,8 @@ export default function AboutPage() {
             <h2>Bio</h2>
             <p>
               I work at the intersection of governance, technology, and economic development. My
-              focus is on institutional design, governance experimentation, and the practical steps needed
-              to make new models real.
+              focus is on institutional design, governance experimentation, and the practical steps
+              needed to make new models real.
             </p>
             <p>
               I share essays and field notes here, along with the books and ideas that shape my

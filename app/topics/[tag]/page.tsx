@@ -5,7 +5,7 @@ import { NoteCard } from '@/components/notes/NoteCard'
 import { TagPill } from '@/components/ui/TagPill'
 import { markdownToHtml } from '@/lib/markdown'
 import { cn } from '@/lib/utils'
-import { getTopicContent, getTopicsIndex } from '@/lib/topics'
+import { getTopicContent, getTopicHref, getTopicsIndex } from '@/lib/topics'
 import type { Project } from '@/lib/topics'
 import { getBacklinksForNote, getOutgoingLinksForNote } from '@/lib/backlinks'
 import { generateBreadcrumbSchema } from '@/lib/structured-data'
@@ -108,7 +108,7 @@ export default async function TopicPage({ params }: PageProps) {
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: 'Home', url: siteUrl },
     { name: 'Topics', url: `${siteUrl}/topics` },
-    { name: topicTag, url: `${siteUrl}/topics/${topicTag}` },
+    { name: topicTag, url: `${siteUrl}${getTopicHref(topicTag)}` },
   ])
 
   return (

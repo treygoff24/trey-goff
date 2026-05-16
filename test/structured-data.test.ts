@@ -43,6 +43,21 @@ test('BreadcrumbList schema exists in topics/[tag]/page.tsx', () => {
   )
 })
 
+test('Topic breadcrumb structured-data URL uses the encoded topic href helper', () => {
+  const topicPagePath = join(projectRoot, 'app/topics/[tag]/page.tsx')
+  const topicSource = readFileSync(topicPagePath, 'utf-8')
+
+  assert.ok(
+    topicSource.includes('getTopicHref') &&
+      topicSource.includes('${siteUrl}${getTopicHref(topicTag)}'),
+    'Topic breadcrumb item URL should use getTopicHref(topicTag) so special characters are encoded',
+  )
+  assert.ok(
+    !topicSource.includes('${siteUrl}/topics/${topicTag}'),
+    'Topic breadcrumb item URL should not concatenate a raw decoded tag into the URL',
+  )
+})
+
 test('Book schema includes enhanced fields', () => {
   const structuredDataPath = join(projectRoot, 'lib/structured-data.ts')
   const structuredDataSource = readFileSync(structuredDataPath, 'utf-8')

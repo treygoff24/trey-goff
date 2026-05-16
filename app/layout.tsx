@@ -16,7 +16,8 @@ export const metadata: Metadata = {
     default: 'Trey Goff',
     template: '%s — Trey',
   },
-  description: 'Governance, institutional design, and practical experimentation for a faster future.',
+  description:
+    'Governance, institutional design, and practical experimentation for a faster future.',
   metadataBase: new URL(siteUrl),
   alternates: {
     canonical: siteUrl,

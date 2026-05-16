@@ -29,7 +29,7 @@
     "ci:quality": "pnpm prepare:quality && pnpm fmt:check && pnpm lint && pnpm lint:type-aware:raw && pnpm typecheck:ts7:full && pnpm test && pnpm build",
     "ci:quality:legacy": "pnpm ci:quality && pnpm lint:legacy && pnpm typecheck:legacy",
     "test": "pnpm content:sync && node --import tsx --test test/*.test.ts",
-    "test:coverage": "c8 --reporter=text --reporter=lcov node --import tsx --test test/*.test.ts",
+    "test:coverage": "pnpm content:sync && c8 --reporter=text --reporter=lcov node --import tsx --test test/*.test.ts",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",

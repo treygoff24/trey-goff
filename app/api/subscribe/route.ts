@@ -21,6 +21,10 @@ interface RateLimitEntry {
   resetAt: number
 }
 
+type LimitedBodyReadResult =
+  | { ok: true; body: string }
+  | { ok: false; status: number; error: string }
+
 // WARNING: In-memory rate limiting is best-effort only. This Map resets on
 // serverless cold starts and is not shared across instances. For production-grade
 // protection, use distributed rate limiting (e.g. Upstash/Redis).
@@ -58,6 +62,32 @@ function checkRateLimit(ip: string): { allowed: boolean; retryAfter?: number } {
   return { allowed: true }
 }
 
+async function readRequestBodyWithLimit(request: NextRequest): Promise<LimitedBodyReadResult> {
+  if (!request.body) {
+    return { ok: true, body: '' }
+  }
+
+  const reader = request.body.getReader()
+  const decoder = new TextDecoder()
+  let bytesRead = 0
+  let body = ''
+
+  while (true) {
+    const { done, value } = await reader.read()
+    if (done) break
+
+    bytesRead += value.byteLength
+    if (bytesRead > SUBSCRIBE_MAX_BODY_BYTES) {
+      return { ok: false, status: 413, error: 'Request body too large' }
+    }
+
+    body += decoder.decode(value, { stream: true })
+  }
+
+  body += decoder.decode()
+  return { ok: true, body }
+}
+
 export async function POST(request: NextRequest) {
   if (!isNewsletterEnabled) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 })
@@ -93,8 +123,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const rawBody = await request.text()
-    const parsed = parseSubscribePostBody(rawBody)
+    const rawBody = await readRequestBodyWithLimit(request)
+
+    if (!rawBody.ok) {
+      return NextResponse.json({ error: rawBody.error }, { status: rawBody.status })
+    }
+
+    const parsed = parseSubscribePostBody(rawBody.body)
 
     if (!parsed.ok) {
       return NextResponse.json({ error: parsed.error }, { status: parsed.status })

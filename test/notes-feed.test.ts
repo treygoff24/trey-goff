@@ -1,9 +1,9 @@
-import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { GET } from '@/app/feed.xml/route'
+import { test } from 'node:test'
+import { GET } from '@/app/notes/feed.xml/route'
 import { allNotes } from 'content-collections'
 
-test('feed endpoint returns RSS XML', async () => {
+test('notes feed endpoint returns RSS XML with note links', async () => {
   const response = await GET()
 
   assert.equal(response.status, 200)
@@ -12,10 +12,11 @@ test('feed endpoint returns RSS XML', async () => {
   const body = await response.text()
   assert.match(body, /<rss/i)
   assert.match(body, /<channel>/i)
-  assert.match(body, /Trey Goff/i)
+  assert.match(body, /Trey Goff — Notes/i)
+  assert.match(body, /https:\/\/trey\.world\/notes#/)
 })
 
-test('feed endpoint does not mutate generated notes collection order', async () => {
+test('notes feed endpoint does not mutate generated notes collection order', async () => {
   const originalNotes = [...allNotes]
 
   try {

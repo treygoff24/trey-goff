@@ -1,9 +1,17 @@
-import { Feed } from 'feed'
 import { allNotes } from 'content-collections'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://trey.world'
+let feedModule: typeof import('feed') | null = null
+
+const getFeedModule = async () => {
+  if (!feedModule) {
+    feedModule = await import('feed')
+  }
+  return feedModule
+}
 
 export async function GET() {
+  const { Feed } = await getFeedModule()
   const feed = new Feed({
     title: 'Trey Goff — Notes',
     description: 'Quick thoughts, dispatches, and interesting links.',
@@ -18,7 +26,7 @@ export async function GET() {
     },
   })
 
-  const sortedNotes = allNotes.sort(
+  const sortedNotes = [...allNotes].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   )
 

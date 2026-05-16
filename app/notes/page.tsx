@@ -9,7 +9,7 @@ export const metadata = {
 }
 
 export default async function NotesPage() {
-  const sortedNotes = allNotes.sort(
+  const sortedNotes = [...allNotes].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   )
 
