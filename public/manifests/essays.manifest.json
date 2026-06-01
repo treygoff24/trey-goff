@@ -1,7 +1,22 @@
 {
   "version": "1.0.0",
-  "generated": "2026-04-23T18:58:28.116Z",
+  "generated": "2026-06-01T22:09:12.014Z",
   "entries": [
+    {
+      "id": "agent-long-term-memory",
+      "slug": "agent-long-term-memory",
+      "title": "The Complicated, Un-Sexy, Actually-Working Solution to AI Agent Long-Term Memory",
+      "excerpt": "How a persistent structured-markdown memory and context-engine system gives AI agents real long-term memory by solving data quality at write time and surfacing context when it matters.",
+      "tags": [
+        "ai",
+        "agents",
+        "memory",
+        "engineering"
+      ],
+      "publishedAt": "2026-03-16",
+      "readingTime": 35,
+      "status": "published"
+    },
     {
       "id": "how-i-became-a-christian",
       "slug": "how-i-became-a-christian",

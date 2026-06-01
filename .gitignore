@@ -55,3 +55,10 @@ test-results/
 
 # Content Collections
 .content-collections
+
+# Local agent/tooling state
+.code-briefcase/
+.code-briefcaseignore
+
+# Porting/source drafts
+content/essays/_agent-memory.source.md
