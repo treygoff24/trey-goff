@@ -201,7 +201,13 @@ function ConstellationLens({
   const reducedMotion = useReducedMotion()
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const cameraRef = useRef({ x: 0, y: 0, scale: 1 })
-  const draggingRef = useRef<null | { x: number; y: number }>(null)
+  const draggingRef = useRef<null | {
+    x: number
+    y: number
+    startX: number
+    startY: number
+    moved: boolean
+  }>(null)
 
   const fitCamera = useCallback(() => {
     const canvas = canvasRef.current
@@ -297,7 +303,13 @@ function ConstellationLens({
           className="block h-full w-full cursor-grab touch-none active:cursor-grabbing"
           role="img"
           onPointerDown={(event) => {
-            draggingRef.current = { x: event.clientX, y: event.clientY }
+            draggingRef.current = {
+              x: event.clientX,
+              y: event.clientY,
+              startX: event.clientX,
+              startY: event.clientY,
+              moved: false,
+            }
             event.currentTarget.setPointerCapture(event.pointerId)
           }}
           onPointerMove={(event) => {
@@ -305,12 +317,18 @@ function ConstellationLens({
             if (!drag) return
             cameraRef.current.x += event.clientX - drag.x
             cameraRef.current.y += event.clientY - drag.y
-            draggingRef.current = { x: event.clientX, y: event.clientY }
+            draggingRef.current = {
+              x: event.clientX,
+              y: event.clientY,
+              startX: event.clientX,
+              startY: event.clientY,
+              moved: false,
+            }
           }}
           onPointerUp={(event) => {
             const drag = draggingRef.current
             draggingRef.current = null
-            if (drag && Math.hypot(event.clientX - drag.x, event.clientY - drag.y) < 4) {
+            if (drag && !drag.moved) {
               selectNearest(event)
             }
           }}
