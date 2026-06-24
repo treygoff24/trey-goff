@@ -42,7 +42,7 @@ function loadHandoffData(): {
     .replace('export const LIBRARY =', 'globalThis.LIBRARY =')
   const context = { globalThis: {} as Record<string, unknown> }
   vm.runInNewContext(source, context, { filename: sourcePath })
-  return context.globalThis as {
+  return JSON.parse(JSON.stringify(context.globalThis)) as {
     CATEGORIES: Record<string, HandoffCategory>
     LIBRARY: HandoffBook[]
   }
@@ -104,7 +104,10 @@ test('Aurora graph is deterministic, sparse, and skips generic topic hairballs',
   assert.deepEqual(graphA.nodes, graphB.nodes)
   assert.deepEqual(graphA.edges, graphB.edges)
   assert.equal(graphA.nodes.length, books.length)
-  assert.ok(graphA.edges.length > books.length, 'graph should include both shelf texture and topic threads')
+  assert.ok(
+    graphA.edges.length > books.length,
+    'graph should include both shelf texture and topic threads',
+  )
   assert.ok(
     graphA.edges.filter((edge) => edge.kind === 'topic').length < books.length * 4,
     'generic topic filtering should prevent a dense clique-like graph',
@@ -115,10 +118,7 @@ test('Aurora graph is deterministic, sparse, and skips generic topic hairballs',
   assert.equal(progress.categoryCode, 'econ')
   assert.equal(progress.hue, AURORA_CATEGORIES.econ.hue)
   assert.equal(progress.spine.height, 152 + (fnv1a('Progress and Poverty') % 9) * 15)
-  assert.equal(
-    progress.spine.width,
-    33 + (fnv1a('Henry GeorgeProgress and Poverty') % 5) * 7,
-  )
+  assert.equal(progress.spine.width, 33 + (fnv1a('Henry GeorgeProgress and Poverty') % 5) * 7)
 })
 
 test('Aurora shelf/index sort modes follow the handoff lens semantics', () => {
