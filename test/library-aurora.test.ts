@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import vm from 'node:vm'
 import { getAllBooks } from '@/lib/books'
+import type { AuroraCategoryCode } from '@/lib/library/aurora'
 import {
   AURORA_CATEGORY_ORDER,
   AURORA_CATEGORIES,
@@ -52,7 +53,8 @@ test('Aurora library categories match the design handoff taxonomy', () => {
   const handoff = loadHandoffData()
 
   assert.deepEqual(Object.keys(AURORA_CATEGORIES), Object.keys(handoff.CATEGORIES))
-  for (const [code, category] of Object.entries(handoff.CATEGORIES)) {
+  for (const [rawCode, category] of Object.entries(handoff.CATEGORIES)) {
+    const code = rawCode as AuroraCategoryCode
     assert.deepEqual(AURORA_CATEGORIES[code], {
       code,
       label: category.label,
@@ -126,13 +128,20 @@ test('Aurora shelf/index sort modes follow the handoff lens semantics', () => {
   const graph = buildAuroraGraph(books)
 
   const byThreads = sortAuroraBooks(graph.books, 'links')
-  assert.ok(byThreads[0].degree >= byThreads[1].degree)
+  const firstThreaded = byThreads[0]
+  const secondThreaded = byThreads[1]
+  assert.ok(firstThreaded && secondThreaded)
+  assert.ok(firstThreaded.degree >= secondThreaded.degree)
 
   const byRecent = sortAuroraBooks(graph.books, 'recent')
-  assert.equal(byRecent[0].year, Math.max(...books.map((book) => book.year)))
+  const newest = byRecent[0]
+  assert.ok(newest)
+  assert.equal(newest.year, Math.max(...books.map((book) => book.year)))
 
   const byShelf = sortAuroraBooks(graph.books, 'shelf')
-  const firstHue = byShelf[0].hue
+  const firstShelfBook = byShelf[0]
+  assert.ok(firstShelfBook)
+  const firstHue = firstShelfBook.hue
   assert.ok(byShelf.slice(0, 12).every((book) => book.hue >= firstHue))
 
   const byAuthor = sortAuroraBooks(graph.books, 'author')
