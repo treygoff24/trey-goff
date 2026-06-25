@@ -1,6 +1,8 @@
+import Link from 'next/link'
 import { allEssays } from 'content-collections'
-import { EssayCard } from '@/components/writing/EssayCard'
-import { TagPill } from '@/components/ui/TagPill'
+import { EditorialHeader } from '@/components/site/EditorialHeader'
+import { EditorialIndexRow } from '@/components/site/EditorialIndexRow'
+import { formatDateShort } from '@/lib/utils'
 
 export const metadata = {
   title: 'Writing',
@@ -19,105 +21,81 @@ export default async function WritingPage({ searchParams }: WritingPageProps) {
     : allEssays
 
   const activeTag = Array.isArray(params?.tag) ? params?.tag[0] : params?.tag
-
-  const allTags = Array.from(new Set(visibleEssays.flatMap((essay) => essay.tags))).sort((a, b) =>
-    a.localeCompare(b),
-  )
-
   const sortedEssays = [...visibleEssays].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   )
-
   const filteredEssays = activeTag
     ? sortedEssays.filter((essay) => essay.tags.includes(activeTag))
     : sortedEssays
-  const featuredEssays = filteredEssays.filter((essay) => essay.featured)
-  const nonFeaturedEssays = filteredEssays.filter((essay) => !essay.featured)
-  const showFeaturedSection = featuredEssays.length > 0
+  const featuredEssay = filteredEssays.find((essay) => essay.featured) ?? filteredEssays[0]
+  const moreEssays = featuredEssay
+    ? filteredEssays.filter((essay) => essay.slug !== featuredEssay.slug)
+    : filteredEssays
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-16">
-      <header className="mb-12">
-        <h1 className="font-satoshi text-4xl font-medium text-text-1 mb-4">Writing</h1>
-        <p className="text-lg text-text-2 max-w-2xl">
-          Long-form essays on governance reform, technology policy, and building better
-          institutions.
-        </p>
-      </header>
-
-      {allTags.length > 0 && (
-        <div className="mb-8 flex flex-wrap gap-2">
-          <TagPill tag="All" href="/writing" active={!activeTag} />
-          {allTags.map((tag) => (
-            <TagPill
-              key={tag}
-              tag={tag}
-              href={`/writing?tag=${encodeURIComponent(tag)}`}
-              active={activeTag === tag}
-            />
-          ))}
-        </div>
-      )}
+    <div className="tg-page max-w-5xl">
+      <EditorialHeader
+        eyebrow="Writing"
+        title="Essays & field notes"
+        standfirst="Long-form thinking on governance reform, institutional design, technology, faith, and the craft of building things that last."
+      />
 
       {filteredEssays.length === 0 ? (
-        <div className="rounded-lg border border-border-1 bg-surface-1 p-8 text-center">
-          <p className="text-text-3">
-            {activeTag ? `No essays tagged "${activeTag}" yet.` : 'Essays coming soon.'}
-          </p>
-        </div>
+        <section className="mt-14 border-t border-warm pt-8 text-text-3">
+          {activeTag ? `No essays tagged “${activeTag}” yet.` : 'Essays coming soon.'}
+        </section>
       ) : (
-        <div className="space-y-10">
-          {showFeaturedSection && (
-            <section>
-              <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-text-3">
-                    Featured
+        <>
+          {featuredEssay && (
+            <section className="mt-6">
+              <article>
+                <Link
+                  href={`/writing/${featuredEssay.slug}`}
+                  className="group block border-t-2 border-warm px-1 py-8 transition-colors hover:bg-warm/5 sm:py-10"
+                >
+                  <div className="mb-5 flex flex-wrap items-center gap-3">
+                    <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-warm">
+                      Featured
+                    </span>
+                    <span className="text-sm text-text-3">
+                      <time dateTime={featuredEssay.date}>
+                        {formatDateShort(featuredEssay.date)}
+                      </time>{' '}
+                      · {featuredEssay.readingTime} min read
+                    </span>
+                  </div>
+                  <h2 className="max-w-3xl font-newsreader text-[clamp(2rem,4vw,3.4rem)] font-normal leading-[1.08] text-text-1 transition-colors group-hover:text-warm">
+                    {featuredEssay.title}
+                  </h2>
+                  <p className="mt-4 max-w-2xl text-base leading-7 text-text-2">
+                    {featuredEssay.summary}
                   </p>
-                  <h2 className="mt-2 font-satoshi text-2xl font-medium text-text-1">Start here</h2>
-                </div>
-              </div>
-              <div className="space-y-6">
-                {featuredEssays.map((essay) => (
-                  <EssayCard
-                    key={essay.slug}
-                    title={essay.title}
-                    slug={essay.slug}
-                    date={essay.date}
-                    summary={essay.summary}
-                    tags={essay.tags}
-                    readingTime={essay.readingTime}
-                    status={essay.status}
-                    featured={essay.featured}
-                  />
-                ))}
-              </div>
+                  <p className="mt-5 font-mono text-[11px] uppercase tracking-[0.14em] text-text-3">
+                    {featuredEssay.tags.slice(0, 4).join(' · ')}
+                  </p>
+                </Link>
+              </article>
             </section>
           )}
 
-          {(showFeaturedSection ? nonFeaturedEssays : filteredEssays).length > 0 && (
-            <section>
-              {showFeaturedSection && (
-                <h2 className="mb-4 font-satoshi text-2xl font-medium text-text-1">All essays</h2>
-              )}
-              <div className="space-y-6">
-                {(showFeaturedSection ? nonFeaturedEssays : filteredEssays).map((essay) => (
-                  <EssayCard
-                    key={essay.slug}
-                    title={essay.title}
-                    slug={essay.slug}
-                    date={essay.date}
-                    summary={essay.summary}
-                    tags={essay.tags}
-                    readingTime={essay.readingTime}
-                    status={essay.status}
-                    featured={essay.featured}
-                  />
-                ))}
-              </div>
-            </section>
-          )}
-        </div>
+          <section className="mt-12">
+            <p className="border-b border-border-1 pb-5 font-mono text-xs uppercase tracking-[0.2em] text-text-3">
+              More essays
+            </p>
+            {moreEssays.map((essay) => (
+              <article key={essay.slug}>
+                <EditorialIndexRow
+                  href={`/writing/${essay.slug}`}
+                  meta={<time dateTime={essay.date}>{formatDateShort(essay.date)}</time>}
+                  title={essay.title}
+                  description={essay.summary}
+                  tags={essay.tags}
+                  detail={`${essay.readingTime} min →`}
+                />
+              </article>
+            ))}
+          </section>
+        </>
       )}
     </div>
   )

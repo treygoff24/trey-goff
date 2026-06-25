@@ -1,285 +1,244 @@
 #!/usr/bin/env tsx
 /**
- * Bundle isolation: keep Three.js out of most static route bundles.
+ * Bundle isolation: keep heavy interactive packages out of static/editorial routes.
  *
- * The homepage loads Three.js only via a deferred `next/dynamic` starfield; it is
- * intentionally excluded from `protectedRoutes` below. `/interactive` (when enabled)
- * is the primary heavy 3D surface.
- *
- * Usage: `pnpm check-bundle-isolation` (runs in postbuild).
+ * Next App Router does not expose useful route mappings in `.next/build-manifest.json`.
+ * This checker resolves routes through the App Router manifests, then scans each route's
+ * client-reference manifest, dynamic loadable manifest, rendered HTML, and referenced chunks.
  */
 
 import * as fs from 'fs'
 import * as path from 'path'
 
-// =============================================================================
-// Configuration
-// =============================================================================
+const NEXT_DIR = '.next'
+const STATIC_CHUNKS_DIR = path.join(NEXT_DIR, 'static/chunks')
+const SERVER_APP_DIR = path.join(NEXT_DIR, 'server/app')
 
-const CONFIG = {
-  nextDir: '.next',
-  staticDir: '.next/static/chunks',
-  routesManifest: '.next/routes-manifest.json',
+const PROTECTED_ROUTES = [
+  '/',
+  '/writing',
+  '/projects',
+  '/about',
+  '/library',
+  '/notes',
+  '/media',
+  '/topics',
+  '/transmissions',
+  '/powerlifting',
+  '/subscribe',
+  '/now',
+  '/colophon',
+  '/graph',
+]
 
-  // Patterns that indicate Three.js
-  threePatterns: [
-    'three', // three.js core
-    '@react-three', // R3F packages
-    'postprocessing', // postprocessing effects
-    'troika-three-text', // Three.js text rendering
-  ],
+const HEAVY_3D_PATTERNS = [
+  {
+    label: 'three',
+    needles: ['node_modules/three/', '.pnpm/three@', '"three"', "'three'", 'THREE.'],
+  },
+  { label: '@react-three', needles: ['node_modules/@react-three/', '.pnpm/@react-three+'] },
+  { label: 'postprocessing', needles: ['node_modules/postprocessing/', '.pnpm/postprocessing@'] },
+  {
+    label: 'troika-three-text',
+    needles: ['node_modules/troika-three-text/', '.pnpm/troika-three-text@'],
+  },
+  { label: 'three-stdlib', needles: ['node_modules/three-stdlib/', '.pnpm/three-stdlib@'] },
+]
 
-  // Reference: `/` and `/interactive` may load Three via dynamic imports.
-  allowedRoutes: ['/interactive'],
+const LIBRARY_FORBIDDEN_PATTERNS = [
+  { label: 'sigma', needles: ['node_modules/sigma/', '.pnpm/sigma@'] },
+  { label: 'graphology', needles: ['node_modules/graphology', '.pnpm/graphology'] },
+  { label: '@react-sigma', needles: ['node_modules/@react-sigma/', '.pnpm/@react-sigma+'] },
+]
 
-  // App routes that must not pull Three.js into their primary page chunks (excludes `/`; see header).
-  protectedRoutes: ['/writing', '/library', '/projects', '/about', '/notes', '/graph', '/media'],
+interface ForbiddenPattern {
+  label: string
+  needles: string[]
 }
 
-// =============================================================================
-// Types
-// =============================================================================
-
-interface ChunkInfo {
-  name: string
-  path: string
-  size: number
-  hasThree: boolean
-  threeImports: string[]
-}
-
-interface RouteInfo {
-  path: string
+interface RouteAnalysis {
+  route: string
+  artifacts: string[]
   chunks: string[]
-  hasThreeChunk: boolean
+  forbidden: Array<{ label: string; artifact: string }>
 }
 
-interface AnalysisResult {
-  passed: boolean
-  threeChunks: ChunkInfo[]
-  protectedRoutesWithThree: RouteInfo[]
-  totalThreeSize: number
-  warnings: string[]
+function readText(filePath: string): string {
+  return fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf8') : ''
 }
 
-// =============================================================================
-// Analysis Functions
-// =============================================================================
-
-function findChunksWithThree(): ChunkInfo[] {
-  const chunks: ChunkInfo[] = []
-
-  if (!fs.existsSync(CONFIG.staticDir)) {
-    console.log("Warning: .next/static/chunks not found. Run 'pnpm build' first.")
-    return chunks
-  }
-
-  const files = fs.readdirSync(CONFIG.staticDir)
-
-  for (const file of files) {
-    if (!file.endsWith('.js')) continue
-
-    const filePath = path.join(CONFIG.staticDir, file)
-    const stats = fs.statSync(filePath)
-    const content = fs.readFileSync(filePath, 'utf-8')
-
-    const threeImports: string[] = []
-
-    for (const pattern of CONFIG.threePatterns) {
-      // Check for package imports
-      if (content.includes(`"${pattern}`) || content.includes(`'${pattern}`)) {
-        threeImports.push(pattern)
-      }
-      // Check for Three.js specific identifiers
-      if (pattern === 'three' && content.includes('THREE.')) {
-        if (!threeImports.includes('three')) {
-          threeImports.push('three')
-        }
-      }
-    }
-
-    chunks.push({
-      name: file,
-      path: filePath,
-      size: stats.size,
-      hasThree: threeImports.length > 0,
-      threeImports,
-    })
-  }
-
-  return chunks
+function readJsonRecord(filePath: string): Record<string, unknown> {
+  if (!fs.existsSync(filePath)) return {}
+  const parsed: unknown = JSON.parse(fs.readFileSync(filePath, 'utf8'))
+  return parsed && typeof parsed === 'object' && !Array.isArray(parsed)
+    ? (parsed as Record<string, unknown>)
+    : {}
 }
 
-function checkBuildManifest(): { routeChunks: Map<string, string[]> } {
-  const routeChunks = new Map<string, string[]>()
+function routeToAppPath(route: string): string {
+  return route === '/' ? '/page' : `${route}/page`
+}
 
-  // Check build manifest for route -> chunk mappings
-  const manifestPath = path.join(CONFIG.nextDir, 'build-manifest.json')
+function routeToServerPath(route: string): string {
+  return route === '/' ? 'page' : `${route.slice(1)}/page`
+}
 
-  if (fs.existsSync(manifestPath)) {
-    try {
-      const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'))
+function routeToHtmlPath(route: string): string {
+  return path.join(SERVER_APP_DIR, route === '/' ? 'index.html' : `${route.slice(1)}.html`)
+}
 
-      if (manifest.pages) {
-        for (const [route, chunks] of Object.entries(manifest.pages)) {
-          routeChunks.set(route, chunks as string[])
-        }
-      }
-    } catch {
-      console.log('Warning: Could not parse build manifest')
+function routeToRscPath(route: string): string {
+  return path.join(SERVER_APP_DIR, route === '/' ? 'index.rsc' : `${route.slice(1)}.rsc`)
+}
+
+function unique(values: string[]): string[] {
+  return [...new Set(values)].sort()
+}
+
+function staticChunkPath(chunk: string): string {
+  return path.join(STATIC_CHUNKS_DIR, path.basename(chunk))
+}
+
+function extractChunks(text: string): string[] {
+  return unique(
+    [...text.matchAll(/(?:\/_next\/)?static\/chunks\/[^"'<>\s)]+\.js/g)].map((match) =>
+      match[0].replace(/^\/_next\//, ''),
+    ),
+  )
+}
+
+function collectLoadableChunks(filePath: string): string[] {
+  const manifest = readJsonRecord(filePath)
+  const chunks: string[] = []
+
+  for (const value of Object.values(manifest)) {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) continue
+    const files = (value as Record<string, unknown>).files
+    if (!Array.isArray(files)) continue
+    for (const file of files) {
+      if (typeof file === 'string' && file.endsWith('.js')) chunks.push(file)
     }
   }
 
-  return { routeChunks }
+  return unique(chunks)
 }
 
-function analyzeRouteIsolation(
-  chunks: ChunkInfo[],
-  routeChunks: Map<string, string[]>,
-): RouteInfo[] {
-  const threeChunkNames = new Set(chunks.filter((c) => c.hasThree).map((c) => c.name))
-
-  const routesWithThree: RouteInfo[] = []
-
-  for (const route of CONFIG.protectedRoutes) {
-    // Check various route naming patterns Next.js uses
-    const routePatterns = [
-      route,
-      route === '/' ? '/index' : route,
-      `pages${route}`,
-      `app${route}`,
-      `app${route}/page`,
-    ]
-
-    let hasThreeChunk = false
-    const routeChunkList: string[] = []
-
-    for (const pattern of routePatterns) {
-      const chunkList = routeChunks.get(pattern)
-      if (chunkList) {
-        for (const chunk of chunkList) {
-          const chunkName = path.basename(chunk)
-          routeChunkList.push(chunkName)
-          if (threeChunkNames.has(chunkName)) {
-            hasThreeChunk = true
-          }
-        }
-      }
-    }
-
-    if (hasThreeChunk) {
-      routesWithThree.push({
-        path: route,
-        chunks: routeChunkList,
-        hasThreeChunk: true,
-      })
-    }
+function matchesForbidden(content: string, patterns: ForbiddenPattern[]): string[] {
+  const hits: string[] = []
+  for (const pattern of patterns) {
+    if (pattern.needles.some((needle) => content.includes(needle))) hits.push(pattern.label)
   }
-
-  return routesWithThree
+  return unique(hits)
 }
 
-// =============================================================================
-// Main Analysis
-// =============================================================================
+function resolveRouteArtifacts(route: string): RouteAnalysis | null {
+  const serverPath = routeToServerPath(route)
+  const artifactCandidates = [
+    path.join(SERVER_APP_DIR, `${serverPath}_client-reference-manifest.js`),
+    path.join(SERVER_APP_DIR, `${serverPath}.js`),
+    routeToHtmlPath(route),
+    routeToRscPath(route),
+  ].filter((candidate) => fs.existsSync(candidate))
 
-function runAnalysis(): AnalysisResult {
-  console.log('Bundle Isolation Check\n')
-  console.log('='.repeat(50))
+  const loadablePath = path.join(SERVER_APP_DIR, serverPath, 'react-loadable-manifest.json')
+  const loadableChunks = collectLoadableChunks(loadablePath)
+  if (fs.existsSync(loadablePath)) artifactCandidates.push(loadablePath)
 
-  const warnings: string[] = []
+  if (artifactCandidates.length === 0) return null
 
-  // 1. Find all chunks containing Three.js
-  console.log('\n1. Scanning chunks for Three.js imports...')
-  const allChunks = findChunksWithThree()
-  const threeChunks = allChunks.filter((c) => c.hasThree)
+  const chunks = unique([
+    ...loadableChunks,
+    ...artifactCandidates.flatMap((artifact) => extractChunks(readText(artifact))),
+  ])
 
-  console.log(`   Found ${allChunks.length} total chunks`)
-  console.log(`   Found ${threeChunks.length} chunks with Three.js`)
+  const artifacts = unique([
+    ...artifactCandidates,
+    ...chunks.map(staticChunkPath).filter(fs.existsSync),
+  ])
+  const routePatterns =
+    route === '/library' ? [...HEAVY_3D_PATTERNS, ...LIBRARY_FORBIDDEN_PATTERNS] : HEAVY_3D_PATTERNS
 
-  for (const chunk of threeChunks) {
-    const sizeKB = (chunk.size / 1024).toFixed(1)
-    console.log(`   - ${chunk.name} (${sizeKB}KB): ${chunk.threeImports.join(', ')}`)
-  }
+  const forbidden = artifacts.flatMap((artifact) =>
+    matchesForbidden(readText(artifact), routePatterns).map((label) => ({ label, artifact })),
+  )
 
-  // 2. Check route -> chunk mappings
-  console.log('\n2. Analyzing route chunk mappings...')
-  const { routeChunks } = checkBuildManifest()
-
-  if (routeChunks.size === 0) {
-    warnings.push('Could not analyze route chunk mappings (build manifest not found)')
-    console.log('   ⚠ Could not find build manifest')
-  } else {
-    console.log(`   Found mappings for ${routeChunks.size} routes`)
-  }
-
-  // 3. Check protected routes
-  console.log('\n3. Checking protected routes...')
-  const protectedRoutesWithThree = analyzeRouteIsolation(allChunks, routeChunks)
-
-  if (protectedRoutesWithThree.length === 0) {
-    console.log('   ✓ No protected routes load Three.js directly')
-  } else {
-    for (const route of protectedRoutesWithThree) {
-      console.log(`   ✗ ${route.path} loads Three.js chunks`)
-    }
-  }
-
-  // Calculate total Three.js size
-  const totalThreeSize = threeChunks.reduce((sum, c) => sum + c.size, 0)
-
-  // 4. Check dynamic import pattern
-  console.log('\n4. Verifying dynamic import pattern...')
-
-  // Check that InteractiveWorld uses dynamic import
-  const interactiveShellPath = 'components/interactive/InteractiveShell.tsx'
-  if (fs.existsSync(interactiveShellPath)) {
-    const content = fs.readFileSync(interactiveShellPath, 'utf-8')
-    if (content.includes('dynamic(') && content.includes('InteractiveWorld')) {
-      console.log('   ✓ InteractiveWorld uses dynamic import')
-    } else {
-      warnings.push('InteractiveWorld should use dynamic() import for code splitting')
-      console.log('   ⚠ InteractiveWorld may not use dynamic import')
-    }
-  }
-
-  // Summary
-  console.log('\n' + '='.repeat(50))
-  console.log('SUMMARY')
-  console.log('='.repeat(50))
-  console.log(`Three.js chunks: ${threeChunks.length}`)
-  console.log(`Total Three.js size: ${(totalThreeSize / 1024 / 1024).toFixed(2)}MB`)
-  console.log(`Protected routes with Three.js: ${protectedRoutesWithThree.length}`)
-  console.log(`Warnings: ${warnings.length}`)
-
-  const passed = protectedRoutesWithThree.length === 0
-
-  if (passed) {
-    console.log('\n✓ Bundle isolation verified!')
-    console.log(
-      '  Three.js is not in protected route bundles (homepage uses deferred dynamic import)',
-    )
-  } else {
-    console.log('\n✗ Bundle isolation FAILED')
-    console.log('  Three.js is leaking into protected routes')
-  }
-
-  return {
-    passed,
-    threeChunks,
-    protectedRoutesWithThree,
-    totalThreeSize,
-    warnings,
-  }
+  return { route, artifacts, chunks, forbidden }
 }
 
-// =============================================================================
-// Main
-// =============================================================================
+function verifyAppRoutesExist(): string[] {
+  const appRoutes = readJsonRecord(path.join(NEXT_DIR, 'app-path-routes-manifest.json'))
+  return PROTECTED_ROUTES.filter((route) => appRoutes[routeToAppPath(route)] !== route)
+}
 
-const result = runAnalysis()
+function verifyInteractiveDynamicImport(): string | null {
+  const source = readText('components/interactive/InteractiveShell.tsx')
+  if (!source) return 'components/interactive/InteractiveShell.tsx missing'
+  return source.includes('dynamic(') && source.includes('InteractiveWorld')
+    ? null
+    : 'InteractiveWorld should stay behind next/dynamic in InteractiveShell'
+}
 
-// Only fail if we found actual violations (not just warnings)
-if (!result.passed) {
+console.log('Bundle Isolation Check\n')
+console.log('='.repeat(50))
+
+if (!fs.existsSync(NEXT_DIR)) {
+  console.error('Missing .next directory. Run pnpm build first.')
   process.exit(1)
 }
+
+const missingAppRoutes = verifyAppRoutesExist()
+const routeAnalyses = PROTECTED_ROUTES.map((route) => resolveRouteArtifacts(route))
+const missingArtifacts = PROTECTED_ROUTES.filter((_, index) => routeAnalyses[index] === null)
+const analyses = routeAnalyses.filter((analysis): analysis is RouteAnalysis => analysis !== null)
+const interactiveWarning = verifyInteractiveDynamicImport()
+const violations = analyses.flatMap((analysis) =>
+  analysis.forbidden.map((hit) => ({ route: analysis.route, ...hit })),
+)
+
+console.log('\n1. Protected App Router routes')
+console.log(`   Expected: ${PROTECTED_ROUTES.length}`)
+console.log(`   Resolved artifacts for: ${analyses.length}`)
+for (const analysis of analyses) {
+  console.log(
+    `   - ${analysis.route}: ${analysis.chunks.length} static chunks, ${analysis.artifacts.length} artifacts`,
+  )
+}
+
+console.log('\n2. Forbidden package scan')
+if (violations.length === 0) {
+  console.log('   ✓ No protected route loads forbidden heavy packages')
+} else {
+  for (const violation of violations) {
+    console.log(`   ✗ ${violation.route}: ${violation.label} in ${violation.artifact}`)
+  }
+}
+
+console.log('\n3. Dynamic heavy route guard')
+if (interactiveWarning) {
+  console.log(`   ⚠ ${interactiveWarning}`)
+} else {
+  console.log('   ✓ /interactive keeps InteractiveWorld dynamically imported')
+}
+
+const failures = [
+  ...missingAppRoutes.map((route) => `missing app route mapping: ${route}`),
+  ...missingArtifacts.map((route) => `missing route artifacts: ${route}`),
+  ...violations.map((violation) => `${violation.route} imports ${violation.label}`),
+]
+
+console.log('\n' + '='.repeat(50))
+console.log('SUMMARY')
+console.log('='.repeat(50))
+console.log(`Protected routes: ${PROTECTED_ROUTES.length}`)
+console.log(`Missing app route mappings: ${missingAppRoutes.length}`)
+console.log(`Missing route artifacts: ${missingArtifacts.length}`)
+console.log(`Forbidden package violations: ${violations.length}`)
+console.log(`Warnings: ${interactiveWarning ? 1 : 0}`)
+
+if (failures.length > 0) {
+  console.log('\n✗ Bundle isolation FAILED')
+  for (const failure of failures) console.log(`  - ${failure}`)
+  process.exit(1)
+}
+
+console.log('\n✓ Bundle isolation verified')

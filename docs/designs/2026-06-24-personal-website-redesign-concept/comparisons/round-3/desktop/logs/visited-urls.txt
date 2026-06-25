@@ -1,0 +1,4 @@
+http://localhost:3103/
+http://localhost:3103/writing
+http://localhost:3103/projects
+http://localhost:3103/about

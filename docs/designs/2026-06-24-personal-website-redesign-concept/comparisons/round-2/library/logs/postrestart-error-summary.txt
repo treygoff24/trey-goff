@@ -1,0 +1,7 @@
+== desktop errors ==
+== mobile errors ==
+== constellation errors ==
+== shelf errors ==
+== river errors ==
+== index errors ==
+== interactions errors ==

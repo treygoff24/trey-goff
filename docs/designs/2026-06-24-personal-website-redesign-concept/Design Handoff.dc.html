@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Hanken+Grotesk:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: #04130c; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  ::selection { background: rgba(111,214,154,0.3); }
+  @page { margin: 0; }
+</style>
+</helmet>
+
+<div style="position: relative; min-height: 100vh; background: #04130c; color: #e8f3ec; font-family: 'Hanken Grotesk', sans-serif; overflow-x: hidden;">
+  <div style="position: fixed; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(120% 60% at 50% -10%, rgba(111,214,154,0.10), transparent 55%);"></div>
+  <div style="position: relative; z-index: 1;">
+
+  <!-- ══════════ COVER ══════════ -->
+  <section style="max-width: 1180px; margin: 0 auto; padding: 88px 56px 56px;">
+    <div style="font-family: 'Geist Mono', monospace; font-size: 12px; letter-spacing: 0.24em; text-transform: uppercase; color: #6fd69a; margin-bottom: 28px;">Design Handoff · v1.0 · 2026</div>
+    <h1 style="font-family: 'Spectral', serif; font-weight: 300; font-size: clamp(46px, 7vw, 96px); line-height: 1.0; letter-spacing: -0.02em; margin-bottom: 24px;">Trey Goff<span style="color: #6fd69a;">.</span></h1>
+    <p style="font-family: 'Spectral', serif; font-weight: 300; font-style: italic; font-size: clamp(20px, 2.4vw, 30px); line-height: 1.3; color: rgba(232,243,236,0.82); max-width: 720px; margin-bottom: 40px;">Personal site — the complete visual specification and build reference for the Aurora-Emerald direction.</p>
+    <div style="display: flex; gap: 14px; flex-wrap: wrap; font-family: 'Geist Mono', monospace; font-size: 12px; letter-spacing: 0.04em; color: rgba(232,243,236,0.7);">
+      <span style="border: 1px solid rgba(111,214,154,0.3); padding: 9px 15px; border-radius: 100px;">5 pages</span>
+      <span style="border: 1px solid rgba(111,214,154,0.3); padding: 9px 15px; border-radius: 100px;">Aurora-Emerald system</span>
+      <span style="border: 1px solid rgba(111,214,154,0.3); padding: 9px 15px; border-radius: 100px;">334-book Library</span>
+      <span style="border: 1px solid rgba(111,214,154,0.3); padding: 9px 15px; border-radius: 100px;">Constellation knowledge-map</span>
+    </div>
+  </section>
+
+  <div style="max-width: 1180px; margin: 0 auto; padding: 0 56px 30px;">
+    <div style="border-radius: 8px; overflow: hidden; border: 1px solid rgba(111,214,154,0.18); box-shadow: 0 30px 90px rgba(0,0,0,0.55);">
+      <img src="handoff/shots/lens-constellation.png" alt="The Library constellation" style="display: block; width: 100%;">
+    </div>
+    <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: rgba(232,243,236,0.45); margin-top: 12px; text-align: center;">The Library — 334 books mapped as a constellation of ideas. The signature page of the site.</div>
+  </div>
+
+  <!-- ══════════ CONTENTS ══════════ -->
+  <section style="max-width: 1180px; margin: 0 auto; padding: 40px 56px 70px;">
+    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: rgba(232,243,236,0.1); border: 1px solid rgba(232,243,236,0.1); border-radius: 4px; overflow: hidden;">
+      <div style="background: #061a10; padding: 24px 22px;"><div style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6fd69a; margin-bottom: 10px;">01</div><div style="font-family: 'Spectral', serif; font-size: 19px;">The System</div><div style="font-size: 12.5px; color: rgba(232,243,236,0.5); margin-top: 5px;">Color, type, motion, background</div></div>
+      <div style="background: #061a10; padding: 24px 22px;"><div style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6fd69a; margin-bottom: 10px;">02</div><div style="font-family: 'Spectral', serif; font-size: 19px;">The Pages</div><div style="font-size: 12.5px; color: rgba(232,243,236,0.5); margin-top: 5px;">Home, Writing, Projects, About</div></div>
+      <div style="background: #061a10; padding: 24px 22px;"><div style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6fd69a; margin-bottom: 10px;">03</div><div style="font-family: 'Spectral', serif; font-size: 19px;">The Library</div><div style="font-size: 12.5px; color: rgba(232,243,236,0.5); margin-top: 5px;">Constellation + four lenses</div></div>
+      <div style="background: #061a10; padding: 24px 22px;"><div style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6fd69a; margin-bottom: 10px;">04</div><div style="font-family: 'Spectral', serif; font-size: 19px;">Build Notes</div><div style="font-size: 12.5px; color: rgba(232,243,236,0.5); margin-top: 5px;">Data, responsive, a11y</div></div>
+      <div style="background: #061a10; padding: 24px 22px;"><div style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6fd69a; margin-bottom: 10px;">05</div><div style="font-family: 'Spectral', serif; font-size: 19px;">Integration</div><div style="font-size: 12.5px; color: rgba(232,243,236,0.5); margin-top: 5px;">Unifying library + graph</div></div>
+    </div>
+  </section>
+
+  <!-- ══════════ 01 · THE SYSTEM ══════════ -->
+  <section style="max-width: 1180px; margin: 0 auto; padding: 30px 56px 20px;">
+    <div style="font-family: 'Geist Mono', monospace; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #6fd69a; margin-bottom: 14px;">01 · The System</div>
+    <h2 style="font-family: 'Spectral', serif; font-weight: 300; font-size: clamp(30px, 4vw, 50px); line-height: 1.05; margin-bottom: 18px;">Aurora-Emerald</h2>
+    <p style="font-size: 17px; font-weight: 300; line-height: 1.6; color: rgba(232,243,236,0.74); max-width: 660px; margin-bottom: 48px;">A near-black emerald ground lit by a living aurora, set in a literary serif. Restrained, nocturnal, and a little cosmic — built so a single accent green carries every interaction.</p>
+  </section>
+
+  <!-- palette -->
+  <section style="max-width: 1180px; margin: 0 auto; padding: 0 56px 36px;">
+    <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(232,243,236,0.5); margin-bottom: 18px; border-bottom: 1px solid rgba(232,243,236,0.12); padding-bottom: 12px;">Core palette</div>
+    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px;">
+      <div><div style="height: 92px; border-radius: 5px; background: #04130c; border: 1px solid rgba(232,243,236,0.14);"></div><div style="font-family: 'Geist Mono', monospace; font-size: 12px; margin-top: 9px;">#04130C</div><div style="font-size: 12px; color: rgba(232,243,236,0.5);">Ground</div></div>
+      <div><div style="height: 92px; border-radius: 5px; background: #061a10; border: 1px solid rgba(232,243,236,0.14);"></div><div style="font-family: 'Geist Mono', monospace; font-size: 12px; margin-top: 9px;">#061A10</div><div style="font-size: 12px; color: rgba(232,243,236,0.5);">Surface</div></div>
+      <div><div style="height: 92px; border-radius: 5px; background: #6fd69a;"></div><div style="font-family: 'Geist Mono', monospace; font-size: 12px; margin-top: 9px;">#6FD69A</div><div style="font-size: 12px; color: rgba(232,243,236,0.5);">Accent</div></div>
+      <div><div style="height: 92px; border-radius: 5px; background: #97e8bb;"></div><div style="font-family: 'Geist Mono', monospace; font-size: 12px; margin-top: 9px;">#97E8BB</div><div style="font-size: 12px; color: rgba(232,243,236,0.5);">Accent hover</div></div>
+      <div><div style="height: 92px; border-radius: 5px; background: #e8f3ec;"></div><div style="font-family: 'Geist Mono', monospace; font-size: 12px; margin-top: 9px;">#E8F3EC</div><div style="font-size: 12px; color: rgba(232,243,236,0.5);">Text</div></div>
+    </div>
+    <div style="font-size: 13.5px; line-height: 1.6; color: rgba(232,243,236,0.6); margin-top: 18px; max-width: 760px;">Text tints step down by opacity on the text color: <span style="font-family: 'Geist Mono', monospace; color: #e8f3ec;">0.7</span> secondary · <span style="font-family: 'Geist Mono', monospace; color: #e8f3ec;">0.5</span> tertiary · <span style="font-family: 'Geist Mono', monospace; color: #e8f3ec;">0.12</span> hairlines. Hover surfaces are <span style="font-family: 'Geist Mono', monospace; color: #e8f3ec;">rgba(232,243,236,0.05)</span>.</div>
+  </section>
+
+  <!-- library hues -->
+  <section style="max-width: 1180px; margin: 0 auto; padding: 0 56px 36px;">
+    <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(232,243,236,0.5); margin-bottom: 8px; border-bottom: 1px solid rgba(232,243,236,0.12); padding-bottom: 12px;">Library shelf hues · one emerald family, green→cyan</div>
+    <div style="font-size: 13.5px; line-height: 1.6; color: rgba(232,243,236,0.6); margin: 16px 0 20px; max-width: 760px;">The Library's 12 genre clusters each get a hue in a tight green-to-cyan band so the whole map reads as one organism. Defined in OKLCH — <span style="font-family: 'Geist Mono', monospace; color: #e8f3ec;">oklch(0.74 0.14 H)</span>.</div>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+      <span style="display: inline-flex; align-items: center; gap: 8px; font-family: 'Geist Mono', monospace; font-size: 12px; color: rgba(232,243,236,0.78); border: 1px solid rgba(232,243,236,0.14); padding: 7px 13px 7px 9px; border-radius: 100px;"><span style="width: 12px; height: 12px; border-radius: 50%; background: oklch(0.74 0.14 230);"></span>Sci-Fi · 230</span>
+      <span style="display: inline-flex; align-items: center; gap: 8px; font-family: 'Geist Mono', monospace; font-size: 12px; color: rgba(232,243,236,0.78); border: 1px solid rgba(232,243,236,0.14); padding: 7px 13px 7px 9px; border-radius: 100px;"><span style="width: 12px; height: 12px; border-radius: 50%; background: oklch(0.74 0.14 218);"></span>Fantasy · 218</span>
+      <span style="display: inline-flex; align-items: center; gap: 8px; font-family: 'Geist Mono', monospace; font-size: 12px; color: rgba(232,243,236,0.78); border: 1px solid rgba(232,243,236,0.14); padding: 7px 13px 7px 9px; border-radius: 100px;"><span style="width: 12px; height: 12px; border-radius: 50%; background: oklch(0.74 0.14 205);"></span>Fiction · 205</span>
+      <span style="display: inline-flex; align-items: center; gap: 8px; font-family: 'Geist Mono', monospace; font-size: 12px; color: rgba(232,243,236,0.78); border: 1px solid rgba(232,243,236,0.14); padding: 7px 13px 7px 9px; border-radius: 100px;"><span style="width: 12px; height: 12px; border-radius: 50%; background: oklch(0.74 0.14 196);"></span>Science · 196</span>
+      <span style="display: inline-flex; align-items: center; gap: 8px; font-family: 'Geist Mono', monospace; font-size: 12px; color: rgba(232,243,236,0.78); border: 1px solid rgba(232,243,236,0.14); padding: 7px 13px 7px 9px; border-radius: 100px;"><span style="width: 12px; height: 12px; border-radius: 50%; background: oklch(0.74 0.14 186);"></span>Self &amp; Growth · 186</span>
+      <span style="display: inline-flex; align-items: center; gap: 8px; font-family: 'Geist Mono', monospace; font-size: 12px; color: rgba(232,243,236,0.78); border: 1px solid rgba(232,243,236,0.14); padding: 7px 13px 7px 9px; border-radius: 100px;"><span style="width: 12px; height: 12px; border-radius: 50%; background: oklch(0.74 0.14 178);"></span>Business · 178</span>
+      <span style="display: inline-flex; align-items: center; gap: 8px; font-family: 'Geist Mono', monospace; font-size: 12px; color: rgba(232,243,236,0.78); border: 1px solid rgba(232,243,236,0.14); padding: 7px 13px 7px 9px; border-radius: 100px;"><span style="width: 12px; height: 12px; border-radius: 50%; background: oklch(0.74 0.14 168);"></span>Economics · 168</span>
+      <span style="display: inline-flex; align-items: center; gap: 8px; font-family: 'Geist Mono', monospace; font-size: 12px; color: rgba(232,243,236,0.78); border: 1px solid rgba(232,243,236,0.14); padding: 7px 13px 7px 9px; border-radius: 100px;"><span style="width: 12px; height: 12px; border-radius: 50%; background: oklch(0.74 0.14 158);"></span>Politics · 158</span>
+      <span style="display: inline-flex; align-items: center; gap: 8px; font-family: 'Geist Mono', monospace; font-size: 12px; color: rgba(232,243,236,0.78); border: 1px solid rgba(232,243,236,0.14); padding: 7px 13px 7px 9px; border-radius: 100px;"><span style="width: 12px; height: 12px; border-radius: 50%; background: oklch(0.74 0.14 148);"></span>Philosophy · 148</span>
+      <span style="display: inline-flex; align-items: center; gap: 8px; font-family: 'Geist Mono', monospace; font-size: 12px; color: rgba(232,243,236,0.78); border: 1px solid rgba(232,243,236,0.14); padding: 7px 13px 7px 9px; border-radius: 100px;"><span style="width: 12px; height: 12px; border-radius: 50%; background: oklch(0.74 0.14 138);"></span>Religion · 138</span>
+      <span style="display: inline-flex; align-items: center; gap: 8px; font-family: 'Geist Mono', monospace; font-size: 12px; color: rgba(232,243,236,0.78); border: 1px solid rgba(232,243,236,0.14); padding: 7px 13px 7px 9px; border-radius: 100px;"><span style="width: 12px; height: 12px; border-radius: 50%; background: oklch(0.74 0.14 128);"></span>History · 128</span>
+      <span style="display: inline-flex; align-items: center; gap: 8px; font-family: 'Geist Mono', monospace; font-size: 12px; color: rgba(232,243,236,0.78); border: 1px solid rgba(232,243,236,0.14); padding: 7px 13px 7px 9px; border-radius: 100px;"><span style="width: 12px; height: 12px; border-radius: 50%; background: oklch(0.74 0.14 118);"></span>Lives · 118</span>
+    </div>
+  </section>
+
+  <!-- typography -->
+  <section style="max-width: 1180px; margin: 0 auto; padding: 0 56px 36px;">
+    <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(232,243,236,0.5); margin-bottom: 22px; border-bottom: 1px solid rgba(232,243,236,0.12); padding-bottom: 12px;">Typography</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px;">
+      <div style="border: 1px solid rgba(232,243,236,0.12); border-radius: 6px; padding: 26px 24px; background: #061a10;">
+        <div style="font-family: 'Spectral', serif; font-size: 52px; font-weight: 300; line-height: 1; margin-bottom: 16px;">Ag</div>
+        <div style="font-family: 'Spectral', serif; font-size: 21px; font-weight: 400; margin-bottom: 4px;">Spectral</div>
+        <div style="font-size: 13px; color: rgba(232,243,236,0.6); line-height: 1.5;">Display &amp; headings. Weights 300 / 400 / 500, italic for emphasis. All H1–H3, the logo, pull-quotes.</div>
+      </div>
+      <div style="border: 1px solid rgba(232,243,236,0.12); border-radius: 6px; padding: 26px 24px; background: #061a10;">
+        <div style="font-family: 'Hanken Grotesk', sans-serif; font-size: 52px; font-weight: 500; line-height: 1; margin-bottom: 16px;">Ag</div>
+        <div style="font-family: 'Hanken Grotesk', sans-serif; font-size: 21px; font-weight: 600; margin-bottom: 4px;">Hanken Grotesk</div>
+        <div style="font-size: 13px; color: rgba(232,243,236,0.6); line-height: 1.5;">Body &amp; UI. Weights 300–600. Paragraphs, nav, descriptions, card copy.</div>
+      </div>
+      <div style="border: 1px solid rgba(232,243,236,0.12); border-radius: 6px; padding: 26px 24px; background: #061a10;">
+        <div style="font-family: 'Geist Mono', monospace; font-size: 50px; font-weight: 400; line-height: 1; margin-bottom: 16px;">Ag</div>
+        <div style="font-family: 'Geist Mono', monospace; font-size: 20px; font-weight: 500; margin-bottom: 4px;">Geist Mono</div>
+        <div style="font-size: 13px; color: rgba(232,243,236,0.6); line-height: 1.5;">Labels &amp; data. Eyebrows (0.2em, uppercase), stats, button text, ratings, dates, metadata.</div>
+      </div>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 22px; font-family: 'Geist Mono', monospace; font-size: 12px; color: rgba(232,243,236,0.6);">
+      <span><span style="color: #6fd69a;">H1</span> clamp(38–76px) · Spectral 300</span>
+      <span><span style="color: #6fd69a;">H2</span> clamp(28–50px) · Spectral 300</span>
+      <span><span style="color: #6fd69a;">Body</span> 14–20px · Hanken 300–400</span>
+      <span><span style="color: #6fd69a;">Eyebrow</span> 12px · 0.2em · Mono 600</span>
+    </div>
+  </section>
+
+  <!-- background + motion -->
+  <section style="max-width: 1180px; margin: 0 auto; padding: 0 56px 70px;">
+    <div style="display: grid; grid-template-columns: 1.3fr 1fr; gap: 28px; align-items: stretch;">
+      <div style="border: 1px solid rgba(232,243,236,0.12); border-radius: 6px; overflow: hidden; background: #061a10;">
+        <img src="handoff/assets/aurora-emerald.png" alt="Aurora background" style="display: block; width: 100%; height: 200px; object-fit: cover;">
+        <div style="padding: 20px 24px;">
+          <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #6fd69a; margin-bottom: 10px;">The aurora background</div>
+          <div style="font-size: 13.5px; line-height: 1.6; color: rgba(232,243,236,0.66);">A full-screen WebGL shader (7 drifting aurora ribbons + starfield), shifted into the emerald family with <span style="font-family: 'Geist Mono', monospace; color: #e8f3ec;">hue-rotate(14deg) saturate(1.45) brightness(0.92)</span> and dimmed under a radial vignette so text stays legible. Fixed behind every page. Honors <span style="font-family: 'Geist Mono', monospace; color: #e8f3ec;">prefers-reduced-motion</span> (freezes).</div>
+        </div>
+      </div>
+      <div style="border: 1px solid rgba(232,243,236,0.12); border-radius: 6px; padding: 24px; background: #061a10;">
+        <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #6fd69a; margin-bottom: 14px;">Motion</div>
+        <div style="font-size: 13.5px; line-height: 1.7; color: rgba(232,243,236,0.7);">
+          <div style="margin-bottom: 12px;"><span style="font-family: 'Geist Mono', monospace; color: #e8f3ec;">Entrance</span> — content rises 16px + fades in, <span style="font-family: 'Geist Mono', monospace;">cubic-bezier(0.16,1,0.3,1)</span>, 0.8–1s, on hero load.</div>
+          <div style="margin-bottom: 12px;"><span style="font-family: 'Geist Mono', monospace; color: #e8f3ec;">Hover</span> — links shift to accent; rows wash to 5% surface; 0.15–0.2s ease.</div>
+          <div><span style="font-family: 'Geist Mono', monospace; color: #e8f3ec;">Constellation</span> — stars twinkle (out-of-phase sine), spring zoom/pan, books lift on the shelf.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ 02 · THE PAGES ══════════ -->
+  <section style="max-width: 1180px; margin: 0 auto; padding: 30px 56px 10px;">
+    <div style="font-family: 'Geist Mono', monospace; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #6fd69a; margin-bottom: 14px;">02 · The Pages</div>
+    <h2 style="font-family: 'Spectral', serif; font-weight: 300; font-size: clamp(30px, 4vw, 50px); line-height: 1.05; margin-bottom: 18px;">Five screens, one language</h2>
+    <p style="font-size: 17px; font-weight: 300; line-height: 1.6; color: rgba(232,243,236,0.74); max-width: 660px; margin-bottom: 20px;">Each page pairs a generous serif header (eyebrow → headline → standfirst) with quiet, hairline-ruled index rows. Desktop captures at full width; mobile at 402px.</p>
+  </section>
+
+  <!-- PAGE: HOME -->
+  <section style="max-width: 1180px; margin: 0 auto; padding: 26px 56px;">
+    <div style="display: flex; align-items: baseline; gap: 14px; margin-bottom: 20px;"><span style="font-family: 'Geist Mono', monospace; font-size: 13px; color: #6fd69a;">/</span><h3 style="font-family: 'Spectral', serif; font-weight: 400; font-size: 28px;">Home</h3><span style="font-size: 13.5px; color: rgba(232,243,236,0.55);">Centered hero · four-paths index · selected work · featured essays</span></div>
+    <div style="display: grid; grid-template-columns: 1fr 250px; gap: 26px; align-items: start;">
+      <div style="border-radius: 9px; overflow: hidden; border: 1px solid rgba(232,243,236,0.12); box-shadow: 0 22px 60px rgba(0,0,0,0.45);">
+        <div style="display: flex; align-items: center; gap: 6px; padding: 10px 13px; background: rgba(8,22,15,0.95); border-bottom: 1px solid rgba(232,243,236,0.08);"><span style="width: 10px; height: 10px; border-radius: 50%; background: #ec6a5e;"></span><span style="width: 10px; height: 10px; border-radius: 50%; background: #f4bf4f;"></span><span style="width: 10px; height: 10px; border-radius: 50%; background: #61c554;"></span><span style="margin-left: 12px; font-family: 'Geist Mono', monospace; font-size: 11px; color: rgba(232,243,236,0.4);">treygoff.com</span></div>
+        <img src="handoff/shots/home-desktop.png" alt="Home desktop" style="display: block; width: 100%;">
+      </div>
+      <div style="border-radius: 26px; padding: 9px; background: #0a1a12; border: 1px solid rgba(232,243,236,0.14); box-shadow: 0 20px 50px rgba(0,0,0,0.45);">
+        <div style="height: 18px; display: flex; justify-content: center; align-items: center;"><span style="width: 54px; height: 5px; border-radius: 3px; background: rgba(232,243,236,0.2);"></span></div>
+        <img src="handoff/shots/home-mobile.png" alt="Home mobile" style="display: block; width: 100%; border-radius: 18px;">
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE: WRITING -->
+  <section style="max-width: 1180px; margin: 0 auto; padding: 26px 56px;">
+    <div style="display: flex; align-items: baseline; gap: 14px; margin-bottom: 20px;"><span style="font-family: 'Geist Mono', monospace; font-size: 13px; color: #6fd69a;">/writing</span><h3 style="font-family: 'Spectral', serif; font-weight: 400; font-size: 28px;">Writing</h3><span style="font-size: 13.5px; color: rgba(232,243,236,0.55);">Featured essay · chronological index with read-time</span></div>
+    <div style="display: grid; grid-template-columns: 1fr 250px; gap: 26px; align-items: start;">
+      <div style="border-radius: 9px; overflow: hidden; border: 1px solid rgba(232,243,236,0.12); box-shadow: 0 22px 60px rgba(0,0,0,0.45);">
+        <div style="display: flex; align-items: center; gap: 6px; padding: 10px 13px; background: rgba(8,22,15,0.95); border-bottom: 1px solid rgba(232,243,236,0.08);"><span style="width: 10px; height: 10px; border-radius: 50%; background: #ec6a5e;"></span><span style="width: 10px; height: 10px; border-radius: 50%; background: #f4bf4f;"></span><span style="width: 10px; height: 10px; border-radius: 50%; background: #61c554;"></span><span style="margin-left: 12px; font-family: 'Geist Mono', monospace; font-size: 11px; color: rgba(232,243,236,0.4);">treygoff.com/writing</span></div>
+        <img src="handoff/shots/writing-desktop.png" alt="Writing desktop" style="display: block; width: 100%;">
+      </div>
+      <div style="border-radius: 26px; padding: 9px; background: #0a1a12; border: 1px solid rgba(232,243,236,0.14); box-shadow: 0 20px 50px rgba(0,0,0,0.45);">
+        <div style="height: 18px; display: flex; justify-content: center; align-items: center;"><span style="width: 54px; height: 5px; border-radius: 3px; background: rgba(232,243,236,0.2);"></span></div>
+        <img src="handoff/shots/writing-mobile.png" alt="Writing mobile" style="display: block; width: 100%; border-radius: 18px;">
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE: PROJECTS -->
+  <section style="max-width: 1180px; margin: 0 auto; padding: 26px 56px;">
+    <div style="display: flex; align-items: baseline; gap: 14px; margin-bottom: 20px;"><span style="font-family: 'Geist Mono', monospace; font-size: 13px; color: #6fd69a;">/projects</span><h3 style="font-family: 'Spectral', serif; font-weight: 400; font-size: 28px;">Projects</h3><span style="font-size: 13.5px; color: rgba(232,243,236,0.55);">Featured project · categorized work index with status</span></div>
+    <div style="display: grid; grid-template-columns: 1fr 250px; gap: 26px; align-items: start;">
+      <div style="border-radius: 9px; overflow: hidden; border: 1px solid rgba(232,243,236,0.12); box-shadow: 0 22px 60px rgba(0,0,0,0.45);">
+        <div style="display: flex; align-items: center; gap: 6px; padding: 10px 13px; background: rgba(8,22,15,0.95); border-bottom: 1px solid rgba(232,243,236,0.08);"><span style="width: 10px; height: 10px; border-radius: 50%; background: #ec6a5e;"></span><span style="width: 10px; height: 10px; border-radius: 50%; background: #f4bf4f;"></span><span style="width: 10px; height: 10px; border-radius: 50%; background: #61c554;"></span><span style="margin-left: 12px; font-family: 'Geist Mono', monospace; font-size: 11px; color: rgba(232,243,236,0.4);">treygoff.com/projects</span></div>
+        <img src="handoff/shots/projects-desktop.png" alt="Projects desktop" style="display: block; width: 100%;">
+      </div>
+      <div style="border-radius: 26px; padding: 9px; background: #0a1a12; border: 1px solid rgba(232,243,236,0.14); box-shadow: 0 20px 50px rgba(0,0,0,0.45);">
+        <div style="height: 18px; display: flex; justify-content: center; align-items: center;"><span style="width: 54px; height: 5px; border-radius: 3px; background: rgba(232,243,236,0.2);"></span></div>
+        <img src="handoff/shots/projects-mobile.png" alt="Projects mobile" style="display: block; width: 100%; border-radius: 18px;">
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE: ABOUT -->
+  <section style="max-width: 1180px; margin: 0 auto; padding: 26px 56px 50px;">
+    <div style="display: flex; align-items: baseline; gap: 14px; margin-bottom: 20px;"><span style="font-family: 'Geist Mono', monospace; font-size: 13px; color: #6fd69a;">/about</span><h3 style="font-family: 'Spectral', serif; font-weight: 400; font-size: 28px;">About</h3><span style="font-size: 13.5px; color: rgba(232,243,236,0.55);">Bio prose + sticky sidebar (role / roots / faith / links + portrait slot)</span></div>
+    <div style="display: grid; grid-template-columns: 1fr 250px; gap: 26px; align-items: start;">
+      <div style="border-radius: 9px; overflow: hidden; border: 1px solid rgba(232,243,236,0.12); box-shadow: 0 22px 60px rgba(0,0,0,0.45);">
+        <div style="display: flex; align-items: center; gap: 6px; padding: 10px 13px; background: rgba(8,22,15,0.95); border-bottom: 1px solid rgba(232,243,236,0.08);"><span style="width: 10px; height: 10px; border-radius: 50%; background: #ec6a5e;"></span><span style="width: 10px; height: 10px; border-radius: 50%; background: #f4bf4f;"></span><span style="width: 10px; height: 10px; border-radius: 50%; background: #61c554;"></span><span style="margin-left: 12px; font-family: 'Geist Mono', monospace; font-size: 11px; color: rgba(232,243,236,0.4);">treygoff.com/about</span></div>
+        <img src="handoff/shots/about-desktop.png" alt="About desktop" style="display: block; width: 100%;">
+      </div>
+      <div style="border-radius: 26px; padding: 9px; background: #0a1a12; border: 1px solid rgba(232,243,236,0.14); box-shadow: 0 20px 50px rgba(0,0,0,0.45);">
+        <div style="height: 18px; display: flex; justify-content: center; align-items: center;"><span style="width: 54px; height: 5px; border-radius: 3px; background: rgba(232,243,236,0.2);"></span></div>
+        <img src="handoff/shots/about-mobile.png" alt="About mobile" style="display: block; width: 100%; border-radius: 18px;">
+      </div>
+    </div>
+    <div style="font-size: 13px; color: rgba(232,243,236,0.55); margin-top: 14px; font-style: italic;">Note — the hatched “Drop portrait” box is an intentional image slot awaiting Trey's photo.</div>
+  </section>
+
+  <!-- ══════════ 03 · THE LIBRARY ══════════ -->
+  <section style="max-width: 1180px; margin: 0 auto; padding: 40px 56px 10px; border-top: 1px solid rgba(232,243,236,0.12);">
+    <div style="font-family: 'Geist Mono', monospace; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #6fd69a; margin-bottom: 14px;">03 · The Library</div>
+    <h2 style="font-family: 'Spectral', serif; font-weight: 300; font-size: clamp(30px, 4vw, 50px); line-height: 1.05; margin-bottom: 18px;">One collection, <span style="font-style: italic; color: #6fd69a;">four lenses</span></h2>
+    <p style="font-size: 17px; font-weight: 300; line-height: 1.6; color: rgba(232,243,236,0.74); max-width: 700px; margin-bottom: 14px;">The same 334 books re-rendered four ways, switchable from a pinned bottom bar. A category filter and a click-through detail drawer tie all four together. The Constellation is the headline; the others are calmer ways in.</p>
+  </section>
+
+  <!-- constellation algorithm -->
+  <section style="max-width: 1180px; margin: 0 auto; padding: 22px 56px;">
+    <div style="border-radius: 9px; overflow: hidden; border: 1px solid rgba(111,214,154,0.2); box-shadow: 0 22px 60px rgba(0,0,0,0.5); margin-bottom: 28px;">
+      <img src="handoff/shots/lens-constellation.png" alt="Constellation lens" style="display: block; width: 100%;">
+    </div>
+    <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #6fd69a; margin-bottom: 20px;">Constellation — how it's built</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px;">
+      <div style="border: 1px solid rgba(232,243,236,0.12); border-radius: 6px; padding: 22px 24px; background: #061a10;">
+        <div style="font-family: 'Spectral', serif; font-size: 18px; color: #6fd69a; margin-bottom: 8px;">1 · Genre clusters on a kinship ring</div>
+        <div style="font-size: 13.5px; line-height: 1.6; color: rgba(232,243,236,0.7);">12 shelves (consolidated from 33 raw genres) sit evenly around a circle (R≈560). Order is by intellectual kinship so neighbours share readers, closed as a loop: <span style="font-family: 'Geist Mono', monospace; color: #e8f3ec; font-size: 12px;">scifi → science → growth → business → econ → politics → phil → religion → history → lives → fiction → fantasy →</span> (back to scifi).</div>
+      </div>
+      <div style="border: 1px solid rgba(232,243,236,0.12); border-radius: 6px; padding: 22px 24px; background: #061a10;">
+        <div style="font-family: 'Spectral', serif; font-size: 18px; color: #6fd69a; margin-bottom: 8px;">2 · Phyllotaxis packing, best to the core</div>
+        <div style="font-size: 13.5px; line-height: 1.6; color: rgba(232,243,236,0.7);">Within each cluster, books pack in a sunflower spiral (golden angle). The most thematically-connected books are pulled to the bright centre; the rest drift to the rim — so each shelf has a glowing heart.</div>
+      </div>
+      <div style="border: 1px solid rgba(232,243,236,0.12); border-radius: 6px; padding: 22px 24px; background: #061a10;">
+        <div style="font-family: 'Spectral', serif; font-size: 18px; color: #6fd69a; margin-bottom: 8px;">3 · Topic threads</div>
+        <div style="font-size: 13.5px; line-height: 1.6; color: rgba(232,243,236,0.7);">Two books are linked when they share a <em>specific</em> topic (any topic on ≤24 books — broader ones are basically the genre and are skipped). Bright threads chain these across the map, so ideas visibly bridge shelves. Faint intra-cluster lines add constellation texture.</div>
+      </div>
+      <div style="border: 1px solid rgba(232,243,236,0.12); border-radius: 6px; padding: 22px 24px; background: #061a10;">
+        <div style="font-family: 'Spectral', serif; font-size: 18px; color: #6fd69a; margin-bottom: 8px;">4 · Encoding &amp; interaction</div>
+        <div style="font-size: 13.5px; line-height: 1.6; color: rgba(232,243,236,0.7);"><span style="color: #e8f3ec;">Colour</span> = shelf hue · <span style="color: #e8f3ec;">size + brightness</span> = topic-centrality (how connected) · <span style="color: #e8f3ec;">twinkle</span> = per-star sine. Fit-to-screen on load; scroll-zoom to cursor; drag-pan; hover label; click → detail drawer; the category filter dims everything off-theme.</div>
+      </div>
+    </div>
+    <div style="font-size: 12.5px; color: rgba(232,243,236,0.5); margin-top: 14px; line-height: 1.6;">Rendered on a single <span style="font-family: 'Geist Mono', monospace;">&lt;canvas&gt;</span> with a requestAnimationFrame loop plus a setInterval watchdog (guarantees paint even when the tab/iframe is backgrounded). OKLCH cluster colours are converted to RGB in JS for canvas (canvas gradients don't accept oklch()).</div>
+  </section>
+
+  <!-- the other three lenses -->
+  <section style="max-width: 1180px; margin: 0 auto; padding: 14px 56px 40px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+      <div>
+        <div style="border-radius: 7px; overflow: hidden; border: 1px solid rgba(232,243,236,0.12); margin-bottom: 12px;"><img src="handoff/shots/lens-shelf.png" alt="Shelf lens" style="display: block; width: 100%; height: 150px; object-fit: cover; object-position: top;"></div>
+        <div style="font-family: 'Spectral', serif; font-size: 18px; margin-bottom: 5px;">The Shelf</div>
+        <div style="font-size: 13px; line-height: 1.55; color: rgba(232,243,236,0.62);">A CSS spine wall — vertical titles, hue per shelf, sortable by shelf / colour / threads / recency / height / author. Hover lifts a book out.</div>
+      </div>
+      <div>
+        <div style="border-radius: 7px; overflow: hidden; border: 1px solid rgba(232,243,236,0.12); margin-bottom: 12px;"><img src="handoff/shots/lens-river.png" alt="River lens" style="display: block; width: 100%; height: 150px; object-fit: cover; object-position: bottom;"></div>
+        <div style="font-family: 'Spectral', serif; font-size: 18px; margin-bottom: 5px;">The River</div>
+        <div style="font-size: 13px; line-height: 1.55; color: rgba(232,243,236,0.62);">Every book as a tick along a timeline of publication year (ancient → present); taller tick = more idea-threads. The density tells a reading story.</div>
+      </div>
+      <div>
+        <div style="border-radius: 7px; overflow: hidden; border: 1px solid rgba(232,243,236,0.12); margin-bottom: 12px;"><img src="handoff/shots/lens-index.png" alt="Index lens" style="display: block; width: 100%; height: 150px; object-fit: cover; object-position: top;"></div>
+        <div style="font-family: 'Spectral', serif; font-size: 18px; margin-bottom: 5px;">The Index</div>
+        <div style="font-size: 13px; line-height: 1.55; color: rgba(232,243,236,0.62);">The restrained option — a sortable typographic ledger: №, title / author, shelf, primary topic, year. The confident, scannable fallback.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- data schema -->
+  <section style="max-width: 1180px; margin: 0 auto; padding: 0 56px 60px;">
+    <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(232,243,236,0.5); margin-bottom: 18px; border-bottom: 1px solid rgba(232,243,236,0.12); padding-bottom: 12px;">Data model</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start;">
+      <div style="background: #02100a; border: 1px solid rgba(232,243,236,0.12); border-radius: 6px; padding: 22px 24px; font-family: 'Geist Mono', monospace; font-size: 12.5px; line-height: 1.7; color: rgba(232,243,236,0.82); overflow-x: auto;">
+        <div style="color: rgba(232,243,236,0.4);">// library-data.js — one record per book</div>
+        <div>{</div>
+        <div>&nbsp;&nbsp;<span style="color: #6fd69a;">id</span>: "seeing-like-a-state",</div>
+        <div>&nbsp;&nbsp;<span style="color: #6fd69a;">t</span>:  "Seeing Like a State",</div>
+        <div>&nbsp;&nbsp;<span style="color: #6fd69a;">a</span>:  "James C. Scott",</div>
+        <div>&nbsp;&nbsp;<span style="color: #6fd69a;">y</span>:  1998,&nbsp;&nbsp;<span style="color: rgba(232,243,236,0.4);">// year published</span></div>
+        <div>&nbsp;&nbsp;<span style="color: #6fd69a;">c</span>:  "politics",&nbsp;<span style="color: rgba(232,243,236,0.4);">// shelf / cluster</span></div>
+        <div>&nbsp;&nbsp;<span style="color: #6fd69a;">tp</span>: ["governance","planning",…],</div>
+        <div>&nbsp;&nbsp;<span style="color: #6fd69a;">r</span>:  5,&nbsp;&nbsp;&nbsp;<span style="color: rgba(232,243,236,0.4);">// rating (optional)</span></div>
+        <div>&nbsp;&nbsp;<span style="color: #6fd69a;">k</span>:  "Essential…"&nbsp;<span style="color: rgba(232,243,236,0.4);">// blurb (optional)</span></div>
+        <div>}</div>
+      </div>
+      <div style="font-size: 14px; line-height: 1.7; color: rgba(232,243,236,0.72);">
+        <p style="margin-bottom: 14px;">Generated from the live <span style="font-family: 'Geist Mono', monospace; font-size: 12.5px; color: #e8f3ec;">content/library/books.json</span> (334 titles). Two transforms run at build:</p>
+        <p style="margin-bottom: 12px;"><span style="color: #6fd69a; font-family: 'Geist Mono', monospace; font-size: 12px;">→ shelf</span> 33 raw genres collapse into 12 clusters; the 15 ambiguous “non-fiction” books are routed to a shelf by their topics.</p>
+        <p><span style="color: #6fd69a; font-family: 'Geist Mono', monospace; font-size: 12px;">→ topics</span> drive the constellation's threads, centrality, sizing and the detail-drawer chips — the richest signal in the data.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ 04 · BUILD NOTES ══════════ -->
+  <section style="max-width: 1180px; margin: 0 auto; padding: 40px 56px 10px; border-top: 1px solid rgba(232,243,236,0.12);">
+    <div style="font-family: 'Geist Mono', monospace; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #6fd69a; margin-bottom: 14px;">04 · Build Notes</div>
+    <h2 style="font-family: 'Spectral', serif; font-weight: 300; font-size: clamp(30px, 4vw, 50px); line-height: 1.05; margin-bottom: 30px;">Taking it to production</h2>
+  </section>
+
+  <section style="max-width: 1180px; margin: 0 auto; padding: 0 56px 70px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px;">
+      <div style="border: 1px solid rgba(232,243,236,0.12); border-radius: 6px; padding: 24px; background: #061a10;">
+        <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #6fd69a; margin-bottom: 12px;">Data realities</div>
+        <div style="font-size: 13.5px; line-height: 1.65; color: rgba(232,243,236,0.72);">Ratings exist on only 8 of 334 books, and there are no read-dates — so encodings deliberately avoid rating (size/centrality use the topic graph) and the River uses <em>publication</em> year. As Trey adds ratings, dates and blurbs, the same fields light up automatically. A 9-blurb “Marginalia” lens is built but hidden until there are enough notes.</div>
+      </div>
+      <div style="border: 1px solid rgba(232,243,236,0.12); border-radius: 6px; padding: 24px; background: #061a10;">
+        <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #6fd69a; margin-bottom: 12px;">Responsive</div>
+        <div style="font-size: 13.5px; line-height: 1.65; color: rgba(232,243,236,0.72);">Layouts are fluid (clamp + flex-wrap) and reflow cleanly to 402px. One production to-do: the nav currently wraps to a second row on phones — swap it for a proper menu / hamburger. The constellation is already touch-enabled (pinch-zoom, drag-pan).</div>
+      </div>
+      <div style="border: 1px solid rgba(232,243,236,0.12); border-radius: 6px; padding: 24px; background: #061a10;">
+        <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #6fd69a; margin-bottom: 12px;">Fit into the existing app</div>
+        <div style="font-size: 13.5px; line-height: 1.65; color: rgba(232,243,236,0.72);">The production site (Next.js) already ships a <span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #e8f3ec;">/library</span> and a <span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #e8f3ec;">/graph</span>. Decision to make: does the Constellation <em>replace</em> the current library view, or become a new lens beside the existing shelf/stack UI? It shares the graph's worldview, so unifying them is the natural move.</div>
+      </div>
+      <div style="border: 1px solid rgba(232,243,236,0.12); border-radius: 6px; padding: 24px; background: #061a10;">
+        <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #6fd69a; margin-bottom: 12px;">Performance &amp; a11y</div>
+        <div style="font-size: 13.5px; line-height: 1.65; color: rgba(232,243,236,0.72);">The aurora is one WebGL quad and freezes under <span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #e8f3ec;">prefers-reduced-motion</span>; consider a static gradient fallback for low-power devices. The constellation is a single canvas, comfortable at 334 nodes. Provide a text/list equivalent (the Index lens already serves this) for screen readers.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ 05 · INTEGRATION ══════════ -->
+  <section style="max-width: 1180px; margin: 0 auto; padding: 40px 56px 10px; border-top: 1px solid rgba(232,243,236,0.12);">
+    <div style="font-family: 'Geist Mono', monospace; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #6fd69a; margin-bottom: 14px;">05 · Integration</div>
+    <h2 style="font-family: 'Spectral', serif; font-weight: 300; font-size: clamp(30px, 4vw, 50px); line-height: 1.05; margin-bottom: 18px;">Unifying with <span style="font-style: italic; color: #6fd69a;">/library</span> &amp; <span style="font-style: italic; color: #6fd69a;">/graph</span></h2>
+    <p style="font-size: 17px; font-weight: 300; line-height: 1.6; color: rgba(232,243,236,0.74); max-width: 720px; margin-bottom: 12px;">The Constellation is at once a library view and a knowledge graph — so it lands across two systems the production site already ships. The plan: one shared graph engine, one library lens-switcher, one detail panel. Nothing built twice.</p>
+  </section>
+
+  <!-- lens rationalization -->
+  <section style="max-width: 1180px; margin: 0 auto; padding: 22px 56px;">
+    <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(232,243,236,0.5); margin-bottom: 18px; border-bottom: 1px solid rgba(232,243,236,0.12); padding-bottom: 12px;">A · Rationalize the views into one lens-switcher</div>
+    <div style="border: 1px solid rgba(232,243,236,0.1); border-radius: 6px; overflow: hidden;">
+      <div style="display: grid; grid-template-columns: 1.1fr 24px 1fr 110px; gap: 18px; align-items: center; padding: 12px 22px; background: #02100a; font-family: 'Geist Mono', monospace; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(232,243,236,0.45);"><span>Exists today</span><span></span><span>Becomes</span><span style="text-align: right;">Action</span></div>
+      <div style="display: grid; grid-template-columns: 1.1fr 24px 1fr 110px; gap: 18px; align-items: center; padding: 16px 22px; border-top: 1px solid rgba(232,243,236,0.08); background: #061a10;"><span style="font-family: 'Geist Mono', monospace; font-size: 13px; color: rgba(232,243,236,0.55);">— new —</span><span style="color: #6fd69a;">→</span><span style="font-family: 'Spectral', serif; font-size: 18px;">Constellation <span style="font-size: 12px; color: rgba(232,243,236,0.5);">· hero</span></span><span style="text-align: right;"><span style="font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: 0.06em; color: #04130c; background: #6fd69a; padding: 4px 9px; border-radius: 100px;">ADD</span></span></div>
+      <div style="display: grid; grid-template-columns: 1.1fr 24px 1fr 110px; gap: 18px; align-items: center; padding: 16px 22px; border-top: 1px solid rgba(232,243,236,0.08);"><span style="font-family: 'Geist Mono', monospace; font-size: 13px; color: rgba(232,243,236,0.75);">StackLibrary</span><span style="color: #6fd69a;">→</span><span style="font-family: 'Spectral', serif; font-size: 18px;">Shelf</span><span style="text-align: right;"><span style="font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: 0.06em; color: #6fd69a; border: 1px solid rgba(111,214,154,0.4); padding: 3px 9px; border-radius: 100px;">REPLACE</span></span></div>
+      <div style="display: grid; grid-template-columns: 1.1fr 24px 1fr 110px; gap: 18px; align-items: center; padding: 16px 22px; border-top: 1px solid rgba(232,243,236,0.08); background: #061a10;"><span style="font-family: 'Geist Mono', monospace; font-size: 13px; color: rgba(232,243,236,0.75);">LibraryClient grid + covers</span><span style="color: #6fd69a;">→</span><span style="font-family: 'Spectral', serif; font-size: 18px;">Index <span style="font-size: 12px; color: rgba(232,243,236,0.5);">· covers move to detail</span></span><span style="text-align: right;"><span style="font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: 0.06em; color: #6fd69a; border: 1px solid rgba(111,214,154,0.4); padding: 3px 9px; border-radius: 100px;">REPLACE</span></span></div>
+      <div style="display: grid; grid-template-columns: 1.1fr 24px 1fr 110px; gap: 18px; align-items: center; padding: 16px 22px; border-top: 1px solid rgba(232,243,236,0.08);"><span style="font-family: 'Geist Mono', monospace; font-size: 13px; color: rgba(232,243,236,0.55);">— new —</span><span style="color: #6fd69a;">→</span><span style="font-family: 'Spectral', serif; font-size: 18px;">River</span><span style="text-align: right;"><span style="font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: 0.06em; color: #04130c; background: #6fd69a; padding: 4px 9px; border-radius: 100px;">ADD</span></span></div>
+      <div style="display: grid; grid-template-columns: 1.1fr 24px 1fr 110px; gap: 18px; align-items: center; padding: 16px 22px; border-top: 1px solid rgba(232,243,236,0.08); background: #061a10;"><span style="font-family: 'Geist Mono', monospace; font-size: 13px; color: rgba(232,243,236,0.75);">ReadingStatsCharts</span><span style="color: #6fd69a;">→</span><span style="font-family: 'Spectral', serif; font-size: 18px;">Stats <span style="font-size: 12px; color: rgba(232,243,236,0.5);">· optional 5th lens</span></span><span style="text-align: right;"><span style="font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: 0.06em; color: rgba(232,243,236,0.8); border: 1px solid rgba(232,243,236,0.25); padding: 3px 9px; border-radius: 100px;">KEEP</span></span></div>
+      <div style="display: grid; grid-template-columns: 1.1fr 24px 1fr 110px; gap: 18px; align-items: center; padding: 16px 22px; border-top: 1px solid rgba(232,243,236,0.08);"><span style="font-family: 'Geist Mono', monospace; font-size: 13px; color: rgba(232,243,236,0.4); text-decoration: line-through;">FloatingLibrary (3D)</span><span style="color: rgba(232,243,236,0.3);">→</span><span style="font-family: 'Spectral', serif; font-size: 18px; color: rgba(232,243,236,0.5);">demote to easter egg</span><span style="text-align: right;"><span style="font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: 0.06em; color: rgba(232,243,236,0.45); border: 1px solid rgba(232,243,236,0.18); padding: 3px 9px; border-radius: 100px;">RETIRE</span></span></div>
+    </div>
+  </section>
+
+  <!-- constellation vs graph -->
+  <section style="max-width: 1180px; margin: 0 auto; padding: 22px 56px;">
+    <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(232,243,236,0.5); margin-bottom: 18px; border-bottom: 1px solid rgba(232,243,236,0.12); padding-bottom: 12px;">B · The Constellation ↔ Graph boundary</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px;">
+      <div style="border: 1px solid rgba(232,243,236,0.12); border-radius: 6px; padding: 24px; background: #061a10;">
+        <div style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6fd69a; margin-bottom: 10px;">/graph &nbsp;·&nbsp; the everything-map</div>
+        <div style="font-size: 13.5px; line-height: 1.65; color: rgba(232,243,236,0.72);">Stays the all-content knowledge graph — essays + notes + books — powered by <span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #e8f3ec;">generateGraphData()</span>, <span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #e8f3ec;">GraphCanvas</span> and <span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #e8f3ec;">NodeInspector</span>.</div>
+      </div>
+      <div style="border: 1px solid rgba(111,214,154,0.3); border-radius: 6px; padding: 24px; background: #061a10;">
+        <div style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6fd69a; margin-bottom: 10px;">/library Constellation &nbsp;·&nbsp; the books slice</div>
+        <div style="font-size: 13.5px; line-height: 1.65; color: rgba(232,243,236,0.72);">The <em>books-only</em> subgraph of that same engine, re-laid-out into genre clusters with topic threads. Same data, same inspector — a focused framing, not a second graph.</div>
+      </div>
+    </div>
+    <div style="text-align: center; font-family: 'Spectral', serif; font-style: italic; font-size: 16px; color: rgba(232,243,236,0.6); margin-top: 16px;">One graph core · two framings. The library never reimplements the graph.</div>
+  </section>
+
+  <!-- component reuse -->
+  <section style="max-width: 1180px; margin: 0 auto; padding: 22px 56px;">
+    <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(232,243,236,0.5); margin-bottom: 18px; border-bottom: 1px solid rgba(232,243,236,0.12); padding-bottom: 12px;">C · What to reuse</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+      <div style="display: flex; gap: 12px; align-items: baseline; padding: 14px 18px; border: 1px solid rgba(232,243,236,0.1); border-radius: 5px;"><span style="font-family: 'Geist Mono', monospace; font-size: 10px; color: #04130c; background: #6fd69a; padding: 3px 8px; border-radius: 100px; white-space: nowrap;">ADAPT</span><div style="font-size: 13px; line-height: 1.5; color: rgba(232,243,236,0.72);"><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #e8f3ec;">generateGraphData / GraphCanvas</span> — feed the books subgraph + cluster layout.</div></div>
+      <div style="display: flex; gap: 12px; align-items: baseline; padding: 14px 18px; border: 1px solid rgba(232,243,236,0.1); border-radius: 5px;"><span style="font-family: 'Geist Mono', monospace; font-size: 10px; color: #04130c; background: #6fd69a; padding: 3px 8px; border-radius: 100px; white-space: nowrap;">MERGE</span><div style="font-size: 13px; line-height: 1.5; color: rgba(232,243,236,0.72);"><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #e8f3ec;">NodeInspector + BookDetail</span> → one unified detail panel.</div></div>
+      <div style="display: flex; gap: 12px; align-items: baseline; padding: 14px 18px; border: 1px solid rgba(232,243,236,0.1); border-radius: 5px;"><span style="font-family: 'Geist Mono', monospace; font-size: 10px; color: rgba(232,243,236,0.8); border: 1px solid rgba(232,243,236,0.25); padding: 3px 8px; border-radius: 100px; white-space: nowrap;">REUSE</span><div style="font-size: 13px; line-height: 1.5; color: rgba(232,243,236,0.72);"><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #e8f3ec;">book-colors.json / cover-map.json</span> — covers in detail; optional star tint.</div></div>
+      <div style="display: flex; gap: 12px; align-items: baseline; padding: 14px 18px; border: 1px solid rgba(232,243,236,0.1); border-radius: 5px;"><span style="font-family: 'Geist Mono', monospace; font-size: 10px; color: rgba(232,243,236,0.8); border: 1px solid rgba(232,243,236,0.25); padding: 3px 8px; border-radius: 100px; white-space: nowrap;">REUSE</span><div style="font-size: 13px; line-height: 1.5; color: rgba(232,243,236,0.72);"><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #e8f3ec;">LibraryFilters</span> — wire to the shared category / topic filter.</div></div>
+    </div>
+  </section>
+
+  <!-- merged detail -->
+  <section style="max-width: 1180px; margin: 0 auto; padding: 22px 56px 60px;">
+    <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(232,243,236,0.5); margin-bottom: 18px; border-bottom: 1px solid rgba(232,243,236,0.12); padding-bottom: 12px;">D · One detail panel, both worlds</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1.15fr; gap: 16px; align-items: center;">
+      <div style="border: 1px solid rgba(232,243,236,0.1); border-radius: 6px; padding: 20px 22px; background: #02100a;">
+        <div style="font-family: 'Geist Mono', monospace; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(232,243,236,0.45); margin-bottom: 12px;">From production</div>
+        <div style="font-size: 13px; line-height: 2.0; color: rgba(232,243,236,0.72); font-family: 'Geist Mono', monospace;"><div>Cover image</div><div>Author · year · ISBN</div><div>Rating</div><div>Buy / Goodreads links</div></div>
+      </div>
+      <div style="border: 1px solid rgba(232,243,236,0.1); border-radius: 6px; padding: 20px 22px; background: #02100a;">
+        <div style="font-family: 'Geist Mono', monospace; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(232,243,236,0.45); margin-bottom: 12px;">From the redesign</div>
+        <div style="font-size: 13px; line-height: 2.0; color: rgba(232,243,236,0.72); font-family: 'Geist Mono', monospace;"><div>Shelf chip + hue</div><div>Topic chips</div><div>Kindred / threads count</div><div>“See the shelf →”</div></div>
+      </div>
+      <div style="border: 1px solid rgba(111,214,154,0.3); border-radius: 6px; padding: 22px 24px; background: #061a10; box-shadow: 0 14px 40px rgba(0,0,0,0.4);">
+        <div style="font-family: 'Geist Mono', monospace; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #6fd69a; margin-bottom: 12px;">→ Unified BookDetail</div>
+        <div style="font-size: 13.5px; line-height: 1.6; color: rgba(232,243,236,0.78);">Cover + shelf hue header → title, author, year → rating <em>or</em> kindred-reads → topic chips → blurb → buy links + “See the shelf”. One panel, opened from every lens and from a graph node.</div>
+      </div>
+    </div>
+    <div style="font-size: 12.5px; color: rgba(232,243,236,0.5); margin-top: 16px; line-height: 1.6;">Open decisions to confirm before build: covers in <em>detail only</em> vs. also tinting Constellation stars · whether <span style="font-family: 'Geist Mono', monospace;">/graph</span> keeps its own page or becomes a lens too. Recommendation baked in above — detail-only covers, <span style="font-family: 'Geist Mono', monospace;">/graph</span> stays its own page.</div>
+  </section>
+
+  <!-- file manifest -->
+  <section style="max-width: 1180px; margin: 0 auto; padding: 0 56px 80px;">
+    <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(232,243,236,0.5); margin-bottom: 18px; border-bottom: 1px solid rgba(232,243,236,0.12); padding-bottom: 12px;">Deliverables</div>
+    <div style="font-family: 'Geist Mono', monospace; font-size: 13px; line-height: 2.0; color: rgba(232,243,236,0.72);">
+      <div><span style="color: #6fd69a;">Trey Goff - Home.dc.html</span> &nbsp;·&nbsp; centered hero + index</div>
+      <div><span style="color: #6fd69a;">Writing.dc.html · Projects.dc.html · About.dc.html</span> &nbsp;·&nbsp; sub-pages</div>
+      <div><span style="color: #6fd69a;">Library.dc.html</span> &nbsp;·&nbsp; constellation + shelf + river + index</div>
+      <div><span style="color: #6fd69a;">library-data.js</span> &nbsp;·&nbsp; 334 books, build-ready schema</div>
+      <div><span style="color: #6fd69a;">static/aurora-veil.html</span> &nbsp;·&nbsp; WebGL background</div>
+      <div style="color: rgba(232,243,236,0.45);">handoff/shots/ &nbsp;·&nbsp; desktop + mobile reference captures</div>
+    </div>
+    <div style="margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(232,243,236,0.12); display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px;">
+      <div style="font-family: 'Spectral', serif; font-style: italic; font-size: 18px; color: rgba(232,243,236,0.7);">The shelf is never finished — new books join the constellation as he reads them.</div>
+      <div style="font-family: 'Geist Mono', monospace; font-size: 11px; color: rgba(232,243,236,0.4);">Trey Goff · Aurora-Emerald · 2026</div>
+    </div>
+  </section>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

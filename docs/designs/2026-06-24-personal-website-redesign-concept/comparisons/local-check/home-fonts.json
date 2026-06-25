@@ -1,0 +1,21 @@
+{
+  "h1Font": "Spectral, \"Spectral Fallback\", Georgia, \"Times New Roman\", serif",
+  "h1LineHeight": "54.3866px",
+  "h1Size": "50.358px",
+  "hBox": {
+    "h": 108.75,
+    "w": 876,
+    "x": 24,
+    "y": 220.3125
+  },
+  "logoFont": "Spectral, \"Spectral Fallback\", Georgia, \"Times New Roman\", serif",
+  "navBox": {
+    "h": 112,
+    "w": 924,
+    "x": 0,
+    "y": 0
+  },
+  "navFont": "\"Hanken Grotesk\", \"Hanken Grotesk Fallback\", system-ui, sans-serif",
+  "rootDisplay": "\"Spectral\",\"Spectral Fallback\"",
+  "rootNews": "\"Spectral\",\"Spectral Fallback\",Georgia,\"Times New Roman\",serif"
+}

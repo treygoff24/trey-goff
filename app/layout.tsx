@@ -3,6 +3,7 @@ import { satoshi, newsreader, monaspace } from '@/lib/fonts'
 import { TopNav } from '@/components/layout/TopNav'
 import { Footer } from '@/components/layout/Footer'
 import { SkipLink } from '@/components/layout/SkipLink'
+import { AuroraBackground } from '@/components/layout/AuroraBackground'
 import { CommandPaletteProvider, CommandPalette } from '@/components/command'
 import { EasterEggs } from '@/components/easter-eggs/EasterEggs'
 import { SpeedInsights } from '@vercel/speed-insights/next'
@@ -62,12 +63,8 @@ export default function RootLayout({
   const organizationSchema = generateOrganizationSchema()
 
   return (
-    <html
-      lang="en"
-      data-command-palette-ready="true"
-      className={`${satoshi.variable} ${newsreader.variable} ${monaspace.variable}`}
-    >
-      <body className="flex min-h-screen flex-col isolate">
+    <html lang="en" className={`${satoshi.variable} ${newsreader.variable} ${monaspace.variable}`}>
+      <body className="flex min-h-screen flex-col overflow-x-hidden">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -75,9 +72,10 @@ export default function RootLayout({
           }}
         />
         <CommandPaletteProvider>
+          <AuroraBackground />
           <SkipLink />
           <TopNav />
-          <main id="main-content" className="flex-1 outline-none" tabIndex={-1}>
+          <main id="main-content" className="relative z-10 flex-1 outline-none" tabIndex={-1}>
             {children}
           </main>
           <Footer />

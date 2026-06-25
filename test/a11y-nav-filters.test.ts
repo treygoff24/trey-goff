@@ -57,42 +57,6 @@ describe('A11y: Navigation labels and filter states', () => {
     })
   })
 
-  describe('A12: Library filter buttons have aria-pressed', () => {
-    it('status filter buttons should have aria-pressed', () => {
-      const filePath = join(projectRoot, 'components/library/LibraryFilters.tsx')
-      const content = readFileSync(filePath, 'utf-8')
-
-      const lines = content.split('\n')
-      const statusStart = lines.findIndex((l) => l.includes('Status filter'))
-      const statusEnd = lines.findIndex((l, i) => i > statusStart && l.includes('Topic filter'))
-      const statusSection = lines.slice(statusStart, statusEnd).join('\n')
-
-      const hasAriaPressed = /aria-pressed=/.test(statusSection)
-      assert.ok(hasAriaPressed, 'Status filter buttons should have aria-pressed attribute')
-    })
-
-    it('topic filter buttons should have aria-pressed', () => {
-      const filePath = join(projectRoot, 'components/library/LibraryFilters.tsx')
-      const content = readFileSync(filePath, 'utf-8')
-
-      const lines = content.split('\n')
-      const topicStart = lines.findIndex((l) => l.includes('Topic filter'))
-      const topicEnd = lines.findIndex((l, i) => i > topicStart && l.includes('Sort'))
-      const topicSection = lines.slice(topicStart, topicEnd).join('\n')
-
-      const hasAriaPressed = /aria-pressed=/.test(topicSection)
-      assert.ok(hasAriaPressed, 'Topic filter buttons should have aria-pressed attribute')
-    })
-
-    it('aria-pressed should reflect active state', () => {
-      const filePath = join(projectRoot, 'components/library/LibraryFilters.tsx')
-      const content = readFileSync(filePath, 'utf-8')
-
-      const hasConditionalPressed = /aria-pressed=\{[^}]*===/.test(content)
-      assert.ok(hasConditionalPressed, 'aria-pressed should be conditional based on filter state')
-    })
-  })
-
   describe('A13: Graph filter toggles have aria-pressed', () => {
     it('graph filter toggles should have aria-pressed', () => {
       const filePath = join(projectRoot, 'components/graph/GraphClient.tsx')

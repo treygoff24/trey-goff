@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;1,400&family=Hanken+Grotesk:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: #04130c; }
+  ::selection { background: rgba(111,214,154,0.3); }
+  @keyframes tgRise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</helmet>
+
+<div style="position: relative; min-height: 100vh; background: #04130c; color: #e8f3ec; overflow-x: hidden; font-family: 'Hanken Grotesk', sans-serif;">
+  <iframe src="static/aurora-veil.html" title="Aurora background" style="position: fixed; inset: 0; width: 100%; height: 100%; border: 0; z-index: 0; filter: hue-rotate(14deg) saturate(1.45) brightness(0.92);"></iframe>
+  <div style="position: fixed; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(120% 70% at 50% 0%, transparent 28%, rgba(4,19,12,0.62) 70%, rgba(4,19,12,0.94) 100%);"></div>
+
+  <div style="position: relative; z-index: 2;">
+    <nav style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; row-gap: 12px; padding: 28px 48px; max-width: 1140px; margin: 0 auto;">
+      <a href="Trey%20Goff%20-%20Home.dc.html" style="font-family: 'Spectral', serif; font-weight: 500; font-size: 21px; color: #e8f3ec; text-decoration: none; white-space: nowrap;">Trey Goff</a>
+      <div style="display: flex; gap: 30px; align-items: center; font-size: 14px; font-weight: 500;">
+        <a href="Writing.dc.html" style="color: rgba(232,243,236,0.7); text-decoration: none;" style-hover="color: #6fd69a;">Writing</a>
+        <a href="Projects.dc.html" style="color: #6fd69a; text-decoration: none;">Projects</a>
+        <a href="Library.dc.html" style="color: rgba(232,243,236,0.7); text-decoration: none;" style-hover="color: #6fd69a;">Library</a>
+        <a href="About.dc.html" style="color: rgba(232,243,236,0.7); text-decoration: none;" style-hover="color: #6fd69a;">About</a>
+      </div>
+    </nav>
+
+    <header style="max-width: 1140px; margin: 0 auto; padding: 12vh 48px 6vh; animation: tgRise 0.8s cubic-bezier(0.16,1,0.3,1) both;">
+      <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: #6fd69a; margin-bottom: 22px;">Projects</div>
+      <h1 style="font-family: 'Spectral', serif; font-weight: 300; font-size: clamp(40px, 5vw, 68px); line-height: 1.04; letter-spacing: -0.01em; margin-bottom: 22px; text-wrap: balance;">Systems I'm building</h1>
+      <p style="font-size: clamp(17px, 1.4vw, 20px); font-weight: 300; line-height: 1.6; color: rgba(232,243,236,0.74); max-width: 620px;">The work spans websites, command-line &amp; agent tooling, public-policy initiatives, and Próspera itself — different surfaces, one throughline: institutions that let progress compound.</p>
+    </header>
+
+    <!-- featured project -->
+    <section style="max-width: 1140px; margin: 0 auto; padding: 0 48px;">
+      <div style="border-top: 2px solid #6fd69a; padding: 34px 4px 8px;">
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+          <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(232,243,236,0.55);">Software</span>
+          <span style="font-family: 'Geist Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #6fd69a;">Active</span>
+        </div>
+        <h2 style="font-family: 'Spectral', serif; font-weight: 400; font-size: clamp(28px, 3.4vw, 42px); margin-bottom: 14px;">The Control Room</h2>
+        <p style="font-size: 17px; line-height: 1.6; color: rgba(232,243,236,0.72); max-width: 720px; margin-bottom: 34px;">An explorable index of ideas, writing, and reading — a command-palette-first home for everything I think about in public.</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; border-top: 1px solid rgba(232,243,236,0.12); padding-top: 28px;">
+          <div>
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #6fd69a; margin-bottom: 10px;">Problem</div>
+            <p style="font-size: 15px; line-height: 1.6; color: rgba(232,243,236,0.7);">Personal knowledge and public writing are scattered across tools and feeds, impossible to traverse as one body of work.</p>
+          </div>
+          <div>
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #6fd69a; margin-bottom: 10px;">Approach</div>
+            <p style="font-size: 15px; line-height: 1.6; color: rgba(232,243,236,0.7);">A command-palette-first site that ties essays, notes, books, and a knowledge graph into one place you can explore from anywhere.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- other projects -->
+    <section style="max-width: 1140px; margin: 0 auto; padding: 40px 48px 30px;">
+      <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(232,243,236,0.5); margin-bottom: 4px; border-bottom: 1px solid rgba(232,243,236,0.22); padding-bottom: 16px;">More work</div>
+      <div style="display: grid; grid-template-columns: 200px 1fr; gap: 36px; align-items: baseline; padding: 30px 4px; border-bottom: 1px solid rgba(232,243,236,0.14);">
+        <div>
+          <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(232,243,236,0.55); margin-bottom: 9px;">Institutional</div>
+          <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 7px; height: 7px; background: #6fd69a; display: inline-block;"></span><span style="font-size: 12.5px; color: rgba(232,243,236,0.7);">Ongoing</span></div>
+        </div>
+        <div>
+          <h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 25px; margin-bottom: 8px;">Próspera</h3>
+          <p style="font-size: 15px; line-height: 1.6; color: rgba(232,243,236,0.66); max-width: 680px; margin-bottom: 12px;">Public affairs and governance for Honduras&#39;s first ZEDE — the world&#39;s most ambitious charter city. First full-time employee; now chief of staff &amp; director of public affairs.</p>
+          <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(232,243,236,0.5);">governance · charter cities · economics</div>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 200px 1fr; gap: 36px; align-items: baseline; padding: 30px 4px; border-bottom: 1px solid rgba(232,243,236,0.14);">
+        <div>
+          <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(232,243,236,0.55); margin-bottom: 9px;">Agent tooling</div>
+          <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 7px; height: 7px; border: 1px solid rgba(232,243,236,0.5); display: inline-block;"></span><span style="font-size: 12.5px; color: rgba(232,243,236,0.7);">CLI</span></div>
+        </div>
+        <div>
+          <h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 25px; margin-bottom: 8px;">Harness &amp; agent tooling</h3>
+          <p style="font-size: 15px; line-height: 1.6; color: rgba(232,243,236,0.66); max-width: 680px; margin-bottom: 12px;">Command-line harnesses and tools for working alongside AI agents — tinkering at the frontier of what&#39;s actually possible right now.</p>
+          <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(232,243,236,0.5);">AI · CLI · developer tools</div>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 200px 1fr; gap: 36px; align-items: baseline; padding: 30px 4px; border-bottom: 1px solid rgba(232,243,236,0.14);">
+        <div>
+          <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(232,243,236,0.55); margin-bottom: 9px;">Public policy</div>
+          <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 7px; height: 7px; border: 1px solid rgba(232,243,236,0.5); display: inline-block;"></span><span style="font-size: 12.5px; color: rgba(232,243,236,0.7);">Initiative</span></div>
+        </div>
+        <div>
+          <h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 25px; margin-bottom: 8px;">Governance experiments</h3>
+          <p style="font-size: 15px; line-height: 1.6; color: rgba(232,243,236,0.66); max-width: 680px; margin-bottom: 12px;">Turning institutional experiments into legible, repeatable models other jurisdictions can study, adapt, and adopt — so a good idea doesn&#39;t have to be reinvented from scratch each time.</p>
+          <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(232,243,236,0.5);">institutional design · policy</div>
+        </div>
+      </div>
+    </section>
+
+    <footer style="max-width: 1140px; margin: 70px auto 0; padding: 44px 48px; border-top: 1px solid rgba(232,243,236,0.1); display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 24px;">
+      <div style="max-width: 380px;">
+        <a href="Trey%20Goff%20-%20Home.dc.html" style="font-family: 'Spectral', serif; font-size: 20px; margin-bottom: 10px; color: #e8f3ec; text-decoration: none; display: inline-block;">Trey Goff</a>
+        <p style="font-size: 13.5px; line-height: 1.55; color: rgba(232,243,236,0.55);">Building better governance through institutional design and practical experimentation.</p>
+      </div>
+      <div style="display: flex; gap: 24px; font-size: 13px; font-weight: 600;">
+        <a href="https://twitter.com/treygoff" style="color: rgba(232,243,236,0.65); text-decoration: none;" style-hover="color: #6fd69a;">Twitter</a>
+        <a href="https://github.com/treygoff" style="color: rgba(232,243,236,0.65); text-decoration: none;" style-hover="color: #6fd69a;">GitHub</a>
+        <span style="color: rgba(232,243,236,0.4);">© 2026</span>
+      </div>
+    </footer>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

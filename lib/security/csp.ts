@@ -1,7 +1,7 @@
 export const NONCE_REQUEST_HEADER = 'x-nonce'
 
-export function isInteractiveLibraryPath(pathname: string): boolean {
-  return /^\/(?:interactive|library)(?:\/|$)/.test(pathname)
+export function isStrictCspPath(pathname: string): boolean {
+  return /^\/interactive(?:\/|$)/.test(pathname)
 }
 
 export function isMediaPath(pathname: string): boolean {
@@ -15,8 +15,8 @@ interface BuildCspInput {
 }
 
 export function buildCsp({ pathname, nonce, isDevelopment = false }: BuildCspInput): string {
-  const allowEval = isDevelopment || isInteractiveLibraryPath(pathname)
-  const scriptSrc = isInteractiveLibraryPath(pathname)
+  const allowEval = isDevelopment || isStrictCspPath(pathname)
+  const scriptSrc = isStrictCspPath(pathname)
     ? `script-src 'self' 'nonce-${nonce}'${allowEval ? " 'unsafe-eval'" : ''}`
     : `script-src 'self' 'unsafe-inline'${allowEval ? " 'unsafe-eval'" : ''}`
   const connectSrc = isDevelopment ? "connect-src 'self' ws: wss:" : "connect-src 'self'"

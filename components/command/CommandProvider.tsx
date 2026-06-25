@@ -4,6 +4,7 @@ import {
   createContext,
   useContext,
   useCallback,
+  useEffect,
   useLayoutEffect,
   useState,
   type ReactNode,
@@ -21,6 +22,11 @@ export function CommandPaletteProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false)
 
   const toggle = useCallback(() => setOpen((prev) => !prev), [])
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-command-palette-ready', 'true')
+    return () => document.documentElement.removeAttribute('data-command-palette-ready')
+  }, [])
 
   // Global keyboard shortcut: Cmd+K / Ctrl+K
   useLayoutEffect(() => {

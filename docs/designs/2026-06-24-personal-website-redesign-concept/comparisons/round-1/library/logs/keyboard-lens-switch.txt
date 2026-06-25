@@ -1,0 +1,114 @@
+-- keyboard focus/Enter Constellation --
+"Constellation"
+✓ Done
+✓ Done
+[
+  {
+    "active": "true",
+    "focused": true,
+    "text": "Constellation"
+  },
+  {
+    "active": "false",
+    "focused": false,
+    "text": "Shelf"
+  },
+  {
+    "active": "false",
+    "focused": false,
+    "text": "River"
+  },
+  {
+    "active": "false",
+    "focused": false,
+    "text": "Index"
+  }
+]
+-- keyboard focus/Enter Shelf --
+"Shelf"
+✓ Done
+✓ Done
+[
+  {
+    "active": "true",
+    "focused": false,
+    "text": "Shelf"
+  },
+  {
+    "active": "false",
+    "focused": false,
+    "text": "Constellation"
+  },
+  {
+    "active": "true",
+    "focused": true,
+    "text": "Shelf"
+  },
+  {
+    "active": "false",
+    "focused": false,
+    "text": "River"
+  },
+  {
+    "active": "false",
+    "focused": false,
+    "text": "Index"
+  }
+]
+-- keyboard focus/Enter River --
+"River"
+✓ Done
+✓ Done
+[
+  {
+    "active": "false",
+    "focused": false,
+    "text": "Constellation"
+  },
+  {
+    "active": "false",
+    "focused": false,
+    "text": "Shelf"
+  },
+  {
+    "active": "true",
+    "focused": true,
+    "text": "River"
+  },
+  {
+    "active": "false",
+    "focused": false,
+    "text": "Index"
+  }
+]
+-- keyboard focus/Enter Index --
+"Index"
+✓ Done
+✓ Done
+[
+  {
+    "active": null,
+    "focused": false,
+    "text": "Shelf"
+  },
+  {
+    "active": "false",
+    "focused": false,
+    "text": "Constellation"
+  },
+  {
+    "active": "false",
+    "focused": false,
+    "text": "Shelf"
+  },
+  {
+    "active": "false",
+    "focused": false,
+    "text": "River"
+  },
+  {
+    "active": "true",
+    "focused": true,
+    "text": "Index"
+  }
+]

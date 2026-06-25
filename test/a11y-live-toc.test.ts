@@ -34,23 +34,6 @@ describe('A15: Mobile TOC toggle aria-expanded', () => {
   })
 })
 
-describe('A16: Sort select label association', () => {
-  it('select has aria-label or associated label', () => {
-    const filePath = join(projectRoot, 'components/library/LibraryFilters.tsx')
-    const content = readFileSync(filePath, 'utf-8')
-
-    const hasAriaLabel = /<select[^>]*aria-label=/i.test(content)
-    const hasHtmlFor = /htmlFor="sort-select"[\s\S]{0,300}<select[^>]*id="sort-select"/i.test(
-      content,
-    )
-
-    assert.ok(
-      hasAriaLabel || hasHtmlFor,
-      'Sort select must have aria-label or be associated with a label via htmlFor/id',
-    )
-  })
-})
-
 describe('A17: Easter egg toast announcement', () => {
   it('toast has role="alert" or aria-live', () => {
     const filePath = join(projectRoot, 'components/easter-eggs/EasterEggs.tsx')

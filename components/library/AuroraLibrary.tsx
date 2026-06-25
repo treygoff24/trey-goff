@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import clsx from 'clsx'
 import type {
   AuroraCategoryCode,
@@ -107,40 +108,40 @@ function drawConstellation({
 }) {
   context.clearRect(0, 0, width, height)
 
-  const gradient = context.createRadialGradient(
-    width * 0.5,
-    height * 0.42,
+  context.fillStyle = 'rgba(2, 9, 6, 0.96)'
+  context.fillRect(0, 0, width, height)
+
+  const purple = context.createRadialGradient(
+    width * 0.22,
+    height * 0.52,
     0,
-    width * 0.5,
-    height * 0.45,
-    width,
+    width * 0.22,
+    height * 0.52,
+    width * 0.58,
   )
-  gradient.addColorStop(0, 'rgba(14, 57, 34, 0.18)')
-  gradient.addColorStop(0.5, 'rgba(4, 19, 12, 0.66)')
-  gradient.addColorStop(1, 'rgba(2, 9, 6, 0.94)')
-  context.fillStyle = gradient
+  purple.addColorStop(0, 'rgba(127, 41, 122, 0.26)')
+  purple.addColorStop(0.52, 'rgba(80, 31, 83, 0.18)')
+  purple.addColorStop(1, 'rgba(2, 9, 6, 0)')
+  context.fillStyle = purple
+  context.fillRect(0, 0, width, height)
+
+  const green = context.createRadialGradient(
+    width * 0.86,
+    height * 0.5,
+    0,
+    width * 0.86,
+    height * 0.5,
+    width * 0.54,
+  )
+  green.addColorStop(0, 'rgba(13, 59, 35, 0.28)')
+  green.addColorStop(0.62, 'rgba(8, 37, 24, 0.16)')
+  green.addColorStop(1, 'rgba(2, 9, 6, 0)')
+  context.fillStyle = green
   context.fillRect(0, 0, width, height)
 
   context.save()
   context.translate(camera.x, camera.y)
   context.scale(camera.scale, camera.scale)
-
-  for (const edge of edges) {
-    const a = nodes.find((node) => node.id === edge.a)
-    const b = nodes.find((node) => node.id === edge.b)
-    if (!a || !b) continue
-    const book = booksById.get(a.id)
-    const dim = !!activeCategory && book?.categoryCode !== activeCategory
-    context.beginPath()
-    context.moveTo(a.x, a.y)
-    context.lineTo(b.x, b.y)
-    context.lineWidth = edge.kind === 'topic' ? 1.05 / camera.scale : 0.55 / camera.scale
-    context.strokeStyle =
-      edge.kind === 'topic'
-        ? `rgba(111, 214, 154, ${dim ? 0.08 : 0.34})`
-        : `rgba(232, 243, 236, ${dim ? 0.025 : 0.07})`
-    context.stroke()
-  }
 
   const categoryAnchors = new Map<AuroraCategoryCode, { x: number; y: number; count: number }>()
   for (const node of nodes) {
@@ -153,8 +154,46 @@ function drawConstellation({
 
   for (const [code, anchor] of categoryAnchors.entries()) {
     const category = AURORA_CATEGORIES[code]
+    const centerX = anchor.x / anchor.count
+    const centerY = anchor.y / anchor.count
+    const clusterRadius = 40 + Math.min(54, Math.sqrt(anchor.count) * 11)
+    const halo = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, clusterRadius)
+    halo.addColorStop(
+      0,
+      hsl(category.hue, 74, activeCategory && activeCategory !== code ? 0.06 : 0.24),
+    )
+    halo.addColorStop(
+      0.42,
+      hsl(category.hue, 58, activeCategory && activeCategory !== code ? 0.025 : 0.11),
+    )
+    halo.addColorStop(1, hsl(category.hue, 50, 0))
+    context.fillStyle = halo
+    context.beginPath()
+    context.arc(centerX, centerY, clusterRadius, 0, Math.PI * 2)
+    context.fill()
+  }
+
+  for (const edge of edges) {
+    const a = nodes.find((node) => node.id === edge.a)
+    const b = nodes.find((node) => node.id === edge.b)
+    if (!a || !b) continue
+    const book = booksById.get(a.id)
+    const dim = !!activeCategory && book?.categoryCode !== activeCategory
+    context.beginPath()
+    context.moveTo(a.x, a.y)
+    context.lineTo(b.x, b.y)
+    context.lineWidth = edge.kind === 'topic' ? 0.82 / camera.scale : 0.42 / camera.scale
+    context.strokeStyle =
+      edge.kind === 'topic'
+        ? hsl(book?.hue ?? 158, 62, dim ? 0.05 : 0.25)
+        : `rgba(232, 243, 236, ${dim ? 0.02 : 0.055})`
+    context.stroke()
+  }
+
+  for (const [code, anchor] of categoryAnchors.entries()) {
+    const category = AURORA_CATEGORIES[code]
     context.save()
-    context.globalAlpha = activeCategory && activeCategory !== code ? 0.13 : 0.36
+    context.globalAlpha = activeCategory && activeCategory !== code ? 0.1 : 0.28
     context.fillStyle = hsl(category.hue, 72, 0.9)
     context.font = `${11 / camera.scale}px Geist Mono, monospace`
     context.textAlign = 'center'
@@ -172,10 +211,17 @@ function drawConstellation({
     const dim = !!activeCategory && book?.categoryCode !== activeCategory
     const pulse = selectedId === node.id ? 2.2 : Math.sin(time * 0.0012 + node.phase) * 0.42
     context.beginPath()
-    context.arc(node.x, node.y, node.radius + pulse, 0, Math.PI * 2)
-    context.fillStyle = hsl(node.hue, selectedId === node.id ? 74 : 66, dim ? 0.14 : 0.9)
-    context.shadowColor = hsl(node.hue, 70, dim ? 0.2 : 0.7)
-    context.shadowBlur = selectedId === node.id ? 22 : 9
+    context.arc(node.x, node.y, node.radius * 4.6 + pulse * 1.6, 0, Math.PI * 2)
+    context.fillStyle = hsl(node.hue, 68, dim ? 0.025 : 0.13)
+    context.shadowColor = hsl(node.hue, 70, dim ? 0.06 : 0.52)
+    context.shadowBlur = selectedId === node.id ? 34 : 20
+    context.fill()
+
+    context.beginPath()
+    context.arc(node.x, node.y, node.radius * 2.02 + pulse, 0, Math.PI * 2)
+    context.fillStyle = hsl(node.hue, selectedId === node.id ? 80 : 70, dim ? 0.18 : 0.98)
+    context.shadowColor = hsl(node.hue, 70, dim ? 0.12 : 0.86)
+    context.shadowBlur = selectedId === node.id ? 32 : 18
     context.fill()
     context.shadowBlur = 0
   }
@@ -201,6 +247,8 @@ function ConstellationLens({
   const reducedMotion = useReducedMotion()
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const cameraRef = useRef({ x: 0, y: 0, scale: 1 })
+  const renderRef = useRef<(time: number) => void>(() => {})
+  const frameRef = useRef(0)
   const draggingRef = useRef<null | {
     x: number
     y: number
@@ -208,6 +256,14 @@ function ConstellationLens({
     startY: number
     moved: boolean
   }>(null)
+
+  const requestRender = useCallback(() => {
+    if (frameRef.current) return
+    frameRef.current = requestAnimationFrame((time) => {
+      frameRef.current = 0
+      renderRef.current(time)
+    })
+  }, [])
 
   const fitCamera = useCallback(() => {
     const canvas = canvasRef.current
@@ -219,22 +275,22 @@ function ConstellationLens({
     const maxX = Math.max(...xs)
     const minY = Math.min(...ys)
     const maxY = Math.max(...ys)
-    const pad = 90
-    const scale = Math.min(
-      rect.width / (maxX - minX + pad * 2),
-      rect.height / (maxY - minY + pad * 2),
-    )
+    const pad = 50
+    const scale =
+      Math.min(rect.width / (maxX - minX + pad * 2), rect.height / (maxY - minY + pad * 2)) * 1.06
     cameraRef.current = {
       scale,
       x: rect.width / 2 - ((minX + maxX) / 2) * scale,
       y: rect.height / 2 - ((minY + maxY) / 2) * scale,
     }
-  }, [nodes])
+    requestRender()
+  }, [nodes, requestRender])
 
   useEffect(() => {
     fitCamera()
-    window.addEventListener('resize', fitCamera)
-    return () => window.removeEventListener('resize', fitCamera)
+    const onResize = () => fitCamera()
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
   }, [fitCamera])
 
   useEffect(() => {
@@ -242,8 +298,7 @@ function ConstellationLens({
     const context = canvas?.getContext('2d')
     if (!canvas || !context) return
 
-    let animation = 0
-    const render = (time: number) => {
+    renderRef.current = (time: number) => {
       const rect = canvas.getBoundingClientRect()
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
       const targetWidth = Math.max(1, Math.floor(rect.width * dpr))
@@ -263,14 +318,17 @@ function ConstellationLens({
         activeCategory,
         selectedId,
         camera: cameraRef.current,
-        time,
+        time: reducedMotion ? 0 : time,
       })
-      if (!reducedMotion) animation = requestAnimationFrame(render)
     }
 
-    animation = requestAnimationFrame(render)
-    return () => cancelAnimationFrame(animation)
-  }, [activeCategory, booksById, edges, nodes, reducedMotion, selectedId])
+    requestRender()
+    return () => {
+      renderRef.current = () => {}
+      if (frameRef.current) cancelAnimationFrame(frameRef.current)
+      frameRef.current = 0
+    }
+  }, [activeCategory, booksById, edges, nodes, reducedMotion, requestRender, selectedId])
 
   const eventToWorld = useCallback((event: React.PointerEvent<HTMLCanvasElement>) => {
     const rect = event.currentTarget.getBoundingClientRect()
@@ -296,7 +354,7 @@ function ConstellationLens({
 
   return (
     <section className="mx-auto max-w-[1240px] px-4 pb-10 sm:px-8 lg:px-12">
-      <div className="relative h-[76vh] min-h-[520px] overflow-hidden rounded border border-accent/20 bg-[radial-gradient(120%_90%_at_50%_42%,rgba(4,19,12,0.12),rgba(4,19,12,0.66))] shadow-[0_28px_90px_-55px_rgba(0,0,0,0.95)]">
+      <div className="relative h-[min(72vh,590px)] min-h-[440px] overflow-hidden rounded border border-accent/20 bg-[radial-gradient(70%_90%_at_22%_52%,rgba(126,40,122,0.22),transparent_68%),radial-gradient(72%_78%_at_82%_52%,rgba(7,48,31,0.34),transparent_72%),rgba(3,14,9,0.82)] shadow-[0_28px_90px_-55px_rgba(0,0,0,0.95)]">
         <canvas
           ref={canvasRef}
           aria-label="Constellation of books linked by shared topics"
@@ -315,27 +373,47 @@ function ConstellationLens({
           onPointerMove={(event) => {
             const drag = draggingRef.current
             if (!drag) return
+            const moved =
+              drag.moved || Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) > 4
             cameraRef.current.x += event.clientX - drag.x
             cameraRef.current.y += event.clientY - drag.y
             draggingRef.current = {
               x: event.clientX,
               y: event.clientY,
-              startX: event.clientX,
-              startY: event.clientY,
-              moved: false,
+              startX: drag.startX,
+              startY: drag.startY,
+              moved,
             }
+            requestRender()
           }}
           onPointerUp={(event) => {
             const drag = draggingRef.current
             draggingRef.current = null
+            if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+              event.currentTarget.releasePointerCapture(event.pointerId)
+            }
             if (drag && !drag.moved) {
               selectNearest(event)
+            }
+          }}
+          onPointerCancel={(event) => {
+            draggingRef.current = null
+            if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+              event.currentTarget.releasePointerCapture(event.pointerId)
             }
           }}
           onWheel={(event) => {
             event.preventDefault()
             const delta = event.deltaY > 0 ? 0.92 : 1.08
-            cameraRef.current.scale = Math.max(0.22, Math.min(2.8, cameraRef.current.scale * delta))
+            const rect = event.currentTarget.getBoundingClientRect()
+            const camera = cameraRef.current
+            const worldX = (event.clientX - rect.left - camera.x) / camera.scale
+            const worldY = (event.clientY - rect.top - camera.y) / camera.scale
+            const nextScale = Math.max(0.22, Math.min(2.8, camera.scale * delta))
+            camera.scale = nextScale
+            camera.x = event.clientX - rect.left - worldX * nextScale
+            camera.y = event.clientY - rect.top - worldY * nextScale
+            requestRender()
           }}
         />
         <div className="pointer-events-none absolute left-5 top-4 font-mono text-[11px] uppercase tracking-[0.16em] text-text-2/70">
@@ -400,6 +478,7 @@ function ShelfLens({
                 <button
                   key={book.id}
                   type="button"
+                  data-testid={`library-shelf-book-${book.id}`}
                   aria-label={`${book.title} by ${book.author}`}
                   onClick={() => onSelect(book.id)}
                   className={clsx(
@@ -414,7 +493,7 @@ function ShelfLens({
                     background: `linear-gradient(180deg, ${oklchColor(book.hue, 0.34, 0.085, 1)}, ${oklchColor(book.hue, 0.24, 0.075, 1)})`,
                   }}
                 >
-                  <span className="max-h-[calc(100%-28px)] max-w-full overflow-hidden whitespace-nowrap font-display text-[13px] font-medium leading-none tracking-[0.01em] text-text-1 [text-orientation:mixed] [writing-mode:vertical-rl]">
+                  <span className="max-h-[calc(100%-28px)] max-w-full overflow-hidden whitespace-nowrap font-newsreader text-[13px] font-medium leading-none tracking-[0.01em] text-text-1 [text-orientation:mixed] [writing-mode:vertical-rl]">
                     {book.title}
                   </span>
                   <span className="max-h-[76px] max-w-full overflow-hidden whitespace-nowrap font-mono text-[8.5px] uppercase tracking-[0.08em] text-text-2/65 [writing-mode:vertical-rl]">
@@ -456,11 +535,8 @@ function RiverLens({
 
   return (
     <section className="mx-auto max-w-[1240px] pb-12">
-      <div className="px-4 font-mono text-[11px] uppercase tracking-[0.12em] text-text-2/60 sm:px-8 lg:px-12">
-        The River — every book, by the year it was published · taller tick = more idea-threads
-      </div>
-      <div className="tg-scroll overflow-x-auto px-4 py-6 sm:px-8 lg:px-12">
-        <div className="flex min-h-[380px] items-end gap-3">
+      <div className="tg-scroll overflow-x-auto bg-[radial-gradient(60%_92%_at_18%_26%,rgba(126,40,122,0.32),transparent_72%),radial-gradient(70%_80%_at_86%_28%,rgba(18,83,50,0.24),transparent_76%)] px-4 py-10 sm:px-8 lg:px-12">
+        <div className="flex min-h-[320px] -translate-y-14 items-end gap-3">
           {years.map(({ year, books: yearBooks }) => (
             <div key={year} className="flex flex-col items-center">
               <div className="flex w-[62px] flex-col-reverse gap-[3px]">
@@ -470,6 +546,7 @@ function RiverLens({
                     <button
                       key={book.id}
                       type="button"
+                      data-testid={`library-river-book-${book.id}`}
                       title={`${book.title} · ${book.author}`}
                       aria-label={`${book.title} by ${book.author}`}
                       onClick={() => onSelect(book.id)}
@@ -546,6 +623,7 @@ function IndexLens({
             <button
               key={book.id}
               type="button"
+              data-testid={`library-index-book-${book.id}`}
               onClick={() => onSelect(book.id)}
               className={clsx(
                 'grid w-full grid-cols-[42px_minmax(0,1fr)_120px_84px_56px] items-baseline gap-3 border-b border-text-1/10 px-2 py-4 text-left transition hover:bg-accent/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent sm:grid-cols-[42px_minmax(0,1fr)_150px_96px_56px] sm:gap-5',
@@ -554,10 +632,10 @@ function IndexLens({
             >
               <span className="font-mono text-xs text-text-2/45">{index + 1}</span>
               <span className="min-w-0">
-                <span className="block truncate font-display text-lg font-medium text-text-1">
+                <span className="block font-newsreader text-lg font-medium leading-snug text-text-1">
                   {book.title}
                 </span>
-                <span className="mt-0.5 block truncate text-sm text-text-2/70">{book.author}</span>
+                <span className="mt-0.5 block text-sm text-text-2/70">{book.author}</span>
               </span>
               <span className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.04em] text-text-2/70">
                 <span
@@ -588,20 +666,64 @@ function DetailDrawer({
   onClose: () => void
   onSeeShelf: (category: AuroraCategoryCode) => void
 }) {
+  const panelRef = useRef<HTMLDivElement | null>(null)
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null)
+  const previousFocusRef = useRef<HTMLElement | null>(null)
+
   useEffect(() => {
     if (!book) return
+    previousFocusRef.current = document.activeElement as HTMLElement | null
+    closeButtonRef.current?.focus()
+
+    const getFocusable = () =>
+      Array.from(
+        panelRef.current?.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        ) ?? [],
+      ).filter((element) => !element.hasAttribute('disabled'))
+
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose()
+      if (event.key === 'Escape') {
+        onClose()
+        return
+      }
+      if (event.key !== 'Tab') return
+
+      const focusable = getFocusable()
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      if (!first || !last) {
+        event.preventDefault()
+        return
+      }
+
+      const active = document.activeElement
+      if (!panelRef.current?.contains(active)) {
+        event.preventDefault()
+        first.focus()
+        return
+      }
+      if (event.shiftKey && active === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault()
+        first.focus()
+      }
     }
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      if (previousFocusRef.current?.isConnected) previousFocusRef.current.focus()
+      previousFocusRef.current = null
+    }
   }, [book, onClose])
 
   if (!book) return null
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-[70]"
+      className="fixed inset-0 z-[80]"
       role="dialog"
       aria-modal="true"
       aria-labelledby="book-drawer-title"
@@ -612,8 +734,12 @@ function DetailDrawer({
         className="absolute inset-0 cursor-default bg-bg-0/65 backdrop-blur-[3px]"
         onClick={onClose}
       />
-      <div className="tg-scroll absolute right-0 top-0 flex h-full w-[min(440px,92vw)] flex-col overflow-y-auto border-l border-accent/25 bg-bg-1/95 px-8 py-9 shadow-[-24px_0_70px_rgba(0,0,0,0.55)] sm:px-9">
+      <div
+        ref={panelRef}
+        className="tg-scroll absolute right-0 top-0 flex h-full w-[min(440px,92vw)] flex-col overflow-y-auto border-l border-accent/25 bg-bg-1/95 px-8 py-9 shadow-[-24px_0_70px_rgba(0,0,0,0.55)] sm:px-9"
+      >
         <button
+          ref={closeButtonRef}
           type="button"
           aria-label="Close"
           onClick={onClose}
@@ -700,39 +826,81 @@ function DetailDrawer({
           See the {book.categoryLabel} shelf →
         </button>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }
 
 export function AuroraLibrary({ books, nodes, edges, topicCount }: AuroraLibraryProps) {
+  const [hydrated, setHydrated] = useState(false)
   const [lens, setLens] = useState<Lens>('constellation')
   const [activeCategory, setActiveCategory] = useState<AuroraCategoryCode | null>(null)
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [shelfSort, setShelfSort] = useState<AuroraShelfSort>('shelf')
   const [indexSort, setIndexSort] = useState<IndexState>({ key: 'year', asc: false })
+  const [lensFocused, setLensFocused] = useState(false)
+  const lensViewportRef = useRef<HTMLDivElement | null>(null)
+  const lensContentRef = useRef<HTMLDivElement | null>(null)
 
   const booksById = useMemo(() => new Map(books.map((book) => [book.id, book])), [books])
   const selectedBook = selectedId ? (booksById.get(selectedId) ?? null) : null
   const counts = useMemo(() => categoryCounts(books), [books])
 
-  const handleSelect = useCallback((id: string) => {
-    setSelectedId(id)
+  const handleSelect = useCallback((id: string) => setSelectedId(id), [])
+  const closeDetail = useCallback(() => setSelectedId(null), [])
+  const handleLensChange = useCallback((nextLens: Lens) => {
+    setLens(nextLens)
+    setLensFocused(true)
+    requestAnimationFrame(() => {
+      const isMobile = window.matchMedia('(max-width: 639px)').matches
+      const target =
+        isMobile || nextLens !== 'constellation' ? lensContentRef.current : lensViewportRef.current
+      if (!target) return
+
+      window.scrollTo({
+        top:
+          target.getBoundingClientRect().top +
+          window.scrollY -
+          (!isMobile && nextLens === 'constellation' ? 12 : 0),
+        behavior: 'auto',
+      })
+    })
+  }, [])
+
+  useEffect(() => {
+    setHydrated(true)
+  }, [])
+
+  useEffect(() => {
+    const update = () => {
+      if (window.scrollY < 120) setLensFocused(false)
+    }
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    return () => window.removeEventListener('scroll', update)
   }, [])
 
   return (
-    <div className="min-h-screen pb-28 text-text-1">
-      <header className="tg-page pb-8 pt-[clamp(4rem,9vh,8rem)]">
+    <div
+      className="min-h-screen pb-28 text-text-1"
+      data-testid="aurora-library"
+      data-aurora-library-ready={hydrated ? 'true' : 'false'}
+    >
+      <header className="mx-12 max-w-[72rem] pb-5 pt-[10.5rem] max-[520px]:mx-auto max-[520px]:max-w-[402px] max-[520px]:px-12 sm:pt-[8.5rem] xl:mx-auto">
         <div className="tg-rise">
           <div className="tg-eyebrow">Library</div>
-          <h1 className="tg-display max-w-[880px]">
-            Everything I&apos;ve read, and four ways to{' '}
-            <span className="italic text-accent">wander</span> it.
+          <h1 className="tg-display mt-5 max-w-[620px] max-[520px]:max-w-[17rem]">
+            <span className="sr-only">Everything I&apos;ve read, and four ways to wander it.</span>
+            <span aria-hidden="true">
+              Everything I&apos;ve read, and four ways to{' '}
+              <span className="italic text-accent">wander</span> it.
+            </span>
           </h1>
-          <p className="tg-standfirst mt-6 max-w-[620px]">
+          <p className="tg-standfirst mt-5 max-w-[620px] max-sm:hidden">
             A reading life is a shape, not a list. Same collection, four instruments — map it as a
             constellation of ideas, browse the shelf, ride the timeline, or scan the index.
           </p>
-          <div className="mt-6 flex flex-wrap gap-5 font-mono text-xs tracking-[0.06em] text-text-2/70">
+          <div className="mt-5 flex flex-wrap gap-5 font-mono text-xs tracking-[0.06em] text-text-2/70 max-sm:hidden">
             <span>
               <span className="text-accent">{books.length}</span> books
             </span>
@@ -748,10 +916,17 @@ export function AuroraLibrary({ books, nodes, edges, topicCount }: AuroraLibrary
         </div>
       </header>
 
-      <div className="mx-auto max-w-[1240px] px-4 pb-6 sm:px-8 lg:px-12">
-        <div className="tg-scroll flex gap-2 overflow-x-auto pb-2">
+      <div
+        ref={lensViewportRef}
+        className="mx-auto max-w-[1240px] px-12 pb-4 max-sm:hidden sm:px-8 lg:px-12"
+      >
+        <div
+          className="tg-scroll flex gap-2 overflow-x-auto pb-2"
+          data-testid="library-category-strip"
+        >
           <button
             type="button"
+            data-testid="library-category-all"
             aria-pressed={!activeCategory}
             onClick={() => setActiveCategory(null)}
             className={clsx(
@@ -767,6 +942,7 @@ export function AuroraLibrary({ books, nodes, edges, topicCount }: AuroraLibrary
             <button
               key={category.code}
               type="button"
+              data-testid={`library-category-${category.code}`}
               aria-pressed={activeCategory === category.code}
               onClick={() =>
                 setActiveCategory((current) => (current === category.code ? null : category.code))
@@ -789,49 +965,13 @@ export function AuroraLibrary({ books, nodes, edges, topicCount }: AuroraLibrary
         </div>
       </div>
 
-      {lens === 'constellation' ? (
-        <ConstellationLens
-          nodes={nodes}
-          edges={edges}
-          booksById={booksById}
-          activeCategory={activeCategory}
-          selectedId={selectedId}
-          onSelect={handleSelect}
-        />
-      ) : null}
-      {lens === 'shelf' ? (
-        <ShelfLens
-          books={books}
-          activeCategory={activeCategory}
-          shelfSort={shelfSort}
-          onSortChange={setShelfSort}
-          onSelect={handleSelect}
-        />
-      ) : null}
-      {lens === 'river' ? (
-        <RiverLens books={books} activeCategory={activeCategory} onSelect={handleSelect} />
-      ) : null}
-      {lens === 'index' ? (
-        <IndexLens
-          books={books}
-          activeCategory={activeCategory}
-          indexSort={indexSort}
-          onIndexSortChange={setIndexSort}
-          onSelect={handleSelect}
-        />
-      ) : null}
-
-      <DetailDrawer
-        book={selectedBook}
-        onClose={() => setSelectedId(null)}
-        onSeeShelf={(category) => {
-          setActiveCategory(category)
-          setLens('shelf')
-          setSelectedId(null)
-        }}
-      />
-
-      <div className="fixed bottom-5 left-1/2 z-50 flex -translate-x-1/2 items-center gap-1 rounded-full border border-accent/20 bg-bg-0/80 p-1.5 font-mono shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-xl max-sm:w-[calc(100vw-1.5rem)] max-sm:justify-center">
+      <div
+        className={clsx(
+          'z-50 flex items-center gap-1 rounded-full border border-accent/20 bg-bg-0/80 p-1.5 font-mono shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-xl transition duration-200 ease-out max-sm:fixed max-sm:bottom-4 max-sm:left-1/2 max-sm:w-[calc(100vw-2rem)] max-sm:-translate-x-1/2 max-sm:justify-center sm:relative sm:mx-auto sm:-mb-10 sm:w-fit',
+          lensFocused && 'sm:pointer-events-none sm:translate-y-2 sm:opacity-0',
+        )}
+        data-testid="library-lens-switcher"
+      >
         <span className="px-2 pl-3 text-[10px] uppercase tracking-[0.14em] text-text-2/45 max-sm:hidden">
           Lens
         </span>
@@ -839,8 +979,9 @@ export function AuroraLibrary({ books, nodes, edges, topicCount }: AuroraLibrary
           <button
             key={tab.key}
             type="button"
+            data-testid={`library-lens-${tab.key}`}
             aria-pressed={lens === tab.key}
-            onClick={() => setLens(tab.key)}
+            onClick={() => handleLensChange(tab.key)}
             className={clsx(
               'rounded-full px-3 py-2 text-[11px] tracking-[0.04em] transition-colors sm:px-3.5 sm:text-xs',
               lens === tab.key
@@ -852,6 +993,50 @@ export function AuroraLibrary({ books, nodes, edges, topicCount }: AuroraLibrary
           </button>
         ))}
       </div>
+
+      <div ref={lensContentRef} className="scroll-mt-0">
+        {lens === 'constellation' ? (
+          <ConstellationLens
+            nodes={nodes}
+            edges={edges}
+            booksById={booksById}
+            activeCategory={activeCategory}
+            selectedId={selectedId}
+            onSelect={handleSelect}
+          />
+        ) : null}
+        {lens === 'shelf' ? (
+          <ShelfLens
+            books={books}
+            activeCategory={activeCategory}
+            shelfSort={shelfSort}
+            onSortChange={setShelfSort}
+            onSelect={handleSelect}
+          />
+        ) : null}
+        {lens === 'river' ? (
+          <RiverLens books={books} activeCategory={activeCategory} onSelect={handleSelect} />
+        ) : null}
+        {lens === 'index' ? (
+          <IndexLens
+            books={books}
+            activeCategory={activeCategory}
+            indexSort={indexSort}
+            onIndexSortChange={setIndexSort}
+            onSelect={handleSelect}
+          />
+        ) : null}
+      </div>
+
+      <DetailDrawer
+        book={selectedBook}
+        onClose={closeDetail}
+        onSeeShelf={(category) => {
+          setActiveCategory(category)
+          handleLensChange('shelf')
+          setSelectedId(null)
+        }}
+      />
     </div>
   )
 }

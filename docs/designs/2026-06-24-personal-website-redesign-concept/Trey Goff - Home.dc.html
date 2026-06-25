@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Hanken+Grotesk:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: #04130c; }
+  ::selection { background: rgba(111,214,154,0.3); }
+  @keyframes tgRise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</helmet>
+
+<div style="position: relative; min-height: 100vh; overflow-x: hidden; font-family: 'Hanken Grotesk', sans-serif; background: #04130c; color: #e8f3ec;">
+  <iframe src="static/aurora-veil.html" title="Aurora veil background" style="position: fixed; inset: 0; width: 100%; height: 100%; border: 0; z-index: 0; filter: hue-rotate(14deg) saturate(1.45) brightness(0.92);"></iframe>
+  <div style="position: fixed; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(110% 80% at 50% 30%, transparent 32%, rgba(4,19,12,0.5) 72%, rgba(4,19,12,0.92) 100%);"></div>
+
+  <div style="position: relative; z-index: 2;">
+    <nav style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; row-gap: 12px; padding: 28px 48px; max-width: 1180px; margin: 0 auto;">
+      <a href="Trey%20Goff%20-%20Home.dc.html" style="font-family: 'Spectral', serif; font-weight: 500; font-size: 21px; color: #e8f3ec; text-decoration: none; white-space: nowrap;">Trey Goff</a>
+      <div style="display: flex; gap: 30px; align-items: center; font-size: 14px; font-weight: 500;">
+        <a href="Writing.dc.html" style="color: rgba(232,243,236,0.7); text-decoration: none;" style-hover="color: #6fd69a;">Writing</a>
+        <a href="Projects.dc.html" style="color: rgba(232,243,236,0.7); text-decoration: none;" style-hover="color: #6fd69a;">Projects</a>
+        <a href="Library.dc.html" style="color: rgba(232,243,236,0.7); text-decoration: none;" style-hover="color: #6fd69a;">Library</a>
+        <a href="About.dc.html" style="color: rgba(232,243,236,0.7); text-decoration: none;" style-hover="color: #6fd69a;">About</a>
+      </div>
+    </nav>
+
+    <!-- hero (centered) -->
+    <header style="max-width: 880px; margin: 0 auto; padding: 16vh 32px 14vh; text-align: center; min-height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; animation: tgRise 1s cubic-bezier(0.16,1,0.3,1) both;">
+      <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.26em; text-transform: uppercase; color: #6fd69a; margin-bottom: 30px;">Próspera · Public Policy · Software</div>
+      <h1 style="font-family: 'Spectral', serif; font-weight: 300; font-size: clamp(38px, 5.4vw, 76px); line-height: 1.08; letter-spacing: -0.01em; margin-bottom: 28px; text-wrap: balance;">Designing the systems that let human progress <span style="font-style: italic; color: #6fd69a;">compound</span>.</h1>
+      <p style="font-size: clamp(17px, 1.4vw, 20px); font-weight: 300; line-height: 1.6; color: rgba(232,243,236,0.78); max-width: 580px; margin-bottom: 38px;">I'm Trey Goff — institutional designer, public-policy economist, and builder of software and AI tooling. Chief of staff at Próspera, curious to a fault, hunting for the largest lever I can pull.</p>
+      <div style="display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;">
+        <a href="Writing.dc.html" style="font-family: 'Geist Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #04130c; background: #6fd69a; padding: 14px 24px; text-decoration: none;" style-hover="background: #97e8bb;">Read the writing →</a>
+        <a href="Projects.dc.html" style="font-family: 'Geist Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #e8f3ec; border: 1px solid rgba(232,243,236,0.3); padding: 14px 24px; text-decoration: none;" style-hover="border-color: #6fd69a; color: #6fd69a;">See the work →</a>
+      </div>
+    </header>
+
+    <!-- paths -->
+    <section style="max-width: 1180px; margin: 0 auto; padding: 40px 32px 10px;">
+      <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(232,243,236,0.5); margin-bottom: 4px; border-bottom: 1px solid rgba(232,243,236,0.22); padding-bottom: 16px;">Four paths into the work</div>
+      <a href="Writing.dc.html" style="display: grid; grid-template-columns: 56px 1fr 24px; gap: 28px; align-items: center; padding: 24px 6px; border-bottom: 1px solid rgba(232,243,236,0.12); text-decoration: none; color: #e8f3ec;" style-hover="background: rgba(232,243,236,0.05);">
+        <span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6fd69a; letter-spacing: 0.08em;">01</span>
+        <div style="display: flex; align-items: baseline; gap: 20px; flex-wrap: wrap;"><h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 22px; width: 130px;">Writing</h3><p style="font-size: 14px; line-height: 1.5; color: rgba(232,243,236,0.6); flex: 1; min-width: 240px;">Essays and field notes on governance, technology, faith, and building.</p></div>
+        <span style="font-size: 16px; color: #6fd69a;">→</span>
+      </a>
+      <a href="Projects.dc.html" style="display: grid; grid-template-columns: 56px 1fr 24px; gap: 28px; align-items: center; padding: 24px 6px; border-bottom: 1px solid rgba(232,243,236,0.12); text-decoration: none; color: #e8f3ec;" style-hover="background: rgba(232,243,236,0.05);">
+        <span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6fd69a; letter-spacing: 0.08em;">02</span>
+        <div style="display: flex; align-items: baseline; gap: 20px; flex-wrap: wrap;"><h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 22px; width: 130px;">Projects</h3><p style="font-size: 14px; line-height: 1.5; color: rgba(232,243,236,0.6); flex: 1; min-width: 240px;">Websites, CLI &amp; agent tooling, policy initiatives, and Próspera.</p></div>
+        <span style="font-size: 16px; color: #6fd69a;">→</span>
+      </a>
+      <a href="Library.dc.html" style="display: grid; grid-template-columns: 56px 1fr 24px; gap: 28px; align-items: center; padding: 24px 6px; border-bottom: 1px solid rgba(232,243,236,0.12); text-decoration: none; color: #e8f3ec;" style-hover="background: rgba(232,243,236,0.05);">
+        <span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6fd69a; letter-spacing: 0.08em;">03</span>
+        <div style="display: flex; align-items: baseline; gap: 20px; flex-wrap: wrap;"><h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 22px; width: 130px;">Library</h3><p style="font-size: 14px; line-height: 1.5; color: rgba(232,243,236,0.6); flex: 1; min-width: 240px;">A few hundred books, mapped five ways — a constellation of everything I've read.</p></div>
+        <span style="font-size: 16px; color: #6fd69a;">→</span>
+      </a>
+      <a href="About.dc.html" style="display: grid; grid-template-columns: 56px 1fr 24px; gap: 28px; align-items: center; padding: 24px 6px; border-bottom: 1px solid rgba(232,243,236,0.12); text-decoration: none; color: #e8f3ec;" style-hover="background: rgba(232,243,236,0.05);">
+        <span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6fd69a; letter-spacing: 0.08em;">04</span>
+        <div style="display: flex; align-items: baseline; gap: 20px; flex-wrap: wrap;"><h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 22px; width: 130px;">About</h3><p style="font-size: 14px; line-height: 1.5; color: rgba(232,243,236,0.6); flex: 1; min-width: 240px;">Mississippi roots, a cosmopolitan orbit, and what I'm chasing.</p></div>
+        <span style="font-size: 16px; color: #6fd69a;">→</span>
+      </a>
+    </section>
+
+    <!-- selected work -->
+    <section style="max-width: 1180px; margin: 0 auto; padding: 70px 32px 10px;">
+      <div style="text-align: center; margin-bottom: 30px;">
+        <h2 style="font-family: 'Spectral', serif; font-weight: 300; font-size: clamp(28px, 3vw, 42px);">Selected work</h2>
+        <p style="font-size: 14px; color: rgba(232,243,236,0.55); margin-top: 8px;">Across websites, tooling, policy, and Próspera.</p>
+      </div>
+      <div style="border-top: 1px solid rgba(232,243,236,0.22);">
+        <a href="Projects.dc.html" style="display: grid; grid-template-columns: 200px 1fr 24px; gap: 36px; align-items: baseline; padding: 28px 6px; border-bottom: 1px solid rgba(232,243,236,0.14); text-decoration: none; color: #e8f3ec;" style-hover="background: rgba(232,243,236,0.05);">
+          <div>
+            <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(232,243,236,0.55); margin-bottom: 9px;">Software</div>
+            <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 7px; height: 7px; background: #6fd69a; display: inline-block;"></span><span style="font-size: 12.5px; color: rgba(232,243,236,0.7);">Active</span></div>
+          </div>
+          <div>
+            <h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 25px; margin-bottom: 6px;">The Control Room</h3>
+            <p style="font-size: 14.5px; line-height: 1.55; color: rgba(232,243,236,0.62); max-width: 600px;">A command-palette-first index tying essays, notes, books, and a knowledge graph into one explorable place.</p>
+          </div>
+          <span style="font-size: 18px; color: #6fd69a;">→</span>
+        </a>
+        <a href="Projects.dc.html" style="display: grid; grid-template-columns: 200px 1fr 24px; gap: 36px; align-items: baseline; padding: 28px 6px; border-bottom: 1px solid rgba(232,243,236,0.14); text-decoration: none; color: #e8f3ec;" style-hover="background: rgba(232,243,236,0.05);">
+          <div>
+            <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(232,243,236,0.55); margin-bottom: 9px;">Institutional</div>
+            <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 7px; height: 7px; background: #6fd69a; display: inline-block;"></span><span style="font-size: 12.5px; color: rgba(232,243,236,0.7);">Ongoing</span></div>
+          </div>
+          <div>
+            <h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 25px; margin-bottom: 6px;">Próspera</h3>
+            <p style="font-size: 14.5px; line-height: 1.55; color: rgba(232,243,236,0.62); max-width: 600px;">Public affairs and governance for the world's most ambitious charter city — from first employee to chief of staff.</p>
+          </div>
+          <span style="font-size: 18px; color: #6fd69a;">→</span>
+        </a>
+        <a href="Projects.dc.html" style="display: grid; grid-template-columns: 200px 1fr 24px; gap: 36px; align-items: baseline; padding: 28px 6px; border-bottom: 1px solid rgba(232,243,236,0.14); text-decoration: none; color: #e8f3ec;" style-hover="background: rgba(232,243,236,0.05);">
+          <div>
+            <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(232,243,236,0.55); margin-bottom: 9px;">Agent tooling</div>
+            <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 7px; height: 7px; border: 1px solid rgba(232,243,236,0.5); display: inline-block;"></span><span style="font-size: 12.5px; color: rgba(232,243,236,0.7);">CLI</span></div>
+          </div>
+          <div>
+            <h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 25px; margin-bottom: 6px;">Harness &amp; command-line tools</h3>
+            <p style="font-size: 14.5px; line-height: 1.55; color: rgba(232,243,236,0.62); max-width: 600px;">Tinkering at the frontier of what's possible with AI — harnesses and tools for working alongside agents.</p>
+          </div>
+          <span style="font-size: 18px; color: #6fd69a;">→</span>
+        </a>
+        <a href="Projects.dc.html" style="display: grid; grid-template-columns: 200px 1fr 24px; gap: 36px; align-items: baseline; padding: 28px 6px; border-bottom: 1px solid rgba(232,243,236,0.14); text-decoration: none; color: #e8f3ec;" style-hover="background: rgba(232,243,236,0.05);">
+          <div>
+            <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(232,243,236,0.55); margin-bottom: 9px;">Public policy</div>
+            <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 7px; height: 7px; border: 1px solid rgba(232,243,236,0.5); display: inline-block;"></span><span style="font-size: 12.5px; color: rgba(232,243,236,0.7);">Initiative</span></div>
+          </div>
+          <div>
+            <h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 25px; margin-bottom: 6px;">Governance experiments</h3>
+            <p style="font-size: 14.5px; line-height: 1.55; color: rgba(232,243,236,0.62); max-width: 600px;">Turning institutional experiments into legible, repeatable models others can adopt.</p>
+          </div>
+          <span style="font-size: 18px; color: #6fd69a;">→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- featured essays -->
+    <section style="max-width: 1180px; margin: 0 auto; padding: 70px 32px 10px;">
+      <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 4px; border-bottom: 1px solid rgba(232,243,236,0.22); padding-bottom: 18px;">
+        <h2 style="font-family: 'Spectral', serif; font-weight: 300; font-size: clamp(28px, 3vw, 42px);">Featured essays</h2>
+        <a href="Writing.dc.html" style="font-size: 13px; font-weight: 600; color: #6fd69a; text-decoration: none;">All writing →</a>
+      </div>
+      <a href="Writing.dc.html" style="display: grid; grid-template-columns: 120px 1fr auto; gap: 28px; align-items: baseline; padding: 26px 6px; border-bottom: 1px solid rgba(232,243,236,0.12); text-decoration: none; color: #e8f3ec;" style-hover="background: rgba(232,243,236,0.05);">
+        <span style="font-size: 12px; font-weight: 600; color: rgba(232,243,236,0.5); white-space: nowrap;">Sep 15, 2025</span>
+        <div>
+          <h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 21px; margin-bottom: 5px;">How I Became a Christian</h3>
+          <p style="font-size: 14px; line-height: 1.5; color: rgba(232,243,236,0.62);">A rationalist's journey to faith — from southern Baptist childhood to angry atheism to genuine belief.</p>
+        </div>
+        <span style="font-size: 12px; font-weight: 600; color: #6fd69a; white-space: nowrap;">16 min</span>
+      </a>
+      <a href="Writing.dc.html" style="display: grid; grid-template-columns: 120px 1fr auto; gap: 28px; align-items: baseline; padding: 26px 6px; border-bottom: 1px solid rgba(232,243,236,0.12); text-decoration: none; color: #e8f3ec;" style-hover="background: rgba(232,243,236,0.05);">
+        <span style="font-size: 12px; font-weight: 600; color: rgba(232,243,236,0.5); white-space: nowrap;">Apr 5, 2024</span>
+        <div>
+          <h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 21px; margin-bottom: 5px;">Peer-Reviewed Paper on Próspera Governance</h3>
+          <p style="font-size: 14px; line-height: 1.5; color: rgba(232,243,236,0.62);">On the history, formation, and governance structure of Honduras's first ZEDE.</p>
+        </div>
+        <span style="font-size: 12px; font-weight: 600; color: #6fd69a; white-space: nowrap;">Paper</span>
+      </a>
+      <a href="Writing.dc.html" style="display: grid; grid-template-columns: 120px 1fr auto; gap: 28px; align-items: baseline; padding: 26px 6px; border-bottom: 1px solid rgba(232,243,236,0.12); text-decoration: none; color: #e8f3ec;" style-hover="background: rgba(232,243,236,0.05);">
+        <span style="font-size: 12px; font-weight: 600; color: rgba(232,243,236,0.5); white-space: nowrap;">Jan 15, 2024</span>
+        <div>
+          <h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 21px; margin-bottom: 5px;">Hello World: Building The Control Room</h3>
+          <p style="font-size: 14px; line-height: 1.5; color: rgba(232,243,236,0.62);">An introduction to this site and what I hope to accomplish with it.</p>
+        </div>
+        <span style="font-size: 12px; font-weight: 600; color: #6fd69a; white-space: nowrap;">Meta</span>
+      </a>
+    </section>
+
+    <footer style="max-width: 1180px; margin: 60px auto 0; padding: 44px 32px 90px; border-top: 1px solid rgba(232,243,236,0.1); display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 24px;">
+      <div style="max-width: 380px;">
+        <div style="font-family: 'Spectral', serif; font-size: 20px; margin-bottom: 10px;">Trey Goff</div>
+        <p style="font-size: 13.5px; line-height: 1.55; color: rgba(232,243,236,0.55);">Building better governance through institutional design and practical experimentation.</p>
+      </div>
+      <div style="display: flex; gap: 24px; font-size: 13px; font-weight: 600;">
+        <a href="https://twitter.com/treygoff" style="color: rgba(232,243,236,0.65); text-decoration: none;" style-hover="color: #6fd69a;">Twitter</a>
+        <a href="https://github.com/treygoff" style="color: rgba(232,243,236,0.65); text-decoration: none;" style-hover="color: #6fd69a;">GitHub</a>
+        <span style="color: rgba(232,243,236,0.4);">© 2026</span>
+      </div>
+    </footer>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

@@ -1,26 +1,23 @@
-import { Newsreader, Geologica, IBM_Plex_Mono } from 'next/font/google'
+import { Geist_Mono, Hanken_Grotesk, Spectral } from 'next/font/google'
 
-// Distinctive type pairing to replace the temporary Inter/JetBrains setup
-// If you want local fonts later, swap these out for next/font/local.
-
-export const satoshi = Geologica({
+export const satoshi = Hanken_Grotesk({
   subsets: ['latin'],
-  variable: '--font-satoshi-font',
+  variable: '--font-body',
   display: 'swap',
   weight: ['400', '500', '600', '700'],
 })
 
-export const newsreader = Newsreader({
+export const newsreader = Spectral({
   subsets: ['latin'],
-  variable: '--font-newsreader-font',
+  variable: '--font-display',
   display: 'swap',
-  weight: ['400', '500', '600'],
+  weight: ['400', '500', '600', '700'],
   style: ['normal', 'italic'],
 })
 
-export const monaspace = IBM_Plex_Mono({
+export const monaspace = Geist_Mono({
   subsets: ['latin'],
-  variable: '--font-mono-font',
+  variable: '--font-label',
   display: 'swap',
   weight: ['400', '500', '600'],
 })

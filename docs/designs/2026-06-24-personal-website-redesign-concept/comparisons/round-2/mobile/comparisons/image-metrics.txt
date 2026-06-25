@@ -1,0 +1,4 @@
+home ref=(402, 540) actual=(402, 540) mae=16.81
+writing ref=(402, 540) actual=(402, 540) mae=16.82
+projects ref=(402, 540) actual=(402, 540) mae=17.94
+about ref=(402, 540) actual=(402, 540) mae=15.85

@@ -1,0 +1,46 @@
+{
+  "home": {
+    "baseline": "docs/designs/2026-06-24-personal-website-redesign-concept/handoff/shots/home-desktop.png",
+    "actual": "docs/designs/2026-06-24-personal-website-redesign-concept/comparisons/round-4/desktop/screenshots/home-desktop.png",
+    "diff": "docs/designs/2026-06-24-personal-website-redesign-concept/comparisons/round-4/desktop/diffs/home-diff.png",
+    "size": [
+      924,
+      540
+    ],
+    "rms": 41.494,
+    "changed_px_pct_threshold8": 49.15
+  },
+  "writing": {
+    "baseline": "docs/designs/2026-06-24-personal-website-redesign-concept/handoff/shots/writing-desktop.png",
+    "actual": "docs/designs/2026-06-24-personal-website-redesign-concept/comparisons/round-4/desktop/screenshots/writing-desktop.png",
+    "diff": "docs/designs/2026-06-24-personal-website-redesign-concept/comparisons/round-4/desktop/diffs/writing-diff.png",
+    "size": [
+      924,
+      540
+    ],
+    "rms": 42.537,
+    "changed_px_pct_threshold8": 35.59
+  },
+  "projects": {
+    "baseline": "docs/designs/2026-06-24-personal-website-redesign-concept/handoff/shots/projects-desktop.png",
+    "actual": "docs/designs/2026-06-24-personal-website-redesign-concept/comparisons/round-4/desktop/screenshots/projects-desktop.png",
+    "diff": "docs/designs/2026-06-24-personal-website-redesign-concept/comparisons/round-4/desktop/diffs/projects-diff.png",
+    "size": [
+      924,
+      540
+    ],
+    "rms": 39.108,
+    "changed_px_pct_threshold8": 29.594
+  },
+  "about": {
+    "baseline": "docs/designs/2026-06-24-personal-website-redesign-concept/handoff/shots/about-desktop.png",
+    "actual": "docs/designs/2026-06-24-personal-website-redesign-concept/comparisons/round-4/desktop/screenshots/about-desktop.png",
+    "diff": "docs/designs/2026-06-24-personal-website-redesign-concept/comparisons/round-4/desktop/diffs/about-diff.png",
+    "size": [
+      924,
+      540
+    ],
+    "rms": 50.905,
+    "changed_px_pct_threshold8": 41.357
+  }
+}

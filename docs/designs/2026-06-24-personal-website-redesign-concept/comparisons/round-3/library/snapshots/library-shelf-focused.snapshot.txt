@@ -1,0 +1,1096 @@
+- link "Skip to main content" [ref=e1]
+- banner
+  - navigation "Main navigation" [ref=e2]
+    - link "Trey Goff" [ref=e3]
+    - link "Writing" [ref=e4]
+    - link "Projects" [ref=e5]
+    - link "Library" [ref=e6]
+    - link "About" [ref=e7]
+- main
+  - sectionheader
+    - StaticText "LIBRARY"
+    - heading "Everything I've read, and four ways to wander it." [level=1, ref=e8]
+      - StaticText "Everything I've read, and four ways to wander it."
+    - paragraph
+      - StaticText "A reading life is a shape, not a list. Same collection, four instruments — map it as a constellation of ideas, browse the shelf, ride the timeline, or scan the index."
+    - StaticText "334"
+    - StaticText " books"
+    - StaticText "·"
+    - StaticText "12"
+    - StaticText " shelves"
+    - StaticText "·"
+    - StaticText "155"
+    - StaticText " topics"
+  - generic
+    - button "ALL · 334" [ref=e9]
+      - StaticText "ALL · 334"
+    - button "SCI-FI · 60" [ref=e10]
+      - StaticText "SCI-FI · 60"
+    - button "FANTASY · 41" [ref=e11]
+      - StaticText "FANTASY · 41"
+    - button "FICTION · 33" [ref=e12]
+      - StaticText "FICTION · 33"
+    - button "SCIENCE · 41" [ref=e13]
+      - StaticText "SCIENCE · 41"
+    - button "SELF & GROWTH · 23" [ref=e14]
+      - StaticText "SELF & GROWTH · 23"
+    - button "BUSINESS · 31" [ref=e15]
+      - StaticText "BUSINESS · 31"
+    - button "ECONOMICS · 14" [ref=e16]
+      - StaticText "ECONOMICS · 14"
+    - button "POLITICS · 24" [ref=e17]
+      - StaticText "POLITICS · 24"
+    - button "PHILOSOPHY · 27" [ref=e18]
+      - StaticText "PHILOSOPHY · 27"
+    - button "RELIGION · 11" [ref=e19]
+      - StaticText "RELIGION · 11"
+    - button "HISTORY · 19" [ref=e20]
+      - StaticText "HISTORY · 19"
+    - button "LIVES · 10" [ref=e21]
+      - StaticText "LIVES · 10"
+  - generic
+    - StaticText "LENS"
+    - button "Constellation" [ref=e22]
+    - button "Shelf" [ref=e23]
+    - button "River" [ref=e24]
+    - button "Index" [ref=e25]
+  - generic
+    - StaticText "ARRANGE BY"
+    - button "SHELF" [ref=e26]
+    - button "COLOR" [ref=e27]
+    - button "THREADS" [ref=e28]
+    - button "RECENT" [ref=e29]
+    - button "HEIGHT" [ref=e30]
+    - button "AUTHOR" [ref=e31]
+    - button "The Immortalists by David M. Friedman" [ref=e32]
+      - StaticText "The Immortalists"
+      - StaticText "DAVID M. FRIEDMAN"
+    - button "Elon Musk by Walter Isaacson" [ref=e33]
+      - StaticText "Elon Musk"
+      - StaticText "WALTER ISAACSON"
+    - button "Can't Hurt Me by David Goggins" [ref=e34]
+      - StaticText "Can't Hurt Me"
+      - StaticText "DAVID GOGGINS"
+    - button "Hillbilly Elegy by J.D. Vance" [ref=e35]
+      - StaticText "Hillbilly Elegy"
+      - StaticText "J.D. VANCE"
+    - button "Liftoff: Elon Musk and the Desperate Early Days That Launched SpaceX by Eric Berger" [ref=e36]
+      - StaticText "Liftoff: Elon Musk and the Desperate Early Days That Launched SpaceX"
+      - StaticText "ERIC BERGER"
+    - button "The Fish That Ate the Whale by Rich Cohen" [ref=e37]
+      - StaticText "The Fish That Ate the Whale"
+      - StaticText "RICH COHEN"
+    - button "Troubled: A Memoir of Foster Care, Family, and Social Class by Rob Henderson" [ref=e38]
+      - StaticText "Troubled: A Memoir of Foster Care, Family, and Social Class"
+      - StaticText "ROB HENDERSON"
+    - button "Greenlights by Matthew McConaughey" [ref=e39]
+      - StaticText "Greenlights"
+      - StaticText "MATTHEW MCCONAUGHEY"
+    - button "The Game by Neil Strauss" [ref=e40]
+      - StaticText "The Game"
+      - StaticText "NEIL STRAUSS"
+    - button "The Solace of Open Spaces by Gretel Ehrlich" [ref=e41]
+      - StaticText "The Solace of Open Spaces"
+      - StaticText "GRETEL EHRLICH"
+    - button "The Infidel and the Professor by Dennis C. Rasmussen" [ref=e42]
+      - StaticText "The Infidel and the Professor"
+      - StaticText "DENNIS C. RASMUSSEN"
+    - button "The Making of the Atomic Bomb by Richard Rhodes" [ref=e43]
+      - StaticText "The Making of the Atomic Bomb"
+      - StaticText "RICHARD RHODES"
+    - button "Days of Rage by Bryan Burrough" [ref=e44]
+      - StaticText "Days of Rage"
+      - StaticText "BRYAN BURROUGH"
+    - button "Midnight in Chernobyl by Adam Higginbotham" [ref=e45]
+      - StaticText "Midnight in Chernobyl"
+      - StaticText "ADAM HIGGINBOTHAM"
+    - button "The White Pill by Michael Malice" [ref=e46]
+      - StaticText "The White Pill"
+      - StaticText "MICHAEL MALICE"
+    - button "Lion City: Singapore and the Invention of Modern Asia by Jeevan Vasagar" [ref=e47]
+      - StaticText "Lion City: Singapore and the Invention of Modern Asia"
+      - StaticText "JEEVAN VASAGAR"
+    - button "Homo Deus by Yuval Noah Harari" [ref=e48]
+      - StaticText "Homo Deus"
+      - StaticText "YUVAL NOAH HARARI"
+    - button "On Grand Strategy by John Lewis Gaddis" [ref=e49]
+      - StaticText "On Grand Strategy"
+      - StaticText "JOHN LEWIS GADDIS"
+    - button "The Aristocracy of Talent by Adrian Wooldridge" [ref=e50]
+      - StaticText "The Aristocracy of Talent"
+      - StaticText "ADRIAN WOOLDRIDGE"
+    - button "The Doomsday Machine by Daniel Ellsberg" [ref=e51]
+      - StaticText "The Doomsday Machine"
+      - StaticText "DANIEL ELLSBERG"
+    - button "Sapiens by Yuval Noah Harari" [ref=e52]
+      - StaticText "Sapiens"
+      - StaticText "YUVAL NOAH HARARI"
+    - button "Inventing Freedom by Daniel Hannan" [ref=e53]
+      - StaticText "Inventing Freedom"
+      - StaticText "DANIEL HANNAN"
+    - button "New City Upon a Hill: A History of Columbia, Maryland by Joseph Rocco Mitchell & David L. Stebenne" [ref=e54]
+      - StaticText "New City Upon a Hill: A History of Columbia, Maryland"
+      - StaticText "JOSEPH ROCCO MITCHELL & DAVID L. STEBENNE"
+    - button "Singapore, Singapura by Nicholas Walton" [ref=e55]
+      - StaticText "Singapore, Singapura"
+      - StaticText "NICHOLAS WALTON"
+    - button "The Polymath by Peter Burke" [ref=e56]
+      - StaticText "The Polymath"
+      - StaticText "PETER BURKE"
+    - button "The Struggle for Taiwan by Sulmaan Wasif Khan" [ref=e57]
+      - StaticText "The Struggle for Taiwan"
+      - StaticText "SULMAAN WASIF KHAN"
+    - button "Red Famine: Stalin's War on Ukraine by Anne Applebaum" [ref=e58]
+      - StaticText "Red Famine: Stalin's War on Ukraine"
+      - StaticText "ANNE APPLEBAUM"
+    - button "The Edge of the World by Michael Pye" [ref=e59]
+      - StaticText "The Edge of the World"
+      - StaticText "MICHAEL PYE"
+    - button "The Sack of Detroit by Kenneth Whyte" [ref=e60]
+      - StaticText "The Sack of Detroit"
+      - StaticText "KENNETH WHYTE"
+    - button "Return of the God Hypothesis by Stephen C. Meyer" [ref=e61]
+      - StaticText "Return of the God Hypothesis"
+      - StaticText "STEPHEN C. MEYER"
+    - button "The Mind Illuminated by Culadasa" [ref=e62]
+      - StaticText "The Mind Illuminated"
+      - StaticText "CULADASA"
+    - button "The Ruthless Elimination of Hurry by John Mark Comer" [ref=e63]
+      - StaticText "The Ruthless Elimination of Hurry"
+      - StaticText "JOHN MARK COMER"
+    - button "It's Good to Be a Man: A Handbook for Godly Masculinity by Michael Foster & Dominic Bnonn Tennant" [ref=e64]
+      - StaticText "It's Good to Be a Man: A Handbook for Godly Masculinity"
+      - StaticText "MICHAEL FOSTER & DOMINIC BNONN TENNANT"
+    - button "Love and Respect by Emerson Eggerichs" [ref=e65]
+      - StaticText "Love and Respect"
+      - StaticText "EMERSON EGGERICHS"
+    - button "The Case for Christ by Lee Strobel" [ref=e66]
+      - StaticText "The Case for Christ"
+      - StaticText "LEE STROBEL"
+    - button "The Fruit of Her Hands by Nancy Wilson" [ref=e67]
+      - StaticText "The Fruit of Her Hands"
+      - StaticText "NANCY WILSON"
+    - button "The Meaning of Marriage by Timothy Keller" [ref=e68]
+      - StaticText "The Meaning of Marriage"
+      - StaticText "TIMOTHY KELLER"
+    - button "The Reason for God by Timothy Keller" [ref=e69]
+      - StaticText "The Reason for God"
+      - StaticText "TIMOTHY KELLER"
+    - button "Right Concentration by Leigh Brasington" [ref=e70]
+      - StaticText "Right Concentration"
+      - StaticText "LEIGH BRASINGTON"
+    - button "What the Buddha Taught by Walpola Rahula" [ref=e71]
+      - StaticText "What the Buddha Taught"
+      - StaticText "WALPOLA RAHULA"
+    - button "Stubborn Attachments by Tyler Cowen" [ref=e72]
+      - StaticText "Stubborn Attachments"
+      - StaticText "TYLER COWEN"
+    - button "The Problem of Political Authority by Michael Huemer" [ref=e73]
+      - StaticText "The Problem of Political Authority"
+      - StaticText "MICHAEL HUEMER"
+    - button "Provocations by Camille Paglia" [ref=e74]
+      - StaticText "Provocations"
+      - StaticText "CAMILLE PAGLIA"
+    - button "Skin in the Game by Nassim Nicholas Taleb" [ref=e75]
+      - StaticText "Skin in the Game"
+      - StaticText "NASSIM NICHOLAS TALEB"
+    - button "Why Buddhism is True by Robert Wright" [ref=e76]
+      - StaticText "Why Buddhism is True"
+      - StaticText "ROBERT WRIGHT"
+    - button "When All Else Fails: The Ethics of Resistance to State Injustice by Jason Brennan" [ref=e77]
+      - StaticText "When All Else Fails: The Ethics of Resistance to State Injustice"
+      - StaticText "JASON BRENNAN"
+    - button "Against the Machine: On the Unmaking of Humanity by Paul Kingsnorth" [ref=e78]
+      - StaticText "Against the Machine: On the Unmaking of Humanity"
+      - StaticText "PAUL KINGSNORTH"
+    - button "The Beginning of Infinity by David Deutsch" [ref=e79]
+      - StaticText "The Beginning of Infinity"
+      - StaticText "DAVID DEUTSCH"
+    - button "Second Treatise of Government by John Locke" [ref=e80]
+      - StaticText "Second Treatise of Government"
+      - StaticText "JOHN LOCKE"
+    - button "The Prince by Niccolo Machiavelli" [ref=e81]
+      - StaticText "The Prince"
+      - StaticText "NICCOLO MACHIAVELLI"
+    - button "The Republic by Plato" [ref=e82]
+      - StaticText "The Republic"
+      - StaticText "PLATO"
+    - button "Foundations of a Free Society by Gregory Salmieri & Robert Mayhew" [ref=e83]
+      - StaticText "Foundations of a Free Society"
+      - StaticText "GREGORY SALMIERI & ROBERT MAYHEW"
+    - button "The Individualists by Matt Zwolinski & John Tomasi" [ref=e84]
+      - StaticText "The Individualists"
+      - StaticText "MATT ZWOLINSKI & JOHN TOMASI"
+    - button "Waking Up by Sam Harris" [ref=e85]
+      - StaticText "Waking Up"
+      - StaticText "SAM HARRIS"
+    - button "The Art of War by Sun Tzu" [ref=e86]
+      - StaticText "The Art of War"
+      - StaticText "SUN TZU"
+    - button "The Science of Free Will by Samir Varma" [ref=e87]
+      - StaticText "The Science of Free Will"
+      - StaticText "SAMIR VARMA"
+    - button "The Book of Five Rings by Miyamoto Musashi" [ref=e88]
+      - StaticText "The Book of Five Rings"
+      - StaticText "MIYAMOTO MUSASHI"
+    - button "The Journalist and the Murderer by Janet Malcolm" [ref=e89]
+      - StaticText "The Journalist and the Murderer"
+      - StaticText "JANET MALCOLM"
+    - button "Atheism: The Case Against God by George H. Smith" [ref=e90]
+      - StaticText "Atheism: The Case Against God"
+      - StaticText "GEORGE H. SMITH"
+    - button "Fear and Trembling by Soren Kierkegaard" [ref=e91]
+      - StaticText "Fear and Trembling"
+      - StaticText "SOREN KIERKEGAARD"
+    - button "Antifragile by Nassim Nicholas Taleb" [ref=e92]
+      - StaticText "Antifragile"
+      - StaticText "NASSIM NICHOLAS TALEB"
+    - button "On Liberty by John Stuart Mill" [ref=e93]
+      - StaticText "On Liberty"
+      - StaticText "JOHN STUART MILL"
+    - button "Word by Word: The Secret Life of Dictionaries by Kory Stamper" [ref=e94]
+      - StaticText "Word by Word: The Secret Life of Dictionaries"
+      - StaticText "KORY STAMPER"
+    - button "At the Existentialist Cafe by Sarah Bakewell" [ref=e95]
+      - StaticText "At the Existentialist Cafe"
+      - StaticText "SARAH BAKEWELL"
+    - button "Beyond Good and Evil by Friedrich Nietzsche" [ref=e96]
+      - StaticText "Beyond Good and Evil"
+      - StaticText "FRIEDRICH NIETZSCHE"
+    - button "Meditations by Marcus Aurelius" [ref=e97]
+      - StaticText "Meditations"
+      - StaticText "MARCUS AURELIUS"
+    - button "Zen and the Art of Motorcycle Maintenance by Robert M. Pirsig" [ref=e98]
+      - StaticText "Zen and the Art of Motorcycle Maintenance"
+      - StaticText "ROBERT M. PIRSIG"
+    - button "The Communist Manifesto by Karl Marx" [ref=e99]
+      - StaticText "The Communist Manifesto"
+      - StaticText "KARL MARX"
+    - button "What's Our Problem?: A Self-Help Book for Societies by Tim Urban" [ref=e100]
+      - StaticText "What's Our Problem?: A Self-Help Book for Societies"
+      - StaticText "TIM URBAN"
+    - button "The Technological Republic by Alex Mayyasi" [ref=e101]
+      - StaticText "The Technological Republic"
+      - StaticText "ALEX MAYYASI"
+    - button "The Law by Frederic Bastiat" [ref=e102]
+      - StaticText "The Law"
+      - StaticText "FREDERIC BASTIAT"
+    - button "For A New Liberty by Murray N. Rothbard" [ref=e103]
+      - StaticText "For A New Liberty"
+      - StaticText "MURRAY N. ROTHBARD"
+    - button "The Conservative Futurist by James Pethokoukis" [ref=e104]
+      - StaticText "The Conservative Futurist"
+      - StaticText "JAMES PETHOKOUKIS"
+    - button "Anatomy of the State by Murray N. Rothbard" [ref=e105]
+      - StaticText "Anatomy of the State"
+      - StaticText "MURRAY N. ROTHBARD"
+    - button "Liberty Defined by Ron Paul" [ref=e106]
+      - StaticText "Liberty Defined"
+      - StaticText "RON PAUL"
+    - button "Real Dissent by Tom Woods" [ref=e107]
+      - StaticText "Real Dissent"
+      - StaticText "TOM WOODS"
+    - button "The Machinery of Freedom by David Friedman" [ref=e108]
+      - StaticText "The Machinery of Freedom"
+      - StaticText "DAVID FRIEDMAN"
+    - button "The Origins of Woke by Richard Hanania" [ref=e109]
+      - StaticText "The Origins of Woke"
+      - StaticText "RICHARD HANANIA"
+    - button "The Network State by Balaji Srinivasan" [ref=e110]
+      - StaticText "The Network State"
+      - StaticText "BALAJI SRINIVASAN"
+    - button "America's Cultural Revolution by Christopher F. Rufo" [ref=e111]
+      - StaticText "America's Cultural Revolution"
+      - StaticText "CHRISTOPHER F. RUFO"
+    - button "Entrepreneurial Communities by Calvin Duke" [ref=e112]
+      - StaticText "Entrepreneurial Communities"
+      - StaticText "CALVIN DUKE"
+    - button "Your Next Government? by Tom W. Bell" [ref=e113]
+      - StaticText "Your Next Government?"
+      - StaticText "TOM W. BELL"
+    - button "Act of Congress by Robert G. Kaiser" [ref=e114]
+      - StaticText "Act of Congress"
+      - StaticText "ROBERT G. KAISER"
+    - button "Inside Congress by Trevor Corning, Nolan Dolan & Ryan Strasser" [ref=e115]
+      - StaticText "Inside Congress"
+      - StaticText "TREVOR CORNING, NOLAN DOLAN & RYAN STRASSER"
+    - button "The New Right by Michael Malice" [ref=e116]
+      - StaticText "The New Right"
+      - StaticText "MICHAEL MALICE"
+    - button "Against Intellectual Property by N. Stephan Kinsella" [ref=e117]
+      - StaticText "Against Intellectual Property"
+      - StaticText "N. STEPHAN KINSELLA"
+    - button "The Dirty Dozen by Robert A. Levy & William Mellor" [ref=e118]
+      - StaticText "The Dirty Dozen"
+      - StaticText "ROBERT A. LEVY & WILLIAM MELLOR"
+    - button "Life At The Bottom by Theodore Dalrymple" [ref=e119]
+      - StaticText "Life At The Bottom"
+      - StaticText "THEODORE DALRYMPLE"
+    - button "Seeing Like a State by James C. Scott" [ref=e120]
+      - StaticText "Seeing Like a State"
+      - StaticText "JAMES C. SCOTT"
+    - button "Fool's Errand: Time to End the War in Afghanistan by Scott Horton" [ref=e121]
+      - StaticText "Fool's Errand: Time to End the War in Afghanistan"
+      - StaticText "SCOTT HORTON"
+    - button "Very Important People by Ashley Mears" [ref=e122]
+      - StaticText "Very Important People"
+      - StaticText "ASHLEY MEARS"
+    - button "Equal Is Unfair by Don Watkins & Yaron Brook" [ref=e123]
+      - StaticText "Equal Is Unfair"
+      - StaticText "DON WATKINS & YARON BROOK"
+    - button "The Age of Em by Robin Hanson" [ref=e124]
+      - StaticText "The Age of Em"
+      - StaticText "ROBIN HANSON"
+    - button "Progress and Poverty by Henry George" [ref=e125]
+      - StaticText "Progress and Poverty"
+      - StaticText "HENRY GEORGE"
+    - button "The Culture Transplant by Garett Jones" [ref=e126]
+      - StaticText "The Culture Transplant"
+      - StaticText "GARETT JONES"
+    - button "Order without Design: How Markets Shape Cities by Alain Bertaud" [ref=e127]
+      - StaticText "Order without Design: How Markets Shape Cities"
+      - StaticText "ALAIN BERTAUD"
+    - button "America's Great Depression by Murray N. Rothbard" [ref=e128]
+      - StaticText "America's Great Depression"
+      - StaticText "MURRAY N. ROTHBARD"
+    - button "Economic Policy: Thoughts for Today and Tomorrow by Ludwig von Mises" [ref=e129]
+      - StaticText "Economic Policy: Thoughts for Today and Tomorrow"
+      - StaticText "LUDWIG VON MISES"
+    - button "End the Fed by Ron Paul" [ref=e130]
+      - StaticText "End the Fed"
+      - StaticText "RON PAUL"
+    - button "Human Action by Ludwig von Mises" [ref=e131]
+      - StaticText "Human Action"
+      - StaticText "LUDWIG VON MISES"
+    - button "The Bitcoin Standard by Saifedean Ammous" [ref=e132]
+      - StaticText "The Bitcoin Standard"
+      - StaticText "SAIFEDEAN AMMOUS"
+    - button "The Case against Education by Bryan Caplan" [ref=e133]
+      - StaticText "The Case against Education"
+      - StaticText "BRYAN CAPLAN"
+    - button "The Moral Case for Fossil Fuels by Alex Epstein" [ref=e134]
+      - StaticText "The Moral Case for Fossil Fuels"
+      - StaticText "ALEX EPSTEIN"
+    - button "What Has Government Done to Our Money? by Murray N. Rothbard" [ref=e135]
+      - StaticText "What Has Government Done to Our Money?"
+      - StaticText "MURRAY N. ROTHBARD"
+    - button "What Is Money? by Michael Saylor" [ref=e136]
+      - StaticText "What Is Money?"
+      - StaticText "MICHAEL SAYLOR"
+    - button "Amazon Unbound by Brad Stone" [ref=e137]
+      - StaticText "Amazon Unbound"
+      - StaticText "BRAD STONE"
+    - button "The Everything Store by Brad Stone" [ref=e138]
+      - StaticText "The Everything Store"
+      - StaticText "BRAD STONE"
+    - button "The Nvidia Way: Jensen Huang and the Making of a Tech Giant by Tae Kim" [ref=e139]
+      - StaticText "The Nvidia Way: Jensen Huang and the Making of a Tech Giant"
+      - StaticText "TAE KIM"
+    - button "What I Learned Losing a Million Dollars by Jim Paul & Brendan Moynihan" [ref=e140]
+      - StaticText "What I Learned Losing a Million Dollars"
+      - StaticText "JIM PAUL & BRENDAN MOYNIHAN"
+    - button "Bold by Peter H. Diamandis & Steven Kotler" [ref=e141]
+      - StaticText "Bold"
+      - StaticText "PETER H. DIAMANDIS & STEVEN KOTLER"
+    - button "Start-up Nation by Dan Senor & Saul Singer" [ref=e142]
+      - StaticText "Start-up Nation"
+      - StaticText "DAN SENOR & SAUL SINGER"
+    - button "Crossing the Chasm by Geoffrey A. Moore" [ref=e143]
+      - StaticText "Crossing the Chasm"
+      - StaticText "GEOFFREY A. MOORE"
+    - button "Hacking Growth by Sean Ellis & Morgan Brown" [ref=e144]
+      - StaticText "Hacking Growth"
+      - StaticText "SEAN ELLIS & MORGAN BROWN"
+    - button "The Hard Thing About Hard Things by Ben Horowitz" [ref=e145]
+      - StaticText "The Hard Thing About Hard Things"
+      - StaticText "BEN HOROWITZ"
+    - button "Hit Makers by Derek Thompson" [ref=e146]
+      - StaticText "Hit Makers"
+      - StaticText "DEREK THOMPSON"
+    - button "High Growth Handbook by Elad Gil" [ref=e147]
+      - StaticText "High Growth Handbook"
+      - StaticText "ELAD GIL"
+    - button "Secrets of Sand Hill Road by Scott Kupor" [ref=e148]
+      - StaticText "Secrets of Sand Hill Road"
+      - StaticText "SCOTT KUPOR"
+    - button "The Art of the Start 2.0 by Guy Kawasaki" [ref=e149]
+      - StaticText "The Art of the Start 2.0"
+      - StaticText "GUY KAWASAKI"
+    - button "The Cold Start Problem by Andrew Chen" [ref=e150]
+      - StaticText "The Cold Start Problem"
+      - StaticText "ANDREW CHEN"
+    - button "The Entrepreneurial Bible to Venture Capital by Andrew Romans" [ref=e151]
+      - StaticText "The Entrepreneurial Bible to Venture Capital"
+      - StaticText "ANDREW ROMANS"
+    - button "The Launch Pad: Inside Y Combinator by Randall Stross" [ref=e152]
+      - StaticText "The Launch Pad: Inside Y Combinator"
+      - StaticText "RANDALL STROSS"
+    - button "Invent and Wander: The Collected Writings of Jeff Bezos by Jeff Bezos & Walter Isaacson" [ref=e153]
+      - StaticText "Invent and Wander: The Collected Writings of Jeff Bezos"
+      - StaticText "JEFF BEZOS & WALTER ISAACSON"
+    - button "$100M Offers by Alex Hormozi" [ref=e154]
+      - StaticText "$100M Offers"
+      - StaticText "ALEX HORMOZI"
+    - button "Building the Future by Amy C. Edmondson & Susan Salter Reynolds" [ref=e155]
+      - StaticText "Building the Future"
+      - StaticText "AMY C. EDMONDSON & SUSAN SALTER REYNOLDS"
+    - button "It Doesn't Have to Be Crazy at Work by Jason Fried & David Heinemeier Hansson" [ref=e156]
+      - StaticText "It Doesn't Have to Be Crazy at Work"
+      - StaticText "JASON FRIED & DAVID HEINEMEIER HANSSON"
+    - button "The 1-Page Marketing Plan by Allan Dib" [ref=e157]
+      - StaticText "The 1-Page Marketing Plan"
+      - StaticText "ALLAN DIB"
+    - button "Amp It Up by Frank Slootman" [ref=e158]
+      - StaticText "Amp It Up"
+      - StaticText "FRANK SLOOTMAN"
+    - button "Chief Of Staff: The Strategic Partner Who Will Revolutionize Your Organization by Tyler Parris" [ref=e159]
+      - StaticText "Chief Of Staff: The Strategic Partner Who Will Revolutionize Your Organization"
+      - StaticText "TYLER PARRIS"
+    - button "Junk to Gold by Willis Johnson" [ref=e160]
+      - StaticText "Junk to Gold"
+      - StaticText "WILLIS JOHNSON"
+    - button "Fooled by Randomness by Nassim Nicholas Taleb" [ref=e161]
+      - StaticText "Fooled by Randomness"
+      - StaticText "NASSIM NICHOLAS TALEB"
+    - button "Good to Great by Jim Collins" [ref=e162]
+      - StaticText "Good to Great"
+      - StaticText "JIM COLLINS"
+    - button "Scaling People by Claire Hughes Johnson" [ref=e163]
+      - StaticText "Scaling People"
+      - StaticText "CLAIRE HUGHES JOHNSON"
+    - button "Dream Big by Cristiane Correa" [ref=e164]
+      - StaticText "Dream Big"
+      - StaticText "CRISTIANE CORREA"
+    - button "Never Split the Difference by Chris Voss" [ref=e165]
+      - StaticText "Never Split the Difference"
+      - StaticText "CHRIS VOSS"
+    - button "Unreasonable Hospitality by Will Guidara" [ref=e166]
+      - StaticText "Unreasonable Hospitality"
+      - StaticText "WILL GUIDARA"
+    - button "Working Backwards by Colin Bryar & Bill Carr" [ref=e167]
+      - StaticText "Working Backwards"
+      - StaticText "COLIN BRYAR & BILL CARR"
+    - button "The Elephant in the Brain by Kevin Simler & Robin Hanson" [ref=e168]
+      - StaticText "The Elephant in the Brain"
+      - StaticText "KEVIN SIMLER & ROBIN HANSON"
+    - button "Thinking, Fast and Slow by Daniel Kahneman" [ref=e169]
+      - StaticText "Thinking, Fast and Slow"
+      - StaticText "DANIEL KAHNEMAN"
+    - button "Flow: The Psychology of Optimal Experience by Mihaly Csikszentmihalyi" [ref=e170]
+      - StaticText "Flow: The Psychology of Optimal Experience"
+      - StaticText "MIHALY CSIKSZENTMIHALYI"
+    - button "Grit by Angela Duckworth" [ref=e171]
+      - StaticText "Grit"
+      - StaticText "ANGELA DUCKWORTH"
+    - button "The First Rule of Mastery by Michael Gervais" [ref=e172]
+      - StaticText "The First Rule of Mastery"
+      - StaticText "MICHAEL GERVAIS"
+    - button "Letting Go: The Pathway of Surrender by David R. Hawkins" [ref=e173]
+      - StaticText "Letting Go: The Pathway of Surrender"
+      - StaticText "DAVID R. HAWKINS"
+    - button "Cultish: The Language of Fanaticism by Amanda Montell" [ref=e174]
+      - StaticText "Cultish: The Language of Fanaticism"
+      - StaticText "AMANDA MONTELL"
+    - button "Barking up the Wrong Tree by Eric Barker" [ref=e175]
+      - StaticText "Barking up the Wrong Tree"
+      - StaticText "ERIC BARKER"
+    - button "How to Decide by Annie Duke" [ref=e176]
+      - StaticText "How to Decide"
+      - StaticText "ANNIE DUKE"
+    - button "Mating in Captivity by Esther Perel" [ref=e177]
+      - StaticText "Mating in Captivity"
+      - StaticText "ESTHER PEREL"
+    - button "Reality Is Broken by Jane McGonigal" [ref=e178]
+      - StaticText "Reality Is Broken"
+      - StaticText "JANE MCGONIGAL"
+    - button "Science and Development of Muscle Hypertrophy by Brad Schoenfeld" [ref=e179]
+      - StaticText "Science and Development of Muscle Hypertrophy"
+      - StaticText "BRAD SCHOENFELD"
+    - button "Your Dog Is Your Mirror by Kevin Behan" [ref=e180]
+      - StaticText "Your Dog Is Your Mirror"
+      - StaticText "KEVIN BEHAN"
+    - button "Range: Why Generalists Triumph in a Specialized World by David Epstein" [ref=e181]
+      - StaticText "Range: Why Generalists Triumph in a Specialized World"
+      - StaticText "DAVID EPSTEIN"
+    - button "Atomic Habits by James Clear" [ref=e182]
+      - StaticText "Atomic Habits"
+      - StaticText "JAMES CLEAR"
+    - button "Effortless by Greg McKeown" [ref=e183]
+      - StaticText "Effortless"
+      - StaticText "GREG MCKEOWN"
+    - button "The 4-Hour Workweek by Tim Ferriss" [ref=e184]
+      - StaticText "The 4-Hour Workweek"
+      - StaticText "TIM FERRISS"
+    - button "Tools of Titans by Tim Ferriss" [ref=e185]
+      - StaticText "Tools of Titans"
+      - StaticText "TIM FERRISS"
+    - button "48 Laws of Power by Robert Greene" [ref=e186]
+      - StaticText "48 Laws of Power"
+      - StaticText "ROBERT GREENE"
+    - button "Cribsheet: A Data-Driven Guide to Better, More Relaxed Parenting by Emily Oster" [ref=e187]
+      - StaticText "Cribsheet: A Data-Driven Guide to Better, More Relaxed Parenting"
+      - StaticText "EMILY OSTER"
+    - button "Expecting Better by Emily Oster" [ref=e188]
+      - StaticText "Expecting Better"
+      - StaticText "EMILY OSTER"
+    - button "The Warrior Poet Way by John Lovell" [ref=e189]
+      - StaticText "The Warrior Poet Way"
+      - StaticText "JOHN LOVELL"
+    - button "The 2-Hour Cocktail Party by Nick Gray" [ref=e190]
+      - StaticText "The 2-Hour Cocktail Party"
+      - StaticText "NICK GRAY"
+    - button "Behave by Robert Sapolsky" [ref=e191]
+      - StaticText "Behave"
+      - StaticText "ROBERT SAPOLSKY"
+    - button "Hacking Darwin by Jamie Metzl" [ref=e192]
+      - StaticText "Hacking Darwin"
+      - StaticText "JAMIE METZL"
+    - button "The WEIRDest People in the World by Joseph Henrich" [ref=e193]
+      - StaticText "The WEIRDest People in the World"
+      - StaticText "JOSEPH HENRICH"
+    - button "The Biggest Ideas in the Universe by Sean Carroll" [ref=e194]
+      - StaticText "The Biggest Ideas in the Universe"
+      - StaticText "SEAN CARROLL"
+    - button "Endure by Alex Hutchinson" [ref=e195]
+      - StaticText "Endure"
+      - StaticText "ALEX HUTCHINSON"
+    - button "Life 3.0: Being Human in the Age of Artificial Intelligence by Max Tegmark" [ref=e196]
+      - StaticText "Life 3.0: Being Human in the Age of Artificial Intelligence"
+      - StaticText "MAX TEGMARK"
+    - button "Scientific Freedom: The Elixir of Civilization by Donald W. Braben" [ref=e197]
+      - StaticText "Scientific Freedom: The Elixir of Civilization"
+      - StaticText "DONALD W. BRABEN"
+    - button "Stealing Fire by Steven Kotler & Jamie Wheal" [ref=e198]
+      - StaticText "Stealing Fire"
+      - StaticText "STEVEN KOTLER & JAMIE WHEAL"
+    - button "Where Is My Flying Car? by J. Storrs Hall" [ref=e199]
+      - StaticText "Where Is My Flying Car?"
+      - StaticText "J. STORRS HALL"
+    - button "How Life Works: A User's Guide to the New Biology by Philip Ball" [ref=e200]
+      - StaticText "How Life Works: A User's Guide to the New Biology"
+      - StaticText "PHILIP BALL"
+    - button "T: The Story of Testosterone by Carole Hooven" [ref=e201]
+      - StaticText "T: The Story of Testosterone"
+      - StaticText "CAROLE HOOVEN"
+    - button "Reentry: SpaceX, Elon Musk, and the Reusable Rockets that Launched a Second Space Age by Eric Berger" [ref=e202]
+      - StaticText "Reentry: SpaceX, Elon Musk, and the Reusable Rockets that Launched a Second Space Age"
+      - StaticText "ERIC BERGER"
+    - button "A Short History of Nearly Everything by Bill Bryson" [ref=e203]
+      - StaticText "A Short History of Nearly Everything"
+      - StaticText "BILL BRYSON"
+    - button "Breath: The New Science of a Lost Art by James Nestor" [ref=e204]
+      - StaticText "Breath: The New Science of a Lost Art"
+      - StaticText "JAMES NESTOR"
+    - button "Caffeine: How Caffeine Created the Modern World by Michael Pollan" [ref=e205]
+      - StaticText "Caffeine: How Caffeine Created the Modern World"
+      - StaticText "MICHAEL POLLAN"
+    - button "Drug Use for Grown-Ups by Carl L. Hart" [ref=e206]
+      - StaticText "Drug Use for Grown-Ups"
+      - StaticText "CARL L. HART"
+    - button "Lifespan: Why We Age—and Why We Don't Have To by David A. Sinclair" [ref=e207]
+      - StaticText "Lifespan: Why We Age—and Why We Don't Have To"
+      - StaticText "DAVID A. SINCLAIR"
+    - button "The Ends of the World by Peter Brannen" [ref=e208]
+      - StaticText "The Ends of the World"
+      - StaticText "PETER BRANNEN"
+    - button "The Metaverse by Matthew Ball" [ref=e209]
+      - StaticText "The Metaverse"
+      - StaticText "MATTHEW BALL"
+    - button "Breakneck: China's Quest to Engineer the Future by Dan Wang" [ref=e210]
+      - StaticText "Breakneck: China's Quest to Engineer the Future"
+      - StaticText "DAN WANG"
+    - button "The Kill Chain by Christian Brose" [ref=e211]
+      - StaticText "The Kill Chain"
+      - StaticText "CHRISTIAN BROSE"
+    - button "The Emperor's New Mind by Roger Penrose" [ref=e212]
+      - StaticText "The Emperor's New Mind"
+      - StaticText "ROGER PENROSE"
+    - button "The Master and His Emissary by Iain McGilchrist" [ref=e213]
+      - StaticText "The Master and His Emissary"
+      - StaticText "IAIN MCGILCHRIST"
+    - button "A Thousand Brains by Jeff Hawkins" [ref=e214]
+      - StaticText "A Thousand Brains"
+      - StaticText "JEFF HAWKINS"
+    - button "Why Greatness Cannot Be Planned: The Myth of the Objective by Kenneth O. Stanley & Joel Lehman" [ref=e215]
+      - StaticText "Why Greatness Cannot Be Planned: The Myth of the Objective"
+      - StaticText "KENNETH O. STANLEY & JOEL LEHMAN"
+    - button "Astrophysics for People in a Hurry by Neil deGrasse Tyson" [ref=e216]
+      - StaticText "Astrophysics for People in a Hurry"
+      - StaticText "NEIL DEGRASSE TYSON"
+    - button "Helgoland by Carlo Rovelli" [ref=e217]
+      - StaticText "Helgoland"
+      - StaticText "CARLO ROVELLI"
+    - button "Reality Is Not What It Seems by Carlo Rovelli" [ref=e218]
+      - StaticText "Reality Is Not What It Seems"
+      - StaticText "CARLO ROVELLI"
+    - button "Something Deeply Hidden by Sean Carroll" [ref=e219]
+      - StaticText "Something Deeply Hidden"
+      - StaticText "SEAN CARROLL"
+    - button "The Elegant Universe by Brian Greene" [ref=e220]
+      - StaticText "The Elegant Universe"
+      - StaticText "BRIAN GREENE"
+    - button "The Order of Time by Carlo Rovelli" [ref=e221]
+      - StaticText "The Order of Time"
+      - StaticText "CARLO ROVELLI"
+    - button "Until the End of Time by Brian Greene" [ref=e222]
+      - StaticText "Until the End of Time"
+      - StaticText "BRIAN GREENE"
+    - button "How to Change Your Mind by Michael Pollan" [ref=e223]
+      - StaticText "How to Change Your Mind"
+      - StaticText "MICHAEL POLLAN"
+    - button "The Molecule of More by Daniel Z. Lieberman & Michael E. Long" [ref=e224]
+      - StaticText "The Molecule of More"
+      - StaticText "DANIEL Z. LIEBERMAN & MICHAEL E. LONG"
+    - button "Eve: How the Female Body Drove 200 Million Years of Human Evolution by Cat Bohannon" [ref=e225]
+      - StaticText "Eve: How the Female Body Drove 200 Million Years of Human Evolution"
+      - StaticText "CAT BOHANNON"
+    - button "The 10,000 Year Explosion by Gregory Cochran & Henry Harpending" [ref=e226]
+      - StaticText "The 10,000 Year Explosion"
+      - StaticText "GREGORY COCHRAN & HENRY HARPENDING"
+    - button "The Tangled Tree by David Quammen" [ref=e227]
+      - StaticText "The Tangled Tree"
+      - StaticText "DAVID QUAMMEN"
+    - button "Who We Are and How We Got Here by David Reich" [ref=e228]
+      - StaticText "Who We Are and How We Got Here"
+      - StaticText "DAVID REICH"
+    - button "Everything Is Predictable: How Bayesian Statistics Explain Our World by Tom Chivers" [ref=e229]
+      - StaticText "Everything Is Predictable: How Bayesian Statistics Explain Our World"
+      - StaticText "TOM CHIVERS"
+    - button "Naked Statistics by Charles Wheelan" [ref=e230]
+      - StaticText "Naked Statistics"
+      - StaticText "CHARLES WHEELAN"
+    - button "The Joy of x: A Guided Tour of Math by Steven Strogatz" [ref=e231]
+      - StaticText "The Joy of x: A Guided Tour of Math"
+      - StaticText "STEVEN STROGATZ"
+    - button "A Lodging of Wayfaring Men by Paul Rosenberg" [ref=e232]
+      - StaticText "A Lodging of Wayfaring Men"
+      - StaticText "PAUL ROSENBERG"
+    - button "A Christmas Carol by Charles Dickens" [ref=e233]
+      - StaticText "A Christmas Carol"
+      - StaticText "CHARLES DICKENS"
+    - button "Great Expectations by Charles Dickens" [ref=e234]
+      - StaticText "Great Expectations"
+      - StaticText "CHARLES DICKENS"
+    - button "Jane Eyre by Charlotte Bronte" [ref=e235]
+      - StaticText "Jane Eyre"
+      - StaticText "CHARLOTTE BRONTE"
+    - button "Moby Dick by Herman Melville" [ref=e236]
+      - StaticText "Moby Dick"
+      - StaticText "HERMAN MELVILLE"
+    - button "Pride and Prejudice by Jane Austen" [ref=e237]
+      - StaticText "Pride and Prejudice"
+      - StaticText "JANE AUSTEN"
+    - button "The Count of Monte Cristo by Alexandre Dumas" [ref=e238]
+      - StaticText "The Count of Monte Cristo"
+      - StaticText "ALEXANDRE DUMAS"
+    - button "The Great Gatsby by F. Scott Fitzgerald" [ref=e239]
+      - StaticText "The Great Gatsby"
+      - StaticText "F. SCOTT FITZGERALD"
+    - button "Wuthering Heights by Emily Bronte" [ref=e240]
+      - StaticText "Wuthering Heights"
+      - StaticText "EMILY BRONTE"
+    - button "The MANIAC by Benjamin Labatut" [ref=e241]
+      - StaticText "The MANIAC"
+      - StaticText "BENJAMIN LABATUT"
+    - button "The Silent Patient by Alex Michaelides" [ref=e242]
+      - StaticText "The Silent Patient"
+      - StaticText "ALEX MICHAELIDES"
+    - button "Dracula by Bram Stoker" [ref=e243]
+      - StaticText "Dracula"
+      - StaticText "BRAM STOKER"
+    - button "Frankenstein by Mary Shelley" [ref=e244]
+      - StaticText "Frankenstein"
+      - StaticText "MARY SHELLEY"
+    - button "Slaughterhouse-Five by Kurt Vonnegut" [ref=e245]
+      - StaticText "Slaughterhouse-Five"
+      - StaticText "KURT VONNEGUT"
+    - button "A Confederacy of Dunces by John Kennedy Toole" [ref=e246]
+      - StaticText "A Confederacy of Dunces"
+      - StaticText "JOHN KENNEDY TOOLE"
+    - button "Cloud Atlas by David Mitchell" [ref=e247]
+      - StaticText "Cloud Atlas"
+      - StaticText "DAVID MITCHELL"
+    - button "Five Years After by William R. Forstchen" [ref=e248]
+      - StaticText "Five Years After"
+      - StaticText "WILLIAM R. FORSTCHEN"
+    - button "One Second After by William R. Forstchen" [ref=e249]
+      - StaticText "One Second After"
+      - StaticText "WILLIAM R. FORSTCHEN"
+    - button "One Year After by William R. Forstchen" [ref=e250]
+      - StaticText "One Year After"
+      - StaticText "WILLIAM R. FORSTCHEN"
+    - button "The Final Day by William R. Forstchen" [ref=e251]
+      - StaticText "The Final Day"
+      - StaticText "WILLIAM R. FORSTCHEN"
+    - button "The Midnight Library by Matt Haig" [ref=e252]
+      - StaticText "The Midnight Library"
+      - StaticText "MATT HAIG"
+    - button "The Odyssey by Homer" [ref=e253]
+      - StaticText "The Odyssey"
+      - StaticText "HOMER"
+    - button "Around the World in 80 Days by Jules Verne" [ref=e254]
+      - StaticText "Around the World in 80 Days"
+      - StaticText "JULES VERNE"
+    - button "Atlas Shrugged by Ayn Rand" [ref=e255]
+      - StaticText "Atlas Shrugged"
+      - StaticText "AYN RAND"
+    - button "The Adventures of Sherlock Holmes by Arthur Conan Doyle" [ref=e256]
+      - StaticText "The Adventures of Sherlock Holmes"
+      - StaticText "ARTHUR CONAN DOYLE"
+    - button "The Call of the Wild by Jack London" [ref=e257]
+      - StaticText "The Call of the Wild"
+      - StaticText "JACK LONDON"
+    - button "Treasure Island by Robert Louis Stevenson" [ref=e258]
+      - StaticText "Treasure Island"
+      - StaticText "ROBERT LOUIS STEVENSON"
+    - button "Carrie by Stephen King" [ref=e259]
+      - StaticText "Carrie"
+      - StaticText "STEPHEN KING"
+    - button "The Terminal List by Jack Carr" [ref=e260]
+      - StaticText "The Terminal List"
+      - StaticText "JACK CARR"
+    - button "Palace of Treason by Jason Matthews" [ref=e261]
+      - StaticText "Palace of Treason"
+      - StaticText "JASON MATTHEWS"
+    - button "Red Sparrow by Jason Matthews" [ref=e262]
+      - StaticText "Red Sparrow"
+      - StaticText "JASON MATTHEWS"
+    - button "The Kremlin's Candidate by Jason Matthews" [ref=e263]
+      - StaticText "The Kremlin's Candidate"
+      - StaticText "JASON MATTHEWS"
+    - button "Norse Mythology by Neil Gaiman" [ref=e264]
+      - StaticText "Norse Mythology"
+      - StaticText "NEIL GAIMAN"
+    - button "Fairy Tale by Stephen King" [ref=e265]
+      - StaticText "Fairy Tale"
+      - StaticText "STEPHEN KING"
+    - button "The Drawing of the Three by Stephen King" [ref=e266]
+      - StaticText "The Drawing of the Three"
+      - StaticText "STEPHEN KING"
+    - button "The Gunslinger by Stephen King" [ref=e267]
+      - StaticText "The Gunslinger"
+      - StaticText "STEPHEN KING"
+    - button "The Waste Lands by Stephen King" [ref=e268]
+      - StaticText "The Waste Lands"
+      - StaticText "STEPHEN KING"
+    - button "Allegiant by Veronica Roth" [ref=e269]
+      - StaticText "Allegiant"
+      - StaticText "VERONICA ROTH"
+    - button "Divergent by Veronica Roth" [ref=e270]
+      - StaticText "Divergent"
+      - StaticText "VERONICA ROTH"
+    - button "Insurgent by Veronica Roth" [ref=e271]
+      - StaticText "Insurgent"
+      - StaticText "VERONICA ROTH"
+    - button "I Am Number Four by Pittacus Lore" [ref=e272]
+      - StaticText "I Am Number Four"
+      - StaticText "PITTACUS LORE"
+    - button "The Ghost in the Shell by Masamune Shirow" [ref=e273]
+      - StaticText "The Ghost in the Shell"
+      - StaticText "MASAMUNE SHIROW"
+    - button "BLAME! Vol. 1 by Tsutomu Nihei" [ref=e274]
+      - StaticText "BLAME! Vol. 1"
+      - StaticText "TSUTOMU NIHEI"
+    - button "A Crown of Swords by Robert Jordan" [ref=e275]
+      - StaticText "A Crown of Swords"
+      - StaticText "ROBERT JORDAN"
+    - button "A Memory of Light by Robert Jordan & Brandon Sanderson" [ref=e276]
+      - StaticText "A Memory of Light"
+      - StaticText "ROBERT JORDAN & BRANDON SANDERSON"
+    - button "Brisingr by Christopher Paolini" [ref=e277]
+      - StaticText "Brisingr"
+      - StaticText "CHRISTOPHER PAOLINI"
+    - button "Crossroads of Twilight by Robert Jordan" [ref=e278]
+      - StaticText "Crossroads of Twilight"
+      - StaticText "ROBERT JORDAN"
+    - button "Eldest by Christopher Paolini" [ref=e279]
+      - StaticText "Eldest"
+      - StaticText "CHRISTOPHER PAOLINI"
+    - button "Empire in Black and Gold by Adrian Tchaikovsky" [ref=e280]
+      - StaticText "Empire in Black and Gold"
+      - StaticText "ADRIAN TCHAIKOVSKY"
+    - button "Eragon by Christopher Paolini" [ref=e281]
+      - StaticText "Eragon"
+      - StaticText "CHRISTOPHER PAOLINI"
+    - button "Fourth Wing by Rebecca Yarros" [ref=e282]
+      - StaticText "Fourth Wing"
+      - StaticText "REBECCA YARROS"
+    - button "Inheritance by Christopher Paolini" [ref=e283]
+      - StaticText "Inheritance"
+      - StaticText "CHRISTOPHER PAOLINI"
+    - button "Iron Flame by Rebecca Yarros" [ref=e284]
+      - StaticText "Iron Flame"
+      - StaticText "REBECCA YARROS"
+    - button "Knife of Dreams by Robert Jordan" [ref=e285]
+      - StaticText "Knife of Dreams"
+      - StaticText "ROBERT JORDAN"
+    - button "Lord of Chaos by Robert Jordan" [ref=e286]
+      - StaticText "Lord of Chaos"
+      - StaticText "ROBERT JORDAN"
+    - button "Mistborn: The Final Empire by Brandon Sanderson" [ref=e287]
+      - StaticText "Mistborn: The Final Empire"
+      - StaticText "BRANDON SANDERSON"
+    - button "Murtagh: The World of Eragon by Christopher Paolini" [ref=e288]
+      - StaticText "Murtagh: The World of Eragon"
+      - StaticText "CHRISTOPHER PAOLINI"
+    - button "Onyx Storm by Rebecca Yarros" [ref=e289]
+      - StaticText "Onyx Storm"
+      - StaticText "REBECCA YARROS"
+    - button "Shadows of Self by Brandon Sanderson" [ref=e290]
+      - StaticText "Shadows of Self"
+      - StaticText "BRANDON SANDERSON"
+    - button "The Alloy of Law by Brandon Sanderson" [ref=e291]
+      - StaticText "The Alloy of Law"
+      - StaticText "BRANDON SANDERSON"
+    - button "The Bands of Mourning by Brandon Sanderson" [ref=e292]
+      - StaticText "The Bands of Mourning"
+      - StaticText "BRANDON SANDERSON"
+    - button "The Dragon Reborn by Robert Jordan" [ref=e293]
+      - StaticText "The Dragon Reborn"
+      - StaticText "ROBERT JORDAN"
+    - button "The Eye of the World by Robert Jordan" [ref=e294]
+      - StaticText "The Eye of the World"
+      - StaticText "ROBERT JORDAN"
+    - button "The Fires of Heaven by Robert Jordan" [ref=e295]
+      - StaticText "The Fires of Heaven"
+      - StaticText "ROBERT JORDAN"
+    - button "The Gathering Storm by Robert Jordan & Brandon Sanderson" [ref=e296]
+      - StaticText "The Gathering Storm"
+      - StaticText "ROBERT JORDAN & BRANDON SANDERSON"
+    - button "The Great Hunt by Robert Jordan" [ref=e297]
+      - StaticText "The Great Hunt"
+      - StaticText "ROBERT JORDAN"
+    - button "The Hero of Ages by Brandon Sanderson" [ref=e298]
+      - StaticText "The Hero of Ages"
+      - StaticText "BRANDON SANDERSON"
+    - button "The Lost Metal by Brandon Sanderson" [ref=e299]
+      - StaticText "The Lost Metal"
+      - StaticText "BRANDON SANDERSON"
+    - button "The Path of Daggers by Robert Jordan" [ref=e300]
+      - StaticText "The Path of Daggers"
+      - StaticText "ROBERT JORDAN"
+    - button "The Shadow Rising by Robert Jordan" [ref=e301]
+      - StaticText "The Shadow Rising"
+      - StaticText "ROBERT JORDAN"
+    - button "The Way of Kings by Brandon Sanderson" [ref=e302]
+      - StaticText "The Way of Kings"
+      - StaticText "BRANDON SANDERSON"
+    - button "The Well of Ascension by Brandon Sanderson" [ref=e303]
+      - StaticText "The Well of Ascension"
+      - StaticText "BRANDON SANDERSON"
+    - button "Towers of Midnight by Robert Jordan & Brandon Sanderson" [ref=e304]
+      - StaticText "Towers of Midnight"
+      - StaticText "ROBERT JORDAN & BRANDON SANDERSON"
+    - button "Winter's Heart by Robert Jordan" [ref=e305]
+      - StaticText "Winter's Heart"
+      - StaticText "ROBERT JORDAN"
+    - button "The Sovereign Individual by James Dale Davidson & Lord William Rees-Mogg" [ref=e306]
+      - StaticText "The Sovereign Individual"
+      - StaticText "JAMES DALE DAVIDSON & LORD WILLIAM REES-MOGG"
+    - button "Journey to the Center of the Earth by Jules Verne" [ref=e307]
+      - StaticText "Journey to the Center of the Earth"
+      - StaticText "JULES VERNE"
+    - button "The Powers of the Earth by Travis J.I. Corcoran" [ref=e308]
+      - StaticText "The Powers of the Earth"
+      - StaticText "TRAVIS J.I. CORCORAN"
+    - button "Upgrade by Blake Crouch" [ref=e309]
+      - StaticText "Upgrade"
+      - StaticText "BLAKE CROUCH"
+    - button "We by Yevgeny Zamyatin" [ref=e310]
+      - StaticText "We"
+      - StaticText "YEVGENY ZAMYATIN"
+    - button "Snow Crash by Neal Stephenson" [ref=e311]
+      - StaticText "Snow Crash"
+      - StaticText "NEAL STEPHENSON"
+    - button "Abaddon's Gate by James S.A. Corey" [ref=e312]
+      - StaticText "Abaddon's Gate"
+      - StaticText "JAMES S.A. COREY"
+    - button "Alien Clay by Adrian Tchaikovsky" [ref=e313]
+      - StaticText "Alien Clay"
+      - StaticText "ADRIAN TCHAIKOVSKY"
+    - button "Anathem by Neal Stephenson" [ref=e314]
+      - StaticText "Anathem"
+      - StaticText "NEAL STEPHENSON"
+    - button "Artemis by Andy Weir" [ref=e315]
+      - StaticText "Artemis"
+      - StaticText "ANDY WEIR"
+    - button "Babylon's Ashes by James S.A. Corey" [ref=e316]
+      - StaticText "Babylon's Ashes"
+      - StaticText "JAMES S.A. COREY"
+    - button "Ball Lightning by Liu Cixin" [ref=e317]
+      - StaticText "Ball Lightning"
+      - StaticText "LIU CIXIN"
+    - button "Caliban's War by James S.A. Corey" [ref=e318]
+      - StaticText "Caliban's War"
+      - StaticText "JAMES S.A. COREY"
+    - button "Children of Dune by Frank Herbert" [ref=e319]
+      - StaticText "Children of Dune"
+      - StaticText "FRANK HERBERT"
+    - button "Children of Ruin by Adrian Tchaikovsky" [ref=e320]
+      - StaticText "Children of Ruin"
+      - StaticText "ADRIAN TCHAIKOVSKY"
+    - button "Children of Time by Adrian Tchaikovsky" [ref=e321]
+      - StaticText "Children of Time"
+      - StaticText "ADRIAN TCHAIKOVSKY"
+    - button "Cibola Burn by James S.A. Corey" [ref=e322]
+      - StaticText "Cibola Burn"
+      - StaticText "JAMES S.A. COREY"
+    - button "Consider Phlebas by Iain M. Banks" [ref=e323]
+      - StaticText "Consider Phlebas"
+      - StaticText "IAIN M. BANKS"
+    - button "Dark Age by Pierce Brown" [ref=e324]
+      - StaticText "Dark Age"
+      - StaticText "PIERCE BROWN"
+    - button "Death's End by Liu Cixin" [ref=e325]
+      - StaticText "Death's End"
+      - StaticText "LIU CIXIN"
+    - button "Dune by Frank Herbert" [ref=e326]
+      - StaticText "Dune"
+      - StaticText "FRANK HERBERT"
+    - button "Dune Messiah by Frank Herbert" [ref=e327]
+      - StaticText "Dune Messiah"
+      - StaticText "FRANK HERBERT"
+    - button "Ender's Game by Orson Scott Card" [ref=e328]
+      - StaticText "Ender's Game"
+      - StaticText "ORSON SCOTT CARD"
+    - button "Fall; or, Dodge in Hell by Neal Stephenson" [ref=e329]
+      - StaticText "Fall; or, Dodge in Hell"
+      - StaticText "NEAL STEPHENSON"
+    - button "Fine Structure by qntm" [ref=e330]
+      - StaticText "Fine Structure"
+      - StaticText "QNTM"
+    - button "God Emperor of Dune by Frank Herbert" [ref=e331]
+      - StaticText "God Emperor of Dune"
+      - StaticText "FRANK HERBERT"
+    - button "Golden Son by Pierce Brown" [ref=e332]
+      - StaticText "Golden Son"
+      - StaticText "PIERCE BROWN"
+    - button "Hyperion by Dan Simmons" [ref=e333]
+      - StaticText "Hyperion"
+      - StaticText "DAN SIMMONS"
+    - button "In Ascension by Martin MacInnes" [ref=e334]
+      - StaticText "In Ascension"
+      - StaticText "MARTIN MACINNES"
+    - button "Iron Gold by Pierce Brown" [ref=e335]
+      - StaticText "Iron Gold"
+      - StaticText "PIERCE BROWN"
+    - button "Leviathan Falls by James S.A. Corey" [ref=e336]
+      - StaticText "Leviathan Falls"
+      - StaticText "JAMES S.A. COREY"
+    - button "Leviathan Wakes by James S.A. Corey" [ref=e337]
+      - StaticText "Leviathan Wakes"
+      - StaticText "JAMES S.A. COREY"
+    - button "Morning Star by Pierce Brown" [ref=e338]
+      - StaticText "Morning Star"
+      - StaticText "PIERCE BROWN"
+    - button "Nemesis Games by James S.A. Corey" [ref=e339]
+      - StaticText "Nemesis Games"
+      - StaticText "JAMES S.A. COREY"
+    - button "Only Human by Sylvain Neuvel" [ref=e340]
+      - StaticText "Only Human"
+      - StaticText "SYLVAIN NEUVEL"
+    - button "Persepolis Rising by James S.A. Corey" [ref=e341]
+      - StaticText "Persepolis Rising"
+      - StaticText "JAMES S.A. COREY"
+    - button "Polostan by Neal Stephenson" [ref=e342]
+      - StaticText "Polostan"
+      - StaticText "NEAL STEPHENSON"
+    - button "Project Hail Mary by Andy Weir" [ref=e343]
+      - StaticText "Project Hail Mary"
+      - StaticText "ANDY WEIR"
+    - button "Red Rising by Pierce Brown" [ref=e344]
+      - StaticText "Red Rising"
+      - StaticText "PIERCE BROWN"
+    - button "Service Model by Adrian Tchaikovsky" [ref=e345]
+      - StaticText "Service Model"
+      - StaticText "ADRIAN TCHAIKOVSKY"
+    - button "Seveneves by Neal Stephenson" [ref=e346]
+      - StaticText "Seveneves"
+      - StaticText "NEAL STEPHENSON"
+    - button "Sleeping Giants by Sylvain Neuvel" [ref=e347]
+      - StaticText "Sleeping Giants"
+      - StaticText "SYLVAIN NEUVEL"
+    - button "Speaker for the Dead by Orson Scott Card" [ref=e348]
+      - StaticText "Speaker for the Dead"
+      - StaticText "ORSON SCOTT CARD"
+    - button "Termination Shock by Neal Stephenson" [ref=e349]
+      - StaticText "Termination Shock"
+      - StaticText "NEAL STEPHENSON"
+    - button "The Dark Forest by Liu Cixin" [ref=e350]
+      - StaticText "The Dark Forest"
+      - StaticText "LIU CIXIN"
+    - button "The Doors of Eden by Adrian Tchaikovsky" [ref=e351]
+      - StaticText "The Doors of Eden"
+      - StaticText "ADRIAN TCHAIKOVSKY"
+    - button "The Fall of Hyperion by Dan Simmons" [ref=e352]
+      - StaticText "The Fall of Hyperion"
+      - StaticText "DAN SIMMONS"
+    - button "The Fifth Science by Exurb1a" [ref=e353]
+      - StaticText "The Fifth Science"
+      - StaticText "EXURB1A"
+    - button "The Mercy of Gods by James S.A. Corey" [ref=e354]
+      - StaticText "The Mercy of Gods"
+      - StaticText "JAMES S.A. COREY"
+    - button "The Player of Games by Iain M. Banks" [ref=e355]
+      - StaticText "The Player of Games"
+      - StaticText "IAIN M. BANKS"
+    - button "The Quantum Magician by Derek Kunsken" [ref=e356]
+      - StaticText "The Quantum Magician"
+      - StaticText "DEREK KUNSKEN"
+    - button "The Quantum Thief by Hannu Rajaniemi" [ref=e357]
+      - StaticText "The Quantum Thief"
+      - StaticText "HANNU RAJANIEMI"
+    - button "The Redemption of Time by Baoshu" [ref=e358]
+      - StaticText "The Redemption of Time"
+      - StaticText "BAOSHU"
+    - button "The Three-Body Problem by Liu Cixin" [ref=e359]
+      - StaticText "The Three-Body Problem"
+      - StaticText "LIU CIXIN"
+    - button "The Wandering Earth by Liu Cixin" [ref=e360]
+      - StaticText "The Wandering Earth"
+      - StaticText "LIU CIXIN"
+    - button "Theft of Fire by Devon Eriksen" [ref=e361]
+      - StaticText "Theft of Fire"
+      - StaticText "DEVON ERIKSEN"
+    - button "Tiamat's Wrath by James S.A. Corey" [ref=e362]
+      - StaticText "Tiamat's Wrath"
+      - StaticText "JAMES S.A. COREY"
+    - button "To Sleep in a Sea of Stars by Christopher Paolini" [ref=e363]
+      - StaticText "To Sleep in a Sea of Stars"
+      - StaticText "CHRISTOPHER PAOLINI"
+    - button "Valuable Humans in Transit and Other Stories by qntm" [ref=e364]
+      - StaticText "Valuable Humans in Transit and Other Stories"
+      - StaticText "QNTM"
+    - button "Waking Gods by Sylvain Neuvel" [ref=e365]
+      - StaticText "Waking Gods"
+      - StaticText "SYLVAIN NEUVEL"
+- contentinfo
+  - generic
+    - link "Trey Goff" [ref=e366]
+    - paragraph
+      - StaticText "Designing systems, institutions, and software that help human progress compound."
+    - StaticText "Quick access:"
+    - StaticText "⌘K"
+    - heading "ROUTES" [level=3, ref=e367]
+    - navigation "Footer navigation" [ref=e368]
+      - link "Writing" [ref=e373]
+      - link "Projects" [ref=e374]
+      - link "Library" [ref=e375]
+      - link "About" [ref=e376]
+      - link "Notes" [ref=e377]
+      - link "Media" [ref=e378]
+      - link "Topics" [ref=e379]
+    - heading "CONNECT" [level=3, ref=e369]
+    - link "Twitter" [ref=e370]
+    - link "GitHub" [ref=e371]
+    - StaticText "AURORA"
+    - navigation "Footer links" [ref=e372]
+      - link "Colophon" [ref=e380]
+      - link "RSS" [ref=e381]
+      - link "Graph" [ref=e382]
+      - link "Interactive" [ref=e383]
+    - StaticText "Online"
+    - StaticText "|"
+    - paragraph
+      - StaticText "© 2026 Trey Goff"
+- alert

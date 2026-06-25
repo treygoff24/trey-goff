@@ -30,11 +30,6 @@ export class CommandPalettePage extends BasePage {
     await this.waitForSearchIdle()
   }
 
-  async openCommandPaletteByClick() {
-    await super.openCommandPaletteByClick()
-    await this.waitForSearchIdle()
-  }
-
   async waitForSearchIdle() {
     // Ensure the list is rendered before checking loading state
     await expect(this.commandList).toBeVisible()

@@ -18,6 +18,7 @@
     "build/**",
     "next-env.d.ts",
     ".content-collections/**",
+    "docs/designs/**",
     "test/.broken/**",
     "verify-arch.cjs"
   ],

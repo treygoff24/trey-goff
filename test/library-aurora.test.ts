@@ -5,11 +5,13 @@ import { join } from 'node:path'
 import vm from 'node:vm'
 import { getAllBooks } from '@/lib/books'
 import type { AuroraCategoryCode } from '@/lib/library/aurora'
+import type { Book } from '@/lib/books/types'
 import {
   AURORA_CATEGORY_ORDER,
   AURORA_CATEGORIES,
   buildAuroraGraph,
   buildAuroraLibrary,
+  categorizeAuroraBook,
   fnv1a,
   sortAuroraBooks,
 } from '@/lib/library/aurora'
@@ -17,6 +19,20 @@ import {
 type HandoffCategory = {
   label: string
   hue: number
+}
+
+function fixtureBook(overrides: Partial<Book> = {}): Book {
+  return {
+    id: overrides.id ?? 'fixture-book',
+    title: overrides.title ?? 'Fixture Book',
+    author: overrides.author ?? 'Fixture Author',
+    year: overrides.year ?? 2026,
+    status: overrides.status ?? 'read',
+    topics: overrides.topics ?? [],
+    genre: overrides.genre,
+    whyILoveIt: overrides.whyILoveIt ?? '',
+    rating: overrides.rating,
+  }
 }
 
 type HandoffBook = {
@@ -98,6 +114,27 @@ test('Aurora library data transform matches every generated handoff book', () =>
   }
 })
 
+test('Aurora category rules document genre and non-fiction topic fallbacks', () => {
+  assert.equal(categorizeAuroraBook(fixtureBook({ genre: 'science-fiction' })), 'scifi')
+  assert.equal(categorizeAuroraBook(fixtureBook({ genre: 'business' })), 'business')
+  assert.equal(categorizeAuroraBook(fixtureBook({ genre: 'biography' })), 'lives')
+  assert.equal(categorizeAuroraBook(fixtureBook({ genre: 'made-up' })), 'phil')
+  assert.equal(categorizeAuroraBook(fixtureBook({ genre: undefined })), 'phil')
+
+  assert.equal(
+    categorizeAuroraBook(fixtureBook({ genre: 'non-fiction', topics: ['governance'] })),
+    'politics',
+  )
+  assert.equal(
+    categorizeAuroraBook(fixtureBook({ genre: 'non-fiction', topics: ['marketing'] })),
+    'business',
+  )
+  assert.equal(
+    categorizeAuroraBook(fixtureBook({ genre: 'non-fiction', topics: ['economics', 'politics'] })),
+    'econ',
+  )
+})
+
 test('Aurora graph is deterministic, sparse, and skips generic topic hairballs', () => {
   const books = buildAuroraLibrary(getAllBooks())
   const graphA = buildAuroraGraph(books)
@@ -121,6 +158,44 @@ test('Aurora graph is deterministic, sparse, and skips generic topic hairballs',
   assert.equal(progress.hue, AURORA_CATEGORIES.econ.hue)
   assert.equal(progress.spine.height, 152 + (fnv1a('Progress and Poverty') % 9) * 15)
   assert.equal(progress.spine.width, 33 + (fnv1a('Henry GeorgeProgress and Poverty') % 5) * 7)
+})
+
+test('Aurora graph topic edge cap keeps generic topics sparse', () => {
+  const capped = buildAuroraGraph(
+    buildAuroraLibrary(
+      Array.from({ length: 24 }, (_, index) =>
+        fixtureBook({
+          id: `capped-${index}`,
+          title: `Capped ${index}`,
+          topics: ['shared'],
+          genre: 'business',
+        }),
+      ),
+    ),
+  )
+  assert.equal(
+    capped.edges.filter((edge) => edge.kind === 'topic').length,
+    23,
+    '24-book shared topics should form a sparse chain',
+  )
+
+  const skipped = buildAuroraGraph(
+    buildAuroraLibrary(
+      Array.from({ length: 25 }, (_, index) =>
+        fixtureBook({
+          id: `skipped-${index}`,
+          title: `Skipped ${index}`,
+          topics: ['shared'],
+          genre: 'business',
+        }),
+      ),
+    ),
+  )
+  assert.equal(
+    skipped.edges.filter((edge) => edge.kind === 'topic').length,
+    0,
+    '25-book shared topics should be treated as generic hairballs',
+  )
 })
 
 test('Aurora shelf/index sort modes follow the handoff lens semantics', () => {

@@ -17,14 +17,14 @@ describe('A11y Attributes', () => {
     })
   })
 
-  describe('A7: MobileNav aria-expanded', () => {
-    it('should have aria-expanded attribute on hamburger button', () => {
+  describe('A7: Handoff masthead avoids orphaned mobile drawer controls', () => {
+    it('should not render the retired hamburger trigger', () => {
       const filePath = join(projectRoot, 'components/layout/TopNav.tsx')
       const content = readFileSync(filePath, 'utf-8')
-      const hasAriaExpanded = /aria-label="Open menu"[^>]*\s+aria-expanded={mobileNavOpen}/.test(
-        content,
+      assert.ok(
+        !content.includes('Open menu'),
+        'Retired hamburger button should stay out of TopNav',
       )
-      assert.ok(hasAriaExpanded, 'Hamburger button should have aria-expanded attribute')
     })
   })
 
@@ -34,15 +34,6 @@ describe('A11y Attributes', () => {
       const content = readFileSync(filePath, 'utf-8')
       const hasAriaCurrent = /aria-current={isActive \? .page. : undefined}/.test(content)
       assert.ok(hasAriaCurrent, 'Active nav link should have aria-current attribute')
-    })
-  })
-
-  describe('A9: RatingStars accessible label', () => {
-    it('should have aria-label describing the rating', () => {
-      const filePath = join(projectRoot, 'components/library/BookCard.tsx')
-      const content = readFileSync(filePath, 'utf-8')
-      const hasAriaLabel = /export function RatingStars[\s\S]*?<div[^>]*aria-label=/.test(content)
-      assert.ok(hasAriaLabel, 'RatingStars container should have aria-label')
     })
   })
 })

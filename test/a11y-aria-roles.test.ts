@@ -25,13 +25,6 @@ describe('A11y: aria-hidden, roles, and reduced motion', () => {
   })
 
   describe('Lucide icons', () => {
-    it('BookCard Star icons should have aria-hidden', () => {
-      const filePath = join(projectRoot, 'components/library/BookCard.tsx')
-      const content = readFileSync(filePath, 'utf-8')
-      const hasAriaHidden = /<Star[^>]*aria-hidden="true"/.test(content)
-      assert.ok(hasAriaHidden, 'BookCard Star icons should have aria-hidden')
-    })
-
     it('TransmissionCard Radio icon should have aria-hidden', () => {
       const filePath = join(projectRoot, 'components/transmissions/TransmissionCard.tsx')
       const content = readFileSync(filePath, 'utf-8')
@@ -71,15 +64,6 @@ describe('A11y: aria-hidden, roles, and reduced motion', () => {
         hasReducedMotion,
         'TransmissionCard should handle prefers-reduced-motion for animations',
       )
-    })
-  })
-
-  describe('BookCard rating visibility', () => {
-    it('should have accessible rating without opacity-0 on hover', () => {
-      const filePath = join(projectRoot, 'components/library/BookCard.tsx')
-      const content = readFileSync(filePath, 'utf-8')
-      const ratingSection = content.match(/rating[\s\S]*?<div[^>]*class="[^"]*opacity-0[^"]*"/)
-      assert.ok(!ratingSection, 'BookCard rating should not be hidden with opacity-0')
     })
   })
 })

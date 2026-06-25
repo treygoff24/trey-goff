@@ -9,13 +9,9 @@ describe('A11y: SVG icons, quality buttons, loading', () => {
       const topNavPath = path.join(process.cwd(), 'components/layout/TopNav.tsx')
       const content = await fs.readFile(topNavPath, 'utf-8')
 
-      // Find SVG elements (search icon at line 74, hamburger icon at line 96)
       const svgMatches = content.matchAll(/<svg[^>]*>/g)
       const svgElements = Array.from(svgMatches)
 
-      assert.ok(svgElements.length >= 2, 'Expected at least 2 SVG elements in TopNav')
-
-      // Check that all decorative SVGs have aria-hidden
       for (const match of svgElements) {
         const svgTag = match[0]
         assert.ok(

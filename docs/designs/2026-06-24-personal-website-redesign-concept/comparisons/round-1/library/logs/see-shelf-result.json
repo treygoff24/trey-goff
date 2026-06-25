@@ -1,0 +1,67 @@
+{
+  "category": [
+    {
+      "cls": "shrink-0 rounded-full border px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.08em] transition-colors border-accent bg-accent text-bg-0",
+      "pressed": "true",
+      "text": "All · 334"
+    },
+    {
+      "cls": "inline-flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.08em] transition-colors border-text-1/10 bg-bg-1/45 text-text-2 hover:border-accent/50 hover:text-accent",
+      "pressed": "false",
+      "text": "Sci-Fi · 60"
+    },
+    {
+      "cls": "inline-flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.08em] transition-colors border-text-1/10 bg-bg-1/45 text-text-2 hover:border-accent/50 hover:text-accent",
+      "pressed": "false",
+      "text": "Fantasy · 41"
+    },
+    {
+      "cls": "inline-flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.08em] transition-colors border-text-1/10 bg-bg-1/45 text-text-2 hover:border-accent/50 hover:text-accent",
+      "pressed": "false",
+      "text": "Fiction · 33"
+    },
+    {
+      "cls": "inline-flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.08em] transition-colors border-text-1/10 bg-bg-1/45 text-text-2 hover:border-accent/50 hover:text-accent",
+      "pressed": "false",
+      "text": "Science · 41"
+    },
+    {
+      "cls": "inline-flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.08em] transition-colors border-text-1/10 bg-bg-1/45 text-text-2 hover:border-accent/50 hover:text-accent",
+      "pressed": "false",
+      "text": "Self & Growth · 23"
+    },
+    {
+      "cls": "inline-flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.08em] transition-colors border-text-1/10 bg-bg-1/45 text-text-2 hover:border-accent/50 hover:text-accent",
+      "pressed": "false",
+      "text": "Business · 31"
+    },
+    {
+      "cls": "inline-flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.08em] transition-colors border-text-1/10 bg-bg-1/45 text-text-2 hover:border-accent/50 hover:text-accent",
+      "pressed": "false",
+      "text": "Economics · 14"
+    }
+  ],
+  "dialogPresent": false,
+  "lens": [
+    {
+      "pressed": null,
+      "text": "Shelf"
+    },
+    {
+      "pressed": "false",
+      "text": "Constellation"
+    },
+    {
+      "pressed": "false",
+      "text": "Shelf"
+    },
+    {
+      "pressed": "false",
+      "text": "River"
+    },
+    {
+      "pressed": "true",
+      "text": "Index"
+    }
+  ]
+}

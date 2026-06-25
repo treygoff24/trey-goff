@@ -5,7 +5,7 @@ import {
   PREVIEW_SESSION_COOKIE,
   previewSessionToken,
 } from '@/lib/preview-auth'
-import { buildCsp, isInteractiveLibraryPath, NONCE_REQUEST_HEADER } from '@/lib/security/csp'
+import { buildCsp, isStrictCspPath, NONCE_REQUEST_HEADER } from '@/lib/security/csp'
 
 function createNonce(): string {
   const bytes = new Uint8Array(16)
@@ -73,7 +73,7 @@ export function proxy(request: NextRequest) {
   }
 
   const pathname = request.nextUrl.pathname
-  const strictRoute = isInteractiveLibraryPath(pathname)
+  const strictRoute = isStrictCspPath(pathname)
   const nonce = strictRoute ? createNonce() : ''
   const requestHeaders = new Headers(request.headers)
   const csp = buildCsp({
