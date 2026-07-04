@@ -15,7 +15,7 @@ test.describe('Notes Page', () => {
     })
 
     test('should display page description', async ({ page }) => {
-      await expect(page.getByText(/quick thoughts|dispatches|interesting links/i)).toBeVisible()
+      await expect(page.getByText(/quick thoughts/i)).toBeVisible()
     })
 
     test('should display note cards or empty state', async () => {
@@ -239,7 +239,7 @@ test.describe('Notes Page - Mobile', () => {
       const box = await firstCard.boundingBox()
       expect(box).toBeTruthy()
       expect(box!.width).toBeLessThanOrEqual(375) // Should fit mobile width
-      expect(box!.width).toBeGreaterThan(300) // Should use most of the width
+      expect(box!.width).toBeGreaterThan(260) // Should use most of the width inside the 3rem site gutters
     }
   })
 })

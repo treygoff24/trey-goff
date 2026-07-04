@@ -96,11 +96,15 @@ export function Footer() {
         </div>
 
         <div className="my-8 flex items-center gap-4">
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border-1 to-transparent" />
-          <span className="font-mono text-[10px] uppercase tracking-[0.34em] text-text-3">
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-warm/20 to-accent/25" />
+          <Link
+            href="/colophon"
+            title="How this site is made — and who made it"
+            className="font-mono text-[10px] uppercase tracking-[0.34em] text-text-3 transition-colors hover:text-warm"
+          >
             Aurora
-          </span>
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border-1 to-transparent" />
+          </Link>
+          <div className="h-px flex-1 bg-gradient-to-r from-accent/25 via-warm/20 to-transparent" />
         </div>
 
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">

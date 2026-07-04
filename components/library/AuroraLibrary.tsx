@@ -277,11 +277,12 @@ function ConstellationLens({
     const maxY = Math.max(...ys)
     const pad = 50
     const scale =
-      Math.min(rect.width / (maxX - minX + pad * 2), rect.height / (maxY - minY + pad * 2)) * 1.06
+      Math.min(rect.width / (maxX - minX + pad * 2), rect.height / (maxY - minY + pad * 2)) * 0.96
     cameraRef.current = {
       scale,
       x: rect.width / 2 - ((minX + maxX) / 2) * scale,
-      y: rect.height / 2 - ((minY + maxY) / 2) * scale,
+      // nudge down so the floating lens switcher doesn't sit on the top cluster
+      y: rect.height / 2 - ((minY + maxY) / 2) * scale + 14,
     }
     requestRender()
   }, [nodes, requestRender])
@@ -493,10 +494,10 @@ function ShelfLens({
                     background: `linear-gradient(180deg, ${oklchColor(book.hue, 0.34, 0.085, 1)}, ${oklchColor(book.hue, 0.24, 0.075, 1)})`,
                   }}
                 >
-                  <span className="max-h-[calc(100%-28px)] max-w-full overflow-hidden whitespace-nowrap font-newsreader text-[13px] font-medium leading-none tracking-[0.01em] text-text-1 [text-orientation:mixed] [writing-mode:vertical-rl]">
+                  <span className="min-h-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap font-newsreader text-[13px] font-medium leading-none tracking-[0.01em] text-text-1 [text-orientation:mixed] [writing-mode:vertical-rl]">
                     {book.title}
                   </span>
-                  <span className="max-h-[76px] max-w-full overflow-hidden whitespace-nowrap font-mono text-[8.5px] uppercase tracking-[0.08em] text-text-2/65 [writing-mode:vertical-rl]">
+                  <span className="mt-2 max-h-[76px] max-w-full shrink-0 overflow-hidden text-ellipsis whitespace-nowrap font-mono text-[8.5px] uppercase tracking-[0.08em] text-text-2/65 [writing-mode:vertical-rl]">
                     {book.author}
                   </span>
                 </button>
@@ -761,6 +762,22 @@ function DetailDrawer({
           {book.title}
         </h2>
         <div className="mb-7 text-base text-text-2">{book.author}</div>
+        {book.coverUrl && (
+          <div className="mb-7">
+            {/* eslint-disable-next-line @next/next/no-img-element -- static asset, natural size varies */}
+            <img
+              src={book.coverUrl}
+              alt={`Cover of ${book.title}`}
+              width={168}
+              height={252}
+              loading="lazy"
+              className="h-auto w-[168px] rounded-[3px] border border-text-1/15 shadow-[0_18px_50px_-18px_rgba(0,0,0,0.8)]"
+              style={{
+                boxShadow: `0 18px 50px -18px rgba(0,0,0,0.8), 0 0 34px ${oklchColor(book.hue, 0.6, 0.13, 0.14)}`,
+              }}
+            />
+          </div>
+        )}
         <div className="mb-6 flex items-center gap-5 border-y border-text-1/10 py-4">
           <div>
             <div className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-text-2/60">
@@ -784,7 +801,7 @@ function DetailDrawer({
                 </span>
               </span>
             </div>
-          ) : (
+          ) : book.degree > 0 ? (
             <div>
               <div className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-text-2/60">
                 Threads
@@ -793,22 +810,39 @@ function DetailDrawer({
                 {book.degree} <span className="text-xs text-text-2/55">kindred reads</span>
               </div>
             </div>
+          ) : (
+            <div>
+              <div className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-text-2/60">
+                Shelf
+              </div>
+              <div className="font-mono text-[15px]" style={{ color: book.color }}>
+                {book.categoryLabel}
+              </div>
+            </div>
           )}
         </div>
-        <div className="mb-7 flex flex-wrap gap-2">
-          {book.topics.slice(0, 8).map((topic) => (
-            <span
-              key={topic}
-              className="rounded-full border px-2.5 py-1 font-mono text-[10.5px] capitalize tracking-[0.02em] text-text-2"
-              style={{
-                borderColor: oklchColor(book.hue, 0.5, 0.1, 0.5),
-                backgroundColor: oklchColor(book.hue, 0.45, 0.1, 0.12),
-              }}
-            >
-              {formatAuroraTopic(topic)}
-            </span>
-          ))}
-        </div>
+        {(() => {
+          const topics = book.topics
+            .filter(
+              (topic) =>
+                formatAuroraTopic(topic).toLowerCase() !== book.categoryLabel.toLowerCase(),
+            )
+            .slice(0, 8)
+          return topics.length > 0 ? (
+            <p className="mb-7 flex flex-wrap gap-x-3 gap-y-1.5 font-mono text-[10.5px] uppercase tracking-[0.1em] text-text-2/75">
+              {topics.map((topic, index) => (
+                <span key={topic} className="flex items-center gap-3">
+                  {index > 0 && (
+                    <span aria-hidden="true" style={{ color: book.color }}>
+                      ·
+                    </span>
+                  )}
+                  {formatAuroraTopic(topic)}
+                </span>
+              ))}
+            </p>
+          ) : null
+        })()}
         {book.whyILoveIt ? (
           <p className="mb-8 text-pretty font-display text-xl italic leading-relaxed text-text-1/90">
             {book.whyILoveIt}

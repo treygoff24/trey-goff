@@ -26,8 +26,10 @@ test.describe('Static content pages', () => {
     const basePage = new BasePage(page)
     await basePage.goto('/colophon')
 
-    await expect(page.getByRole('heading', { name: 'Colophon' })).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Stack' })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: /How this site is made — and who made it/ }),
+    ).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'The stack' })).toBeVisible()
   })
 
   test('Powerlifting page shows hidden content and table', async ({ page }) => {

@@ -60,18 +60,93 @@ export default function AboutPage() {
                 purpose, and fulfillment from every precious second the Lord has given me.
               </p>
             </div>
-            <blockquote className="mt-9 border-l-2 border-warm pl-6 font-newsreader text-xl italic leading-8 text-text-1/85">
+            <blockquote className="mt-10 font-newsreader text-[1.4rem] font-light italic leading-[1.6] text-text-1/90">
+              <span aria-hidden="true" className="mr-3 not-italic text-warm">
+                —
+              </span>
               Make the most meaning you can from every second of existence — then go find a bigger
               lever.
             </blockquote>
           </div>
 
           <aside className="md:sticky md:top-24">
-            <div className="flex aspect-[4/5] items-center justify-center border border-border-2 bg-bg-1 [background-image:repeating-linear-gradient(135deg,rgba(111,214,154,0.10)_0_10px,transparent_10px_20px)]">
-              <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-text-3">
-                drop portrait
-              </span>
-            </div>
+            <figure className="border border-border-2 bg-bg-1">
+              <svg
+                viewBox="0 0 320 400"
+                className="block aspect-[4/5] w-full"
+                role="img"
+                aria-label="A star chart tracing an orbit from Mississippi to Roatán"
+              >
+                <defs>
+                  <radialGradient id="orbit-glow" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#6FD69A" stopOpacity="0.5" />
+                    <stop offset="100%" stopColor="#6FD69A" stopOpacity="0" />
+                  </radialGradient>
+                </defs>
+                {/* graticule */}
+                <path d="M0 96 Q160 76 320 96" stroke="rgba(232,243,236,0.07)" fill="none" />
+                <path d="M0 200 Q160 180 320 200" stroke="rgba(232,243,236,0.07)" fill="none" />
+                <path d="M0 304 Q160 284 320 304" stroke="rgba(232,243,236,0.07)" fill="none" />
+                <path d="M96 0 Q112 200 96 400" stroke="rgba(232,243,236,0.05)" fill="none" />
+                <path d="M224 0 Q208 200 224 400" stroke="rgba(232,243,236,0.05)" fill="none" />
+                {/* the wider orbit: everywhere else, unlabeled */}
+                {[
+                  [58, 60],
+                  [262, 88],
+                  [284, 180],
+                  [42, 232],
+                  [150, 48],
+                  [236, 322],
+                  [70, 348],
+                ].map(([x, y]) => (
+                  <circle key={`${x}-${y}`} cx={x} cy={y} r="1.5" fill="rgba(232,243,236,0.35)" />
+                ))}
+                {/* the arc that matters */}
+                <path
+                  d="M92 120 C 150 160, 190 220, 212 292"
+                  stroke="#6FD69A"
+                  strokeWidth="1.5"
+                  strokeDasharray="1 0"
+                  fill="none"
+                  opacity="0.85"
+                />
+                <path
+                  d="M212 292 C 224 330, 244 352, 276 368"
+                  stroke="#6FD69A"
+                  strokeWidth="1.25"
+                  strokeDasharray="3 5"
+                  fill="none"
+                  opacity="0.55"
+                />
+                <circle cx="92" cy="120" r="14" fill="url(#orbit-glow)" />
+                <circle cx="92" cy="120" r="3" fill="#97E8BB" />
+                <circle cx="212" cy="292" r="18" fill="url(#orbit-glow)" />
+                <circle cx="212" cy="292" r="3.5" fill="#97E8BB" />
+                <text
+                  x="106"
+                  y="112"
+                  fill="rgba(232,243,236,0.62)"
+                  fontSize="9"
+                  letterSpacing="1.5"
+                  fontFamily="var(--font-mono)"
+                >
+                  32.3°N — MISSISSIPPI
+                </text>
+                <text
+                  x="88"
+                  y="310"
+                  fill="rgba(232,243,236,0.62)"
+                  fontSize="9"
+                  letterSpacing="1.5"
+                  fontFamily="var(--font-mono)"
+                >
+                  16.3°N — ROATÁN
+                </text>
+              </svg>
+              <figcaption className="border-t border-border-1 px-4 py-3 font-mono text-[10px] uppercase tracking-[0.16em] text-text-3">
+                The orbit so far
+              </figcaption>
+            </figure>
             <div className="mt-6 border-t border-border-2 pt-6">
               <div className="space-y-5">
                 {facts.map(([label, value]) => (

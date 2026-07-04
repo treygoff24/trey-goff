@@ -47,22 +47,59 @@ void main() {
   p.x *= u_resolution.x / u_resolution.y;
 
   float t = u_time * 0.045;
+  float breath = 0.82 + 0.18 * sin(u_time * 0.07);
+
+  // Broad slow curtain
   float veil = fbm(vec2(p.x * 1.15 - t, p.y * 2.5 + t * 0.7));
-  float ribbon = smoothstep(0.50, 0.86, veil + sin((p.x * 1.8 + p.y * 2.2 - t * 3.0)) * 0.18);
-  float glow = smoothstep(0.90, 0.18, distance(uv, vec2(0.76, 0.14))) * 0.12;
-  float lower = smoothstep(0.95, 0.12, distance(uv, vec2(0.78, 0.86))) * 0.11;
-  float vignette = smoothstep(0.95, 0.25, distance(uv, vec2(0.5, 0.45)));
+  float ribbon = smoothstep(0.36, 0.85, veil + sin((p.x * 1.8 + p.y * 2.2 - t * 3.0)) * 0.2);
+
+  // Finer counter-drifting curtain
+  float veil2 = fbm(vec2(p.x * 2.4 + t * 0.55, p.y * 3.3 - t * 0.4));
+  float ribbon2 = smoothstep(0.5, 0.92, veil2 + sin((p.x * 3.1 - p.y * 1.5 + t * 2.1)) * 0.16);
+
+  // Aurora lives in the upper sky; fade toward the reading zone
+  float sky = smoothstep(0.18, 0.92, uv.y);
+
+  float glow = smoothstep(0.90, 0.18, distance(uv, vec2(0.76, 0.14))) * 0.14;
+  float lower = smoothstep(0.95, 0.12, distance(uv, vec2(0.78, 0.86))) * 0.1;
+  float vignette = smoothstep(1.05, 0.3, distance(uv, vec2(0.5, 0.52)));
 
   vec3 ground = vec3(0.004, 0.016, 0.012);
   vec3 surface = vec3(0.012, 0.060, 0.040);
   vec3 accent = vec3(0.435, 0.839, 0.604);
   vec3 hover = vec3(0.592, 0.910, 0.733);
+  vec3 cyan = vec3(0.38, 0.83, 0.77);
+  vec3 violet = vec3(0.46, 0.20, 0.52);
 
-  vec3 color = mix(ground, surface, uv.y * 0.21 + glow * 0.7);
-  color += accent * ribbon * 0.06;
-  color += hover * glow * 0.08;
+  // Slow hue drift along the green-cyan band the shelves use
+  float drift = fbm(vec2(p.x * 0.5 + t * 0.3, p.y * 0.8 - t * 0.2));
+  vec3 curtain = mix(accent, cyan, smoothstep(0.35, 0.75, drift));
+
+  // The rare violet heart every real aurora hides
+  vec2 bloomPos = vec2(0.30 + 0.05 * sin(t * 1.6), 0.62 + 0.05 * cos(t * 1.2));
+  float bloom = smoothstep(0.52, 0.04, distance(uv, bloomPos));
+
+  // Sparse pinprick stars, upper sky only
+  float aspect = u_resolution.x / u_resolution.y;
+  vec2 grid = vec2(uv.x * aspect, uv.y) * 56.0;
+  vec2 cell = floor(grid);
+  float seed = hash(cell);
+  vec2 starCenter = vec2(hash(cell + 7.3), hash(cell + 3.1));
+  float starDist = length(fract(grid) - starCenter);
+  float star = smoothstep(0.09, 0.0, starDist) * step(0.94, seed);
+  float twinkle = 0.55 + 0.45 * sin(u_time * (0.25 + seed) + seed * 40.0);
+
+  vec3 color = mix(ground, surface, uv.y * 0.24 + glow * 0.7);
+  color += curtain * ribbon * sky * 0.5 * breath;
+  color += hover * ribbon2 * sky * 0.2 * breath;
+  color += violet * bloom * 0.22 * breath;
+  color += hover * glow * 0.1;
   color += accent * lower * 0.05;
-  color *= 0.55 + vignette * 0.34;
+  color += vec3(0.72, 0.9, 0.85) * star * twinkle * sky * 0.55;
+  color *= 0.62 + vignette * 0.32;
+
+  // Dither to break banding in the near-black gradients
+  color += (hash(gl_FragCoord.xy) - 0.5) * (1.5 / 255.0);
 
   gl_FragColor = vec4(color, 1.0);
 }
@@ -218,11 +255,8 @@ export function AuroraBackground() {
       aria-hidden="true"
     >
       <div className="absolute inset-0 bg-[radial-gradient(58%_56%_at_82%_24%,rgba(54,181,124,0.09),transparent_66%),radial-gradient(70%_70%_at_73%_86%,rgba(111,214,154,0.055),transparent_70%),linear-gradient(90deg,#010403_0%,#030d09_52%,#04130c_100%)]" />
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 h-full w-full opacity-[0.52] sm:opacity-[0.6]"
-      />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(1,7,5,0.36)_60%,rgba(1,5,4,0.9)_100%)]" />
+      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,transparent_38%,rgba(1,5,4,0.5)_100%),radial-gradient(circle_at_center,transparent_0%,rgba(1,7,5,0.18)_62%,rgba(1,5,4,0.6)_100%)]" />
     </div>
   )
 }

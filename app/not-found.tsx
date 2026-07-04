@@ -135,7 +135,7 @@ export default function NotFound() {
             href="/"
             className="group relative overflow-hidden rounded-lg bg-warm px-8 py-3 font-medium text-bg-0 transition-all hover:shadow-lg hover:shadow-warm/20"
           >
-            <span className="relative z-10">Return to Base</span>
+            <span className="relative z-10">Return home</span>
             <div className="absolute inset-0 -translate-x-full bg-white/20 transition-transform group-hover:translate-x-full" />
           </Link>
 

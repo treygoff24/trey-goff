@@ -2,6 +2,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import { allEssays, allProjects } from 'content-collections'
 import { EditorialIndexRow } from '@/components/site/EditorialIndexRow'
+import { getAllBooks } from '@/lib/books'
 import { formatDateShort } from '@/lib/utils'
 
 export const metadata: Metadata = {
@@ -15,28 +16,35 @@ export const metadata: Metadata = {
   },
 }
 
-const paths = [
-  {
-    href: '/writing',
-    title: 'Writing',
-    description: 'Essays and field notes on governance, technology, faith, and building.',
-  },
-  {
-    href: '/projects',
-    title: 'Projects',
-    description: 'Websites, CLI & agent tooling, policy initiatives, and Próspera.',
-  },
-  {
-    href: '/library',
-    title: 'Library',
-    description: "A few hundred books, mapped four ways — a constellation of everything I've read.",
-  },
-  {
-    href: '/about',
-    title: 'About',
-    description: "Mississippi roots, a cosmopolitan orbit, and what I'm chasing.",
-  },
-]
+function buildPaths(essayCount: number, projectCount: number, bookCount: number) {
+  return [
+    {
+      href: '/writing',
+      meta: `${essayCount} essays`,
+      title: 'Writing',
+      description: 'Essays and field notes on governance, technology, faith, and building.',
+    },
+    {
+      href: '/projects',
+      meta: `${projectCount} systems`,
+      title: 'Projects',
+      description: 'Websites, CLI & agent tooling, policy initiatives, and Próspera.',
+    },
+    {
+      href: '/library',
+      meta: `${bookCount} books`,
+      title: 'Library',
+      description:
+        "A few hundred books, mapped four ways — a constellation of everything I've read.",
+    },
+    {
+      href: '/about',
+      meta: 'One person',
+      title: 'About',
+      description: "Mississippi roots, a cosmopolitan orbit, and what I'm chasing.",
+    },
+  ]
+}
 
 const fallbackWork = [
   {
@@ -128,13 +136,13 @@ export default function HomePage() {
 
       <section className="mt-10">
         <p className="border-b border-border-2 pb-4 font-mono text-xs uppercase tracking-[0.2em] text-text-3">
-          Four paths into the work
+          Ways in
         </p>
-        {paths.map((item, index) => (
+        {buildPaths(visibleEssays.length, selectedWork.length, getAllBooks().length).map((item) => (
           <EditorialIndexRow
             key={item.href}
             href={item.href}
-            number={String(index + 1).padStart(2, '0')}
+            meta={item.meta}
             title={item.title}
             description={item.description}
           />

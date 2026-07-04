@@ -19,7 +19,7 @@ test.describe('Home', () => {
 
     await expect(page.getByRole('link', { name: /Read the writing/ })).toBeVisible()
     await expect(page.getByRole('link', { name: /See the work/ })).toBeVisible()
-    await expect(page.getByText('Four paths into the work')).toBeVisible()
+    await expect(page.getByText('Ways in', { exact: true })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Selected work' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Featured essays' })).toBeVisible()
   })
@@ -47,7 +47,7 @@ test.describe('Home', () => {
   })
 
   test('shows the four path rows', async ({ page }) => {
-    const pathSection = page.locator('section').filter({ hasText: 'Four paths into the work' })
+    const pathSection = page.locator('section').filter({ hasText: 'Ways in' })
 
     await expect(pathSection.getByRole('link', { name: /Writing/ })).toBeVisible()
     await expect(pathSection.getByRole('link', { name: /Projects/ })).toBeVisible()

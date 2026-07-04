@@ -1,4 +1,5 @@
 import type { Book } from '@/lib/books/types'
+import coverMap from '@/public/cover-map.json'
 
 export const AURORA_CATEGORY_ORDER = [
   'scifi',
@@ -49,6 +50,7 @@ export type AuroraBook = {
   topics: string[]
   rating?: number
   whyILoveIt?: string
+  coverUrl?: string
 }
 
 export type AuroraGraphBook = AuroraBook & {
@@ -97,7 +99,9 @@ export type AuroraShelfSort = 'shelf' | 'color' | 'links' | 'recent' | 'height' 
 export type AuroraIndexSort = 'title' | 'author' | 'cat' | 'topic' | 'year'
 
 const GENERIC_TOPIC_LIMIT = 24
-const RING_RADIUS = 560
+// ponytail: elliptical ring so the constellation fills the wide lens panel like a sky band
+const RING_RADIUS_X = 800
+const RING_RADIUS_Y = 500
 const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5))
 
 const GENRE_TO_CATEGORY: Record<string, AuroraCategoryCode> = {
@@ -173,6 +177,7 @@ export function buildAuroraLibrary(books: readonly Book[]): AuroraBook[] {
       topics: [...(book.topics ?? [])],
       rating: book.rating,
       whyILoveIt: book.whyILoveIt || undefined,
+      coverUrl: book.coverUrl ?? (coverMap as Record<string, string>)[book.id],
     }
   })
 }
@@ -269,8 +274,8 @@ export function buildAuroraGraph(books: readonly AuroraBook[]): AuroraGraph {
   for (const code of categories) {
     const group = groups.get(code)
     if (!group) continue
-    const cx = Math.cos(group.angle) * RING_RADIUS
-    const cy = Math.sin(group.angle) * RING_RADIUS
+    const cx = Math.cos(group.angle) * RING_RADIUS_X
+    const cy = Math.sin(group.angle) * RING_RADIUS_Y
     const sorted = [...group.books].sort(
       (a, b) =>
         b.degree - a.degree || (b.rating ?? 0) - (a.rating ?? 0) || a.title.localeCompare(b.title),
