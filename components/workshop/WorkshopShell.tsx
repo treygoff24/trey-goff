@@ -193,7 +193,7 @@ export function WorkshopShell({ projects, bench, lineage, ledger, receipts }: Wo
       <div
         role="tablist"
         aria-label="Workshop lenses"
-        className="mt-12 grid grid-cols-2 gap-x-8 gap-y-3 border-b border-border-1 md:flex md:gap-10"
+        className={`${styles.tabStrip} mt-12 grid grid-cols-2 gap-x-8 gap-y-3 border-b border-border-1 md:flex md:gap-10`}
         onKeyDown={onTabKeyDown}
       >
         {lenses.map((item, index) => {

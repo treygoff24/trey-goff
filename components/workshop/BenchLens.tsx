@@ -31,7 +31,10 @@ function BenchProjectRow({ project }: { project: Project }) {
 
   if (project.sealed) {
     return (
-      <div className={styles.benchRow} aria-label={sealedAriaLabel(project)}>
+      <div
+        className={`${styles.benchRow} ${styles.sealedRow}`}
+        aria-label={sealedAriaLabel(project)}
+      >
         {content}
       </div>
     )

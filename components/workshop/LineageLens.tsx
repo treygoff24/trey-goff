@@ -34,7 +34,6 @@ type DrawState = {
 
 const COMPLETE_DRAW: DrawState = { elapsed: Number.POSITIVE_INFINITY, complete: true }
 const ENTRANCE_MS = 3200
-const SHIPPED_AT_RE = /^\d{4}-(0[1-9]|1[0-2])$/
 
 function clamp01(value: number): number {
   return Math.max(0, Math.min(1, value))
@@ -43,14 +42,6 @@ function clamp01(value: number): number {
 function easeOutCubic(value: number): number {
   const t = clamp01(value)
   return 1 - (1 - t) ** 3
-}
-
-function shippedAtValue(project: Project): number {
-  return Date.parse(
-    SHIPPED_AT_RE.test(project.shippedAt)
-      ? `${project.shippedAt}-01T00:00:00.000Z`
-      : project.shippedAt,
-  )
 }
 
 function cssToken(style: CSSStyleDeclaration, name: string): string {
@@ -187,17 +178,12 @@ function threadLength(points: readonly { x: number; y: number }[], width: number
 
 function drawYears(
   context: CanvasRenderingContext2D,
-  projects: readonly Project[],
+  ticks: LineageLayout['ticks'],
   width: number,
   height: number,
   tokens: DrawTokens,
 ) {
-  if (projects.length === 0) return
-  const values = projects.map(shippedAtValue).filter(Number.isFinite)
-  const first = Math.min(...values)
-  const last = Math.max(...values)
-  const firstYear = Math.min(...projects.map((project) => project.year))
-  const lastYear = Math.max(...projects.map((project) => project.year))
+  if (ticks.length === 0) return
   const y = height - 26
 
   context.save()
@@ -207,18 +193,29 @@ function drawYears(
   context.textAlign = 'center'
   context.textBaseline = 'top'
 
-  for (let year = firstYear; year <= lastYear; year += 1) {
-    const value = Date.parse(`${year}-01-01T00:00:00.000Z`)
-    const x =
-      first === last ? width / 2 : width * (0.06 + ((value - first) / (last - first)) * 0.88)
+  for (const tick of ticks) {
+    const x = tick.x * width
     if (x < 14 || x > width - 14) continue
     context.beginPath()
     context.moveTo(x, y - 7)
     context.lineTo(x, y)
     context.stroke()
-    context.fillText(String(year), x, y + 4)
+    context.fillText(String(tick.year), x, y + 4)
   }
   context.restore()
+}
+
+type LabelRect = {
+  x: number
+  y: number
+  w: number
+  h: number
+}
+
+function rectsIntersect(a: LabelRect, b: LabelRect, pad = 3): boolean {
+  return (
+    a.x < b.x + b.w + pad && b.x < a.x + a.w + pad && a.y < b.y + b.h + pad && b.y < a.y + a.h + pad
+  )
 }
 
 function drawDisciplineLabels(
@@ -229,7 +226,7 @@ function drawDisciplineLabels(
   height: number,
   labels: Record<ProjectDiscipline, string>,
   tokens: DrawTokens,
-) {
+): LabelRect[] {
   const nodesById = new Map(layout.nodes.map((node) => [node.id, node]))
   const bands = new Map<ProjectDiscipline, number[]>()
   for (const project of projects) {
@@ -238,6 +235,7 @@ function drawDisciplineLabels(
     bands.set(project.discipline, [...(bands.get(project.discipline) ?? []), node.y])
   }
 
+  const rects: LabelRect[] = []
   context.save()
   context.fillStyle = rgba(tokens.text3, 0.68)
   context.font = `10px ${tokens.mono}`
@@ -245,9 +243,12 @@ function drawDisciplineLabels(
   context.textBaseline = 'middle'
   for (const [discipline, values] of bands.entries()) {
     const y = (values.reduce((sum, value) => sum + value, 0) / values.length) * height
-    context.fillText(labels[discipline].toUpperCase(), 14, y)
+    const text = labels[discipline].toUpperCase()
+    context.fillText(text, 14, y)
+    rects.push({ x: 14, y: y - 6, w: context.measureText(text).width, h: 12 })
   }
   context.restore()
+  return rects
 }
 
 function lineageChain(activeId: string, edges: readonly LineageLayoutEdge[]): Set<string> {
@@ -286,16 +287,6 @@ function truncatedLabel(
     text = text.slice(0, -1)
   }
   return `${text}...`
-}
-
-function drawLabel(
-  context: CanvasRenderingContext2D,
-  text: string,
-  x: number,
-  y: number,
-  maxWidth: number,
-) {
-  context.fillText(truncatedLabel(context, text, maxWidth), x, y)
 }
 
 function drawLineage({
@@ -340,8 +331,10 @@ function drawLineage({
   const edgeT = edgeProgress(drawState)
   const threadT = threadProgress(drawState)
 
-  drawYears(context, projects, width, height, tokens)
-  drawDisciplineLabels(context, projects, layout, width, height, labels, tokens)
+  drawYears(context, layout.ticks, width, height, tokens)
+  const occupied = drawDisciplineLabels(context, projects, layout, width, height, labels, tokens)
+  // Reserve the year-axis strip so node labels never sit on the tick labels.
+  occupied.push({ x: 0, y: height - 34, w: width, h: 34 })
 
   for (const edge of layout.edges) {
     if (edgeT <= 0) continue
@@ -409,32 +402,81 @@ function drawLineage({
     context.restore()
   })
 
-  layout.nodes.forEach((node, index) => {
-    const project = projectsById.get(node.id)
-    if (!project) return
-    const isFlagship = project.tier === 'flagship'
-    const isActiveNode = activeId === node.id
-    if (!isFlagship && (!isActiveNode || width < 640)) return
+  // Reserve every node dot so labels never get punched through by a circle.
+  for (const node of layout.nodes) {
+    const p = point(node, width, height)
+    const r = node.r * Math.min(width, height)
+    occupied.push({ x: p.x - r, y: p.y - r, w: r * 2, h: r * 2 })
+  }
 
+  const small = width < 640
+  const fontSize = small ? 10 : 12
+  const labelFont = `${fontSize}px ${tokens.serif}`
+  const labelMaxWidth = small ? 118 : 210
+  const tierRank: Record<Project['tier'], number> = { flagship: 0, solid: 1, minor: 2 }
+  const labelAlpha: Record<Project['tier'], number> = { flagship: 0.9, solid: 0.72, minor: 0.55 }
+
+  const labelable = layout.nodes
+    .map((node, index) => ({ node, index, project: projectsById.get(node.id) }))
+    .filter(
+      (item): item is { node: (typeof layout.nodes)[number]; index: number; project: Project } =>
+        !!item.project,
+    )
+    .filter(({ node, project }) => node.id === activeId || !small || project.tier !== 'minor')
+    .sort((a, b) => {
+      const activeDelta = Number(b.node.id === activeId) - Number(a.node.id === activeId)
+      if (activeDelta !== 0) return activeDelta
+      return tierRank[a.project.tier] - tierRank[b.project.tier] || a.node.x - b.node.x
+    })
+
+  context.save()
+  context.font = labelFont
+  context.textAlign = 'left'
+  context.textBaseline = 'top'
+
+  for (const { node, index, project } of labelable) {
+    const progress = nodeProgress(index, layout.nodes.length, drawState)
+    if (progress <= 0) continue
+
+    const isActiveNode = node.id === activeId
+    const priority = isActiveNode || project.tier === 'flagship'
     const p = point(node, width, height)
     const radius = node.r * Math.min(width, height)
-    const above = index % 2 === 0
-    const maxWidth = width < 640 ? 92 : 148
+    const text = truncatedLabel(context, project.name ?? node.id, labelMaxWidth)
+    const w = context.measureText(text).width
+    const h = fontSize + 2
+    const baseX = p.x < width * 0.12 ? p.x : p.x > width * 0.88 ? p.x - w : p.x - w / 2
+    const gap = radius + 8
+    const candidates: LabelRect[] = [
+      { x: baseX, y: p.y - gap - h, w, h },
+      { x: baseX, y: p.y + gap, w, h },
+    ]
+    if (priority) {
+      candidates.push(
+        { x: baseX, y: p.y - gap - h * 2 - 4, w, h },
+        { x: baseX, y: p.y + gap + h + 4, w, h },
+        { x: baseX - w / 2 - 8, y: p.y - gap - h, w, h },
+        { x: baseX + w / 2 + 8, y: p.y + gap, w, h },
+      )
+    }
 
-    context.save()
-    context.fillStyle = isFlagship ? rgba(tokens.text1, 0.88) : rgba(tokens.text1, 0.78)
-    context.font = `12px ${tokens.serif}`
-    context.textAlign = p.x < width * 0.12 ? 'left' : p.x > width * 0.88 ? 'right' : 'center'
-    context.textBaseline = above ? 'bottom' : 'top'
-    drawLabel(
-      context,
-      project.name ?? project.id,
-      p.x,
-      p.y + (above ? -radius - 8 : radius + 8),
-      maxWidth,
+    const fits = (rect: LabelRect) =>
+      rect.x >= 2 &&
+      rect.x + rect.w <= width - 2 &&
+      rect.y >= 2 &&
+      rect.y + rect.h <= height - 2 &&
+      !occupied.some((placed) => rectsIntersect(rect, placed))
+    const chosen = candidates.find(fits) ?? (isActiveNode ? candidates[0]! : null)
+    if (!chosen) continue
+
+    context.fillStyle = rgba(
+      tokens.text1,
+      (isActiveNode ? 0.95 : labelAlpha[project.tier]) * progress,
     )
-    context.restore()
-  })
+    context.fillText(text, chosen.x, chosen.y)
+    occupied.push(chosen)
+  }
+  context.restore()
 }
 
 export function LineageLens({ projects, edges, disciplineLabels }: LineageLensProps) {

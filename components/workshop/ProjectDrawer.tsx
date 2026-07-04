@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { DISCIPLINE_LABELS, getProject, type Project } from '@/lib/projects'
 import styles from './workshop.module.css'
@@ -11,15 +11,86 @@ type ProjectDrawerProps = {
   onSelectProject: (id: string) => void
 }
 
+const lineageChipClass =
+  'cursor-pointer border border-border-2 px-2 py-1 text-left font-mono text-[11px] tracking-[0.1em] text-warm transition hover:border-warm hover:bg-[color-mix(in_oklab,var(--color-warm)_8%,transparent)] hover:text-text-1 focus-visible:border-warm focus-visible:text-text-1'
+
 const linkLabels = {
   github: 'GitHub',
   site: 'Site',
-  install: 'Install',
 } as const
 
 function externalHref(value: string): string | null {
   if (/^https?:\/\//.test(value)) return value
   return value.match(/https?:\/\/\S+/)?.[0] ?? null
+}
+
+function InstallCommand({ command }: { command: string }) {
+  const [copied, setCopied] = useState(false)
+  const resetRef = useRef(0)
+
+  useEffect(() => () => window.clearTimeout(resetRef.current), [])
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(command)
+      setCopied(true)
+      window.clearTimeout(resetRef.current)
+      resetRef.current = window.setTimeout(() => setCopied(false), 2000)
+    } catch {
+      // Clipboard can be unavailable (permissions, insecure context); the
+      // command stays selectable by hand.
+    }
+  }
+
+  return (
+    <section className="mt-8" aria-label="Install command">
+      <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.14em] text-text-3">Install</p>
+      <div className="flex items-stretch border border-border-1">
+        <code className="min-w-0 flex-1 whitespace-pre-wrap [overflow-wrap:anywhere] px-3 py-2.5 font-mono text-xs leading-5 text-text-2">
+          {/* <wbr> after each slash lets long URLs wrap at path boundaries
+              instead of mid-token; overflow-wrap:anywhere stays as the
+              fallback when a single segment still overflows. */}
+          {command.split(/(?<=\/)(?!\/)/).map((segment, index, segments) => (
+            <Fragment key={index}>
+              {segment}
+              {index < segments.length - 1 ? <wbr /> : null}
+            </Fragment>
+          ))}
+        </code>
+        <button
+          type="button"
+          onClick={copy}
+          className="shrink-0 border-l border-border-1 px-3 font-mono text-[11px] uppercase tracking-[0.14em] text-warm transition hover:bg-[color-mix(in_oklab,var(--color-warm)_8%,transparent)] hover:text-text-1"
+        >
+          {copied ? 'Copied' : 'Copy'}
+          <span aria-live="polite" className="sr-only">
+            {copied ? 'Install command copied to clipboard' : ''}
+          </span>
+        </button>
+      </div>
+    </section>
+  )
+}
+
+const MONTH_NAMES = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+] as const
+
+function shippedLabel(project: Project): string {
+  const match = project.shippedAt.match(/^(\d{4})-(\d{2})/)
+  const label = match ? `${MONTH_NAMES[Number(match[2]) - 1]} ${match[1]}` : String(project.year)
+  return project.dateApprox ? `~ ${label}` : label
 }
 
 function lineageTargets(ids: readonly string[] | undefined): readonly Project[] {
@@ -157,7 +228,8 @@ export function ProjectDrawer({ project, onClose, onSelectProject }: ProjectDraw
 
   if (!mounted || !project) return null
 
-  const links = Object.entries(project.links ?? {}) as Array<[keyof typeof linkLabels, string]>
+  const { install, ...urlLinks } = project.links ?? {}
+  const links = Object.entries(urlLinks) as Array<[keyof typeof linkLabels, string]>
   const descends = lineageTargets(project.lineage?.descends)
   const builtWith = lineageTargets(project.lineage?.builtWith)
   const hasLineage = descends.length > 0 || builtWith.length > 0
@@ -267,6 +339,8 @@ export function ProjectDrawer({ project, onClose, onSelectProject }: ProjectDraw
               </nav>
             ) : null}
 
+            {install ? <InstallCommand key={project.id} command={install} /> : null}
+
             {hasLineage ? (
               <div className="mt-8 space-y-4" aria-label="Lineage">
                 {descends.length ? (
@@ -279,10 +353,10 @@ export function ProjectDrawer({ project, onClose, onSelectProject }: ProjectDraw
                         <button
                           key={target.id}
                           type="button"
-                          className="border border-border-1 px-2 py-1 text-left font-mono text-[11px] tracking-[0.1em] text-text-3 transition hover:border-warm hover:text-warm focus-visible:border-warm focus-visible:text-warm"
+                          className={lineageChipClass}
                           onClick={() => selectProject(target.id)}
                         >
-                          {target.name}
+                          {target.name} →
                         </button>
                       ))}
                     </div>
@@ -299,10 +373,10 @@ export function ProjectDrawer({ project, onClose, onSelectProject }: ProjectDraw
                         <button
                           key={target.id}
                           type="button"
-                          className="border border-border-1 px-2 py-1 text-left font-mono text-[11px] tracking-[0.1em] text-text-3 transition hover:border-warm hover:text-warm focus-visible:border-warm focus-visible:text-warm"
+                          className={lineageChipClass}
                           onClick={() => selectProject(target.id)}
                         >
-                          {target.name}
+                          {target.name} →
                         </button>
                       ))}
                     </div>
@@ -310,6 +384,30 @@ export function ProjectDrawer({ project, onClose, onSelectProject }: ProjectDraw
                 ) : null}
               </div>
             ) : null}
+
+            <section className={`mt-8 ${styles.drawerRule} pt-6`} aria-label="Project facts">
+              <dl className="flex items-baseline justify-between gap-4 font-mono text-[11px] uppercase tracking-[0.14em]">
+                <dt className="text-text-3">Ship date</dt>
+                <dd className="text-text-2">{shippedLabel(project)}</dd>
+              </dl>
+              {project.tags?.length ? (
+                <ul className="mt-4 flex flex-wrap gap-2" aria-label="Tags">
+                  {project.tags.map((tag) => (
+                    <li
+                      key={tag}
+                      className="border border-border-1 px-2 py-1 font-mono text-[11px] tracking-[0.1em] text-text-3"
+                    >
+                      {tag}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+              {!links.length && !install ? (
+                <p className="mt-5 text-sm leading-6 text-text-3">
+                  No public links for this one yet.
+                </p>
+              ) : null}
+            </section>
           </>
         )}
       </div>

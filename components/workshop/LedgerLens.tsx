@@ -33,9 +33,7 @@ export function LedgerLens() {
                   </span>
                 )}
               </span>
-              <span className={`${styles.meta} truncate`}>
-                {DISCIPLINE_LABELS[project.discipline]}
-              </span>
+              <span className={styles.meta}>{DISCIPLINE_LABELS[project.discipline]}</span>
               <span className={styles.oneLine}>
                 {project.sealed ? (
                   <span className={styles.meta}>{project.sealedNote}</span>
@@ -51,7 +49,7 @@ export function LedgerLens() {
             <div key={project.id}>
               {project.sealed ? (
                 <div
-                  className={styles.ledgerRow}
+                  className={`${styles.ledgerRow} ${styles.sealedRow}`}
                   style={rowStyle}
                   aria-label={sealedAriaLabel(project)}
                 >

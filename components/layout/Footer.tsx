@@ -1,11 +1,11 @@
 import Link from 'next/link'
-import { isNewsletterEnabled } from '@/lib/site-config'
+import { isInteractiveWorldEnabled, isNewsletterEnabled } from '@/lib/site-config'
 
 const footerLinks = [
   { href: '/colophon', label: 'Colophon' },
   { href: '/feed.xml', label: 'RSS' },
   { href: '/graph', label: 'Graph' },
-  { href: '/interactive', label: 'Interactive' },
+  ...(isInteractiveWorldEnabled ? [{ href: '/interactive', label: 'Interactive' }] : []),
 ]
 
 const socialLinks = [

@@ -5,6 +5,10 @@ export const REFERENCE_HEIGHT = 640
 export const MIN_NODE_DISTANCE_PX = 28
 
 const X_PAD = 0.06
+// How much pure calendar-time position contributes to a node's x. The
+// remainder comes from chronological rank, which spreads dense periods
+// (e.g. a burst of same-year ships) apart instead of overplotting them.
+const TIME_WEIGHT = 0.3
 const TOP_PAD_PX = 16
 const BOTTOM_PAD_PX = 44
 const MIN_BAND_HEIGHT_PX = 32
@@ -36,10 +40,16 @@ export type LineageLayoutEdge = {
   points: [Point, Point, Point]
 }
 
+export type LineageTick = {
+  year: number
+  x: number
+}
+
 export type LineageLayout = {
   nodes: LineageLayoutNode[]
   edges: LineageLayoutEdge[]
   thread: Point[]
+  ticks: LineageTick[]
 }
 
 type Viewport = {
@@ -136,21 +146,57 @@ export function layoutLineage(
   const height = finiteDimension(viewport.height, REFERENCE_HEIGHT)
   const radiusScale = Math.max(1, Math.min(width, height))
   const projects = [...inputProjects].filter((project) => !project.sealed).sort(byChronology)
-  if (projects.length === 0) return { nodes: [], edges: [], thread: [] }
+  if (projects.length === 0) return { nodes: [], edges: [], thread: [], ticks: [] }
 
   const times = projects.map((project) => dateValue(project.shippedAt))
   const first = Math.min(...times)
   const last = Math.max(...times)
   const timeSpan = last - first
-  const xById = new Map<string, number>()
-  projects.forEach((project) => {
-    xById.set(
-      project.id,
-      timeSpan === 0
-        ? 0.5
-        : X_PAD + ((dateValue(project.shippedAt) - first) / timeSpan) * (1 - X_PAD * 2),
+  const uniqueTimes = [...new Set(times)].sort((a, b) => a - b)
+  const rankXByTime = new Map<number, number>()
+  uniqueTimes.forEach((time, index) => {
+    rankXByTime.set(
+      time,
+      uniqueTimes.length === 1 ? 0.5 : X_PAD + (index / (uniqueTimes.length - 1)) * (1 - X_PAD * 2),
     )
   })
+
+  const rankX = (value: number): number => {
+    const firstTime = uniqueTimes[0]!
+    const lastTime = uniqueTimes[uniqueTimes.length - 1]!
+    if (value <= firstTime) return rankXByTime.get(firstTime)!
+    if (value >= lastTime) return rankXByTime.get(lastTime)!
+    for (let index = 0; index < uniqueTimes.length - 1; index += 1) {
+      const a = uniqueTimes[index]!
+      const b = uniqueTimes[index + 1]!
+      if (value < a || value > b) continue
+      const t = b === a ? 0 : (value - a) / (b - a)
+      return rankXByTime.get(a)! + t * (rankXByTime.get(b)! - rankXByTime.get(a)!)
+    }
+    return 0.5
+  }
+
+  const xForTime = (value: number): number => {
+    if (timeSpan === 0) return 0.5
+    const linear = X_PAD + ((value - first) / timeSpan) * (1 - X_PAD * 2)
+    return TIME_WEIGHT * linear + (1 - TIME_WEIGHT) * rankX(value)
+  }
+
+  const xById = new Map<string, number>()
+  projects.forEach((project) => {
+    xById.set(project.id, xForTime(dateValue(project.shippedAt)))
+  })
+
+  const ticks: LineageTick[] = []
+  if (timeSpan > 0) {
+    const firstYear = new Date(first).getUTCFullYear()
+    const lastYear = new Date(last).getUTCFullYear()
+    for (let year = firstYear; year <= lastYear; year += 1) {
+      const value = Date.parse(`${year}-01-01T00:00:00.000Z`)
+      if (!Number.isFinite(value) || value < first || value > last) continue
+      ticks.push({ year, x: xForTime(value) })
+    }
+  }
 
   const plannedByDiscipline = LINEAGE_DISCIPLINES.map((discipline) => {
     const bandProjects = projects.filter((project) => project.discipline === discipline)
@@ -224,5 +270,6 @@ export function layoutLineage(
     nodes,
     edges,
     thread: nodes.map((node) => ({ x: node.x, y: node.y })),
+    ticks,
   }
 }

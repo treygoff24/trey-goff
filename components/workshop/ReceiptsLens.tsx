@@ -22,6 +22,7 @@ export function ReceiptsLens() {
             <span className={`${styles.rowTitle} text-[15px] font-medium leading-tight`}>
               {project.name}
             </span>
+            <span aria-hidden="true" className={styles.receiptLeader} />
             <dl className={styles.receiptReadings}>
               {project.receipts?.map((receipt) => (
                 <div key={`${receipt.label}-${receipt.value}`} className={styles.receiptReading}>

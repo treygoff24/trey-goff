@@ -2,6 +2,25 @@
   position: relative;
 }
 
+/* Docks flush beneath the fixed site header (z-50) while scrolling so the
+   lens tabs never transit through the header band and read as a doubled nav.
+   Top offsets mirror TopNav's measured heights: ~112px stacked mobile layout,
+   97px md+ row (h-24 + border). */
+.tabStrip {
+  position: sticky;
+  top: 6.9375rem;
+  z-index: 40;
+  background: color-mix(in oklab, var(--color-bg-0) 88%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+@media (min-width: 768px) {
+  .tabStrip {
+    top: 6.0625rem;
+  }
+}
+
 .tab {
   position: relative;
   min-height: 2.75rem;
@@ -31,6 +50,12 @@
   padding-block: clamp(2.5rem, 6vw, 5rem);
 }
 
+/* The ledger opens with a thin small-caps row instead of a display heading,
+   so the shared panel padding reads as dead space above the table. */
+.tabpanel[data-workshop-panel='ledger'] {
+  padding-block-start: clamp(1.5rem, 3.5vw, 2.75rem);
+}
+
 .shell[data-hydrated='false'] [data-workshop-panel]:not([data-workshop-panel='bench']) {
   display: none;
 }
@@ -55,7 +80,7 @@
 
 .ledgerRow {
   display: grid;
-  grid-template-columns: 6.5rem minmax(0, 1.1fr) minmax(7rem, 0.46fr) minmax(0, 1.4fr) 6.5rem;
+  grid-template-columns: 6.5rem minmax(0, 1.1fr) minmax(11rem, 0.5fr) minmax(0, 1.4fr) 6.5rem;
   gap: clamp(0.75rem, 2vw, 1.5rem);
   align-items: baseline;
   padding-block: 1rem;
@@ -73,6 +98,17 @@ button.ledgerRow,
 button.benchRow,
 button.receiptRow {
   cursor: pointer;
+}
+
+/* Sealed rows are deliberately inert (see workshop e2e "amendment" spec) —
+   dim them and pin the cursor so they never read as clickable. */
+.sealedRow,
+.sealedRow * {
+  cursor: default;
+}
+
+.sealedRow {
+  opacity: 0.62;
 }
 
 button.ledgerRow:hover .rowTitle::after,
@@ -136,10 +172,18 @@ button.receiptRow:focus-visible .rowTitle::after {
 
 .receiptRow {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(13rem, max-content);
+  grid-template-columns: minmax(0, max-content) minmax(1.5rem, 1fr) max-content;
   gap: clamp(1rem, 3vw, 2rem);
   align-items: start;
   padding-block: clamp(1.1rem, 2.5vw, 1.55rem);
+}
+
+/* Dotted leader bridging the gap between a project name and its right-aligned
+   readings, so the eye can pair label and value across a wide row. */
+.receiptLeader {
+  align-self: start;
+  height: 1rem;
+  border-bottom: 1px dotted var(--color-border-2);
 }
 
 .receiptReadings {
@@ -379,6 +423,10 @@ button.receiptRow:focus-visible .rowTitle::after {
   .receiptRow {
     grid-template-columns: minmax(0, 1fr);
     gap: 0.85rem;
+  }
+
+  .receiptLeader {
+    display: none;
   }
 
   .receiptReadings {

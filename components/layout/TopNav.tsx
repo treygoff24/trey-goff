@@ -16,9 +16,17 @@ export function TopNav() {
   const pathname = usePathname()
   const [hydrated, setHydrated] = useState(false)
   const [hideForLibraryLens, setHideForLibraryLens] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
     setHydrated(true)
+  }, [])
+
+  useEffect(() => {
+    const update = () => setScrolled(window.scrollY > 12)
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    return () => window.removeEventListener('scroll', update)
   }, [])
 
   useEffect(() => {
@@ -37,13 +45,16 @@ export function TopNav() {
     <header
       className={cn(
         'pointer-events-none fixed inset-x-0 top-0 z-50 transition duration-300 ease-out',
+        scrolled &&
+          !hideForLibraryLens &&
+          'border-b border-border-1 bg-bg-0/85 shadow-[0_12px_40px_color-mix(in_oklab,var(--color-bg-0)_45%,transparent)] backdrop-blur-md',
         hideForLibraryLens && '-translate-y-8 opacity-0',
       )}
       data-top-nav-ready={hydrated ? 'true' : 'false'}
     >
       <nav
         className={cn(
-          'mx-auto flex max-w-[92rem] flex-col items-start gap-2 px-12 pt-8 max-[520px]:max-w-[402px] md:h-24 md:flex-row md:items-center md:justify-between md:gap-8 md:pt-0',
+          'mx-auto flex max-w-[92rem] flex-col items-start gap-2 px-12 pb-4 pt-8 max-[520px]:max-w-[402px] md:h-24 md:flex-row md:items-center md:justify-between md:gap-8 md:py-0',
           hideForLibraryLens ? 'pointer-events-none' : 'pointer-events-auto',
         )}
         aria-label="Main navigation"
