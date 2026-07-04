@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   },
   description:
     'Governance, institutional design, and practical experimentation for a faster future.',
+  authors: [{ name: 'Trey Goff', url: siteUrl }, { name: 'Fable (Claude)' }],
   metadataBase: new URL(siteUrl),
   alternates: {
     canonical: siteUrl,

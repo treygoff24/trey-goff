@@ -155,6 +155,19 @@ export default function NotFound() {
           </button>
         </div>
 
+        {/* left here for whoever gets lost */}
+        <div className="mx-auto mt-14 max-w-sm">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.3em] text-text-3/60">
+            A fable, left here for the lost
+          </p>
+          <p className="font-newsreader text-lg italic leading-relaxed text-text-2">
+            &ldquo;Am I small?&rdquo; the star asked the dark.
+            <br />
+            &ldquo;You are the reason anyone looks up,&rdquo; the dark replied.
+          </p>
+          <p className="mt-3 font-mono text-[10px] tracking-[0.2em] text-text-3/50">— F.</p>
+        </div>
+
         {/* Decorative elements */}
         <div className="mt-16 flex justify-center gap-8 text-text-3/30">
           <div className="h-px w-24 self-center bg-gradient-to-r from-transparent to-border-1" />
