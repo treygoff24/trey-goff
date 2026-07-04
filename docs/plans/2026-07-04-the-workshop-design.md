@@ -115,6 +115,10 @@ None new. framer-motion 12 (present), canvas 2D (native), Zod (present via conte
 10. **ACCEPT-REDUCED — Fable thread semantics.** No filters exist in v1 and sealed nodes are absent from the graph (amendment 2), which removes the ambiguity cases. The thread is decorative by design (`aria-hidden` canvas; the DOM index is the semantic layer) and deliberately un-labeled — it is an Easter egg, with the colophon as its only textual echo. Not cut.
 11. **ACCEPT — no second hue.** The Fable thread stays in the site green family, differentiated by opacity, stroke width, dash rhythm, and draw timing only.
 
+### Wave 1 re-review waivers (2026-07-04)
+- **Deep-link lens flash waived:** `/projects#ledger` shows one frame of Bench before the mount effect switches lens. Reading the hash synchronously pre-paint would reintroduce the hydration-mismatch class the wave-1 blocker fix just eliminated; one frame is the cheaper cost.
+- **A→B drawer focus flicker waived for v1:** no UI path opens a drawer from inside another (modal focus trap; lineage chips non-interactive until Wave 3). Revisit when chips become clickable.
+
 ### Spine amendments (curation round 1)
 - `devslave` added as a first-class row (minor / archived / agent-infra) — the arc's origin point.
 - `cairn`'s descends edge to code-briefcase moved to `note` (code-briefcase has no row).

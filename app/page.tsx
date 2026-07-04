@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { allEssays, allProjects } from 'content-collections'
 import { EditorialIndexRow } from '@/components/site/EditorialIndexRow'
 import { getAllBooks } from '@/lib/books'
+import { DISCIPLINE_LABELS, getFlagships } from '@/lib/projects'
 import { formatDateShort } from '@/lib/utils'
 
 export const metadata: Metadata = {
@@ -46,30 +47,6 @@ function buildPaths(essayCount: number, projectCount: number, bookCount: number)
   ]
 }
 
-const fallbackWork = [
-  {
-    meta: 'Institutional',
-    status: 'Ongoing',
-    title: 'Próspera',
-    description:
-      "Public affairs and governance for the world's most ambitious charter city — from first employee to chief of staff.",
-  },
-  {
-    meta: 'Agent tooling',
-    status: 'CLI',
-    title: 'Harness & command-line tools',
-    description:
-      "Tinkering at the frontier of what's possible with AI — harnesses and tools for working alongside agents.",
-  },
-  {
-    meta: 'Public policy',
-    status: 'Initiative',
-    title: 'Governance experiments',
-    description:
-      'Turning institutional experiments into legible, repeatable models others can adopt.',
-  },
-]
-
 export default function HomePage() {
   const isProduction = process.env.NODE_ENV === 'production'
   const visibleEssays = isProduction
@@ -89,10 +66,22 @@ export default function HomePage() {
     return a.name.localeCompare(b.name)
   })[0]
 
+  const flagshipWork = getFlagships()
+    .filter((project) => project.id !== featuredProject?.slug)
+    .slice(0, featuredProject ? 3 : 4)
+    .map((project) => ({
+      id: project.id,
+      meta: DISCIPLINE_LABELS[project.discipline],
+      status: project.status,
+      title: project.name ?? project.id,
+      description: project.note ?? project.oneLiner ?? '',
+    }))
+
   const selectedWork = [
     ...(featuredProject
       ? [
           {
+            id: featuredProject.slug,
             meta: featuredProject.type,
             status: featuredProject.status,
             title: featuredProject.name,
@@ -103,7 +92,7 @@ export default function HomePage() {
           },
         ]
       : []),
-    ...fallbackWork,
+    ...flagshipWork,
   ]
 
   return (
@@ -157,7 +146,7 @@ export default function HomePage() {
         <div className="mt-8 border-t border-border-2 text-left">
           {selectedWork.map((item) => (
             <EditorialIndexRow
-              key={item.title}
+              key={item.id}
               href="/projects"
               meta={
                 <span>
