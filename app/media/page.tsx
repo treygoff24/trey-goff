@@ -12,9 +12,12 @@ export default function MediaPage() {
   const availableTypes = getAllTypes()
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-16">
-      <header className="mb-12">
-        <h1 className="mb-4 font-satoshi text-4xl font-medium text-text-1">Media</h1>
+    <div className="tg-page max-w-6xl">
+      <header className="tg-rise mb-12">
+        <p className="tg-eyebrow text-warm">Media</p>
+        <h1 className="mt-6 mb-4 font-newsreader text-[clamp(2.4rem,4.5vw,3.2rem)] font-medium leading-[1.06] tracking-[-0.02em] text-text-1">
+          Conversations on the record.
+        </h1>
         <p className="max-w-2xl text-lg text-text-2">
           Podcasts, interviews, and talks on governance, technology, and building better systems.
         </p>

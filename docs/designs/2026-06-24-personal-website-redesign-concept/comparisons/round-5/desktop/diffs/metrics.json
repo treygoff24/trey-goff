@@ -1,0 +1,90 @@
+{
+  "home": {
+    "ref_size": [
+      924,
+      540
+    ],
+    "actual_size": [
+      924,
+      540
+    ],
+    "common_size": [
+      924,
+      540
+    ],
+    "rms_diff": 42.76688600151127,
+    "mean_abs_diff": 15.790663914275024,
+    "diff_bbox": [
+      0,
+      0,
+      924,
+      540
+    ]
+  },
+  "writing": {
+    "ref_size": [
+      924,
+      540
+    ],
+    "actual_size": [
+      924,
+      540
+    ],
+    "common_size": [
+      924,
+      540
+    ],
+    "rms_diff": 42.53783235039085,
+    "mean_abs_diff": 16.481346534124313,
+    "diff_bbox": [
+      0,
+      0,
+      924,
+      540
+    ]
+  },
+  "projects": {
+    "ref_size": [
+      924,
+      540
+    ],
+    "actual_size": [
+      924,
+      540
+    ],
+    "common_size": [
+      924,
+      540
+    ],
+    "rms_diff": 39.10727967603831,
+    "mean_abs_diff": 14.395457217679441,
+    "diff_bbox": [
+      0,
+      0,
+      924,
+      540
+    ]
+  },
+  "about": {
+    "ref_size": [
+      924,
+      540
+    ],
+    "actual_size": [
+      924,
+      540
+    ],
+    "common_size": [
+      924,
+      540
+    ],
+    "rms_diff": 50.90669530868557,
+    "mean_abs_diff": 19.606813505424615,
+    "diff_bbox": [
+      0,
+      0,
+      924,
+      540
+    ]
+  }
+}

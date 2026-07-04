@@ -9,13 +9,16 @@ export default function NowPage() {
   const lastUpdated = '2026-03-16'
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-16">
-      <header className="mb-10">
-        <h1 className="font-satoshi text-4xl font-medium text-text-1">Now</h1>
-        <p className="mt-3 text-lg text-text-2">
+    <div className="tg-page max-w-3xl">
+      <header className="tg-rise mb-10">
+        <p className="tg-eyebrow text-warm">Now</p>
+        <h1 className="mt-6 font-newsreader text-[clamp(2.4rem,4.5vw,3.2rem)] font-medium leading-[1.06] tracking-[-0.02em] text-text-1">
+          What has my attention right now.
+        </h1>
+        <p className="mt-4 text-lg text-text-2">
           A living snapshot of what I am focused on right now.
         </p>
-        <p className="mt-3 text-xs uppercase tracking-[0.2em] text-text-3">
+        <p className="mt-4 font-mono text-xs uppercase tracking-[0.2em] text-text-3">
           Last updated: {lastUpdated}
         </p>
       </header>

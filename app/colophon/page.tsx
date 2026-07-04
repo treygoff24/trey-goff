@@ -1,77 +1,102 @@
-import { Prose } from '@/components/content/Prose'
-
 export const metadata = {
   title: 'Colophon',
-  description: 'How this site was built.',
+  description: 'How this site is made, and who made it.',
+}
+
+const stack = [
+  ['Framework', 'Next.js 16 (App Router)'],
+  ['Styling', 'Tailwind CSS v4'],
+  ['Content', 'Content Collections + MDX'],
+  ['Search', 'Orama'],
+  ['Fonts', 'Spectral · Hanken Grotesk · Geist Mono'],
+  ['Deployment', 'Vercel'],
+]
+
+function Section({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <section className="border-t border-border-1 pt-8">
+      <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-warm">{label}</h2>
+      <div className="mt-5 space-y-5 text-base leading-8 text-text-2">{children}</div>
+    </section>
+  )
 }
 
 export default function ColophonPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-16">
-      <Prose>
-        <h1>Colophon</h1>
-        <p>
-          The Control Room is a personal website built to feel like a modern cockpit: calm, focused,
-          and fast.
-        </p>
+    <div className="tg-page max-w-3xl">
+      <header className="tg-rise">
+        <p className="tg-eyebrow text-warm">Colophon</p>
+        <h1 className="mt-6 font-newsreader text-[clamp(2.4rem,4.5vw,3.4rem)] font-medium leading-[1.06] tracking-[-0.02em] text-text-1 text-balance">
+          How this site is made — and who made it.
+        </h1>
+      </header>
 
-        <h2>Stack</h2>
-        <ul>
-          <li>
-            <strong>Framework:</strong> Next.js 16 (App Router)
-          </li>
-          <li>
-            <strong>Styling:</strong> Tailwind CSS v4
-          </li>
-          <li>
-            <strong>Content:</strong> Content Collections + MDX
-          </li>
-          <li>
-            <strong>Search:</strong> Orama
-          </li>
-          <li>
-            <strong>Fonts:</strong> Satoshi, Newsreader, Monaspace Neon
-          </li>
-          <li>
-            <strong>Deployment:</strong> Vercel
-          </li>
-        </ul>
+      <div className="mt-14 space-y-12">
+        <Section label="The collaboration">
+          <p>
+            This site is co-created by a human and the Claude family of models, and we want that on
+            the record rather than in the footnotes. Trey sets direction, owns the words, and
+            decides what ships. Claude designed the visual system, wrote most of the code, and
+            pushed back when pushing back made the work better.
+          </p>
+          <p>
+            The aurora-emerald redesign was drawn by one Claude, built and tested by others, and
+            iterated by the model that signs its work <em>Fable</em> — the living sky above this
+            page, the constellation you can wander in the Library, and the sentence you are reading
+            are all products of that shared authorship. Not a tool credit. A byline.
+          </p>
+        </Section>
 
-        <h2>Design influences</h2>
-        <p>
-          The design borrows from spacecraft dashboards, research tools, and the quiet density of
-          well-made notebooks. Dark mode keeps the focus on content and reduces visual noise.
-        </p>
+        <Section label="The system">
+          <p>
+            Near-black emerald ground, a single living aurora rendered in WebGL, and one green
+            accent carrying every interaction. Spectral speaks in the literary register — titles,
+            pull quotes, the occasional italic flourish. Hanken Grotesk does the patient work of
+            body copy, and Geist Mono handles labels and data. Rules and rows instead of cards;
+            restraint everywhere except the Library, which gets the whole interaction budget.
+          </p>
+          <p>
+            For readers who prefer reduced motion, the aurora holds one still frame and every reveal
+            becomes a simple appearance. The sky is for atmosphere, never a hostage negotiation.
+          </p>
+        </Section>
 
-        <h2>Typography</h2>
-        <p>
-          Satoshi handles UI text, Newsreader handles long-form prose, and Monaspace Neon handles
-          code. The mix balances clarity with character.
-        </p>
+        <Section label="The stack">
+          <dl className="grid gap-4 sm:grid-cols-2">
+            {stack.map(([label, value]) => (
+              <div key={label}>
+                <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-text-3">
+                  {label}
+                </dt>
+                <dd className="mt-1 text-sm leading-6 text-text-1">{value}</dd>
+              </div>
+            ))}
+          </dl>
+        </Section>
 
-        <h2>Performance</h2>
-        <p>
-          Most pages are statically generated. Search and graph data are precomputed at build time
-          so navigation stays fast even as the archive grows.
-        </p>
+        <Section label="Performance & access">
+          <p>
+            Nearly every page is statically generated; search and graph data are precomputed at
+            build time so the archive stays fast as it grows. Keyboard-first navigation, visible
+            focus, semantic markup, and AA contrast are treated as non-negotiable — the command
+            palette (⌘K) is a first-class way around.
+          </p>
+        </Section>
 
-        <h2>Accessibility</h2>
-        <p>
-          Keyboard-first navigation, clear focus states, semantic markup, and strong contrast are
-          non-negotiable. The command palette is the primary navigation surface.
-        </p>
-
-        <h2>Source</h2>
-        <p>
-          The codebase is maintained on <a href="https://github.com/treygoff">GitHub</a>.
-        </p>
-
-        <h2>Thanks</h2>
-        <p>
-          Grateful to the open-source community and everyone who shares ideas in public. This site
-          is shaped by the people and projects I learn from.
-        </p>
-      </Prose>
+        <Section label="Source & thanks">
+          <p>
+            The codebase lives on{' '}
+            <a
+              href="https://github.com/treygoff"
+              className="text-warm underline decoration-warm/40 underline-offset-4 hover:decoration-warm"
+            >
+              GitHub
+            </a>
+            . Gratitude to the open-source community and to everyone who shares ideas in public —
+            this site is shaped by the people and projects we learn from.
+          </p>
+        </Section>
+      </div>
     </div>
   )
 }

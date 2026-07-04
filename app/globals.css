@@ -2,21 +2,21 @@
 
 @theme {
   /* Colors - Dark Mode Only */
-  --color-bg-0: #05060a;
-  --color-bg-1: #0a0f1c;
+  --color-bg-0: #04130c;
+  --color-bg-1: #061a10;
 
-  --color-surface-1: rgba(255, 255, 255, 0.05);
-  --color-surface-2: rgba(255, 255, 255, 0.12);
+  --color-surface-1: rgba(232, 243, 236, 0.055);
+  --color-surface-2: rgba(232, 243, 236, 0.11);
 
-  --color-border-1: rgba(255, 255, 255, 0.12);
-  --color-border-2: rgba(255, 255, 255, 0.22);
+  --color-border-1: rgba(232, 243, 236, 0.13);
+  --color-border-2: rgba(151, 232, 187, 0.28);
 
-  --color-text-1: rgba(255, 255, 255, 0.95);
-  --color-text-2: rgba(255, 255, 255, 0.74);
-  --color-text-3: rgba(255, 255, 255, 0.55);
+  --color-text-1: #e8f3ec;
+  --color-text-2: rgba(232, 243, 236, 0.74);
+  --color-text-3: rgba(232, 243, 236, 0.52);
 
-  --color-warm: #f5a25a;
-  --color-accent: #3ed6c8;
+  --color-warm: #6fd69a;
+  --color-accent: #97e8bb;
   --color-success: #34d399;
   --color-warning: #fbbf24;
   --color-error: #f87171;
@@ -51,9 +51,15 @@
   --radius-full: 9999px;
 
   /* Fonts */
-  --font-satoshi: var(--font-satoshi-font), system-ui, sans-serif;
-  --font-newsreader: var(--font-newsreader-font), Georgia, serif;
-  --font-mono: var(--font-mono-font), ui-monospace, monospace;
+  --font-satoshi: var(--font-body), var(--font-satoshi-font), system-ui, sans-serif;
+  --font-newsreader: var(--font-display), var(--font-newsreader-font), Georgia, serif;
+  --font-mono: var(--font-label), var(--font-mono-font), ui-monospace, monospace;
+}
+
+:root {
+  --font-satoshi: var(--font-body), system-ui, sans-serif;
+  --font-newsreader: var(--font-display), Georgia, 'Times New Roman', serif;
+  --font-mono: var(--font-label), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 /* Base styles */
@@ -64,21 +70,29 @@ html {
 
 body {
   font-family: var(--font-satoshi);
-  background-color: var(--color-bg-1);
-  background-image:
-    radial-gradient(1200px 600px at 15% -10%, rgba(245, 162, 90, 0.12), transparent 60%),
-    radial-gradient(900px 500px at 85% 10%, rgba(62, 214, 200, 0.1), transparent 55%),
-    radial-gradient(700px 400px at 50% 80%, rgba(255, 255, 255, 0.06), transparent 60%);
-  background-attachment: fixed;
+  background-color: var(--color-bg-0);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+.font-satoshi {
+  font-family: var(--font-satoshi);
+}
+
+.font-newsreader,
+.font-display {
+  font-family: var(--font-newsreader);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
 /* Focus styles */
 :focus-visible {
-  outline: 2px solid var(--color-warm);
-  outline-offset: 2px;
+  outline: 1.5px solid var(--color-accent);
+  outline-offset: 3px;
 }
 
 [cmdk-input]:focus-visible {
@@ -95,11 +109,11 @@ body {
 
 /* Decorative utilities */
 .glass-panel {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+  background: linear-gradient(135deg, rgba(232, 243, 236, 0.055), rgba(232, 243, 236, 0.018));
   border: 1px solid var(--color-border-1);
   box-shadow:
     0 20px 60px -40px rgba(0, 0, 0, 0.6),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    inset 0 1px 0 rgba(232, 243, 236, 0.06);
   backdrop-filter: blur(16px);
 }
 
@@ -109,9 +123,9 @@ body {
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background:
-    radial-gradient(120% 120% at 10% 0%, rgba(245, 162, 90, 0.1), transparent 55%),
-    radial-gradient(120% 120% at 90% 10%, rgba(62, 214, 200, 0.08), transparent 55%),
-    rgba(255, 255, 255, 0.03);
+    radial-gradient(120% 120% at 10% 0%, rgba(111, 214, 154, 0.13), transparent 58%),
+    radial-gradient(120% 120% at 90% 10%, rgba(151, 232, 187, 0.08), transparent 58%),
+    rgba(6, 26, 16, 0.42);
   box-shadow: 0 30px 70px -50px rgba(0, 0, 0, 0.65);
 }
 
@@ -139,13 +153,112 @@ body {
   text-transform: uppercase;
 }
 
+.tg-page {
+  width: min(100% - 6rem, 72rem);
+  margin-inline: auto;
+  padding-block: clamp(9.25rem, 16vw, 9.75rem) clamp(4rem, 8vw, 7rem);
+}
+
+@media (max-width: 639px) {
+  .tg-page {
+    width: min(calc(100% - 6rem), 72rem);
+    padding-top: 11rem;
+  }
+}
+
+.tg-section {
+  padding-block: clamp(3.5rem, 7vw, 6.5rem);
+  border-top: 1px solid var(--color-border-1);
+}
+
+.tg-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.tg-display {
+  font-family: var(--font-newsreader);
+  font-size: clamp(3rem, 5.7vw, 4.25rem);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: var(--color-text-1);
+}
+
+.tg-standfirst {
+  max-width: 38rem;
+  font-size: clamp(1.05rem, 1.7vw, 1.35rem);
+  line-height: 1.65;
+  color: var(--color-text-2);
+}
+
+.tg-rule-row {
+  display: grid;
+  grid-template-columns: minmax(2.5rem, 0.18fr) minmax(0, 1fr) auto;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  align-items: baseline;
+  padding-block: clamp(1rem, 2.5vw, 1.55rem);
+  border-top: 1px solid var(--color-border-1);
+}
+
+.tg-rule-row:last-child {
+  border-bottom: 1px solid var(--color-border-1);
+}
+
+.tg-action,
+.tg-action-secondary {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.125rem;
+  padding-inline: 1.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.tg-action {
+  background: var(--color-warm);
+  color: var(--color-bg-0);
+}
+
+.tg-action-secondary {
+  border: 1px solid var(--color-border-1);
+  color: var(--color-text-1);
+}
+
+.tg-action:hover,
+.tg-action-secondary:hover {
+  transform: translateY(-1px);
+}
+
+.tg-action-secondary:hover {
+  border-color: rgba(151, 232, 187, 0.45);
+  color: var(--color-accent);
+}
+
+.tg-rise {
+  animation: fadeInUp 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
 .prose {
   --prose-body: var(--color-text-1);
   --prose-headings: var(--color-text-1);
   --prose-links: var(--color-warm);
   --prose-code: var(--color-accent);
 
-  font-family: var(--font-newsreader);
+  font-family: var(--font-satoshi);
   font-size: var(--text-base);
   line-height: 1.55;
   color: var(--prose-body);
@@ -160,8 +273,8 @@ body {
 .prose h2,
 .prose h3,
 .prose h4 {
-  font-family: var(--font-satoshi);
-  font-weight: 600;
+  font-family: var(--font-newsreader);
+  font-weight: 500;
   color: var(--prose-headings);
   margin-top: 2em;
   margin-bottom: 0.75em;
@@ -394,7 +507,7 @@ body {
 /* Konami retro mode */
 html[data-konami='true'] body {
   background-image:
-    linear-gradient(180deg, rgba(245, 162, 90, 0.12), rgba(62, 214, 200, 0.08)),
+    linear-gradient(180deg, rgba(111, 214, 154, 0.12), rgba(151, 232, 187, 0.08)),
     repeating-linear-gradient(
       0deg,
       rgba(255, 255, 255, 0.04) 0px,
@@ -403,11 +516,11 @@ html[data-konami='true'] body {
       transparent 3px
     );
   background-attachment: fixed;
-  text-shadow: 0 0 12px rgba(245, 162, 90, 0.2);
+  text-shadow: 0 0 12px rgba(111, 214, 154, 0.2);
 }
 
 html[data-konami='true'] a {
-  text-shadow: 0 0 16px rgba(62, 214, 200, 0.35);
+  text-shadow: 0 0 16px rgba(151, 232, 187, 0.35);
 }
 
 /* Reduced motion */
@@ -420,7 +533,8 @@ html[data-konami='true'] a {
     transition-duration: 0.01ms !important;
   }
 
-  .animate-fade-in-up {
+  .animate-fade-in-up,
+  .tg-rise {
     opacity: 1;
     transform: none;
   }
@@ -486,10 +600,10 @@ html[data-konami='true'] a {
 @keyframes glow-pulse {
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(245, 162, 90, 0);
+    box-shadow: 0 0 0 0 rgba(111, 214, 154, 0);
   }
   50% {
-    box-shadow: 0 0 20px 2px rgba(245, 162, 90, 0.15);
+    box-shadow: 0 0 20px 2px rgba(111, 214, 154, 0.15);
   }
 }
 
@@ -508,7 +622,7 @@ html[data-konami='true'] a {
     border-color: rgba(255, 255, 255, 0.1);
   }
   50% {
-    border-color: rgba(245, 162, 90, 0.3);
+    border-color: rgba(111, 214, 154, 0.3);
   }
 }
 
@@ -520,7 +634,7 @@ html[data-konami='true'] a {
 
 .hover-lift:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 40px -12px rgba(245, 162, 90, 0.2);
+  box-shadow: 0 12px 40px -12px rgba(111, 214, 154, 0.2);
 }
 
 .hover-glow {
@@ -530,7 +644,7 @@ html[data-konami='true'] a {
 }
 
 .hover-glow:hover {
-  box-shadow: 0 0 30px -5px rgba(245, 162, 90, 0.15);
+  box-shadow: 0 0 30px -5px rgba(111, 214, 154, 0.15);
 }
 
 /* Card hover group effects */
@@ -544,14 +658,14 @@ html[data-konami='true'] a {
 
 .card-interactive:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px -8px rgba(245, 162, 90, 0.12);
+  box-shadow: 0 8px 30px -8px rgba(111, 214, 154, 0.12);
 }
 
 .card-interactive:focus-visible {
   outline: 2px solid var(--color-warm);
   outline-offset: 2px;
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px -8px rgba(245, 162, 90, 0.12);
+  box-shadow: 0 8px 30px -8px rgba(111, 214, 154, 0.12);
 }
 
 /* Link underline animation */
@@ -725,4 +839,28 @@ html[data-konami='true'] a {
 
 .stack-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.22);
+}
+
+/* Aurora library — thin themed scrollbar for lens overflow (River timeline, detail drawer) */
+.tg-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--color-accent) 30%, transparent) transparent;
+}
+
+.tg-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.tg-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tg-scroll::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--color-accent) 28%, transparent);
+  border-radius: 999px;
+}
+
+.tg-scroll::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--color-accent) 45%, transparent);
 }

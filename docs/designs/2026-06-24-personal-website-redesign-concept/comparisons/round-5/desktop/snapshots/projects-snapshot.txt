@@ -1,0 +1,94 @@
+- link "Skip to main content" [ref=e1]
+- banner
+  - navigation "Main navigation" [ref=e2]
+    - link "Trey Goff" [ref=e3]
+    - link "Writing" [ref=e4]
+    - link "Projects" [ref=e5]
+    - link "Library" [ref=e6]
+    - link "About" [ref=e7]
+- main
+  - sectionheader
+    - paragraph
+      - StaticText "PROJECTS"
+    - heading "Systems I'm building" [level=1, ref=e8]
+    - paragraph
+      - StaticText "The work spans websites, command-line & agent tooling, public-policy initiatives, and Próspera itself — different surfaces, one throughline: institutions that let progress compound."
+  - article
+    - StaticText "SOFTWARE"
+    - StaticText "ACTIVE"
+    - heading "The Control Room" [level=2, ref=e16]
+    - paragraph
+      - StaticText "An explorable index of ideas, writing, and reading."
+    - paragraph
+      - StaticText "PROBLEM"
+    - paragraph
+      - StaticText "Personal knowledge and public writing are scattered across tools and feeds."
+    - paragraph
+      - StaticText "APPROACH"
+    - paragraph
+      - StaticText "Build a command-palette-first site that ties essays, notes, books, and a knowledge graph into one place."
+    - link "COLOPHON →" [ref=e17]
+      - StaticText "COLOPHON →"
+  - generic
+    - paragraph
+      - StaticText "MORE WORK"
+    - article
+      - generic
+        - StaticText "INSTITUTIONAL"
+        - StaticText "ONGOING"
+      - heading "Próspera" [level=2, ref=e18]
+      - paragraph
+        - StaticText "Public affairs and governance for Honduras's first ZEDE — the world's most ambitious charter city. First full-time employee; now chief of staff & director of public affairs."
+      - paragraph
+        - StaticText "GOVERNANCE · CHARTER CITIES · ECONOMICS"
+      - link "→" [ref=e32]
+    - article
+      - generic
+        - StaticText "AGENT TOOLING"
+        - StaticText "CLI"
+      - heading "Harness & agent tooling" [level=2, ref=e19]
+      - paragraph
+        - StaticText "Command-line harnesses and tools for working alongside AI agents — tinkering at the frontier of what's actually possible right now."
+      - paragraph
+        - StaticText "AI · CLI · DEVELOPER TOOLS"
+      - link "→" [ref=e33]
+    - article
+      - generic
+        - StaticText "PUBLIC POLICY"
+        - StaticText "INITIATIVE"
+      - heading "Governance experiments" [level=2, ref=e20]
+      - paragraph
+        - StaticText "Turning institutional experiments into legible, repeatable models other jurisdictions can study, adapt, and adopt — so a good idea doesn't have to be reinvented from scratch each time."
+      - paragraph
+        - StaticText "INSTITUTIONAL DESIGN · POLICY"
+      - link "→" [ref=e34]
+- contentinfo
+  - generic
+    - link "Trey Goff" [ref=e9]
+    - paragraph
+      - StaticText "Designing systems, institutions, and software that help human progress compound."
+    - StaticText "Quick access:"
+    - StaticText "⌘K"
+    - heading "ROUTES" [level=3, ref=e10]
+    - navigation "Footer navigation" [ref=e11]
+      - link "Writing" [ref=e21]
+      - link "Projects" [ref=e22]
+      - link "Library" [ref=e23]
+      - link "About" [ref=e24]
+      - link "Notes" [ref=e25]
+      - link "Media" [ref=e26]
+      - link "Topics" [ref=e27]
+    - heading "CONNECT" [level=3, ref=e12]
+    - link "Twitter" [ref=e13]
+    - link "GitHub" [ref=e14]
+    - StaticText "AURORA"
+    - navigation "Footer links" [ref=e15]
+      - link "Colophon" [ref=e28]
+      - link "RSS" [ref=e29]
+      - link "Graph" [ref=e30]
+      - link "Interactive" [ref=e31]
+    - StaticText "Online"
+    - StaticText "|"
+    - paragraph
+      - StaticText "© 2026 Trey Goff"
+- alert

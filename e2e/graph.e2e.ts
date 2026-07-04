@@ -84,8 +84,8 @@ test.describe('Knowledge Graph Page', () => {
 
       const initialConnectionCount = await graphPage.getConnectionCount()
 
-      // Toggle off a node type
-      await graphPage.toggleFilter('Tags')
+      // Toggle off a node type that is active in both desktop and the mobile default lens.
+      await graphPage.toggleFilter('Essays')
 
       // Connection count may decrease
       const filteredConnectionCount = await graphPage.getConnectionCount()
@@ -112,7 +112,9 @@ test.describe('Knowledge Graph Page', () => {
 
     test('should display "Click a node" message', async ({ page }) => {
       await graphPage.expectGraphRendered()
-      await expect(page.getByText('Click a node to view details')).toBeVisible()
+      await expect(
+        page.getByText(/Click a node to view details|Pick a lens, tap a quick entry point/),
+      ).toBeVisible()
     })
 
     // Note: Testing actual node selection is tricky because it requires clicking
@@ -129,8 +131,8 @@ test.describe('Knowledge Graph Page', () => {
       const canvas = graphPage.graphCanvas
       await expect(canvas).toBeVisible()
 
-      // Verify canvas is responding (doesn't throw on click)
-      await canvas.click({ position: { x: 300, y: 300 } })
+      // Verify canvas is responding without hitting the mobile zoom controls.
+      await canvas.click({ position: { x: 96, y: 128 } })
     })
 
     test('should support scroll for zoom', async ({ page }, testInfo) => {

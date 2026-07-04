@@ -2,130 +2,78 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useRef, useState } from 'react'
-import { MobileNav } from './MobileNav'
-import { useCommandPalette } from '@/components/command'
+import { useEffect, useState } from 'react'
+import { cn } from '@/lib/utils'
 
 const navItems = [
   { href: '/writing', label: 'Writing' },
-  { href: '/library', label: 'Library' },
-  { href: '/media', label: 'Media' },
-  { href: '/topics', label: 'Topics' },
   { href: '/projects', label: 'Projects' },
+  { href: '/library', label: 'Library' },
   { href: '/about', label: 'About' },
 ]
 
 export function TopNav() {
   const pathname = usePathname()
-  const [mobileNavOpen, setMobileNavOpen] = useState(false)
-  const { setOpen } = useCommandPalette()
-  const mobileMenuButtonRef = useRef<HTMLButtonElement>(null)
+  const [hydrated, setHydrated] = useState(false)
+  const [hideForLibraryLens, setHideForLibraryLens] = useState(false)
+
+  useEffect(() => {
+    setHydrated(true)
+  }, [])
+
+  useEffect(() => {
+    if (!pathname?.startsWith('/library')) {
+      setHideForLibraryLens(false)
+      return
+    }
+
+    const update = () => setHideForLibraryLens(window.scrollY > 120)
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    return () => window.removeEventListener('scroll', update)
+  }, [pathname])
 
   return (
-    <>
-      <header className="sticky top-0 z-50 border-b border-border-1 bg-bg-1/80 backdrop-blur-sm">
-        <nav
-          className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4"
-          aria-label="Main navigation"
+    <header
+      className={cn(
+        'pointer-events-none fixed inset-x-0 top-0 z-50 transition duration-300 ease-out',
+        hideForLibraryLens && '-translate-y-8 opacity-0',
+      )}
+      data-top-nav-ready={hydrated ? 'true' : 'false'}
+    >
+      <nav
+        className={cn(
+          'mx-auto flex max-w-[92rem] flex-col items-start gap-2 px-12 pt-8 max-[520px]:max-w-[402px] md:h-24 md:flex-row md:items-center md:justify-between md:gap-8 md:pt-0',
+          hideForLibraryLens ? 'pointer-events-none' : 'pointer-events-auto',
+        )}
+        aria-label="Main navigation"
+      >
+        <Link
+          href="/"
+          className="font-newsreader text-[1.42rem] font-semibold tracking-[-0.02em] text-text-1 transition-colors hover:text-warm"
         >
-          <Link
-            href="/"
-            className="font-satoshi text-lg font-medium text-text-1 transition-colors hover:text-warm"
-          >
-            Trey
-          </Link>
+          Trey Goff
+        </Link>
 
-          {/* Desktop nav */}
-          <div className="hidden items-center gap-6 md:flex">
-            {navItems.map((item) => {
-              const isActive = pathname === item.href || pathname?.startsWith(item.href + '/')
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`relative text-sm transition-colors ${
-                    isActive
-                      ? 'text-warm font-medium nav-link-active'
-                      : 'text-text-2 hover:text-text-1'
-                  }`}
-                  aria-current={isActive ? 'page' : undefined}
-                >
-                  {item.label}
-                </Link>
-              )
-            })}
-
-            <button
-              onClick={() => setOpen(true)}
-              className="group/search flex items-center gap-2 rounded-md border border-border-1 px-3 py-1.5 text-sm text-text-3 transition-all hover:border-warm/30 hover:text-text-2 hover:bg-warm/5"
-              aria-label="Open search (Command K)"
-            >
-              Search
-              <kbd className="rounded bg-surface-1 px-1.5 py-0.5 font-mono text-xs transition-colors group-hover/search:bg-warm/10 group-hover/search:text-warm">
-                ⌘K
-              </kbd>
-            </button>
-          </div>
-
-          {/* Mobile nav controls */}
-          <div className="flex items-center gap-2 md:hidden">
-            {/* Search button - opens command palette */}
-            <button
-              onClick={() => setOpen(true)}
-              className="flex h-11 w-11 items-center justify-center rounded-md text-text-2 transition-colors hover:bg-surface-1 hover:text-text-1"
-              aria-label="Search"
-            >
-              <svg
-                className="h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
+        <div className="flex items-center gap-7 md:gap-8">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href || pathname?.startsWith(item.href + '/')
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  'text-[0.86rem] font-semibold text-text-2 transition-colors hover:text-text-1',
+                  isActive && 'text-warm',
+                )}
+                aria-current={isActive ? 'page' : undefined}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </button>
-
-            {/* Hamburger button */}
-            <button
-              ref={mobileMenuButtonRef}
-              onClick={() => setMobileNavOpen(true)}
-              className="flex h-11 w-11 items-center justify-center rounded-md text-text-2 transition-colors hover:bg-surface-1 hover:text-text-1"
-              aria-label="Open menu"
-              aria-expanded={mobileNavOpen}
-            >
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            </button>
-          </div>
-        </nav>
-      </header>
-
-      {/* Mobile drawer */}
-      <MobileNav
-        isOpen={mobileNavOpen}
-        onClose={() => setMobileNavOpen(false)}
-        navItems={navItems}
-        currentPath={pathname}
-        triggerRef={mobileMenuButtonRef}
-      />
-    </>
+                {item.label}
+              </Link>
+            )
+          })}
+        </div>
+      </nav>
+    </header>
   )
 }

@@ -2,7 +2,6 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { allEssays } from 'content-collections'
 import { formatDate } from '@/lib/utils'
-import { TagPill } from '@/components/ui/TagPill'
 import { TableOfContents, MobileTableOfContents } from '@/components/writing/TableOfContents'
 import { Prose } from '@/components/content/Prose'
 import { RelatedLinks } from '@/components/content/RelatedLinks'
@@ -82,30 +81,43 @@ export default async function EssayPage({ params }: PageProps) {
       <article className="mx-auto max-w-4xl px-4 py-16">
         {/* Header */}
         <header className="mb-12">
-          {essay.status === 'evergreen' && (
-            <span className="mb-4 inline-block rounded-full bg-warm/10 px-3 py-1 text-sm font-medium text-warm">
-              Evergreen
-            </span>
-          )}
+          <p className="tg-eyebrow text-warm">
+            Essay
+            {essay.status === 'evergreen' && <span className="ml-3 text-text-3">· Evergreen</span>}
+          </p>
 
-          <h1 className="font-satoshi text-4xl font-medium text-text-1 mb-4">{essay.title}</h1>
+          <h1 className="mt-6 mb-5 font-newsreader text-[clamp(2.4rem,4.8vw,3.5rem)] font-medium leading-[1.08] tracking-[-0.02em] text-text-1 text-balance">
+            {essay.title}
+          </h1>
 
-          <p className="text-xl text-text-2 mb-6">{essay.summary}</p>
+          <p className="mb-7 max-w-2xl text-xl leading-relaxed text-text-2">{essay.summary}</p>
 
-          <div className="flex flex-wrap items-center gap-4 text-sm text-text-3">
+          <div className="flex flex-wrap items-center gap-3 font-mono text-xs uppercase tracking-[0.14em] text-text-3">
             <time dateTime={essay.date}>{formatDate(essay.date)}</time>
-            <span>·</span>
+            <span aria-hidden="true">·</span>
             <span>{essay.readingTime} min read</span>
-            <span>·</span>
+            <span aria-hidden="true">·</span>
             <span>{essay.wordCount.toLocaleString()} words</span>
           </div>
 
           {essay.tags.length > 0 && (
-            <div className="mt-6 flex flex-wrap gap-2">
-              {essay.tags.map((tag) => (
-                <TagPill key={tag} tag={tag} href={`/writing?tag=${encodeURIComponent(tag)}`} />
+            <p className="mt-5 flex flex-wrap gap-x-3 gap-y-2 font-mono text-[11px] uppercase tracking-[0.14em]">
+              {essay.tags.map((tag, index) => (
+                <span key={tag} className="flex items-center gap-3">
+                  {index > 0 && (
+                    <span aria-hidden="true" className="text-text-3">
+                      ·
+                    </span>
+                  )}
+                  <Link
+                    href={`/writing?tag=${encodeURIComponent(tag)}`}
+                    className="text-text-3 transition-colors hover:text-warm"
+                  >
+                    {tag}
+                  </Link>
+                </span>
               ))}
-            </div>
+            </p>
           )}
         </header>
 
@@ -123,7 +135,7 @@ export default async function EssayPage({ params }: PageProps) {
 
         {(outgoingLinks.length > 0 || backlinks.length > 0) && (
           <section className="mt-12 rounded-lg border border-border-1 bg-surface-1 p-6">
-            <h2 className="mb-4 font-satoshi text-lg font-medium text-text-1">Connections</h2>
+            <h2 className="mb-4 font-newsreader text-xl font-medium text-text-1">Connections</h2>
             <div className="grid gap-6 md:grid-cols-2">
               <RelatedLinks title="Links out" links={outgoingLinks} />
               <RelatedLinks title="Backlinks" links={backlinks} />
@@ -133,7 +145,7 @@ export default async function EssayPage({ params }: PageProps) {
 
         {isNewsletterEnabled ? (
           <div className="mt-16 rounded-lg border border-border-1 bg-surface-1 p-6">
-            <h3 className="mb-2 font-satoshi text-lg font-medium text-text-1">
+            <h3 className="mb-2 font-newsreader text-xl font-medium text-text-1">
               Enjoyed this essay?
             </h3>
             <p className="mb-4 text-sm text-text-2">
@@ -142,11 +154,11 @@ export default async function EssayPage({ params }: PageProps) {
             <SubscribeForm compact />
           </div>
         ) : (
-          <section className="mt-16 rounded-2xl border border-border-1 bg-surface-1 p-6 sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-text-3">
+          <section className="mt-16 border-t border-border-2 pt-8">
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-text-3">
               Continue exploring
             </p>
-            <h3 className="mt-3 font-satoshi text-2xl font-medium text-text-1">
+            <h3 className="mt-3 font-newsreader text-2xl font-medium text-text-1">
               Follow the thread from here.
             </h3>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-text-2">
@@ -154,22 +166,13 @@ export default async function EssayPage({ params }: PageProps) {
               turning these ideas into something concrete.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Link
-                href="/writing"
-                className="inline-flex items-center justify-center rounded-full bg-warm px-5 py-2.5 text-sm font-semibold text-bg-0 transition hover:-translate-y-0.5"
-              >
-                More essays
+              <Link href="/writing" className="tg-action">
+                More essays →
               </Link>
-              <Link
-                href="/topics"
-                className="inline-flex items-center justify-center rounded-full border border-border-1 px-5 py-2.5 text-sm font-medium text-text-1 transition hover:border-warm/40 hover:text-warm"
-              >
+              <Link href="/topics" className="tg-action-secondary">
                 Browse topics
               </Link>
-              <Link
-                href="/projects"
-                className="inline-flex items-center justify-center rounded-full border border-border-1 px-5 py-2.5 text-sm font-medium text-text-1 transition hover:border-warm/40 hover:text-warm"
-              >
+              <Link href="/projects" className="tg-action-secondary">
                 See projects
               </Link>
             </div>

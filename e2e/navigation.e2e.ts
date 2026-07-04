@@ -13,12 +13,14 @@ test.describe('Navigation - Desktop', () => {
 
   test.describe('Top navigation', () => {
     test('should display site logo/name', async () => {
-      await expect(basePage.topNav.getByRole('link', { name: 'Trey', exact: true })).toBeVisible()
+      await expect(
+        basePage.topNav.getByRole('link', { name: 'Trey Goff', exact: true }),
+      ).toBeVisible()
     })
 
     test('should navigate to home when clicking logo', async ({ page }) => {
       await page.goto('/about')
-      await basePage.topNav.getByRole('link', { name: 'Trey', exact: true }).click()
+      await basePage.topNav.getByRole('link', { name: 'Trey Goff', exact: true }).click()
       await expect(page).toHaveURL('/')
     })
 
@@ -61,16 +63,12 @@ test.describe('Navigation - Desktop', () => {
 
       // Writing link should have active styling
       const writingLink = basePage.topNav.getByRole('link', { name: 'Writing' })
-      await expect(writingLink).toHaveClass(/font-medium/)
+      await expect(writingLink).toHaveAttribute('aria-current', 'page')
     })
 
-    test('should display search button with keyboard hint', async () => {
-      // Scope to the header nav to avoid matching homepage search button
-      const searchButton = basePage.topNav.getByRole('button', { name: /search|command k/i })
-      await expect(searchButton).toBeVisible()
-
-      // Should show keyboard shortcut in the nav
-      await expect(basePage.topNav.locator('kbd')).toContainText('K')
+    test('should keep search controls out of the handoff masthead', async () => {
+      await expect(basePage.topNav.getByRole('button')).toHaveCount(0)
+      await expect(basePage.topNav.locator('kbd')).toHaveCount(0)
     })
   })
 
@@ -99,83 +97,31 @@ test.describe('Navigation - Mobile', () => {
     await basePage.goto('/')
   })
 
-  test.describe('Mobile hamburger menu', () => {
-    test('should display hamburger menu button', async () => {
-      await expect(basePage.mobileMenuButton).toBeVisible()
+  test.describe('Mobile inline navigation', () => {
+    test('should display the handoff inline nav links instead of a drawer trigger', async ({
+      page,
+    }) => {
+      await expect(basePage.topNav.getByRole('link', { name: 'Trey Goff' })).toBeVisible()
+      await expect(
+        basePage.topNav.getByRole('link', { name: 'Writing', exact: true }),
+      ).toBeVisible()
+      await expect(
+        basePage.topNav.getByRole('link', { name: 'Library', exact: true }),
+      ).toBeVisible()
+      await expect(
+        basePage.topNav.getByRole('link', { name: 'Projects', exact: true }),
+      ).toBeVisible()
+      await expect(basePage.topNav.getByRole('link', { name: 'About', exact: true })).toBeVisible()
+      await expect(page.getByRole('button', { name: /open menu|close menu/i })).toHaveCount(0)
     })
 
-    test('should hide desktop nav links on mobile', async ({ page }) => {
-      // Desktop nav links should be hidden
-      const desktopNav = page.locator('.hidden.md\\:flex')
-      await expect(desktopNav).not.toBeVisible()
-    })
-
-    test('should open mobile nav drawer when clicking hamburger', async () => {
-      await basePage.openMobileNav()
-      await expect(basePage.mobileNav).toBeVisible()
-    })
-
-    test('should close mobile nav when clicking close button', async () => {
-      await basePage.openMobileNav()
-      await basePage.closeMobileNav()
-      await expect(basePage.mobileNav).not.toBeVisible()
-    })
-
-    test('should close mobile nav when pressing Escape', async ({ page }) => {
-      await basePage.openMobileNav()
-      await page.keyboard.press('Escape')
-      await expect(basePage.mobileNav).not.toBeVisible()
-    })
-
-    test('should display nav links in mobile drawer', async () => {
-      await basePage.openMobileNav()
-
-      await expect(basePage.mobileNav.getByRole('link', { name: 'Writing' })).toBeVisible()
-      await expect(basePage.mobileNav.getByRole('link', { name: 'Library' })).toBeVisible()
-      await expect(basePage.mobileNav.getByRole('link', { name: 'Projects' })).toBeVisible()
-      await expect(basePage.mobileNav.getByRole('link', { name: 'About' })).toBeVisible()
-    })
-
-    test('should navigate and close drawer when clicking a link', async ({ page }) => {
-      await basePage.openMobileNav()
-      await basePage.navigateViaMobileNav('Writing')
-
-      // Drawer should close
-      await expect(basePage.mobileNav).not.toBeVisible()
-
-      // Should navigate to writing
+    test('should navigate from the mobile inline nav', async ({ page }) => {
+      await basePage.navigateViaTopNav('Writing')
       await expect(page).toHaveURL('/writing')
     })
 
-    test('should display secondary links in mobile drawer', async () => {
-      await basePage.openMobileNav()
-
-      await expect(basePage.mobileNav.getByRole('link', { name: 'Now' })).toBeVisible()
-      await expect(basePage.mobileNav.getByRole('link', { name: 'Colophon' })).toBeVisible()
-      await expect(basePage.mobileNav.getByRole('link', { name: 'Subscribe' })).toHaveCount(0)
-    })
-
-    test('should close drawer when clicking backdrop', async ({ page }) => {
-      await basePage.openMobileNav()
-
-      // Click the backdrop
-      const backdrop = page.locator('.fixed.inset-0.bg-black\\/60')
-      await backdrop.click({ force: true })
-
-      await expect(basePage.mobileNav).not.toBeVisible()
-    })
-  })
-
-  test.describe('Mobile search', () => {
-    test('should display mobile search button', async () => {
-      const searchButton = basePage.topNav.getByRole('button', { name: 'Search', exact: true })
-      await expect(searchButton).toBeVisible()
-    })
-
-    test('should open command palette when clicking mobile search', async ({ page }) => {
-      const searchButton = basePage.topNav.getByRole('button', { name: 'Search', exact: true })
-      await searchButton.click()
-
+    test('should still open command palette from keyboard shortcut on mobile', async ({ page }) => {
+      await page.keyboard.press('Control+k')
       await expect(page.getByRole('dialog')).toBeVisible()
     })
   })
@@ -218,13 +164,12 @@ test.describe('Skip Link - Accessibility', () => {
 })
 
 test.describe('Navigation - Sticky header', () => {
-  test('should have sticky header', async ({ page }) => {
+  test('should have fixed transparent header', async ({ page }) => {
     const basePage = new BasePage(page)
     await basePage.goto('/')
 
-    // Header should be sticky
     const header = page.getByRole('banner')
-    await expect(header).toHaveClass(/sticky/)
+    await expect(header).toHaveClass(/fixed/)
   })
 
   test('header should remain visible after scrolling', async ({ page }) => {

@@ -2,13 +2,15 @@ import { test, expect } from '@playwright/test'
 import { BasePage } from './pages'
 
 test.describe('Static content pages', () => {
-  test('About page shows mission and bio', async ({ page }) => {
+  test('About page shows the new bio and fact rail', async ({ page }) => {
     const basePage = new BasePage(page)
     await basePage.goto('/about')
 
-    await expect(page.getByRole('heading', { name: 'About' })).toBeVisible()
-    await expect(page.getByText('Mission')).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Bio' })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: /institutions that let human progress compound/i }),
+    ).toBeVisible()
+    await expect(page.getByText(/chief of staff and director of public affairs/i)).toBeVisible()
+    await expect(page.getByText('Faith')).toBeVisible()
   })
 
   test('Now page shows last updated and sections', async ({ page }) => {
@@ -24,8 +26,10 @@ test.describe('Static content pages', () => {
     const basePage = new BasePage(page)
     await basePage.goto('/colophon')
 
-    await expect(page.getByRole('heading', { name: 'Colophon' })).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Stack' })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: /How this site is made — and who made it/ }),
+    ).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'The stack' })).toBeVisible()
   })
 
   test('Powerlifting page shows hidden content and table', async ({ page }) => {
@@ -43,15 +47,14 @@ test.describe('Static content pages', () => {
     const basePage = new BasePage(page)
     await basePage.goto('/projects')
 
-    await expect(page.getByRole('heading', { name: 'Projects' })).toBeVisible()
-    await expect(page.getByRole('link', { name: 'Read the writing' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: "Systems I'm building" })).toBeVisible()
+    await expect(page.getByText(/websites, command-line & agent tooling/i)).toBeVisible()
 
-    const cards = page.locator('article')
-    const cardCount = await cards.count()
+    const rows = page.locator('article')
+    const rowCount = await rows.count()
 
-    if (cardCount > 0) {
-      await expect(cards.first().getByRole('heading')).toBeVisible()
-      await expect(cards.first().getByRole('link').first()).toBeVisible()
+    if (rowCount > 0) {
+      await expect(rows.first().getByRole('heading')).toBeVisible()
     } else {
       await expect(page.getByText(/Projects coming soon/i)).toBeVisible()
     }

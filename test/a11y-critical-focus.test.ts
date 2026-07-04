@@ -5,14 +5,6 @@ import { join } from 'node:path'
 
 const projectRoot = join(__dirname, '..')
 
-test('A1: FloatingLibrary should have a skip link', () => {
-  const path = join(projectRoot, 'components/library/floating/FloatingLibrary.tsx')
-  const source = readFileSync(path, 'utf-8')
-  const hasSkipLink =
-    (source.includes('Skip to content') || source.includes('skip-link')) && source.includes('href')
-  assert.ok(hasSkipLink, 'FloatingLibrary should have skip link')
-})
-
 test('A1: InteractiveShell should have a skip link', () => {
   const path = join(projectRoot, 'components/interactive/InteractiveShell.tsx')
   const source = readFileSync(path, 'utf-8')

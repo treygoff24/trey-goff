@@ -9,59 +9,49 @@ test.describe('Home', () => {
     await basePage.goto('/')
   })
 
-  test('should render hero and key sections', async ({ page }) => {
+  test('renders the Aurora hero and key editorial sections', async ({ page }) => {
     await expect(
       page.getByRole('heading', {
         level: 1,
-        name: 'Designing the systems that let progress compound.',
+        name: /Designing the systems that let human progress compound\./,
       }),
     ).toBeVisible()
 
-    await expect(page.getByRole('link', { name: 'Read the work' })).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Four paths into the work' })).toBeVisible()
+    await expect(page.getByRole('link', { name: /Read the writing/ })).toBeVisible()
+    await expect(page.getByRole('link', { name: /See the work/ })).toBeVisible()
+    await expect(page.getByText('Ways in', { exact: true })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Selected work' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Featured essays' })).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Keep up with the work' })).toBeVisible()
   })
 
-  test('should surface primary CTAs and featured content', async ({ page }) => {
-    const heroSection = page.locator('section').filter({
+  test('surfaces primary CTAs and featured content', async ({ page }) => {
+    const heroSection = page.locator('header').filter({
       has: page.getByRole('heading', {
         level: 1,
-        name: 'Designing the systems that let progress compound.',
+        name: /Designing the systems that let human progress compound\./,
       }),
     })
 
-    await expect(heroSection.getByRole('link', { name: 'Read the work' })).toBeVisible()
-    await expect(heroSection.getByRole('link', { name: 'Explore projects' })).toBeVisible()
-    await expect(heroSection.getByRole('link', { name: "See what's current" })).toBeVisible()
+    await expect(heroSection.getByRole('link', { name: /Read the writing/ })).toBeVisible()
+    await expect(heroSection.getByRole('link', { name: /See the work/ })).toBeVisible()
 
-    const featuredProjectSection = page.locator('section').filter({
+    const selectedWorkSection = page.locator('section').filter({
       has: page.getByRole('heading', { name: 'Selected work' }),
     })
-    await expect(featuredProjectSection.getByRole('link', { name: 'Case study' })).toBeVisible()
-    await expect(featuredProjectSection.getByRole('link', { name: 'Colophon' })).toBeVisible()
+    await expect(selectedWorkSection.getByRole('heading', { name: 'Próspera' })).toBeVisible()
 
     const featuredWritingSection = page.locator('section').filter({
       has: page.getByRole('heading', { name: 'Featured essays' }),
     })
-    await expect(featuredWritingSection.locator('article')).toHaveCount(3)
-
-    const ctaSection = page.locator('section').filter({
-      has: page.getByRole('heading', { name: 'Keep up with the work' }),
-    })
-    await expect(ctaSection.getByRole('link', { name: 'Read the latest essays' })).toBeVisible()
-    await expect(ctaSection.getByRole('link', { name: 'Browse projects' })).toBeVisible()
+    await expect(featuredWritingSection.getByRole('link')).toHaveCount(4)
   })
 
-  test('should show the four signal tiles', async ({ page }) => {
-    const signalSection = page.locator('section').filter({
-      has: page.getByRole('heading', { name: 'Four paths into the work' }),
-    })
+  test('shows the four path rows', async ({ page }) => {
+    const pathSection = page.locator('section').filter({ hasText: 'Ways in' })
 
-    await expect(signalSection.getByRole('link', { name: 'Writing' })).toBeVisible()
-    await expect(signalSection.getByRole('link', { name: 'Projects' })).toBeVisible()
-    await expect(signalSection.getByRole('link', { name: 'Library' })).toBeVisible()
-    await expect(signalSection.getByRole('link', { name: 'Graph' })).toBeVisible()
+    await expect(pathSection.getByRole('link', { name: /Writing/ })).toBeVisible()
+    await expect(pathSection.getByRole('link', { name: /Projects/ })).toBeVisible()
+    await expect(pathSection.getByRole('link', { name: /Library/ })).toBeVisible()
+    await expect(pathSection.getByRole('link', { name: /About/ })).toBeVisible()
   })
 })

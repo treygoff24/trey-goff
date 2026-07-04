@@ -26,20 +26,21 @@ export default async function NotesPage() {
   )
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-16">
-      <header className="mb-12">
-        <h1 className="font-satoshi text-4xl font-medium text-text-1 mb-4">Notes</h1>
+    <div className="tg-page max-w-2xl">
+      <header className="tg-rise mb-12">
+        <p className="tg-eyebrow text-warm">Notes</p>
+        <h1 className="mt-6 mb-4 font-newsreader text-[clamp(2.4rem,4.5vw,3.2rem)] font-medium leading-[1.06] tracking-[-0.02em] text-text-1">
+          Field notes & dispatches
+        </h1>
         <p className="text-lg text-text-2">
           Quick thoughts, dispatches from the field, and interesting links.
         </p>
       </header>
 
       {sortedNotes.length === 0 ? (
-        <div className="rounded-lg border border-border-1 bg-surface-1 p-8 text-center">
-          <p className="text-text-3">Notes coming soon.</p>
-        </div>
+        <p className="border-t border-border-1 pt-8 text-text-3">Notes coming soon.</p>
       ) : (
-        <div className="space-y-6">
+        <div className="border-t border-border-2">
           {notesWithHtml.map((note) => (
             <NoteCard
               key={note.slug}

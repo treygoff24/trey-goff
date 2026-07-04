@@ -16,6 +16,7 @@ const TYPE_LABELS: Record<string, string> = {
   book: 'Book',
   tag: 'Tag',
   idea: 'Idea',
+  transmission: 'Transmission',
 }
 
 export function NodeInspector({ node, isMobile = false }: NodeInspectorProps) {

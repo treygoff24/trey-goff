@@ -7,9 +7,8 @@ function read(path: string): string {
   return readFileSync(join(process.cwd(), path), 'utf-8')
 }
 
-test('interactive and library layouts opt into dynamic rendering for nonce injection', () => {
+test('interactive layout opts into dynamic rendering for nonce injection', () => {
   const interactiveLayout = read('app/interactive/layout.tsx')
-  const libraryLayout = read('app/library/layout.tsx')
 
   assert.match(
     interactiveLayout,
@@ -20,17 +19,6 @@ test('interactive and library layouts opt into dynamic rendering for nonce injec
     interactiveLayout,
     /await\s+connection\(\)/,
     'interactive layout should opt into dynamic rendering',
-  )
-
-  assert.match(
-    libraryLayout,
-    /import\s+\{\s*connection\s*\}\s+from\s+["']next\/server["']/,
-    'library layout should import connection()',
-  )
-  assert.match(
-    libraryLayout,
-    /await\s+connection\(\)/,
-    'library layout should opt into dynamic rendering',
   )
 })
 

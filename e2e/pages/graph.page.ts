@@ -95,7 +95,9 @@ export class GraphPage extends BasePage {
   }
 
   async expectNodeInspectorEmpty() {
-    await expect(this.page.getByText('Click a node to view details')).toBeVisible()
+    await expect(
+      this.page.getByText(/Click a node to view details|Pick a lens, tap a quick entry point/),
+    ).toBeVisible()
   }
 
   async expectNodeInspectorHasContent() {

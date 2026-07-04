@@ -1,0 +1,4 @@
+10989.6 (0.167691)  home RMSE above
+10971.5 (0.167414)  writing RMSE above
+10718.3 (0.16355)  projects RMSE above
+14158.4 (0.216043)  about RMSE above

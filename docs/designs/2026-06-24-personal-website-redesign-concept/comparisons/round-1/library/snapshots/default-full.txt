@@ -1,0 +1,93 @@
+- link "Skip to main content" [ref=e1]
+- banner
+  - navigation "Main navigation" [ref=e2]
+    - link "Trey Goff" [ref=e3]
+    - link "WRITING" [ref=e4]
+    - link "PROJECTS" [ref=e5]
+    - link "LIBRARY" [ref=e6]
+    - link "ABOUT" [ref=e7]
+    - button "Open search (Command K)" [ref=e8]
+      - StaticText "SEARCH"
+      - StaticText "⌘K"
+- main
+  - sectionheader
+    - StaticText "LIBRARY"
+    - heading "Everything I've read, and four ways towander it." [level=1, ref=e9]
+      - StaticText "Everything I've read, and four ways towander it."
+    - paragraph
+      - StaticText "A reading life is a shape, not a list. Same collection, four instruments — map it as a constellation of ideas, browse the shelf, ride the timeline, or scan the index."
+    - StaticText "334"
+    - StaticText " books"
+    - StaticText "·"
+    - StaticText "12"
+    - StaticText " shelves"
+    - StaticText "·"
+    - StaticText "155"
+    - StaticText " topics"
+  - generic
+    - button "ALL · 334" [ref=e10]
+      - StaticText "ALL · 334"
+    - button "SCI-FI · 60" [ref=e11]
+      - StaticText "SCI-FI · 60"
+    - button "FANTASY · 41" [ref=e12]
+      - StaticText "FANTASY · 41"
+    - button "FICTION · 33" [ref=e13]
+      - StaticText "FICTION · 33"
+    - button "SCIENCE · 41" [ref=e14]
+      - StaticText "SCIENCE · 41"
+    - button "SELF & GROWTH · 23" [ref=e15]
+      - StaticText "SELF & GROWTH · 23"
+    - button "BUSINESS · 31" [ref=e16]
+      - StaticText "BUSINESS · 31"
+    - button "ECONOMICS · 14" [ref=e17]
+      - StaticText "ECONOMICS · 14"
+    - button "POLITICS · 24" [ref=e18]
+      - StaticText "POLITICS · 24"
+    - button "PHILOSOPHY · 27" [ref=e19]
+      - StaticText "PHILOSOPHY · 27"
+    - button "RELIGION · 11" [ref=e20]
+      - StaticText "RELIGION · 11"
+    - button "HISTORY · 19" [ref=e21]
+      - StaticText "HISTORY · 19"
+    - button "LIVES · 10" [ref=e22]
+      - StaticText "LIVES · 10"
+  - generic
+    - image "Constellation of books linked by shared topics"
+    - StaticText "THE CONSTELLATION"
+    - StaticText "scroll to zoom · drag to pan · bright threads link a shared topic · click a star"
+  - generic
+    - StaticText "LENS"
+    - button "Constellation" [ref=e23]
+    - button "Shelf" [ref=e24]
+    - button "River" [ref=e25]
+    - button "Index" [ref=e26]
+- contentinfo
+  - generic
+    - link "Trey Goff" [ref=e27]
+    - paragraph
+      - StaticText "Designing systems, institutions, and software that help human progress compound."
+    - StaticText "Quick access:"
+    - StaticText "⌘K"
+    - heading "ROUTES" [level=3, ref=e28]
+    - navigation "Footer navigation" [ref=e29]
+      - link "Writing" [ref=e34]
+      - link "Projects" [ref=e35]
+      - link "Library" [ref=e36]
+      - link "About" [ref=e37]
+      - link "Notes" [ref=e38]
+      - link "Media" [ref=e39]
+      - link "Topics" [ref=e40]
+    - heading "CONNECT" [level=3, ref=e30]
+    - link "Twitter" [ref=e31]
+    - link "GitHub" [ref=e32]
+    - StaticText "AURORA"
+    - navigation "Footer links" [ref=e33]
+      - link "Colophon" [ref=e41]
+      - link "RSS" [ref=e42]
+      - link "Graph" [ref=e43]
+      - link "Interactive" [ref=e44]
+    - StaticText "Online"
+    - StaticText "|"
+    - paragraph
+      - StaticText "© 2026 Trey Goff"
+- alert

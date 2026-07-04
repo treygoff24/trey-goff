@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;1,400&family=Hanken+Grotesk:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: #04130c; }
+  ::selection { background: rgba(111,214,154,0.3); }
+</style>
+</helmet>
+
+<div style="position: relative; min-height: 100vh; background: #04130c; color: #e8f3ec; overflow-x: hidden; font-family: 'Hanken Grotesk', sans-serif;">
+  <iframe src="static/aurora-veil.html" title="Aurora background" style="position: fixed; inset: 0; width: 100%; height: 100%; border: 0; z-index: 0; filter: hue-rotate(14deg) saturate(1.45) brightness(0.92);"></iframe>
+  <div style="position: fixed; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(120% 80% at 50% 10%, transparent 24%, rgba(4,19,12,0.7) 64%, rgba(4,19,12,0.96) 100%);"></div>
+
+  <div style="position: relative; z-index: 2; max-width: 1180px; margin: 0 auto; padding: 9vh 48px 14vh;">
+
+    <!-- intro -->
+    <div style="font-family: 'Geist Mono', monospace; font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: #6fd69a; margin-bottom: 20px;">Structure · No cards</div>
+    <h1 style="font-family: 'Spectral', serif; font-weight: 300; font-size: clamp(34px, 4.4vw, 56px); line-height: 1.06; letter-spacing: -0.01em; margin-bottom: 18px; max-width: 760px;">Three ways to organize, minus the floating cards.</h1>
+    <p style="font-size: 17px; font-weight: 300; line-height: 1.6; color: rgba(232,243,236,0.7); max-width: 600px;">Same four projects, three structural languages. Tell me which feels right and I'll carry it across the whole site — colors stay exactly as they are.</p>
+
+    <!-- ───── OPTION A · LEDGER ───── -->
+    <div style="margin-top: 96px;">
+      <div style="display: flex; align-items: baseline; gap: 16px; margin-bottom: 30px;">
+        <span style="font-family: 'Geist Mono', monospace; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #6fd69a;">Option A</span>
+        <span style="font-family: 'Spectral', serif; font-style: italic; font-size: 22px; color: rgba(232,243,236,0.9);">The Ledger</span>
+        <span style="font-size: 13px; color: rgba(232,243,236,0.5);">— hairline rows, generous air, an index you scan top-to-bottom.</span>
+      </div>
+      <div style="border-top: 1px solid rgba(232,243,236,0.22);">
+        <a href="#" style="display: grid; grid-template-columns: 220px 1fr 28px; gap: 36px; align-items: baseline; padding: 30px 6px; border-bottom: 1px solid rgba(232,243,236,0.14); text-decoration: none; color: #e8f3ec; transition: background 0.18s;" style-hover="background: rgba(111,214,154,0.06);">
+          <div>
+            <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(232,243,236,0.55); margin-bottom: 9px;">Software</div>
+            <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 7px; height: 7px; background: #6fd69a; display: inline-block;"></span><span style="font-size: 12.5px; color: rgba(232,243,236,0.7);">Active</span></div>
+          </div>
+          <div>
+            <h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 26px; margin-bottom: 7px;">The Control Room</h3>
+            <p style="font-size: 14.5px; line-height: 1.55; color: rgba(232,243,236,0.62); max-width: 560px;">A command-palette-first index tying essays, notes, books, and a knowledge graph into one explorable place.</p>
+          </div>
+          <span style="font-size: 18px; color: #6fd69a;">→</span>
+        </a>
+        <a href="#" style="display: grid; grid-template-columns: 220px 1fr 28px; gap: 36px; align-items: baseline; padding: 30px 6px; border-bottom: 1px solid rgba(232,243,236,0.14); text-decoration: none; color: #e8f3ec; transition: background 0.18s;" style-hover="background: rgba(111,214,154,0.06);">
+          <div>
+            <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(232,243,236,0.55); margin-bottom: 9px;">Institutional</div>
+            <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 7px; height: 7px; background: #6fd69a; display: inline-block;"></span><span style="font-size: 12.5px; color: rgba(232,243,236,0.7);">Ongoing</span></div>
+          </div>
+          <div>
+            <h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 26px; margin-bottom: 7px;">Próspera</h3>
+            <p style="font-size: 14.5px; line-height: 1.55; color: rgba(232,243,236,0.62); max-width: 560px;">Public affairs and governance for the world's most ambitious charter city — from first employee to chief of staff.</p>
+          </div>
+          <span style="font-size: 18px; color: #6fd69a;">→</span>
+        </a>
+        <a href="#" style="display: grid; grid-template-columns: 220px 1fr 28px; gap: 36px; align-items: baseline; padding: 30px 6px; border-bottom: 1px solid rgba(232,243,236,0.14); text-decoration: none; color: #e8f3ec; transition: background 0.18s;" style-hover="background: rgba(111,214,154,0.06);">
+          <div>
+            <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(232,243,236,0.55); margin-bottom: 9px;">Agent tooling</div>
+            <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 7px; height: 7px; border: 1px solid rgba(232,243,236,0.5); display: inline-block;"></span><span style="font-size: 12.5px; color: rgba(232,243,236,0.7);">CLI</span></div>
+          </div>
+          <div>
+            <h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 26px; margin-bottom: 7px;">Harness &amp; command-line tools</h3>
+            <p style="font-size: 14.5px; line-height: 1.55; color: rgba(232,243,236,0.62); max-width: 560px;">Tinkering at the frontier of what's possible with AI — harnesses and tools for working alongside agents.</p>
+          </div>
+          <span style="font-size: 18px; color: #6fd69a;">→</span>
+        </a>
+        <a href="#" style="display: grid; grid-template-columns: 220px 1fr 28px; gap: 36px; align-items: baseline; padding: 30px 6px; border-bottom: 1px solid rgba(232,243,236,0.14); text-decoration: none; color: #e8f3ec; transition: background 0.18s;" style-hover="background: rgba(111,214,154,0.06);">
+          <div>
+            <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(232,243,236,0.55); margin-bottom: 9px;">Public policy</div>
+            <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 7px; height: 7px; border: 1px solid rgba(232,243,236,0.5); display: inline-block;"></span><span style="font-size: 12.5px; color: rgba(232,243,236,0.7);">Initiative</span></div>
+          </div>
+          <div>
+            <h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 26px; margin-bottom: 7px;">Governance experiments</h3>
+            <p style="font-size: 14.5px; line-height: 1.55; color: rgba(232,243,236,0.62); max-width: 560px;">Turning institutional experiments into legible, repeatable models others can adopt.</p>
+          </div>
+          <span style="font-size: 18px; color: #6fd69a;">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ───── OPTION B · MATRIX ───── -->
+    <div style="margin-top: 110px;">
+      <div style="display: flex; align-items: baseline; gap: 16px; margin-bottom: 30px;">
+        <span style="font-family: 'Geist Mono', monospace; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #6fd69a;">Option B</span>
+        <span style="font-family: 'Spectral', serif; font-style: italic; font-size: 22px; color: rgba(232,243,236,0.9);">The Matrix</span>
+        <span style="font-size: 13px; color: rgba(232,243,236,0.5);">— a ruled grid, sharp corners, no fills. Reads architectural / institutional.</span>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid rgba(232,243,236,0.22); border-left: 1px solid rgba(232,243,236,0.22);">
+        <div style="border-right: 1px solid rgba(232,243,236,0.22); border-bottom: 1px solid rgba(232,243,236,0.22); padding: 38px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <span style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(232,243,236,0.55);">Software</span>
+            <span style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #6fd69a;">Active</span>
+          </div>
+          <h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 27px; margin-bottom: 10px;">The Control Room</h3>
+          <p style="font-size: 14.5px; line-height: 1.6; color: rgba(232,243,236,0.64);">A command-palette-first index tying essays, notes, books, and a knowledge graph into one explorable place.</p>
+        </div>
+        <div style="border-right: 1px solid rgba(232,243,236,0.22); border-bottom: 1px solid rgba(232,243,236,0.22); padding: 38px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <span style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(232,243,236,0.55);">Institutional</span>
+            <span style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #6fd69a;">Ongoing</span>
+          </div>
+          <h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 27px; margin-bottom: 10px;">Próspera</h3>
+          <p style="font-size: 14.5px; line-height: 1.6; color: rgba(232,243,236,0.64);">Public affairs and governance for the world's most ambitious charter city — from first employee to chief of staff.</p>
+        </div>
+        <div style="border-right: 1px solid rgba(232,243,236,0.22); border-bottom: 1px solid rgba(232,243,236,0.22); padding: 38px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <span style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(232,243,236,0.55);">Agent tooling</span>
+            <span style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(232,243,236,0.55);">CLI</span>
+          </div>
+          <h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 27px; margin-bottom: 10px;">Harness &amp; command-line tools</h3>
+          <p style="font-size: 14.5px; line-height: 1.6; color: rgba(232,243,236,0.64);">Tinkering at the frontier of what's possible with AI — harnesses and tools for working alongside agents.</p>
+        </div>
+        <div style="border-right: 1px solid rgba(232,243,236,0.22); border-bottom: 1px solid rgba(232,243,236,0.22); padding: 38px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <span style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(232,243,236,0.55);">Public policy</span>
+            <span style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(232,243,236,0.55);">Initiative</span>
+          </div>
+          <h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 27px; margin-bottom: 10px;">Governance experiments</h3>
+          <p style="font-size: 14.5px; line-height: 1.6; color: rgba(232,243,236,0.64);">Turning institutional experiments into legible, repeatable models others can adopt.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───── OPTION C · BROADSHEET ───── -->
+    <div style="margin-top: 110px;">
+      <div style="display: flex; align-items: baseline; gap: 16px; margin-bottom: 30px;">
+        <span style="font-family: 'Geist Mono', monospace; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #6fd69a;">Option C</span>
+        <span style="font-family: 'Spectral', serif; font-style: italic; font-size: 22px; color: rgba(232,243,236,0.9);">The Broadsheet</span>
+        <span style="font-size: 13px; color: rgba(232,243,236,0.5);">— vertical columns split by rules, with a big index number. Newspaper energy.</span>
+      </div>
+      <div style="border-top: 2px solid #6fd69a; padding-top: 4px;">
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr);">
+          <div style="padding: 28px 26px 0 0;">
+            <div style="font-family: 'Spectral', serif; font-size: 38px; font-weight: 300; color: rgba(232,243,236,0.32); line-height: 1; margin-bottom: 18px;">01</div>
+            <div style="font-family: 'Geist Mono', monospace; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: #6fd69a; margin-bottom: 12px;">Software · Active</div>
+            <h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 23px; line-height: 1.12; margin-bottom: 12px;">The Control Room</h3>
+            <p style="font-size: 14px; line-height: 1.55; color: rgba(232,243,236,0.6);">A command-palette-first index tying essays, notes, books, and a knowledge graph into one place.</p>
+          </div>
+          <div style="padding: 28px 26px 0; border-left: 1px solid rgba(232,243,236,0.18);">
+            <div style="font-family: 'Spectral', serif; font-size: 38px; font-weight: 300; color: rgba(232,243,236,0.32); line-height: 1; margin-bottom: 18px;">02</div>
+            <div style="font-family: 'Geist Mono', monospace; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: #6fd69a; margin-bottom: 12px;">Institutional · Ongoing</div>
+            <h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 23px; line-height: 1.12; margin-bottom: 12px;">Próspera</h3>
+            <p style="font-size: 14px; line-height: 1.55; color: rgba(232,243,236,0.6);">Public affairs and governance for the world's most ambitious charter city — first employee to chief of staff.</p>
+          </div>
+          <div style="padding: 28px 26px 0; border-left: 1px solid rgba(232,243,236,0.18);">
+            <div style="font-family: 'Spectral', serif; font-size: 38px; font-weight: 300; color: rgba(232,243,236,0.32); line-height: 1; margin-bottom: 18px;">03</div>
+            <div style="font-family: 'Geist Mono', monospace; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: #6fd69a; margin-bottom: 12px;">Agent tooling · CLI</div>
+            <h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 23px; line-height: 1.12; margin-bottom: 12px;">Harness &amp; CLI tools</h3>
+            <p style="font-size: 14px; line-height: 1.55; color: rgba(232,243,236,0.6);">Tinkering at the frontier of what's possible with AI — harnesses for working alongside agents.</p>
+          </div>
+          <div style="padding: 28px 0 0 26px; border-left: 1px solid rgba(232,243,236,0.18);">
+            <div style="font-family: 'Spectral', serif; font-size: 38px; font-weight: 300; color: rgba(232,243,236,0.32); line-height: 1; margin-bottom: 18px;">04</div>
+            <div style="font-family: 'Geist Mono', monospace; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: #6fd69a; margin-bottom: 12px;">Public policy · Initiative</div>
+            <h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 23px; line-height: 1.12; margin-bottom: 12px;">Governance experiments</h3>
+            <p style="font-size: 14px; line-height: 1.55; color: rgba(232,243,236,0.6);">Turning institutional experiments into legible, repeatable models others can adopt.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

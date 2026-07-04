@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Hanken+Grotesk:wght@300;400;500;600;700&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: #04130c; }
+  ::selection { background: rgba(111,214,154,0.3); }
+  @keyframes tgRise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes tgFade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes tgPulse { 0%,100% { opacity: 0.4; } 50% { opacity: 0.9; } }
+  .tg-scroll::-webkit-scrollbar { height: 9px; width: 9px; }
+  .tg-scroll::-webkit-scrollbar-track { background: transparent; }
+  .tg-scroll::-webkit-scrollbar-thumb { background: rgba(111,214,154,0.22); border-radius: 5px; }
+  .tg-scroll::-webkit-scrollbar-thumb:hover { background: rgba(111,214,154,0.4); }
+</style>
+</helmet>
+
+<div style="position: relative; min-height: 100vh; background: #04130c; color: #e8f3ec; overflow-x: hidden; font-family: 'Hanken Grotesk', sans-serif;">
+  <iframe src="static/aurora-veil.html" title="Aurora background" style="position: fixed; inset: 0; width: 100%; height: 100%; border: 0; z-index: 0; filter: hue-rotate(14deg) saturate(1.45) brightness(0.92);"></iframe>
+  <div style="position: fixed; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(120% 75% at 50% 0%, transparent 24%, rgba(4,19,12,0.62) 66%, rgba(4,19,12,0.95) 100%);"></div>
+
+  <div style="position: relative; z-index: 2;">
+
+    <!-- nav -->
+    <nav style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; row-gap: 12px; padding: 28px 48px; max-width: 1240px; margin: 0 auto;">
+      <a href="Trey%20Goff%20-%20Home.dc.html" style="font-family: 'Spectral', serif; font-weight: 500; font-size: 21px; color: #e8f3ec; text-decoration: none; white-space: nowrap;">Trey Goff</a>
+      <div style="display: flex; gap: 30px; align-items: center; font-size: 14px; font-weight: 500;">
+        <a href="Writing.dc.html" style="color: rgba(232,243,236,0.7); text-decoration: none;" style-hover="color: #6fd69a;">Writing</a>
+        <a href="Projects.dc.html" style="color: rgba(232,243,236,0.7); text-decoration: none;" style-hover="color: #6fd69a;">Projects</a>
+        <a href="Library.dc.html" style="color: #6fd69a; text-decoration: none;">Library</a>
+        <a href="About.dc.html" style="color: rgba(232,243,236,0.7); text-decoration: none;" style-hover="color: #6fd69a;">About</a>
+      </div>
+    </nav>
+
+    <!-- header -->
+    <header style="max-width: 1240px; margin: 0 auto; padding: 9vh 48px 3vh; animation: tgRise 0.8s cubic-bezier(0.16,1,0.3,1) both;">
+      <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: #6fd69a; margin-bottom: 22px;">Library</div>
+      <h1 style="font-family: 'Spectral', serif; font-weight: 300; font-size: clamp(38px, 5vw, 66px); line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 22px; max-width: 880px; text-wrap: balance;">Everything I've read, and four ways to <span style="font-style: italic; color: #6fd69a;">wander</span> it.</h1>
+      <p style="font-size: clamp(17px, 1.4vw, 20px); font-weight: 300; line-height: 1.6; color: rgba(232,243,236,0.74); max-width: 620px; margin-bottom: 26px;">A reading life is a shape, not a list. Same collection, four instruments — map it as a constellation of ideas, browse the shelf, ride the timeline, or scan the index.</p>
+      <div style="display: flex; gap: 22px; flex-wrap: wrap; font-family: 'Geist Mono', monospace; font-size: 12px; letter-spacing: 0.06em; color: rgba(232,243,236,0.55);">
+        <span><span style="color: #6fd69a;">{{ statBooks }}</span> books</span>
+        <span style="color: rgba(232,243,236,0.25);">·</span>
+        <span><span style="color: #6fd69a;">{{ statShelves }}</span> shelves</span>
+        <span style="color: rgba(232,243,236,0.25);">·</span>
+        <span><span style="color: #6fd69a;">{{ statTopics }}</span> topics</span>
+      </div>
+    </header>
+
+    <!-- category filter -->
+    <div style="max-width: 1240px; margin: 0 auto; padding: 10px 48px 22px;">
+      <div class="tg-scroll" style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px;">
+        <button onClick="{{ clearFilter }}" style="{{ allChipStyle }}">All · {{ statBooks }}</button>
+        <sc-for list="{{ catChips }}" as="c" hint-placeholder-count="11">
+          <button onClick="{{ c.onClick }}" style="{{ c.style }}"><span style="width: 7px; height: 7px; border-radius: 50%; display: inline-block; background: {{ c.color }}; margin-right: 8px;"></span>{{ c.label }} · {{ c.count }}</button>
+        </sc-for>
+      </div>
+    </div>
+
+    <!-- ════════ LENS AREA ════════ -->
+    <sc-if value="{{ loaded }}" hint-placeholder-val="{{ false }}">
+
+      <!-- ─── LENS 1 · CONSTELLATION ─── -->
+      <sc-if value="{{ isConstellation }}" hint-placeholder-val="{{ true }}">
+      <section style="max-width: 1240px; margin: 0 auto; padding: 6px 32px 36px;">
+        <div style="position: relative; height: 76vh; min-height: 520px; border: 1px solid rgba(111,214,154,0.16); border-radius: 4px; overflow: hidden; background: radial-gradient(120% 90% at 50% 42%, rgba(4,19,12,0.12), rgba(4,19,12,0.66));">
+          <canvas ref="{{ setCanvas }}" style="display: block; width: 100%; height: 100%; cursor: grab; touch-action: none;"></canvas>
+          <div style="position: absolute; top: 16px; left: 20px; pointer-events: none; font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(232,243,236,0.5);">The Constellation</div>
+          <div style="position: absolute; bottom: 14px; left: 20px; pointer-events: none; font-family: 'Geist Mono', monospace; font-size: 10.5px; letter-spacing: 0.05em; color: rgba(232,243,236,0.42);">scroll to zoom · drag to pan · bright threads link a shared topic · click a star</div>
+        </div>
+      </section>
+      </sc-if>
+
+      <!-- ─── LENS 2 · THE SHELF ─── -->
+      <sc-if value="{{ isShelf }}" hint-placeholder-val="{{ true }}">
+      <section style="max-width: 1240px; margin: 0 auto; padding: 6px 48px 40px;">
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 34px;">
+          <span style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(232,243,236,0.45); margin-right: 6px;">Arrange by</span>
+          <sc-for list="{{ shelfSorts }}" as="s" hint-placeholder-count="6">
+            <button onClick="{{ s.onClick }}" style="{{ s.style }}">{{ s.label }}</button>
+          </sc-for>
+        </div>
+        <sc-for list="{{ shelves }}" as="shelf" hint-placeholder-count="9">
+          <div style="display: flex; align-items: flex-end; flex-wrap: wrap; gap: 7px; border-bottom: 2px solid rgba(111,214,154,0.22); padding: 0 2px; margin-bottom: 30px; min-height: 196px;">
+            <sc-for list="{{ shelf }}" as="b" hint-placeholder-count="16">
+              <div onClick="{{ b.open }}" style="{{ b.spineStyle }}" style-hover="transform: translateY(-12px); filter: brightness(1.32); box-shadow: 0 16px 32px rgba(0,0,0,0.5); z-index: 3;">
+                <span style="writing-mode: vertical-rl; text-orientation: mixed; white-space: nowrap; overflow: hidden; max-height: calc(100% - 26px); font-family: 'Spectral', serif; font-weight: 500; font-size: 13px; letter-spacing: 0.01em; color: rgba(232,243,236,0.94);">{{ b.t }}</span>
+                <span style="writing-mode: vertical-rl; white-space: nowrap; overflow: hidden; max-height: 76px; font-family: 'Geist Mono', monospace; font-size: 8.5px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(232,243,236,0.5);">{{ b.a }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </section>
+      </sc-if>
+
+      <!-- ─── LENS 3 · MARGINALIA ─── -->
+      <sc-if value="{{ isMarginalia }}" hint-placeholder-val="{{ true }}">
+      <section style="max-width: 1060px; margin: 0 auto; padding: 6px 48px 40px;">
+        <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(232,243,236,0.45); margin-bottom: 22px; border-bottom: 1px solid rgba(232,243,236,0.12); padding-bottom: 16px;">Marginalia — the line that stuck</div>
+        <sc-for list="{{ margView }}" as="q" hint-placeholder-count="8">
+          <div onClick="{{ q.open }}" style="{{ q.wrapStyle }}" style-hover="background: rgba(111,214,154,0.05);">
+            <p style="font-family: 'Spectral', serif; font-weight: 300; font-style: italic; font-size: clamp(20px, 2.2vw, 29px); line-height: 1.4; color: #e8f3ec; margin-bottom: 14px; text-wrap: pretty;">{{ q.take }}</p>
+            <div style="font-family: 'Geist Mono', monospace; font-size: 11.5px; letter-spacing: 0.06em; color: {{ q.color }};">{{ q.cite }}</div>
+          </div>
+        </sc-for>
+      </section>
+      </sc-if>
+
+      <!-- ─── LENS 4 · THE RIVER ─── -->
+      <sc-if value="{{ isRiver }}" hint-placeholder-val="{{ true }}">
+      <section style="margin: 0 auto; padding: 6px 0 40px; max-width: 1240px;">
+        <div style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(232,243,236,0.45); margin-bottom: 8px; padding: 0 48px;">The River — every book, by the year it was published · taller tick = more idea-threads</div>
+        <div class="tg-scroll" style="overflow-x: auto; padding: 22px 48px 18px;">
+          <div style="display: flex; align-items: flex-end; gap: 12px; min-height: 380px;">
+            <sc-for list="{{ riverYears }}" as="yr" hint-placeholder-count="14">
+              <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="display: flex; flex-direction: column-reverse; gap: 3px; width: 62px;">
+                  <sc-for list="{{ yr.books }}" as="b" hint-placeholder-count="6">
+                    <div onClick="{{ b.open }}" title="{{ b.tip }}" style="{{ b.tickStyle }}" style-hover="filter: brightness(1.45);"></div>
+                  </sc-for>
+                </div>
+                <div style="margin-top: 12px; border-top: 1px solid rgba(232,243,236,0.18); width: 100%; text-align: center; padding-top: 9px; font-family: 'Geist Mono', monospace; font-size: 12px; color: rgba(232,243,236,0.6);">{{ yr.year }}</div>
+                <div style="font-family: 'Geist Mono', monospace; font-size: 10px; color: rgba(232,243,236,0.35); margin-top: 3px;">{{ yr.count }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+      </sc-if>
+
+      <!-- ─── LENS 5 · THE INDEX ─── -->
+      <sc-if value="{{ isIndex }}" hint-placeholder-val="{{ true }}">
+      <section style="max-width: 1060px; margin: 0 auto; padding: 6px 48px 50px;">
+        <div style="display: grid; grid-template-columns: 42px 1fr 150px 96px 56px; gap: 20px; align-items: center; padding: 0 8px 14px; border-bottom: 1px solid rgba(232,243,236,0.22); font-family: 'Geist Mono', monospace; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(232,243,236,0.5);">
+          <span>№</span>
+          <sc-for list="{{ indexSorts }}" as="s" hint-placeholder-count="4">
+            <button onClick="{{ s.onClick }}" style="{{ s.style }}">{{ s.label }}</button>
+          </sc-for>
+        </div>
+        <sc-for list="{{ indexView }}" as="b" hint-placeholder-count="20">
+          <div onClick="{{ b.open }}" style="{{ b.rowStyle }}" style-hover="background: rgba(111,214,154,0.06);">
+            <span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: rgba(232,243,236,0.32);">{{ b.num }}</span>
+            <div>
+              <h3 style="font-family: 'Spectral', serif; font-weight: 500; font-size: 18px; color: #e8f3ec; margin-bottom: 2px;">{{ b.t }}</h3>
+              <span style="font-size: 13px; color: rgba(232,243,236,0.55);">{{ b.a }}</span>
+            </div>
+            <span style="display: inline-flex; align-items: center; gap: 8px; font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.04em; color: rgba(232,243,236,0.6);"><span style="width: 7px; height: 7px; border-radius: 50%; background: {{ b.color }}; display: inline-block;"></span>{{ b.catLabel }}</span>
+            <span style="font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.03em; color: rgba(232,243,236,0.5); text-transform: capitalize; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ b.topTopic }}</span>
+            <span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: rgba(232,243,236,0.5); text-align: right;">{{ b.y }}</span>
+          </div>
+        </sc-for>
+      </section>
+      </sc-if>
+
+    </sc-if>
+
+    <!-- loading placeholder -->
+    <sc-if value="{{ notLoaded }}" hint-placeholder-val="{{ true }}">
+    <section style="max-width: 1240px; margin: 0 auto; padding: 80px 48px; display: flex; align-items: center; justify-content: center; min-height: 50vh;">
+      <div style="font-family: 'Geist Mono', monospace; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(232,243,236,0.5); animation: tgPulse 1.6s ease-in-out infinite;">Charting the library…</div>
+    </section>
+    </sc-if>
+
+    <!-- footer -->
+    <footer style="max-width: 1240px; margin: 40px auto 90px; padding: 44px 48px; border-top: 1px solid rgba(232,243,236,0.1); display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 24px;">
+      <div style="max-width: 420px;">
+        <a href="Trey%20Goff%20-%20Home.dc.html" style="font-family: 'Spectral', serif; font-size: 20px; margin-bottom: 10px; color: #e8f3ec; text-decoration: none; display: inline-block;">Trey Goff</a>
+        <p style="font-size: 13.5px; line-height: 1.55; color: rgba(232,243,236,0.55);">The shelf is never finished. New books join the constellation as I read them.</p>
+      </div>
+      <div style="display: flex; gap: 24px; font-size: 13px; font-weight: 600;">
+        <a href="https://twitter.com/treygoff" style="color: rgba(232,243,236,0.65); text-decoration: none;" style-hover="color: #6fd69a;">Twitter</a>
+        <a href="https://github.com/treygoff" style="color: rgba(232,243,236,0.65); text-decoration: none;" style-hover="color: #6fd69a;">GitHub</a>
+        <span style="color: rgba(232,243,236,0.4);">© 2026</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- detail drawer -->
+  <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position: fixed; inset: 0; z-index: 60;">
+    <div onClick="{{ closeDrawer }}" style="position: absolute; inset: 0; background: rgba(2,10,7,0.62); backdrop-filter: blur(3px); animation: tgFade 0.3s both;"></div>
+    <div style="position: absolute; top: 0; right: 0; height: 100%; width: min(440px, 92vw); background: rgba(6,20,13,0.97); border-left: 1px solid rgba(111,214,154,0.25); box-shadow: -24px 0 70px rgba(0,0,0,0.55); padding: 38px 36px; display: flex; flex-direction: column; animation: tgRise 0.35s cubic-bezier(0.16,1,0.3,1) both; overflow-y: auto;">
+      <button onClick="{{ closeDrawer }}" style="align-self: flex-end; background: transparent; border: 1px solid rgba(232,243,236,0.2); color: rgba(232,243,236,0.7); width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 16px; line-height: 1; margin-bottom: 22px;" style-hover="border-color: #6fd69a; color: #6fd69a;">×</button>
+      <div style="display: inline-flex; align-items: center; gap: 9px; font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: {{ sb.color }}; margin-bottom: 18px;"><span style="width: 8px; height: 8px; border-radius: 50%; background: {{ sb.color }}; display: inline-block;"></span>{{ sb.catLabel }}</div>
+      <h2 style="font-family: 'Spectral', serif; font-weight: 400; font-size: 32px; line-height: 1.12; color: #e8f3ec; margin-bottom: 10px; text-wrap: balance;">{{ sb.t }}</h2>
+      <div style="font-size: 16px; color: rgba(232,243,236,0.65); margin-bottom: 26px;">{{ sb.a }}</div>
+      <div style="display: flex; align-items: center; gap: 20px; padding: 16px 0; border-top: 1px solid rgba(232,243,236,0.12); border-bottom: 1px solid rgba(232,243,236,0.12); margin-bottom: 22px;">
+        <div>
+          <div style="font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(232,243,236,0.45); margin-bottom: 6px;">Published</div>
+          <div style="font-family: 'Geist Mono', monospace; font-size: 15px; color: #e8f3ec;">{{ sb.y }}</div>
+        </div>
+        <div style="width: 1px; height: 30px; background: rgba(232,243,236,0.12);"></div>
+        <sc-if value="{{ sb.hasRating }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(232,243,236,0.45); margin-bottom: 6px;">Rating</div>
+          <span style="position: relative; font-family: 'Geist Mono', monospace; font-size: 15px; letter-spacing: 3px; color: rgba(232,243,236,0.14);">█████<span style="position: absolute; left: 0; top: 0; overflow: hidden; white-space: nowrap; width: {{ sb.ratingW }}; color: {{ sb.color }};">█████</span></span>
+        </div>
+        </sc-if>
+        <sc-if value="{{ sb.noRating }}" hint-placeholder-val="{{ true }}">
+        <div>
+          <div style="font-family: 'Geist Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(232,243,236,0.45); margin-bottom: 6px;">Threads</div>
+          <div style="font-family: 'Geist Mono', monospace; font-size: 15px; color: {{ sb.color }};">{{ sb.deg }} <span style="color: rgba(232,243,236,0.4); font-size: 12px;">kindred reads</span></div>
+        </div>
+        </sc-if>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 24px;">
+        <sc-for list="{{ sb.topicChips }}" as="tc" hint-placeholder-count="4">
+          <span style="{{ tc.style }}">{{ tc.label }}</span>
+        </sc-for>
+      </div>
+      <sc-if value="{{ sb.hasTake }}" hint-placeholder-val="{{ false }}">
+        <p style="font-family: 'Spectral', serif; font-weight: 300; font-style: italic; font-size: 19px; line-height: 1.5; color: rgba(232,243,236,0.9); margin-bottom: 28px; text-wrap: pretty;">{{ sb.take }}</p>
+      </sc-if>
+      <button onClick="{{ sb.seeShelf }}" style="margin-top: auto; align-self: flex-start; font-family: 'Geist Mono', monospace; font-size: 12px; letter-spacing: 0.06em; color: #04130c; background: #6fd69a; border: 0; padding: 13px 22px; border-radius: 2px; cursor: pointer;" style-hover="background: #97e8bb;">See the {{ sb.catLabel }} shelf →</button>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- lens switcher -->
+  <div style="position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); z-index: 50; display: flex; align-items: center; gap: 5px; padding: 6px; background: rgba(7,16,12,0.78); backdrop-filter: blur(16px); border: 1px solid rgba(111,214,154,0.18); border-radius: 100px; box-shadow: 0 12px 40px rgba(0,0,0,0.55); font-family: 'Geist Mono', monospace;">
+    <span style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(232,243,236,0.4); padding: 0 8px 0 12px;">Lens</span>
+    <sc-for list="{{ lensTabs }}" as="tab" hint-placeholder-count="5">
+      <button onClick="{{ tab.onClick }}" style="{{ tab.style }}">{{ tab.label }}</button>
+    </sc-for>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    books: [], cats: {}, loaded: false,
+    lens: 'constellation', activeCat: null, selected: null,
+    shelfSort: 'shelf', indexSort: { key: 'year', asc: false },
+  };
+
+  // ─── lifecycle ───
+  componentDidMount() {
+    import('./library-data.js')
+      .then((m) => {
+        this.setState({ books: m.LIBRARY, cats: m.CATEGORIES, loaded: true }, () => {
+          if (this._canvas && !this.nodes) { this.buildNodes(); this.fitCamera(); this.startLoop(); }
+        });
+      })
+      .catch((e) => console.error('library-data load failed', e));
+    window.addEventListener('resize', this._onResize);
+  }
+  componentWillUnmount() {
+    this.stopLoop();
+    window.removeEventListener('resize', this._onResize);
+    this.detachCanvas();
+  }
+  _onResize = () => { if (this.nodes && this._canvas) this.fitCamera(); };
+
+  // ─── color helper ───
+  catColor(hue, l, c, a) {
+    const cc = (c === undefined) ? 0.13 : c;
+    const aa = (a === undefined) ? 1 : a;
+    return 'oklch(' + l + ' ' + cc + ' ' + hue + ' / ' + aa + ')';
+  }
+  hash(s) {
+    let h = 2166136261;
+    for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return (h >>> 0);
+  }
+  // canvas color parsing has no oklch() in this engine — convert to rgba for the canvas
+  catRGBA(hue, l, c, a) {
+    const cc = (c === undefined) ? 0.13 : c;
+    const aa = (a === undefined) ? 1 : a;
+    const hr = hue * Math.PI / 180;
+    const A = cc * Math.cos(hr), B = cc * Math.sin(hr);
+    let ll = l + 0.3963377774 * A + 0.2158037573 * B;
+    let mm = l - 0.1055613458 * A - 0.0638541728 * B;
+    let ss = l - 0.0894841775 * A - 1.2914855480 * B;
+    ll = ll * ll * ll; mm = mm * mm * mm; ss = ss * ss * ss;
+    const r = 4.0767416621 * ll - 3.3077115913 * mm + 0.2309699292 * ss;
+    const g = -1.2684380046 * ll + 2.6097574011 * mm - 0.3413193965 * ss;
+    const b = -0.0041960863 * ll - 0.7034186147 * mm + 1.7076147010 * ss;
+    const gam = (x) => { x = x <= 0.0031308 ? 12.92 * x : 1.055 * Math.pow(Math.max(0, x), 1 / 2.4) - 0.055; return Math.max(0, Math.min(1, x)); };
+    return 'rgba(' + Math.round(gam(r) * 255) + ',' + Math.round(gam(g) * 255) + ',' + Math.round(gam(b) * 255) + ',' + aa + ')';
+  }
+
+  // ─── constellation: layout ───
+  buildNodes() {
+    const books = this.state.books, cats = this.state.cats;
+    if (!books.length) return;
+    // ring seated by kinship — every neighbor shares readers, closed as a loop
+    const kinship = ['scifi', 'science', 'growth', 'business', 'econ', 'politics', 'phil', 'religion', 'history', 'lives', 'fiction', 'fantasy'];
+    const codes = kinship.filter((c) => cats[c]).concat(Object.keys(cats).filter((c) => kinship.indexOf(c) < 0));
+    const N = codes.length, R = 560;
+
+    // ── topic graph: books linked when they share a *specific* topic ──
+    // (a topic on more than GENERIC books is basically the genre itself — skip it,
+    //  it would wire everyone to everyone and mean nothing)
+    const GENERIC = 24;
+    const topicMap = {};
+    books.forEach((b, idx) => { (b.tp || []).forEach((t) => { (topicMap[t] || (topicMap[t] = [])).push(idx); }); });
+    const neighbors = books.map(() => new Set());
+    Object.keys(topicMap).forEach((t) => {
+      const ids = topicMap[t];
+      if (ids.length < 2 || ids.length > GENERIC) return;
+      for (let i = 0; i < ids.length; i++) for (let j = i + 1; j < ids.length; j++) { neighbors[ids[i]].add(ids[j]); neighbors[ids[j]].add(ids[i]); }
+    });
+    const degree = books.map((b, i) => neighbors[i].size);
+    const maxDeg = Math.max(1, ...degree);
+    this.degree = degree;
+
+    // ── place: the most-connected books are pulled to each genre's bright core ──
+    const groups = {};
+    codes.forEach((code, i) => { groups[code] = { angle: (i / N) * Math.PI * 2, list: [] }; });
+    books.forEach((b, idx) => { (groups[b.c] || (groups[b.c] = { angle: 0, list: [] })).list.push({ b, idx }); });
+    const golden = Math.PI * (3 - Math.sqrt(5));
+    const nodes = [], nodeByIdx = {};
+    codes.forEach((code) => {
+      const g = groups[code]; if (!g) return;
+      const cx = Math.cos(g.angle) * R, cy = Math.sin(g.angle) * R;
+      const hue = (cats[code] || {}).hue || 160;
+      g.list.sort((p, q) => degree[q.idx] - degree[p.idx] || (q.b.r || 0) - (p.b.r || 0));
+      g.list.forEach((it, j) => {
+        const ang = j * golden, rad = 22 * Math.sqrt(j + 0.7);
+        const dn = degree[it.idx] / maxDeg;
+        const node = {
+          idx: it.idx, c: code, hue,
+          x: cx + Math.cos(ang) * rad, y: cy + Math.sin(ang) * rad,
+          r: 2.0 + Math.sqrt(dn) * 4.2, deg: degree[it.idx], dn,
+          t: it.b.t, a: it.b.a, phase: Math.random() * Math.PI * 2,
+        };
+        nodes.push(node); nodeByIdx[it.idx] = node;
+      });
+    });
+    this.nodes = nodes;
+
+    // ── edges ──
+    const edges = [];
+    // faint intra-genre spiral filler (the soft "constellation" texture)
+    codes.forEach((code) => {
+      const gn = nodes.filter((n) => n.c === code);
+      for (let k = 1; k < gn.length; k++) edges.push({ a: gn[k - 1], b: gn[k], strong: false });
+    });
+    // bright idea-threads: shared specific topic, chained around the map (not a full clique)
+    const seen = {};
+    Object.keys(topicMap).forEach((t) => {
+      const ids = topicMap[t].filter((i) => nodeByIdx[i]);
+      if (ids.length < 2 || ids.length > GENERIC) return;
+      ids.sort((p, q) => Math.atan2(nodeByIdx[p].y, nodeByIdx[p].x) - Math.atan2(nodeByIdx[q].y, nodeByIdx[q].x));
+      for (let k = 1; k < ids.length; k++) {
+        const a = ids[k - 1], b = ids[k], key = a < b ? a + '-' + b : b + '-' + a;
+        if (seen[key]) continue; seen[key] = 1;
+        edges.push({ a: nodeByIdx[a], b: nodeByIdx[b], strong: true });
+      }
+    });
+    this.edges = edges;
+  }
+
+  fitCamera() {
+    const el = this._canvas; if (!el || !this.nodes) return;
+    const W = el.clientWidth, H = el.clientHeight;
+    if (!W || !H) return; // section not laid out yet — try again next frame
+    let minX = 1e9, minY = 1e9, maxX = -1e9, maxY = -1e9;
+    this.nodes.forEach((n) => { minX = Math.min(minX, n.x); maxX = Math.max(maxX, n.x); minY = Math.min(minY, n.y); maxY = Math.max(maxY, n.y); });
+    const pad = 70;
+    const sc = Math.min(W / ((maxX - minX) + pad * 2), H / ((maxY - minY) + pad * 2));
+    this.cam = { scale: sc, x: W / 2 - ((minX + maxX) / 2) * sc, y: H / 2 - ((minY + maxY) / 2) * sc };
+  }
+
+  // ─── constellation: canvas wiring ───
+  setCanvas = (el) => {
+    if (!el) { this.detachCanvas(); this.stopLoop(); this._canvas = null; return; }
+    this._canvas = el; this.attachCanvas(el);
+    if (this.state.books.length && !this.nodes) this.buildNodes();
+    this.fitCamera();
+    // always restart from a clean slate — guards against a stale _raf left by a
+    // double mount (React 18) that would otherwise block startLoop forever
+    this.stopLoop(); this.startLoop();
+    // kick a paint once layout has settled, in case the section had 0 size on mount
+    requestAnimationFrame(() => { this.fitCamera(); this.draw(); });
+  };
+  attachCanvas(el) {
+    el.addEventListener('wheel', this.onWheel, { passive: false });
+    el.addEventListener('pointerdown', this.onDown);
+    el.addEventListener('pointermove', this.onMoveCanvas);
+    el.addEventListener('pointerup', this.onUp);
+    el.addEventListener('pointerleave', this.onLeave);
+    if (window.ResizeObserver) {
+      this._ro = new ResizeObserver(() => { this.fitCamera(); if (!this._raf) this.startLoop(); });
+      this._ro.observe(el);
+    }
+  }
+  detachCanvas() {
+    const el = this._canvas; if (!el) return;
+    el.removeEventListener('wheel', this.onWheel);
+    el.removeEventListener('pointerdown', this.onDown);
+    el.removeEventListener('pointermove', this.onMoveCanvas);
+    el.removeEventListener('pointerup', this.onUp);
+    el.removeEventListener('pointerleave', this.onLeave);
+    if (this._ro) { try { this._ro.disconnect(); } catch (e) {} this._ro = null; }
+  }
+  startLoop() {
+    if (this._running) return;
+    this._running = true;
+    const frame = () => {
+      if (!this._running) return;
+      try { this.draw(); } catch (e) { /* never let one bad frame kill the loop */ }
+      this._raf = requestAnimationFrame(frame);
+    };
+    this._raf = requestAnimationFrame(frame);
+    // rAF is paused while the iframe is offscreen/backgrounded, which would leave the
+    // first paint blank — this watchdog guarantees draw() still runs (~7fps min) regardless.
+    if (this._watch) clearInterval(this._watch);
+    this._watch = setInterval(() => { if (this._running) { try { this.draw(); } catch (e) {} } }, 140);
+  }
+  stopLoop() {
+    this._running = false;
+    if (this._raf) { cancelAnimationFrame(this._raf); this._raf = null; }
+    if (this._watch) { clearInterval(this._watch); this._watch = null; }
+  }
+
+  onWheel = (e) => {
+    e.preventDefault(); if (!this.cam) return;
+    const el = this._canvas, rect = el.getBoundingClientRect();
+    const mx = e.clientX - rect.left, my = e.clientY - rect.top, cam = this.cam;
+    const factor = Math.exp(-e.deltaY * 0.0014);
+    const ns = Math.max(0.18, Math.min(6, cam.scale * factor));
+    const wx = (mx - cam.x) / cam.scale, wy = (my - cam.y) / cam.scale;
+    cam.scale = ns; cam.x = mx - wx * ns; cam.y = my - wy * ns;
+  };
+  onDown = (e) => {
+    this._drag = { x: e.clientX, y: e.clientY, camx: this.cam.x, camy: this.cam.y, moved: false };
+    if (this._canvas) this._canvas.style.cursor = 'grabbing';
+  };
+  onMoveCanvas = (e) => {
+    if (!this.cam || !this._canvas) return;
+    const rect = this._canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    if (this._drag) {
+      const dx = e.clientX - this._drag.x, dy = e.clientY - this._drag.y;
+      if (Math.abs(dx) + Math.abs(dy) > 3) this._drag.moved = true;
+      this.cam.x = this._drag.camx + dx; this.cam.y = this._drag.camy + dy;
+    }
+    this.hover = this.pick(mx, my);
+    this._canvas.style.cursor = this._drag ? 'grabbing' : (this.hover ? 'pointer' : 'grab');
+  };
+  onUp = (e) => {
+    if (this._drag && !this._drag.moved && this._canvas) {
+      const rect = this._canvas.getBoundingClientRect();
+      const hit = this.pick(e.clientX - rect.left, e.clientY - rect.top);
+      if (hit) this.setState({ selected: hit.idx });
+    }
+    this._drag = null;
+    if (this._canvas) this._canvas.style.cursor = this.hover ? 'pointer' : 'grab';
+  };
+  onLeave = () => { this._drag = null; this.hover = null; };
+
+  pick(mx, my) {
+    if (!this.nodes || !this.cam) return null;
+    const cam = this.cam; let best = null, bestD = 1e9;
+    for (const n of this.nodes) {
+      const sx = n.x * cam.scale + cam.x, sy = n.y * cam.scale + cam.y;
+      const d = Math.hypot(sx - mx, sy - my);
+      if (d <= n.r + 7 && d < bestD) { bestD = d; best = n; }
+    }
+    return best;
+  }
+  roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  draw() {
+    const el = this._canvas; if (!el) return;
+    if (!this.nodes) { if (this.state.books.length) this.buildNodes(); else return; }
+    if (!this.cam) this.fitCamera();
+    const dpr = window.devicePixelRatio || 1;
+    const W = el.clientWidth, H = el.clientHeight;
+    if (W === 0 || H === 0) return;
+    if (el.width !== Math.round(W * dpr) || el.height !== Math.round(H * dpr)) { el.width = Math.round(W * dpr); el.height = Math.round(H * dpr); }
+    const ctx = el.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    const cam = this.cam, t = performance.now() / 1000, active = this.state.activeCat;
+
+    // edges
+    for (const e of this.edges) {
+      const on = !active || e.a.c === active || e.b.c === active;
+      const ax = e.a.x * cam.scale + cam.x, ay = e.a.y * cam.scale + cam.y;
+      const bx = e.b.x * cam.scale + cam.x, by = e.b.y * cam.scale + cam.y;
+      ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by);
+      if (e.strong) { ctx.strokeStyle = this.catRGBA(e.a.hue, 0.8, 0.13, on ? 0.32 : 0.04); ctx.lineWidth = 1; }
+      else { ctx.strokeStyle = this.catRGBA(e.a.hue, 0.72, 0.07, on ? 0.11 : 0.02); ctx.lineWidth = 0.6; }
+      ctx.stroke();
+    }
+    // nodes
+    for (const n of this.nodes) {
+      const on = !active || n.c === active;
+      const sx = n.x * cam.scale + cam.x, sy = n.y * cam.scale + cam.y;
+      if (sx < -40 || sx > W + 40 || sy < -40 || sy > H + 40) continue;
+      const tw = 0.72 + 0.28 * Math.sin(t * 1.4 + n.phase);
+      const baseA = on ? 1 : 0.12;
+      const L = 0.62 + n.dn * 0.2;
+      const g = ctx.createRadialGradient(sx, sy, 0, sx, sy, n.r * 4.2);
+      g.addColorStop(0, this.catRGBA(n.hue, L, 0.14, baseA * tw * 0.55));
+      g.addColorStop(1, this.catRGBA(n.hue, L, 0.14, 0));
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(sx, sy, n.r * 4.2, 0, 7); ctx.fill();
+      ctx.fillStyle = this.catRGBA(n.hue, Math.min(0.96, L + 0.16), 0.13, baseA * Math.min(1, tw + 0.25));
+      ctx.beginPath(); ctx.arc(sx, sy, n.r, 0, 7); ctx.fill();
+    }
+    // hover label
+    if (this.hover) {
+      const n = this.hover;
+      const sx = n.x * cam.scale + cam.x, sy = n.y * cam.scale + cam.y;
+      ctx.beginPath(); ctx.arc(sx, sy, n.r + 4, 0, 7);
+      ctx.strokeStyle = this.catRGBA(n.hue, 0.85, 0.14, 1); ctx.lineWidth = 1.5; ctx.stroke();
+      ctx.font = '600 12.5px Geist, sans-serif';
+      const wTitle = ctx.measureText(n.t).width;
+      ctx.font = '400 10px "Geist Mono", monospace';
+      const wSub = ctx.measureText(n.a).width;
+      const bw = Math.max(wTitle, wSub) + 22;
+      let bx = sx + 14, by = sy - 8;
+      if (bx + bw > W - 6) bx = sx - 14 - bw;
+      if (by - 20 < 6) by = 26;
+      ctx.fillStyle = 'rgba(4,16,11,0.92)';
+      ctx.strokeStyle = this.catRGBA(n.hue, 0.6, 0.14, 1); ctx.lineWidth = 1;
+      this.roundRect(ctx, bx, by - 22, bw, 44, 7); ctx.fill(); ctx.stroke();
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillStyle = '#eef3ec'; ctx.font = '600 12.5px Geist, sans-serif';
+      ctx.fillText(n.t, bx + 11, by - 4);
+      ctx.fillStyle = 'rgba(232,243,236,0.6)'; ctx.font = '400 10px "Geist Mono", monospace';
+      ctx.fillText(n.a, bx + 11, by + 12);
+    }
+  }
+
+  // ─── tab/chip styles ───
+  lensTabStyle(active) {
+    return [
+      'font-family: Geist Mono, monospace', 'font-size: 12px', 'letter-spacing: 0.02em',
+      'border: 0', 'cursor: pointer', 'padding: 8px 15px', 'border-radius: 100px', 'transition: all 0.2s ease',
+      active ? 'background: #6fd69a' : 'background: transparent',
+      active ? 'color: #04130c' : 'color: rgba(232,243,236,0.62)',
+    ].join('; ');
+  }
+  chipStyle(active, hue) {
+    return [
+      'font-family: Geist Mono, monospace', 'font-size: 11.5px', 'letter-spacing: 0.03em', 'white-space: nowrap',
+      'display: inline-flex', 'align-items: center', 'padding: 8px 15px', 'border-radius: 100px', 'cursor: pointer', 'transition: all 0.15s ease',
+      'border: 1px solid ' + (active ? this.catColor(hue, 0.6, 0.14, 1) : 'rgba(232,243,236,0.16)'),
+      'background: ' + (active ? this.catColor(hue, 0.5, 0.12, 0.18) : 'transparent'),
+      'color: ' + (active ? '#e8f3ec' : 'rgba(232,243,236,0.62)'),
+    ].join('; ');
+  }
+  sortStyle(active) {
+    return [
+      'font-family: Geist Mono, monospace', 'font-size: 11px', 'letter-spacing: 0.04em', 'text-transform: uppercase',
+      'border: 0', 'background: transparent', 'cursor: pointer', 'padding: 6px 10px', 'border-radius: 4px', 'transition: all 0.15s',
+      active ? 'color: #6fd69a' : 'color: rgba(232,243,236,0.5)',
+    ].join('; ');
+  }
+  indexSortStyle(active, align) {
+    return [
+      'font-family: Geist Mono, monospace', 'font-size: 10.5px', 'letter-spacing: 0.1em', 'text-transform: uppercase',
+      'border: 0', 'background: transparent', 'cursor: pointer', 'padding: 0', 'transition: color 0.15s',
+      'text-align: ' + (align || 'left'),
+      active ? 'color: #6fd69a' : 'color: rgba(232,243,236,0.5)',
+    ].join('; ');
+  }
+  spineStyle(item) {
+    const h = 152 + (this.hash(item.t) % 9) * 15;
+    const w = 33 + (this.hash(item.a + item.t) % 5) * 7;
+    const hue = item.hue;
+    return [
+      'box-sizing: border-box', 'width: ' + w + 'px', 'height: ' + h + 'px', 'flex: 0 0 auto',
+      'display: flex', 'flex-direction: column', 'justify-content: space-between', 'align-items: center',
+      'padding: 14px 0 12px',
+      'background: linear-gradient(180deg, ' + this.catColor(hue, 0.34, 0.085, 1) + ', ' + this.catColor(hue, 0.24, 0.075, 1) + ')',
+      'border-left: 3px solid ' + this.catColor(hue, 0.66, 0.14, 1),
+      'border-top: 1px solid ' + this.catColor(hue, 0.5, 0.1, 0.5),
+      'border-radius: 2px 3px 0 0', 'box-shadow: 2px 0 8px rgba(0,0,0,0.35)',
+      'cursor: pointer', 'position: relative', 'overflow: hidden',
+      'transition: transform 0.22s cubic-bezier(0.16,1,0.3,1), filter 0.22s, box-shadow 0.22s',
+      item.dim ? 'opacity: 0.16' : 'opacity: 1',
+    ].join('; ');
+  }
+  tickStyle(item) {
+    return [
+      'width: 62px', 'height: ' + (6 + Math.min(16, item.deg)) + 'px', 'border-radius: 2px',
+      'cursor: pointer', 'transition: filter 0.2s',
+      'background: ' + this.catColor(item.hue, 0.56, 0.13, 1),
+      item.dim ? 'opacity: 0.16' : 'opacity: 0.9',
+    ].join('; ');
+  }
+  rowStyle(item) {
+    return [
+      'display: grid', 'grid-template-columns: 42px 1fr 150px 96px 56px', 'gap: 20px', 'align-items: baseline',
+      'padding: 15px 8px', 'border-bottom: 1px solid rgba(232,243,236,0.09)', 'cursor: pointer', 'transition: background 0.15s',
+      item.dim ? 'opacity: 0.3' : 'opacity: 1',
+    ].join('; ');
+  }
+  margWrapStyle(item) {
+    return [
+      'display: block', 'padding: 22px 6px 22px 26px',
+      'border-left: 2px solid ' + this.catColor(item.hue, 0.6, 0.14, 1),
+      'margin-bottom: 10px', 'cursor: pointer', 'border-radius: 0 4px 4px 0',
+      'transition: background 0.15s, opacity 0.2s',
+      item.dim ? 'opacity: 0.2' : 'opacity: 1',
+    ].join('; ');
+  }
+  topicChipStyle(hue) {
+    return [
+      'font-family: Geist Mono, monospace', 'font-size: 10.5px', 'letter-spacing: 0.02em', 'text-transform: capitalize',
+      'padding: 5px 10px', 'border-radius: 100px', 'white-space: nowrap',
+      'border: 1px solid ' + this.catColor(hue, 0.5, 0.1, 0.5),
+      'background: ' + this.catColor(hue, 0.45, 0.1, 0.12),
+      'color: rgba(232,243,236,0.72)',
+    ].join('; ');
+  }
+
+  // ─── view computation ───
+  computeView() {
+    const { books, cats, activeCat } = this.state;
+    const deg = this.degree || [];
+    return books.map((b, idx) => {
+      const meta = cats[b.c] || { label: b.c, hue: 160 };
+      const topics = b.tp || [];
+      return {
+        idx, t: b.t, a: b.a, y: b.y, r: b.r, c: b.c,
+        catLabel: meta.label, hue: meta.hue, color: this.catColor(meta.hue, 0.74, 0.14, 1),
+        take: b.k || '', cite: '— ' + b.t + ' · ' + b.a,
+        topics, topTopic: topics[0] ? topics[0].replace(/-/g, ' ') : '—',
+        deg: deg[idx] || 0,
+        hasRating: !!b.r, ratingW: b.r ? Math.round((b.r / 5) * 100) + '%' : '0%',
+        dim: !!(activeCat && b.c !== activeCat),
+        open: () => this.setState({ selected: idx }),
+      };
+    });
+  }
+
+  renderVals() {
+    const { books, cats, loaded, lens, activeCat, selected, shelfSort, indexSort } = this.state;
+    const view = this.computeView();
+
+    // header stats
+    const topicSet = new Set();
+    books.forEach((b) => (b.tp || []).forEach((t) => topicSet.add(t)));
+    const statTopics = topicSet.size;
+
+    // category chips
+    const catChips = Object.keys(cats).map((code) => {
+      const meta = cats[code];
+      return {
+        code, label: meta.label, count: books.filter((b) => b.c === code).length,
+        color: this.catColor(meta.hue, 0.74, 0.14, 1),
+        style: this.chipStyle(activeCat === code, meta.hue),
+        onClick: () => this.setState({ activeCat: activeCat === code ? null : code }),
+      };
+    });
+
+    // shelf (sorted + chunked)
+    const sortedShelf = view.slice();
+    if (shelfSort === 'shelf') sortedShelf.sort((a, b) => a.hue - b.hue || b.deg - a.deg);
+    else if (shelfSort === 'color') sortedShelf.sort((a, b) => a.hue - b.hue);
+    else if (shelfSort === 'links') sortedShelf.sort((a, b) => b.deg - a.deg);
+    else if (shelfSort === 'recent') sortedShelf.sort((a, b) => b.y - a.y);
+    else if (shelfSort === 'author') sortedShelf.sort((a, b) => a.a.localeCompare(b.a));
+    else if (shelfSort === 'height') sortedShelf.sort((a, b) => (this.hash(b.t) % 9) - (this.hash(a.t) % 9));
+    const spined = sortedShelf.map((it) => Object.assign({}, it, { spineStyle: this.spineStyle(it) }));
+    const shelves = [];
+    for (let i = 0; i < spined.length; i += 16) shelves.push(spined.slice(i, i + 16));
+    const shelfDefs = [['shelf', 'Shelf'], ['color', 'Color'], ['links', 'Threads'], ['recent', 'Recent'], ['height', 'Height'], ['author', 'Author']];
+    const shelfSorts = shelfDefs.map((d) => ({ label: d[1], style: this.sortStyle(shelfSort === d[0]), onClick: () => this.setState({ shelfSort: d[0] }) }));
+
+    // marginalia
+    const margView = view.filter((v) => v.take).map((v) => Object.assign({}, v, { wrapStyle: this.margWrapStyle(v) }));
+
+    // river
+    const map = {};
+    view.forEach((b) => { (map[b.y] || (map[b.y] = [])).push(b); });
+    const riverYears = Object.keys(map).map(Number).sort((a, b) => a - b).map((y) => ({
+      year: y, count: map[y].length,
+      books: map[y].slice().sort((a, b) => b.deg - a.deg).map((b) => Object.assign({}, b, { tip: b.t + ' · ' + b.a, tickStyle: this.tickStyle(b) })),
+    }));
+
+    // index (sorted)
+    const iv = view.slice();
+    const k = indexSort.key, asc = indexSort.asc ? 1 : -1;
+    iv.sort((a, b) => {
+      let r;
+      if (k === 'title') r = a.t.localeCompare(b.t);
+      else if (k === 'author') r = a.a.localeCompare(b.a);
+      else if (k === 'cat') r = a.catLabel.localeCompare(b.catLabel);
+      else if (k === 'topic') r = a.topTopic.localeCompare(b.topTopic);
+      else r = a.y - b.y;
+      return r * asc;
+    });
+    const indexView = iv.map((it, i) => Object.assign({}, it, { num: i + 1, rowStyle: this.rowStyle(it) }));
+    const idxDefs = [['title', 'Title', 'left'], ['cat', 'Shelf', 'left'], ['topic', 'Topic', 'left'], ['year', 'Year', 'right']];
+    const indexSorts = idxDefs.map((d) => ({
+      label: d[1], style: this.indexSortStyle(indexSort.key === d[0], d[2]),
+      onClick: () => this.setState({ indexSort: { key: d[0], asc: indexSort.key === d[0] ? !indexSort.asc : (d[0] === 'title' || d[0] === 'cat' || d[0] === 'topic') } }),
+    }));
+
+    // lens tabs
+    const lensDefs = [['constellation', 'Constellation'], ['shelf', 'Shelf'], ['river', 'River'], ['index', 'Index']];
+    const lensTabs = lensDefs.map((d) => ({ label: d[1], style: this.lensTabStyle(lens === d[0]), onClick: () => this.setState({ lens: d[0] }) }));
+
+    // detail drawer
+    const degArr = this.degree || [];
+    let sb = { catLabel: '', color: '#6fd69a', t: '', a: '', y: '', ratingW: '0%', hasRating: false, noRating: true, deg: 0, topicChips: [], take: '', hasTake: false, noTake: true, seeShelf: () => {} };
+    if (selected !== null && books[selected]) {
+      const b = books[selected], meta = cats[b.c] || { label: b.c, hue: 160 };
+      const chips = (b.tp || []).slice(0, 8).map((t) => ({ label: t.replace(/-/g, ' '), style: this.topicChipStyle(meta.hue) }));
+      sb = {
+        catLabel: meta.label, color: this.catColor(meta.hue, 0.74, 0.14, 1),
+        t: b.t, a: b.a, y: b.y,
+        hasRating: !!b.r, noRating: !b.r, ratingW: b.r ? Math.round((b.r / 5) * 100) + '%' : '0%',
+        deg: degArr[selected] || 0, topicChips: chips,
+        take: b.k || '', hasTake: !!b.k, noTake: !b.k,
+        seeShelf: () => this.setState({ activeCat: b.c, lens: 'shelf', selected: null }),
+      };
+    }
+
+    return {
+      loaded, notLoaded: !loaded,
+      statBooks: books.length, statShelves: Object.keys(cats).length, statTopics,
+      catChips,
+      allChipStyle: this.chipStyle(!activeCat, 158),
+      clearFilter: () => this.setState({ activeCat: null }),
+      isConstellation: lens === 'constellation', isShelf: lens === 'shelf',
+      isMarginalia: lens === 'marginalia', isRiver: lens === 'river', isIndex: lens === 'index',
+      setCanvas: this.setCanvas,
+      shelves, shelfSorts,
+      margView,
+      riverYears,
+      indexView, indexSorts,
+      lensTabs,
+      drawerOpen: selected !== null, closeDrawer: () => this.setState({ selected: null }), sb,
+    };
+  }
+
+}
+</script>
+</body>
+</html>

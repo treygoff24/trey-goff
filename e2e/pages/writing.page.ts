@@ -11,7 +11,7 @@ export class WritingPage extends BasePage {
 
   constructor(page: Page) {
     super(page)
-    this.pageTitle = page.getByRole('heading', { name: 'Writing', level: 1 })
+    this.pageTitle = page.getByRole('heading', { name: 'Essays & field notes', level: 1 })
     this.essayCards = page.locator('article')
     this.emptyState = page.getByText('Essays coming soon.')
   }

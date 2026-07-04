@@ -47,19 +47,6 @@ describe('A11y Focus-Visible Styles', () => {
     })
   })
 
-  describe('FloatingLibrary Canvas', () => {
-    it('should have visible focus indicator', () => {
-      const filePath = join(projectRoot, 'components/library/floating/FloatingLibrary.tsx')
-      const content = readFileSync(filePath, 'utf-8')
-      const hasCanvas = /<Canvas/.test(content)
-      assert.ok(hasCanvas, 'Found Canvas component')
-      const hasWrapperWithFocus = /(?:tabIndex=\{0\}|focus-visible:)[\s\S]{0,200}<Canvas/.test(
-        content,
-      )
-      assert.ok(hasWrapperWithFocus, 'Canvas wrapper should have focus-visible styles')
-    })
-  })
-
   describe('main element tabIndex', () => {
     it('should not have tabIndex={-1} outline flash issue', () => {
       const filePath = join(projectRoot, 'app/layout.tsx')

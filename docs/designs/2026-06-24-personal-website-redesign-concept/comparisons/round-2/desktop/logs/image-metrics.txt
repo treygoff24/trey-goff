@@ -1,0 +1,4 @@
+home ref=(924, 540) actual=(924, 540) diff_mae=15.03 bbox=(0, 0, 924, 540)
+writing ref=(924, 540) actual=(924, 540) diff_mae=16.34 bbox=(0, 0, 924, 540)
+projects ref=(924, 540) actual=(924, 540) diff_mae=14.18 bbox=(0, 0, 924, 540)
+about ref=(924, 540) actual=(924, 540) diff_mae=23.94 bbox=(0, 0, 924, 540)

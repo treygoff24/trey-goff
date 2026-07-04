@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 // @ts-expect-error -- ts extension import works at runtime with tsx
 import { nextConfig } from '../next.config.ts'
-import { buildCsp, isInteractiveLibraryPath, isMediaPath } from '@/lib/security/csp'
+import { buildCsp, isMediaPath, isStrictCspPath } from '@/lib/security/csp'
 
 function toDirectiveMap(csp: string): Map<string, string> {
   return new Map(
@@ -40,7 +40,7 @@ test('next config includes static security headers and no static CSP', async () 
   )
 })
 
-test('CSP uses strict nonce policy on interactive/library and static-friendly policy elsewhere', () => {
+test('CSP uses strict nonce policy on interactive and static-friendly policy elsewhere', () => {
   const nonce = 'test-nonce-value'
 
   const defaultCsp = buildCsp({ pathname: '/about', nonce, isDevelopment: false })
@@ -62,20 +62,21 @@ test('CSP uses strict nonce policy on interactive/library and static-friendly po
     'default routes should not allow unsafe-eval',
   )
 
-  // Interactive/library routes stay nonce-based and eval-enabled for Three.js.
-  for (const scriptSrc of [interactiveScriptSrc, libraryScriptSrc]) {
-    assert.match(
-      scriptSrc,
-      new RegExp(`'nonce-${nonce}'`),
-      'strict routes should include nonce token',
-    )
-    assert.doesNotMatch(
-      scriptSrc,
-      /'unsafe-inline'/,
-      'strict routes should not allow unsafe-inline',
-    )
-    assert.match(scriptSrc, /'unsafe-eval'/, 'strict routes should allow unsafe-eval')
-  }
+  assert.match(
+    interactiveScriptSrc,
+    new RegExp(`'nonce-${nonce}'`),
+    'interactive route should include nonce token',
+  )
+  assert.doesNotMatch(
+    interactiveScriptSrc,
+    /'unsafe-inline'/,
+    'interactive route should not allow unsafe-inline',
+  )
+  assert.match(interactiveScriptSrc, /'unsafe-eval'/, 'interactive route should allow unsafe-eval')
+
+  assert.match(libraryScriptSrc, /'unsafe-inline'/, 'library should use the static-friendly policy')
+  assert.doesNotMatch(libraryScriptSrc, /'unsafe-eval'/, 'library should not allow unsafe-eval')
+  assert.doesNotMatch(libraryScriptSrc, /'nonce-/, 'library should not require a nonce')
 
   assert.equal(
     defaultImgSrc,
@@ -116,15 +117,15 @@ test('CSP relaxes script and connect sources in development for the webpack runt
   )
 })
 
-test('interactive/library route classification includes roots and subpaths only', () => {
-  assert.equal(isInteractiveLibraryPath('/interactive'), true)
-  assert.equal(isInteractiveLibraryPath('/interactive/world'), true)
-  assert.equal(isInteractiveLibraryPath('/library'), true)
-  assert.equal(isInteractiveLibraryPath('/library/shelf'), true)
+test('strict CSP route classification includes interactive roots and subpaths only', () => {
+  assert.equal(isStrictCspPath('/interactive'), true)
+  assert.equal(isStrictCspPath('/interactive/world'), true)
 
-  assert.equal(isInteractiveLibraryPath('/about'), false)
-  assert.equal(isInteractiveLibraryPath('/interactive-playground'), false)
-  assert.equal(isInteractiveLibraryPath('/library-tools'), false)
+  assert.equal(isStrictCspPath('/library'), false)
+  assert.equal(isStrictCspPath('/library/shelf'), false)
+  assert.equal(isStrictCspPath('/about'), false)
+  assert.equal(isStrictCspPath('/interactive-playground'), false)
+  assert.equal(isStrictCspPath('/library-tools'), false)
 })
 
 test('media route classification includes roots and subpaths only', () => {

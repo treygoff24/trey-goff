@@ -36,7 +36,7 @@ test.describe('Writing Page', () => {
     })
 
     test('should display page description', async ({ page }) => {
-      await expect(page.getByText(/essays on governance|long-form essays/i)).toBeVisible()
+      await expect(page.getByText(/Long-form thinking on governance reform/i)).toBeVisible()
     })
 
     test('should display essay cards or empty state', async () => {
@@ -53,7 +53,7 @@ test.describe('Writing Page', () => {
   test.describe('Featured section', () => {
     test('should surface featured essays when available', async ({ page }) => {
       const featuredSection = page.locator('section').filter({
-        has: page.getByRole('heading', { name: 'Start here' }),
+        has: page.locator('span', { hasText: 'Featured' }),
       })
 
       const sectionCount = await featuredSection.count()
@@ -67,7 +67,7 @@ test.describe('Writing Page', () => {
           .count()
         expect(featuredBadgeCount).toBeGreaterThan(0)
 
-        await expect(page.getByRole('heading', { name: 'All essays' })).toBeVisible()
+        await expect(page.getByText('More essays')).toBeVisible()
       }
     })
   })

@@ -13,20 +13,13 @@ test.describe('Command Palette', () => {
 
   test.describe('Opening and closing', () => {
     test('should open with Cmd+K keyboard shortcut', async ({ page }) => {
-      await expect(commandPalette.searchButton.first()).toBeVisible({ timeout: 60000 })
       await page.keyboard.press('Meta+k')
       await expect(commandPalette.dialog).toBeVisible()
       await expect(commandPalette.searchInput).toBeFocused()
     })
 
     test('should open with Ctrl+K keyboard shortcut', async ({ page }) => {
-      await expect(commandPalette.searchButton.first()).toBeVisible({ timeout: 60000 })
       await page.keyboard.press('Control+k')
-      await expect(commandPalette.dialog).toBeVisible()
-    })
-
-    test('should open when clicking the search button', async () => {
-      await commandPalette.openCommandPaletteByClick()
       await expect(commandPalette.dialog).toBeVisible()
     })
 
@@ -238,11 +231,8 @@ test.describe('Command Palette - Mobile', () => {
     await commandPalette.goto('/')
   })
 
-  test('should open via mobile search button', async () => {
-    // On mobile, there's a search icon button
-    const searchButton = commandPalette.page.getByRole('button', { name: 'Search', exact: true })
-    await searchButton.click()
-
+  test('should open via keyboard shortcut on mobile', async ({ page }) => {
+    await page.keyboard.press('Control+k')
     await expect(commandPalette.dialog).toBeVisible()
   })
 

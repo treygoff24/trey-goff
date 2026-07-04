@@ -4,6 +4,8 @@ import { isNewsletterEnabled } from '@/lib/site-config'
 const footerLinks = [
   { href: '/colophon', label: 'Colophon' },
   { href: '/feed.xml', label: 'RSS' },
+  { href: '/graph', label: 'Graph' },
+  { href: '/interactive', label: 'Interactive' },
 ]
 
 const socialLinks = [
@@ -13,34 +15,31 @@ const socialLinks = [
 
 const quickNav = [
   { href: '/writing', label: 'Writing' },
-  { href: '/library', label: 'Library' },
   { href: '/projects', label: 'Projects' },
+  { href: '/library', label: 'Library' },
   { href: '/about', label: 'About' },
+  { href: '/notes', label: 'Notes' },
+  { href: '/media', label: 'Media' },
+  { href: '/topics', label: 'Topics' },
 ]
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="relative border-t border-border-1 bg-bg-0">
-      {/* Subtle gradient overlay */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-transparent to-bg-1/50" />
-
-      <div className="relative mx-auto max-w-5xl px-4 py-12">
-        {/* Main footer content */}
-        <div className="grid gap-8 md:grid-cols-3">
-          {/* Brand column */}
+    <footer className="relative z-10 border-t border-border-1 bg-bg-0/72 backdrop-blur-md">
+      <div className="relative mx-auto max-w-6xl px-4 py-12 sm:px-6">
+        <div className="grid gap-8 md:grid-cols-[1.3fr_1fr_1fr]">
           <div className="space-y-4">
             <Link href="/" className="inline-block">
-              <span className="font-satoshi text-lg font-medium text-text-1 transition-colors hover:text-warm">
+              <span className="font-newsreader text-xl font-medium text-text-1 transition-colors hover:text-warm">
                 Trey Goff
               </span>
             </Link>
             <p className="text-sm leading-relaxed text-text-3">
-              Building better governance through institutional design and practical experimentation.
+              Designing systems, institutions, and software that help human progress compound.
             </p>
 
-            {/* Command palette hint */}
             <div className="flex items-center gap-2 text-xs text-text-3">
               <span>Quick access:</span>
               <kbd className="rounded border border-border-1 bg-surface-1 px-1.5 py-0.5 font-mono text-text-2">
@@ -49,10 +48,9 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Navigation column */}
           <div className="space-y-4">
             <h3 className="font-mono text-xs font-medium uppercase tracking-wider text-text-3">
-              Navigation
+              Routes
             </h3>
             <nav className="grid grid-cols-2 gap-2" aria-label="Footer navigation">
               {quickNav.map((link) => (
@@ -67,7 +65,6 @@ export function Footer() {
             </nav>
           </div>
 
-          {/* Connect column */}
           <div className="space-y-4">
             <h3 className="font-mono text-xs font-medium uppercase tracking-wider text-text-3">
               Connect
@@ -98,20 +95,19 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Divider with decorative elements */}
         <div className="my-8 flex items-center gap-4">
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border-1 to-transparent" />
-          <div className="flex items-center gap-1">
-            <span className="h-1 w-1 rounded-full bg-warm/50" />
-            <span className="h-1 w-1 rounded-full bg-accent/50" />
-            <span className="h-1 w-1 rounded-full bg-warm/50" />
-          </div>
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border-1 to-transparent" />
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-warm/20 to-accent/25" />
+          <Link
+            href="/colophon"
+            title="How this site is made — and who made it"
+            className="font-mono text-[10px] uppercase tracking-[0.34em] text-text-3 transition-colors hover:text-warm"
+          >
+            Aurora
+          </Link>
+          <div className="h-px flex-1 bg-gradient-to-r from-accent/25 via-warm/20 to-transparent" />
         </div>
 
-        {/* Bottom bar */}
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-          {/* Footer links */}
           <nav className="flex flex-wrap justify-center gap-6" aria-label="Footer links">
             {footerLinks.map((link) => (
               <Link
@@ -124,7 +120,6 @@ export function Footer() {
             ))}
           </nav>
 
-          {/* Status indicator + Copyright */}
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 text-xs text-text-3">
               <span className="relative flex h-1.5 w-1.5">

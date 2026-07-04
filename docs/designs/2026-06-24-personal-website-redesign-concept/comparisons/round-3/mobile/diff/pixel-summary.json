@@ -1,0 +1,66 @@
+[
+  {
+    "route": "home",
+    "size": [
+      402,
+      540
+    ],
+    "rms": 51.18,
+    "mean_abs_channel": 17.08,
+    "changed_pixels_pct": 98.82,
+    "bbox": [
+      0,
+      0,
+      402,
+      540
+    ]
+  },
+  {
+    "route": "writing",
+    "size": [
+      402,
+      540
+    ],
+    "rms": 42.9,
+    "mean_abs_channel": 15.04,
+    "changed_pixels_pct": 99.68,
+    "bbox": [
+      0,
+      0,
+      402,
+      540
+    ]
+  },
+  {
+    "route": "projects",
+    "size": [
+      402,
+      540
+    ],
+    "rms": 45.82,
+    "mean_abs_channel": 15.46,
+    "changed_pixels_pct": 99.74,
+    "bbox": [
+      0,
+      0,
+      402,
+      540
+    ]
+  },
+  {
+    "route": "about",
+    "size": [
+      402,
+      540
+    ],
+    "rms": 51.5,
+    "mean_abs_channel": 17.15,
+    "changed_pixels_pct": 98.66,
+    "bbox": [
+      0,
+      0,
+      402,
+      540
+    ]
+  }
+]

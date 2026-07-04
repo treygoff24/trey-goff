@@ -1,15 +1,13 @@
 import { getAllBooks } from '@/lib/books'
-import type { BookColorMap } from '@/lib/library/colors'
+import { buildAuroraGraph, buildAuroraLibrary } from '@/lib/library/aurora'
 import { generateLibraryBooksGraph } from '@/lib/structured-data'
 import { siteUrl } from '@/lib/site-config'
 import { serializeJsonLd } from '@/lib/safe-json-ld'
-import { StackLibrary } from '@/components/library/StackLibrary'
-import bookColorsData from '@/public/book-colors.json'
-import coverMapData from '@/public/cover-map.json'
+import { AuroraLibrary } from '@/components/library/AuroraLibrary'
 
 const libraryTitle = 'Library'
 const libraryDescription =
-  'Books that have shaped my thinking on governance, economics, and building better systems.'
+  'Everything Trey has read, mapped as a constellation, shelf, river, and index of ideas.'
 
 export const metadata = {
   title: libraryTitle,
@@ -18,8 +16,8 @@ export const metadata = {
 
 export default function LibraryPage() {
   const books = getAllBooks()
-  const colors = bookColorsData as BookColorMap
-  const coverMap = coverMapData as Record<string, string>
+  const auroraBooks = buildAuroraLibrary(books)
+  const graph = buildAuroraGraph(auroraBooks)
 
   const libraryJsonLd = generateLibraryBooksGraph(
     books.map((book) => ({
@@ -41,12 +39,11 @@ export default function LibraryPage() {
         }}
       />
 
-      <StackLibrary
-        books={books}
-        colors={colors}
-        coverMap={coverMap}
-        title={libraryTitle}
-        description={libraryDescription}
+      <AuroraLibrary
+        books={graph.books}
+        nodes={graph.nodes}
+        edges={graph.edges}
+        topicCount={graph.topicCounts.size}
       />
     </>
   )

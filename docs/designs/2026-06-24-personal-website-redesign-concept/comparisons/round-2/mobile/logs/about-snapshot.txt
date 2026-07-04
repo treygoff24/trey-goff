@@ -1,0 +1,73 @@
+- link "Skip to main content" [ref=e1]
+- banner
+  - navigation "Main navigation" [ref=e2]
+    - link "Trey Goff" [ref=e3]
+    - link "Writing" [ref=e4]
+    - link "Projects" [ref=e5]
+    - link "Library" [ref=e6]
+    - link "About" [ref=e7]
+- main
+  - sectionheader
+    - paragraph
+      - StaticText "ABOUT"
+    - heading "An explorer working on the institutions that let human progresscompound." [level=1, ref=e8]
+      - StaticText "An explorer working on the institutions that let human progresscompound."
+  - generic
+    - paragraph
+      - StaticText "I'm an explorer by temperament and curious to a fault. I work at the intersection of public-policy economics and institutional design — and I build the software and AI tooling that turns those ideas into something you can touch."
+    - paragraph
+      - StaticText "I was the first full-time employee at Próspera, where I now serve as chief of staff and director of public affairs. The mandate is easy to state and hard to do: design the institutions that let progress compound, and turn governance experiments into models other places can actually adopt."
+    - paragraph
+      - StaticText "I'm a strange mix — deep Mississippi southern roots and a cosmopolitan, world-traveling streak. That tension shows up in everything: how I think, what I read, and the way I build."
+    - paragraph
+      - StaticText "I'm a Christian and a husband. My aim is simple to name: find the biggest lever I can pull for the largest positive impact on the world, and wring the most meaning, purpose, and fulfillment from every precious second the Lord has given me."
+    - blockquote
+      - StaticText "Make the most meaning you can from every second of existence — then go find a bigger lever."
+    - generic
+      - StaticText "DROP PORTRAIT"
+      - paragraph
+        - StaticText "ROLE"
+      - paragraph
+        - StaticText "Chief of Staff & Director of Public Affairs, Próspera"
+      - paragraph
+        - StaticText "ROOTS"
+      - paragraph
+        - StaticText "Mississippi → most everywhere"
+      - paragraph
+        - StaticText "FAITH"
+      - paragraph
+        - StaticText "Christian"
+      - paragraph
+        - StaticText "FIND ME"
+      - link "Twitter" [ref=e16]
+      - link "GitHub" [ref=e17]
+- contentinfo
+  - generic
+    - link "Trey Goff" [ref=e9]
+    - paragraph
+      - StaticText "Designing systems, institutions, and software that help human progress compound."
+    - StaticText "Quick access:"
+    - StaticText "⌘K"
+    - heading "ROUTES" [level=3, ref=e10]
+    - navigation "Footer navigation" [ref=e11]
+      - link "Writing" [ref=e18]
+      - link "Projects" [ref=e19]
+      - link "Library" [ref=e20]
+      - link "About" [ref=e21]
+      - link "Notes" [ref=e22]
+      - link "Media" [ref=e23]
+      - link "Topics" [ref=e24]
+    - heading "CONNECT" [level=3, ref=e12]
+    - link "Twitter" [ref=e13]
+    - link "GitHub" [ref=e14]
+    - StaticText "AURORA"
+    - navigation "Footer links" [ref=e15]
+      - link "Colophon" [ref=e25]
+      - link "RSS" [ref=e26]
+      - link "Graph" [ref=e27]
+      - link "Interactive" [ref=e28]
+    - StaticText "Online"
+    - StaticText "|"
+    - paragraph
+      - StaticText "© 2026 Trey Goff"
+- alert

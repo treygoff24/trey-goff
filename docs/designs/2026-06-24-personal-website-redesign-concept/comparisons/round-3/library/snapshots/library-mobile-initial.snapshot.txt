@@ -1,0 +1,52 @@
+- link "Skip to main content" [ref=e1]
+- banner
+  - navigation "Main navigation" [ref=e2]
+    - link "Trey Goff" [ref=e3]
+    - link "Writing" [ref=e4]
+    - link "Projects" [ref=e5]
+    - link "Library" [ref=e6]
+    - link "About" [ref=e7]
+- main
+  - sectionheader
+    - StaticText "LIBRARY"
+    - heading "Everything I've read, and four ways to wander it." [level=1, ref=e8]
+      - StaticText "Everything I've read, and four ways to wander it."
+  - generic
+    - button "Constellation" [ref=e9]
+    - button "Shelf" [ref=e10]
+    - button "River" [ref=e11]
+    - button "Index" [ref=e12]
+  - generic
+    - image "Constellation of books linked by shared topics"
+    - StaticText "THE CONSTELLATION"
+    - StaticText "scroll to zoom · drag to pan · bright threads link a shared topic · click a star"
+- contentinfo
+  - generic
+    - link "Trey Goff" [ref=e13]
+    - paragraph
+      - StaticText "Designing systems, institutions, and software that help human progress compound."
+    - StaticText "Quick access:"
+    - StaticText "⌘K"
+    - heading "ROUTES" [level=3, ref=e14]
+    - navigation "Footer navigation" [ref=e15]
+      - link "Writing" [ref=e20]
+      - link "Projects" [ref=e21]
+      - link "Library" [ref=e22]
+      - link "About" [ref=e23]
+      - link "Notes" [ref=e24]
+      - link "Media" [ref=e25]
+      - link "Topics" [ref=e26]
+    - heading "CONNECT" [level=3, ref=e16]
+    - link "Twitter" [ref=e17]
+    - link "GitHub" [ref=e18]
+    - StaticText "AURORA"
+    - navigation "Footer links" [ref=e19]
+      - link "Colophon" [ref=e27]
+      - link "RSS" [ref=e28]
+      - link "Graph" [ref=e29]
+      - link "Interactive" [ref=e30]
+    - StaticText "Online"
+    - StaticText "|"
+    - paragraph
+      - StaticText "© 2026 Trey Goff"
+- alert
