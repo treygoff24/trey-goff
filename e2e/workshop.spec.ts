@@ -23,7 +23,6 @@ test.describe('Workshop', () => {
     await expect(page.locator(panel('bench'))).toBeVisible()
     await expect(page.locator(panel('lineage'))).toBeHidden()
     await expect(page.locator(panel('ledger'))).toBeHidden()
-    await expect(page.locator(panel('receipts'))).toBeHidden()
   })
 
   test('routes to Ledger by hash and restores it after reload', async ({ page }) => {
@@ -155,33 +154,6 @@ test.describe('Workshop', () => {
       .toBeTruthy()
   })
 
-  test('renders receipts without sealed projects', async ({ page }) => {
-    await gotoWorkshop(page)
-    await openLens(page, 'Receipts')
-
-    const receipts = page.locator(panel('receipts'))
-    await expect(
-      receipts.getByText('All figures measured from live runs. Nothing projected.'),
-    ).toBeVisible()
-
-    const reconRow = receipts.locator('[data-workshop-project="recon"]')
-    await expect(reconRow).toBeVisible()
-    const values = reconRow.locator('dd')
-    await expect.poll(() => values.count()).toBeGreaterThanOrEqual(1)
-    await expect
-      .poll(() => values.first().evaluate((element) => element.textContent?.trim() ?? ''))
-      .not.toBe('')
-
-    const html = await receipts.innerHTML()
-    expect(html).not.toContain('wade-litigation')
-    expect(html).not.toContain('bapa-litigation')
-    expect(html).not.toContain('litigation')
-    expect(html).not.toContain('gavel')
-    expect(html).not.toContain('dwp-onboarding')
-    expect(html).not.toContain('dev-pipeline-private')
-    expect(html).not.toMatch(/under seal|private|client work/i)
-  })
-
   test('shows activated lens content immediately under reduced motion', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' })
     await gotoWorkshop(page)
@@ -197,16 +169,9 @@ test.describe('Workshop', () => {
     await expect
       .poll(() => firstLedgerRow.evaluate((row) => getComputedStyle(row).opacity))
       .toBe('1')
-
-    await openLens(page, 'Receipts')
-    const firstReceiptRow = page.locator(`${panel('receipts')} [data-workshop-project]`).first()
-    await expect(firstReceiptRow).toBeVisible()
-    await expect
-      .poll(() => firstReceiptRow.evaluate((row) => getComputedStyle(row).opacity))
-      .toBe('1')
   })
 
-  test('renders all four panels without JavaScript and hides the tablist', async ({
+  test('renders all three panels without JavaScript and hides the tablist', async ({
     browser,
     baseURL,
   }) => {
@@ -223,16 +188,12 @@ test.describe('Workshop', () => {
       await expect(noJsPage.locator(panel('bench'))).toBeVisible()
       await expect(noJsPage.locator(panel('lineage'))).toBeVisible()
       await expect(noJsPage.locator(panel('ledger'))).toBeVisible()
-      await expect(noJsPage.locator(panel('receipts'))).toBeVisible()
       await expect(
         noJsPage.locator(`${panel('bench')} [data-workshop-project="recon"]`),
       ).toBeVisible()
       await expect(noJsPage.locator(`${panel('lineage')} canvas`)).toBeVisible()
       await expect(
         noJsPage.locator(`${panel('ledger')} [data-workshop-project]`).first(),
-      ).toBeVisible()
-      await expect(
-        noJsPage.locator(`${panel('receipts')} [data-workshop-project="recon"]`),
       ).toBeVisible()
     } finally {
       await context.close()

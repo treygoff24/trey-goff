@@ -28,7 +28,7 @@ export const DISCIPLINE_LABELS: Record<ProjectDiscipline, string> = {
 
 const PROJECT_TIERS = ['flagship', 'solid', 'minor'] as const
 const PROJECT_STATUSES = ['active', 'shipped', 'archived', 'experimental', 'ongoing'] as const
-const RESERVED_LENS_IDS = new Set(['bench', 'lineage', 'ledger', 'receipts'])
+const RESERVED_LENS_IDS = new Set(['bench', 'lineage', 'ledger'])
 const SHIPPED_AT_RE = /^\d{4}-(0[1-9]|1[0-2])$/
 
 const LinkSchema = z
@@ -250,12 +250,6 @@ export function getFlagships(projects: readonly Project[] = PROJECTS): readonly 
 
 export function getLedgerRows(projects: readonly Project[] = PROJECTS): readonly Project[] {
   return [...projects].sort(sortByShippedDescThenId)
-}
-
-export function getReceiptProjects(projects: readonly Project[] = PROJECTS): readonly Project[] {
-  return [...projects]
-    .filter((project) => !project.sealed && (project.receipts?.length ?? 0) > 0)
-    .sort((a, b) => TIER_ORDER[a.tier] - TIER_ORDER[b.tier] || sortByShippedDescThenId(a, b))
 }
 
 export function getBenches(projects: readonly Project[] = PROJECTS): readonly BenchGroup[] {

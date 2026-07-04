@@ -2,7 +2,6 @@ import { EditorialHeader } from '@/components/site/EditorialHeader'
 import { BenchLens } from '@/components/workshop/BenchLens'
 import { LedgerLens } from '@/components/workshop/LedgerLens'
 import { LineageLens } from '@/components/workshop/LineageLens'
-import { ReceiptsLens } from '@/components/workshop/ReceiptsLens'
 import { WorkshopShell } from '@/components/workshop/WorkshopShell'
 import {
   DISCIPLINE_LABELS,
@@ -13,7 +12,7 @@ import {
 
 export const metadata = {
   title: 'Projects — The Workshop',
-  description: "Everything I've built, and four ways to walk the floor.",
+  description: "Everything I've built, and three ways to walk the floor.",
 }
 
 function LineageSlot() {
@@ -34,7 +33,7 @@ export default function ProjectsPage() {
       <EditorialHeader
         eyebrow="Projects"
         title="The Workshop"
-        standfirst="Everything I've built, and four ways to walk the floor."
+        standfirst="Everything I've built, and three ways to walk the floor."
       />
 
       <WorkshopShell
@@ -42,7 +41,6 @@ export default function ProjectsPage() {
         bench={<BenchLens />}
         lineage={<LineageSlot />}
         ledger={<LedgerLens />}
-        receipts={<ReceiptsLens />}
       />
     </div>
   )

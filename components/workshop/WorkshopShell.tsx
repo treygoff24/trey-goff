@@ -14,21 +14,19 @@ import { type Project } from '@/lib/projects'
 import { ProjectDrawer } from './ProjectDrawer'
 import styles from './workshop.module.css'
 
-type Lens = 'bench' | 'lineage' | 'ledger' | 'receipts'
+type Lens = 'bench' | 'lineage' | 'ledger'
 
 type WorkshopShellProps = {
   projects: readonly Project[]
   bench: ReactNode
   lineage: ReactNode
   ledger: ReactNode
-  receipts: ReactNode
 }
 
 const lenses: Array<{ key: Lens; label: string }> = [
   { key: 'bench', label: 'Bench' },
   { key: 'lineage', label: 'Lineage' },
   { key: 'ledger', label: 'Ledger' },
-  { key: 'receipts', label: 'Receipts' },
 ]
 
 const lensKeys = new Set(lenses.map((item) => item.key))
@@ -36,13 +34,11 @@ const initialLensFlags: Record<Lens, boolean> = {
   bench: true,
   lineage: false,
   ledger: false,
-  receipts: false,
 }
 const initialAnimatedFlags: Record<Lens, boolean> = {
   bench: false,
   lineage: false,
   ledger: false,
-  receipts: false,
 }
 
 function lensFromHash(hash: string): Lens | null {
@@ -56,7 +52,7 @@ function replaceHash(lens: Lens) {
   window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`)
 }
 
-export function WorkshopShell({ projects, bench, lineage, ledger, receipts }: WorkshopShellProps) {
+export function WorkshopShell({ projects, bench, lineage, ledger }: WorkshopShellProps) {
   const [hydrated, setHydrated] = useState(false)
   const [lens, setLens] = useState<Lens>('bench')
   const [revealed, setRevealed] = useState<Record<Lens, boolean>>(initialLensFlags)
@@ -186,7 +182,7 @@ export function WorkshopShell({ projects, bench, lineage, ledger, receipts }: Wo
   //    active lens; React owns visibility once the tablist is interactive.
   // 3. No-JS: the <noscript> style force-shows all panels and hides the
   //    tablist, turning the page into a scrollable index.
-  const panels: Record<Lens, ReactNode> = { bench, lineage, ledger, receipts }
+  const panels: Record<Lens, ReactNode> = { bench, lineage, ledger }
 
   return (
     <div ref={shellRef} className={styles.shell} data-hydrated={hydrated ? 'true' : 'false'}>
