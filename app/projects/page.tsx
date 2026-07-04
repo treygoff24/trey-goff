@@ -1,36 +1,29 @@
 import { EditorialHeader } from '@/components/site/EditorialHeader'
 import { BenchLens } from '@/components/workshop/BenchLens'
 import { LedgerLens } from '@/components/workshop/LedgerLens'
+import { LineageLens } from '@/components/workshop/LineageLens'
 import { WorkshopShell } from '@/components/workshop/WorkshopShell'
-import { DISCIPLINE_LABELS, getAllProjects, getChronologicalLineageProjects } from '@/lib/projects'
-import styles from '@/components/workshop/workshop.module.css'
+import {
+  DISCIPLINE_LABELS,
+  getAllProjects,
+  getChronologicalLineageProjects,
+  getLineageEdges,
+} from '@/lib/projects'
 
 export const metadata = {
   title: 'Projects — The Workshop',
   description: "Everything I've built, and four ways to walk the floor.",
 }
 
-function LineagePlaceholder() {
+function LineageSlot() {
   const projects = getChronologicalLineageProjects()
 
   return (
-    <section aria-label="Lineage index" className="mx-auto max-w-6xl">
-      <ol className={styles.lineageIndex}>
-        {projects.map((project) => (
-          <li key={project.id}>
-            <button type="button" className={styles.lineageRow} data-workshop-project={project.id}>
-              <span className={styles.meta}>{project.year}</span>
-              <span className="font-newsreader text-xl font-medium leading-tight text-text-1">
-                {project.name}
-              </span>
-              <span className={`${styles.meta} text-right md:text-left`}>
-                {DISCIPLINE_LABELS[project.discipline]}
-              </span>
-            </button>
-          </li>
-        ))}
-      </ol>
-    </section>
+    <LineageLens
+      projects={projects}
+      edges={getLineageEdges(projects)}
+      disciplineLabels={DISCIPLINE_LABELS}
+    />
   )
 }
 
@@ -56,7 +49,7 @@ export default function ProjectsPage() {
       <WorkshopShell
         projects={getAllProjects()}
         bench={<BenchLens />}
-        lineage={<LineagePlaceholder />}
+        lineage={<LineageSlot />}
         ledger={<LedgerLens />}
         receipts={<ReceiptsPlaceholder />}
       />

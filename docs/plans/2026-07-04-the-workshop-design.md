@@ -119,6 +119,18 @@ None new. framer-motion 12 (present), canvas 2D (native), Zod (present via conte
 - **Deep-link lens flash waived:** `/projects#ledger` shows one frame of Bench before the mount effect switches lens. Reading the hash synchronously pre-paint would reintroduce the hydration-mismatch class the wave-1 blocker fix just eliminated; one frame is the cheaper cost.
 - **A→B drawer focus flicker waived for v1:** no UI path opens a drawer from inside another (modal focus trap; lineage chips non-interactive until Wave 3). Revisit when chips become clickable.
 
+### Wave 2 review triage (2026-07-04)
+- **Rejected (reviewer findings 1–2, hidden-panel rAF):** the `measured` size-gate already prevents entrance animation on hidden panels — `hidden` ⇒ `display:none` ⇒ ResizeObserver reports 0×0 ⇒ `measured` false ⇒ no entrance; switching away mid-entrance flips `measured` false and the effect cleanup cancels the frame. Mechanism documented in-code; verified empirically in Phase 4 browser QA.
+- **Waived (single-node thread skip):** cosmetic degenerate case; the live spine has 68 unsealed nodes and tests pin no-NaN behavior.
+- Accepted: viewport-scaled lane collision, degenerate-input tests, reduced-motion synchronous redraw, unified size source, single reduced-motion source, canvas fonts from tokens (coordinator finding — no Georgia).
+
+### Wave 2 re-review triage (2026-07-04, round 2 — dry)
+- **Rejected (canvas font var() chains):** empirically disproven in headless Chromium — `getComputedStyle().getPropertyValue('--font-newsreader')` returns the fully var()-substituted stack and `context.font` accepts it (`accepted: true` in the repro).
+- **Rejected (reduced-motion first-frame race):** the hook's state settles during commit-1 effects; `measured` cannot flip true until a post-paint ResizeObserver callback, so the entrance effect always re-evaluates with the settled value.
+- **Waived (pre-measure overlay position jump):** overlay buttons are invisible and the canvas doesn't draw until measured; gating the `<ol>` on `measured` would strip the semantic index from SSR HTML and break no-JS access.
+- **Waived (lane-candidate exhaustion fallback):** requires >200 colliding candidates in one band; max band population is 21.
+- Accepted (test hygiene, coordinator-applied): distance assertion now uses the same VIEWPORT object as the layout call.
+
 ### Spine amendments (curation round 1)
 - `devslave` added as a first-class row (minor / archived / agent-infra) — the arc's origin point.
 - `cairn`'s descends edge to code-briefcase moved to `note` (code-briefcase has no row).
