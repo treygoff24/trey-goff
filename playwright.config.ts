@@ -10,8 +10,8 @@ const E2E_BASE_URL = `http://localhost:${E2E_PORT}`
  */
 export default defineConfig({
   testDir: './e2e',
-  /* Match .e2e.ts files */
-  testMatch: '**/*.e2e.ts',
+  /* Match E2E specs */
+  testMatch: ['**/*.e2e.ts', '**/*.spec.ts'],
   /* Webpack-backed dev startup can be slower on the first route compile */
   timeout: 60 * 1000,
   /* Run tests in files in parallel */

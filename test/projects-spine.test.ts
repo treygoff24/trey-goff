@@ -4,6 +4,7 @@ import {
   getAllProjects,
   getLedgerRows,
   getProject,
+  getReceiptProjects,
   parseProjectsSpine,
   sealedAriaLabel,
   type ProjectInput,
@@ -175,6 +176,108 @@ describe('projects spine validation', () => {
       getLedgerRows(rows).map((project) => project.id),
       ['aardvark', 'alpha', 'beta'],
     )
+  })
+
+  test('getReceiptProjects filters unsealed receipt projects by tier then recency', () => {
+    const rows = parseProjectsSpine(
+      withFixture([
+        {
+          id: 'sealed-alpha',
+          name: null,
+          oneLiner: null,
+          discipline: 'legal',
+          tier: 'flagship',
+          status: 'archived',
+          year: 2026,
+          shippedAt: '2026-03',
+          sealed: true,
+          sealedNote: 'Client-confidential work.',
+        },
+        {
+          id: 'minor-new',
+          name: 'Minor New',
+          oneLiner: 'Has receipts but lower tier.',
+          discipline: 'mcp',
+          tier: 'minor',
+          status: 'shipped',
+          year: 2026,
+          shippedAt: '2026-03',
+          receipts: [{ label: 'runs', value: '3' }],
+        },
+        {
+          id: 'solid-new',
+          name: 'Solid New',
+          oneLiner: 'Newest solid receipt.',
+          discipline: 'site',
+          tier: 'solid',
+          status: 'active',
+          year: 2026,
+          shippedAt: '2026-04',
+          receipts: [{ label: 'checks', value: '9' }],
+        },
+        {
+          id: 'solid-old',
+          name: 'Solid Old',
+          oneLiner: 'Older solid receipt.',
+          discipline: 'site',
+          tier: 'solid',
+          status: 'active',
+          year: 2025,
+          shippedAt: '2025-01',
+          receipts: [{ label: 'checks', value: '7' }],
+        },
+      ]),
+      [],
+    )
+
+    assert.deepEqual(
+      getReceiptProjects(rows).map((project) => project.id),
+      ['solid-new', 'solid-old', 'minor-new'],
+    )
+  })
+
+  test('getReceiptProjects sorts flagship receipts above solid receipts and excludes sealed', () => {
+    const rows = parseProjectsSpine(
+      withFixture([
+        {
+          id: 'flagship-new',
+          name: 'Flagship New',
+          oneLiner: 'Flagship with receipts.',
+          discipline: 'agent-cli',
+          tier: 'flagship',
+          status: 'shipped',
+          year: 2026,
+          shippedAt: '2026-05',
+          receipts: [{ label: 'runs', value: '5' }],
+        },
+        {
+          id: 'solid-newer',
+          name: 'Solid Newer',
+          oneLiner: 'Newer solid receipt.',
+          discipline: 'site',
+          tier: 'solid',
+          status: 'active',
+          year: 2026,
+          shippedAt: '2026-06',
+          receipts: [{ label: 'checks', value: '9' }],
+        },
+      ]),
+      [],
+    )
+
+    const ids = getReceiptProjects(rows).map((project) => project.id)
+    const flagshipIndex = ids.indexOf('flagship-new')
+    const solidIndex = ids.indexOf('solid-newer')
+    assert.ok(flagshipIndex !== -1)
+    assert.ok(solidIndex !== -1)
+    assert.ok(
+      flagshipIndex < solidIndex,
+      'flagship with receipts must sort before solid with receipts',
+    )
+
+    // Sealed projects cannot carry receipts through the schema, so assert the
+    // live spine never leaks one into the receipt list.
+    assert.ok(!getReceiptProjects().some((project) => project.sealed))
   })
 
   test('shippedAt with invalid month and no dateApprox throws', () => {

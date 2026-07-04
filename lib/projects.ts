@@ -252,6 +252,12 @@ export function getLedgerRows(projects: readonly Project[] = PROJECTS): readonly
   return [...projects].sort(sortByShippedDescThenId)
 }
 
+export function getReceiptProjects(projects: readonly Project[] = PROJECTS): readonly Project[] {
+  return [...projects]
+    .filter((project) => !project.sealed && (project.receipts?.length ?? 0) > 0)
+    .sort((a, b) => TIER_ORDER[a.tier] - TIER_ORDER[b.tier] || sortByShippedDescThenId(a, b))
+}
+
 export function getBenches(projects: readonly Project[] = PROJECTS): readonly BenchGroup[] {
   return PROJECT_DISCIPLINES.map((discipline) => ({
     discipline,

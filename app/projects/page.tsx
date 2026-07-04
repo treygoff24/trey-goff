@@ -2,6 +2,7 @@ import { EditorialHeader } from '@/components/site/EditorialHeader'
 import { BenchLens } from '@/components/workshop/BenchLens'
 import { LedgerLens } from '@/components/workshop/LedgerLens'
 import { LineageLens } from '@/components/workshop/LineageLens'
+import { ReceiptsLens } from '@/components/workshop/ReceiptsLens'
 import { WorkshopShell } from '@/components/workshop/WorkshopShell'
 import {
   DISCIPLINE_LABELS,
@@ -27,16 +28,6 @@ function LineageSlot() {
   )
 }
 
-function ReceiptsPlaceholder() {
-  return (
-    <section aria-label="Receipts calibration" className="mx-auto max-w-6xl">
-      <p className="border-t border-border-1 pt-5 font-mono text-xs tracking-[0.14em] text-text-3">
-        Readings being calibrated.
-      </p>
-    </section>
-  )
-}
-
 export default function ProjectsPage() {
   return (
     <div className="tg-page max-w-6xl">
@@ -51,7 +42,7 @@ export default function ProjectsPage() {
         bench={<BenchLens />}
         lineage={<LineageSlot />}
         ledger={<LedgerLens />}
-        receipts={<ReceiptsPlaceholder />}
+        receipts={<ReceiptsLens />}
       />
     </div>
   )

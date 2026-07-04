@@ -2,12 +2,13 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { DISCIPLINE_LABELS, type Project } from '@/lib/projects'
+import { DISCIPLINE_LABELS, getProject, type Project } from '@/lib/projects'
 import styles from './workshop.module.css'
 
 type ProjectDrawerProps = {
   project: Project | null
   onClose: () => void
+  onSelectProject: (id: string) => void
 }
 
 const linkLabels = {
@@ -21,17 +22,19 @@ function externalHref(value: string): string | null {
   return value.match(/https?:\/\/\S+/)?.[0] ?? null
 }
 
-function lineageChips(project: Project): string[] {
-  return [...(project.lineage?.descends ?? []), ...(project.lineage?.builtWith ?? [])]
+function lineageTargets(ids: readonly string[] | undefined): readonly Project[] {
+  return (ids ?? []).map((id) => getProject(id)).filter((project): project is Project => !!project)
 }
 
-export function ProjectDrawer({ project, onClose }: ProjectDrawerProps) {
+export function ProjectDrawer({ project, onClose, onSelectProject }: ProjectDrawerProps) {
   const [mounted, setMounted] = useState(false)
   const panelRef = useRef<HTMLDivElement | null>(null)
   const closeButtonRef = useRef<HTMLButtonElement | null>(null)
+  const titleRef = useRef<HTMLHeadingElement | null>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
   const closingProjectIdRef = useRef<string | null>(null)
   const hasOpenedRef = useRef(false)
+  const nextProjectRef = useRef<string | null>(null)
 
   useEffect(() => setMounted(true), [])
 
@@ -52,11 +55,18 @@ export function ProjectDrawer({ project, onClose }: ProjectDrawerProps) {
   useEffect(() => {
     if (!project) return
 
-    previousFocusRef.current = document.activeElement as HTMLElement | null
+    const isProjectSwap = nextProjectRef.current === project.id
+    if (!isProjectSwap) previousFocusRef.current = document.activeElement as HTMLElement | null
     closingProjectIdRef.current = project.id
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
-    closeButtonRef.current?.focus()
+    if (isProjectSwap) {
+      if (panelRef.current) panelRef.current.scrollTop = 0
+      titleRef.current?.focus({ preventScroll: true })
+      nextProjectRef.current = null
+    } else {
+      closeButtonRef.current?.focus()
+    }
 
     const getFocusable = () =>
       Array.from(
@@ -86,10 +96,20 @@ export function ProjectDrawer({ project, onClose }: ProjectDrawerProps) {
         first.focus()
         return
       }
-      if (event.shiftKey && active === first) {
+      const activeIndex = focusable.indexOf(active as HTMLElement)
+      if (activeIndex === -1) {
+        // The focused element is inside the panel but not in the standard Tab
+        // sequence (e.g. the titled h2 with tabIndex={-1}). Wrap focus instead
+        // of letting Tab escape into the background.
+        event.preventDefault()
+        if (event.shiftKey) last.focus()
+        else first.focus()
+        return
+      }
+      if (event.shiftKey && activeIndex === 0) {
         event.preventDefault()
         last.focus()
-      } else if (!event.shiftKey && active === last) {
+      } else if (!event.shiftKey && activeIndex === focusable.length - 1) {
         event.preventDefault()
         first.focus()
       }
@@ -104,9 +124,16 @@ export function ProjectDrawer({ project, onClose }: ProjectDrawerProps) {
       previousFocusRef.current = null
       const closingId = closingProjectIdRef.current
       closingProjectIdRef.current = null
+      const nextProjectId = nextProjectRef.current
+      if (nextProjectId && nextProjectId !== closingId) return
 
       const restoreFocus = () => {
-        if (previous && previous.isConnected && previous !== document.body) {
+        if (
+          previous &&
+          previous.isConnected &&
+          previous !== document.body &&
+          !previous.hasAttribute('data-workshop-panel')
+        ) {
           previous.focus()
           return
         }
@@ -124,13 +151,21 @@ export function ProjectDrawer({ project, onClose }: ProjectDrawerProps) {
       }
 
       restoreFocus()
+      window.setTimeout(restoreFocus, 0)
     }
   }, [project, onClose])
 
   if (!mounted || !project) return null
 
   const links = Object.entries(project.links ?? {}) as Array<[keyof typeof linkLabels, string]>
-  const chips = lineageChips(project)
+  const descends = lineageTargets(project.lineage?.descends)
+  const builtWith = lineageTargets(project.lineage?.builtWith)
+  const hasLineage = descends.length > 0 || builtWith.length > 0
+
+  const selectProject = (id: string) => {
+    nextProjectRef.current = id
+    onSelectProject(id)
+  }
 
   return createPortal(
     // z-[80] is the shared drawer/modal layer — AuroraLibrary's detail drawer
@@ -164,7 +199,9 @@ export function ProjectDrawer({ project, onClose }: ProjectDrawerProps) {
               {project.year} · {DISCIPLINE_LABELS[project.discipline]}
             </p>
             <h2
+              ref={titleRef}
               id="project-drawer-title"
+              tabIndex={-1}
               className="font-newsreader text-4xl font-medium leading-tight text-text-1"
             >
               Sealed project
@@ -180,7 +217,9 @@ export function ProjectDrawer({ project, onClose }: ProjectDrawerProps) {
               {DISCIPLINE_LABELS[project.discipline]} · {project.status}
             </p>
             <h2
+              ref={titleRef}
               id="project-drawer-title"
+              tabIndex={-1}
               className="font-newsreader text-4xl font-medium leading-tight text-text-1"
             >
               {project.name}
@@ -228,16 +267,47 @@ export function ProjectDrawer({ project, onClose }: ProjectDrawerProps) {
               </nav>
             ) : null}
 
-            {chips.length ? (
-              <div className="mt-8 flex flex-wrap gap-2" aria-label="Lineage">
-                {chips.map((chip) => (
-                  <span
-                    key={chip}
-                    className="border border-border-1 px-2 py-1 font-mono text-[11px] tracking-[0.1em] text-text-3"
-                  >
-                    {chip}
-                  </span>
-                ))}
+            {hasLineage ? (
+              <div className="mt-8 space-y-4" aria-label="Lineage">
+                {descends.length ? (
+                  <div>
+                    <p className="mb-2 font-mono text-[11px] tracking-[0.12em] text-text-3">
+                      descends from
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {descends.map((target) => (
+                        <button
+                          key={target.id}
+                          type="button"
+                          className="border border-border-1 px-2 py-1 text-left font-mono text-[11px] tracking-[0.1em] text-text-3 transition hover:border-warm hover:text-warm focus-visible:border-warm focus-visible:text-warm"
+                          onClick={() => selectProject(target.id)}
+                        >
+                          {target.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+
+                {builtWith.length ? (
+                  <div>
+                    <p className="mb-2 font-mono text-[11px] tracking-[0.12em] text-text-3">
+                      built with
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {builtWith.map((target) => (
+                        <button
+                          key={target.id}
+                          type="button"
+                          className="border border-border-1 px-2 py-1 text-left font-mono text-[11px] tracking-[0.1em] text-text-3 transition hover:border-warm hover:text-warm focus-visible:border-warm focus-visible:text-warm"
+                          onClick={() => selectProject(target.id)}
+                        >
+                          {target.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
               </div>
             ) : null}
           </>

@@ -92,6 +92,7 @@ None new. framer-motion 12 (present), canvas 2D (native), Zod (present via conte
 - No per-project imagery/screenshots (none exist; design must not want them).
 - No CMS/admin; editing the JSON is the workflow.
 - No public "portfolio PDF" export, no filtering/search UI in v1 (the command palette already exists site-wide; wiring projects into it is a fast follow, not v1).
+- MDX deep-dive rendering in the drawer deferred from v1 (coordinator decision, wave 3): the only deep dive is the-control-room, whose content largely duplicates the colophon. `getDeepDive` stays as the validated hook; drawer wiring is a fast follow.
 - No changes to Library, graph, or aurora layers.
 
 ## Wave plan

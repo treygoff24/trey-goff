@@ -178,6 +178,14 @@ export function WorkshopShell({ projects, bench, lineage, ledger, receipts }: Wo
     tabRefs.current[nextIndex]?.focus()
   }
 
+  // Three-phase visibility contract. All three must change together:
+  // 1. SSR / pre-hydration: .shell[data-hydrated='false'] hides every panel
+  //    except bench via CSS, so the server render and the first paint never
+  //    flash inactive lenses.
+  // 2. Hydrated: the `hidden` attribute on each tabpanel is toggled by the
+  //    active lens; React owns visibility once the tablist is interactive.
+  // 3. No-JS: the <noscript> style force-shows all panels and hides the
+  //    tablist, turning the page into a scrollable index.
   const panels: Record<Lens, ReactNode> = { bench, lineage, ledger, receipts }
 
   return (
@@ -226,7 +234,7 @@ export function WorkshopShell({ projects, bench, lineage, ledger, receipts }: Wo
           role="tabpanel"
           aria-labelledby={`workshop-tab-${item.key}`}
           tabIndex={0}
-          hidden={(hydrated ? lens : 'bench') !== item.key}
+          hidden={hydrated && lens !== item.key}
           data-workshop-panel={item.key}
           data-revealed={revealed[item.key] ? 'true' : 'false'}
           data-animate={
@@ -241,10 +249,14 @@ export function WorkshopShell({ projects, bench, lineage, ledger, receipts }: Wo
       ))}
 
       <noscript>
-        <style>{`section[data-workshop-panel][hidden]{display:block !important}[role="tablist"]{display:none}`}</style>
+        <style>{`section[data-workshop-panel]{display:block !important}[role="tablist"]{display:none}`}</style>
       </noscript>
 
-      <ProjectDrawer project={selectedProject} onClose={closeProject} />
+      <ProjectDrawer
+        project={selectedProject}
+        onClose={closeProject}
+        onSelectProject={openProject}
+      />
     </div>
   )
 }

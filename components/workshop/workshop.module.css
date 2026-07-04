@@ -31,12 +31,21 @@
   padding-block: clamp(2.5rem, 6vw, 5rem);
 }
 
+.shell[data-hydrated='false'] [data-workshop-panel]:not([data-workshop-panel='bench']) {
+  display: none;
+}
+
 .ledgerRows {
   border-top: 1px solid var(--color-border-1);
 }
 
+.receiptRows {
+  border-top: 1px solid var(--color-border-1);
+}
+
 .ledgerRow,
-.benchRow {
+.benchRow,
+.receiptRow {
   position: relative;
   width: 100%;
   border-bottom: 1px solid var(--color-border-1);
@@ -61,14 +70,17 @@
 }
 
 button.ledgerRow,
-button.benchRow {
+button.benchRow,
+button.receiptRow {
   cursor: pointer;
 }
 
 button.ledgerRow:hover .rowTitle::after,
 button.benchRow:hover .rowTitle::after,
+button.receiptRow:hover .rowTitle::after,
 button.ledgerRow:focus-visible .rowTitle::after,
-button.benchRow:focus-visible .rowTitle::after {
+button.benchRow:focus-visible .rowTitle::after,
+button.receiptRow:focus-visible .rowTitle::after {
   transform: scaleX(1);
 }
 
@@ -120,6 +132,40 @@ button.benchRow:focus-visible .rowTitle::after {
   font-size: 0.68rem;
   letter-spacing: 0.08em;
   color: var(--color-warm);
+}
+
+.receiptRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(13rem, max-content);
+  gap: clamp(1rem, 3vw, 2rem);
+  align-items: start;
+  padding-block: clamp(1.1rem, 2.5vw, 1.55rem);
+}
+
+.receiptReadings {
+  display: grid;
+  gap: 0.9rem;
+  justify-items: end;
+}
+
+.receiptReading {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-end;
+  gap: 0.18rem;
+}
+
+.receiptValue {
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  line-height: 1.1;
+  color: var(--color-text-1);
+}
+
+.receiptLabel {
+  font-size: 0.75rem;
+  line-height: 1.25;
+  color: var(--color-text-3);
 }
 
 .redaction {
@@ -272,6 +318,11 @@ button.benchRow:focus-visible .rowTitle::after {
   animation-delay: calc(var(--workshop-section-index, 0) * 55ms);
 }
 
+.shell[data-hydrated='true'] [data-workshop-panel='receipts'][data-animate='true'] .receiptRow {
+  animation: ledgerPrint 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--workshop-row-index, 0) * 40ms);
+}
+
 @keyframes ledgerPrint {
   from {
     opacity: 0;
@@ -324,6 +375,19 @@ button.benchRow:focus-visible .rowTitle::after {
     grid-template-columns: minmax(0, 1fr);
     gap: 0.6rem;
   }
+
+  .receiptRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.85rem;
+  }
+
+  .receiptReadings {
+    justify-items: start;
+  }
+
+  .receiptReading {
+    align-items: flex-start;
+  }
 }
 
 @media (max-width: 639px) {
@@ -336,6 +400,7 @@ button.benchRow:focus-visible .rowTitle::after {
 @media (prefers-reduced-motion: reduce) {
   .shell[data-hydrated='true'] [data-workshop-panel='ledger'][data-animate='true'] .ledgerRow,
   .shell[data-hydrated='true'] [data-workshop-panel='bench'][data-animate='true'] .benchSection,
+  .shell[data-hydrated='true'] [data-workshop-panel='receipts'][data-animate='true'] .receiptRow,
   .drawerPanel {
     animation: none;
     opacity: 1;
