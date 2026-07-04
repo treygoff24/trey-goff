@@ -840,3 +840,27 @@ html[data-konami='true'] a {
 .stack-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.22);
 }
+
+/* Aurora library — thin themed scrollbar for lens overflow (River timeline, detail drawer) */
+.tg-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--color-accent) 30%, transparent) transparent;
+}
+
+.tg-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.tg-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tg-scroll::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--color-accent) 28%, transparent);
+  border-radius: 999px;
+}
+
+.tg-scroll::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--color-accent) 45%, transparent);
+}

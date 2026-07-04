@@ -143,6 +143,7 @@ function drawConstellation({
   context.translate(camera.x, camera.y)
   context.scale(camera.scale, camera.scale)
 
+  const nodesById = new Map(nodes.map((node) => [node.id, node]))
   const categoryAnchors = new Map<AuroraCategoryCode, { x: number; y: number; count: number }>()
   for (const node of nodes) {
     const current = categoryAnchors.get(node.categoryCode) ?? { x: 0, y: 0, count: 0 }
@@ -174,8 +175,8 @@ function drawConstellation({
   }
 
   for (const edge of edges) {
-    const a = nodes.find((node) => node.id === edge.a)
-    const b = nodes.find((node) => node.id === edge.b)
+    const a = nodesById.get(edge.a)
+    const b = nodesById.get(edge.b)
     if (!a || !b) continue
     const book = booksById.get(a.id)
     const dim = !!activeCategory && book?.categoryCode !== activeCategory
@@ -294,6 +295,28 @@ function ConstellationLens({
     return () => window.removeEventListener('resize', onResize)
   }, [fitCamera])
 
+  // React attaches wheel listeners passively, so onWheel can't preventDefault —
+  // the page would scroll while the canvas zooms. Native non-passive listener instead.
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const onWheel = (event: WheelEvent) => {
+      event.preventDefault()
+      const delta = event.deltaY > 0 ? 0.92 : 1.08
+      const rect = canvas.getBoundingClientRect()
+      const camera = cameraRef.current
+      const worldX = (event.clientX - rect.left - camera.x) / camera.scale
+      const worldY = (event.clientY - rect.top - camera.y) / camera.scale
+      const nextScale = Math.max(0.22, Math.min(2.8, camera.scale * delta))
+      camera.scale = nextScale
+      camera.x = event.clientX - rect.left - worldX * nextScale
+      camera.y = event.clientY - rect.top - worldY * nextScale
+      requestRender()
+    }
+    canvas.addEventListener('wheel', onWheel, { passive: false })
+    return () => canvas.removeEventListener('wheel', onWheel)
+  }, [requestRender])
+
   useEffect(() => {
     const canvas = canvasRef.current
     const context = canvas?.getContext('2d')
@@ -346,7 +369,12 @@ function ConstellationLens({
       const nearest = nodes
         .map((node) => ({ node, distance: Math.hypot(node.x - point.x, node.y - point.y) }))
         .sort((a, b) => a.distance - b.distance)[0]
-      if (nearest && nearest.distance <= Math.max(12, nearest.node.radius * 2.2)) {
+      // hit-test in screen px so stars stay clickable when zoomed out
+      const scale = cameraRef.current.scale
+      if (
+        nearest &&
+        nearest.distance * scale <= Math.max(16, nearest.node.radius * 2.02 * scale + 6)
+      ) {
         onSelect(nearest.node.id)
       }
     },
@@ -402,19 +430,6 @@ function ConstellationLens({
             if (event.currentTarget.hasPointerCapture(event.pointerId)) {
               event.currentTarget.releasePointerCapture(event.pointerId)
             }
-          }}
-          onWheel={(event) => {
-            event.preventDefault()
-            const delta = event.deltaY > 0 ? 0.92 : 1.08
-            const rect = event.currentTarget.getBoundingClientRect()
-            const camera = cameraRef.current
-            const worldX = (event.clientX - rect.left - camera.x) / camera.scale
-            const worldY = (event.clientY - rect.top - camera.y) / camera.scale
-            const nextScale = Math.max(0.22, Math.min(2.8, camera.scale * delta))
-            camera.scale = nextScale
-            camera.x = event.clientX - rect.left - worldX * nextScale
-            camera.y = event.clientY - rect.top - worldY * nextScale
-            requestRender()
           }}
         />
         <div className="pointer-events-none absolute left-5 top-4 font-mono text-[11px] uppercase tracking-[0.16em] text-text-2/70">
@@ -954,10 +969,7 @@ export function AuroraLibrary({ books, nodes, edges, topicCount }: AuroraLibrary
         ref={lensViewportRef}
         className="mx-auto max-w-[1240px] px-12 pb-4 max-sm:hidden sm:px-8 lg:px-12"
       >
-        <div
-          className="tg-scroll flex gap-2 overflow-x-auto pb-2"
-          data-testid="library-category-strip"
-        >
+        <div className="flex flex-wrap gap-2" data-testid="library-category-strip">
           <button
             type="button"
             data-testid="library-category-all"
