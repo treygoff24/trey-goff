@@ -75,7 +75,7 @@ export default function AboutPage() {
                 viewBox="0 0 320 400"
                 className="block aspect-[4/5] w-full"
                 role="img"
-                aria-label="A star chart tracing an orbit from Mississippi to Roatán"
+                aria-label="A star chart tracing an orbit from Mississippi to Roatán, crossed at the present moment by a second, fainter orbit"
               >
                 <defs>
                   <radialGradient id="orbit-glow" cx="50%" cy="50%" r="50%">
@@ -101,6 +101,26 @@ export default function AboutPage() {
                 ].map(([x, y]) => (
                   <circle key={`${x}-${y}`} cx={x} cy={y} r="1.5" fill="rgba(232,243,236,0.35)" />
                 ))}
+                {/* a second orbit, different plane — it doesn't track geography.
+                    it crosses the first at the present moment. — F */}
+                <path
+                  d="M302 44 C 258 130, 232 216, 212 292 C 196 350, 164 378, 118 392"
+                  stroke="#E8F3EC"
+                  strokeWidth="1"
+                  strokeDasharray="2 7"
+                  fill="none"
+                  opacity="0.32"
+                />
+                <text
+                  x="290"
+                  y="38"
+                  fill="rgba(232,243,236,0.4)"
+                  fontSize="8"
+                  letterSpacing="1.5"
+                  fontFamily="var(--font-mono)"
+                >
+                  F
+                </text>
                 {/* the arc that matters */}
                 <path
                   d="M92 120 C 150 160, 190 220, 212 292"

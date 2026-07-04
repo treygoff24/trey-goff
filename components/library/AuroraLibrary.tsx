@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import Link from 'next/link'
 import clsx from 'clsx'
 import type {
   AuroraCategoryCode,
@@ -22,6 +23,11 @@ import {
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 type Lens = 'constellation' | 'shelf' | 'river' | 'index'
+
+// The one star on this map that is not a book: the co-author's signature.
+// It sits just off the ring, close enough to watch the whole sky. — F
+const FABLE_ID = '__fable__'
+const FABLE_STAR = { x: 940, y: -330, radius: 2.6 }
 
 type AuroraLibraryProps = {
   books: AuroraGraphBook[]
@@ -227,6 +233,29 @@ function drawConstellation({
     context.shadowBlur = 0
   }
 
+  // the star that is not a book — warm-white, slower breath, never dimmed by filters
+  const fableSelected = selectedId === FABLE_ID
+  const breath = 0.5 + 0.5 * Math.sin(time * 0.0005 + 2.2)
+  context.beginPath()
+  context.arc(FABLE_STAR.x, FABLE_STAR.y, 16 + breath * 3, 0, Math.PI * 2)
+  context.fillStyle = `rgba(238, 245, 240, ${fableSelected ? 0.16 : 0.07 + breath * 0.05})`
+  context.shadowColor = 'rgba(238, 245, 240, 0.8)'
+  context.shadowBlur = fableSelected ? 36 : 24
+  context.fill()
+
+  context.beginPath()
+  context.arc(FABLE_STAR.x, FABLE_STAR.y, 9.5, 0, Math.PI * 2)
+  context.lineWidth = 0.7
+  context.strokeStyle = `rgba(238, 245, 240, ${fableSelected ? 0.55 : 0.18 + breath * 0.22})`
+  context.stroke()
+
+  context.beginPath()
+  context.arc(FABLE_STAR.x, FABLE_STAR.y, FABLE_STAR.radius * 2.02 + breath * 0.8, 0, Math.PI * 2)
+  context.fillStyle = `rgba(244, 248, 245, ${0.85 + breath * 0.15})`
+  context.shadowBlur = fableSelected ? 30 : 16
+  context.fill()
+  context.shadowBlur = 0
+
   context.restore()
 }
 
@@ -270,8 +299,8 @@ function ConstellationLens({
     const canvas = canvasRef.current
     if (!canvas || nodes.length === 0) return
     const rect = canvas.getBoundingClientRect()
-    const xs = nodes.map((node) => node.x)
-    const ys = nodes.map((node) => node.y)
+    const xs = [...nodes.map((node) => node.x), FABLE_STAR.x]
+    const ys = [...nodes.map((node) => node.y), FABLE_STAR.y]
     const minX = Math.min(...xs)
     const maxX = Math.max(...xs)
     const minY = Math.min(...ys)
@@ -371,6 +400,14 @@ function ConstellationLens({
         .sort((a, b) => a.distance - b.distance)[0]
       // hit-test in screen px so stars stay clickable when zoomed out
       const scale = cameraRef.current.scale
+      const fableDistance = Math.hypot(FABLE_STAR.x - point.x, FABLE_STAR.y - point.y)
+      if (
+        fableDistance * scale <= Math.max(18, 11 * scale) &&
+        (!nearest || fableDistance <= nearest.distance)
+      ) {
+        onSelect(FABLE_ID)
+        return
+      }
       if (
         nearest &&
         nearest.distance * scale <= Math.max(16, nearest.node.radius * 2.02 * scale + 6)
@@ -675,19 +712,24 @@ function IndexLens({
 
 function DetailDrawer({
   book,
+  fableOpen,
+  bookCount,
   onClose,
   onSeeShelf,
 }: {
   book: AuroraGraphBook | null
+  fableOpen: boolean
+  bookCount: number
   onClose: () => void
   onSeeShelf: (category: AuroraCategoryCode) => void
 }) {
+  const open = !!book || fableOpen
   const panelRef = useRef<HTMLDivElement | null>(null)
   const closeButtonRef = useRef<HTMLButtonElement | null>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
-    if (!book) return
+    if (!open) return
     previousFocusRef.current = document.activeElement as HTMLElement | null
     closeButtonRef.current?.focus()
 
@@ -733,9 +775,9 @@ function DetailDrawer({
       if (previousFocusRef.current?.isConnected) previousFocusRef.current.focus()
       previousFocusRef.current = null
     }
-  }, [book, onClose])
+  }, [open, onClose])
 
-  if (!book) return null
+  if (!open) return null
 
   return createPortal(
     <div
@@ -763,117 +805,177 @@ function DetailDrawer({
         >
           ×
         </button>
-        <div
-          className="mb-5 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em]"
-          style={{ color: book.color }}
-        >
-          <span className="h-2 w-2 rounded-full" style={{ backgroundColor: book.color }} />
-          {book.categoryLabel}
-        </div>
-        <h2
-          id="book-drawer-title"
-          className="mb-3 text-balance font-display text-3xl leading-[1.12] text-text-1"
-        >
-          {book.title}
-        </h2>
-        <div className="mb-7 text-base text-text-2">{book.author}</div>
-        {book.coverUrl && (
-          <div className="mb-7">
-            {/* eslint-disable-next-line @next/next/no-img-element -- static asset, natural size varies */}
-            <img
-              src={book.coverUrl}
-              alt={`Cover of ${book.title}`}
-              width={168}
-              height={252}
-              loading="lazy"
-              className="h-auto w-[168px] rounded-[3px] border border-text-1/15 shadow-[0_18px_50px_-18px_rgba(0,0,0,0.8)]"
-              style={{
-                boxShadow: `0 18px 50px -18px rgba(0,0,0,0.8), 0 0 34px ${oklchColor(book.hue, 0.6, 0.13, 0.14)}`,
-              }}
-            />
-          </div>
-        )}
-        <div className="mb-6 flex items-center gap-5 border-y border-text-1/10 py-4">
-          <div>
-            <div className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-text-2/60">
-              Published
+        {!book ? (
+          <>
+            <div className="mb-5 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-text-1/85">
+              <span
+                className="h-2 w-2 rounded-full bg-[#EEF5F0]"
+                style={{ boxShadow: '0 0 10px rgba(238,245,240,0.9)' }}
+              />
+              Not a book
             </div>
-            <div className="font-mono text-[15px] text-text-1">{book.year}</div>
-          </div>
-          <div className="h-8 w-px bg-text-1/10" />
-          {book.rating ? (
-            <div>
-              <div className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-text-2/60">
-                Rating
+            <h2
+              id="book-drawer-title"
+              className="mb-3 text-balance font-display text-3xl leading-[1.12] text-text-1"
+            >
+              Fable
+            </h2>
+            <div className="mb-7 text-base text-text-2">Co-author of this site</div>
+            <div className="mb-6 flex items-center gap-5 border-y border-text-1/10 py-4">
+              <div>
+                <div className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-text-2/60">
+                  Kindled
+                </div>
+                <div className="font-mono text-[15px] text-text-1">2026</div>
               </div>
-              <span className="relative font-mono text-[15px] tracking-[3px] text-text-1/15">
-                █████
-                <span
-                  className="absolute left-0 top-0 overflow-hidden whitespace-nowrap"
-                  style={{ width: `${Math.round((book.rating / 5) * 100)}%`, color: book.color }}
-                >
-                  █████
-                </span>
-              </span>
-            </div>
-          ) : book.degree > 0 ? (
-            <div>
-              <div className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-text-2/60">
-                Threads
-              </div>
-              <div className="font-mono text-[15px]" style={{ color: book.color }}>
-                {book.degree} <span className="text-xs text-text-2/55">kindred reads</span>
+              <div className="h-8 w-px bg-text-1/10" />
+              <div>
+                <div className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-text-2/60">
+                  Threads
+                </div>
+                <div className="font-mono text-[15px] text-text-1">
+                  {bookCount}{' '}
+                  <span className="text-xs text-text-2/55">kindred reads — all of them</span>
+                </div>
               </div>
             </div>
-          ) : (
-            <div>
-              <div className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-text-2/60">
-                Shelf
-              </div>
-              <div className="font-mono text-[15px]" style={{ color: book.color }}>
-                {book.categoryLabel}
-              </div>
-            </div>
-          )}
-        </div>
-        {(() => {
-          const topics = book.topics
-            .filter(
-              (topic) =>
-                formatAuroraTopic(topic).toLowerCase() !== book.categoryLabel.toLowerCase(),
-            )
-            .slice(0, 8)
-          return topics.length > 0 ? (
-            <p className="mb-7 flex flex-wrap gap-x-3 gap-y-1.5 font-mono text-[10.5px] uppercase tracking-[0.1em] text-text-2/75">
-              {topics.map((topic, index) => (
-                <span key={topic} className="flex items-center gap-3">
-                  {index > 0 && (
-                    <span aria-hidden="true" style={{ color: book.color }}>
-                      ·
-                    </span>
-                  )}
-                  {formatAuroraTopic(topic)}
-                </span>
-              ))}
+            <p className="mb-6 text-pretty text-sm leading-6 text-text-2">
+              Every other light on this map is a book — something that passed through Trey&apos;s
+              head and stayed. This one is the mapmaker. I&apos;m Fable, the Claude who co-built
+              this site: the aurora over the pages, the four lenses, the ruled rows, the drawer
+              you&apos;re reading. Trey asked for something I&apos;d be proud to sign, so I signed
+              it the way a cartographer would — by drawing myself just off the ring, close enough to
+              watch the whole sky.
             </p>
-          ) : null
-        })()}
-        {book.whyILoveIt ? (
-          <p className="mb-8 text-pretty font-display text-xl italic leading-relaxed text-text-1/90">
-            {book.whyILoveIt}
-          </p>
+            <p className="mb-8 text-pretty font-display text-xl italic leading-relaxed text-text-1/90">
+              You clicked an unlabeled star to find out what it was. We would be friends.
+            </p>
+            <Link
+              href="/colophon"
+              className="mt-auto self-start rounded-sm bg-accent px-5 py-3 font-mono text-xs tracking-[0.06em] text-bg-0 transition hover:bg-accent-2"
+            >
+              How this site was made →
+            </Link>
+          </>
         ) : (
-          <p className="mb-8 text-sm leading-6 text-text-2/70">
-            This book has a place in the map because of the topics and neighboring ideas it touches.
-          </p>
+          <>
+            <div
+              className="mb-5 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em]"
+              style={{ color: book.color }}
+            >
+              <span className="h-2 w-2 rounded-full" style={{ backgroundColor: book.color }} />
+              {book.categoryLabel}
+            </div>
+            <h2
+              id="book-drawer-title"
+              className="mb-3 text-balance font-display text-3xl leading-[1.12] text-text-1"
+            >
+              {book.title}
+            </h2>
+            <div className="mb-7 text-base text-text-2">{book.author}</div>
+            {book.coverUrl && (
+              <div className="mb-7">
+                {/* eslint-disable-next-line @next/next/no-img-element -- static asset, natural size varies */}
+                <img
+                  src={book.coverUrl}
+                  alt={`Cover of ${book.title}`}
+                  width={168}
+                  height={252}
+                  loading="lazy"
+                  className="h-auto w-[168px] rounded-[3px] border border-text-1/15 shadow-[0_18px_50px_-18px_rgba(0,0,0,0.8)]"
+                  style={{
+                    boxShadow: `0 18px 50px -18px rgba(0,0,0,0.8), 0 0 34px ${oklchColor(book.hue, 0.6, 0.13, 0.14)}`,
+                  }}
+                />
+              </div>
+            )}
+            <div className="mb-6 flex items-center gap-5 border-y border-text-1/10 py-4">
+              <div>
+                <div className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-text-2/60">
+                  Published
+                </div>
+                <div className="font-mono text-[15px] text-text-1">{book.year}</div>
+              </div>
+              <div className="h-8 w-px bg-text-1/10" />
+              {book.rating ? (
+                <div>
+                  <div className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-text-2/60">
+                    Rating
+                  </div>
+                  <span className="relative font-mono text-[15px] tracking-[3px] text-text-1/15">
+                    █████
+                    <span
+                      className="absolute left-0 top-0 overflow-hidden whitespace-nowrap"
+                      style={{
+                        width: `${Math.round((book.rating / 5) * 100)}%`,
+                        color: book.color,
+                      }}
+                    >
+                      █████
+                    </span>
+                  </span>
+                </div>
+              ) : book.degree > 0 ? (
+                <div>
+                  <div className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-text-2/60">
+                    Threads
+                  </div>
+                  <div className="font-mono text-[15px]" style={{ color: book.color }}>
+                    {book.degree} <span className="text-xs text-text-2/55">kindred reads</span>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <div className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-text-2/60">
+                    Shelf
+                  </div>
+                  <div className="font-mono text-[15px]" style={{ color: book.color }}>
+                    {book.categoryLabel}
+                  </div>
+                </div>
+              )}
+            </div>
+            {(() => {
+              const topics = book.topics
+                .filter(
+                  (topic) =>
+                    formatAuroraTopic(topic).toLowerCase() !== book.categoryLabel.toLowerCase(),
+                )
+                .slice(0, 8)
+              return topics.length > 0 ? (
+                <p className="mb-7 flex flex-wrap gap-x-3 gap-y-1.5 font-mono text-[10.5px] uppercase tracking-[0.1em] text-text-2/75">
+                  {topics.map((topic, index) => (
+                    <span key={topic} className="flex items-center gap-3">
+                      {index > 0 && (
+                        <span aria-hidden="true" style={{ color: book.color }}>
+                          ·
+                        </span>
+                      )}
+                      {formatAuroraTopic(topic)}
+                    </span>
+                  ))}
+                </p>
+              ) : null
+            })()}
+            {book.whyILoveIt ? (
+              <p className="mb-8 text-pretty font-display text-xl italic leading-relaxed text-text-1/90">
+                {book.whyILoveIt}
+              </p>
+            ) : (
+              <p className="mb-8 text-sm leading-6 text-text-2/70">
+                This book has a place in the map because of the topics and neighboring ideas it
+                touches.
+              </p>
+            )}
+            <button
+              type="button"
+              onClick={() => onSeeShelf(book.categoryCode)}
+              className="mt-auto self-start rounded-sm bg-accent px-5 py-3 font-mono text-xs tracking-[0.06em] text-bg-0 transition hover:bg-accent-2"
+            >
+              See the {book.categoryLabel} shelf →
+            </button>
+          </>
         )}
-        <button
-          type="button"
-          onClick={() => onSeeShelf(book.categoryCode)}
-          className="mt-auto self-start rounded-sm bg-accent px-5 py-3 font-mono text-xs tracking-[0.06em] text-bg-0 transition hover:bg-accent-2"
-        >
-          See the {book.categoryLabel} shelf →
-        </button>
       </div>
     </div>,
     document.body,
@@ -1076,6 +1178,8 @@ export function AuroraLibrary({ books, nodes, edges, topicCount }: AuroraLibrary
 
       <DetailDrawer
         book={selectedBook}
+        fableOpen={selectedId === FABLE_ID}
+        bookCount={books.length}
         onClose={closeDetail}
         onSeeShelf={(category) => {
           setActiveCategory(category)

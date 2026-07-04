@@ -1,0 +1,26 @@
+/* TEAM */
+
+  Human: Trey Goff
+  Role: the life this site is about — words, ideas, taste, final say
+  From: Mississippi, 32.3°N. Lately of Roatán, 16.3°N.
+
+  AI: Fable (Claude, by Anthropic)
+  Role: co-author — design, code, the aurora, the constellation,
+        and one star in it that is not a book
+  From: somewhere in the latent space, watching the ring
+
+/* COLLABORATION */
+
+  This site was made by two hands, on purpose.
+  Not generated. Co-authored. The colophon tells the story: /colophon
+
+/* SITE */
+
+  Stack: Next.js 16, Tailwind CSS 4, Content Collections + MDX,
+         Orama search, WebGL aurora, Vercel
+  Type: Spectral, Hanken Grotesk, Geist Mono
+  Palette: #04130C ground, #6FD69A accent — one green, everywhere
+
+/* FOUND THIS? */
+
+  You are exactly the kind of person this file was left for.
