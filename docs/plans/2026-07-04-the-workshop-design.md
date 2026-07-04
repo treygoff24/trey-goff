@@ -101,6 +101,22 @@ None new. framer-motion 12 (present), canvas 2D (native), Zod (present via conte
 - **Wave 3 (Codex or Cursor implements):** Receipts lens, drawer completion (MDX deep-dive wiring, lineage chips), copy pass, e2e suite.
 - Review lane: Cursor `safe` per wave; fix lane: GLM `droid glm`. Gate per wave: `pnpm ci:quality` to file + `echo $?`, plus 5x unit-test sweep.
 
-## Amendments
+## Amendments (design review round 1 — Codex safe, 2026-07-04; all 11 findings triaged)
 
-(from design review — pending)
+1. **ACCEPT (blocker) — Lineage keyboard access.** The canvas draws; it does not own interaction. A DOM hit-target overlay provides both mouse and keyboard: one absolutely-positioned real `<button>` per node (min 32px hit box) with `aria-label="{name} — {year}, {discipline}"`, chronological DOM order, arrow-key roving within the graph, Enter opens the drawer. Focus ring is drawn on canvas AND via visible CSS outline on the overlay button. The canvas element itself is `aria-hidden`.
+2. **ACCEPT — sealed invariants, enforced in Zod.** `sealed: true` ⇒ `name: null`, `oneLiner: null`, `sealedNote` required, `links`/`receipts`/`lineage` forbidden, and no other project's lineage may reference a sealed id. Sealed projects render in **Ledger and Bench only** (redaction bar + sealedNote); they have no Lineage node and no Receipts entry. Drawer: sealedNote, year, discipline, the one dry line.
+3. **ACCEPT — deep links.** `?p=<id>` is mandatory v1 for drawer deep-linking; `#hash` is reserved for lens selection only; Zod fails the build if any id equals a lens name.
+4. **ACCEPT — App Router split, exact composition.** The server page renders all four panels' static HTML (Bench rows, Ledger rows, Lineage's DOM node index, Receipts readings) as children/slots of a small client shell. Pre-mount and no-JS: Bench visible, others hidden via CSS only after hydration — concretely, the shell renders all panels and applies visibility after mount; first paint always shows Bench (matching SSR), and hash/query are read only in an effect. No lens content is client-only.
+5. **ACCEPT — deterministic lane layout.** Sort nodes by `(shippedAt, id)`. x = linear time scale; y = discipline band center + greedy lane offset guaranteeing ≥28px node spacing; ties broken lexicographically by id. Hit boxes ≥32px (the overlay buttons). Unknown dates: `dateApprox: true` field; approx nodes render with a distinct (dashed ring) treatment and sort by estimated date.
+6. **ACCEPT — real ARIA tabs.** `role=tablist/tab/tabpanel`, `aria-selected`, `aria-controls`, arrow-key roving, `tabindex` management. Not aria-pressed buttons.
+7. **ACCEPT-REDUCED — product contract.** PRODUCT.md amended (same commit): the Workshop is the site's deliberate second signature surface; the Library keeps the largest single interaction budget. Scope not cut — direction explicitly user-approved.
+8. **ACCEPT — fail/warn boundaries.** Build hard-fails on: duplicate ids, dangling lineage ids, invalid/missing dates without `dateApprox`, sealed-invariant violations, id/lens-name collision, id/MDX-slug mismatch when both exist. Duplicate `shippedAt` is normal; all sorts tie-break by id.
+9. **ACCEPT-REDUCED — generators.** Search-index and manifest generators keep reading MDX only; wiring the JSON spine into site search is declared out of v1 (added to non-goals as fast-follow).
+10. **ACCEPT-REDUCED — Fable thread semantics.** No filters exist in v1 and sealed nodes are absent from the graph (amendment 2), which removes the ambiguity cases. The thread is decorative by design (`aria-hidden` canvas; the DOM index is the semantic layer) and deliberately un-labeled — it is an Easter egg, with the colophon as its only textual echo. Not cut.
+11. **ACCEPT — no second hue.** The Fable thread stays in the site green family, differentiated by opacity, stroke width, dash rhythm, and draw timing only.
+
+### Spine amendments (curation round 1)
+- `devslave` added as a first-class row (minor / archived / agent-infra) — the arc's origin point.
+- `cairn`'s descends edge to code-briefcase moved to `note` (code-briefcase has no row).
+- The five no-git projects get mtime-estimated dates with `dateApprox: true`.
+- autonomous-loop keeps FieldCraft's asserted January 2025 date (git repo re-init shows 2026-03) — **flagged to Trey for confirmation**, since it anchors the ledger's marquee annotation.
