@@ -49,6 +49,7 @@
     "@react-three/postprocessing": "^3.0.4",
     "@react-three/rapier": "^2.2.0",
     "@vercel/speed-insights": "^2.0.0",
+    "ai": "^6.0.230",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "ecctrl": "^1.0.97",

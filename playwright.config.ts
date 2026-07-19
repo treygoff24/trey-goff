@@ -38,7 +38,12 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        // SwiftShader gives headless Chromium a software WebGL2 context so the
+        // /machine live-simulation path renders in CI instead of falling back.
+        launchOptions: { args: ['--enable-unsafe-swiftshader'] },
+      },
     },
     {
       name: 'webkit',
@@ -47,7 +52,10 @@ export default defineConfig({
     /* Mobile viewports for responsive testing */
     {
       name: 'mobile-chrome',
-      use: { ...devices['Pixel 5'] },
+      use: {
+        ...devices['Pixel 5'],
+        launchOptions: { args: ['--enable-unsafe-swiftshader'] },
+      },
     },
     {
       name: 'mobile-safari',
@@ -66,6 +74,10 @@ export default defineConfig({
       // Lab features run enabled under e2e; dormant states are unit-tested.
       NEXT_PUBLIC_ENABLE_EDITION: 'true',
       NEXT_PUBLIC_ENABLE_RESIDENT: 'true',
+      ANNEX_SECRET: 'e2e-annex-secret-with-at-least-thirty-two-chars',
+      ANNEX_GITHUB_TOKEN: 'e2e-annex-github-token',
+      ANNEX_CONTENT_REPO: 'e2e/annex-content',
+      ANNEX_GITHUB_API_URL: 'http://127.0.0.1:3102',
     },
   },
 })

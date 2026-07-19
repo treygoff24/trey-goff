@@ -29,6 +29,9 @@ const PROTECTED_ROUTES = [
   '/now',
   '/colophon',
   '/graph',
+  '/edition',
+  '/mission-control',
+  '/resident',
 ]
 
 const HEAVY_3D_PATTERNS = [
@@ -178,6 +181,16 @@ function verifyInteractiveDynamicImport(): string | null {
     : 'InteractiveWorld should stay behind next/dynamic in InteractiveShell'
 }
 
+// /machine is the one new heavy R3F route; its scene must load via next/dynamic
+// so the three.js payload never lands in a protected editorial route's bundle.
+function verifyMachineDynamicImport(): string | null {
+  const source = readText('components/machine/MachineShell.tsx')
+  if (!source) return 'components/machine/MachineShell.tsx missing'
+  return source.includes('dynamic(') && source.includes('MachineWorld')
+    ? null
+    : 'MachineWorld should stay behind next/dynamic in MachineShell'
+}
+
 console.log('Bundle Isolation Check\n')
 console.log('='.repeat(50))
 
@@ -191,6 +204,7 @@ const routeAnalyses = PROTECTED_ROUTES.map((route) => resolveRouteArtifacts(rout
 const missingArtifacts = PROTECTED_ROUTES.filter((_, index) => routeAnalyses[index] === null)
 const analyses = routeAnalyses.filter((analysis): analysis is RouteAnalysis => analysis !== null)
 const interactiveWarning = verifyInteractiveDynamicImport()
+const machineWarning = verifyMachineDynamicImport()
 const violations = analyses.flatMap((analysis) =>
   analysis.forbidden.map((hit) => ({ route: analysis.route, ...hit })),
 )
@@ -219,6 +233,11 @@ if (interactiveWarning) {
 } else {
   console.log('   ✓ /interactive keeps InteractiveWorld dynamically imported')
 }
+if (machineWarning) {
+  console.log(`   ⚠ ${machineWarning}`)
+} else {
+  console.log('   ✓ /machine keeps MachineWorld dynamically imported')
+}
 
 const failures = [
   ...missingAppRoutes.map((route) => `missing app route mapping: ${route}`),
@@ -233,7 +252,7 @@ console.log(`Protected routes: ${PROTECTED_ROUTES.length}`)
 console.log(`Missing app route mappings: ${missingAppRoutes.length}`)
 console.log(`Missing route artifacts: ${missingArtifacts.length}`)
 console.log(`Forbidden package violations: ${violations.length}`)
-console.log(`Warnings: ${interactiveWarning ? 1 : 0}`)
+console.log(`Warnings: ${(interactiveWarning ? 1 : 0) + (machineWarning ? 1 : 0)}`)
 
 if (failures.length > 0) {
   console.log('\n✗ Bundle isolation FAILED')
