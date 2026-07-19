@@ -280,6 +280,19 @@ test('annex code stays outside client, content, public generators, and client-li
     /from ['"]next\/link['"]/,
     'reading room must use native anchors',
   )
+
+  // Existence-hiding: no public page may link or name /classified. Only the
+  // annex's own files may; the proxy bootstrap lives at the repo root, outside
+  // this scanned set. A stray /lab-style reference would blow the annex cover.
+  const annexFileSet = new Set(annexFiles)
+  for (const [file, source] of sources) {
+    if (annexFileSet.has(file)) continue
+    assert.doesNotMatch(
+      source,
+      /['"`]\/classified/,
+      `${file} must not reference /classified (annex existence-hiding)`,
+    )
+  }
 })
 
 test('entry authorization is uniform before any missing-entry decision', async () => {

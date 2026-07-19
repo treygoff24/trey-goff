@@ -37,13 +37,6 @@ const experiments = [
     description:
       'A live operating picture — focus, lifts, reading, writing, shipping, orbit — where every instrument carries its own clock and nothing is inferred.',
   },
-  {
-    href: '/classified',
-    meta: 'Private · Gated',
-    title: 'The Annex',
-    description:
-      'A friends-only reading room behind a shared secret, wrapped for everyone else in a deadpan notice of administrative non-access.',
-  },
 ]
 
 export default function LabPage() {
@@ -51,7 +44,7 @@ export default function LabPage() {
     <div className="tg-page max-w-4xl">
       <header className="border-b border-border-2 pb-10">
         <p className="tg-eyebrow">The Lab</p>
-        <h1 className="tg-display mt-6 max-w-3xl">Five experiments, one to keep.</h1>
+        <h1 className="tg-display mt-6 max-w-3xl">Four experiments, one to keep.</h1>
         <p className="tg-standfirst mt-6 max-w-2xl">
           Prototypes for the site — each one a different answer to &ldquo;how was this made?&rdquo;
           None has touched the homepage. Walk through them, then tell me which one earns its place.
