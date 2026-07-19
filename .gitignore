@@ -59,6 +59,8 @@ test-results/
 # Local agent/tooling state
 .code-briefcase/
 .code-briefcaseignore
+.scratch/
+_scratch/
 
 # Porting/source drafts
 content/essays/_agent-memory.source.md
