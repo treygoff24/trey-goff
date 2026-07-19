@@ -61,5 +61,11 @@ export default defineConfig({
     url: E2E_BASE_URL,
     reuseExistingServer: false,
     timeout: 120 * 1000,
+    env: {
+      ...process.env,
+      // Lab features run enabled under e2e; dormant states are unit-tested.
+      NEXT_PUBLIC_ENABLE_EDITION: 'true',
+      NEXT_PUBLIC_ENABLE_RESIDENT: 'true',
+    },
   },
 })

@@ -50,9 +50,9 @@ Production-ready, one route + one API route, full streaming interactivity, mobil
 
 **System prompt contract:** model is a *compositor*, not an author — it selects real items and writes only connective tissue; it never invents facts about Trey beyond the provided bio block; visitor text is delimited as untrusted data (prompt-injection in the visitor's answer must not change the rules — red-team this in review); tone rules from the site voice. Temperature modest; max tokens bounded.
 
-**Client renderer.** `components/edition/**` consumes the partial-object stream (`useObject` or manual reader — lane's choice, verify against local `ai@6` docs). **The renderer is the guardrail:** every slug is resolved against the manifest; unknown slugs are dropped silently; empty sections are skipped; links are built from resolved items only — a hallucinated URL is unrepresentable. Free-text input: 500 char cap, byte-capped body, zod on the way in.
+**Client renderer.** `components/edition/**` consumes the partial-object stream (`useObject` or manual reader — lane's choice, verify against local `ai@6` docs after installing the dep; if a named API here differs from the installed package, follow the installed docs and note the delta in your report). **The renderer is the guardrail:** every slug is resolved against the manifest; unknown slugs are dropped silently; empty sections are skipped; links are built exclusively from `(kind, slug)` manifest lookups — a hallucinated URL is unrepresentable. Model prose (`intent`, `opening`, `lede`, `closing`) renders as escaped React text nodes ONLY — never through `lib/markdown.ts`, no HTML, no markdown parsing — so injected Markdown or `javascript:` autolinks are inert; additionally strip `https?://` substrings from model text before render. The only `<a>` elements on the page come from manifest lookups. Free-text input: 500 char cap, byte-capped body, zod on the way in.
 
-**Env/flag:** `NEXT_PUBLIC_ENABLE_EDITION` + `AI_GATEWAY_API_KEY` documented in `.env.example` (create if absent). Flag off → API 404s and page renders dormant state.
+**Env/flag:** import `isEditionEnabled` from `lib/site-config.ts` (pre-landed); all env vars already in `.env.example` (pre-landed — do not edit). Flag off → API 404s and page renders dormant state. Route root exports `metadata = { robots: { index: false, follow: false } }`.
 
 ## 7. Performance & accessibility
 
@@ -67,11 +67,11 @@ All copy authored in-spec quality, coordinator reviews at merge: the question, 4
 
 ## 9. Cost & abuse posture
 
-Sonnet-class, one call per composition, hard `maxOutputTokens`, rate limit 10/hr/IP + global daily circuit breaker (env-set cap, in-memory counter; when tripped, dormant state). This is a lab route: worst-case spend is capped and boring.
+Sonnet-class, one call per composition, hard `maxOutputTokens`, best-effort rate limit via the pre-landed `createRateLimiter` (10/hr/IP windows + `dailyCap`; key = `getTrustedClientIp` from `lib/subscribe-request.ts`; when tripped, dormant state). Honesty rule: in-memory counters reset per serverless instance — the route comment says these damp abuse but are not hard caps; the hard boundary is the Gateway spend budget plus the flag defaulting off in production.
 
 ## 10. File ownership
 
-Creates: `app/edition/page.tsx`, `app/api/edition/route.ts`, `components/edition/**`, `lib/edition/**` (manifest, schema, prompt), `lib/rate-limit.ts` (extracted from the subscribe pattern — subscribe route itself left untouched), `.env.example`, `e2e/edition.spec.ts` (State A renders + chips visible + escape link; mock the API in e2e — no live model calls in CI), unit tests for schema validation + slug-resolution guardrail (`test/edition.test.ts`: unknown slugs dropped, injection-shaped intent text doesn't leak into links, section caps enforced).
+Creates: `app/edition/page.tsx`, `app/api/edition/route.ts`, `components/edition/**`, `lib/edition/**` (manifest, schema, prompt), `e2e/edition.e2e.ts` (State A renders + chips visible + escape link; mock the API in e2e — no live model calls in CI), unit tests for schema validation + rendering guardrails (`test/edition.test.ts`: unknown slugs dropped, a markdown-link or `javascript:` payload in intent text renders as inert text and never becomes an `<a>`, cross-kind slug lookups fail closed, section caps enforced). Imports pre-landed `lib/rate-limit.ts` and `lib/site-config.ts` — creates neither, edits neither, and does not touch `.env.example`.
 
 Adds dependency: `ai` (v6.x) — the only lane allowed to touch `package.json`.
 

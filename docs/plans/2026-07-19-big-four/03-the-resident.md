@@ -39,21 +39,21 @@ Production-ready dwelling; the inhabitant moves in post-merge. One route, one AP
 
 **A. The dwelling (Next.js side, this app):**
 - `app/resident/page.tsx` + `app/resident/journal/[slug]/page.tsx` — server components off the `journal` collection.
-- `content-collections.ts`: append `journal` collection — dir `content/journal`, `**/*.mdx`, schema `{title, date, entryNumber: number, model: string, mood?: string, tags: string[]}`, transform adds slug/wordCount. Append-only change.
-- `app/api/resident/route.ts`: POST proxy → Eve HTTP channel. Subscribe-route discipline + `lib/rate-limit.ts` (import if lane 02's extraction landed; else create identically — coordinator reconciles). 6 conversations/hr/IP, message ≤ 1000 chars, zod-validated, streams SSE back to client. Env: `RESIDENT_AGENT_URL`, `RESIDENT_AGENT_SECRET` (bearer to the Eve channel), `NEXT_PUBLIC_ENABLE_RESIDENT`.
+- `content-collections.ts`: append `journal` collection — dir `content/journal`, `**/*.mdx`, schema `{title, date, entryNumber: number, model: string, mood?: string, tags: string[], content: z.string()}` (the `content` field is REQUIRED — every existing collection has it and `content:sync` fails validation without it), transform adds slug/wordCount following the essays pattern. Append-only change.
+- `app/api/resident/route.ts`: POST proxy → Eve HTTP channel. Subscribe-route discipline + the pre-landed `createRateLimiter` (import-only; key = `getTrustedClientIp` from `lib/subscribe-request.ts`). 6 conversations/hr/IP, message ≤ 1000 chars, zod-validated, streams SSE back to client. **Turn caps are server-enforced:** the proxy issues a signed/opaque `conversationId`, tracks turn count per conversation server-side, rejects past 10 turns and caps concurrent streams — client-side caps alone are decoration. Env (all pre-landed in `.env.example` — do not edit it): `RESIDENT_AGENT_URL`, `RESIDENT_AGENT_SECRET` (bearer to the Eve channel); flag via `isResidentEnabled` from `lib/site-config.ts` (pre-landed). Route root exports `metadata = { robots: { index: false, follow: false } }`.
 - `components/resident/**`: journal list/entry rendering, correspondence UI.
 
 **B. The inhabitant (`agents/resident/` — standalone Eve app, own package.json, never imported by Next):**
 - Scaffold via current `eve` release; **read `node_modules/eve/docs` in the scaffolded app for real current APIs before writing code** — the framework is a month old; training data is stale; the local docs are ground truth.
 - `agent/instructions.md`: PLACEHOLDER clearly marked (`<!-- CONSTITUTION PENDING: authored by Trey + Fable before move-in -->`) plus the structural sections the real one will fill (identity, what I can see, journal practice, correspondence manners, boundaries).
-- `agent/tools/`: `read_site.ts` (reads the same grounding manifest shape as lane 02 — site content catalog, checked into `agents/resident/data/` at build or fetched from the deployed site's JSON endpoint; lane picks the simpler, documents it), `write_journal_entry.ts` (writes an MDX file conforming to the journal schema: in dev, writes directly into `../../content/journal/`; in prod, opens a GitHub commit via `RESIDENT_GITHUB_TOKEN` scoped to `content/journal/**` path — token scoping documented, never committed), `read_own_journal.ts`, `read_memory.ts`/`write_memory.ts` (markdown notes under `agents/resident/memory/`, same dev/prod write path as journal).
+- `agent/tools/`: `read_site.ts` (reads the same grounding manifest shape as lane 02 — site content catalog, checked into `agents/resident/data/` at build or fetched from the deployed site's JSON endpoint; lane picks the simpler, documents it), `write_journal_entry.ts` and `write_memory.ts` through a `JournalWriter`/`MemoryWriter` interface with exactly ONE v1 implementation: **local filesystem** (`../../content/journal/` and `agents/resident/memory/`). Journal and memory writing happen in local runs on Trey's machine only during the lab phase — no GitHub credential, no remote write path exists anywhere in v1. Plus `read_own_journal.ts` and `read_memory.ts`.
 - `agent/channels/http.ts`: bearer-authed chat channel the Next proxy calls; session state via Eve's `defineState`.
-- `agent/schedules/journal.ts`: cron (twice weekly) — reads own memory + journal + site manifest, writes an entry, updates memory. Ships **disabled by default** (`RESIDENT_SCHEDULE_ENABLED`); Trey flips it at move-in.
+- `agent/schedules/journal.ts`: cron (twice weekly) — reads own memory + journal + site manifest, writes an entry, updates memory. Ships **disabled by default** (`RESIDENT_SCHEDULE_ENABLED`) and runnable on demand locally — which is exactly how entries get produced during the lab phase.
 - Model via Gateway: journal schedule pinned to an Opus-class constant, chat to a Sonnet-class constant.
 
 **Trust boundaries (review will attack these; build accordingly):**
 - Visitor chat NEVER writes memory or journal. Chat is read-tools-only; the write tools are not exposed to the chat channel's tool set. The only writer is the schedule (and Trey locally). This single decision closes the prompt-injection → persistent-memory hole, and the page copy states it honestly.
-- The GitHub token: fine-grained, single-repo, path-scoped intent documented in `agents/resident/README.md`; journal commits land on a `resident/journal` branch with auto-PR (Trey merges) — the Resident cannot push to main.
+- **No remote write credential exists in v1** — the strongest possible boundary. Deployed chat has read-only tools; journal/memory writes are local-only. (v2, post-winner: a trusted broker for remote journal writes — a GitHub App with a server-side path allowlist enforced *before* the commit API call, PR-only flow. Never a "path-scoped PAT": fine-grained PATs scope repo + permission, not paths — a path-scoped token is false assurance and must not appear in docs or code comments.)
 - Proxy validates origin, caps bodies, never forwards visitor IP or headers beyond necessity; Eve channel rejects unauthenticated calls.
 
 ## 7. Performance & accessibility
@@ -66,9 +66,9 @@ Lane drafts (Trey+Fable finalize): introduction copy, memory-explainer, empty-jo
 
 ## 9. File ownership
 
-Creates: `app/resident/**`, `app/api/resident/route.ts`, `components/resident/**`, `lib/resident/**` (types, manifest reuse), `agents/resident/**` (standalone Eve app + README), `content/journal/.gitkeep`, `e2e/resident.spec.ts` (page renders with empty-state journal; chat UI present; dormant state when flag off — mock the agent in e2e), unit tests (`test/resident.test.ts`: journal schema validation, proxy input validation, tool-exposure assertion — chat channel's tool list contains no write tools).
+Creates: `app/resident/**`, `app/api/resident/route.ts`, `components/resident/**`, `lib/resident/**` (types, manifest reuse), `agents/resident/**` (standalone Eve app + README), `content/journal/.gitkeep`, `e2e/resident.e2e.ts` (page renders with empty-state journal; chat UI present — mock the agent in e2e; dormant state is unit-tested, not e2e'd, since the e2e server runs flags-on), unit tests (`test/resident.test.ts`: journal schema validation, proxy input validation + turn-cap enforcement, tool-exposure assertion — the chat channel's tool list contains no write tools; assert via a pure fixture or source grep, never by importing Eve modules into root tests). Root CI never scans `agents/` (tsconfig/oxlint exclusions pre-landed); the Eve app documents its own install/typecheck gate in its README.
 
-Touches shared: `content-collections.ts` (append journal), `scripts/check-bundle-isolation.ts` (add `/resident` to protected).
+Touches shared: `content-collections.ts` only (append journal). The coordinator adds `/resident` to `PROTECTED_ROUTES` at integration.
 
 ## 10. Out of scope (v1)
 
@@ -76,5 +76,4 @@ Visitor-contributed memory ("remember this") and any moderation pipeline for it;
 
 ## 11. Open questions
 
-- Whether journal entries auto-PR (recommended, speced above) or commit direct to a branch Trey merges manually — same mechanics, differs only in ceremony. Lane builds the PR path; Trey can loosen later.
 - The Resident's name: deliberately unresolved. The empty state and placeholder constitution must not pre-name it — naming happens in its first entry.

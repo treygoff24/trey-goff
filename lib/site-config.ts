@@ -10,3 +10,5 @@ export const isNewsletterEnabled = parseBooleanFlag(process.env.NEXT_PUBLIC_ENAB
 export const isInteractiveWorldEnabled = parseBooleanFlag(
   process.env.NEXT_PUBLIC_ENABLE_INTERACTIVE_WORLD,
 )
+export const isEditionEnabled = parseBooleanFlag(process.env.NEXT_PUBLIC_ENABLE_EDITION)
+export const isResidentEnabled = parseBooleanFlag(process.env.NEXT_PUBLIC_ENABLE_RESIDENT)

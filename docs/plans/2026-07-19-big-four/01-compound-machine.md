@@ -25,7 +25,7 @@ Production-ready quality, one route, full interactivity. Desktop is the primary 
 
 ## 5. Experience walkthrough
 
-**Layout.** Full-bleed immersive route, no site chrome (nested layout per shared contracts). Three regions:
+**Layout.** Full-bleed immersive route following the `/interactive` precedent exactly: nested `layout.tsx` plus a shell component in the `InteractiveShell` mold (full-viewport surface; the root chrome remains mounted underneath — match `/interactive`'s existing overlay and focus handling, and do not attempt a root-layout or route-group refactor). Route root exports `metadata = { robots: { index: false, follow: false } }`. Three regions:
 
 1. **The world** (dominant): isometric-ish perspective camera over a district grid where agents live and structures accrete. Slow ambient camera drift; pointer parallax (subtle, disabled on reduced-motion).
 2. **The console** (bottom or right edge, DOM not canvas): the levers, run controls, and readouts. Mono labels, hairline rules, editorial voice. This is real DOM — keyboard accessible, screen-reader legible.
@@ -64,11 +64,13 @@ Per agent: capital `k`, skill `s` (lognormal, fixed at seed), and an investment-
 
 Aggregates per tick: total output, structures completed, median wealth. This is Solow-flavored micro with institutional wedges — legible, defensible, and it genuinely produces the divergence (investment collapse under insecurity is the mechanism, not a scripted outcome). **No scripted outcomes:** the levers change parameters; the world does the rest.
 
+**Pinned parameters** (all constants in one exported `PARAMS` object in `lib/machine/sim.ts`; tune once during build until behavior is stable, then freeze): α = 0.3; depreciation δ = 0.5%/tick on `k`; initial `k` ~ LogNormal(μ=0, σ=0.5); skill `s` ~ LogNormal(μ=0, σ=0.4), fixed at seed; expected return r̂ = α·s·k^(α−1) − δ; invest propensity p = logistic(β·(r̂ − λ·ρ)), starting β = 4, λ = 8; tax drag removes share `t` of investable output; trade: 10% of agents pair randomly per tick, pair gain = τ·|s_i − s_j| split evenly; consumption is the residual (no debt, `k` never negative). The divergence test is a **characterization, not a theorem**: at frozen params, assert secure-vs-predatory ordering with ≥1.5× total output at tick 1000, plus monotonicity (output weakly increases as ρ falls, same seed). If tuning can't produce that honestly, report the actual behavior rather than forcing the threshold.
+
 Sim runs in the main thread inside a fixed-step accumulator (target: full tick loop for 15k agents < 4ms; it's arithmetic over typed arrays — use `Float32Array`/`Uint32Array` SoA layout, zero per-tick allocation). If profiling shows it can't hold 4ms, move to a Web Worker with transferable state — but measure first.
 
 ## 7. Rendering
 
-- R3F + drei, reusing `lib/interactive/capabilities.ts` + quality presets. `three` and rapier are already deps; **do not use rapier** (no physics here).
+- R3F + drei. Device tiering: consume `detectCapabilities().suggestedTier` from `lib/interactive/capabilities.ts` (`suggestQualityTier` is unexported — the `suggestedTier` field on the returned object is the API; do not export the helper). For live tier adjustment reuse `createAutoTuneState`/`recordFrameSample` from `lib/interactive/quality.ts`; map tier → agent counts in your own `lib/machine/quality.ts` (the interactive `QUALITY_PRESETS` are `/interactive`-shaped — don't reuse them wholesale). `three` and rapier are already deps; **do not use rapier** (no physics here).
 - Agents: single `InstancedMesh` (small emissive quads/sprites). Structures: single `InstancedMesh` of unit boxes, height-scaled per parcel; emissive intensity ∝ parcel wealth. District ground: one plane with a subtle shader gradient. Target draw calls: **< 20 per panel**.
 - Agent counts by tier: low 1,500 / medium 6,000 / high 15,000 per panel (halve in split mode on medium and low).
 - Split mode: one canvas, two scenes via drei `<View>` (scissored viewports) — not two `<Canvas>` mounts.
@@ -89,7 +91,7 @@ Sim runs in the main thread inside a fixed-step accumulator (target: full tick l
 
 ## 10. File ownership
 
-Creates: `app/machine/{layout.tsx,page.tsx}`, `components/machine/**` (shell, console, panels), `lib/machine/**` (sim core, presets, seed utils), `e2e/machine.spec.ts`, unit tests for the sim core (`test/machine-sim.test.ts`: determinism — same seed twice = identical aggregates at tick 500; divergence — secure vs predatory rulesets separate by >2× output at tick 1000; zero-allocation tick loop sanity).
+Creates: `app/machine/{layout.tsx,page.tsx}`, `components/machine/**` (shell, console, panels), `lib/machine/**` (sim core, presets, seed utils), `e2e/machine.e2e.ts`, unit tests for the sim core (`test/machine-sim.test.ts`: determinism — same seed twice = identical aggregates at tick 500; the characterization divergence + monotonicity tests from §6; a loose tick-cost sanity bound generous enough for CI variance; and a source-grep assertion that the machine page reaches R3F only through `next/dynamic` — the bundle-isolation script's dynamic-import guard only watches `InteractiveShell`, so this lane guards its own). The coordinator extends `scripts/check-bundle-isolation.ts` at integration; this lane never edits it.
 
 ## 11. Out of scope (v1)
 
