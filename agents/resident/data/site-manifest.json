@@ -1,0 +1,3870 @@
+{
+  "version": 1,
+  "generatedAt": "2026-06-01T22:09:11.828Z",
+  "entries": [
+    {
+      "type": "page",
+      "slug": "home",
+      "title": "Home",
+      "date": null,
+      "summary": "The Control Room",
+      "tags": []
+    },
+    {
+      "type": "page",
+      "slug": "writing",
+      "title": "Writing",
+      "date": null,
+      "summary": "Essays and long-form content",
+      "tags": []
+    },
+    {
+      "type": "page",
+      "slug": "notes",
+      "title": "Notes",
+      "date": null,
+      "summary": "Quick thoughts and links",
+      "tags": []
+    },
+    {
+      "type": "page",
+      "slug": "library",
+      "title": "Library",
+      "date": null,
+      "summary": "Books and reading",
+      "tags": []
+    },
+    {
+      "type": "page",
+      "slug": "topics",
+      "title": "Topics",
+      "date": null,
+      "summary": "Signals across essays, notes, and books",
+      "tags": []
+    },
+    {
+      "type": "page",
+      "slug": "projects",
+      "title": "Projects",
+      "date": null,
+      "summary": "Things I've built",
+      "tags": []
+    },
+    {
+      "type": "page",
+      "slug": "about",
+      "title": "About",
+      "date": null,
+      "summary": "Who I am and what I believe",
+      "tags": []
+    },
+    {
+      "type": "page",
+      "slug": "now",
+      "title": "Now",
+      "date": null,
+      "summary": "What I'm currently focused on",
+      "tags": []
+    },
+    {
+      "type": "page",
+      "slug": "colophon",
+      "title": "Colophon",
+      "date": null,
+      "summary": "How this site was built",
+      "tags": []
+    },
+    {
+      "type": "page",
+      "slug": "graph",
+      "title": "Knowledge Graph",
+      "date": null,
+      "summary": "Visual map of connected ideas",
+      "tags": []
+    },
+    {
+      "type": "essay",
+      "slug": "writing/agent-long-term-memory",
+      "title": "The Complicated, Un-Sexy, Actually-Working Solution to AI Agent Long-Term Memory",
+      "date": null,
+      "summary": "How a persistent structured-markdown memory and context-engine system gives AI agents real long-term memory by solving data quality at write time and surfacing context when it matters.",
+      "tags": [
+        "ai",
+        "agents",
+        "memory",
+        "engineering"
+      ]
+    },
+    {
+      "type": "essay",
+      "slug": "writing/future-of-music-is-electronic",
+      "title": "The Future of Music is Electronic",
+      "date": null,
+      "summary": "Why we're running out of traditional melodies and how software-modified timbre opens an infinite frontier for musical creation.",
+      "tags": [
+        "economics",
+        "music",
+        "technology",
+        "intellectual-property"
+      ]
+    },
+    {
+      "type": "essay",
+      "slug": "writing/hello-world",
+      "title": "Hello World: Building The Control Room",
+      "date": null,
+      "summary": "An introduction to this site and what I hope to accomplish.",
+      "tags": [
+        "meta",
+        "personal"
+      ]
+    },
+    {
+      "type": "essay",
+      "slug": "writing/how-i-became-a-christian",
+      "title": "How I Became a Christian",
+      "date": null,
+      "summary": "A rationalist's journey to faith—from southern Baptist childhood to angry atheism to genuine belief.",
+      "tags": [
+        "philosophy",
+        "personal",
+        "christianity",
+        "religion"
+      ]
+    },
+    {
+      "type": "essay",
+      "slug": "writing/peer-reviewed-paper-prospera-governance",
+      "title": "Peer-Reviewed Academic Paper on Prospera Governance",
+      "date": null,
+      "summary": "A peer-reviewed paper on the history, formation, and governance structure of Honduras's first ZEDE.",
+      "tags": [
+        "governance",
+        "prospera",
+        "economics",
+        "zede",
+        "charter-cities"
+      ]
+    },
+    {
+      "type": "essay",
+      "slug": "writing/the-voluntaryist-constitution",
+      "title": "The Voluntaryist Constitution",
+      "date": null,
+      "summary": "A theoretical framework for constitutional governance based on voluntary association, consent, and the protection of individual rights.",
+      "tags": [
+        "governance",
+        "philosophy",
+        "libertarianism",
+        "politics"
+      ]
+    },
+    {
+      "type": "note",
+      "slug": "notes#2024-01-first-note",
+      "title": "Note from 2024-01-10",
+      "date": null,
+      "summary": "",
+      "tags": [
+        "meta"
+      ]
+    },
+    {
+      "type": "note",
+      "slug": "notes#2024-01-interesting-link",
+      "title": "The Network State",
+      "date": null,
+      "summary": "",
+      "tags": [
+        "governance",
+        "technology"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#progress-and-poverty",
+      "title": "Progress and Poverty",
+      "date": null,
+      "summary": "by Henry George (1879)",
+      "tags": [
+        "economics",
+        "land",
+        "governance",
+        "classical-liberalism"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-problem-of-political-authority",
+      "title": "The Problem of Political Authority",
+      "date": null,
+      "summary": "by Michael Huemer (2012)",
+      "tags": [
+        "philosophy",
+        "governance",
+        "libertarianism",
+        "ethics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-machinery-of-freedom",
+      "title": "The Machinery of Freedom",
+      "date": null,
+      "summary": "by David Friedman (1973)",
+      "tags": [
+        "economics",
+        "governance",
+        "anarcho-capitalism"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#seeing-like-a-state",
+      "title": "Seeing Like a State",
+      "date": null,
+      "summary": "by James C. Scott (1998)",
+      "tags": [
+        "governance",
+        "planning",
+        "local-knowledge"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#antifragile",
+      "title": "Antifragile",
+      "date": null,
+      "summary": "by Nassim Nicholas Taleb (2012)",
+      "tags": [
+        "risk",
+        "systems",
+        "philosophy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-sovereign-individual",
+      "title": "The Sovereign Individual",
+      "date": null,
+      "summary": "by James Dale Davidson & Lord William Rees-Mogg (1997)",
+      "tags": [
+        "technology",
+        "governance",
+        "future"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#stubborn-attachments",
+      "title": "Stubborn Attachments",
+      "date": null,
+      "summary": "by Tyler Cowen (2018)",
+      "tags": [
+        "economics",
+        "ethics",
+        "growth"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-beginning-of-infinity",
+      "title": "The Beginning of Infinity",
+      "date": null,
+      "summary": "by David Deutsch (2011)",
+      "tags": [
+        "philosophy",
+        "science",
+        "knowledge"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#scientific-freedom",
+      "title": "Scientific Freedom: The Elixir of Civilization",
+      "date": null,
+      "summary": "by Donald W. Braben (2008)",
+      "tags": [
+        "science",
+        "innovation",
+        "policy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#life-at-the-bottom",
+      "title": "Life At The Bottom",
+      "date": null,
+      "summary": "by Theodore Dalrymple (2001)",
+      "tags": [
+        "society",
+        "culture",
+        "poverty"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-journalist-and-the-murderer",
+      "title": "The Journalist and the Murderer",
+      "date": null,
+      "summary": "by Janet Malcolm (1990)",
+      "tags": [
+        "journalism",
+        "ethics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#against-the-machine",
+      "title": "Against the Machine: On the Unmaking of Humanity",
+      "date": null,
+      "summary": "by Paul Kingsnorth (2023)",
+      "tags": [
+        "technology",
+        "philosophy",
+        "society"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#breakneck",
+      "title": "Breakneck: China's Quest to Engineer the Future",
+      "date": null,
+      "summary": "by Dan Wang (2024)",
+      "tags": [
+        "china",
+        "technology",
+        "geopolitics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#on-grand-strategy",
+      "title": "On Grand Strategy",
+      "date": null,
+      "summary": "by John Lewis Gaddis (2018)",
+      "tags": [
+        "strategy",
+        "history",
+        "leadership"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-quantum-thief",
+      "title": "The Quantum Thief",
+      "date": null,
+      "summary": "by Hannu Rajaniemi (2010)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#valuable-humans-in-transit",
+      "title": "Valuable Humans in Transit and Other Stories",
+      "date": null,
+      "summary": "by qntm (2022)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#why-greatness-cannot-be-planned",
+      "title": "Why Greatness Cannot Be Planned: The Myth of the Objective",
+      "date": null,
+      "summary": "by Kenneth O. Stanley & Joel Lehman (2015)",
+      "tags": [
+        "innovation",
+        "ai",
+        "creativity"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#why-buddhism-is-true",
+      "title": "Why Buddhism is True",
+      "date": null,
+      "summary": "by Robert Wright (2017)",
+      "tags": [
+        "buddhism",
+        "psychology",
+        "meditation"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-struggle-for-taiwan",
+      "title": "The Struggle for Taiwan",
+      "date": null,
+      "summary": "by Sulmaan Wasif Khan (2024)",
+      "tags": [
+        "geopolitics",
+        "china",
+        "history"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#its-good-to-be-a-man",
+      "title": "It's Good to Be a Man: A Handbook for Godly Masculinity",
+      "date": null,
+      "summary": "by Michael Foster & Dominic Bnonn Tennant (2021)",
+      "tags": [
+        "christianity",
+        "masculinity"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#chief-of-staff",
+      "title": "Chief Of Staff: The Strategic Partner Who Will Revolutionize Your Organization",
+      "date": null,
+      "summary": "by Tyler Parris (2015)",
+      "tags": [
+        "business",
+        "leadership"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#atheism-the-case-against-god",
+      "title": "Atheism: The Case Against God",
+      "date": null,
+      "summary": "by George H. Smith (1974)",
+      "tags": [
+        "philosophy",
+        "religion",
+        "atheism"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#when-all-else-fails",
+      "title": "When All Else Fails: The Ethics of Resistance to State Injustice",
+      "date": null,
+      "summary": "by Jason Brennan (2018)",
+      "tags": [
+        "philosophy",
+        "politics",
+        "ethics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#act-of-congress",
+      "title": "Act of Congress",
+      "date": null,
+      "summary": "by Robert G. Kaiser (2013)",
+      "tags": [
+        "politics",
+        "government"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#inside-congress",
+      "title": "Inside Congress",
+      "date": null,
+      "summary": "by Trevor Corning, Nolan Dolan & Ryan Strasser (2017)",
+      "tags": [
+        "politics",
+        "government"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-nvidia-way",
+      "title": "The Nvidia Way: Jensen Huang and the Making of a Tech Giant",
+      "date": null,
+      "summary": "by Tae Kim (2024)",
+      "tags": [
+        "technology",
+        "business",
+        "biography"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#zen-and-the-art-of-motorcycle-maintenance",
+      "title": "Zen and the Art of Motorcycle Maintenance",
+      "date": null,
+      "summary": "by Robert M. Pirsig (1974)",
+      "tags": [
+        "philosophy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#mistborn-the-final-empire",
+      "title": "Mistborn: The Final Empire",
+      "date": null,
+      "summary": "by Brandon Sanderson (2006)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-well-of-ascension",
+      "title": "The Well of Ascension",
+      "date": null,
+      "summary": "by Brandon Sanderson (2007)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-hero-of-ages",
+      "title": "The Hero of Ages",
+      "date": null,
+      "summary": "by Brandon Sanderson (2008)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-alloy-of-law",
+      "title": "The Alloy of Law",
+      "date": null,
+      "summary": "by Brandon Sanderson (2011)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#shadows-of-self",
+      "title": "Shadows of Self",
+      "date": null,
+      "summary": "by Brandon Sanderson (2015)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-bands-of-mourning",
+      "title": "The Bands of Mourning",
+      "date": null,
+      "summary": "by Brandon Sanderson (2016)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-lost-metal",
+      "title": "The Lost Metal",
+      "date": null,
+      "summary": "by Brandon Sanderson (2022)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-science-of-free-will",
+      "title": "The Science of Free Will",
+      "date": null,
+      "summary": "by Samir Varma (2023)",
+      "tags": [
+        "philosophy",
+        "neuroscience"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#unreasonable-hospitality",
+      "title": "Unreasonable Hospitality",
+      "date": null,
+      "summary": "by Will Guidara (2022)",
+      "tags": [
+        "business",
+        "hospitality"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#fine-structure",
+      "title": "Fine Structure",
+      "date": null,
+      "summary": "by qntm (2021)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#reentry",
+      "title": "Reentry: SpaceX, Elon Musk, and the Reusable Rockets that Launched a Second Space Age",
+      "date": null,
+      "summary": "by Eric Berger (2024)",
+      "tags": [
+        "space",
+        "technology",
+        "biography"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-first-rule-of-mastery",
+      "title": "The First Rule of Mastery",
+      "date": null,
+      "summary": "by Michael Gervais (2023)",
+      "tags": [
+        "psychology",
+        "performance"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#cloud-atlas",
+      "title": "Cloud Atlas",
+      "date": null,
+      "summary": "by David Mitchell (2004)",
+      "tags": [
+        "fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#cribsheet",
+      "title": "Cribsheet: A Data-Driven Guide to Better, More Relaxed Parenting",
+      "date": null,
+      "summary": "by Emily Oster (2019)",
+      "tags": [
+        "parenting",
+        "data"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#polostan",
+      "title": "Polostan",
+      "date": null,
+      "summary": "by Neal Stephenson (2024)",
+      "tags": [
+        "science-fiction",
+        "history"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#blame-vol-1",
+      "title": "BLAME! Vol. 1",
+      "date": null,
+      "summary": "by Tsutomu Nihei (1998)",
+      "tags": [
+        "manga",
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#how-life-works",
+      "title": "How Life Works: A User's Guide to the New Biology",
+      "date": null,
+      "summary": "by Philip Ball (2023)",
+      "tags": [
+        "biology",
+        "science"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#at-the-existentialist-cafe",
+      "title": "At the Existentialist Cafe",
+      "date": null,
+      "summary": "by Sarah Bakewell (2016)",
+      "tags": [
+        "philosophy",
+        "history"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-culture-transplant",
+      "title": "The Culture Transplant",
+      "date": null,
+      "summary": "by Garett Jones (2022)",
+      "tags": [
+        "economics",
+        "culture",
+        "immigration"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#everything-is-predictable",
+      "title": "Everything Is Predictable: How Bayesian Statistics Explain Our World",
+      "date": null,
+      "summary": "by Tom Chivers (2024)",
+      "tags": [
+        "statistics",
+        "probability"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#crossing-the-chasm",
+      "title": "Crossing the Chasm",
+      "date": null,
+      "summary": "by Geoffrey A. Moore (1991)",
+      "tags": [
+        "business",
+        "marketing",
+        "startups"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-case-for-christ",
+      "title": "The Case for Christ",
+      "date": null,
+      "summary": "by Lee Strobel (1998)",
+      "tags": [
+        "christianity",
+        "apologetics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#theft-of-fire",
+      "title": "Theft of Fire",
+      "date": null,
+      "summary": "by Devon Eriksen (2023)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-1-page-marketing-plan",
+      "title": "The 1-Page Marketing Plan",
+      "date": null,
+      "summary": "by Allan Dib (2016)",
+      "tags": [
+        "marketing",
+        "business"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#murtagh",
+      "title": "Murtagh: The World of Eragon",
+      "date": null,
+      "summary": "by Christopher Paolini (2023)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-warrior-poet-way",
+      "title": "The Warrior Poet Way",
+      "date": null,
+      "summary": "by John Lovell (2021)",
+      "tags": [
+        "masculinity",
+        "philosophy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-origins-of-woke",
+      "title": "The Origins of Woke",
+      "date": null,
+      "summary": "by Richard Hanania (2023)",
+      "tags": [
+        "politics",
+        "law",
+        "culture"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#what-is-money",
+      "title": "What Is Money?",
+      "date": null,
+      "summary": "by Michael Saylor (2022)",
+      "tags": [
+        "bitcoin",
+        "economics",
+        "money"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#elon-musk",
+      "title": "Elon Musk",
+      "date": null,
+      "summary": "by Walter Isaacson (2023)",
+      "tags": [
+        "biography",
+        "technology",
+        "business"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-polymath",
+      "title": "The Polymath",
+      "date": null,
+      "summary": "by Peter Burke (2020)",
+      "tags": [
+        "history",
+        "knowledge"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#americas-cultural-revolution",
+      "title": "America's Cultural Revolution",
+      "date": null,
+      "summary": "by Christopher F. Rufo (2023)",
+      "tags": [
+        "politics",
+        "culture"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-elegant-universe",
+      "title": "The Elegant Universe",
+      "date": null,
+      "summary": "by Brian Greene (1999)",
+      "tags": [
+        "physics",
+        "string-theory"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#scaling-people",
+      "title": "Scaling People",
+      "date": null,
+      "summary": "by Claire Hughes Johnson (2023)",
+      "tags": [
+        "business",
+        "management"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#life-3-0",
+      "title": "Life 3.0: Being Human in the Age of Artificial Intelligence",
+      "date": null,
+      "summary": "by Max Tegmark (2017)",
+      "tags": [
+        "ai",
+        "future",
+        "technology"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#whats-our-problem",
+      "title": "What's Our Problem?: A Self-Help Book for Societies",
+      "date": null,
+      "summary": "by Tim Urban (2023)",
+      "tags": [
+        "society",
+        "politics",
+        "psychology"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#science-of-muscle-hypertrophy",
+      "title": "Science and Development of Muscle Hypertrophy",
+      "date": null,
+      "summary": "by Brad Schoenfeld (2016)",
+      "tags": [
+        "fitness",
+        "science"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-book-of-five-rings",
+      "title": "The Book of Five Rings",
+      "date": null,
+      "summary": "by Miyamoto Musashi (1645)",
+      "tags": [
+        "philosophy",
+        "strategy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-white-pill",
+      "title": "The White Pill",
+      "date": null,
+      "summary": "by Michael Malice (2022)",
+      "tags": [
+        "history",
+        "politics",
+        "anarchism"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#red-famine",
+      "title": "Red Famine: Stalin's War on Ukraine",
+      "date": null,
+      "summary": "by Anne Applebaum (2017)",
+      "tags": [
+        "history",
+        "ukraine",
+        "communism"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-fifth-science",
+      "title": "The Fifth Science",
+      "date": null,
+      "summary": "by Exurb1a (2018)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#100m-offers",
+      "title": "$100M Offers",
+      "date": null,
+      "summary": "by Alex Hormozi (2021)",
+      "tags": [
+        "business",
+        "marketing",
+        "entrepreneurship"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#meditations",
+      "title": "Meditations",
+      "date": null,
+      "summary": "by Marcus Aurelius (180)",
+      "tags": [
+        "philosophy",
+        "stoicism"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-2-hour-cocktail-party",
+      "title": "The 2-Hour Cocktail Party",
+      "date": null,
+      "summary": "by Nick Gray (2022)",
+      "tags": [
+        "networking",
+        "social"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#ghost-in-the-shell",
+      "title": "The Ghost in the Shell",
+      "date": null,
+      "summary": "by Masamune Shirow (1989)",
+      "tags": [
+        "manga",
+        "science-fiction",
+        "cyberpunk"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-launch-pad",
+      "title": "The Launch Pad: Inside Y Combinator",
+      "date": null,
+      "summary": "by Randall Stross (2012)",
+      "tags": [
+        "startups",
+        "business"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#atlas-shrugged",
+      "title": "Atlas Shrugged",
+      "date": null,
+      "summary": "by Ayn Rand (1957)",
+      "tags": [
+        "philosophy",
+        "libertarianism"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#stealing-fire",
+      "title": "Stealing Fire",
+      "date": null,
+      "summary": "by Steven Kotler & Jamie Wheal (2017)",
+      "tags": [
+        "psychology",
+        "performance",
+        "consciousness"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#fear-and-trembling",
+      "title": "Fear and Trembling",
+      "date": null,
+      "summary": "by Soren Kierkegaard (1843)",
+      "tags": [
+        "philosophy",
+        "religion",
+        "existentialism"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-network-state",
+      "title": "The Network State",
+      "date": null,
+      "summary": "by Balaji Srinivasan (2022)",
+      "tags": [
+        "governance",
+        "technology",
+        "future"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#reality-is-broken",
+      "title": "Reality Is Broken",
+      "date": null,
+      "summary": "by Jane McGonigal (2011)",
+      "tags": [
+        "games",
+        "psychology"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-three-body-problem",
+      "title": "The Three-Body Problem",
+      "date": null,
+      "summary": "by Liu Cixin (2008)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-dark-forest",
+      "title": "The Dark Forest",
+      "date": null,
+      "summary": "by Liu Cixin (2008)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#deaths-end",
+      "title": "Death's End",
+      "date": null,
+      "summary": "by Liu Cixin (2010)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#a-lodging-of-wayfaring-men",
+      "title": "A Lodging of Wayfaring Men",
+      "date": null,
+      "summary": "by Paul Rosenberg (2007)",
+      "tags": [
+        "libertarianism",
+        "fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-fish-that-ate-the-whale",
+      "title": "The Fish That Ate the Whale",
+      "date": null,
+      "summary": "by Rich Cohen (2012)",
+      "tags": [
+        "history",
+        "business",
+        "biography"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-reason-for-god",
+      "title": "The Reason for God",
+      "date": null,
+      "summary": "by Timothy Keller (2008)",
+      "tags": [
+        "christianity",
+        "apologetics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#mating-in-captivity",
+      "title": "Mating in Captivity",
+      "date": null,
+      "summary": "by Esther Perel (2006)",
+      "tags": [
+        "relationships",
+        "psychology"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#lion-city",
+      "title": "Lion City: Singapore and the Invention of Modern Asia",
+      "date": null,
+      "summary": "by Jeevan Vasagar (2021)",
+      "tags": [
+        "singapore",
+        "history",
+        "governance"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#amp-it-up",
+      "title": "Amp It Up",
+      "date": null,
+      "summary": "by Frank Slootman (2022)",
+      "tags": [
+        "business",
+        "leadership"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-edge-of-the-world",
+      "title": "The Edge of the World",
+      "date": null,
+      "summary": "by Michael Pye (2014)",
+      "tags": [
+        "history",
+        "europe"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#amazon-unbound",
+      "title": "Amazon Unbound",
+      "date": null,
+      "summary": "by Brad Stone (2021)",
+      "tags": [
+        "business",
+        "technology",
+        "biography"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-everything-store",
+      "title": "The Everything Store",
+      "date": null,
+      "summary": "by Brad Stone (2013)",
+      "tags": [
+        "business",
+        "technology",
+        "biography"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-cold-start-problem",
+      "title": "The Cold Start Problem",
+      "date": null,
+      "summary": "by Andrew Chen (2021)",
+      "tags": [
+        "startups",
+        "networks",
+        "business"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#termination-shock",
+      "title": "Termination Shock",
+      "date": null,
+      "summary": "by Neal Stephenson (2021)",
+      "tags": [
+        "science-fiction",
+        "climate"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-sack-of-detroit",
+      "title": "The Sack of Detroit",
+      "date": null,
+      "summary": "by Kenneth Whyte (2021)",
+      "tags": [
+        "history",
+        "business",
+        "automotive"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-aristocracy-of-talent",
+      "title": "The Aristocracy of Talent",
+      "date": null,
+      "summary": "by Adrian Wooldridge (2021)",
+      "tags": [
+        "history",
+        "meritocracy",
+        "society"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#entrepreneurial-communities",
+      "title": "Entrepreneurial Communities",
+      "date": null,
+      "summary": "by Calvin Duke (2021)",
+      "tags": [
+        "governance",
+        "libertarianism",
+        "communities"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#t-the-story-of-testosterone",
+      "title": "T: The Story of Testosterone",
+      "date": null,
+      "summary": "by Carole Hooven (2021)",
+      "tags": [
+        "biology",
+        "science"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#cultish",
+      "title": "Cultish: The Language of Fanaticism",
+      "date": null,
+      "summary": "by Amanda Montell (2021)",
+      "tags": [
+        "language",
+        "psychology",
+        "cults"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-meaning-of-marriage",
+      "title": "The Meaning of Marriage",
+      "date": null,
+      "summary": "by Timothy Keller (2011)",
+      "tags": [
+        "christianity",
+        "marriage"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#wheel-of-time-1",
+      "title": "The Eye of the World",
+      "date": null,
+      "summary": "by Robert Jordan (1990)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#wheel-of-time-2",
+      "title": "The Great Hunt",
+      "date": null,
+      "summary": "by Robert Jordan (1990)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#wheel-of-time-3",
+      "title": "The Dragon Reborn",
+      "date": null,
+      "summary": "by Robert Jordan (1991)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#wheel-of-time-4",
+      "title": "The Shadow Rising",
+      "date": null,
+      "summary": "by Robert Jordan (1992)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#wheel-of-time-5",
+      "title": "The Fires of Heaven",
+      "date": null,
+      "summary": "by Robert Jordan (1993)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#wheel-of-time-6",
+      "title": "Lord of Chaos",
+      "date": null,
+      "summary": "by Robert Jordan (1994)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#wheel-of-time-7",
+      "title": "A Crown of Swords",
+      "date": null,
+      "summary": "by Robert Jordan (1996)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#wheel-of-time-8",
+      "title": "The Path of Daggers",
+      "date": null,
+      "summary": "by Robert Jordan (1998)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#wheel-of-time-9",
+      "title": "Winter's Heart",
+      "date": null,
+      "summary": "by Robert Jordan (2000)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#wheel-of-time-10",
+      "title": "Crossroads of Twilight",
+      "date": null,
+      "summary": "by Robert Jordan (2003)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#wheel-of-time-11",
+      "title": "Knife of Dreams",
+      "date": null,
+      "summary": "by Robert Jordan (2005)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#wheel-of-time-12",
+      "title": "The Gathering Storm",
+      "date": null,
+      "summary": "by Robert Jordan & Brandon Sanderson (2009)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#wheel-of-time-13",
+      "title": "Towers of Midnight",
+      "date": null,
+      "summary": "by Robert Jordan & Brandon Sanderson (2010)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#wheel-of-time-14",
+      "title": "A Memory of Light",
+      "date": null,
+      "summary": "by Robert Jordan & Brandon Sanderson (2013)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#working-backwards",
+      "title": "Working Backwards",
+      "date": null,
+      "summary": "by Colin Bryar & Bill Carr (2021)",
+      "tags": [
+        "business",
+        "amazon"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#hacking-darwin",
+      "title": "Hacking Darwin",
+      "date": null,
+      "summary": "by Jamie Metzl (2019)",
+      "tags": [
+        "genetics",
+        "future",
+        "science"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-player-of-games",
+      "title": "The Player of Games",
+      "date": null,
+      "summary": "by Iain M. Banks (1988)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#consider-phlebas",
+      "title": "Consider Phlebas",
+      "date": null,
+      "summary": "by Iain M. Banks (1987)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#singapore-singapura",
+      "title": "Singapore, Singapura",
+      "date": null,
+      "summary": "by Nicholas Walton (2018)",
+      "tags": [
+        "singapore",
+        "history"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#fools-errand",
+      "title": "Fool's Errand: Time to End the War in Afghanistan",
+      "date": null,
+      "summary": "by Scott Horton (2017)",
+      "tags": [
+        "foreign-policy",
+        "war"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#junk-to-gold",
+      "title": "Junk to Gold",
+      "date": null,
+      "summary": "by Willis Johnson (2014)",
+      "tags": [
+        "business",
+        "entrepreneurship"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-case-against-education",
+      "title": "The Case against Education",
+      "date": null,
+      "summary": "by Bryan Caplan (2018)",
+      "tags": [
+        "economics",
+        "education"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#hacking-growth",
+      "title": "Hacking Growth",
+      "date": null,
+      "summary": "by Sean Ellis & Morgan Brown (2017)",
+      "tags": [
+        "marketing",
+        "startups"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#liftoff",
+      "title": "Liftoff: Elon Musk and the Desperate Early Days That Launched SpaceX",
+      "date": null,
+      "summary": "by Eric Berger (2021)",
+      "tags": [
+        "space",
+        "biography"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-bitcoin-standard",
+      "title": "The Bitcoin Standard",
+      "date": null,
+      "summary": "by Saifedean Ammous (2018)",
+      "tags": [
+        "bitcoin",
+        "economics",
+        "money"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#building-the-future",
+      "title": "Building the Future",
+      "date": null,
+      "summary": "by Amy C. Edmondson & Susan Salter Reynolds (2016)",
+      "tags": [
+        "innovation",
+        "business"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#drug-use-for-grown-ups",
+      "title": "Drug Use for Grown-Ups",
+      "date": null,
+      "summary": "by Carl L. Hart (2021)",
+      "tags": [
+        "drugs",
+        "policy",
+        "science"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#dream-big",
+      "title": "Dream Big",
+      "date": null,
+      "summary": "by Cristiane Correa (2014)",
+      "tags": [
+        "business",
+        "3g-capital"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-powers-of-the-earth",
+      "title": "The Powers of the Earth",
+      "date": null,
+      "summary": "by Travis J.I. Corcoran (2017)",
+      "tags": [
+        "science-fiction",
+        "libertarianism"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-immortalists",
+      "title": "The Immortalists",
+      "date": null,
+      "summary": "by David M. Friedman (2007)",
+      "tags": [
+        "biography",
+        "science"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-weirdest-people",
+      "title": "The WEIRDest People in the World",
+      "date": null,
+      "summary": "by Joseph Henrich (2020)",
+      "tags": [
+        "psychology",
+        "anthropology",
+        "culture"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#your-next-government",
+      "title": "Your Next Government?",
+      "date": null,
+      "summary": "by Tom W. Bell (2017)",
+      "tags": [
+        "governance",
+        "libertarianism",
+        "charter-cities"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#invent-and-wander",
+      "title": "Invent and Wander: The Collected Writings of Jeff Bezos",
+      "date": null,
+      "summary": "by Jeff Bezos & Walter Isaacson (2020)",
+      "tags": [
+        "business",
+        "biography"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#how-to-decide",
+      "title": "How to Decide",
+      "date": null,
+      "summary": "by Annie Duke (2020)",
+      "tags": [
+        "decision-making",
+        "psychology"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#flow",
+      "title": "Flow: The Psychology of Optimal Experience",
+      "date": null,
+      "summary": "by Mihaly Csikszentmihalyi (1990)",
+      "tags": [
+        "psychology",
+        "performance"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#dune",
+      "title": "Dune",
+      "date": null,
+      "summary": "by Frank Herbert (1965)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#dune-messiah",
+      "title": "Dune Messiah",
+      "date": null,
+      "summary": "by Frank Herbert (1969)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#children-of-dune",
+      "title": "Children of Dune",
+      "date": null,
+      "summary": "by Frank Herbert (1976)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#god-emperor-of-dune",
+      "title": "God Emperor of Dune",
+      "date": null,
+      "summary": "by Frank Herbert (1981)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#where-is-my-flying-car",
+      "title": "Where Is My Flying Car?",
+      "date": null,
+      "summary": "by J. Storrs Hall (2018)",
+      "tags": [
+        "technology",
+        "innovation",
+        "future"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-hard-thing-about-hard-things",
+      "title": "The Hard Thing About Hard Things",
+      "date": null,
+      "summary": "by Ben Horowitz (2014)",
+      "tags": [
+        "business",
+        "startups",
+        "leadership"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#red-rising",
+      "title": "Red Rising",
+      "date": null,
+      "summary": "by Pierce Brown (2014)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#golden-son",
+      "title": "Golden Son",
+      "date": null,
+      "summary": "by Pierce Brown (2015)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#morning-star",
+      "title": "Morning Star",
+      "date": null,
+      "summary": "by Pierce Brown (2016)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#iron-gold",
+      "title": "Iron Gold",
+      "date": null,
+      "summary": "by Pierce Brown (2018)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#dark-age",
+      "title": "Dark Age",
+      "date": null,
+      "summary": "by Pierce Brown (2019)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#word-by-word",
+      "title": "Word by Word: The Secret Life of Dictionaries",
+      "date": null,
+      "summary": "by Kory Stamper (2017)",
+      "tags": [
+        "language",
+        "linguistics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#order-without-design",
+      "title": "Order without Design: How Markets Shape Cities",
+      "date": null,
+      "summary": "by Alain Bertaud (2018)",
+      "tags": [
+        "urban-planning",
+        "economics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-4-hour-workweek",
+      "title": "The 4-Hour Workweek",
+      "date": null,
+      "summary": "by Tim Ferriss (2007)",
+      "tags": [
+        "productivity",
+        "business",
+        "lifestyle"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#very-important-people",
+      "title": "Very Important People",
+      "date": null,
+      "summary": "by Ashley Mears (2020)",
+      "tags": [
+        "sociology",
+        "nightlife"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-kill-chain",
+      "title": "The Kill Chain",
+      "date": null,
+      "summary": "by Christian Brose (2020)",
+      "tags": [
+        "military",
+        "technology",
+        "defense"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#provocations",
+      "title": "Provocations",
+      "date": null,
+      "summary": "by Camille Paglia (2018)",
+      "tags": [
+        "culture",
+        "art",
+        "politics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#good-to-great",
+      "title": "Good to Great",
+      "date": null,
+      "summary": "by Jim Collins (2001)",
+      "tags": [
+        "business",
+        "management"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#it-doesnt-have-to-be-crazy-at-work",
+      "title": "It Doesn't Have to Be Crazy at Work",
+      "date": null,
+      "summary": "by Jason Fried & David Heinemeier Hansson (2018)",
+      "tags": [
+        "business",
+        "productivity"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#foundations-of-a-free-society",
+      "title": "Foundations of a Free Society",
+      "date": null,
+      "summary": "by Gregory Salmieri & Robert Mayhew (2019)",
+      "tags": [
+        "philosophy",
+        "libertarianism"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#secrets-of-sand-hill-road",
+      "title": "Secrets of Sand Hill Road",
+      "date": null,
+      "summary": "by Scott Kupor (2019)",
+      "tags": [
+        "venture-capital",
+        "startups"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-dirty-dozen",
+      "title": "The Dirty Dozen",
+      "date": null,
+      "summary": "by Robert A. Levy & William Mellor (2008)",
+      "tags": [
+        "law",
+        "constitution",
+        "libertarianism"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-entrepreneurial-bible-to-venture-capital",
+      "title": "The Entrepreneurial Bible to Venture Capital",
+      "date": null,
+      "summary": "by Andrew Romans (2013)",
+      "tags": [
+        "venture-capital",
+        "startups"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#sleeping-giants",
+      "title": "Sleeping Giants",
+      "date": null,
+      "summary": "by Sylvain Neuvel (2016)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#waking-gods",
+      "title": "Waking Gods",
+      "date": null,
+      "summary": "by Sylvain Neuvel (2017)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#only-human",
+      "title": "Only Human",
+      "date": null,
+      "summary": "by Sylvain Neuvel (2018)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#high-growth-handbook",
+      "title": "High Growth Handbook",
+      "date": null,
+      "summary": "by Elad Gil (2018)",
+      "tags": [
+        "startups",
+        "business"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#red-sparrow",
+      "title": "Red Sparrow",
+      "date": null,
+      "summary": "by Jason Matthews (2013)",
+      "tags": [
+        "thriller",
+        "espionage"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#palace-of-treason",
+      "title": "Palace of Treason",
+      "date": null,
+      "summary": "by Jason Matthews (2015)",
+      "tags": [
+        "thriller",
+        "espionage"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-kremlins-candidate",
+      "title": "The Kremlin's Candidate",
+      "date": null,
+      "summary": "by Jason Matthews (2018)",
+      "tags": [
+        "thriller",
+        "espionage"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#start-up-nation",
+      "title": "Start-up Nation",
+      "date": null,
+      "summary": "by Dan Senor & Saul Singer (2009)",
+      "tags": [
+        "israel",
+        "startups",
+        "innovation"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#new-city-upon-a-hill",
+      "title": "New City Upon a Hill: A History of Columbia, Maryland",
+      "date": null,
+      "summary": "by Joseph Rocco Mitchell & David L. Stebenne (2017)",
+      "tags": [
+        "urban-planning",
+        "history"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#endure",
+      "title": "Endure",
+      "date": null,
+      "summary": "by Alex Hutchinson (2018)",
+      "tags": [
+        "sports",
+        "performance",
+        "science"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-elephant-in-the-brain",
+      "title": "The Elephant in the Brain",
+      "date": null,
+      "summary": "by Kevin Simler & Robin Hanson (2018)",
+      "tags": [
+        "psychology",
+        "economics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#real-dissent",
+      "title": "Real Dissent",
+      "date": null,
+      "summary": "by Tom Woods (2014)",
+      "tags": [
+        "libertarianism",
+        "politics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-joy-of-x",
+      "title": "The Joy of x: A Guided Tour of Math",
+      "date": null,
+      "summary": "by Steven Strogatz (2012)",
+      "tags": [
+        "mathematics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#in-ascension",
+      "title": "In Ascension",
+      "date": null,
+      "summary": "by Martin MacInnes (2023)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-emperors-new-mind",
+      "title": "The Emperor's New Mind",
+      "date": null,
+      "summary": "by Roger Penrose (1989)",
+      "tags": [
+        "ai",
+        "consciousness",
+        "physics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#days-of-rage",
+      "title": "Days of Rage",
+      "date": null,
+      "summary": "by Bryan Burrough (2015)",
+      "tags": [
+        "history",
+        "terrorism",
+        "politics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-fruit-of-her-hands",
+      "title": "The Fruit of Her Hands",
+      "date": null,
+      "summary": "by Nancy Wilson (1997)",
+      "tags": [
+        "christianity",
+        "women"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#right-concentration",
+      "title": "Right Concentration",
+      "date": null,
+      "summary": "by Leigh Brasington (2015)",
+      "tags": [
+        "buddhism",
+        "meditation"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#letting-go",
+      "title": "Letting Go: The Pathway of Surrender",
+      "date": null,
+      "summary": "by David R. Hawkins (2012)",
+      "tags": [
+        "spirituality",
+        "psychology"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-mind-illuminated",
+      "title": "The Mind Illuminated",
+      "date": null,
+      "summary": "by Culadasa (2015)",
+      "tags": [
+        "buddhism",
+        "meditation",
+        "neuroscience"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#what-the-buddha-taught",
+      "title": "What the Buddha Taught",
+      "date": null,
+      "summary": "by Walpola Rahula (1959)",
+      "tags": [
+        "buddhism"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-technological-republic",
+      "title": "The Technological Republic",
+      "date": null,
+      "summary": "by Alex Mayyasi (2024)",
+      "tags": [
+        "technology",
+        "politics",
+        "governance"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#fourth-wing",
+      "title": "Fourth Wing",
+      "date": null,
+      "summary": "by Rebecca Yarros (2023)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#iron-flame",
+      "title": "Iron Flame",
+      "date": null,
+      "summary": "by Rebecca Yarros (2023)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#onyx-storm",
+      "title": "Onyx Storm",
+      "date": null,
+      "summary": "by Rebecca Yarros (2025)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#expecting-better",
+      "title": "Expecting Better",
+      "date": null,
+      "summary": "by Emily Oster (2013)",
+      "tags": [
+        "parenting",
+        "data"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-maniac",
+      "title": "The MANIAC",
+      "date": null,
+      "summary": "by Benjamin Labatut (2023)",
+      "tags": [
+        "science",
+        "ai",
+        "history"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#love-and-respect",
+      "title": "Love and Respect",
+      "date": null,
+      "summary": "by Emerson Eggerichs (2004)",
+      "tags": [
+        "christianity",
+        "marriage"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#who-we-are-and-how-we-got-here",
+      "title": "Who We Are and How We Got Here",
+      "date": null,
+      "summary": "by David Reich (2018)",
+      "tags": [
+        "genetics",
+        "history",
+        "anthropology"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#alien-clay",
+      "title": "Alien Clay",
+      "date": null,
+      "summary": "by Adrian Tchaikovsky (2024)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-mercy-of-gods",
+      "title": "The Mercy of Gods",
+      "date": null,
+      "summary": "by James S.A. Corey (2024)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#a-confederacy-of-dunces",
+      "title": "A Confederacy of Dunces",
+      "date": null,
+      "summary": "by John Kennedy Toole (1980)",
+      "tags": [
+        "fiction",
+        "humor"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#what-i-learned-losing-a-million-dollars",
+      "title": "What I Learned Losing a Million Dollars",
+      "date": null,
+      "summary": "by Jim Paul & Brendan Moynihan (1994)",
+      "tags": [
+        "investing",
+        "psychology"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-10000-year-explosion",
+      "title": "The 10,000 Year Explosion",
+      "date": null,
+      "summary": "by Gregory Cochran & Henry Harpending (2009)",
+      "tags": [
+        "genetics",
+        "evolution",
+        "history"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#service-model",
+      "title": "Service Model",
+      "date": null,
+      "summary": "by Adrian Tchaikovsky (2024)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-master-and-his-emissary",
+      "title": "The Master and His Emissary",
+      "date": null,
+      "summary": "by Iain McGilchrist (2009)",
+      "tags": [
+        "neuroscience",
+        "philosophy",
+        "culture"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#troubled",
+      "title": "Troubled: A Memoir of Foster Care, Family, and Social Class",
+      "date": null,
+      "summary": "by Rob Henderson (2024)",
+      "tags": [
+        "memoir",
+        "sociology"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-ruthless-elimination-of-hurry",
+      "title": "The Ruthless Elimination of Hurry",
+      "date": null,
+      "summary": "by John Mark Comer (2019)",
+      "tags": [
+        "christianity",
+        "spirituality"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-individualists",
+      "title": "The Individualists",
+      "date": null,
+      "summary": "by Matt Zwolinski & John Tomasi (2023)",
+      "tags": [
+        "libertarianism",
+        "philosophy",
+        "history"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-wandering-earth",
+      "title": "The Wandering Earth",
+      "date": null,
+      "summary": "by Liu Cixin (2000)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-conservative-futurist",
+      "title": "The Conservative Futurist",
+      "date": null,
+      "summary": "by James Pethokoukis (2023)",
+      "tags": [
+        "politics",
+        "technology",
+        "future"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#return-of-the-god-hypothesis",
+      "title": "Return of the God Hypothesis",
+      "date": null,
+      "summary": "by Stephen C. Meyer (2021)",
+      "tags": [
+        "science",
+        "religion",
+        "philosophy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#making-of-the-atomic-bomb",
+      "title": "The Making of the Atomic Bomb",
+      "date": null,
+      "summary": "by Richard Rhodes (1986)",
+      "tags": [
+        "history",
+        "science",
+        "war"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#leviathan-wakes",
+      "title": "Leviathan Wakes",
+      "date": null,
+      "summary": "by James S.A. Corey (2011)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#calibans-war",
+      "title": "Caliban's War",
+      "date": null,
+      "summary": "by James S.A. Corey (2012)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#abaddons-gate",
+      "title": "Abaddon's Gate",
+      "date": null,
+      "summary": "by James S.A. Corey (2013)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#cibola-burn",
+      "title": "Cibola Burn",
+      "date": null,
+      "summary": "by James S.A. Corey (2014)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#nemesis-games",
+      "title": "Nemesis Games",
+      "date": null,
+      "summary": "by James S.A. Corey (2015)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#babylons-ashes",
+      "title": "Babylon's Ashes",
+      "date": null,
+      "summary": "by James S.A. Corey (2016)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#persepolis-rising",
+      "title": "Persepolis Rising",
+      "date": null,
+      "summary": "by James S.A. Corey (2017)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#tiamats-wrath",
+      "title": "Tiamat's Wrath",
+      "date": null,
+      "summary": "by James S.A. Corey (2019)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#leviathan-falls",
+      "title": "Leviathan Falls",
+      "date": null,
+      "summary": "by James S.A. Corey (2021)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#fairy-tale",
+      "title": "Fairy Tale",
+      "date": null,
+      "summary": "by Stephen King (2022)",
+      "tags": [
+        "fantasy",
+        "horror"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#upgrade",
+      "title": "Upgrade",
+      "date": null,
+      "summary": "by Blake Crouch (2022)",
+      "tags": [
+        "science-fiction",
+        "genetics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#greenlights",
+      "title": "Greenlights",
+      "date": null,
+      "summary": "by Matthew McConaughey (2020)",
+      "tags": [
+        "memoir",
+        "philosophy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-moral-case-for-fossil-fuels",
+      "title": "The Moral Case for Fossil Fuels",
+      "date": null,
+      "summary": "by Alex Epstein (2014)",
+      "tags": [
+        "energy",
+        "environment",
+        "economics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#children-of-ruin",
+      "title": "Children of Ruin",
+      "date": null,
+      "summary": "by Adrian Tchaikovsky (2019)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#children-of-time",
+      "title": "Children of Time",
+      "date": null,
+      "summary": "by Adrian Tchaikovsky (2015)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-redemption-of-time",
+      "title": "The Redemption of Time",
+      "date": null,
+      "summary": "by Baoshu (2011)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-silent-patient",
+      "title": "The Silent Patient",
+      "date": null,
+      "summary": "by Alex Michaelides (2019)",
+      "tags": [
+        "thriller",
+        "psychology"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-biggest-ideas-in-the-universe",
+      "title": "The Biggest Ideas in the Universe",
+      "date": null,
+      "summary": "by Sean Carroll (2022)",
+      "tags": [
+        "physics",
+        "science"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-metaverse",
+      "title": "The Metaverse",
+      "date": null,
+      "summary": "by Matthew Ball (2022)",
+      "tags": [
+        "technology",
+        "future"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-terminal-list",
+      "title": "The Terminal List",
+      "date": null,
+      "summary": "by Jack Carr (2018)",
+      "tags": [
+        "thriller",
+        "military"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#your-dog-is-your-mirror",
+      "title": "Your Dog Is Your Mirror",
+      "date": null,
+      "summary": "by Kevin Behan (2011)",
+      "tags": [
+        "dogs",
+        "psychology"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#shadows-of-the-apt-1",
+      "title": "Empire in Black and Gold",
+      "date": null,
+      "summary": "by Adrian Tchaikovsky (2008)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#a-thousand-brains",
+      "title": "A Thousand Brains",
+      "date": null,
+      "summary": "by Jeff Hawkins (2021)",
+      "tags": [
+        "neuroscience",
+        "ai"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-doors-of-eden",
+      "title": "The Doors of Eden",
+      "date": null,
+      "summary": "by Adrian Tchaikovsky (2020)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#helgoland",
+      "title": "Helgoland",
+      "date": null,
+      "summary": "by Carlo Rovelli (2020)",
+      "tags": [
+        "physics",
+        "quantum"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#effortless",
+      "title": "Effortless",
+      "date": null,
+      "summary": "by Greg McKeown (2021)",
+      "tags": [
+        "productivity"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#project-hail-mary",
+      "title": "Project Hail Mary",
+      "date": null,
+      "summary": "by Andy Weir (2021)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#hyperion",
+      "title": "Hyperion",
+      "date": null,
+      "summary": "by Dan Simmons (1989)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-fall-of-hyperion",
+      "title": "The Fall of Hyperion",
+      "date": null,
+      "summary": "by Dan Simmons (1990)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-midnight-library",
+      "title": "The Midnight Library",
+      "date": null,
+      "summary": "by Matt Haig (2020)",
+      "tags": [
+        "fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#anathem",
+      "title": "Anathem",
+      "date": null,
+      "summary": "by Neal Stephenson (2008)",
+      "tags": [
+        "science-fiction",
+        "philosophy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#to-sleep-in-a-sea-of-stars",
+      "title": "To Sleep in a Sea of Stars",
+      "date": null,
+      "summary": "by Christopher Paolini (2020)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-molecule-of-more",
+      "title": "The Molecule of More",
+      "date": null,
+      "summary": "by Daniel Z. Lieberman & Michael E. Long (2018)",
+      "tags": [
+        "neuroscience",
+        "dopamine"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#a-short-history-of-nearly-everything",
+      "title": "A Short History of Nearly Everything",
+      "date": null,
+      "summary": "by Bill Bryson (2003)",
+      "tags": [
+        "science",
+        "history"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-way-of-kings",
+      "title": "The Way of Kings",
+      "date": null,
+      "summary": "by Brandon Sanderson (2010)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#naked-statistics",
+      "title": "Naked Statistics",
+      "date": null,
+      "summary": "by Charles Wheelan (2013)",
+      "tags": [
+        "statistics",
+        "math"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#breath",
+      "title": "Breath: The New Science of a Lost Art",
+      "date": null,
+      "summary": "by James Nestor (2020)",
+      "tags": [
+        "health",
+        "science"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#reality-is-not-what-it-seems",
+      "title": "Reality Is Not What It Seems",
+      "date": null,
+      "summary": "by Carlo Rovelli (2014)",
+      "tags": [
+        "physics",
+        "quantum"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#tools-of-titans",
+      "title": "Tools of Titans",
+      "date": null,
+      "summary": "by Tim Ferriss (2016)",
+      "tags": [
+        "productivity",
+        "business"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#atomic-habits",
+      "title": "Atomic Habits",
+      "date": null,
+      "summary": "by James Clear (2018)",
+      "tags": [
+        "habits",
+        "productivity"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-infidel-and-the-professor",
+      "title": "The Infidel and the Professor",
+      "date": null,
+      "summary": "by Dennis C. Rasmussen (2017)",
+      "tags": [
+        "philosophy",
+        "history",
+        "economics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#snow-crash",
+      "title": "Snow Crash",
+      "date": null,
+      "summary": "by Neal Stephenson (1992)",
+      "tags": [
+        "science-fiction",
+        "cyberpunk"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#ball-lightning",
+      "title": "Ball Lightning",
+      "date": null,
+      "summary": "by Liu Cixin (2004)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#until-the-end-of-time",
+      "title": "Until the End of Time",
+      "date": null,
+      "summary": "by Brian Greene (2020)",
+      "tags": [
+        "physics",
+        "cosmology"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#seveneves",
+      "title": "Seveneves",
+      "date": null,
+      "summary": "by Neal Stephenson (2015)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#caffeine",
+      "title": "Caffeine: How Caffeine Created the Modern World",
+      "date": null,
+      "summary": "by Michael Pollan (2020)",
+      "tags": [
+        "history",
+        "science"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#speaker-for-the-dead",
+      "title": "Speaker for the Dead",
+      "date": null,
+      "summary": "by Orson Scott Card (1986)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#enders-game",
+      "title": "Ender's Game",
+      "date": null,
+      "summary": "by Orson Scott Card (1985)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#something-deeply-hidden",
+      "title": "Something Deeply Hidden",
+      "date": null,
+      "summary": "by Sean Carroll (2019)",
+      "tags": [
+        "physics",
+        "quantum"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#lifespan",
+      "title": "Lifespan: Why We Age—and Why We Don't Have To",
+      "date": null,
+      "summary": "by David A. Sinclair (2019)",
+      "tags": [
+        "science",
+        "longevity"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-new-right",
+      "title": "The New Right",
+      "date": null,
+      "summary": "by Michael Malice (2019)",
+      "tags": [
+        "politics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-art-of-the-start-2-0",
+      "title": "The Art of the Start 2.0",
+      "date": null,
+      "summary": "by Guy Kawasaki (2015)",
+      "tags": [
+        "startups",
+        "business"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#fall-or-dodge-in-hell",
+      "title": "Fall; or, Dodge in Hell",
+      "date": null,
+      "summary": "by Neal Stephenson (2019)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#midnight-in-chernobyl",
+      "title": "Midnight in Chernobyl",
+      "date": null,
+      "summary": "by Adam Higginbotham (2019)",
+      "tags": [
+        "history",
+        "science"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#range",
+      "title": "Range: Why Generalists Triumph in a Specialized World",
+      "date": null,
+      "summary": "by David Epstein (2019)",
+      "tags": [
+        "performance",
+        "learning"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-quantum-magician",
+      "title": "The Quantum Magician",
+      "date": null,
+      "summary": "by Derek Kunsken (2018)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#bold",
+      "title": "Bold",
+      "date": null,
+      "summary": "by Peter H. Diamandis & Steven Kotler (2015)",
+      "tags": [
+        "entrepreneurship",
+        "technology"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-ends-of-the-world",
+      "title": "The Ends of the World",
+      "date": null,
+      "summary": "by Peter Brannen (2017)",
+      "tags": [
+        "science",
+        "geology"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#cant-hurt-me",
+      "title": "Can't Hurt Me",
+      "date": null,
+      "summary": "by David Goggins (2018)",
+      "tags": [
+        "memoir",
+        "performance"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#barking-up-the-wrong-tree",
+      "title": "Barking up the Wrong Tree",
+      "date": null,
+      "summary": "by Eric Barker (2017)",
+      "tags": [
+        "success",
+        "psychology"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#artemis",
+      "title": "Artemis",
+      "date": null,
+      "summary": "by Andy Weir (2017)",
+      "tags": [
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#hit-makers",
+      "title": "Hit Makers",
+      "date": null,
+      "summary": "by Derek Thompson (2017)",
+      "tags": [
+        "culture",
+        "marketing"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-doomsday-machine",
+      "title": "The Doomsday Machine",
+      "date": null,
+      "summary": "by Daniel Ellsberg (2017)",
+      "tags": [
+        "nuclear",
+        "history",
+        "war"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#never-split-the-difference",
+      "title": "Never Split the Difference",
+      "date": null,
+      "summary": "by Chris Voss (2016)",
+      "tags": [
+        "negotiation",
+        "business"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-tangled-tree",
+      "title": "The Tangled Tree",
+      "date": null,
+      "summary": "by David Quammen (2018)",
+      "tags": [
+        "biology",
+        "evolution"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#norse-mythology",
+      "title": "Norse Mythology",
+      "date": null,
+      "summary": "by Neil Gaiman (2017)",
+      "tags": [
+        "mythology"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#slaughterhouse-five",
+      "title": "Slaughterhouse-Five",
+      "date": null,
+      "summary": "by Kurt Vonnegut (1969)",
+      "tags": [
+        "fiction",
+        "war"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-order-of-time",
+      "title": "The Order of Time",
+      "date": null,
+      "summary": "by Carlo Rovelli (2017)",
+      "tags": [
+        "physics",
+        "time"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-age-of-em",
+      "title": "The Age of Em",
+      "date": null,
+      "summary": "by Robin Hanson (2016)",
+      "tags": [
+        "ai",
+        "future",
+        "economics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#waking-up",
+      "title": "Waking Up",
+      "date": null,
+      "summary": "by Sam Harris (2014)",
+      "tags": [
+        "meditation",
+        "spirituality",
+        "neuroscience"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#how-to-change-your-mind",
+      "title": "How to Change Your Mind",
+      "date": null,
+      "summary": "by Michael Pollan (2018)",
+      "tags": [
+        "psychedelics",
+        "neuroscience"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#homo-deus",
+      "title": "Homo Deus",
+      "date": null,
+      "summary": "by Yuval Noah Harari (2015)",
+      "tags": [
+        "future",
+        "history"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#skin-in-the-game",
+      "title": "Skin in the Game",
+      "date": null,
+      "summary": "by Nassim Nicholas Taleb (2018)",
+      "tags": [
+        "risk",
+        "philosophy",
+        "economics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#sapiens",
+      "title": "Sapiens",
+      "date": null,
+      "summary": "by Yuval Noah Harari (2011)",
+      "tags": [
+        "history",
+        "anthropology"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#thinking-fast-and-slow",
+      "title": "Thinking, Fast and Slow",
+      "date": null,
+      "summary": "by Daniel Kahneman (2011)",
+      "tags": [
+        "psychology",
+        "economics",
+        "decision-making"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#behave",
+      "title": "Behave",
+      "date": null,
+      "summary": "by Robert Sapolsky (2017)",
+      "tags": [
+        "neuroscience",
+        "biology",
+        "psychology"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#grit",
+      "title": "Grit",
+      "date": null,
+      "summary": "by Angela Duckworth (2016)",
+      "tags": [
+        "psychology",
+        "performance"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-gunslinger",
+      "title": "The Gunslinger",
+      "date": null,
+      "summary": "by Stephen King (1982)",
+      "tags": [
+        "fantasy",
+        "horror"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-drawing-of-the-three",
+      "title": "The Drawing of the Three",
+      "date": null,
+      "summary": "by Stephen King (1987)",
+      "tags": [
+        "fantasy",
+        "horror"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-waste-lands",
+      "title": "The Waste Lands",
+      "date": null,
+      "summary": "by Stephen King (1991)",
+      "tags": [
+        "fantasy",
+        "horror"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#hillbilly-elegy",
+      "title": "Hillbilly Elegy",
+      "date": null,
+      "summary": "by J.D. Vance (2016)",
+      "tags": [
+        "memoir",
+        "society"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#astrophysics-for-people-in-a-hurry",
+      "title": "Astrophysics for People in a Hurry",
+      "date": null,
+      "summary": "by Neil deGrasse Tyson (2017)",
+      "tags": [
+        "physics",
+        "cosmology"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#fooled-by-randomness",
+      "title": "Fooled by Randomness",
+      "date": null,
+      "summary": "by Nassim Nicholas Taleb (2001)",
+      "tags": [
+        "probability",
+        "finance",
+        "philosophy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-48-laws-of-power",
+      "title": "48 Laws of Power",
+      "date": null,
+      "summary": "by Robert Greene (1998)",
+      "tags": [
+        "power",
+        "strategy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-game",
+      "title": "The Game",
+      "date": null,
+      "summary": "by Neil Strauss (2005)",
+      "tags": [
+        "memoir",
+        "social-dynamics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#equal-is-unfair",
+      "title": "Equal Is Unfair",
+      "date": null,
+      "summary": "by Don Watkins & Yaron Brook (2016)",
+      "tags": [
+        "economics",
+        "inequality",
+        "libertarianism"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#eragon",
+      "title": "Eragon",
+      "date": null,
+      "summary": "by Christopher Paolini (2003)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#eldest",
+      "title": "Eldest",
+      "date": null,
+      "summary": "by Christopher Paolini (2005)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#brisingr",
+      "title": "Brisingr",
+      "date": null,
+      "summary": "by Christopher Paolini (2008)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#inheritance",
+      "title": "Inheritance",
+      "date": null,
+      "summary": "by Christopher Paolini (2011)",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#divergent",
+      "title": "Divergent",
+      "date": null,
+      "summary": "by Veronica Roth (2011)",
+      "tags": [
+        "young-adult",
+        "dystopia"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#insurgent",
+      "title": "Insurgent",
+      "date": null,
+      "summary": "by Veronica Roth (2012)",
+      "tags": [
+        "young-adult",
+        "dystopia"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#allegiant",
+      "title": "Allegiant",
+      "date": null,
+      "summary": "by Veronica Roth (2013)",
+      "tags": [
+        "young-adult",
+        "dystopia"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#i-am-number-four",
+      "title": "I Am Number Four",
+      "date": null,
+      "summary": "by Pittacus Lore (2010)",
+      "tags": [
+        "young-adult",
+        "science-fiction"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#human-action",
+      "title": "Human Action",
+      "date": null,
+      "summary": "by Ludwig von Mises (1949)",
+      "tags": [
+        "economics",
+        "austrian-economics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#for-a-new-liberty",
+      "title": "For A New Liberty",
+      "date": null,
+      "summary": "by Murray N. Rothbard (1973)",
+      "tags": [
+        "libertarianism",
+        "economics",
+        "anarcho-capitalism"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#anatomy-of-the-state",
+      "title": "Anatomy of the State",
+      "date": null,
+      "summary": "by Murray N. Rothbard (1974)",
+      "tags": [
+        "libertarianism",
+        "politics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#americas-great-depression",
+      "title": "America's Great Depression",
+      "date": null,
+      "summary": "by Murray N. Rothbard (1963)",
+      "tags": [
+        "economics",
+        "history"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#what-has-government-done-to-our-money",
+      "title": "What Has Government Done to Our Money?",
+      "date": null,
+      "summary": "by Murray N. Rothbard (1963)",
+      "tags": [
+        "economics",
+        "money"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#economic-policy",
+      "title": "Economic Policy: Thoughts for Today and Tomorrow",
+      "date": null,
+      "summary": "by Ludwig von Mises (1979)",
+      "tags": [
+        "economics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-law",
+      "title": "The Law",
+      "date": null,
+      "summary": "by Frederic Bastiat (1850)",
+      "tags": [
+        "libertarianism",
+        "law",
+        "economics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#liberty-defined",
+      "title": "Liberty Defined",
+      "date": null,
+      "summary": "by Ron Paul (2011)",
+      "tags": [
+        "libertarianism",
+        "politics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#end-the-fed",
+      "title": "End the Fed",
+      "date": null,
+      "summary": "by Ron Paul (2009)",
+      "tags": [
+        "economics",
+        "federal-reserve"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#against-intellectual-property",
+      "title": "Against Intellectual Property",
+      "date": null,
+      "summary": "by N. Stephan Kinsella (2008)",
+      "tags": [
+        "libertarianism",
+        "law",
+        "ip"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#inventing-freedom",
+      "title": "Inventing Freedom",
+      "date": null,
+      "summary": "by Daniel Hannan (2013)",
+      "tags": [
+        "history",
+        "liberty",
+        "anglosphere"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-great-gatsby",
+      "title": "The Great Gatsby",
+      "date": null,
+      "summary": "by F. Scott Fitzgerald (1925)",
+      "tags": [
+        "fiction",
+        "classic"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-count-of-monte-cristo",
+      "title": "The Count of Monte Cristo",
+      "date": null,
+      "summary": "by Alexandre Dumas (1844)",
+      "tags": [
+        "fiction",
+        "classic"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#pride-and-prejudice",
+      "title": "Pride and Prejudice",
+      "date": null,
+      "summary": "by Jane Austen (1813)",
+      "tags": [
+        "fiction",
+        "classic"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#dracula",
+      "title": "Dracula",
+      "date": null,
+      "summary": "by Bram Stoker (1897)",
+      "tags": [
+        "horror",
+        "classic"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#frankenstein",
+      "title": "Frankenstein",
+      "date": null,
+      "summary": "by Mary Shelley (1818)",
+      "tags": [
+        "horror",
+        "science-fiction",
+        "classic"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#moby-dick",
+      "title": "Moby Dick",
+      "date": null,
+      "summary": "by Herman Melville (1851)",
+      "tags": [
+        "fiction",
+        "classic"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-republic",
+      "title": "The Republic",
+      "date": null,
+      "summary": "by Plato (-380)",
+      "tags": [
+        "philosophy",
+        "politics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-prince",
+      "title": "The Prince",
+      "date": null,
+      "summary": "by Niccolo Machiavelli (1532)",
+      "tags": [
+        "politics",
+        "philosophy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-art-of-war",
+      "title": "The Art of War",
+      "date": null,
+      "summary": "by Sun Tzu (-500)",
+      "tags": [
+        "strategy",
+        "war"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-communist-manifesto",
+      "title": "The Communist Manifesto",
+      "date": null,
+      "summary": "by Karl Marx (1848)",
+      "tags": [
+        "politics",
+        "economics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#on-liberty",
+      "title": "On Liberty",
+      "date": null,
+      "summary": "by John Stuart Mill (1859)",
+      "tags": [
+        "philosophy",
+        "liberty"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#second-treatise-of-government",
+      "title": "Second Treatise of Government",
+      "date": null,
+      "summary": "by John Locke (1689)",
+      "tags": [
+        "philosophy",
+        "politics"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#beyond-good-and-evil",
+      "title": "Beyond Good and Evil",
+      "date": null,
+      "summary": "by Friedrich Nietzsche (1886)",
+      "tags": [
+        "philosophy"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-odyssey",
+      "title": "The Odyssey",
+      "date": null,
+      "summary": "by Homer (-700)",
+      "tags": [
+        "classic",
+        "mythology"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#one-second-after",
+      "title": "One Second After",
+      "date": null,
+      "summary": "by William R. Forstchen (2009)",
+      "tags": [
+        "fiction",
+        "survival"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#one-year-after",
+      "title": "One Year After",
+      "date": null,
+      "summary": "by William R. Forstchen (2015)",
+      "tags": [
+        "fiction",
+        "survival"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-final-day",
+      "title": "The Final Day",
+      "date": null,
+      "summary": "by William R. Forstchen (2017)",
+      "tags": [
+        "fiction",
+        "survival"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#five-years-after",
+      "title": "Five Years After",
+      "date": null,
+      "summary": "by William R. Forstchen (2024)",
+      "tags": [
+        "fiction",
+        "survival"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#eve-how-the-female-body",
+      "title": "Eve: How the Female Body Drove 200 Million Years of Human Evolution",
+      "date": null,
+      "summary": "by Cat Bohannon (2023)",
+      "tags": [
+        "biology",
+        "evolution"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-solace-of-open-spaces",
+      "title": "The Solace of Open Spaces",
+      "date": null,
+      "summary": "by Gretel Ehrlich (1985)",
+      "tags": [
+        "memoir",
+        "nature"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#carrie",
+      "title": "Carrie",
+      "date": null,
+      "summary": "by Stephen King (1974)",
+      "tags": [
+        "horror"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#treasure-island",
+      "title": "Treasure Island",
+      "date": null,
+      "summary": "by Robert Louis Stevenson (1883)",
+      "tags": [
+        "adventure",
+        "classic"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-call-of-the-wild",
+      "title": "The Call of the Wild",
+      "date": null,
+      "summary": "by Jack London (1903)",
+      "tags": [
+        "adventure",
+        "classic"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#journey-to-the-center-of-the-earth",
+      "title": "Journey to the Center of the Earth",
+      "date": null,
+      "summary": "by Jules Verne (1864)",
+      "tags": [
+        "science-fiction",
+        "classic"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#around-the-world-in-80-days",
+      "title": "Around the World in 80 Days",
+      "date": null,
+      "summary": "by Jules Verne (1872)",
+      "tags": [
+        "adventure",
+        "classic"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#jane-eyre",
+      "title": "Jane Eyre",
+      "date": null,
+      "summary": "by Charlotte Bronte (1847)",
+      "tags": [
+        "fiction",
+        "classic"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#wuthering-heights",
+      "title": "Wuthering Heights",
+      "date": null,
+      "summary": "by Emily Bronte (1847)",
+      "tags": [
+        "fiction",
+        "classic"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#great-expectations",
+      "title": "Great Expectations",
+      "date": null,
+      "summary": "by Charles Dickens (1861)",
+      "tags": [
+        "fiction",
+        "classic"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#a-christmas-carol",
+      "title": "A Christmas Carol",
+      "date": null,
+      "summary": "by Charles Dickens (1843)",
+      "tags": [
+        "fiction",
+        "classic"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#the-adventures-of-sherlock-holmes",
+      "title": "The Adventures of Sherlock Holmes",
+      "date": null,
+      "summary": "by Arthur Conan Doyle (1892)",
+      "tags": [
+        "mystery",
+        "classic"
+      ]
+    },
+    {
+      "type": "book",
+      "slug": "library#we",
+      "title": "We",
+      "date": null,
+      "summary": "by Yevgeny Zamyatin (1924)",
+      "tags": [
+        "science-fiction",
+        "dystopia"
+      ]
+    },
+    {
+      "type": "project",
+      "slug": "projects#the-control-room",
+      "title": "The Control Room",
+      "date": null,
+      "summary": "An explorable index of ideas, writing, and reading.",
+      "tags": [
+        "personal",
+        "knowledge",
+        "design"
+      ]
+    },
+    {
+      "type": "page",
+      "slug": "powerlifting",
+      "title": "Powerlifting",
+      "date": null,
+      "summary": "The hidden gym page",
+      "tags": []
+    }
+  ]
+}
