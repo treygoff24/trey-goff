@@ -110,6 +110,9 @@ function CityGround() {
 
 const STRUCTURE_MODEL = '/machine/structure.glb'
 
+// Guards the exposure ratio when an agent holds nothing at all.
+const PARAMS_EPSILON = 1e-6
+
 /**
  * Geometry for the structures instancer, or null to keep the plain box.
  *
@@ -155,11 +158,13 @@ function CityInstances({
   reducedMotion,
   drawCount,
   buildings,
+  mono,
 }: {
   sim: MachineSim
   reducedMotion: boolean
   drawCount: number
   buildings: boolean
+  mono: boolean
 }) {
   const structureGeometry = useStructureGeometry(buildings)
   const agents = useRef<InstancedMesh>(null)
@@ -168,6 +173,13 @@ function CityInstances({
   const object = useMemo(() => new Object3D(), [])
   const color = useMemo(() => new Color(), [])
   const warm = useMemo(() => cssColor('--color-warm'), [])
+  // Three states, three existing semantic tokens — no new hues in the palette.
+  // Green compounds, amber is capital committed but not yet realised, red is
+  // capital taken. This is what makes the levers legible: drop permitting and
+  // the field yellows because investment sits exposed for longer, drop property
+  // security and it starts flashing red because that exposure gets seized.
+  const building = useMemo(() => cssColor('--color-warning'), [])
+  const seized = useMemo(() => cssColor('--color-error'), [])
   const side = Math.ceil(Math.sqrt(sim.count))
 
   useEffect(() => {
@@ -199,14 +211,42 @@ function CityInstances({
       object.rotation.set(0, 0, 0)
       object.updateMatrix()
       structures.current.setMatrixAt(index, object.matrix)
-      color.copy(warm).multiplyScalar(brightness)
+
+      if (mono) {
+        color.copy(warm).multiplyScalar(brightness)
+      } else if (sim.seizureFlash[index]! > 0) {
+        // Seizure is an event, not a level, so it reads at fixed brightness
+        // rather than scaling with capital. A rich agent losing everything and a
+        // poor one losing everything are the same event.
+        color.copy(seized).multiplyScalar(0.5)
+      } else {
+        // Exposure is the share of an agent's worth that is committed but not
+        // yet realised — capital it could still lose. A binary "is building"
+        // flag was useless here: investment resets to zero and immediately
+        // starts accumulating again, so nearly every agent is mid-build on
+        // nearly every tick and the whole field went amber. As a ratio it stays
+        // green at rest and yellows exactly where the wait is long, which is
+        // what the permitting lever actually does.
+        const committed = sim.investment[index]!
+        const exposure = committed / (committed + sim.capital[index]! + PARAMS_EPSILON)
+        color
+          .copy(warm)
+          .lerp(building, Math.min(1, exposure * 2.2))
+          .multiplyScalar(brightness)
+      }
       structures.current.setColorAt(index, color)
 
       object.position.set(x, height + 0.055, z)
       object.scale.setScalar((reducedMotion ? 0.32 : 0.26) * (24 / side))
       object.updateMatrix()
       agents.current.setMatrixAt(index, object.matrix)
-      color.copy(warm).multiplyScalar(sim.seizureFlash[index]! > 0 ? 0.05 : 0.72 + brightness)
+      // The agent dot sits above its structure. It stays green except when
+      // seized, where dimming alone was nearly invisible against the field.
+      if (!mono && sim.seizureFlash[index]! > 0) {
+        color.copy(seized).multiplyScalar(0.85)
+      } else {
+        color.copy(warm).multiplyScalar(sim.seizureFlash[index]! > 0 ? 0.05 : 0.72 + brightness)
+      }
       agents.current.setColorAt(index, color)
     }
 
@@ -286,6 +326,7 @@ function CityScene({
   reducedMotion,
   split,
   buildings,
+  mono,
 }: {
   sim: MachineSim
   panel: number
@@ -294,6 +335,7 @@ function CityScene({
   reducedMotion: boolean
   split: boolean
   buildings: boolean
+  mono: boolean
 }) {
   return (
     <>
@@ -305,6 +347,7 @@ function CityScene({
         reducedMotion={reducedMotion}
         drawCount={drawCount}
         buildings={buildings}
+        mono={mono}
       />
       {highQuality && <TradeLinks sim={sim} />}
       {highQuality && !split && (
@@ -367,11 +410,16 @@ export function MachineWorld({
   // modelled skyline. Read once from the URL rather than threaded through the
   // console, so the default path stays exactly the shipped bars while the two
   // can be compared live. Promote to real UI only if the skyline wins.
-  const buildings = useMemo(
+  const params = useMemo(
     () =>
-      typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('buildings'),
+      typeof window === 'undefined'
+        ? new URLSearchParams()
+        : new URLSearchParams(window.location.search),
     [],
   )
+  const buildings = params.has('buildings')
+  // /machine?mono=1 restores the original single-green field for comparison.
+  const mono = params.has('mono')
 
   useEffect(onReady, [onReady])
   useEffect(() => {
@@ -393,6 +441,7 @@ export function MachineWorld({
           reducedMotion={reducedMotion}
           split={split}
           buildings={buildings}
+          mono={mono}
         />
       </View>
       {split && (
@@ -405,6 +454,7 @@ export function MachineWorld({
             reducedMotion={reducedMotion}
             split={split}
             buildings={buildings}
+            mono={mono}
           />
         </View>
       )}
