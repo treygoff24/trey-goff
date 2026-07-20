@@ -86,7 +86,7 @@ test.describe('The Edition', () => {
       page.getByRole('heading', { name: 'You came to inspect the engineering.', level: 1 }),
     ).toBeFocused()
     await expect(page.getByRole('heading', { name: /agent long-term memory/i })).toBeVisible()
-    await expect(page.getByText('Setting the next section…')).toBeVisible()
+    await expect(page.getByText('Setting the next section')).toBeVisible()
     await expect(page.getByRole('button', { name: 'Compose again' })).toBeVisible()
   })
 
