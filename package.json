@@ -37,7 +37,10 @@
     "generate-search": "tsx scripts/generate-search-index.ts",
     "compress-assets": "tsx scripts/compress-assets.ts",
     "validate-budgets": "tsx scripts/validate-asset-budgets.ts",
-    "check-bundle-isolation": "tsx scripts/check-bundle-isolation.ts"
+    "check-bundle-isolation": "tsx scripts/check-bundle-isolation.ts",
+    "assets:inspect": "gltf-transform inspect",
+    "assets:optimize": "node scripts/assets/optimize-glb.mjs",
+    "assets:validate": "node scripts/assets/validate-assets.mjs public/machine"
   },
   "dependencies": {
     "@content-collections/core": "^0.14.2",
@@ -101,7 +104,8 @@
     "sharp": "^0.34.5",
     "tailwindcss": "^4.2.1",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "gltf-validator": "^2.0.0-dev.3.10"
   },
   "packageManager": "pnpm@9.15.1"
 }

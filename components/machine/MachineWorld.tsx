@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { View } from '@react-three/drei'
 import { Bloom, EffectComposer } from '@react-three/postprocessing'
@@ -108,15 +108,60 @@ function CityGround() {
   )
 }
 
+const STRUCTURE_MODEL = '/machine/structure.glb'
+
+/**
+ * Geometry for the structures instancer, or null to keep the plain box.
+ *
+ * Loaded imperatively rather than through drei's useGLTF on purpose. useGLTF
+ * suspends, and a hook cannot be called conditionally, so it would suspend on
+ * every visit including the default path where buildings are off — which blanks
+ * the whole scene, since there is no Suspense boundary inside the View.
+ *
+ * The mesh is authored as a unit block anchored at its base so it drops into the
+ * existing scale math untouched, and carries no material of its own so
+ * instanceColor still drives the single-green palette.
+ */
+function useStructureGeometry(enabled: boolean) {
+  const [geometry, setGeometry] = useState<import('three').BufferGeometry | null>(null)
+
+  useEffect(() => {
+    if (!enabled) return
+    let cancelled = false
+    let loaded: import('three').BufferGeometry | undefined
+
+    void import('three-stdlib').then(({ GLTFLoader }) => {
+      new GLTFLoader().load(STRUCTURE_MODEL, (gltf) => {
+        if (cancelled) return
+        gltf.scene.traverse((node) => {
+          const mesh = node as unknown as { geometry?: import('three').BufferGeometry }
+          if (!loaded && mesh.geometry) loaded = mesh.geometry
+        })
+        if (loaded) setGeometry(loaded)
+      })
+    })
+
+    return () => {
+      cancelled = true
+      loaded?.dispose()
+    }
+  }, [enabled])
+
+  return geometry
+}
+
 function CityInstances({
   sim,
   reducedMotion,
   drawCount,
+  buildings,
 }: {
   sim: MachineSim
   reducedMotion: boolean
   drawCount: number
+  buildings: boolean
 }) {
+  const structureGeometry = useStructureGeometry(buildings)
   const agents = useRef<InstancedMesh>(null)
   const structures = useRef<InstancedMesh>(null)
   const lastTick = useRef(-1)
@@ -128,7 +173,11 @@ function CityInstances({
   useEffect(() => {
     if (agents.current) agents.current.instanceMatrix.setUsage(DynamicDrawUsage)
     if (structures.current) structures.current.instanceMatrix.setUsage(DynamicDrawUsage)
-  }, [])
+    // The structures instancer remounts when the model arrives, so its matrices
+    // start empty. Clearing the tick guard forces the next frame to refill them
+    // instead of skipping as an already-drawn tick.
+    lastTick.current = -1
+  }, [structureGeometry])
 
   useFrame(() => {
     if (lastTick.current === sim.tick) return
@@ -143,7 +192,9 @@ function CityInstances({
       const height = Math.min(4.5, 0.12 + sim.structureHeight[index]! * 0.035)
       const brightness = Math.min(0.22, 0.04 + Math.log1p(sim.capital[index]!) * 0.024)
 
-      object.position.set(x, height * 0.5, z)
+      // A boxGeometry is centred on its origin, so it sits at half its height.
+      // The structure model is anchored at its base and sits at zero.
+      object.position.set(x, structureGeometry ? 0 : height * 0.5, z)
       object.scale.set(0.48 * (24 / side), height, 0.48 * (24 / side))
       object.rotation.set(0, 0, 0)
       object.updateMatrix()
@@ -167,12 +218,18 @@ function CityInstances({
 
   return (
     <>
+      {/*
+        args are constructor arguments, applied once. The model resolves after
+        first paint, so without a changing key the instancer would keep the box
+        it was built with and the swap would silently never happen.
+      */}
       <instancedMesh
+        key={structureGeometry ? 'structure-model' : 'structure-box'}
         ref={structures}
-        args={[undefined, undefined, drawCount]}
+        args={[structureGeometry ?? undefined, undefined, drawCount]}
         frustumCulled={false}
       >
-        <boxGeometry args={[1, 1, 1]} />
+        {structureGeometry ? null : <boxGeometry args={[1, 1, 1]} />}
         <meshBasicMaterial toneMapped={false} />
       </instancedMesh>
       <instancedMesh ref={agents} args={[undefined, undefined, drawCount]} frustumCulled={false}>
@@ -228,6 +285,7 @@ function CityScene({
   drawCount,
   reducedMotion,
   split,
+  buildings,
 }: {
   sim: MachineSim
   panel: number
@@ -235,13 +293,19 @@ function CityScene({
   drawCount: number
   reducedMotion: boolean
   split: boolean
+  buildings: boolean
 }) {
   return (
     <>
       <CameraMotion reducedMotion={reducedMotion} panel={panel} split={split} />
       <color attach="background" args={[cssColor('--color-bg-0')]} />
       <CityGround />
-      <CityInstances sim={sim} reducedMotion={reducedMotion} drawCount={drawCount} />
+      <CityInstances
+        sim={sim}
+        reducedMotion={reducedMotion}
+        drawCount={drawCount}
+        buildings={buildings}
+      />
       {highQuality && <TradeLinks sim={sim} />}
       {highQuality && !split && (
         <EffectComposer multisampling={0}>
@@ -299,6 +363,15 @@ export function MachineWorld({
 }: MachineWorldProps) {
   const quality = getMachineQuality(tier, split)
   const worldRef = useRef<HTMLDivElement>(null)
+  // Experiment toggle: /machine?buildings=1 swaps the structure bars for the
+  // modelled skyline. Read once from the URL rather than threaded through the
+  // console, so the default path stays exactly the shipped bars while the two
+  // can be compared live. Promote to real UI only if the skyline wins.
+  const buildings = useMemo(
+    () =>
+      typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('buildings'),
+    [],
+  )
 
   useEffect(onReady, [onReady])
   useEffect(() => {
@@ -319,6 +392,7 @@ export function MachineWorld({
           drawCount={Math.min(left.count, quality.agentCount)}
           reducedMotion={reducedMotion}
           split={split}
+          buildings={buildings}
         />
       </View>
       {split && (
@@ -330,6 +404,7 @@ export function MachineWorld({
             drawCount={Math.min(right.count, quality.agentCount)}
             reducedMotion={reducedMotion}
             split={split}
+            buildings={buildings}
           />
         </View>
       )}

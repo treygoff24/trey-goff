@@ -168,6 +168,9 @@ importers:
       eslint-config-next:
         specifier: ^16.1.6
         version: 16.1.6(@typescript-eslint/parser@8.57.0(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3)
+      gltf-validator:
+        specifier: ^2.0.0-dev.3.10
+        version: 2.0.0-dev.3.10
       oxfmt:
         specifier: 0.36.0
         version: 0.36.0

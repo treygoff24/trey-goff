@@ -1,0 +1,23 @@
+{
+  "mcpServers": {
+    "blender": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://projects.blender.org/lab/blender_mcp.git@v1.0.0#subdirectory=mcp",
+        "blender-mcp"
+      ],
+      "env": {}
+    },
+    "sketchfab": {
+      "type": "stdio",
+      "command": "/bin/zsh",
+      "args": [
+        "-lc",
+        "export SKETCHFAB_API_KEY=\"$(security find-generic-password -a \"$USER\" -s claude-space-sketchfab-mcp -w)\" && exec npx --yes sketchfab-mcp-server@1.0.10"
+      ],
+      "env": {}
+    }
+  }
+}
