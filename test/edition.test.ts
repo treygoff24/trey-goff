@@ -111,9 +111,18 @@ test('schema and renderer enforce section caps', () => {
   assert.equal(editionSchema.safeParse(overCap).success, false)
   assert.equal(resolveEditionSections(catalog, overCap.sections).length, 4)
   assert.equal(
-    editionSchema.safeParse({ ...overCap, sections: [section, section], opening: 'x'.repeat(501) })
+    editionSchema.safeParse({ ...overCap, sections: [section, section], opening: 'x'.repeat(701) })
       .success,
     false,
+  )
+
+  // The caps carry deliberate headroom over the lengths the prompt asks for, so
+  // a model that overruns by a clause still renders. Guards the regression that
+  // motivated raising them: at 500, strong models hard-failed validation.
+  assert.equal(
+    editionSchema.safeParse({ ...overCap, sections: [section, section], opening: 'x'.repeat(650) })
+      .success,
+    true,
   )
 })
 

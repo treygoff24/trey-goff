@@ -85,9 +85,31 @@ export async function POST(request: NextRequest) {
     const result = streamText({
       model: gateway(EDITION_MODEL),
       output: Output.object({ schema: editionSchema }),
-      system: buildEditionSystemPrompt(editionCatalog),
-      prompt: buildEditionUserPrompt(parsed.intent),
-      temperature: 0.35,
+      // The catalog makes the system prompt ~28k tokens, identical on every
+      // request, so it dominates cost. Caching it cuts a compose from ~$0.15 to
+      // ~$0.026 on a warm cache. Anthropic only accepts a cache breakpoint on a
+      // system message part, which is why the system prompt moves into
+      // `messages` here rather than staying on the `system` option.
+      //
+      // `allowSystemInMessages` is safe in this exact shape and nowhere else:
+      // the system content is a server-built constant, and visitor input only
+      // ever reaches the `user` message below, already JSON-wrapped and labeled
+      // untrusted. Never interpolate request data into a system message.
+      allowSystemInMessages: true,
+      messages: [
+        {
+          role: 'system',
+          content: buildEditionSystemPrompt(editionCatalog),
+          // Default 5-minute TTL. A 1h TTL is available but costs a 2x write
+          // multiplier against 1.25x, so it only wins above a ~53% hit rate
+          // where 5m wins above ~22%. 5m is the safer bet until traffic says
+          // otherwise: its worst case is a 23% premium, the 1h worst case 93%.
+          providerOptions: { anthropic: { cacheControl: { type: 'ephemeral' } } },
+        },
+        { role: 'user', content: buildEditionUserPrompt(parsed.intent) },
+      ],
+      // No temperature: Opus 4.8 does not accept one and the gateway warns and
+      // drops it. Composition variety comes from the visitor's intent, not sampling.
       maxOutputTokens: 1800,
       maxRetries: 1,
       abortSignal: request.signal,

@@ -104,7 +104,7 @@ export function EditionExperience({ catalog }: EditionExperienceProps) {
 
   const sections = resolveEditionSections(catalog, composition.sections)
   const displayedIntent =
-    sanitizeModelText(composition.intent, 140) || `You came looking for ${submittedIntent}.`
+    sanitizeModelText(composition.intent, 200) || `You came looking for ${submittedIntent}.`
   const footerIntent = displayedIntent.replace(/^you\s+/i, '').replace(/[.!?…]+$/u, '')
 
   async function compose(intent: string) {
@@ -309,7 +309,7 @@ export function EditionExperience({ catalog }: EditionExperienceProps) {
         {sanitizeModelText(composition.opening, 500) && (
           <EditionProse
             text={composition.opening}
-            maxLength={500}
+            maxLength={700}
             className="tg-rise my-14 max-w-3xl font-newsreader text-[clamp(1.5rem,3vw,2.2rem)] leading-[1.45] text-text-1"
           />
         )}
@@ -333,7 +333,7 @@ export function EditionExperience({ catalog }: EditionExperienceProps) {
                 {section.lede && (
                   <EditionProse
                     text={section.lede}
-                    maxLength={200}
+                    maxLength={280}
                     className="max-w-2xl leading-7 text-text-2"
                   />
                 )}
@@ -383,7 +383,7 @@ export function EditionExperience({ catalog }: EditionExperienceProps) {
             {sanitizeModelText(composition.closing, 300) && (
               <EditionProse
                 text={composition.closing}
-                maxLength={300}
+                maxLength={420}
                 className="mb-7 max-w-2xl leading-7 text-text-2"
               />
             )}
