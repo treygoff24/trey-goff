@@ -1,6 +1,8 @@
 import { allEssays, allNotes, allProjects } from 'content-collections'
 import appearancesData from '@/content/media/appearances.json'
 import { getAllBooks } from '@/lib/books'
+import bookColors from '@/public/book-colors.json'
+import coverMap from '@/public/cover-map.json'
 import type { EditionCatalogItem } from '@/lib/edition/catalog'
 import { getAllTransmissions } from '@/lib/transmissions'
 
@@ -102,16 +104,27 @@ const projectItems: EditionCatalogItem[] = allProjects.map((project) => ({
   meta: project.type,
 }))
 
-const bookItems: EditionCatalogItem[] = books.map((book) => ({
-  type: 'library',
-  slug: book.id,
-  title: book.title,
-  date: String(book.year),
-  summary: book.whyILoveIt || `By ${book.author}.`,
-  tags: book.topics.slice(0, 5),
-  href: `/library#${book.id}`,
-  meta: book.author,
-}))
+// cover-map also holds generated data-URI placeholders (old palette); only real files shelf-render.
+function realCover(bookId: string, coverUrl: string | undefined): string | undefined {
+  const url = coverUrl ?? (coverMap as Record<string, string>)[bookId]
+  return url?.startsWith('/covers/') ? url : undefined
+}
+
+const bookItems: EditionCatalogItem[] = books.map((book) => {
+  const coverUrl = realCover(book.id, book.coverUrl)
+  return {
+    type: 'library',
+    slug: book.id,
+    title: book.title,
+    date: String(book.year),
+    summary: book.whyILoveIt || `By ${book.author}.`,
+    tags: book.topics.slice(0, 5),
+    href: `/library#${book.id}`,
+    meta: book.author,
+    coverUrl,
+    accent: coverUrl ? (bookColors as Record<string, string>)[book.id] : undefined,
+  }
+})
 
 const transmissionItems: EditionCatalogItem[] = getAllTransmissions().map((item) => ({
   type: 'transmissions',

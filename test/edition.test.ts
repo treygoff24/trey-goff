@@ -56,6 +56,26 @@ const catalog: EditionCatalogItem[] = [
     href: '/projects#shared-slug',
     meta: 'Project',
   },
+  ...Array.from({ length: 5 }, (_, i) => ({
+    type: 'essays' as const,
+    slug: `essay-${i}`,
+    title: `Essay number ${i}`,
+    date: '2026-01-01',
+    summary: 'Another essay',
+    tags: ['governance'],
+    href: `/writing/essay-${i}`,
+    meta: 'Essay',
+  })),
+  {
+    type: 'transmissions' as const,
+    slug: 'reprint',
+    title: 'An Essay',
+    date: '2026-01-02',
+    summary: 'The same essay printed elsewhere',
+    tags: ['governance'],
+    href: 'https://example.com/reprint',
+    meta: 'Example Wire',
+  },
 ]
 
 test('unknown slugs are dropped and empty sections fail closed', () => {
@@ -66,6 +86,16 @@ test('unknown slugs are dropped and empty sections fail closed', () => {
 
   assert.equal(resolved.length, 1)
   assert.equal(resolved[0]?.items.length, 1)
+  assert.equal(resolved[0]?.items[0]?.href, '/writing/shared-slug')
+})
+
+test('the same work under two kinds renders once, first appearance wins', () => {
+  const resolved = resolveEditionSections(catalog, [
+    { kind: 'essays', lede: 'The essay.', slugs: ['shared-slug'] },
+    { kind: 'transmissions', lede: 'The reprint.', slugs: ['reprint'] },
+  ])
+
+  assert.equal(resolved.length, 1)
   assert.equal(resolved[0]?.items[0]?.href, '/writing/shared-slug')
 })
 
@@ -104,7 +134,11 @@ test('schema and renderer enforce section caps', () => {
   const overCap = {
     intent: 'You came to read.',
     opening: 'Welcome.',
-    sections: Array.from({ length: 5 }, () => section),
+    sections: Array.from({ length: 5 }, (_, i) => ({
+      kind: 'essays' as const,
+      lede: 'A reason.',
+      slugs: [`essay-${i}`],
+    })),
     closing: 'Keep reading.',
   }
 

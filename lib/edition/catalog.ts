@@ -8,6 +8,8 @@ export interface EditionCatalogLookupItem {
   tags: string[]
   href: string
   meta: string
+  coverUrl?: string
+  accent?: string
 }
 
 export interface EditionCatalogItem extends EditionCatalogLookupItem {
@@ -45,11 +47,19 @@ export function resolveCatalogItem(
   return catalog.find((item) => item.type === kind && item.slug === slug)
 }
 
+// The same work can exist under two kinds (an essay and its external printing),
+// so cross-section dedup keys on normalized title, first appearance wins.
+function titleKey(title: string): string {
+  return title.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
+}
+
 export function resolveEditionSections(
   catalog: readonly EditionClientCatalogItem[],
   sections: unknown,
 ): ResolvedEditionSection[] {
   if (!Array.isArray(sections)) return []
+
+  const seenTitles = new Set<string>()
 
   return sections.slice(0, 4).flatMap((section) => {
     if (!section || typeof section !== 'object') return []
@@ -61,13 +71,13 @@ export function resolveEditionSections(
 
     const kind = candidate.kind as EditionKind
     const slugs = Array.isArray(candidate.slugs) ? candidate.slugs.slice(0, 4) : []
-    const items = slugs
-      .flatMap((slug) => {
-        if (typeof slug !== 'string') return []
-        const item = resolveCatalogItem(catalog, kind, slug)
-        return item ? [item] : []
-      })
-      .filter((item, index, all) => all.findIndex((other) => other.slug === item.slug) === index)
+    const items = slugs.flatMap((slug) => {
+      if (typeof slug !== 'string') return []
+      const item = resolveCatalogItem(catalog, kind, slug)
+      if (!item || seenTitles.has(titleKey(item.title))) return []
+      seenTitles.add(titleKey(item.title))
+      return [item]
+    })
 
     if (items.length === 0) return []
 

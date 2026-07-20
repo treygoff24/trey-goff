@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { cn } from '@/lib/utils'
 
 interface EditorialIndexRowProps {
   href?: string
@@ -8,6 +9,7 @@ interface EditorialIndexRowProps {
   description?: React.ReactNode
   detail?: React.ReactNode
   tags?: string[]
+  className?: string
 }
 
 export function EditorialIndexRow({
@@ -18,6 +20,7 @@ export function EditorialIndexRow({
   description,
   detail,
   tags = [],
+  className,
 }: EditorialIndexRowProps) {
   const content = (
     <>
@@ -49,11 +52,14 @@ export function EditorialIndexRow({
   )
 
   if (!href) {
-    return <div className="tg-rule-row">{content}</div>
+    return <div className={cn('tg-rule-row', className)}>{content}</div>
   }
 
   return (
-    <Link href={href} className="tg-rule-row group transition-colors hover:bg-surface-1/50">
+    <Link
+      href={href}
+      className={cn('tg-rule-row group transition-colors hover:bg-surface-1/50', className)}
+    >
       {content}
     </Link>
   )

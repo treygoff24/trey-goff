@@ -11,15 +11,19 @@ export const metadata: Metadata = {
 }
 
 export default function EditionPage() {
-  const catalog = editionCatalog.map(({ type, slug, title, summary, tags, href, meta }) => ({
-    type,
-    slug,
-    title,
-    summary,
-    tags,
-    href,
-    meta,
-  }))
+  const catalog = editionCatalog.map(
+    ({ type, slug, title, summary, tags, href, meta, coverUrl, accent }) => ({
+      type,
+      slug,
+      title,
+      summary,
+      tags,
+      href,
+      meta,
+      ...(coverUrl && { coverUrl }),
+      ...(accent && { accent }),
+    }),
+  )
 
   return isEditionEnabled ? <EditionExperience catalog={catalog} /> : <DormantEdition />
 }

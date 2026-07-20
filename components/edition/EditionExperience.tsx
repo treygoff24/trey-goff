@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { FormEvent, useEffect, useRef, useState } from 'react'
 import { EditorialIndexRow } from '@/components/site/EditorialIndexRow'
 import { EditionProse } from '@/components/edition/EditionProse'
+import { EditionShelf } from '@/components/edition/EditionShelf'
 import {
   EDITION_KIND_LABELS,
   resolveCatalogItem,
@@ -105,7 +106,6 @@ export function EditionExperience({ catalog }: EditionExperienceProps) {
   const sections = resolveEditionSections(catalog, composition.sections)
   const displayedIntent =
     sanitizeModelText(composition.intent, 200) || `You came looking for ${submittedIntent}.`
-  const footerIntent = displayedIntent.replace(/^you\s+/i, '').replace(/[.!?…]+$/u, '')
 
   async function compose(intent: string) {
     const trimmed = intent.trim()
@@ -298,7 +298,12 @@ export function EditionExperience({ catalog }: EditionExperienceProps) {
           >
             {displayedIntent}
           </h1>
-          <div className="mt-8 h-px overflow-hidden bg-border-1" aria-hidden="true">
+          <div
+            className={`mt-8 h-px overflow-hidden bg-border-1 transition-opacity duration-1000 motion-reduce:transition-none ${
+              status === 'complete' ? 'opacity-0' : 'opacity-100'
+            }`}
+            aria-hidden="true"
+          >
             <div
               className="h-full bg-warm transition-[width] duration-700 ease-out motion-reduce:transition-none"
               style={{ width: `${progress}%` }}
@@ -338,18 +343,23 @@ export function EditionExperience({ catalog }: EditionExperienceProps) {
                   />
                 )}
               </div>
-              <div>
-                {section.items.map((item) => (
-                  <EditorialIndexRow
-                    key={`${item.type}:${item.slug}`}
-                    href={item.href}
-                    meta={item.meta}
-                    title={item.title}
-                    description={item.summary}
-                    tags={item.tags}
-                  />
-                ))}
-              </div>
+              {section.kind === 'library' ? (
+                <EditionShelf items={section.items} />
+              ) : (
+                <div>
+                  {section.items.map((item) => (
+                    <EditorialIndexRow
+                      key={`${item.type}:${item.slug}`}
+                      href={item.href}
+                      meta={item.meta}
+                      title={item.title}
+                      description={item.summary}
+                      tags={item.tags}
+                      className="tg-set"
+                    />
+                  ))}
+                </div>
+              )}
             </section>
           ))}
         </div>
@@ -357,7 +367,11 @@ export function EditionExperience({ catalog }: EditionExperienceProps) {
         {status === 'streaming' && (
           <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border-1 py-8">
             <p className="font-mono text-xs uppercase tracking-[0.16em] text-text-2">
-              Setting the next section…
+              Setting the next section
+              <span
+                aria-hidden="true"
+                className="ml-2 inline-block h-3 w-[7px] animate-pulse bg-warm/70 align-baseline motion-reduce:animate-none"
+              />
             </p>
             <button type="button" onClick={reset} className="tg-action-secondary">
               Compose again
@@ -388,8 +402,8 @@ export function EditionExperience({ catalog }: EditionExperienceProps) {
               />
             )}
             <p className="max-w-3xl font-newsreader text-xl leading-8 text-text-1">
-              Composed {composedAt} for a visitor who {footerIntent}. Everything above is real:
-              every link, every essay.
+              Composed {composedAt} for a visitor who said &ldquo;{submittedIntent}&rdquo;.
+              Everything above is real: every link, every essay.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <button type="button" onClick={reset} className="tg-action">

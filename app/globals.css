@@ -252,6 +252,27 @@ body {
   animation: fadeInUp 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
+/* Type being set: rises into place and sharpens, like ink settling into paper. */
+@keyframes editionSet {
+  0% {
+    opacity: 0;
+    transform: translateY(0.85rem);
+    filter: blur(4px);
+  }
+  55% {
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+.tg-set {
+  animation: editionSet 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
 .prose {
   --prose-body: var(--color-text-1);
   --prose-headings: var(--color-text-1);
@@ -534,9 +555,11 @@ html[data-konami='true'] a {
   }
 
   .animate-fade-in-up,
-  .tg-rise {
+  .tg-rise,
+  .tg-set {
     opacity: 1;
     transform: none;
+    filter: none;
   }
 }
 
