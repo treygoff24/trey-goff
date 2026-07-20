@@ -17,6 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/notes',
     '/library',
     '/graph',
+    '/machine',
     '/projects',
     '/about',
     '/now',

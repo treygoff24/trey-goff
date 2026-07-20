@@ -3,9 +3,8 @@ import { connection } from 'next/server'
 import { satoshi, newsreader, monaspace } from '@/lib/fonts'
 
 export const metadata: Metadata = {
-  title: 'The Compound Machine — Trey Goff',
+  title: 'The Compound Machine',
   description: 'Change the rules and watch the same people build two different futures.',
-  robots: { index: false, follow: false },
 }
 
 export default async function MachineLayout({ children }: Readonly<{ children: React.ReactNode }>) {

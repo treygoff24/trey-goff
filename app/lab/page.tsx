@@ -4,25 +4,11 @@ import { EditorialIndexRow } from '@/components/site/EditorialIndexRow'
 
 export const metadata: Metadata = {
   title: 'The Lab',
-  description: 'Experimental surfaces, not yet chosen.',
+  description: 'Experimental surfaces, kept for later.',
   robots: { index: false, follow: false },
 }
 
 const experiments = [
-  {
-    href: '/machine',
-    meta: 'Simulation · WebGL',
-    title: 'The Compound Machine',
-    description:
-      'Four institutional rules drive a seeded economy rendered as a compounding field of light. Pause it, re-run the same seed, or split the screen to watch two rule sets diverge from an identical start.',
-  },
-  {
-    href: '/edition',
-    meta: 'Generative · Streams live',
-    title: 'The Edition',
-    description:
-      'Ask what brought you here and a language model composes a bespoke edition of the site around that intent, live, from what actually exists — every link real, every word its own.',
-  },
   {
     href: '/resident',
     meta: 'AI resident · Dormant',
@@ -44,10 +30,11 @@ export default function LabPage() {
     <div className="tg-page max-w-4xl">
       <header className="border-b border-border-2 pb-10">
         <p className="tg-eyebrow">The Lab</p>
-        <h1 className="tg-display mt-6 max-w-3xl">Four experiments, one to keep.</h1>
+        <h1 className="tg-display mt-6 max-w-3xl">Two experiments, kept warm.</h1>
         <p className="tg-standfirst mt-6 max-w-2xl">
-          Prototypes for the site — each one a different answer to &ldquo;how was this made?&rdquo;
-          None has touched the homepage. Walk through them, then tell me which one earns its place.
+          Prototypes for the site. The Compound Machine graduated to a page of its own and the
+          Edition is being refined toward one; these two stay here — built, dormant, and waiting for
+          their moment.
         </p>
       </header>
 

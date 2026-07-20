@@ -21,6 +21,7 @@ const quickNav = [
   { href: '/notes', label: 'Notes' },
   { href: '/media', label: 'Media' },
   { href: '/topics', label: 'Topics' },
+  { href: '/machine', label: 'Machine' },
 ]
 
 export function Footer() {
