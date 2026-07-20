@@ -59,8 +59,13 @@ const LEVERS: readonly {
   },
 ]
 
+const COMPACT_NUMBER = new Intl.NumberFormat('en-US', {
+  notation: 'compact',
+  maximumFractionDigits: 1,
+})
+
 function formatCompact(value: number): string {
-  return Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(value)
+  return COMPACT_NUMBER.format(value)
 }
 
 function Sparkline({ values, logarithmic }: { values: number[]; logarithmic: boolean }) {

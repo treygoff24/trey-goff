@@ -51,6 +51,22 @@ test('auto-tuning downgrades when frame times are high', () => {
   assert.equal(getAutoTunedTier(state), 'low')
 })
 
+test('auto-tuning reuses its per-frame sample storage', () => {
+  const state = createAutoTuneState(false)
+  const now = performance.now()
+  state.samples = Array.from({ length: 60 }, (_, index) => ({
+    frameTime: 16,
+    timestamp: now - 500 + index,
+  }))
+  state.lastAdjustment = now - 10000
+  const samples = state.samples
+  const sortedTimes = state.sortedTimes
+
+  assert.equal(recordFrameSample(state, 16), null)
+  assert.equal(state.samples, samples)
+  assert.equal(state.sortedTimes, sortedTimes)
+})
+
 test('auto-tuning upgrades when frame times are low', () => {
   const state = createAutoTuneState(false)
   const now = performance.now()

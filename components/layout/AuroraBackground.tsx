@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { usePathname } from 'next/navigation'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 const VERTEX_SHADER = `
@@ -145,8 +146,10 @@ function createProgram(gl: WebGLRenderingContext) {
 export function AuroraBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const reducedMotion = useReducedMotion()
+  const disabled = usePathname() === '/machine'
 
   useEffect(() => {
+    if (disabled) return
     const canvas = canvasRef.current
     if (!canvas) return
 
@@ -247,7 +250,9 @@ export function AuroraBackground() {
       if (gl && buffer) gl.deleteBuffer(buffer)
       if (gl && program) gl.deleteProgram(program)
     }
-  }, [reducedMotion])
+  }, [disabled, reducedMotion])
+
+  if (disabled) return null
 
   return (
     <div

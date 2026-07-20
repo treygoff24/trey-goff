@@ -1,9 +1,8 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { View } from '@react-three/drei'
-import { Bloom, EffectComposer } from '@react-three/postprocessing'
 import {
   Color,
   DynamicDrawUsage,
@@ -17,6 +16,18 @@ import type { QualityTier } from '@/lib/interactive/capabilities'
 import type { MachineSim } from '@/lib/machine/sim'
 import { getMachineQuality } from '@/lib/machine/quality'
 import styles from './machine.module.css'
+
+const BloomPass = lazy(() =>
+  import('@react-three/postprocessing').then(({ Bloom, EffectComposer }) => ({
+    default: function MachineBloom() {
+      return (
+        <EffectComposer multisampling={0}>
+          <Bloom intensity={0.5} luminanceThreshold={0.42} luminanceSmoothing={0.9} mipmapBlur />
+        </EffectComposer>
+      )
+    },
+  })),
+)
 
 interface MachineWorldProps {
   left: MachineSim
@@ -182,7 +193,7 @@ function CityInstances({
   const seized = useMemo(() => cssColor('--color-error'), [])
   const side = Math.ceil(Math.sqrt(sim.count))
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (agents.current) agents.current.instanceMatrix.setUsage(DynamicDrawUsage)
     if (structures.current) structures.current.instanceMatrix.setUsage(DynamicDrawUsage)
     // The structures instancer remounts when the model arrives, so its matrices
@@ -351,9 +362,9 @@ function CityScene({
       />
       {highQuality && <TradeLinks sim={sim} />}
       {highQuality && !split && (
-        <EffectComposer multisampling={0}>
-          <Bloom intensity={0.5} luminanceThreshold={0.42} luminanceSmoothing={0.9} mipmapBlur />
-        </EffectComposer>
+        <Suspense fallback={null}>
+          <BloomPass />
+        </Suspense>
       )}
     </>
   )

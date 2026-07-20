@@ -6,9 +6,11 @@ async function waitForLiveMachine(page: import('@playwright/test').Page) {
 }
 
 test.describe('The Compound Machine', () => {
-  test('renders and lets the visitor change and compare rules', async ({ page }) => {
+  test('renders and lets the visitor change and compare rules', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name.startsWith('mobile-'), 'Compare mode is desktop-only')
     await page.goto('/machine?seed=0')
     await waitForLiveMachine(page)
+    await expect(page.locator('canvas')).toHaveCount(1)
 
     const security = page.getByRole('slider', { name: /Property security/ })
     await security.fill('92')

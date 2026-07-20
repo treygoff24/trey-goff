@@ -6,6 +6,8 @@ import {
   PARAMS,
   advanceSimulation,
   createSimulation,
+  snapshotSimulation,
+  tickSimulation,
   type InstitutionValues,
 } from '@/lib/machine/sim'
 
@@ -27,6 +29,25 @@ test('the same seed and rules produce identical aggregates', () => {
 
   assert.deepEqual(first.aggregates, second.aggregates)
   assert.deepEqual(first.capital, second.capital)
+})
+
+test('batched and deferred-median ticks preserve eager simulation results', () => {
+  const eager = createSimulation(1500, SEED, COMMON_RULES)
+  const batched = createSimulation(1500, SEED, COMMON_RULES)
+  const deferred = createSimulation(1500, SEED, COMMON_RULES)
+
+  for (let tick = 0; tick < 20; tick++) {
+    tickSimulation(eager)
+    tickSimulation(deferred, false)
+  }
+  advanceSimulation(batched, 20)
+
+  assert.deepEqual(batched.aggregates, eager.aggregates)
+  assert.deepEqual(snapshotSimulation(deferred), eager.aggregates)
+  assert.deepEqual(batched.capital, eager.capital)
+  assert.deepEqual(deferred.capital, eager.capital)
+  assert.equal(batched.shockRngState, eager.shockRngState)
+  assert.equal(deferred.tradeRngState, eager.tradeRngState)
 })
 
 test('split panels with identical rules remain identical', () => {

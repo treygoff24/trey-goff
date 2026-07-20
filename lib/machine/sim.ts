@@ -30,6 +30,7 @@ export interface MachineSim {
   tradeB: Uint32Array
   tradeCount: number
   wealthScratch: Float32Array
+  medianTick: number
   institutions: InstitutionValues
   targets: InstitutionValues
   aggregates: SimAggregates
@@ -128,6 +129,7 @@ export function createSimulation(
     tradeB: new Uint32Array(Math.ceil(safeCount * PARAMS.tradePairShare * 0.5)),
     tradeCount: 0,
     wealthScratch: new Float32Array(safeCount),
+    medianTick: -1,
     institutions: copyInstitutions(initial),
     targets: copyInstitutions(initial),
     aggregates: { tick: 0, totalOutput: 0, structures: 0, medianWealth: 0 },
@@ -140,7 +142,7 @@ export function createSimulation(
     sim.skill[index] = Math.exp(PARAMS.skillMu + PARAMS.skillSigma * normalRandom(sim))
   }
 
-  updateAggregates(sim, 0)
+  updateAggregates(sim, 0, true)
   return sim
 }
 
@@ -163,7 +165,8 @@ export function institutionParameters(values: InstitutionValues) {
   }
 }
 
-function updateAggregates(sim: MachineSim, totalOutput: number): void {
+function updateMedianWealth(sim: MachineSim): void {
+  if (sim.medianTick === sim.tick) return
   for (let index = 0; index < sim.count; index++) {
     sim.wealthScratch[index] = sim.capital[index]! + sim.investment[index]!
   }
@@ -174,13 +177,19 @@ function updateAggregates(sim: MachineSim, totalOutput: number): void {
       ? (sim.wealthScratch[middle - 1]! + sim.wealthScratch[middle]!) / 2
       : sim.wealthScratch[middle]!
 
+  sim.aggregates.medianWealth = median
+  sim.medianTick = sim.tick
+}
+
+function updateAggregates(sim: MachineSim, totalOutput: number, updateMedian: boolean): void {
   sim.aggregates.tick = sim.tick
   sim.aggregates.totalOutput = totalOutput
   sim.aggregates.structures = sim.structuresCompleted
-  sim.aggregates.medianWealth = median
+  if (updateMedian) updateMedianWealth(sim)
 }
 
-export function tickSimulation(sim: MachineSim): SimAggregates {
+// Live callers can defer the O(n log n) median until their next published snapshot.
+export function tickSimulation(sim: MachineSim, updateMedian = true): SimAggregates {
   const ease = PARAMS.institutionEase
   const current = sim.institutions
   const target = sim.targets
@@ -258,15 +267,17 @@ export function tickSimulation(sim: MachineSim): SimAggregates {
   }
 
   sim.tick++
-  updateAggregates(sim, totalOutput)
+  updateAggregates(sim, totalOutput, updateMedian)
   return sim.aggregates
 }
 
 export function advanceSimulation(sim: MachineSim, ticks: number): SimAggregates {
-  for (let tick = 0; tick < ticks; tick++) tickSimulation(sim)
+  for (let tick = 0; tick < ticks; tick++) tickSimulation(sim, false)
+  updateMedianWealth(sim)
   return sim.aggregates
 }
 
 export function snapshotSimulation(sim: MachineSim): SimAggregates {
+  updateMedianWealth(sim)
   return { ...sim.aggregates }
 }

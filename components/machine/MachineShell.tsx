@@ -54,10 +54,12 @@ function makeRun(
   seed: number,
   leftRules: InstitutionValues,
   rightRules: InstitutionValues,
+  split: boolean,
 ): MachineRun {
+  const left = warmSimulation(count, seed, leftRules)
   return {
-    left: warmSimulation(count, seed, leftRules),
-    right: warmSimulation(count, seed, rightRules),
+    left,
+    right: split ? warmSimulation(count, seed, rightRules) : left,
   }
 }
 
@@ -165,12 +167,13 @@ export function MachineShell() {
         : caps.suggestedTier
     const count = getMachineQuality(initialTier, false).agentCount
 
+    void import('./MachineWorld')
     setSeed(initialSeed)
     setHasSeed(true)
     setTier(initialTier)
     setLeftRules(initialLeft)
     setRightRules(initialRight)
-    const initialRun = makeRun(count, initialSeed, initialLeft, initialRight)
+    const initialRun = makeRun(count, initialSeed, initialLeft, initialRight, false)
     setRun(initialRun)
     setLeftLedger({
       current: snapshotSimulation(initialRun.left),
@@ -196,23 +199,13 @@ export function MachineShell() {
     const stepMs = 1000 / PARAMS.ticksPerSecond
     hidden.current = document.hidden
 
-    const onVisibility = () => {
-      hidden.current = document.hidden
-      accumulator = 0
-      previous = performance.now()
-    }
-
     const animate = (now: number) => {
-      if (hidden.current) {
-        previous = now
-        frame = requestAnimationFrame(animate)
-        return
-      }
+      if (hidden.current) return
       accumulator = Math.min(500, accumulator + now - previous)
       previous = now
       while (accumulator >= stepMs) {
-        tickSimulation(run.left)
-        if (split) tickSimulation(run.right)
+        tickSimulation(run.left, false)
+        if (split) tickSimulation(run.right, false)
         accumulator -= stepMs
       }
       if (run.left.tick - lastPublishedTick >= PARAMS.ticksPerSecond) {
@@ -232,7 +225,15 @@ export function MachineShell() {
       frame = requestAnimationFrame(animate)
     }
 
-    frame = requestAnimationFrame(animate)
+    const onVisibility = () => {
+      hidden.current = document.hidden
+      accumulator = 0
+      previous = performance.now()
+      cancelAnimationFrame(frame)
+      if (!hidden.current) frame = requestAnimationFrame(animate)
+    }
+
+    if (!hidden.current) frame = requestAnimationFrame(animate)
     document.addEventListener('visibilitychange', onVisibility)
     return () => {
       cancelAnimationFrame(frame)
@@ -275,7 +276,7 @@ export function MachineShell() {
   const resetRun = useCallback(
     (nextSplit = split, nextTier = tier) => {
       const count = getMachineQuality(nextTier, nextSplit).agentCount
-      const next = makeRun(count, seed, leftRules, rightRules)
+      const next = makeRun(count, seed, leftRules, rightRules, nextSplit)
       setRun(next)
       setLeftLedger({
         current: snapshotSimulation(next.left),
@@ -336,6 +337,7 @@ export function MachineShell() {
   }, [run, split])
 
   const reducedMotion = capabilities?.reducedMotion ?? false
+  const worldVersion = reducedMotion ? version : 0
   const world = useMemo(() => {
     if (!run || !capabilities?.webgl2) return null
     return (
@@ -347,12 +349,12 @@ export function MachineShell() {
         reducedMotion={reducedMotion}
         paused={paused}
         isMobile={capabilities.isMobile}
-        version={version}
+        version={worldVersion}
         onTierChange={changeTier}
         onReady={() => setReady(true)}
       />
     )
-  }, [capabilities, changeTier, paused, reducedMotion, run, split, tier, version])
+  }, [capabilities, changeTier, paused, reducedMotion, run, split, tier, worldVersion])
 
   if (!capabilities) return <LoadingWorld message="Reading this device…" />
   if (!capabilities.webgl2) return <Fallback />
