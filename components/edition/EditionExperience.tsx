@@ -197,7 +197,8 @@ export function EditionExperience({ catalog }: EditionExperienceProps) {
               What brought you here?
             </h1>
             <p className="mx-auto mt-7 max-w-xl text-base leading-7 text-text-2 sm:text-lg sm:leading-8">
-              Tell me what you&apos;re looking for. I&apos;ll set the most useful pages on the desk.
+              I keep Trey&apos;s archive, and I know it better than he does. Tell me what
+              you&apos;re after and I&apos;ll bring the right pages to the desk.
             </p>
           </header>
 
