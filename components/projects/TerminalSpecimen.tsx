@@ -36,6 +36,14 @@ export function TerminalSpecimen({
   const updateFade = useCallback(() => {
     const el = scrollerRef.current
     if (!el) return
+    // Inside a closed dossier the subtree is skipped (content-visibility),
+    // so scrollWidth/clientWidth report garbage — never latch a fade from
+    // that state; the toggle listener re-measures when the dossier opens.
+    const dossier = el.closest('details')
+    if (dossier && !dossier.open) {
+      setShowFade(false)
+      return
+    }
     const maxScroll = el.scrollWidth - el.clientWidth
     setShowFade(maxScroll > 1 && el.scrollLeft < maxScroll - 1)
   }, [])
@@ -47,8 +55,17 @@ export function TerminalSpecimen({
     el.addEventListener('scroll', updateFade, { passive: true })
     const resizeObserver = new ResizeObserver(updateFade)
     resizeObserver.observe(el)
+    // When the ancestor dossier <details> closes (e.g. the exclusive
+    // accordion opens another row), Chrome skips the subtree via
+    // content-visibility and the ResizeObserver never delivers — a fade set
+    // while open would stay stuck at opacity 1 even though the capture no
+    // longer overflows. Re-measure on every toggle so the fade state always
+    // matches the live geometry.
+    const dossier = el.closest('details')
+    dossier?.addEventListener('toggle', updateFade)
     return () => {
       el.removeEventListener('scroll', updateFade)
+      dossier?.removeEventListener('toggle', updateFade)
       resizeObserver.disconnect()
     }
   }, [updateFade])
