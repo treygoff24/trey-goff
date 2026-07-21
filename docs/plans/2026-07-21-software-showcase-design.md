@@ -1,7 +1,65 @@
 # The Workshop — software showcase revamp (design doc)
 
 Date: 2026-07-21. Author: workspace Claude (Fable), coordinator. Status:
-DRAFT — pending cross-family design review (foundry Phase 2).
+REVIEWED — Cursor cross-family design review 2026-07-21 returned 12
+findings, verdict "implement with amendments." All 12 ACCEPTED; the
+amendments below override the corresponding sections. Build may proceed.
+
+## Amendments (design-review triage, 2026-07-21 — all accepted)
+
+1. **Open state is server-driven.** Drawers open via `?tool=<id>`
+   searchParams (pattern already used by `app/writing/page.tsx`), rendered
+   as `<details open>` server-side. `id` sits on the `<details>` element
+   with `scroll-margin-top` for the sticky chrome. Wander links are
+   `/projects?tool=<id>#<id>`. No client hash enhancer; at most a tiny
+   focus-to-summary helper after navigation. Exclusive-open falls out by
+   construction (one `tool` param).
+2. **Not the Library drawer idiom.** The Library's DetailDrawer is a
+   portaled modal dialog (focus trap, Escape, restore). This page uses a
+   plain disclosure accordion — `<summary>` as sole control, no trap, no
+   dialog chrome. The doc's "matching Library's drawer idiom" claim is
+   struck.
+3. **Featured 8–12, everyone else ledger-only.** Stations remain as
+   grouping, but only featured tools get drawers/dossiers/specimens; all
+   other tools appear solely in the ledger (one line, no drawer). Full
+   station expansion + denser wander graph deferred to v2, gated on
+   visual QA proving the featured set holds attention.
+4. **Wander = navigation, not stacking.** `runsWith` links navigate to
+   `?tool=` (closing the previous drawer). Links to non-featured tools
+   render as muted text, not links.
+5. **`<summary>` is non-interactive text only** — name + one-liner +
+   quiet status word. All links live in the dossier body.
+6. **Schema extended before authoring:** `order` (number, stable sort
+   within station), `bin?` (command name vs display name), `keywords?`
+   (⌘K), `capture?: {file, capturedAt, prompt}` (prompt line stored in
+   JSON so TerminalSpecimen never regex-guesses), `links:
+   [{label,url,rel?}]`, `featuredRank?`.
+7. **Search is a real change, not a one-liner:** add `type: 'tool'` to
+   `lib/search/types.ts`, extend `lib/search/generate-index.ts` (the
+   actual generator; `scripts/generate-search-index.ts` is a wrapper) and
+   `CommandResults` label/icon/typeOrder. Index featured tools only, URLs
+   `/projects?tool=<id>#<id>`. Regenerate `public/search-index.json` via
+   prebuild.
+8. **Mono earns its keep, nowhere else.** Specimens on featured rows
+   only, typeset as ruled artifacts with constrained width — never
+   full-bleed code wallpaper. No stack "chips": a single quiet mono stack
+   string; status is one word in the meta column. Dossier prose stays
+   Satoshi/Newsreader.
+9. **Scope pin:** Wave 2 builds exactly the page + three components +
+   featured content; The Control Room becomes the lead featured dossier
+   (its MDX stays; page reads from both sources). No wander auto-open, no
+   search entries for non-featured tools.
+10. **No drawer height animation in v1** — native instant toggle
+    (`::details-content` support is uneven; honest under reduced motion).
+11. **The floor plan is one ruled paragraph**, not five mini-kickers —
+    avoids the numbered-scaffold grammar the constitution bans.
+12. **Sanitize checklist (Wave 1, applies to every capture):** no
+    tokens/keys/secrets; no client or family names or repos (prospera*,
+    dwp*, santoro*, erickbrimen*, azc/dod, wade, pactact, TPRI, b4a,
+    aes-site, gavel, praxient, goff-family, Karlyn); no other-agent mail
+    bodies; no email addresses or phone numbers; machine paths under
+    /Users/treygoff are acceptable; trim to ≤ ~30 lines per specimen;
+    record the capture date and exact prompt line in tools.json.
 
 ## Thesis
 

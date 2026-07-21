@@ -1,7 +1,58 @@
 # Audible → Library weekly sync — implementation plan
 
-Date: 2026-07-21. Author: workspace Claude (Fable). Status: DRAFT — awaiting
-plan-reviewer pass before implementation.
+Date: 2026-07-21. Author: workspace Claude (Fable). Status: REVIEWED —
+plan-reviewer verdict "implement with amendments"; all findings triaged
+below, all accepted (one adapted). Implementation may proceed.
+
+## Amendments (plan-review triage, 2026-07-21)
+
+1. **ACCEPT (blocker) — cover artifacts.** `resolve-book-covers.ts`
+   downloads `public/covers/{id}.jpg` (git-tracked, 327 present) and the
+   plan only staged `public/*.json`. The wrapper now stages, by explicit
+   pathspec, every prebuild-touched artifact: `content/library/books.json`,
+   new/changed files under `public/covers/`, and changed `public/*.json`
+   (cover-map, appearance-covers, book-colors, search-index, manifests).
+2. **ACCEPT (blocker) — index-sweeping commit.** Commit uses an explicit
+   pathspec (`git commit -F <msg> -- <paths>`), never a bare index commit,
+   so another session's staged work is untouched. Fleet preflight added:
+   `fleet repo <repo> --for audible-sync` (exit 3 → skip week), plus a
+   30-minute claim around the write/commit, released on exit. Residual
+   risk, accepted knowingly: regenerated artifacts (e.g. search index)
+   embed whatever content sits in the working tree at run time; harmless
+   because those artifacts are regenerated on every content commit.
+3. **ACCEPT, ADAPTED (blocker) — branch guard.** Reviewer asked for a
+   hard `main` assert. Reality: development lives on the long-lived
+   `feat/machine-city` branch and `main` is ~100 commits stale, so a
+   main-only assert means the job never runs. Adapted guard: abort
+   (exit 0, logged) on detached HEAD or mid-merge/rebase state; otherwise
+   commit on the current branch and record the branch name in the log and
+   commit body. Content commits merge trivially across branches.
+4. **ACCEPT (major) — launchd binary rot.** Wrapper hardcodes absolute
+   paths (`/opt/homebrew/bin/{pnpm,node}`, `~/.local/bin/{audible,claude}`,
+   `~/.cargo/bin/fleet`), sets an explicit PATH, and fails loudly naming
+   any missing binary. (The interactive `claude` on PATH is a temp cmux
+   shim — `~/.local/bin/claude` is the stable symlink.) Verified once by
+   `launchctl kickstart` at install, not just a shell run.
+5. **ACCEPT (major) — matching.** Match key uses full normalized primary
+   author, not surname. Every decision (matched→id / inserted / promoted /
+   skipped) is logged in the report and commit body. Title-collision with
+   different author → "possible duplicate — review" report line, no
+   auto-action. The LLM `match_existing_id` pass feeds the same report.
+6. **ACCEPT (major) — slug collisions.** Disambiguate `{slug}-2` instead
+   of dropping; reported.
+7. **ACCEPT (minor) — cheap gate.** Wrapper runs `pnpm test` and
+   `pnpm typecheck` before committing; abort on failure (commit is still
+   the review surface; push remains manual).
+8. **ACCEPT (minor) — `whyILoveIt`.** Typed required in
+   `lib/books/types.ts` but present on only 9/334 entries and guarded by
+   every renderer; the sync never writes it (Trey's voice). Implementer:
+   do not "fix" the type.
+9. **ACCEPT (minor) — missed runs.** `StartCalendarInterval` doesn't
+   catch up if the Mac is asleep Sunday 07:00; accepted as best-effort
+   weekly.
+10. **NIT.** The subtitle-delimiter mojibake in the original draft is an
+   encoding artifact; the normalizer splits on literal `:` and the em
+   dash (U+2014).
 
 ## Goal
 
