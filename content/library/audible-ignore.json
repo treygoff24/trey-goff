@@ -1,0 +1,4 @@
+{
+  "_comment": "ASINs the Audible sync must never surface on the site. Add an ASIN string to the list below; find ASINs in the sync log or via `audible library export`.",
+  "asins": []
+}
