@@ -182,10 +182,10 @@ export default function AboutPage() {
                     Find me
                   </p>
                   <div className="mt-3 flex gap-4 text-sm font-semibold text-text-2">
-                    <a href="https://twitter.com/treygoff" className="hover:text-warm">
+                    <a href="https://x.com/thetreygoff" className="hover:text-warm">
                       Twitter
                     </a>
-                    <a href="https://github.com/treygoff" className="hover:text-warm">
+                    <a href="https://github.com/treygoff24" className="hover:text-warm">
                       GitHub
                     </a>
                   </div>

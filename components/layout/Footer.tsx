@@ -9,8 +9,8 @@ const footerLinks = [
 ]
 
 const socialLinks = [
-  { href: 'https://twitter.com/treygoff', label: 'Twitter', icon: TwitterIcon },
-  { href: 'https://github.com/treygoff', label: 'GitHub', icon: GitHubIcon },
+  { href: 'https://x.com/thetreygoff', label: 'Twitter', icon: TwitterIcon },
+  { href: 'https://github.com/treygoff24', label: 'GitHub', icon: GitHubIcon },
 ]
 
 const quickNav = [

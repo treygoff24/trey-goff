@@ -87,7 +87,7 @@ export default function ColophonPage() {
           <p>
             The codebase lives on{' '}
             <a
-              href="https://github.com/treygoff"
+              href="https://github.com/treygoff24"
               className="text-warm underline decoration-warm/40 underline-offset-4 hover:decoration-warm"
             >
               GitHub

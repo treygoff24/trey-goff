@@ -111,8 +111,12 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
                 {tool.name}
               </span>
               <span className="text-sm leading-6 text-text-2">{tool.oneLiner}</span>
-              <span className="hidden font-mono text-[11px] uppercase tracking-[0.14em] text-text-3 sm:block">
-                {tool.status === 'experiment' ? 'experiment' : tool.stack}
+              {/* One semantic per slot: the right column is always the stack;
+                  experiment status is a separate, warm-tinted marker so the
+                  column doesn't silently switch between language and lifecycle. */}
+              <span className="hidden font-mono text-[11px] uppercase tracking-[0.14em] text-text-3 sm:flex sm:items-baseline sm:gap-3">
+                {tool.status === 'experiment' && <span className="text-warm">experiment</span>}
+                <span>{tool.stack}</span>
               </span>
             </li>
           ))}
