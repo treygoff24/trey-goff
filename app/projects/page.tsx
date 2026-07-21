@@ -1,4 +1,5 @@
 import { allProjects } from 'content-collections'
+import { HashDossierOpener } from '@/components/projects/HashDossierOpener'
 import { WorkshopStation } from '@/components/projects/WorkshopStation'
 import { EditorialHeader } from '@/components/site/EditorialHeader'
 import { EditorialIndexRow } from '@/components/site/EditorialIndexRow'
@@ -42,6 +43,7 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
 
   return (
     <div className="tg-page max-w-6xl">
+      <HashDossierOpener />
       <EditorialHeader
         eyebrow="The Workshop"
         title="One machine, many hands"

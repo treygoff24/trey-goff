@@ -98,6 +98,26 @@ test('CSP uses strict nonce policy on interactive and static-friendly policy els
     /https:\/\/\*\.mzstatic\.com/,
     'media routes should allow Apple podcast artwork hosts',
   )
+
+  // Vercel Speed Insights must be allowlisted everywhere or the site's own
+  // policy blocks its analytics script and vitals beacon.
+  for (const [label, csp] of [
+    ['default', defaultCsp],
+    ['interactive', interactiveCsp],
+    ['library', libraryCsp],
+  ] as const) {
+    const map = toDirectiveMap(csp)
+    assert.match(
+      map.get('script-src') || '',
+      /https:\/\/va\.vercel-scripts\.com/,
+      `${label} routes should allow the Speed Insights script host`,
+    )
+    assert.match(
+      map.get('connect-src') || '',
+      /https:\/\/vitals\.vercel-insights\.com/,
+      `${label} routes should allow the Speed Insights beacon host`,
+    )
+  }
 })
 
 test('CSP relaxes script and connect sources in development for the webpack runtime', () => {
@@ -112,7 +132,7 @@ test('CSP relaxes script and connect sources in development for the webpack runt
   )
   assert.equal(
     directiveMap.get('connect-src'),
-    "'self' ws: wss:",
+    "'self' ws: wss: https://vitals.vercel-insights.com",
     'development routes should allow websocket connections for HMR',
   )
 })

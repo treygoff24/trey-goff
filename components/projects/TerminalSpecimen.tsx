@@ -23,15 +23,23 @@ export function TerminalSpecimen({ toolName, prompt, capturedAt, body }: Termina
         </span>
         <span className="font-mono text-[11px] tracking-[0.08em] text-text-3">{capturedAt}</span>
       </figcaption>
-      <div className="overflow-x-auto px-1 py-4">
-        <pre className="font-mono text-[13px] leading-6 text-text-2">
-          <code>
-            <span className="text-warm">$ </span>
-            <span className="text-text-1">{prompt}</span>
-            {'\n'}
-            {body}
-          </code>
-        </pre>
+      <div className="relative">
+        <div className="overflow-x-auto px-1 py-4">
+          <pre className="font-mono text-[13px] leading-6 text-text-2">
+            <code>
+              <span className="text-warm">$ </span>
+              <span className="text-text-1">{prompt}</span>
+              {'\n'}
+              {body}
+            </code>
+          </pre>
+        </div>
+        {/* Right-edge fade: signals that the capture scrolls horizontally on
+            narrow viewports where no persistent scrollbar is shown. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-bg-0 to-transparent"
+        />
       </div>
     </figure>
   )
