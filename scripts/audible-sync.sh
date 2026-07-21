@@ -50,8 +50,19 @@ fi
 # regenerating is always correct — and it means we can stage the whole
 # allowlist afterward with no porcelain parsing, no baselines, no rename
 # or substring edge cases. Foreign WIP outside these paths is untouched.
-OWNED=(content/library/books.json public/covers public/manifests)
-owned_globs=(':(glob)public/*.json')
+# Enumerated exactly — public/thumbnail-map.json is written by the media
+# pipeline, NOT prebuild, and must never be owned here. public/assets is
+# also left out: compress-assets only rewrites it when 3D sources change,
+# which a book sync never does.
+OWNED=(
+  content/library/books.json
+  public/covers
+  public/manifests
+  public/cover-map.json
+  public/appearance-covers.json
+  public/book-colors.json
+  public/search-index.json
+)
 
 MSG_FILE=$(mktemp)
 cleanup() {
@@ -84,14 +95,16 @@ fi
 echo "books.json changed on branch $branch — regenerating artifacts"
 # Reset any pre-dirty GENERATED paths (never books.json — it now holds this
 # run's additions) so prebuild output is the sole content of owned paths.
-git checkout -- public/covers public/manifests "${owned_globs[@]}" 2>/dev/null || true
+# restore --source=HEAD clears both index and worktree; a bare `checkout --`
+# would restore from the index and leave staged foreign content in place.
+git restore --source=HEAD --staged --worktree -- public/covers public/manifests public/cover-map.json public/appearance-covers.json public/book-colors.json public/search-index.json || echo "note: reset skipped nonexistent paths (ok)"
 "$PNPM" prebuild || { echo "prebuild failed — reverting books.json, no commit"; git checkout -- content/library/books.json; exit 1; }
 
 # cheap gate before committing (review finding 7)
 "$PNPM" test || { echo "tests failed — leaving tree dirty for inspection, no commit"; exit 1; }
 "$PNPM" typecheck || { echo "typecheck failed — leaving tree dirty for inspection, no commit"; exit 1; }
 
-git add -A -- "${OWNED[@]}" "${owned_globs[@]}" || { echo "git add failed"; exit 1; }
+git add -A -- "${OWNED[@]}" || { echo "git add failed"; exit 1; }
 printf '\nBranch: %s\nAutomated weekly sync (scripts/audible-sync.sh); push remains manual.\n' "$branch" >>"$MSG_FILE"
-git commit -F "$MSG_FILE" -- "${OWNED[@]}" "${owned_globs[@]}" || { echo "commit failed"; exit 1; }
+git commit -F "$MSG_FILE" -- "${OWNED[@]}" || { echo "commit failed"; exit 1; }
 echo "committed: $(git log --oneline -1)"

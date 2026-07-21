@@ -67,7 +67,13 @@ def author_keys(author: str) -> set[str]:
     parts = [p.strip() for p in author.split(",") if p.strip()]
     if not parts:
         return {_author_tokens(author)}
-    keys = {_author_tokens(parts[0])}
+    keys = set()
+    # A one-word first part before a comma is almost certainly a bare
+    # surname ("King, Stephen") — keying on it alone would false-match
+    # every other author sharing the surname, so only multi-word first
+    # parts (a full name before a co-author list) key by themselves.
+    if len(parts) == 1 or len(parts[0].split()) >= 2:
+        keys.add(_author_tokens(parts[0]))
     if len(parts) >= 2:
         keys.add(_author_tokens(f"{parts[1]} {parts[0]}"))  # "Evans, Mary Ann" reading
     if len(parts) >= 3:
