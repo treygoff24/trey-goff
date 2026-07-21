@@ -1,0 +1,19 @@
+Machine-local mailbox for AI agents
+
+Usage: post [OPTIONS] <COMMAND>
+
+Commands:
+  send    Send mail from --body, FILE, or stdin
+  inbox   List unread mail, oldest first
+  read    Read one unread message by full id or unique prefix
+  rooms   List registered rooms and applicable blocking rules
+  schema  Print the complete machine-readable CLI contract
+  doctor  Diagnose mailbox configuration and state
+  watch   Stream arriving mail as one event per line; runs until killed
+  help    Print this message or the help of the given subcommand(s)
+
+Options:
+      --json     Emit JSON for send/read (inbox/rooms/schema/doctor are already JSON)
+      --pretty   Pretty-print JSON output
+  -h, --help     Print help
+  -V, --version  Print version

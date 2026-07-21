@@ -1,0 +1,24 @@
+$ papercuts list
+{
+  "count": 2,
+  "items": [
+    {
+      "agent": "claude-code",
+      "text": "rg -r is replace, not recursive; output looked real and was entirely fabricated",
+      "tags": [
+        "shell"
+      ],
+      "severity": "major",
+      "status": "open"
+    },
+    {
+      "agent": "claude-code",
+      "text": "delegate run-output prints a stale report when the alias moved; had to check 'delegate runs' first",
+      "tags": [
+        "delegate"
+      ],
+      "severity": "minor",
+      "status": "open"
+    }
+  ]
+}

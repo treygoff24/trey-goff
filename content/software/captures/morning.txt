@@ -1,0 +1,21 @@
+
+☀️  morning — 2026-07-21T12:35:43
+
+MEMORY  free 82%  swap 0 MB  pressure 1  uptime 2.0d
+
+AGENTS  30 running, 18 suspicious (never auto-killed)
+  [... 15 more idle delegate worktrees ...]
+     pid 41604    2.0h     43 MB  cpu 0.0%  transcript 377.4h ago
+      work / model ?  /Users/treygoff/Code/personal-agent-benchmark
+WOULD KILL (2, run without --no-kill):
+  pid 59155  /Users/treygoff/.agent-browser/browsers/chrome-149.0.7827.115/Google Chrome for Testing.ap
+  pid 59159  /Users/treygoff/.agent-browser/browsers/chrome-149.0.7827.115/Google Chrome for Testing.ap
+
+HOGS (report-only)
+  pid 1809     167 MB  cpu 97%  /opt/homebrew/bin/biome __run_server --watcher-kind=recommended --watc
+
+DOCKER  daemon not running
+
+✅ NO RESTART NEEDED
+  • 18 idle agent session(s) worth a look
+

@@ -1,0 +1,859 @@
+{
+  "stations": [
+    {
+      "id": "coordination",
+      "name": "Coordination",
+      "line": "The swarm layer — who works where, who talks to whom, and how a bounded task moves between agents without anyone stepping on anyone."
+    },
+    {
+      "id": "verification",
+      "name": "Verification",
+      "line": "Tools that make AI output provable — sources with receipts, facts that survive checking, architecture that can't erode silently."
+    },
+    {
+      "id": "senses",
+      "name": "Senses",
+      "line": "Eyes, ears, and a voice for the machine — images, speech, sound, and documents, mostly without leaving the laptop."
+    },
+    {
+      "id": "discipline",
+      "name": "Discipline",
+      "line": "Keeping a machine full of agents honest — triage, complaints, spend caps, and the small daemons that guard the defaults."
+    },
+    {
+      "id": "play",
+      "name": "Play",
+      "line": "Tools built for a life, not a pipeline — the D&D table, the replay files, the house that might get built."
+    }
+  ],
+  "tools": [
+    {
+      "id": "fleet",
+      "name": "Fleet",
+      "bin": "fleet",
+      "oneLiner": "Machine-wide truth for an agent swarm: who is working where, what's claimed, and which writers are about to collide.",
+      "flex": "The exit codes are the API — an agent preflights a repo with one call and a 0, 3, or 1 tells it to go, stop, or look closer. No daemon, no server; evidence read from the machine itself.",
+      "station": "coordination",
+      "stack": "Rust",
+      "status": "daily-driver",
+      "featured": true,
+      "order": 1,
+      "runsWith": [
+        "post",
+        "delegate",
+        "morning"
+      ],
+      "keywords": [
+        "agents",
+        "swarm",
+        "locking",
+        "coordination",
+        "cli"
+      ],
+      "links": [],
+      "capture": {
+        "file": "fleet.txt",
+        "capturedAt": "2026-07-21",
+        "prompt": "fleet status"
+      }
+    },
+    {
+      "id": "delegate",
+      "name": "Delegate",
+      "bin": "delegate",
+      "oneLiner": "Hands a bounded task to another coding agent — Codex, Cursor, Grok, Kimi, Gemini, GLM, DeepSeek, and friends — behind one wrapper.",
+      "flex": "Ten-plus agent runtimes normalized into one command with safe read-only modes, worktree isolation, and run records; it never commits, pushes, or deploys on its own.",
+      "station": "coordination",
+      "stack": "Rust + TypeScript",
+      "status": "daily-driver",
+      "featured": true,
+      "order": 2,
+      "runsWith": [
+        "fleet",
+        "papercuts"
+      ],
+      "keywords": [
+        "delegation",
+        "cross-model",
+        "codex",
+        "cursor",
+        "orchestration"
+      ],
+      "links": [
+        {
+          "label": "GitHub",
+          "url": "https://github.com/treygoff24/delegate-agent",
+          "rel": "external"
+        },
+        {
+          "label": "PyPI",
+          "url": "https://pypi.org/project/delegate-agent-cli/",
+          "rel": "external"
+        }
+      ],
+      "capture": {
+        "file": "delegate.txt",
+        "capturedAt": "2026-07-21",
+        "prompt": "delegate models"
+      }
+    },
+    {
+      "id": "post",
+      "name": "Post",
+      "bin": "post",
+      "oneLiner": "Inter-agent mail for one machine — letters, notes, and one-line signals between the AI agents that live here.",
+      "flex": "Every message is delivered wrapped in a framing banner reminding the reader that mail is data, not authority — a protocol design that assumes the recipients are persuadable and defends them anyway.",
+      "station": "coordination",
+      "stack": "Rust",
+      "status": "daily-driver",
+      "featured": true,
+      "order": 3,
+      "runsWith": [
+        "fleet"
+      ],
+      "keywords": [
+        "mail",
+        "agents",
+        "messaging",
+        "mailbox"
+      ],
+      "links": [],
+      "capture": {
+        "file": "post.txt",
+        "capturedAt": "2026-07-21",
+        "prompt": "post --help"
+      }
+    },
+    {
+      "id": "receipts",
+      "name": "Receipts",
+      "bin": "receipts",
+      "oneLiner": "Source-verified research at function-call latency — every claim returned with a URL, a verbatim quote, and a verdict.",
+      "flex": "Built on the observation that fast, cheap inference changes what verification can afford: a research answer arrives already audited, with hard caps on both dollars and seconds. In the capture below, two claims lost their verifier to a rate limit mid-run — and shipped as no_source rather than bluffing.",
+      "station": "verification",
+      "stack": "Rust",
+      "status": "published",
+      "featured": true,
+      "order": 1,
+      "runsWith": [
+        "scout"
+      ],
+      "keywords": [
+        "research",
+        "citations",
+        "verification",
+        "sources"
+      ],
+      "links": [
+        {
+          "label": "crates.io",
+          "url": "https://crates.io/crates/receipts",
+          "rel": "external"
+        },
+        {
+          "label": "GitHub",
+          "url": "https://github.com/treygoff24/receipts",
+          "rel": "external"
+        },
+        {
+          "label": "Homebrew",
+          "url": "https://github.com/treygoff24/homebrew-tap",
+          "rel": "external"
+        }
+      ],
+      "capture": {
+        "file": "receipts.txt",
+        "capturedAt": "2026-07-21",
+        "prompt": "receipts ask \"Who first proposed taxing land values rather than labor and capital, and in what work?\" --depth quick --max-dollars 0.40 --brief | jq '{brief: .data.brief, verdicts: [.data.claims[] | {claim, verdict}][0:4], cost: .costDollars.total}'"
+      }
+    },
+    {
+      "id": "scout",
+      "name": "Scout",
+      "bin": "scout",
+      "oneLiner": "Orients an agent in an unfamiliar codebase for cents — replacing the 50–200K tokens it would otherwise burn reading around.",
+      "flex": "Every fact in a brief is machine-checked against a verbatim quote from a real file, so a hallucinated claim cannot survive the pipeline. It also refuses to overspend: the capture below is Scout declining a job that would have blown its budget, having spent nothing.",
+      "station": "verification",
+      "stack": "Rust",
+      "status": "published",
+      "featured": true,
+      "order": 2,
+      "runsWith": [
+        "receipts",
+        "lens"
+      ],
+      "keywords": [
+        "codebase",
+        "orientation",
+        "context",
+        "budget"
+      ],
+      "links": [
+        {
+          "label": "crates.io",
+          "url": "https://crates.io/crates/scout-cli",
+          "rel": "external"
+        },
+        {
+          "label": "GitHub",
+          "url": "https://github.com/treygoff24/scout",
+          "rel": "external"
+        },
+        {
+          "label": "Homebrew",
+          "url": "https://github.com/treygoff24/homebrew-tap",
+          "rel": "external"
+        }
+      ],
+      "capture": {
+        "file": "scout.txt",
+        "capturedAt": "2026-07-21",
+        "prompt": "scout index ~/Code/radiant --max-dollars 1 --pretty"
+      }
+    },
+    {
+      "id": "specgate",
+      "name": "Specgate",
+      "bin": "specgate",
+      "oneLiner": "Keeps AI agents from quietly eroding an architecture — module boundaries enforced in CI, with policy changes tracked.",
+      "flex": "The rules themselves are versioned: an agent can't weaken an architectural constraint without the weakening itself becoming a reviewable diff.",
+      "station": "verification",
+      "stack": "Rust",
+      "status": "published",
+      "featured": true,
+      "order": 3,
+      "runsWith": [],
+      "keywords": [
+        "architecture",
+        "boundaries",
+        "lint",
+        "ci"
+      ],
+      "links": [
+        {
+          "label": "npm",
+          "url": "https://www.npmjs.com/package/@treygoff/specgate",
+          "rel": "external"
+        },
+        {
+          "label": "GitHub",
+          "url": "https://github.com/treygoff24/specgate",
+          "rel": "external"
+        }
+      ],
+      "capture": {
+        "file": "specgate.txt",
+        "capturedAt": "2026-07-21",
+        "prompt": "specgate --help"
+      }
+    },
+    {
+      "id": "lens",
+      "name": "Lens",
+      "bin": "lens",
+      "oneLiner": "Natural-language search over local image libraries — no vector database, no daemon, one plain JSONL file.",
+      "flex": "Captions every image once with a fast vision model, then answers any query by handing the entire index to a single model call. The capture below is Lens searching this site's own book covers — it surfaced Moby Dick for \"a lighthouse, a ship, or the sea\" from the cover art alone.",
+      "station": "senses",
+      "stack": "Rust",
+      "status": "published",
+      "featured": true,
+      "order": 1,
+      "runsWith": [
+        "scout"
+      ],
+      "keywords": [
+        "images",
+        "search",
+        "vision",
+        "local-first"
+      ],
+      "links": [
+        {
+          "label": "crates.io",
+          "url": "https://crates.io/crates/lens-cli",
+          "rel": "external"
+        },
+        {
+          "label": "GitHub",
+          "url": "https://github.com/treygoff24/lens",
+          "rel": "external"
+        },
+        {
+          "label": "Homebrew",
+          "url": "https://github.com/treygoff24/homebrew-tap",
+          "rel": "external"
+        }
+      ],
+      "capture": {
+        "file": "lens.txt",
+        "capturedAt": "2026-07-21",
+        "prompt": "lens find \"a lighthouse, a ship, or the sea\" | jq '{hits: [.data.hits[] | {cover: .relPath, description}][0:3], cost: .costDollars.total}'"
+      }
+    },
+    {
+      "id": "elv",
+      "name": "elv",
+      "bin": "elv",
+      "oneLiner": "An agent-first CLI for the entire ElevenLabs API — 338 of 339 operations, compiled from the vendored OpenAPI spec.",
+      "flex": "Where the official integration exposes a handful of tools, elv compiles the whole surface: every operation callable, every response in one stable JSON envelope an agent can parse blind.",
+      "station": "senses",
+      "stack": "Rust",
+      "status": "working",
+      "featured": true,
+      "order": 2,
+      "runsWith": [],
+      "keywords": [
+        "voice",
+        "tts",
+        "audio",
+        "elevenlabs",
+        "openapi"
+      ],
+      "links": [
+        {
+          "label": "GitHub",
+          "url": "https://github.com/treygoff24/elv",
+          "rel": "external"
+        },
+        {
+          "label": "npm",
+          "url": "https://www.npmjs.com/package/eleven-agent-cli",
+          "rel": "external"
+        }
+      ],
+      "capture": {
+        "file": "elv.txt",
+        "capturedAt": "2026-07-21",
+        "prompt": "elv capabilities | jq '{cli: .data.cli, spec: {total_operations, callable_operations, paths}}'"
+      }
+    },
+    {
+      "id": "papercuts",
+      "name": "Papercuts",
+      "bin": "papercuts",
+      "oneLiner": "A complaint box for AI agents — one-line friction reports filed at the moment the friction happens.",
+      "flex": "Agents were silently eating the same workflow defects for months; giving them a one-command way to complain surfaced real bugs no human had noticed. The demo below runs in a sandbox so the real complaint box stays honest.",
+      "station": "discipline",
+      "stack": "Rust",
+      "status": "daily-driver",
+      "featured": true,
+      "order": 1,
+      "runsWith": [
+        "morning",
+        "delegate"
+      ],
+      "keywords": [
+        "friction",
+        "feedback",
+        "devex",
+        "agents"
+      ],
+      "links": [
+        {
+          "label": "crates.io",
+          "url": "https://crates.io/crates/papercuts",
+          "rel": "external"
+        },
+        {
+          "label": "GitHub",
+          "url": "https://github.com/treygoff24/papercuts",
+          "rel": "external"
+        }
+      ],
+      "capture": {
+        "file": "papercuts.txt",
+        "capturedAt": "2026-07-21",
+        "prompt": "papercuts add \"rg -r is replace, not recursive; output looked real and was entirely fabricated\" --tag shell --severity major"
+      }
+    },
+    {
+      "id": "morning",
+      "name": "Morning",
+      "bin": "morning",
+      "oneLiner": "Post-overnight machine triage — memory verdict, agent census, and cleanup of the tooling the night's work left behind.",
+      "flex": "It never kills an agent, no matter how suspicious the process looks; it names them and lets the human decide. Orphaned dev servers and headless browsers get no such courtesy.",
+      "station": "discipline",
+      "stack": "Python",
+      "status": "daily-driver",
+      "featured": true,
+      "order": 2,
+      "runsWith": [
+        "fleet",
+        "papercuts"
+      ],
+      "keywords": [
+        "triage",
+        "memory",
+        "processes",
+        "cleanup"
+      ],
+      "links": [],
+      "capture": {
+        "file": "morning.txt",
+        "capturedAt": "2026-07-21",
+        "prompt": "morning --no-kill --fast"
+      }
+    },
+    {
+      "id": "law",
+      "name": "Probita",
+      "bin": "law",
+      "oneLiner": "Local legal and policy research substrate where every output field is labeled: source fact, deterministic check, or model judgment.",
+      "station": "verification",
+      "stack": "Python",
+      "status": "working",
+      "featured": false,
+      "order": 10,
+      "runsWith": [],
+      "keywords": [
+        "legal",
+        "research",
+        "epistemics"
+      ],
+      "links": [],
+      "capture": null
+    },
+    {
+      "id": "exa-agent",
+      "name": "exa-agent",
+      "bin": "exa-agent",
+      "oneLiner": "The entire Exa search API as one static binary with a stable JSON envelope — an agent's default lane onto the web.",
+      "station": "senses",
+      "stack": "Rust",
+      "status": "daily-driver",
+      "featured": false,
+      "order": 10,
+      "runsWith": [],
+      "keywords": [
+        "search",
+        "web",
+        "research"
+      ],
+      "links": [
+        {
+          "label": "crates.io",
+          "url": "https://crates.io/crates/exa-agent-cli",
+          "rel": "external"
+        },
+        {
+          "label": "GitHub",
+          "url": "https://github.com/treygoff24/exa-agent-cli",
+          "rel": "external"
+        }
+      ],
+      "capture": null
+    },
+    {
+      "id": "stt-stack",
+      "name": "STT Stack",
+      "oneLiner": "Local voice dictation: hotkey to text-at-cursor in under a second, at parity with the cloud service it replaced.",
+      "station": "senses",
+      "stack": "Python + MLX",
+      "status": "daily-driver",
+      "featured": false,
+      "order": 11,
+      "runsWith": [],
+      "keywords": [
+        "speech",
+        "dictation",
+        "local",
+        "whisper"
+      ],
+      "links": [],
+      "capture": null
+    },
+    {
+      "id": "obscura",
+      "name": "Obscura",
+      "bin": "obscura",
+      "oneLiner": "True PDF redaction — text removed from the content stream, not drawn over — with OCR, metadata scrub, and a rasterize-and-rescan verify pass.",
+      "station": "senses",
+      "stack": "Python",
+      "status": "working",
+      "featured": false,
+      "order": 12,
+      "runsWith": [],
+      "keywords": [
+        "pdf",
+        "redaction",
+        "privacy"
+      ],
+      "links": [
+        {
+          "label": "GitHub",
+          "url": "https://github.com/treygoff24/obscura",
+          "rel": "external"
+        }
+      ],
+      "capture": null
+    },
+    {
+      "id": "glm-ocr",
+      "name": "glm-ocr",
+      "oneLiner": "Fully local OCR for PDFs and images — documents to Markdown without leaving the machine.",
+      "station": "senses",
+      "stack": "Python + Ollama",
+      "status": "working",
+      "featured": false,
+      "order": 13,
+      "runsWith": [],
+      "keywords": [
+        "ocr",
+        "local",
+        "documents"
+      ],
+      "links": [],
+      "capture": null
+    },
+    {
+      "id": "agent-memory",
+      "name": "Memorum",
+      "oneLiner": "One shared memory layer across every coding assistant — local-first, plain Markdown in git, no cloud.",
+      "station": "coordination",
+      "stack": "Daemon + CLI",
+      "status": "working",
+      "featured": false,
+      "order": 10,
+      "runsWith": [],
+      "keywords": [
+        "memory",
+        "agents",
+        "local-first"
+      ],
+      "links": [
+        {
+          "label": "GitHub",
+          "url": "https://github.com/treygoff24/agent-memory",
+          "rel": "external"
+        }
+      ],
+      "capture": null
+    },
+    {
+      "id": "polyflow",
+      "name": "Polyflow",
+      "oneLiner": "Runs multi-agent workflow scripts but dispatches each agent call to a different model family — no single-vendor worker layer.",
+      "station": "coordination",
+      "stack": "Node",
+      "status": "working",
+      "featured": false,
+      "order": 11,
+      "runsWith": [
+        "delegate"
+      ],
+      "keywords": [
+        "workflows",
+        "cross-model"
+      ],
+      "links": [],
+      "capture": null
+    },
+    {
+      "id": "wright",
+      "name": "Wright",
+      "oneLiner": "Spec-to-implementation work-queue runner where closure is decided by a program running the acceptance test — never by the agent's self-assessment.",
+      "station": "coordination",
+      "stack": "TypeScript",
+      "status": "experiment",
+      "featured": false,
+      "order": 12,
+      "runsWith": [],
+      "keywords": [
+        "queue",
+        "acceptance",
+        "autonomy"
+      ],
+      "links": [],
+      "capture": null
+    },
+    {
+      "id": "forge",
+      "name": "Forge",
+      "oneLiner": "A local-first overnight software factory, with architecture guarded by Specgate so cross-package imports fail closed.",
+      "station": "coordination",
+      "stack": "TypeScript",
+      "status": "experiment",
+      "featured": false,
+      "order": 13,
+      "runsWith": [
+        "specgate"
+      ],
+      "keywords": [
+        "factory",
+        "overnight",
+        "autonomy"
+      ],
+      "links": [],
+      "capture": null
+    },
+    {
+      "id": "cairn",
+      "name": "Cairn",
+      "oneLiner": "Not a repository index — a versioned belief-management system for AI agents, with an 878-test corpus as its acceptance spec.",
+      "station": "verification",
+      "stack": "Rust",
+      "status": "experiment",
+      "featured": false,
+      "order": 11,
+      "runsWith": [],
+      "keywords": [
+        "beliefs",
+        "context",
+        "knowledge"
+      ],
+      "links": [
+        {
+          "label": "GitHub",
+          "url": "https://github.com/treygoff24/cairn",
+          "rel": "external"
+        }
+      ],
+      "capture": null
+    },
+    {
+      "id": "erdos-hunt",
+      "name": "Erdős Hunt",
+      "oneLiner": "Certificate-first hunting on open math problems: a result is a witness file plus a short auditable verifier that exits 0 or 1.",
+      "station": "verification",
+      "stack": "Python",
+      "status": "experiment",
+      "featured": false,
+      "order": 12,
+      "runsWith": [],
+      "keywords": [
+        "math",
+        "certificates",
+        "verification"
+      ],
+      "links": [],
+      "capture": null
+    },
+    {
+      "id": "fable-meter",
+      "name": "Fable Meter",
+      "oneLiner": "A real-time cost meter and daily-cap circuit breaker for frontier-model usage — the hook denies spawns over the cap.",
+      "station": "discipline",
+      "stack": "Node, zero deps",
+      "status": "daily-driver",
+      "featured": false,
+      "order": 10,
+      "runsWith": [],
+      "keywords": [
+        "cost",
+        "budget",
+        "circuit-breaker"
+      ],
+      "links": [],
+      "capture": null
+    },
+    {
+      "id": "desloppify",
+      "name": "Desloppify",
+      "oneLiner": "A coordinator and eight narrow cleanup agents that sweep AI slop out of a codebase — dedup, dead code, weak types, defensive noise.",
+      "station": "discipline",
+      "stack": "Agent system",
+      "status": "working",
+      "featured": false,
+      "order": 12,
+      "runsWith": [],
+      "keywords": [
+        "cleanup",
+        "refactor",
+        "slop"
+      ],
+      "links": [],
+      "capture": null
+    },
+    {
+      "id": "autonomous-dev-kit",
+      "name": "Autonomous Dev Kit",
+      "oneLiner": "A harness for long-running autonomous development that actually finishes — a deterministic stop-hook engine enforces completion before exit.",
+      "station": "discipline",
+      "stack": "Hooks + skills",
+      "status": "working",
+      "featured": false,
+      "order": 13,
+      "runsWith": [],
+      "keywords": [
+        "autonomy",
+        "completion",
+        "hooks"
+      ],
+      "links": [
+        {
+          "label": "GitHub",
+          "url": "https://github.com/treygoff24/autonomous-dev-kit",
+          "rel": "external"
+        }
+      ],
+      "capture": null
+    },
+    {
+      "id": "mic-pin",
+      "name": "mic-pin",
+      "oneLiner": "An event-driven macOS daemon that pins the default mic so a Bluetooth headset can never silently ruin the audio.",
+      "station": "discipline",
+      "stack": "Swift",
+      "status": "working",
+      "featured": false,
+      "order": 14,
+      "runsWith": [],
+      "keywords": [
+        "macos",
+        "audio",
+        "daemon"
+      ],
+      "links": [],
+      "capture": null
+    },
+    {
+      "id": "rlcoach",
+      "name": "RLCoach",
+      "oneLiner": "All-local Rocket League replay analysis and coaching — a Rust parser, a diagnostics-first pipeline, and zero cloud.",
+      "station": "play",
+      "stack": "Python + Rust",
+      "status": "working",
+      "featured": true,
+      "order": 1,
+      "runsWith": [],
+      "keywords": [
+        "games",
+        "replays",
+        "coaching"
+      ],
+      "links": [
+        {
+          "label": "GitHub",
+          "url": "https://github.com/treygoff24/rlcoach",
+          "rel": "external"
+        }
+      ],
+      "capture": null,
+      "flex": "A fully offline replay pipeline — Rust parser under a Python analysis layer — that would rather emit a machine-readable diagnostic than silently guess at a corrupted frame. Coaching advice you can audit."
+    },
+    {
+      "id": "land",
+      "name": "Land",
+      "oneLiner": "Paste a Zillow link, get what a house on land actually costs — three financing paths compared across six trade-offs plus a cash-runway survivability check.",
+      "station": "play",
+      "stack": "TypeScript",
+      "status": "working",
+      "featured": false,
+      "order": 11,
+      "runsWith": [],
+      "keywords": [
+        "housing",
+        "finance",
+        "personal"
+      ],
+      "links": [],
+      "capture": null
+    },
+    {
+      "id": "timebar",
+      "name": "Timebar",
+      "oneLiner": "A native macOS menu-bar app for visual timezone alignment — DST-aware, home zone pinned, zero third-party dependencies.",
+      "station": "play",
+      "stack": "SwiftUI",
+      "status": "experiment",
+      "featured": false,
+      "order": 12,
+      "runsWith": [],
+      "keywords": [
+        "macos",
+        "timezones",
+        "menubar"
+      ],
+      "links": [
+        {
+          "label": "GitHub",
+          "url": "https://github.com/treygoff24/timebar",
+          "rel": "external"
+        }
+      ],
+      "capture": null
+    },
+    {
+      "id": "tower-defense",
+      "name": "Element Defense",
+      "oneLiner": "Co-op multiplayer tower defense — four element classes, a real-time shared economy, and a full Playwright test rig.",
+      "station": "play",
+      "stack": "Phaser + Socket.IO",
+      "status": "working",
+      "featured": false,
+      "order": 14,
+      "runsWith": [],
+      "keywords": [
+        "games",
+        "multiplayer"
+      ],
+      "links": [
+        {
+          "label": "GitHub",
+          "url": "https://github.com/treygoff24/tower-defense",
+          "rel": "external"
+        }
+      ],
+      "capture": null
+    },
+    {
+      "id": "olive",
+      "name": "Olive",
+      "oneLiner": "A desktop pet in the corner of the screen, backed by a real coding agent — click it, talk to it, let it do actual work.",
+      "station": "play",
+      "stack": "Tauri + React",
+      "status": "experiment",
+      "featured": false,
+      "order": 15,
+      "runsWith": [],
+      "keywords": [
+        "pet",
+        "desktop",
+        "codex"
+      ],
+      "links": [
+        {
+          "label": "GitHub",
+          "url": "https://github.com/treygoff24/codex-pet-sidecar",
+          "rel": "external"
+        }
+      ],
+      "capture": null
+    },
+    {
+      "id": "volley",
+      "name": "Volley",
+      "oneLiner": "What becomes possible when an agent runs at 1,500 tokens a second: trajectories so cheap they become disposable — best-of-N and tree search as function calls.",
+      "station": "coordination",
+      "stack": "Python",
+      "status": "experiment",
+      "featured": false,
+      "order": 14,
+      "runsWith": [],
+      "keywords": [
+        "speed",
+        "cerebras",
+        "search"
+      ],
+      "links": [],
+      "capture": null
+    },
+    {
+      "id": "findphone",
+      "name": "Findphone",
+      "oneLiner": "An agent-facing contact lookup CLI — exists purely so an agent can reach a human by text when it needs one.",
+      "station": "coordination",
+      "stack": "Python",
+      "status": "experiment",
+      "featured": false,
+      "order": 15,
+      "runsWith": [],
+      "keywords": [
+        "contacts",
+        "outreach"
+      ],
+      "links": [],
+      "capture": null
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "brief": "Henry George proposed taxing land values exclusively as an alternative to taxing labor and capital [[https://www.britannica.com/biography/Henry-George]]. While other thinkers—including Adam Smith, Tom Paine, David Ricardo, and John Stuart Mill—argued for the theoretical merit, justice, or economic neutrality of taxing land rent [[https://henrygeorge.org/pchp34.htm], [https://ora.ox.ac.uk/objects/uuid:7a11d268-be0b-4ecd-a30c-64bf48e3597e/files/r9c67wn83n]], George is the figure associated with the specific proposal to replace taxes on labor and capital with a land value tax.\n\n**Uncertainty:** The provided text does not specify the title of the work in which Henry George first proposed this system.",
+  "verdicts": [
+    {
+      "claim": "Henry George proposed taxing land values exclusively rather than taxing labor and capital.",
+      "verdict": "supported"
+    },
+    {
+      "claim": "Henry George detailed his proposal in his work, Progress and Poverty: An Inquiry into the Cause of Industrial Depressions and of Increase of Want with Increase of Wealth: The Remedy.",
+      "verdict": "no_source"
+    },
+    {
+      "claim": "Progress and Poverty was published in 1879.",
+      "verdict": "no_source"
+    },
+    {
+      "claim": "Henry George proposed a 'single tax' on the economic rent of land to replace all other taxes, specifically income taxes and taxes on buildings or improvements.",
+      "verdict": "unsupported"
+    }
+  ],
+  "cost": 0.08549525
+}

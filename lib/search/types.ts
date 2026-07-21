@@ -1,6 +1,6 @@
 export interface SearchDocument {
   id: string
-  type: 'essay' | 'note' | 'book' | 'project' | 'page' | 'action'
+  type: 'essay' | 'note' | 'book' | 'project' | 'tool' | 'page' | 'action'
   title: string
   description?: string
   content?: string // First 200 chars for essays/notes

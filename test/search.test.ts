@@ -53,7 +53,7 @@ describe('search document structure', () => {
 
   test('documents have valid types', () => {
     const { documents } = generateSearchIndex()
-    const validTypes = ['essay', 'note', 'book', 'project', 'page', 'action']
+    const validTypes = ['essay', 'note', 'book', 'project', 'tool', 'page', 'action']
 
     for (const doc of documents) {
       assert.ok(validTypes.includes(doc.type), `Document type "${doc.type}" should be valid`)

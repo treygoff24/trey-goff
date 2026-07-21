@@ -1,0 +1,33 @@
+scout index estimate before spend: 154 files to card, ~$1.4531
+{
+  "schema": "scout.cli.response.v1",
+  "state": "budget_hit",
+  "command": "index",
+  "root": "/Users/treygoff/Code/radiant",
+  "data": {
+    "estimated_usd": 1.4530880499999999,
+    "max_dollars": 1.0
+  },
+  "spend": {
+    "in_tok": 0,
+    "out_tok": 0,
+    "usd": 0.0,
+    "calls": 0,
+    "retries": 0
+  },
+  "skipped_count": 97,
+  "skipped_examples": [
+    {
+      "path": ".claude",
+      "reason": "harness_meta"
+    },
+    {
+      "path": ".npmrc",
+      "reason": "sensitive"
+    },
+    {
+      "path": ".vscode",
+      "reason": "harness_meta"
+    }
+  ]
+}

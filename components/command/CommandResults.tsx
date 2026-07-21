@@ -2,7 +2,7 @@
 
 import { CommandGroup, CommandItem } from '@/components/ui/command'
 import type { SearchResult } from '@/lib/search/orama'
-import { Home, FileText, BookOpen, Book, Folder, Zap } from 'lucide-react'
+import { Home, FileText, BookOpen, Book, Folder, Terminal, Zap } from 'lucide-react'
 
 interface CommandResultsProps {
   results: SearchResult[]
@@ -15,6 +15,7 @@ const typeLabels: Record<string, string> = {
   note: 'Notes',
   book: 'Books',
   project: 'Projects',
+  tool: 'Workshop',
   action: 'Actions',
 }
 
@@ -24,6 +25,7 @@ const typeIcons: Record<string, React.ReactNode> = {
   note: <BookOpen className="mr-2 h-4 w-4" />,
   book: <Book className="mr-2 h-4 w-4" />,
   project: <Folder className="mr-2 h-4 w-4" />,
+  tool: <Terminal className="mr-2 h-4 w-4" />,
   action: <Zap className="mr-2 h-4 w-4" />,
 }
 
@@ -40,7 +42,7 @@ export function CommandResults({ results, onSelect }: CommandResultsProps) {
   )
 
   // Order: pages first, then essays, notes, books, projects, actions
-  const typeOrder = ['page', 'essay', 'note', 'book', 'project', 'action']
+  const typeOrder = ['page', 'essay', 'note', 'book', 'project', 'tool', 'action']
 
   return (
     <>

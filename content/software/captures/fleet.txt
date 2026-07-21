@@ -1,0 +1,12 @@
+fleet status: 28 actor(s), 0 stalled, 1059 historical, 4 live claim(s), 2 collision(s), complete=false
+
+WORKSPACE /Users/treygoff/Code/claude-space
+HARNESS	MODEL	MODE	OWNER	LIVENESS	AGE	PIDS	UNCLAIMED
+claude	-	-	personal	active	23h	18704,90767,90796	true
+
+WORKSPACE /Users/treygoff/Code/delegate-agent
+· 1002 historical
+
+$ fleet collisions
+fleet collisions: 2 workspace(s), complete=false
+/Users/treygoff/Code/agent-memory	2 writer(s)	multiple-parties,writer-is-not-claim-holder
