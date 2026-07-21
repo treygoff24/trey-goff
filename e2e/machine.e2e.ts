@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 
 async function waitForLiveMachine(page: import('@playwright/test').Page) {
-  const liveHeading = page.getByRole('heading', { name: 'These are the rules. Change them.' })
+  const liveHeading = page.getByRole('heading', { name: 'A toy economy you govern.' })
   await expect(liveHeading).toBeVisible({ timeout: 30000 })
 }
 

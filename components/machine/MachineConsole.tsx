@@ -180,12 +180,17 @@ export function MachineConsole({
       <div className={styles.consoleTopline}>
         <div>
           <p className={styles.kicker}>The Compound Machine</p>
-          <h1>These are the rules. Change them.</h1>
+          <h1>A toy economy you govern.</h1>
         </div>
         <span className={styles.mode}>
           {reducedMotion ? 'Still mode' : paused ? 'Paused' : 'Running'}
         </span>
       </div>
+      <p className={styles.intro}>
+        Every light in the field is a person: working, trading, deciding whether tomorrow is safe
+        enough to build for. The four sliders are the rules they live under. Move one and the city
+        answers.
+      </p>
 
       {split && (
         <div className={styles.panelTabs} role="group" aria-label="World to edit">
@@ -285,6 +290,33 @@ export function MachineConsole({
           <Link href="/writing">Read the arguments behind the toy model.</Link>
         </p>
       </div>
+
+      <section className={styles.about} aria-labelledby="machine-about-heading">
+        <div className={styles.sectionHeading}>
+          <h2 id="machine-about-heading">What you are looking at</h2>
+        </div>
+        <p>
+          A few thousand people, each dealt a skill and a little starting capital from the same
+          deck. Every quarter they produce, trade with whoever the market pairs them with, and
+          decide how much of today&apos;s output to sink into structures that pay off later. The
+          city runs about two years per second; the towers are accumulated capital.
+        </p>
+        <p>
+          The sliders are institutions, not talent. Property security sets the odds an unfinished
+          investment is seized before it completes. Permitting sets how many quarters committed
+          capital waits before it produces anything. Open exchange sets how much of the gain from
+          different skills meeting is actually captured. Tax drag takes its share of output before
+          anyone can reinvest it. Re-run the same seed under different rules and the people are
+          identical; only the rules changed.
+        </p>
+        <p>
+          The point is compounding. None of these frictions look fatal in a single year, but each
+          one taxes the base the next year grows from, and over decades the same population ends
+          up in cities that look nothing alike. It is a toy, not a forecast: four levers and
+          compounding under risk, made visible.{' '}
+          <Link href="/writing">The arguments behind it live in the writing.</Link>
+        </p>
+      </section>
 
       <p className={styles.seed}>Seed {seed}</p>
       <output id={liveId} className="sr-only" aria-live="polite">

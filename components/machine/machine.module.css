@@ -351,6 +351,31 @@
   text-overflow: ellipsis;
 }
 
+.intro {
+  margin: 1.25rem 0 0;
+  color: var(--color-text-2);
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+.about {
+  margin-top: 1.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border-1);
+}
+
+.about p {
+  margin: 0 0 0.85rem;
+  color: var(--color-text-2);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.about a {
+  color: var(--color-accent);
+  text-underline-offset: 0.2em;
+}
+
 .explainer,
 .footnote {
   margin: 1.25rem 0 0;
