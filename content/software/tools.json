@@ -288,6 +288,7 @@
       "capture": {
         "file": "lens.txt",
         "capturedAt": "2026-07-21",
+        "wrap": true,
         "prompt": "lens find \"a lighthouse, a ship, or the sea\" | jq '{hits: [.data.hits[] | {cover: .relPath, description}][0:3], cost: .costDollars.total}'"
       }
     },
