@@ -49,25 +49,35 @@ def norm_title(title: str) -> str:
     return t
 
 
-def norm_author(author: str) -> str:
-    """Order-insensitive key for the primary author.
-
-    Audible emits both "J.R.R. Tolkien" and "Tolkien, J.R.R." shapes, and
-    multi-author lists are comma-joined — so take the first two comma parts
-    when the second looks like a continuation of one name (short, no space
-    before another full name), then compare as a sorted token set.
-    """
-    parts = [p.strip() for p in author.split(",") if p.strip()]
-    # "Last, First" inversion only when the second part looks like a given
-    # name fragment (initials with dots, or a single word) — a second full
-    # name after the comma is a co-author, not an inversion.
-    if len(parts) >= 2 and ("." in parts[1] or len(parts[1].split()) == 1):
-        candidate = f"{parts[1]} {parts[0]}"  # "Tolkien, J.R.R." -> "J.R.R. Tolkien"
-    else:
-        candidate = parts[0] if parts else author
-    a = unicodedata.normalize("NFKD", candidate).encode("ascii", "ignore").decode().lower()
+def _author_tokens(name: str) -> str:
+    a = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode().lower()
     a = re.sub(r"[^a-z ]", " ", a)
     return " ".join(sorted(a.split()))
+
+
+def author_keys(author: str) -> set[str]:
+    """All plausible order-insensitive keys for the primary author.
+
+    Audible emits "J.R.R. Tolkien", "Tolkien, J.R.R.", "Evans, Mary Ann",
+    and comma-joined co-author lists — the comma is ambiguous between
+    Last-First inversion and a second author. Rather than guess one
+    reading, return a key per reading and match on intersection; a miss
+    just falls through to the LLM adjudication path.
+    """
+    parts = [p.strip() for p in author.split(",") if p.strip()]
+    if not parts:
+        return {_author_tokens(author)}
+    keys = {_author_tokens(parts[0])}
+    if len(parts) >= 2:
+        keys.add(_author_tokens(f"{parts[1]} {parts[0]}"))  # "Evans, Mary Ann" reading
+    if len(parts) >= 3:
+        keys.add(_author_tokens(f"{parts[1]} {parts[0]} {parts[2]}"))  # "King, Martin Luther, Jr." reading
+    return keys
+
+
+def norm_author(author: str) -> str:
+    """Primary (first-reading) key; matching uses author_keys() sets."""
+    return min(author_keys(author))
 
 
 def slugify(title: str) -> str:
@@ -111,16 +121,18 @@ def match_items(items: list[dict], books: list[dict], report: dict):
     by_key = {}
     by_title = {}
     for b in books:
-        by_key[(norm_title(b["title"]), norm_author(b["author"]))] = b
+        for ak in author_keys(b["author"]):
+            by_key[(norm_title(b["title"]), ak)] = b
         by_title.setdefault(norm_title(b["title"]), []).append(b)
 
     matched, unmatched = [], []
     for it in items:
-        key = (norm_title(it["title"]), norm_author(it["authors"]))
-        if key in by_key:
-            matched.append((it, by_key[key]))
-        elif key[0] in by_title:
-            others = ", ".join(b["id"] for b in by_title[key[0]])
+        nt = norm_title(it["title"])
+        hit = next((by_key[(nt, ak)] for ak in author_keys(it["authors"]) if (nt, ak) in by_key), None)
+        if hit is not None:
+            matched.append((it, hit))
+        elif nt in by_title:
+            others = ", ".join(b["id"] for b in by_title[nt])
             report["review"].append(
                 f"{it.get('asin', '?')} \"{it['title']}\" by {it['authors']}: title matches "
                 f"existing [{others}] with different author — possible duplicate, not inserted"
@@ -409,9 +421,13 @@ def self_test():
         assert not changed2, f"second run must be a no-op, got {report2}"
     assert norm_title("The Dispossessed: An Ambiguous Utopia") == "dispossessed"
     assert norm_title("Sapiens – A Brief History of Humankind") == "sapiens"
-    assert norm_author("James C. Scott, Foreword Person") == norm_author("James C. Scott")
-    assert norm_author("Tolkien, J.R.R.") == norm_author("J.R.R. Tolkien")
-    assert norm_author("Le Guin, Ursula K.") == norm_author("Ursula K. Le Guin")
+    assert author_keys("James C. Scott, Foreword Person") & author_keys("James C. Scott")
+    assert author_keys("Tolkien, J.R.R.") & author_keys("J.R.R. Tolkien")
+    assert author_keys("Le Guin, Ursula K.") & author_keys("Ursula K. Le Guin")
+    assert author_keys("Evans, Mary Ann") & author_keys("Mary Ann Evans")
+    assert author_keys("King, Martin Luther, Jr.") & author_keys("Martin Luther King Jr.")
+    assert author_keys("Sun Tzu") & author_keys("Sun Tzu")
+    assert not (author_keys("Someone Else Entirely") & author_keys("Henry George"))
     assert slugify("Gödel, Escher, Bach") == "godel-escher-bach"
     print("self-test OK")
 
