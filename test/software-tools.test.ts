@@ -73,10 +73,15 @@ describe('workshop tools.json', () => {
   it('keeps captures free of excluded names and obvious secrets', () => {
     const banned =
       /prospera|dwp|santoro|erickbrimen|azctracker|dod-azc|azc-impact|freedom-cities|wade-litigation|bapa|ashworth|pactact|\btpri\b|b4a|aes-site|\bgavel\b|praxient|karlyn|goff-family|diagnosis-explainer|dose-timing|sk-[A-Za-z0-9]{20}|AKIA[A-Z0-9]{16}|ghp_[A-Za-z0-9]{20}|xoxb-/i
+    let checked = 0
     for (const tool of data.tools) {
       if (!tool.capture) continue
       const body = readFileSync(join(root, 'content/software/captures', tool.capture.file), 'utf-8')
       assert.ok(!banned.test(body), `${tool.id}: capture contains a banned string`)
+      checked++
     }
+    // a scan over zero captures is a failure of the check, not a pass of
+    // the content — an emptied tools.json must not read as "all clean"
+    assert.ok(checked >= 5, `only ${checked} captures scanned — scan is not covering the set`)
   })
 })
