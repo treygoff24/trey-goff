@@ -28,7 +28,7 @@ export function ToolRow({ tool, open }: ToolRowProps) {
       id={tool.id}
       name="workshop-dossier"
       open={open}
-      className="group border-t border-border-1 scroll-mt-40"
+      className="group border-t border-border-1 scroll-mt-[17rem] md:scroll-mt-60"
     >
       <summary className="grid cursor-pointer list-none grid-cols-[1fr_auto] items-baseline gap-4 px-1 py-5 transition-colors hover:bg-surface-1/50 [&::-webkit-details-marker]:hidden">
         <span className="min-w-0">

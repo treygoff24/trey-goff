@@ -46,7 +46,7 @@ export function EditorialIndexRow({
         )}
       </div>
       <div className="justify-self-end font-mono text-xs uppercase tracking-[0.14em] text-warm">
-        {detail ?? '→'}
+        {detail ?? (href ? '→' : null)}
       </div>
     </>
   )

@@ -73,8 +73,9 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
             {siteProject.name}
           </h2>
           <p className="mt-3 max-w-3xl text-base leading-7 text-text-2">
-            {siteProject.oneLiner} You are standing in it — this site is the workshop&apos;s own
-            dossier, co-authored with the agents the rest of this page describes.
+            {/* Single template literal: the JSX transform drops the lone space
+                between an expression and adjacent text, yielding "reading.You". */}
+            {`${siteProject.oneLiner} You are standing in it — this site is the workshop's own dossier, co-authored with the agents the rest of this page describes.`}
           </p>
         </section>
       )}
@@ -132,7 +133,6 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
               title={item.title}
               description={item.description}
               tags={item.tags}
-              detail="→"
             />
           </article>
         ))}

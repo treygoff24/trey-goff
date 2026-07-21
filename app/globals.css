@@ -13,7 +13,7 @@
 
   --color-text-1: #e8f3ec;
   --color-text-2: rgba(232, 243, 236, 0.74);
-  --color-text-3: rgba(232, 243, 236, 0.52);
+  --color-text-3: rgba(232, 243, 236, 0.6);
 
   --color-warm: #6fd69a;
   --color-accent: #97e8bb;
@@ -66,6 +66,14 @@
 html {
   background-color: var(--color-bg-0);
   color: var(--color-text-1);
+}
+
+/* Keep in-page anchor targets clear of the fixed header (h-24 + breathing room).
+   Lives in the base layer so per-element scroll-mt-* utilities still win. */
+@layer base {
+  [id] {
+    scroll-margin-top: 7rem;
+  }
 }
 
 body {
