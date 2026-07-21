@@ -311,8 +311,8 @@ export function MachineConsole({
         </p>
         <p>
           The point is compounding. None of these frictions look fatal in a single year, but each
-          one taxes the base the next year grows from, and over decades the same population ends
-          up in cities that look nothing alike. It is a toy, not a forecast: four levers and
+          one taxes the base the next year grows from, and over decades the same population ends up
+          in cities that look nothing alike. It is a toy, not a forecast: four levers and
           compounding under risk, made visible.{' '}
           <Link href="/writing">The arguments behind it live in the writing.</Link>
         </p>

@@ -24,7 +24,12 @@ export function ToolRow({ tool, open }: ToolRowProps) {
   const neighbors = tool.runsWith.map((id) => toolById.get(id)).filter((t): t is Tool => Boolean(t))
 
   return (
-    <details id={tool.id} open={open} className="group border-t border-border-1 scroll-mt-40">
+    <details
+      id={tool.id}
+      name="workshop-dossier"
+      open={open}
+      className="group border-t border-border-1 scroll-mt-40"
+    >
       <summary className="grid cursor-pointer list-none grid-cols-[1fr_auto] items-baseline gap-4 px-1 py-5 transition-colors hover:bg-surface-1/50 [&::-webkit-details-marker]:hidden">
         <span className="min-w-0">
           <span className="font-newsreader text-xl font-medium leading-tight text-text-1 transition-colors group-hover:text-warm">
@@ -89,7 +94,7 @@ export function ToolRow({ tool, open }: ToolRowProps) {
               href={link.url}
               className="tg-action-secondary"
               target="_blank"
-              rel="noreferrer"
+              rel={link.rel ? `${link.rel} noreferrer` : 'noreferrer'}
             >
               {link.label} →
             </a>

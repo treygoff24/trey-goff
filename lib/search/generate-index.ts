@@ -60,8 +60,8 @@ const navigationPages: SearchDocument[] = [
   {
     id: 'nav-projects',
     type: 'page',
-    title: 'Projects',
-    description: "Things I've built",
+    title: 'The Workshop',
+    description: 'The software behind the work — tools, agents, and the machine that runs them',
     url: '/projects',
     priority: 10,
   },

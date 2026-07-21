@@ -38,8 +38,8 @@ SLUG_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 
 
 def norm_title(title: str) -> str:
-    t = unicodedata.normalize("NFKD", title).encode("ascii", "ignore").decode().lower()
-    t = re.split(r"[:—]", t)[0]
+    t = re.split(r"[:–—]", title)[0]  # split subtitles BEFORE ascii-folding eats the dashes
+    t = unicodedata.normalize("NFKD", t).encode("ascii", "ignore").decode().lower()
     t = re.sub(r"[^a-z0-9 ]", " ", t)
     t = re.sub(r"\s+", " ", t).strip()
     for a in ARTICLES:
@@ -50,10 +50,24 @@ def norm_title(title: str) -> str:
 
 
 def norm_author(author: str) -> str:
-    a = author.split(",")[0]
-    a = unicodedata.normalize("NFKD", a).encode("ascii", "ignore").decode().lower()
+    """Order-insensitive key for the primary author.
+
+    Audible emits both "J.R.R. Tolkien" and "Tolkien, J.R.R." shapes, and
+    multi-author lists are comma-joined — so take the first two comma parts
+    when the second looks like a continuation of one name (short, no space
+    before another full name), then compare as a sorted token set.
+    """
+    parts = [p.strip() for p in author.split(",") if p.strip()]
+    # "Last, First" inversion only when the second part looks like a given
+    # name fragment (initials with dots, or a single word) — a second full
+    # name after the comma is a co-author, not an inversion.
+    if len(parts) >= 2 and ("." in parts[1] or len(parts[1].split()) == 1):
+        candidate = f"{parts[1]} {parts[0]}"  # "Tolkien, J.R.R." -> "J.R.R. Tolkien"
+    else:
+        candidate = parts[0] if parts else author
+    a = unicodedata.normalize("NFKD", candidate).encode("ascii", "ignore").decode().lower()
     a = re.sub(r"[^a-z ]", " ", a)
-    return re.sub(r"\s+", " ", a).strip()
+    return " ".join(sorted(a.split()))
 
 
 def slugify(title: str) -> str:
@@ -138,7 +152,12 @@ def build_enrich_prompt(items: list[dict], books: list[dict]) -> str:
     norm_map = {norm_title(b["title"]): b["id"] for b in books}
     payload = []
     for it in items:
-        near = difflib.get_close_matches(norm_title(it["title"]), norm_map.keys(), n=5, cutoff=0.6)
+        nt = norm_title(it["title"])
+        near = difflib.get_close_matches(nt, norm_map.keys(), n=5, cutoff=0.6)
+        # prefix containment catches subtitle shapes difflib scores poorly
+        # ("hobbit or there and back again" vs "hobbit")
+        near += [k for k in norm_map if k not in near and (nt.startswith(k + " ") or k.startswith(nt + " ") or k == nt)]
+        it["_near_ids"] = [norm_map[n] for n in near[:8]]
         payload.append(
             {
                 "asin": it["asin"],
@@ -148,7 +167,7 @@ def build_enrich_prompt(items: list[dict], books: list[dict]) -> str:
                 "audible_genres": it.get("genres"),
                 "release_date": it.get("release_date"),
                 "status": "read" if it.get("is_finished") else "reading",
-                "possible_existing_matches": [norm_map[n] for n in near],
+                "possible_existing_matches": it["_near_ids"],
             }
         )
     return f"""You are adding audiobooks from Trey Goff's Audible library to the hand-curated book list on treygoff.com. Match the existing curation style exactly.
@@ -204,9 +223,11 @@ def validate_entry(entry: dict, input_by_asin: dict, existing_ids: set[str], gen
     src = input_by_asin[asin]
     match_id = entry.get("match_existing_id")
     if match_id is not None:
-        if match_id in existing_ids:
+        # Only honor a match the model was actually offered for THIS item —
+        # a bare existing id must never promote an unrelated curated book.
+        if match_id in src.get("_near_ids", ()):
             return None, None, match_id
-        return None, f"{asin}: match_existing_id {match_id!r} does not exist", None
+        return None, f"{asin}: match_existing_id {match_id!r} not among offered candidates", None
     if "rating" in entry or "whyILoveIt" in entry:
         return None, f"{asin}: model emitted a forbidden field", None
     year = entry.get("year")
@@ -305,12 +326,26 @@ def sync(export_file=None, dry_run=False, books_path=BOOKS_PATH, ignore_path=IGN
                 books.append(book)
                 existing_ids.add(book["id"])
                 changed = True
+        accounted = {e.get("asin") for e in entries if isinstance(e, dict)}
+        for asin in input_by_asin:
+            if asin not in accounted:
+                report["rejected"].append(f"{asin}: enrichment returned no entry for this item")
 
     if changed and not dry_run:
         data["lastUpdated"] = date.today().isoformat()
-        with open(books_path, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
-            f.write("\n")
+        # atomic replace: a crash mid-write must never truncate the library
+        fd, tmp_path = tempfile.mkstemp(dir=os.path.dirname(books_path), suffix=".tmp")
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+                f.write("\n")
+                f.flush()
+                os.fsync(f.fileno())
+            os.replace(tmp_path, books_path)
+        except BaseException:
+            if os.path.exists(tmp_path):
+                os.unlink(tmp_path)
+            raise
     if msg_file and changed and not dry_run:
         lines = ["Sync Audible library into books.json", ""]
         for k in ("inserted", "promoted", "review", "rejected"):
@@ -373,7 +408,10 @@ def self_test():
         )
         assert not changed2, f"second run must be a no-op, got {report2}"
     assert norm_title("The Dispossessed: An Ambiguous Utopia") == "dispossessed"
-    assert norm_author("James C. Scott, Foreword Person") == "james c scott"
+    assert norm_title("Sapiens – A Brief History of Humankind") == "sapiens"
+    assert norm_author("James C. Scott, Foreword Person") == norm_author("James C. Scott")
+    assert norm_author("Tolkien, J.R.R.") == norm_author("J.R.R. Tolkien")
+    assert norm_author("Le Guin, Ursula K.") == norm_author("Ursula K. Le Guin")
     assert slugify("Gödel, Escher, Bach") == "godel-escher-bach"
     print("self-test OK")
 

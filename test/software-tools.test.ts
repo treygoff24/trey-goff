@@ -72,7 +72,7 @@ describe('workshop tools.json', () => {
 
   it('keeps captures free of excluded names and obvious secrets', () => {
     const banned =
-      /prospera|dwp|santoro|erickbrimen|azctracker|dod-azc|wade-litigation|pactact|praxient|karlyn|goff-family|sk-[A-Za-z0-9]{20}|AKIA[A-Z0-9]{16}|xoxb-/i
+      /prospera|dwp|santoro|erickbrimen|azctracker|dod-azc|azc-impact|freedom-cities|wade-litigation|bapa|ashworth|pactact|\btpri\b|b4a|aes-site|\bgavel\b|praxient|karlyn|goff-family|diagnosis-explainer|dose-timing|sk-[A-Za-z0-9]{20}|AKIA[A-Z0-9]{16}|ghp_[A-Za-z0-9]{20}|xoxb-/i
     for (const tool of data.tools) {
       if (!tool.capture) continue
       const body = readFileSync(join(root, 'content/software/captures', tool.capture.file), 'utf-8')

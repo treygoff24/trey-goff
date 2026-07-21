@@ -14,11 +14,13 @@ AUDIBLE="$HOME/.local/bin/audible"
 CLAUDE="$HOME/.local/bin/claude"
 PNPM="/opt/homebrew/bin/pnpm"
 NODE="/opt/homebrew/bin/node"
+PYTHON="/opt/homebrew/bin/python3"
 FLEET="$HOME/.cargo/bin/fleet"
 export PATH="/opt/homebrew/bin:$HOME/.local/bin:$HOME/.cargo/bin:/usr/bin:/bin"
 export AUDIBLE_BIN="$AUDIBLE" CLAUDE_BIN="$CLAUDE"
+[ -x "$PYTHON" ] || PYTHON="/usr/bin/python3"
 
-for bin in "$PNPM" "$NODE" "$CLAUDE"; do
+for bin in "$PNPM" "$NODE" "$CLAUDE" "$PYTHON"; do
   [ -x "$bin" ] || { echo "FATAL missing binary: $bin"; exit 1; }
 done
 if [ ! -x "$AUDIBLE" ] || [ ! -d "$HOME/.audible" ]; then
@@ -42,19 +44,32 @@ if [ "$branch" = "HEAD" ]; then
   exit 0
 fi
 
-# fleet preflight + claim (review finding 2)
+# fleet preflight + claim (review finding 2). Advisory: unexpected rc is
+# logged and the run proceeds; only a positive "occupied" (rc 3) skips.
 if [ -x "$FLEET" ]; then
   "$FLEET" repo "$REPO" --for audible-sync
   rc=$?
   if [ "$rc" -eq 3 ]; then echo "repo occupied per fleet — skipping this week"; exit 0; fi
-  "$FLEET" claim "$REPO" --owner audible-sync --ttl 30m || true
-  release() { "$FLEET" release "$REPO" --owner audible-sync >/dev/null 2>&1 || true; }
-  trap release EXIT
+  [ "$rc" -ne 0 ] && echo "fleet preflight rc=$rc (evidence unavailable) — proceeding, claim below still attempted"
+  "$FLEET" claim "$REPO" --owner audible-sync --ttl 30m || echo "fleet claim failed (advisory) — proceeding"
 fi
 
 MSG_FILE=$(mktemp)
-if ! python3 scripts/audible_sync.py --commit-msg-file "$MSG_FILE"; then
-  echo "sync script failed — no writes were made; will retry next week"
+cleanup() {
+  rm -f "$MSG_FILE" "$BASELINE" "$AFTER" 2>/dev/null
+  [ -x "$FLEET" ] && "$FLEET" release "$REPO" --owner audible-sync >/dev/null 2>&1
+  return 0
+}
+trap cleanup EXIT
+
+# Baseline of already-dirty paths, so foreign WIP never rides into our
+# commit (review finding 2): we stage only paths that BECOME dirty during
+# this run, plus books.json itself.
+BASELINE=$(mktemp); AFTER=$(mktemp)
+git status --porcelain -z > "$BASELINE"
+
+if ! "$PYTHON" scripts/audible_sync.py --commit-msg-file "$MSG_FILE"; then
+  echo "sync script failed — books.json write is atomic, nothing partial on disk; will retry next week"
   exit 1
 fi
 if git diff --quiet -- content/library/books.json; then
@@ -69,15 +84,21 @@ echo "books.json changed on branch $branch — regenerating artifacts"
 "$PNPM" test || { echo "tests failed — leaving tree dirty for inspection, no commit"; exit 1; }
 "$PNPM" typecheck || { echo "typecheck failed — leaving tree dirty for inspection, no commit"; exit 1; }
 
-# Stage exactly what this pipeline owns (review findings 1+2): books.json,
-# prebuild-regenerated public/*.json, and any new/changed cover jpgs.
+# Stage exactly what this run changed (review findings 1+2+13): every
+# public/ path newly dirtied by prebuild — covers, cover-map, manifests,
+# search index, book colors — parsed NUL-safe, minus anything dirty before
+# we started.
+git status --porcelain -z > "$AFTER"
 paths=(content/library/books.json)
-while IFS= read -r line; do
-  p=${line:3}
-  paths+=("$p")
-done < <(git status --porcelain -- 'public/*.json' public/covers)
-git add -- "${paths[@]}"
+while IFS= read -r -d '' entry; do
+  p=${entry:3}
+  case "$p" in
+    public/*)
+      if ! grep -qzF "$entry" "$BASELINE"; then paths+=("$p"); fi
+      ;;
+  esac
+done < "$AFTER"
+git add -- "${paths[@]}" || { echo "git add failed"; exit 1; }
 printf '\nBranch: %s\nAutomated weekly sync (scripts/audible-sync.sh); push remains manual.\n' "$branch" >>"$MSG_FILE"
 git commit -F "$MSG_FILE" -- "${paths[@]}" || { echo "commit failed"; exit 1; }
-rm -f "$MSG_FILE"
 echo "committed: $(git log --oneline -1)"

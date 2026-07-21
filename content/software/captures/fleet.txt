@@ -7,6 +7,3 @@ claude	-	-	personal	active	23h	18704,90767,90796	true
 WORKSPACE /Users/treygoff/Code/delegate-agent
 · 1002 historical
 
-$ fleet collisions
-fleet collisions: 2 workspace(s), complete=false
-/Users/treygoff/Code/agent-memory	2 writer(s)	multiple-parties,writer-is-not-claim-holder

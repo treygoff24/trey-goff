@@ -332,7 +332,7 @@
       "name": "Papercuts",
       "bin": "papercuts",
       "oneLiner": "A complaint box for AI agents — one-line friction reports filed at the moment the friction happens.",
-      "flex": "Agents were silently eating the same workflow defects for months; giving them a one-command way to complain surfaced real bugs no human had noticed. The demo below runs in a sandbox so the real complaint box stays honest.",
+      "flex": "Agents were silently eating the same workflow defects for months; giving them a one-command way to complain surfaced real bugs no human had noticed. The capture below lists two complaints filed moments earlier in a sandbox, so the real complaint box stays honest.",
       "station": "discipline",
       "stack": "Rust",
       "status": "daily-driver",
@@ -363,7 +363,7 @@
       "capture": {
         "file": "papercuts.txt",
         "capturedAt": "2026-07-21",
-        "prompt": "papercuts add \"rg -r is replace, not recursive; output looked real and was entirely fabricated\" --tag shell --severity major"
+        "prompt": "papercuts list | jq '{count: .data.count, items: [.data.items[] | {agent, text, tags, severity, status}]}'"
       }
     },
     {

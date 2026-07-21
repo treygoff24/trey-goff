@@ -50,7 +50,10 @@ export function resolveCatalogItem(
 // The same work can exist under two kinds (an essay and its external printing),
 // so cross-section dedup keys on normalized title, first appearance wins.
 function titleKey(title: string): string {
-  return title.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
+  return title
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, ' ')
+    .trim()
 }
 
 export function resolveEditionSections(

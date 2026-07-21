@@ -1,4 +1,3 @@
-$ papercuts list
 {
   "count": 2,
   "items": [
