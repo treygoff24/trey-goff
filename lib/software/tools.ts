@@ -6,6 +6,8 @@ export interface ToolCapture {
   file: string
   capturedAt: string
   prompt: string
+  /** Soft-wrap long lines (prose-heavy captures) instead of horizontal scroll. */
+  wrap?: boolean
 }
 
 export interface ToolLink {

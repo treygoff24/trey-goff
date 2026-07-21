@@ -65,7 +65,9 @@ export function TopNav() {
           Trey Goff
         </Link>
 
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-1 md:gap-8">
+        {/* Below 360px the five links only fit on one line with a tighter
+            gap and slightly smaller type — otherwise "About" wraps alone. */}
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-1 max-[360px]:gap-x-3 md:gap-8">
           {navItems.map((item) => {
             const isActive = pathname === item.href || pathname?.startsWith(item.href + '/')
             return (
@@ -73,7 +75,7 @@ export function TopNav() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'text-[0.86rem] font-semibold text-text-2 transition-colors hover:text-text-1',
+                  'text-[0.86rem] font-semibold text-text-2 transition-colors hover:text-text-1 max-[360px]:text-[0.78rem]',
                   isActive && 'text-warm',
                 )}
                 aria-current={isActive ? 'page' : undefined}

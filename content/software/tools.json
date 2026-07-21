@@ -164,6 +164,7 @@
       "capture": {
         "file": "receipts.txt",
         "capturedAt": "2026-07-21",
+        "wrap": true,
         "prompt": "receipts ask \"Who first proposed taxing land values rather than labor and capital, and in what work?\" --depth quick --max-dollars 0.40 --brief | jq '{brief: .data.brief, verdicts: [.data.claims[] | {claim, verdict}][0:4], cost: .costDollars.total}'"
       }
     },

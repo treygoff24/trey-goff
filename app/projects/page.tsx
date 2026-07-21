@@ -105,7 +105,7 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
           {ledgerTools.map((tool) => (
             <li
               key={tool.id}
-              className="grid grid-cols-[auto_1fr] items-baseline gap-4 border-t border-border-1 px-1 py-3 sm:grid-cols-[10rem_1fr_auto]"
+              className="grid grid-cols-[auto_1fr] items-baseline gap-x-4 gap-y-1 border-t border-border-1 px-1 py-3 sm:grid-cols-[10rem_1fr_auto]"
             >
               <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-text-3">
                 {tool.name}
@@ -113,8 +113,11 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
               <span className="text-sm leading-6 text-text-2">{tool.oneLiner}</span>
               {/* One semantic per slot: the right column is always the stack;
                   experiment status is a separate, warm-tinted marker so the
-                  column doesn't silently switch between language and lifecycle. */}
-              <span className="hidden font-mono text-[11px] uppercase tracking-[0.14em] text-text-3 sm:flex sm:items-baseline sm:gap-3">
+                  column doesn't silently switch between language and lifecycle.
+                  On mobile the tag drops to its own line under the description
+                  (col 2) instead of disappearing — phone readers still get the
+                  language/status classification. */}
+              <span className="col-start-2 flex items-baseline gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-text-3 sm:col-start-3 sm:row-start-1">
                 {tool.status === 'experiment' && <span className="text-warm">experiment</span>}
                 <span>{tool.stack}</span>
               </span>

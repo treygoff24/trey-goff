@@ -30,15 +30,13 @@ export function ToolRow({ tool, open }: ToolRowProps) {
       open={open}
       className="group border-t border-border-1 scroll-mt-[17rem] md:scroll-mt-60"
     >
-      <summary className="grid cursor-pointer list-none grid-cols-[1fr_auto] items-baseline gap-4 px-1 py-5 transition-colors hover:bg-surface-1/50 [&::-webkit-details-marker]:hidden">
-        <span className="min-w-0">
-          <span className="font-newsreader text-xl font-medium leading-tight text-text-1 transition-colors group-hover:text-warm">
-            {tool.name}
-          </span>
-          <span className="mt-1 block max-w-3xl text-sm leading-6 text-text-2">
-            {tool.oneLiner}
-          </span>
-        </span>
+      <summary className="grid cursor-pointer list-none grid-cols-[1fr_auto] items-baseline gap-x-4 gap-y-1 px-1 py-5 transition-colors hover:bg-surface-1/50 [&::-webkit-details-marker]:hidden">
+        {/* h4 under the station h3 so heading navigation reaches every tool.
+            The one-liner stays outside the heading to keep its accessible
+            name short. */}
+        <h4 className="min-w-0 font-newsreader text-xl font-medium leading-tight text-text-1 transition-colors group-hover:text-warm">
+          {tool.name}
+        </h4>
         <span className="justify-self-end font-mono text-[11px] uppercase tracking-[0.16em] text-text-3">
           {statusWords[tool.status]}
           <span
@@ -47,6 +45,9 @@ export function ToolRow({ tool, open }: ToolRowProps) {
           >
             →
           </span>
+        </span>
+        <span className="col-start-1 row-start-2 mt-0 block max-w-3xl text-sm leading-6 text-text-2">
+          {tool.oneLiner}
         </span>
       </summary>
 
@@ -63,6 +64,7 @@ export function ToolRow({ tool, open }: ToolRowProps) {
             prompt={tool.capture.prompt}
             capturedAt={tool.capture.capturedAt}
             body={readCapture(tool.capture)}
+            wrap={tool.capture.wrap}
           />
         )}
 

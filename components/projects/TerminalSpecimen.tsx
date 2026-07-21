@@ -7,6 +7,12 @@ interface TerminalSpecimenProps {
   prompt: string
   capturedAt: string
   body: string
+  /**
+   * Soft-wrap long lines instead of horizontal scrolling. Use for prose-heavy
+   * captures (long JSON string values) whose meaning would otherwise be hidden
+   * past the right edge; leave off for tabular output where alignment matters.
+   */
+  wrap?: boolean
 }
 
 /**
@@ -14,7 +20,13 @@ interface TerminalSpecimenProps {
  * tool. The output is genuine, captured on the machine the tool lives on;
  * the capture date is part of the artifact.
  */
-export function TerminalSpecimen({ toolName, prompt, capturedAt, body }: TerminalSpecimenProps) {
+export function TerminalSpecimen({
+  toolName,
+  prompt,
+  capturedAt,
+  body,
+  wrap = false,
+}: TerminalSpecimenProps) {
   const scrollerRef = useRef<HTMLDivElement>(null)
   // The fade signals unseen content to the right, so it should only render
   // when the capture actually overflows and the user is not already at the
@@ -51,11 +63,17 @@ export function TerminalSpecimen({ toolName, prompt, capturedAt, body }: Termina
         <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-text-3">
           Live capture · {toolName}
         </span>
-        <span className="font-mono text-[11px] tracking-[0.08em] text-text-3">{capturedAt}</span>
+        <span className="shrink-0 whitespace-nowrap font-mono text-[11px] tracking-[0.08em] text-text-3">
+          {capturedAt}
+        </span>
       </figcaption>
       <div className="relative">
         <div ref={scrollerRef} className="overflow-x-auto px-1 py-4">
-          <pre className="font-mono text-[13px] leading-6 text-text-2">
+          <pre
+            className={`font-mono text-[13px] leading-6 text-text-2 ${
+              wrap ? 'whitespace-pre-wrap [overflow-wrap:anywhere]' : ''
+            }`}
+          >
             <code>
               <span className="text-warm">$ </span>
               <span className="text-text-1">{prompt}</span>
