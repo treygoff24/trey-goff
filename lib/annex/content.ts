@@ -83,22 +83,30 @@ async function fetchEntry(
   return parseAnnexEntry(decoded.toString('utf8'), slug)
 }
 
-async function mapWithConcurrency<T, R>(
+/**
+ * Skips entries that fail rather than failing the archive: one unparseable file
+ * must not seal the whole reading room.
+ */
+async function mapSettledWithConcurrency<T, R>(
   values: T[],
   limit: number,
   mapper: (value: T) => Promise<R>,
 ): Promise<R[]> {
-  const results = new Array<R>(values.length)
+  const results = new Array<R | undefined>(values.length)
   let next = 0
   await Promise.all(
     Array.from({ length: Math.min(limit, values.length) }, async () => {
       while (next < values.length) {
         const index = next++
-        results[index] = await mapper(values[index]!)
+        try {
+          results[index] = await mapper(values[index]!)
+        } catch {
+          results[index] = undefined
+        }
       }
     }),
   )
-  return results
+  return results.filter((result): result is R => result !== undefined)
 }
 
 export async function getAnnexArchive(options: AnnexContentOptions = {}): Promise<AnnexArchive> {
@@ -122,9 +130,14 @@ export async function getAnnexArchive(options: AnnexContentOptions = {}): Promis
     const directory = await fetchJson(`${repoUrl}/contents/entries`, token, fetcher)
     if (!Array.isArray(directory)) throw new Error('Invalid GitHub directory response')
     const items = directory.filter(isDirectoryItem).slice(0, MAX_ANNEX_ENTRIES)
-    const entries = await mapWithConcurrency(items, ENTRY_FETCH_CONCURRENCY, (item) =>
+    const entries = await mapSettledWithConcurrency(items, ENTRY_FETCH_CONCURRENCY, (item) =>
       fetchEntry(item, repoUrl, token, fetcher),
     )
+    // Entries present but none readable is a broken archive, not an empty one:
+    // "Nothing is currently declassified" would be a lie about content that exists.
+    if (items.length > 0 && entries.length === 0) {
+      throw new Error('No annex entry could be read')
+    }
     entries.sort((left, right) => right.date.localeCompare(left.date))
     if (useCache) cache = { repo, expiresAt: now + CACHE_TTL_MS, entries }
     return { status: 'ready', entries }
