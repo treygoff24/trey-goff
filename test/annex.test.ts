@@ -117,6 +117,43 @@ describe('annex content retrieval', () => {
     assert.ok(requests.every(({ init }) => new Headers(init?.headers).has('Authorization')))
   })
 
+  test('one unreadable entry is skipped, not fatal to the archive', async () => {
+    const fetcher = (async (input: string | URL | Request) => {
+      const url = String(input)
+      if (url.endsWith('/contents/entries')) {
+        return jsonResponse([
+          { name: 'good-one.md', path: 'entries/good-one.md', type: 'file' },
+          { name: 'broken.md', path: 'entries/broken.md', type: 'file' },
+          { name: 'good-two.md', path: 'entries/good-two.md', type: 'file' },
+        ])
+      }
+      if (url.endsWith('/contents/entries/broken.md')) {
+        return jsonResponse({
+          encoding: 'base64',
+          content: Buffer.from('no frontmatter here').toString('base64'),
+        })
+      }
+      return jsonResponse({
+        encoding: 'base64',
+        content: Buffer.from(entrySource).toString('base64'),
+      })
+    }) as typeof fetch
+
+    const archive = await getAnnexArchive({
+      token: 'test-value',
+      repo: 'example/annex-content',
+      fetcher,
+    })
+
+    assert.equal(archive.status, 'ready')
+    if (archive.status !== 'ready') return
+    assert.deepEqual(
+      archive.entries.map((entry) => entry.slug).sort(),
+      ['good-one', 'good-two'],
+      'readable entries survive a malformed sibling',
+    )
+  })
+
   test('bounds repository entry count, decoded entry size, and concurrent requests', async () => {
     let active = 0
     let peakActive = 0
