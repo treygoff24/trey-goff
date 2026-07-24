@@ -46,7 +46,9 @@ export function TopNav() {
     <header
       className={cn(
         'pointer-events-none fixed inset-x-0 top-0 z-50 transition duration-300 ease-out',
-        scrolled && 'border-b border-border-1 bg-bg-0/85 backdrop-blur-md',
+        scrolled &&
+          !hideForLibraryLens &&
+          'border-b border-border-1 bg-bg-0/85 shadow-[0_12px_40px_color-mix(in_oklab,var(--color-bg-0)_45%,transparent)] backdrop-blur-md',
         hideForLibraryLens && '-translate-y-8 opacity-0',
       )}
       data-top-nav-ready={hydrated ? 'true' : 'false'}
