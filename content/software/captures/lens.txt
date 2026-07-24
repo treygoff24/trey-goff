@@ -1,0 +1,17 @@
+{
+  "hits": [
+    {
+      "cover": "moby-dick.jpg",
+      "description": "A minimalist book cover for Moby Dick by Herman Melville, featuring a large whale tail emerging from the ocean with a small boat in the distance."
+    },
+    {
+      "cover": "the-edge-of-the-world.jpg",
+      "description": "Book cover for 'The Edge of the World' by Michael Pye, featuring stylized blue and white illustrations of a viking ship, a whale, and coastal life. The art style is reminiscent of traditional woodcuts or linocuts."
+    },
+    {
+      "cover": "the-cold-start-problem.jpg",
+      "description": "The cover of the book 'The Cold Start Problem' by Andrew Chen, featuring a deep blue color palette and an image of ocean waves."
+    }
+  ],
+  "cost": 0.023164
+}

@@ -28,7 +28,7 @@ Literary, nocturnal, alive. A near-black emerald study lit by one aurora — a p
 1. **One living field.** A single global aurora layer carries the atmosphere; every other surface stays quiet so it can.
 2. **Ruled, not carded.** Editorial rows and rules over card grids, except where a drawer/modal is the true affordance.
 3. **One green, everywhere.** A single accent (#6FD69A → #97E8BB hover) carries every interaction; no second accent, ever.
-4. **Two signature surfaces.** The Library (four lenses over everything read) holds the largest single interaction budget; the Workshop (four lenses over everything built) is its deliberate sibling. Every other page spends its budget on typography and pacing.
+4. **The Library is the flex.** Interaction budget concentrates in the Library's four lenses; other pages spend theirs on typography and pacing.
 5. **Co-authored, and says so.** The human–AI collaboration is legible in the craft and, where natural, in the copy (colophon, about) — voice, not gimmick.
 
 ## Accessibility & Inclusion

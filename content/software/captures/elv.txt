@@ -1,0 +1,18 @@
+{
+  "cli": {
+    "name": "elv",
+    "version": "0.2.0",
+    "envelope_version": 1
+  },
+  "spec": {
+    "total_operations": 339,
+    "callable_operations": 338,
+    "paths": 268
+  }
+}
+
+$ elv ops search tts | jq -r ".data[].operation_id" | head -4
+text_to_speech_full
+text_to_speech_full_with_timestamps
+text_to_speech_stream
+text_to_speech_stream_with_timestamps

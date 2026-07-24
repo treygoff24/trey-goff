@@ -15,7 +15,7 @@ export function generatePersonSchema() {
     '@type': 'Person',
     name: 'Trey Goff',
     url: siteUrl,
-    sameAs: ['https://twitter.com/treygoff', 'https://github.com/treygoff'],
+    sameAs: ['https://x.com/thetreygoff', 'https://github.com/treygoff24'],
     jobTitle: 'Governance Innovation',
     description:
       'Building better governance through institutional design and practical experimentation.',

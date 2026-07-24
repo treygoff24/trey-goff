@@ -9,6 +9,7 @@ const navItems = [
   { href: '/writing', label: 'Writing' },
   { href: '/projects', label: 'Projects' },
   { href: '/library', label: 'Library' },
+  { href: '/machine', label: 'Machine' },
   { href: '/about', label: 'About' },
 ]
 
@@ -23,7 +24,7 @@ export function TopNav() {
   }, [])
 
   useEffect(() => {
-    const update = () => setScrolled(window.scrollY > 12)
+    const update = () => setScrolled(window.scrollY > 16)
     update()
     window.addEventListener('scroll', update, { passive: true })
     return () => window.removeEventListener('scroll', update)
@@ -54,7 +55,7 @@ export function TopNav() {
     >
       <nav
         className={cn(
-          'mx-auto flex max-w-[92rem] flex-col items-start gap-2 px-12 pb-4 pt-8 max-[520px]:max-w-[402px] md:h-24 md:flex-row md:items-center md:justify-between md:gap-8 md:py-0',
+          'mx-auto flex max-w-[92rem] flex-col items-start gap-2 px-6 pb-4 pt-6 max-[520px]:max-w-[402px] md:h-24 md:flex-row md:items-center md:justify-between md:gap-8 md:px-12 md:pb-0 md:pt-0',
           hideForLibraryLens ? 'pointer-events-none' : 'pointer-events-auto',
         )}
         aria-label="Main navigation"
@@ -66,7 +67,9 @@ export function TopNav() {
           Trey Goff
         </Link>
 
-        <div className="flex items-center gap-7 md:gap-8">
+        {/* Below 360px the five links only fit on one line with a tighter
+            gap and slightly smaller type — otherwise "About" wraps alone. */}
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-1 max-[360px]:gap-x-3 md:gap-8">
           {navItems.map((item) => {
             const isActive = pathname === item.href || pathname?.startsWith(item.href + '/')
             return (
@@ -74,7 +77,7 @@ export function TopNav() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'text-[0.86rem] font-semibold text-text-2 transition-colors hover:text-text-1',
+                  'text-[0.86rem] font-semibold text-text-2 transition-colors hover:text-text-1 max-[360px]:text-[0.78rem]',
                   isActive && 'text-warm',
                 )}
                 aria-current={isActive ? 'page' : undefined}

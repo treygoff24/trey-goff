@@ -1,16 +1,16 @@
 import Link from 'next/link'
-import { isInteractiveWorldEnabled, isNewsletterEnabled } from '@/lib/site-config'
+import { isNewsletterEnabled } from '@/lib/site-config'
 
 const footerLinks = [
   { href: '/colophon', label: 'Colophon' },
   { href: '/feed.xml', label: 'RSS' },
   { href: '/graph', label: 'Graph' },
-  ...(isInteractiveWorldEnabled ? [{ href: '/interactive', label: 'Interactive' }] : []),
+  { href: '/interactive', label: 'Interactive' },
 ]
 
 const socialLinks = [
-  { href: 'https://twitter.com/treygoff', label: 'Twitter', icon: TwitterIcon },
-  { href: 'https://github.com/treygoff', label: 'GitHub', icon: GitHubIcon },
+  { href: 'https://x.com/thetreygoff', label: 'Twitter', icon: TwitterIcon },
+  { href: 'https://github.com/treygoff24', label: 'GitHub', icon: GitHubIcon },
 ]
 
 const quickNav = [
@@ -21,6 +21,7 @@ const quickNav = [
   { href: '/notes', label: 'Notes' },
   { href: '/media', label: 'Media' },
   { href: '/topics', label: 'Topics' },
+  { href: '/machine', label: 'Machine' },
 ]
 
 export function Footer() {

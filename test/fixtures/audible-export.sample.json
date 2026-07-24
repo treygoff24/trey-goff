@@ -1,0 +1,72 @@
+[
+  {
+    "asin": "MATCH1",
+    "title": "Progress and Poverty: An Inquiry into the Cause of Industrial Depressions",
+    "authors": "Henry George",
+    "genres": "Economics, Politics & Social Sciences",
+    "is_finished": true,
+    "percent_complete": 100,
+    "release_date": "2019-05-01",
+    "runtime_length_min": 900
+  },
+  {
+    "asin": "NEW1",
+    "title": "Seeing Like a State: How Certain Schemes to Improve the Human Condition Have Failed",
+    "authors": "James C. Scott",
+    "genres": "Politics & Social Sciences",
+    "is_finished": true,
+    "percent_complete": 100,
+    "release_date": "2021-03-10",
+    "runtime_length_min": 1050
+  },
+  {
+    "asin": "BADYEAR",
+    "title": "Bad Year",
+    "authors": "Nobody",
+    "genres": "History",
+    "is_finished": true,
+    "percent_complete": 100,
+    "release_date": "2020-01-01",
+    "runtime_length_min": 600
+  },
+  {
+    "asin": "LLMMATCH",
+    "title": "The Hobbit, or There and Back Again (Dramatized Edition)",
+    "authors": "Tolkien, J.R.R.",
+    "genres": "Fantasy",
+    "is_finished": true,
+    "percent_complete": 100,
+    "release_date": "2020-09-15",
+    "runtime_length_min": 680
+  },
+  {
+    "asin": "DUPTITLE",
+    "title": "Progress and Poverty",
+    "authors": "Someone Else Entirely",
+    "genres": "Economics",
+    "is_finished": true,
+    "percent_complete": 100,
+    "release_date": "2022-01-01",
+    "runtime_length_min": 400
+  },
+  {
+    "asin": "POD1",
+    "title": "Some Show",
+    "authors": "A Host",
+    "genres": "Podcast, News",
+    "is_finished": false,
+    "percent_complete": 50,
+    "release_date": "2024-01-01",
+    "runtime_length_min": 60
+  },
+  {
+    "asin": "UNSTARTED",
+    "title": "Never Opened",
+    "authors": "Dusty Author",
+    "genres": "Fiction",
+    "is_finished": false,
+    "percent_complete": 0,
+    "release_date": "2023-01-01",
+    "runtime_length_min": 500
+  }
+]

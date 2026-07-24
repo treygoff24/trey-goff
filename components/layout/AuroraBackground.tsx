@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { usePathname } from 'next/navigation'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 const VERTEX_SHADER = `
@@ -98,6 +99,14 @@ void main() {
   color += vec3(0.72, 0.9, 0.85) * star * twinkle * sky * 0.55;
   color *= 0.62 + vignette * 0.32;
 
+  // Hard ceiling on perceived brightness: this layer sits under near-white
+  // text, so no additive pile-up (curtain + bloom + glow at peak breath) may
+  // ever push the sky bright enough to wash the foreground out. Scale the
+  // whole color down (hue-preserving) whenever luminance exceeds the cap.
+  float lum = dot(color, vec3(0.2126, 0.7152, 0.0722));
+  float cap = 0.18;
+  color *= cap / max(cap, lum);
+
   // Dither to break banding in the near-black gradients
   color += (hash(gl_FragCoord.xy) - 0.5) * (1.5 / 255.0);
 
@@ -145,8 +154,10 @@ function createProgram(gl: WebGLRenderingContext) {
 export function AuroraBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const reducedMotion = useReducedMotion()
+  const disabled = usePathname() === '/machine'
 
   useEffect(() => {
+    if (disabled) return
     const canvas = canvasRef.current
     if (!canvas) return
 
@@ -165,9 +176,10 @@ export function AuroraBackground() {
       frame = 0
     }
 
-    const draw = (time: number) => {
-      if (!gl || !program || lost) return
-
+    // Keep the backing buffer at clientWidth×dpr — a stale default-sized
+    // (300×150) buffer stretched across the viewport renders the aurora
+    // blurry and its bloom imprecise.
+    const sizeCanvas = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
       const width = Math.max(1, Math.floor(canvas.clientWidth * dpr))
       const height = Math.max(1, Math.floor(canvas.clientHeight * dpr))
@@ -175,6 +187,13 @@ export function AuroraBackground() {
         canvas.width = width
         canvas.height = height
       }
+    }
+
+    const draw = (time: number) => {
+      if (!gl || !program || lost) return
+
+      sizeCanvas()
+      const { width, height } = canvas
 
       gl.viewport(0, 0, width, height)
       gl.useProgram(program)
@@ -215,7 +234,14 @@ export function AuroraBackground() {
 
       gl.enableVertexAttribArray(positionLocation)
       gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0)
+      sizeCanvas()
       tick(performance.now())
+    }
+
+    // With reduced motion the loop draws exactly once, so a later viewport
+    // resize would otherwise leave a stale, stretched buffer on screen.
+    const handleResize = () => {
+      draw(performance.now())
     }
 
     const handleVisibility = () => {
@@ -236,18 +262,22 @@ export function AuroraBackground() {
 
     setup()
     document.addEventListener('visibilitychange', handleVisibility)
+    window.addEventListener('resize', handleResize)
     canvas.addEventListener('webglcontextlost', handleLost)
     canvas.addEventListener('webglcontextrestored', handleRestored)
 
     return () => {
       stop()
+      window.removeEventListener('resize', handleResize)
       document.removeEventListener('visibilitychange', handleVisibility)
       canvas.removeEventListener('webglcontextlost', handleLost)
       canvas.removeEventListener('webglcontextrestored', handleRestored)
       if (gl && buffer) gl.deleteBuffer(buffer)
       if (gl && program) gl.deleteProgram(program)
     }
-  }, [reducedMotion])
+  }, [disabled, reducedMotion])
+
+  if (disabled) return null
 
   return (
     <div

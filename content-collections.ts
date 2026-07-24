@@ -1,5 +1,6 @@
 import { defineCollection, defineConfig } from '@content-collections/core'
 import { z } from 'zod'
+import { journalSchema } from './lib/resident/journal-schema'
 
 const essays = defineCollection({
   name: 'essays',
@@ -82,6 +83,18 @@ const projects = defineCollection({
   },
 })
 
+const journal = defineCollection({
+  name: 'journal',
+  directory: 'content/journal',
+  include: '**/*.mdx',
+  schema: journalSchema,
+  transform: (document) => ({
+    ...document,
+    slug: document._meta.path.replace(/\.mdx$/, ''),
+    wordCount: document.content.trim().split(/\s+/).filter(Boolean).length,
+  }),
+})
+
 export default defineConfig({
-  content: [essays, notes, projects],
+  content: [essays, notes, projects, journal],
 })

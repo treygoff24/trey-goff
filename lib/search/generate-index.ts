@@ -1,4 +1,5 @@
 import { allEssays, allNotes, allProjects } from 'content-collections'
+import softwareTools from '@/content/software/tools.json'
 import { readFileSync } from 'fs'
 import type { SearchDocument, SearchIndex } from './types'
 import type { BooksData } from '@/lib/books/types'
@@ -59,8 +60,8 @@ const navigationPages: SearchDocument[] = [
   {
     id: 'nav-projects',
     type: 'page',
-    title: 'Projects',
-    description: "Things I've built",
+    title: 'The Workshop',
+    description: 'The software behind the work — tools, agents, and the machine that runs them',
     url: '/projects',
     priority: 10,
   },
@@ -207,6 +208,19 @@ export function generateSearchIndex(): SearchIndex {
       tags: project.tags,
       url: `/projects#${project.slug}`,
       priority: project.status === 'active' ? 7 : 5,
+    })
+  }
+
+  // Add featured workshop tools (ledger-only tools stay out of ⌘K in v1)
+  for (const tool of softwareTools.tools.filter((t) => t.featured)) {
+    documents.push({
+      id: `tool-${tool.id}`,
+      type: 'tool',
+      title: tool.name,
+      description: tool.oneLiner,
+      keywords: tool.keywords,
+      url: `/projects?tool=${tool.id}#${tool.id}`,
+      priority: 6,
     })
   }
 

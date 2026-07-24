@@ -10,8 +10,8 @@ const E2E_BASE_URL = `http://localhost:${E2E_PORT}`
  */
 export default defineConfig({
   testDir: './e2e',
-  /* Match E2E specs */
-  testMatch: ['**/*.e2e.ts', '**/*.spec.ts'],
+  /* Match .e2e.ts files */
+  testMatch: '**/*.e2e.ts',
   /* Webpack-backed dev startup can be slower on the first route compile */
   timeout: 60 * 1000,
   /* Run tests in files in parallel */
@@ -38,7 +38,12 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        // SwiftShader gives headless Chromium a software WebGL2 context so the
+        // /machine live-simulation path renders in CI instead of falling back.
+        launchOptions: { args: ['--enable-unsafe-swiftshader'] },
+      },
     },
     {
       name: 'webkit',
@@ -47,7 +52,10 @@ export default defineConfig({
     /* Mobile viewports for responsive testing */
     {
       name: 'mobile-chrome',
-      use: { ...devices['Pixel 5'] },
+      use: {
+        ...devices['Pixel 5'],
+        launchOptions: { args: ['--enable-unsafe-swiftshader'] },
+      },
     },
     {
       name: 'mobile-safari',
@@ -61,5 +69,15 @@ export default defineConfig({
     url: E2E_BASE_URL,
     reuseExistingServer: false,
     timeout: 120 * 1000,
+    env: {
+      ...process.env,
+      // Lab features run enabled under e2e; dormant states are unit-tested.
+      NEXT_PUBLIC_ENABLE_EDITION: 'true',
+      NEXT_PUBLIC_ENABLE_RESIDENT: 'true',
+      ANNEX_SECRET: 'e2e-annex-secret-with-at-least-thirty-two-chars',
+      ANNEX_GITHUB_TOKEN: 'e2e-annex-github-token',
+      ANNEX_CONTENT_REPO: 'e2e/annex-content',
+      ANNEX_GITHUB_API_URL: 'http://127.0.0.1:3102',
+    },
   },
 })

@@ -14,6 +14,9 @@ dist
 .env
 .env*.local
 
+# Secret-bearing handoff notes kept in the tree as records, never committed
+*.secret.txt
+
 # Misc
 .DS_Store
 *.pem
@@ -59,7 +62,8 @@ test-results/
 # Local agent/tooling state
 .code-briefcase/
 .code-briefcaseignore
+.scratch/
+_scratch/
 
 # Porting/source drafts
 content/essays/_agent-memory.source.md
-_scratch/

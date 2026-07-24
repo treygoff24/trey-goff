@@ -1,0 +1,20 @@
+cursor: grok-4.5-fast-xhigh (/Users/treygoff/.local/bin/cursor-agent)
+droid:
+  deepseek v4 flash -> custom:Fireworks-:-DeepSeek-V4-Flash-0
+  deepseek v4 pro -> custom:Fireworks-:-DeepSeek-V4-Pro-0
+  gemini -> custom:Gemini-:-3.6-Flash-15
+  glm -> custom:Fireworks-:-GLM-5.2-Fast-0
+  grok -> custom:xAI-:-Grok-4.3-44
+  kimi -> custom:Fireworks-:-Kimi-K2.7-Code-Fast-0
+  minimax -> custom:Fireworks-:-MiniMax-M3-0
+  qwen -> custom:Fireworks-:-Qwen-3.7-Plus-0
+claude: binary=/Users/treygoff/.local/bin/claude-delegate-work defaultModel=(none) workPermissionMode=auto
+grok: binary=/Users/treygoff/.grok/bin/grok defaultModel=grok-4.5 workPermissionMode=auto
+devin: binary=devin defaultModel=swe-1.7
+opencode: binary=opencode defaultModel=(none) defaultAgent=(none)
+  muse -> meta/muse-spark-1.1
+pi: binary=/opt/homebrew/bin/pi defaultModel=(none)
+  gemini -> google/gemini-3.6-flash
+omp: binary=omp defaultModel=(none)
+kimi: binary=/Users/treygoff/.kimi-code/bin/kimi defaultModel=kimi-code/k3
+runtime: /Users/treygoff/.delegate/src/delegate_agent/cli.py

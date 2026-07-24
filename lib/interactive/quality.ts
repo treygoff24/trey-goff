@@ -139,6 +139,7 @@ interface FrameSample {
 
 interface AutoTuneState {
   samples: FrameSample[]
+  sortedTimes: number[]
   currentTier: Exclude<QualityTier, 'auto'>
   sampleCount: number
   lastAdjustment: number
@@ -165,6 +166,7 @@ const AUTO_TUNE_CONFIG = {
 export function createAutoTuneState(isMobile: boolean): AutoTuneState {
   return {
     samples: [],
+    sortedTimes: [],
     currentTier: 'medium',
     sampleCount: 0,
     lastAdjustment: 0,
@@ -182,13 +184,24 @@ export function recordFrameSample(
 ): Exclude<QualityTier, 'auto'> | null {
   const now = performance.now()
 
-  // Add sample
-  state.samples.push({ frameTime: frameTimeMs, timestamp: now })
-  state.sampleCount++
-
-  // Keep only recent samples
+  // Compact in place and reuse an expired sample instead of allocating an array
+  // and object on every rendered frame.
   const cutoff = now - AUTO_TUNE_CONFIG.sampleWindow * AUTO_TUNE_CONFIG.sampleInterval
-  state.samples = state.samples.filter((s) => s.timestamp > cutoff)
+  let kept = 0
+  let sample: FrameSample | undefined
+  for (const current of state.samples) {
+    if (current.timestamp > cutoff) {
+      state.samples[kept++] = current
+    } else {
+      sample ??= current
+    }
+  }
+  state.samples.length = kept
+  sample ??= { frameTime: frameTimeMs, timestamp: now }
+  sample.frameTime = frameTimeMs
+  sample.timestamp = now
+  state.samples.push(sample)
+  state.sampleCount++
 
   // Check if we have enough samples and cooldown has passed
   if (
@@ -199,7 +212,12 @@ export function recordFrameSample(
   }
 
   // Calculate P95 frame time
-  const sortedTimes = [...state.samples.map((s) => s.frameTime)].sort((a, b) => a - b)
+  const sortedTimes = state.sortedTimes
+  sortedTimes.length = state.samples.length
+  for (let index = 0; index < state.samples.length; index++) {
+    sortedTimes[index] = state.samples[index]!.frameTime
+  }
+  sortedTimes.sort((a, b) => a - b)
   const p95Index = Math.floor(sortedTimes.length * 0.95)
   const p95 = sortedTimes[p95Index] ?? 16.67 // Default to ~60fps if undefined
 
@@ -225,7 +243,7 @@ export function recordFrameSample(
   if (newTier) {
     state.currentTier = newTier
     state.lastAdjustment = now
-    state.samples = [] // Reset samples after adjustment
+    state.samples.length = 0 // Reset samples after adjustment
   }
 
   return newTier

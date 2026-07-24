@@ -1,16 +1,63 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import {
+  ANNEX_SESSION_COOKIE,
+  annexSessionToken,
+  areAnnexSecretsEqual,
+  getConfiguredAnnexSecret,
+} from '@/lib/annex-auth'
+import {
   arePreviewSecretsEqual,
   PREVIEW_SESSION_COOKIE,
   previewSessionToken,
 } from '@/lib/preview-auth'
 import { buildCsp, isStrictCspPath, NONCE_REQUEST_HEADER } from '@/lib/security/csp'
+import { createRateLimiter } from '@/lib/rate-limit'
+import { getTrustedClientIp } from '@/lib/subscribe-request'
+
+const annexBootstrapLimiter = createRateLimiter({ maxRequests: 10, windowMs: 15 * 60 * 1000 })
 
 function createNonce(): string {
   const bytes = new Uint8Array(16)
   crypto.getRandomValues(bytes)
   return btoa(String.fromCharCode(...bytes))
+}
+
+function tryAnnexSecretBootstrap(request: NextRequest): NextResponse | null {
+  if (request.nextUrl.pathname !== '/classified' || !request.nextUrl.searchParams.has('key')) {
+    return null
+  }
+
+  const cleanUrl = request.nextUrl.clone()
+  cleanUrl.searchParams.delete('key')
+  // v1 accepts a key in the request line for a no-JS friend-link flow. It can appear in
+  // operator server/CDN logs; v2 will use a fragment + POST exchange instead.
+  const annexSecret = getConfiguredAnnexSecret() ?? ''
+  const key = request.nextUrl.searchParams.get('key') ?? ''
+  const response = NextResponse.redirect(cleanUrl)
+  const allowed = annexBootstrapLimiter.check(getTrustedClientIp(request)).allowed
+  const valid = allowed && Boolean(annexSecret) && areAnnexSecretsEqual(key, annexSecret)
+  response.cookies.set(
+    ANNEX_SESSION_COOKIE,
+    annexSessionToken(valid ? annexSecret : `${annexSecret}\0invalid`),
+    {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 90,
+    },
+  )
+  return response
+}
+
+function applyAnnexPrivacyHeaders(pathname: string, response: NextResponse): NextResponse {
+  if (/^\/classified(?:\/|$)/.test(pathname)) {
+    response.headers.set('Cache-Control', 'no-store, private')
+    response.headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive, nosnippet')
+    response.headers.append('Vary', 'Cookie')
+  }
+  return response
 }
 
 function tryPreviewSecretBootstrap(request: NextRequest): NextResponse | null {
@@ -72,6 +119,11 @@ export function proxy(request: NextRequest) {
     return bootstrap
   }
 
+  const annexBootstrap = tryAnnexSecretBootstrap(request)
+  if (annexBootstrap) {
+    return applyAnnexPrivacyHeaders(request.nextUrl.pathname, annexBootstrap)
+  }
+
   const pathname = request.nextUrl.pathname
   const strictRoute = isStrictCspPath(pathname)
   const nonce = strictRoute ? createNonce() : ''
@@ -98,11 +150,12 @@ export function proxy(request: NextRequest) {
     response.headers.set(NONCE_REQUEST_HEADER, nonce)
   }
 
-  return response
+  return applyAnnexPrivacyHeaders(pathname, response)
 }
 
 export const config = {
   matcher: [
+    '/classified/:path*',
     '/((?!api|_next/static|_next/image|assets/|manifests/|favicon.ico|robots.txt|sitemap.xml|.*\\.(?:png|jpe?g|gif|webp|avif|svg|ico|css|js|map|txt|xml|pdf|woff2?|ttf|otf)$).*)',
   ],
 }

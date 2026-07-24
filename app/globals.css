@@ -13,7 +13,7 @@
 
   --color-text-1: #e8f3ec;
   --color-text-2: rgba(232, 243, 236, 0.74);
-  --color-text-3: rgba(232, 243, 236, 0.52);
+  --color-text-3: rgba(232, 243, 236, 0.6);
 
   --color-warm: #6fd69a;
   --color-accent: #97e8bb;
@@ -66,6 +66,14 @@
 html {
   background-color: var(--color-bg-0);
   color: var(--color-text-1);
+}
+
+/* Keep in-page anchor targets clear of the fixed header (h-24 + breathing room).
+   Lives in the base layer so per-element scroll-mt-* utilities still win. */
+@layer base {
+  [id] {
+    scroll-margin-top: 7rem;
+  }
 }
 
 body {
@@ -250,6 +258,27 @@ body {
 
 .tg-rise {
   animation: fadeInUp 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* Type being set: rises into place and sharpens, like ink settling into paper. */
+@keyframes editionSet {
+  0% {
+    opacity: 0;
+    transform: translateY(0.85rem);
+    filter: blur(4px);
+  }
+  55% {
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+.tg-set {
+  animation: editionSet 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 .prose {
@@ -534,9 +563,11 @@ html[data-konami='true'] a {
   }
 
   .animate-fade-in-up,
-  .tg-rise {
+  .tg-rise,
+  .tg-set {
     opacity: 1;
     transform: none;
+    filter: none;
   }
 }
 
