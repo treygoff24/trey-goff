@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { createHash } from 'node:crypto'
 import { test } from 'node:test'
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
@@ -17,6 +18,10 @@ import {
 import { editionCatalog, visibleEditionEssays } from '@/lib/edition/manifest'
 import { EDITION_MAX_BODY_BYTES, parseEditionRequestBody } from '@/lib/edition/request'
 import { editionSchema } from '@/lib/edition/schema'
+
+/** Digest of `buildEditionSystemPrompt` over the frozen fixture catalog below. */
+const FROZEN_CATALOG_PROMPT_SHA256 =
+  '47bb5883759b206b0adce2c9921d81760b6067892b6398aa64802bda144b23c3'
 
 process.env.NEXT_PUBLIC_ENABLE_EDITION = 'true'
 
@@ -281,4 +286,50 @@ test('route rejects invalid requests without consuming a rate-limit token', asyn
     }),
   } as unknown as import('next/server').NextRequest)
   assert.equal(oversized.status, 413)
+})
+
+/**
+ * The system prompt is cached by the provider at ~28k tokens, and a single changed byte
+ * invalidates that cache for every visitor. This pins the serialization against a frozen
+ * catalog: the recorded digest may only move when the prompt is deliberately rewritten.
+ *
+ * The second half is the Wave 4 guarantee — the `instrumented` flag joined into the *client*
+ * catalog mapping must be invisible here, because `buildEditionSystemPrompt` picks its six
+ * fields by name and never spreads an item.
+ */
+test('the system prompt is byte-identical for a frozen catalog', () => {
+  const frozen: EditionCatalogItem[] = [
+    {
+      type: 'essays',
+      slug: 'frozen-essay',
+      title: 'A frozen essay',
+      date: '2026-01-02',
+      summary: 'Fixture summary for the prompt digest.',
+      tags: ['governance', 'institutions'],
+      href: '/writing/frozen-essay',
+      meta: '12 min',
+    },
+    {
+      type: 'library',
+      slug: 'frozen-book',
+      title: 'A frozen book',
+      date: '1998',
+      summary: 'Fixture book summary.',
+      tags: ['economics'],
+      href: '/library#frozen-book',
+      meta: 'An author',
+      coverUrl: '/covers/frozen-book.jpg',
+      accent: '#123456',
+    },
+  ]
+
+  const prompt = buildEditionSystemPrompt(frozen)
+  assert.equal(
+    createHash('sha256').update(prompt, 'utf8').digest('hex'),
+    FROZEN_CATALOG_PROMPT_SHA256,
+  )
+
+  const withInstrumented = frozen.map((item) => ({ ...item, instrumented: true }))
+  assert.equal(buildEditionSystemPrompt(withInstrumented), prompt)
+  assert.ok(!prompt.includes('instrumented'))
 })

@@ -10,6 +10,13 @@ export interface EditionCatalogLookupItem {
   meta: string
   coverUrl?: string
   accent?: string
+  /**
+   * Set on the client mapping in `app/edition/page.tsx` for essays that ship as instrumented
+   * pieces, so the shelf can mark them. It is deliberately absent from the server catalog the
+   * system prompt serializes: `buildEditionSystemPrompt` picks its fields by name, and the
+   * cached ~28k-token prompt must stay byte-identical.
+   */
+  instrumented?: boolean
 }
 
 export interface EditionCatalogItem extends EditionCatalogLookupItem {

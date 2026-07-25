@@ -11,6 +11,8 @@ import type {
 import { hastToReact, markdownToHast } from '@/lib/instruments/render'
 import { applyAnnotations } from '@/lib/instruments/marks'
 import { Prose } from '@/components/content/Prose'
+import { PublicationNav } from '@/components/instruments/PublicationNav'
+import { publishedInstrumentedPieces } from '@/lib/instruments/publication'
 import {
   LazyAuditLayer,
   LazyAuditProvider,
@@ -128,6 +130,7 @@ export async function InstrumentArticle({
         </Prose>
         <LazyInstrumentRail headings={headings} />
       </div>
+      <PublicationNav slug={manifest.slug} pieces={publishedInstrumentedPieces()} />
       {ledger && <LazyDossierDialog slug={manifest.slug} />}
     </>
   )

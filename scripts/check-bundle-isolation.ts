@@ -300,6 +300,23 @@ function verifyAppRoutesExist(): string[] {
   return PROTECTED_ROUTES.filter((route) => appRoutes[routeToAppPath(route)] !== route)
 }
 
+/**
+ * Wave 4 put publication furniture on two index routes: the cover on `/writing` and the
+ * instrumented marker on `/edition`. Both are server-rendered on purpose, so neither may pull
+ * an instrument chunk — an index page is not a reading surface and must not pay for one.
+ */
+const INSTRUMENT_FREE_ROUTES = ['/writing', '/edition']
+
+function verifyIndexRoutesInstrumentFree(analyses: readonly RouteAnalysis[]): string[] {
+  return analyses
+    .filter((analysis) => INSTRUMENT_FREE_ROUTES.includes(analysis.route))
+    .flatMap((analysis) =>
+      analysis.artifacts
+        .filter((artifact) => readText(artifact).includes(INSTRUMENT_SENTINEL))
+        .map((artifact) => `${analysis.route} loads instrument code: ${artifact}`),
+    )
+}
+
 function verifyInteractiveDynamicImport(): string | null {
   const source = readText('components/interactive/InteractiveShell.tsx')
   if (!source) return 'components/interactive/InteractiveShell.tsx missing'
@@ -333,6 +350,7 @@ const analyses = routeAnalyses.filter((analysis): analysis is RouteAnalysis => a
 const interactiveWarning = verifyInteractiveDynamicImport()
 const machineWarning = verifyMachineDynamicImport()
 const instrumentCheck = verifyInstrumentIsolation()
+const indexRouteLeaks = verifyIndexRoutesInstrumentFree(analyses)
 const violations = analyses.flatMap((analysis) =>
   analysis.forbidden.map((hit) => ({ route: analysis.route, ...hit })),
 )
@@ -385,8 +403,15 @@ if (instrumentCheck.instrumented.length === 0) {
   }
 }
 
+if (indexRouteLeaks.length === 0) {
+  console.log(`   ✓ ${INSTRUMENT_FREE_ROUTES.join(' and ')} stay free of instrument client code`)
+} else {
+  for (const leak of indexRouteLeaks) console.log(`   ✗ ${leak}`)
+}
+
 const failures = [
   ...instrumentCheck.failures,
+  ...indexRouteLeaks,
   ...missingAppRoutes.map((route) => `missing app route mapping: ${route}`),
   ...missingArtifacts.map((route) => `missing route artifacts: ${route}`),
   ...violations.map((violation) => `${violation.route} imports ${violation.label}`),

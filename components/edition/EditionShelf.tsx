@@ -43,6 +43,7 @@ export function EditionShelf({ items }: EditionShelfProps) {
             </h3>
             <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.14em] text-text-3">
               {item.meta}
+              {item.instrumented && <span className="text-warm"> · Instrumented</span>}
             </p>
             {item.summary && (
               <p className="mt-2 line-clamp-3 text-sm leading-6 text-text-2">{item.summary}</p>

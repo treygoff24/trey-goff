@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { allEssays } from 'content-collections'
 import { EditorialHeader } from '@/components/site/EditorialHeader'
 import { EditorialIndexRow } from '@/components/site/EditorialIndexRow'
+import { PublicationCover } from '@/components/site/PublicationCover'
+import { publishedInstrumentedPieces } from '@/lib/instruments/publication'
 import { formatDateShort } from '@/lib/utils'
 
 export const metadata = {
@@ -27,10 +29,17 @@ export default async function WritingPage({ searchParams }: WritingPageProps) {
   const filteredEssays = activeTag
     ? sortedEssays.filter((essay) => essay.tags.includes(activeTag))
     : sortedEssays
-  const featuredEssay = filteredEssays.find((essay) => essay.featured) ?? filteredEssays[0]
+  // Instrumented pieces are presented on the cover instead of in the ordinary list, so a
+  // piece appears once. Drafts never reach the cover, even in development.
+  const shown = new Set(filteredEssays.map((essay) => essay.slug))
+  const coverPieces = publishedInstrumentedPieces().filter((piece) => shown.has(piece.slug))
+  const covered = new Set(coverPieces.map((piece) => piece.slug))
+  const listedEssays = filteredEssays.filter((essay) => !covered.has(essay.slug))
+
+  const featuredEssay = listedEssays.find((essay) => essay.featured) ?? listedEssays[0]
   const moreEssays = featuredEssay
-    ? filteredEssays.filter((essay) => essay.slug !== featuredEssay.slug)
-    : filteredEssays
+    ? listedEssays.filter((essay) => essay.slug !== featuredEssay.slug)
+    : listedEssays
 
   return (
     <div className="tg-page max-w-5xl">
@@ -46,6 +55,8 @@ export default async function WritingPage({ searchParams }: WritingPageProps) {
         </section>
       ) : (
         <>
+          <PublicationCover pieces={coverPieces} />
+
           {featuredEssay && (
             <section className="mt-6">
               <article>
@@ -78,23 +89,25 @@ export default async function WritingPage({ searchParams }: WritingPageProps) {
             </section>
           )}
 
-          <section className="mt-12">
-            <p className="border-b border-border-1 pb-5 font-mono text-xs uppercase tracking-[0.2em] text-text-3">
-              More essays
-            </p>
-            {moreEssays.map((essay) => (
-              <article key={essay.slug}>
-                <EditorialIndexRow
-                  href={`/writing/${essay.slug}`}
-                  meta={<time dateTime={essay.date}>{formatDateShort(essay.date)}</time>}
-                  title={essay.title}
-                  description={essay.summary}
-                  tags={essay.tags}
-                  detail={`${essay.readingTime} min →`}
-                />
-              </article>
-            ))}
-          </section>
+          {moreEssays.length > 0 && (
+            <section className="mt-12">
+              <p className="border-b border-border-1 pb-5 font-mono text-xs uppercase tracking-[0.2em] text-text-3">
+                More essays
+              </p>
+              {moreEssays.map((essay) => (
+                <article key={essay.slug}>
+                  <EditorialIndexRow
+                    href={`/writing/${essay.slug}`}
+                    meta={<time dateTime={essay.date}>{formatDateShort(essay.date)}</time>}
+                    title={essay.title}
+                    description={essay.summary}
+                    tags={essay.tags}
+                    detail={`${essay.readingTime} min →`}
+                  />
+                </article>
+              ))}
+            </section>
+          )}
         </>
       )}
     </div>
