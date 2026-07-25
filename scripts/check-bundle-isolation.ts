@@ -9,9 +9,9 @@
 
 import * as fs from 'fs'
 import * as path from 'path'
+import { INSTRUMENT_SENTINEL } from '../components/instruments/sentinel'
 
 const NEXT_DIR = '.next'
-const STATIC_CHUNKS_DIR = path.join(NEXT_DIR, 'static/chunks')
 const SERVER_APP_DIR = path.join(NEXT_DIR, 'server/app')
 
 const PROTECTED_ROUTES = [
@@ -98,8 +98,13 @@ function unique(values: string[]): string[] {
   return [...new Set(values)].sort()
 }
 
+/**
+ * Chunk references are already `static/chunks/...` paths relative to `.next`, and App Router
+ * nests them by route. Reducing them to a basename silently resolved nested chunks to files
+ * that do not exist, so those chunks were never scanned at all.
+ */
 function staticChunkPath(chunk: string): string {
-  return path.join(STATIC_CHUNKS_DIR, path.basename(chunk))
+  return path.join(NEXT_DIR, chunk)
 }
 
 function extractChunks(text: string): string[] {
@@ -168,15 +173,7 @@ function resolveRouteArtifacts(route: string): RouteAnalysis | null {
   return { route, artifacts, chunks, forbidden }
 }
 
-/**
- * Instrument isolation.
- *
- * The forbidden-package scan cannot see first-party code, so it would pass even if every
- * essay shipped the ledger. Instead each instrument component stamps a sentinel string onto
- * its root, and we compare two concrete built slugs of the same `/writing/[slug]` route: the
- * instrumented one must carry the sentinel in its client chunks, an ordinary essay must not.
- */
-const INSTRUMENT_SENTINEL = 'tg-instrument-chunk-v1'
+/* Instrument isolation — see `verifyInstrumentIsolation` below for what is actually proved. */
 const INSTRUMENTS_DIR = 'content/instruments'
 const ESSAYS_DIR = 'content/essays'
 
@@ -202,54 +199,87 @@ function essaySlugs(): string[] {
     .sort()
 }
 
-/** Every artifact a prerendered `/writing/<slug>` page pulls in, chunks included. */
-function essayArtifacts(slug: string): string[] {
-  const pageArtifacts = [
+interface EssayArtifacts {
+  /** The prerendered page itself: HTML and the Flight payload beside it. */
+  pages: string[]
+  /** Every client chunk those documents reference, as files on disk. */
+  chunks: string[]
+}
+
+function essayArtifacts(slug: string): EssayArtifacts {
+  const pages = [
     path.join(SERVER_APP_DIR, `writing/${slug}.html`),
     path.join(SERVER_APP_DIR, `writing/${slug}.rsc`),
   ].filter((candidate) => fs.existsSync(candidate))
 
-  const chunks = unique(pageArtifacts.flatMap((artifact) => extractChunks(readText(artifact))))
-  return unique([...pageArtifacts, ...chunks.map(staticChunkPath).filter(fs.existsSync)])
+  const chunks = unique(pages.flatMap((page) => extractChunks(readText(page))))
+    .map(staticChunkPath)
+    .filter(fs.existsSync)
+
+  return { pages, chunks }
 }
 
-function carriesSentinel(slug: string): boolean {
-  return essayArtifacts(slug).some((artifact) => readText(artifact).includes(INSTRUMENT_SENTINEL))
+function sentinelHits(paths: readonly string[]): string[] {
+  return paths.filter((candidate) => readText(candidate).includes(INSTRUMENT_SENTINEL))
 }
 
 interface InstrumentCheck {
-  instrumented: string | null
-  plain: string | null
+  instrumented: string[]
+  plainChecked: number
   failures: string[]
 }
 
+/**
+ * The forbidden-package scan cannot see first-party code, so it would pass even if every essay
+ * shipped the ledger. Each instrument component stamps a sentinel onto its root instead, and
+ * this proves two things about it:
+ *
+ *  - an instrumented piece must carry the sentinel in the client JavaScript its page actually
+ *    references. Prerendered HTML and the Flight payload do not count: `data-instrument` lands
+ *    in both whether or not a single byte of instrument code reaches the browser.
+ *  - *every* ordinary essay must be free of it, in chunks and in markup alike. Comparing one
+ *    arbitrary plain slug let a non-representative essay hide a leak in all the others.
+ */
 function verifyInstrumentIsolation(): InstrumentCheck {
   const instrumented = instrumentedSlugs()
-  const plainSlugs = essaySlugs().filter((slug) => !instrumented.includes(slug))
   const failures: string[] = []
 
   // Nothing to prove until a piece is actually instrumented.
-  if (instrumented.length === 0) return { instrumented: null, plain: null, failures }
+  if (instrumented.length === 0) return { instrumented, plainChecked: 0, failures }
 
   for (const slug of instrumented) {
-    const artifacts = essayArtifacts(slug)
-    if (artifacts.length === 0) {
+    const { pages, chunks } = essayArtifacts(slug)
+    if (pages.length === 0) {
       failures.push(`instrumented slug ${slug} has no built page artifacts`)
       continue
     }
-    if (!carriesSentinel(slug)) {
-      failures.push(`instrumented slug ${slug} ships no instrument chunk`)
+    if (chunks.length === 0) {
+      failures.push(`instrumented slug ${slug} references no client chunks on disk`)
+      continue
+    }
+    if (sentinelHits(chunks).length === 0) {
+      failures.push(
+        `instrumented slug ${slug} ships no instrument client chunk (sentinel absent from all ${chunks.length} referenced chunks)`,
+      )
     }
   }
 
-  const plain = plainSlugs.find((slug) => essayArtifacts(slug).length > 0) ?? null
-  if (plain === null) {
-    failures.push('no ordinary essay was built to compare the instrumented slug against')
-  } else if (carriesSentinel(plain)) {
-    failures.push(`ordinary essay ${plain} loads instrument code`)
+  const plain = essaySlugs()
+    .filter((slug) => !instrumented.includes(slug))
+    .map((slug) => ({ slug, ...essayArtifacts(slug) }))
+    .filter((essay) => essay.pages.length > 0)
+
+  if (plain.length === 0) {
+    failures.push('no ordinary essay was built to compare the instrumented slugs against')
   }
 
-  return { instrumented: instrumented[0] ?? null, plain, failures }
+  for (const essay of plain) {
+    for (const artifact of sentinelHits([...essay.pages, ...essay.chunks])) {
+      failures.push(`ordinary essay ${essay.slug} loads instrument code: ${artifact}`)
+    }
+  }
+
+  return { instrumented, plainChecked: plain.length, failures }
 }
 
 function verifyAppRoutesExist(): string[] {
@@ -325,13 +355,13 @@ if (machineWarning) {
 }
 
 console.log('\n4. Instrument isolation')
-if (instrumentCheck.instrumented === null) {
+if (instrumentCheck.instrumented.length === 0) {
   console.log('   – no instrumented pieces built; nothing to isolate')
 } else {
-  console.log(`   Instrumented slug: ${instrumentCheck.instrumented}`)
-  console.log(`   Compared against:  ${instrumentCheck.plain ?? '(none found)'}`)
+  console.log(`   Instrumented slugs: ${instrumentCheck.instrumented.join(', ')}`)
+  console.log(`   Ordinary essays asserted clean: ${instrumentCheck.plainChecked}`)
   if (instrumentCheck.failures.length === 0) {
-    console.log('   ✓ Instrument chunks reach the instrumented piece and no ordinary essay')
+    console.log('   ✓ Instrument chunks reach every instrumented piece and no ordinary essay')
   } else {
     for (const failure of instrumentCheck.failures) console.log(`   ✗ ${failure}`)
   }

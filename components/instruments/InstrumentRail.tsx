@@ -139,14 +139,18 @@ export default function InstrumentRail({ headings }: { headings: { id: string; t
               const anchor = sectionAnchor(section.id)
               const on = filters.sections.includes(section.id)
               return (
-                <li key={section.id} className="grid grid-cols-[1.25rem_1fr] items-start gap-2">
+                <li key={section.id} className="grid grid-cols-[1.75rem_1fr] items-start gap-2">
                   <button
                     type="button"
                     aria-pressed={on}
                     aria-label={`Show only section ${section.id}`}
+                    title={`Filter the ledger to section ${section.id}`}
                     onClick={() => toggleSection(section.id)}
-                    className="font-mono text-xs"
-                    style={{ color: on ? 'var(--instrument-accent)' : 'var(--color-text-3)' }}
+                    className="flex size-6 items-center justify-center rounded-xs border font-mono text-xs"
+                    style={{
+                      color: on ? 'var(--instrument-accent)' : 'var(--color-text-3)',
+                      borderColor: on ? 'var(--instrument-accent)' : 'var(--color-border-1)',
+                    }}
                   >
                     {section.id}
                   </button>
@@ -162,7 +166,7 @@ export default function InstrumentRail({ headings }: { headings: { id: string; t
                       <Spectrum
                         counts={section.counts}
                         mini
-                        label={`Verdict mix for section ${section.id}`}
+                        label={`Full verdict mix for section ${section.id}, before any filter`}
                       />
                     </span>
                   </a>

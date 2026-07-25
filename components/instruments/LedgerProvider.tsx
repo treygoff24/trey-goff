@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useContext, useMemo, type ReactNode } from 'react'
-import type { ClaimsLedger } from '@/lib/instruments/types'
+import type { ClientLedger } from '@/lib/instruments/types'
 import { buildLedgerModel, type LedgerModel } from '@/components/instruments/ledger-model'
 import { INSTRUMENT_SENTINEL } from '@/components/instruments/sentinel'
 
@@ -20,7 +20,7 @@ export function useLedger(): LedgerContextValue {
 }
 
 interface LedgerProviderProps {
-  ledger: ClaimsLedger
+  ledger: ClientLedger
   dossiers: readonly string[]
   children: ReactNode
 }

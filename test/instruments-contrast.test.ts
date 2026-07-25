@@ -48,21 +48,63 @@ function contrast(a: number, b: number): number {
   return (high + 0.05) / (low + 0.05)
 }
 
-const background = luminance(
-  srgbFromHex(declaration('color-bg-0')).map(toLinear) as [number, number, number],
-)
+/** `rgba(...)` over an opaque ground, the way the browser paints a translucent surface. */
+function composite(value: string, base: [number, number, number]): [number, number, number] {
+  const parts = value.match(
+    /rgba?\(\s*([\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)(?:[\s,/]+([\d.]+))?\s*\)/,
+  )
+  assert.ok(parts, `not a plain rgb()/rgba() colour: ${value}`)
+  const alpha = parts[4] === undefined ? 1 : Number(parts[4])
+  return [0, 1, 2].map((channel) => {
+    const over = Number(parts[channel + 1]) / 255
+    return over * alpha + base[channel]! * (1 - alpha)
+  }) as [number, number, number]
+}
 
-test('every verdict colour clears WCAG AA on the page ground', () => {
+const pageGround = srgbFromHex(declaration('color-bg-0'))
+
+/**
+ * Every ground instrument text is actually painted on. The page background is the easy one;
+ * verdict text also sits on the translucent panel surfaces, and a chip that clears AA on
+ * `--color-bg-0` can still fail once `--color-surface-2` is composited underneath it.
+ */
+const grounds: [string, number][] = [
+  ['--color-bg-0', luminance(pageGround.map(toLinear) as [number, number, number])],
+  [
+    '--color-surface-1',
+    luminance(
+      composite(declaration('color-surface-1'), pageGround).map(toLinear) as [
+        number,
+        number,
+        number,
+      ],
+    ),
+  ],
+  [
+    '--color-surface-2',
+    luminance(
+      composite(declaration('color-surface-2'), pageGround).map(toLinear) as [
+        number,
+        number,
+        number,
+      ],
+    ),
+  ],
+]
+
+test('every verdict colour clears WCAG AA on every ground it is painted on', () => {
   for (const state of LEDGER_STATE_VALUES) {
     const value = declaration(`color-verdict-${state}`)
     const parts = value.match(/oklch\(([\d.]+)\s+([\d.]+)\s+([\d.]+)\)/)
     assert.ok(parts, `--color-verdict-${state} is not a plain oklch() triple: ${value}`)
-
-    const ratio = contrast(
-      luminance(linearFromOklch(Number(parts[1]), Number(parts[2]), Number(parts[3]))),
-      background,
+    const foreground = luminance(
+      linearFromOklch(Number(parts[1]), Number(parts[2]), Number(parts[3])),
     )
-    assert.ok(ratio >= 4.5, `${state} is ${ratio.toFixed(2)}:1 on --color-bg-0, below AA`)
+
+    for (const [name, ground] of grounds) {
+      const ratio = contrast(foreground, ground)
+      assert.ok(ratio >= 4.5, `${state} is ${ratio.toFixed(2)}:1 on ${name}, below AA`)
+    }
   }
 })
 

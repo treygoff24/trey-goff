@@ -1,12 +1,16 @@
-import type { ReactElement } from 'react'
 import type { Element, ElementContent, Root, RootContent } from 'hast'
-import { dossierToHast, getInstrumentManifest } from '@/lib/instruments/manifest'
-import { hastToReact } from '@/lib/instruments/render'
+import { dossierToHast, getClaimsLedger, getInstrumentManifest } from '@/lib/instruments/manifest'
 
-export interface RenderedDossier {
+/**
+ * A dossier as it crosses the wire: the sanitized tree the markdown pipeline produced, with
+ * claim ids already turned into controls. Sent on demand rather than rendered into the page,
+ * because a finding nobody opens should not cost every reader its bytes — and sent as a tree
+ * rather than HTML, so the slide-over still never assembles markup from a string.
+ */
+export interface DossierPayload {
   slug: string
   title: string
-  content: ReactElement
+  hast: Root
 }
 
 const CLAIM_ID = /\b(C\d{3})\b/g
@@ -67,30 +71,32 @@ function textOf(node: Element): string {
     .join('')
 }
 
-/**
- * Renders a piece's dossiers on the server. Consumers receive React elements, never markdown
- * and never an HTML string.
- */
-export async function renderDossiers(
-  slug: string,
-  claimIds: ReadonlySet<string>,
-): Promise<RenderedDossier[]> {
-  const manifest = getInstrumentManifest(slug)
-  if (!manifest) return []
+/** Parser positions carry no meaning past the build and roughly double the payload. */
+function stripPositions<T extends { position?: unknown; children?: unknown }>(node: T): T {
+  delete node.position
+  if (Array.isArray(node.children)) node.children.forEach(stripPositions)
+  return node
+}
 
-  return Promise.all(
-    manifest.dossiers.map(async (dossier) => {
-      const tree = await dossierToHast(slug, dossier)
-      const { title, body } = splitTitle(tree)
-      const linked: Root = {
-        ...body,
-        children: linkClaimIds(body.children as ElementContent[], claimIds) as RootContent[],
-      }
-      return {
-        slug: dossier,
-        title: title || dossier.replace(/-/g, ' '),
-        content: hastToReact(linked),
-      }
+export async function getDossierPayload(
+  slug: string,
+  dossier: string,
+): Promise<DossierPayload | null> {
+  const manifest = getInstrumentManifest(slug)
+  if (!manifest?.dossiers.includes(dossier)) return null
+
+  const ledger = getClaimsLedger(slug)
+  const claimIds = new Set((ledger?.claims ?? []).map((claim) => claim.id))
+
+  const tree = await dossierToHast(slug, dossier)
+  const { title, body } = splitTitle(tree)
+
+  return {
+    slug: dossier,
+    title: title || dossier.replace(/-/g, ' '),
+    hast: stripPositions({
+      ...body,
+      children: linkClaimIds(body.children as ElementContent[], claimIds) as RootContent[],
     }),
-  )
+  }
 }

@@ -50,6 +50,18 @@ export const claimSchema = z.object({
   dossier: z.string().min(1).nullable(),
 })
 
+/**
+ * The subset of a ledger the browser is given. `status` is redundant with `verdict` once the
+ * model is built, and the source record, canonical-id bookkeeping and provenance block are
+ * build-time concerns — none of them has a client reader, so none of them crosses the wire.
+ */
+export type ClientClaim = Omit<z.infer<typeof claimSchema>, 'status'>
+
+export interface ClientLedger {
+  sections: z.infer<typeof claimSectionSchema>[]
+  claims: ClientClaim[]
+}
+
 export const claimsLedgerSchema = z
   .object({
     source: z.object({

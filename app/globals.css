@@ -932,17 +932,43 @@ html[data-konami='true'] a {
   outline-offset: 3px;
 }
 
-/* Prose keeps its measure; instrument blocks take the full column. */
+/* Prose keeps its measure; instrument blocks take the whole column.
+
+   The measure has to be enforced on the flow's own children, not on `.instrument-prose`:
+   the article body sits inside one `#essay-content` wrapper, so a rule aimed at the prose
+   element's direct children only ever matched that wrapper and every block — instruments
+   included — inherited the same 65ch column. */
 .instrument-prose {
   max-width: none;
 }
 
-.instrument-prose > :not(.instrument-block) {
+.instrument-flow > :not(.instrument-block) {
   max-width: 65ch;
 }
 
 .instrument-block {
   margin-block: clamp(2rem, 4vw, 3.5rem);
+}
+
+/* Anything jumped to has to clear the sticky ledger controls above it. One offset, shared by
+   the rows and the section headings, tracking the real height of what is pinned. */
+.instrument-scope {
+  --instrument-sticky-offset: 11rem;
+}
+
+@media (min-width: 1024px) {
+  .instrument-scope {
+    --instrument-sticky-offset: 14rem;
+  }
+}
+
+.tg-claim,
+.tg-ledger-section {
+  scroll-margin-top: var(--instrument-sticky-offset);
+}
+
+.tg-claim:focus-visible {
+  outline-offset: 6px;
 }
 
 .tg-instrument-label {
@@ -953,7 +979,13 @@ html[data-konami='true'] a {
   color: var(--instrument-accent);
 }
 
-/* The spine's transparent bucket overlay: a real listbox sitting on the drawing. */
+/* The spine's transparent bucket overlay: a real listbox sitting on the drawing. The buckets
+   are keyboard options only — at sixty across a strip none of them can reach a 24px pointer
+   target, so the pointer talks to the full-width strip beneath them and drags a window out. */
+.tg-bucket {
+  pointer-events: none;
+}
+
 .tg-bucket:focus-visible {
   outline: 1.5px solid var(--instrument-accent);
   outline-offset: -1px;

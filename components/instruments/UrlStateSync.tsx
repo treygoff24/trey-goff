@@ -1,7 +1,7 @@
 'use client'
 
 import { Suspense, useEffect, useRef } from 'react'
-import type { ClaimsLedger } from '@/lib/instruments/types'
+import type { ClientLedger } from '@/lib/instruments/types'
 import { useInstrumentUrlState } from '@/lib/instruments/use-url-state'
 import { instrumentStatesEqual, vocabularyFromLedger } from '@/lib/instruments/url-state'
 import { adoptUrlState, useLedgerStore } from '@/components/instruments/ledger-store'
@@ -13,7 +13,7 @@ import { INSTRUMENT_SENTINEL } from '@/components/instruments/sentinel'
  * the ledger's 434 rows must stay in the prerendered HTML. So this component renders nothing
  * and mirrors state between the URL and the store instead.
  */
-function Sync({ ledger }: { ledger: ClaimsLedger }) {
+function Sync({ ledger }: { ledger: ClientLedger }) {
   const vocabulary = useRef(vocabularyFromLedger(ledger)).current
   const [urlState, commit] = useInstrumentUrlState(vocabulary)
   const mirrored = useRef(urlState)
@@ -36,7 +36,7 @@ function Sync({ ledger }: { ledger: ClaimsLedger }) {
   return null
 }
 
-export default function UrlStateSync({ ledger }: { ledger: ClaimsLedger }) {
+export default function UrlStateSync({ ledger }: { ledger: ClientLedger }) {
   return (
     <span hidden data-instrument={INSTRUMENT_SENTINEL}>
       <Suspense fallback={null}>

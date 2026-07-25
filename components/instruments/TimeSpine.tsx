@@ -1,6 +1,14 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type PointerEvent,
+} from 'react'
 import { useLedger } from '@/components/instruments/LedgerProvider'
 import { useVisibleIds } from '@/components/instruments/use-filtered-rows'
 import { setRange, useLedgerStore } from '@/components/instruments/ledger-store'
@@ -18,6 +26,13 @@ import {
 
 const COMPACT_WIDTH = 640
 const DEFAULT_WIDTH = 900
+
+/**
+ * The spine measures itself before the browser paints, so the first frame the reader sees is
+ * already at the real width — no visible re-draw from the 900px server guess. Falls back to
+ * the ordinary effect on the server, where there is nothing to measure.
+ */
+const useMeasureEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
 
 interface Geometry {
   width: number
@@ -99,6 +114,27 @@ function useRug(model: LedgerModel, geo: Geometry) {
   }, [model.rows, geo])
 }
 
+/**
+ * Where each subject section starts on the tape. The wide layout has room to name them, which
+ * turns the strip from an anonymous density plot into a map of the conversation.
+ */
+function useSectionMarks(model: LedgerModel, geo: Geometry) {
+  return useMemo(() => {
+    if (geo.compact) return []
+    const marks: { id: string; x: number }[] = []
+    let last = -Infinity
+    for (const section of model.sections) {
+      const start = Math.min(...section.rows.map((row) => row.seconds))
+      if (!Number.isFinite(start)) continue
+      const x = geo.x(start)
+      if (x - last < 14) continue
+      last = x
+      marks.push({ id: section.id, x })
+    }
+    return marks
+  }, [model.sections, geo])
+}
+
 export default function TimeSpine() {
   const { model } = useLedger()
   const visible = useVisibleIds()
@@ -109,9 +145,10 @@ export default function TimeSpine() {
   const frameRef = useRef<HTMLDivElement>(null)
   const bucketRefs = useRef<(HTMLButtonElement | null)[]>([])
 
-  useEffect(() => {
+  useMeasureEffect(() => {
     const frame = frameRef.current
     if (!frame) return
+    setWidth(Math.max(320, Math.round(frame.getBoundingClientRect().width)))
     const observer = new ResizeObserver(([entry]) => {
       if (entry) setWidth(Math.max(320, Math.round(entry.contentRect.width)))
     })
@@ -126,6 +163,7 @@ export default function TimeSpine() {
   )
   const paths = useTerrainPaths(model, geo)
   const rug = useRug(model, geo)
+  const sectionMarks = useSectionMarks(model, geo)
 
   const brush = useMemo(() => {
     if (!range) return null
@@ -139,6 +177,13 @@ export default function TimeSpine() {
       last: Math.max(0, Math.min(BUCKET_COUNT - 1, Math.ceil(to / step) - 1)),
     }
   }, [range, model.span])
+
+  useEffect(() => {
+    if (!brush) return
+    setFocused((current) =>
+      current >= brush.first && current <= brush.last ? current : brush.first,
+    )
+  }, [brush])
 
   const brushBuckets = useCallback(
     (a: number, b: number) => {
@@ -195,9 +240,16 @@ export default function TimeSpine() {
       case 'End': {
         const delta = step || (event.key === 'ArrowRight' ? 1 : -1)
         const next = moveFocus(focused + delta)
-        // Shift widens the window rather than moving it: the reader keeps one edge pinned.
-        if (event.shiftKey && brush)
-          brushBuckets(Math.min(brush.first, next), Math.max(brush.last, next))
+        // Shift drags the edge the reader is standing on, so the same gesture that widens a
+        // window from the outside shrinks it from the inside. On a one-bucket window there is
+        // no near edge to pick, so it widens.
+        if (event.shiftKey && brush) {
+          if (brush.first === brush.last)
+            brushBuckets(Math.min(brush.first, next), Math.max(brush.last, next))
+          else if (focused === brush.last) brushBuckets(brush.first, Math.max(brush.first, next))
+          else if (focused === brush.first) brushBuckets(Math.min(brush.last, next), brush.last)
+          else brushBuckets(Math.min(brush.first, next), Math.max(brush.last, next))
+        }
         break
       }
       case 'Enter':
@@ -303,6 +355,27 @@ export default function TimeSpine() {
             contested / even
           </text>
 
+          {sectionMarks.map((mark) => (
+            <g key={mark.id}>
+              <line
+                x1={mark.x}
+                y1={geo.terrainTop - 8}
+                x2={mark.x}
+                y2={geo.terrainBottom}
+                stroke="var(--color-border-1)"
+              />
+              <text
+                x={mark.x + 3}
+                y={geo.terrainTop - 12}
+                className="font-mono"
+                fontSize="9"
+                fill="var(--color-text-3)"
+              >
+                {mark.id}
+              </text>
+            </g>
+          ))}
+
           {rug.map((mark) => (
             <rect
               key={mark.id}
@@ -349,8 +422,9 @@ export default function TimeSpine() {
             brush is as operable from the keyboard as it is from a pointer. */}
         <div
           role="listbox"
-          aria-label="Episode window. Arrow keys move through the interview, Shift and an arrow widen the window, Enter sets or clears it, Escape clears it."
+          aria-label="Episode window. Arrow keys move through the interview, Shift and an arrow move the nearer edge of the window, Enter sets or clears it, Escape clears it."
           aria-orientation="horizontal"
+          aria-multiselectable="true"
           className="absolute inset-0 flex"
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
@@ -377,7 +451,6 @@ export default function TimeSpine() {
                 tabIndex={bucket.index === focused ? 0 : -1}
                 className="tg-bucket h-full flex-1 bg-transparent"
                 aria-label={`${formatMinutes(bucket.from)} to ${formatMinutes(bucket.to)}, ${bucket.total} claims`}
-                onClick={() => brushBuckets(bucket.index, bucket.index)}
               />
             )
           })}
@@ -386,7 +459,7 @@ export default function TimeSpine() {
 
       <p className="mt-3 font-mono text-xs text-text-3">
         {keyboard
-          ? 'arrows move · shift and an arrow widen · enter sets or clears · escape clears'
+          ? 'arrows move · shift and an arrow drag the nearer edge · enter sets or clears · escape clears'
           : 'drag across the spine to scope the ledger'}
       </p>
       <p className="mt-2 max-w-[68ch] text-xs leading-relaxed text-text-3">

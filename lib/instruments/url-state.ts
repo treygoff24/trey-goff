@@ -1,4 +1,4 @@
-import { TIMESTAMP_PATTERN, verdictSchema, type ClaimsLedger } from '@/lib/instruments/types'
+import { TIMESTAMP_PATTERN, verdictSchema, type ClientLedger } from '@/lib/instruments/types'
 
 /**
  * What a verdict filter can name. The six verdicts, plus the state of the claims that carry
@@ -57,7 +57,7 @@ function toSeconds(timestamp: string): number {
 }
 
 /** The vocabulary a claims ledger defines: its declared sections, its claim ids, its span. */
-export function vocabularyFromLedger(ledger: ClaimsLedger): InstrumentVocabulary {
+export function vocabularyFromLedger(ledger: ClientLedger): InstrumentVocabulary {
   const stamps = ledger.claims.flatMap((claim) => claim.timestamps.map(toSeconds))
   return {
     sections: new Set(ledger.sections.map((section) => section.id)),

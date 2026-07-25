@@ -86,9 +86,9 @@ export default async function EssayPage({ params }: PageProps) {
           __html: serializeJsonLd(breadcrumbSchema),
         }}
       />
-      <article className={`mx-auto px-4 py-16 ${instrumented ? 'max-w-6xl' : 'max-w-4xl'}`}>
+      <article className={`mx-auto px-4 py-16 ${instrumented ? 'max-w-[88rem]' : 'max-w-4xl'}`}>
         {/* Header */}
-        <header className="mb-12">
+        <header className={`mb-12 ${instrumented ? 'max-w-4xl' : ''}`}>
           <p className="tg-eyebrow text-warm">
             Essay
             {essay.status === 'evergreen' && <span className="ml-3 text-text-3">· Evergreen</span>}

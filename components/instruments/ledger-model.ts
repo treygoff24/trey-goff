@@ -1,5 +1,9 @@
-import type { Claim, ClaimsLedger } from '@/lib/instruments/types'
-import { LEDGER_STATE_VALUES, type LedgerFilterState } from '@/lib/instruments/url-state'
+import type { ClientClaim, ClientLedger } from '@/lib/instruments/types'
+import {
+  LEDGER_STATE_VALUES,
+  type InstrumentUrlState,
+  type LedgerFilterState,
+} from '@/lib/instruments/url-state'
 
 /**
  * The seven states a row can sit in: the six verdicts, plus the claims that have not been
@@ -48,10 +52,15 @@ export function formatMinutes(seconds: number): string {
 }
 
 export interface LedgerRow {
-  claim: Claim
+  claim: ClientClaim
   state: LedgerState
   /** Where the claim sits on the episode clock: its first timestamp. */
   seconds: number
+  /**
+   * Every clock position the claim carries. A claim recurring later in the interview is in
+   * the brush's range whenever *any* of its timestamps is, not only its first.
+   */
+  stamps: number[]
   /** Everything the search box matches against, pre-lowercased. */
   haystack: string
 }
@@ -77,7 +86,6 @@ export interface LedgerBucket {
 }
 
 export interface LedgerModel {
-  source: ClaimsLedger['source']
   rows: LedgerRow[]
   byId: Map<string, LedgerRow>
   sections: LedgerSection[]
@@ -91,19 +99,21 @@ export interface LedgerModel {
   buckets: LedgerBucket[]
 }
 
-function emptyCounts(): Record<LedgerState, number> {
+/** A zeroed tally over the seven states — the shape every spectrum reads. */
+export function emptyCounts(): Record<LedgerState, number> {
   return Object.fromEntries(LEDGER_STATES.map((state) => [state, 0])) as Record<LedgerState, number>
 }
 
-function stateOf(claim: Claim): LedgerState {
+function stateOf(claim: ClientClaim): LedgerState {
   return claim.verdict ?? 'unverified'
 }
 
-function toRow(claim: Claim): LedgerRow {
+function toRow(claim: ClientClaim): LedgerRow {
   return {
     claim,
     state: stateOf(claim),
     seconds: toSeconds(claim.timestamps[0] ?? '0:00:00'),
+    stamps: claim.timestamps.map(toSeconds),
     haystack: [
       claim.id,
       claim.title,
@@ -148,18 +158,31 @@ function buildTerrain(rows: readonly LedgerRow[], span: number) {
   return { runs, extremes: low && high ? { low, high } : null }
 }
 
+/**
+ * The episode strip, as integer half-open bounds. Fractional boundaries plus an inclusive
+ * range filter used to leak the claims sitting exactly on a boundary into both neighbours,
+ * so each bucket ends one second before the next begins and the last one closes on the span.
+ */
+function bucketStart(index: number, span: number): number {
+  return Math.round((index * span) / BUCKET_COUNT)
+}
+
 function buildBuckets(rows: readonly LedgerRow[], span: number): LedgerBucket[] {
-  const width = span / BUCKET_COUNT
-  const buckets: LedgerBucket[] = Array.from({ length: BUCKET_COUNT }, (_, index) => ({
+  const starts = Array.from({ length: BUCKET_COUNT }, (_, index) => bucketStart(index, span))
+  const buckets: LedgerBucket[] = starts.map((from, index) => ({
     index,
-    from: index * width,
-    to: (index + 1) * width,
+    from,
+    to: index === BUCKET_COUNT - 1 ? span : Math.max(from, starts[index + 1]! - 1),
     counts: emptyCounts(),
     total: 0,
   }))
+
+  // Placed against the same integer boundaries the brush reads back, so a claim is never
+  // counted in a bucket whose own window would then filter it out.
   for (const row of rows) {
-    const bucket = buckets[Math.min(BUCKET_COUNT - 1, Math.floor(row.seconds / width))]
-    if (!bucket) continue
+    let index = 0
+    while (index + 1 < BUCKET_COUNT && starts[index + 1]! <= row.seconds) index += 1
+    const bucket = buckets[index]!
     bucket.counts[row.state] += 1
     bucket.total += 1
   }
@@ -171,7 +194,7 @@ function buildBuckets(rows: readonly LedgerRow[], span: number): LedgerBucket[] 
  * synchronous: the client builds it in a `useMemo` so the terrain survives filter changes
  * untouched.
  */
-export function buildLedgerModel(ledger: ClaimsLedger): LedgerModel {
+export function buildLedgerModel(ledger: ClientLedger): LedgerModel {
   const rows = ledger.claims.map(toRow)
   const span = Math.max(0, ...ledger.claims.flatMap((claim) => claim.timestamps.map(toSeconds)))
 
@@ -190,7 +213,6 @@ export function buildLedgerModel(ledger: ClaimsLedger): LedgerModel {
   const { runs, extremes } = buildTerrain(rows, span)
 
   return {
-    source: ledger.source,
     rows,
     byId: new Map(rows.map((row) => [row.claim.id, row])),
     sections,
@@ -207,11 +229,39 @@ export function verdictColor(state: LedgerState): string {
   return `var(--color-verdict-${state})`
 }
 
-/** The label a verdict wears in the UI. `unverified` is a state of the work, not a finding. */
+/**
+ * The label a verdict wears in the UI. `unverified` reads as itself: the chip, the URL token
+ * and the method note all name the same thing, so a shared link and its filter agree.
+ */
 export function stateLabel(state: LedgerState): string {
-  return state === 'unverified' ? 'not yet worked' : state
+  return state
 }
 
 export function sectionAnchor(sectionId: string): string {
   return `ledger-section-${sectionId}`
+}
+
+/** One definition of "does this row survive the current filters", shared by every instrument. */
+export function matchesFilters(row: LedgerRow, filters: InstrumentUrlState): boolean {
+  if (filters.verdicts.length > 0 && !filters.verdicts.includes(row.state)) return false
+  if (filters.sections.length > 0 && !filters.sections.includes(row.claim.section)) return false
+  if (filters.range && !inRange(row, filters.range)) return false
+  if (!matchesQuery(row, filters.query)) return false
+  return true
+}
+
+/**
+ * A claim is inside the brush when *any* of its timestamps is. Testing only the first one
+ * meant the later-timestamp buttons on a recurring claim scoped the ledger to a window that
+ * hid the very row they were printed on.
+ */
+export function inRange(row: LedgerRow, range: readonly [string, string]): boolean {
+  const from = toSeconds(range[0])
+  const to = toSeconds(range[1])
+  return row.stamps.some((stamp) => stamp >= from && stamp <= to)
+}
+
+export function matchesQuery(row: LedgerRow, query: string): boolean {
+  const needle = query.trim().toLowerCase()
+  return needle === '' || row.haystack.includes(needle)
 }

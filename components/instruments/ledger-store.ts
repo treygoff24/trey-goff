@@ -7,7 +7,12 @@ import {
   type InstrumentUrlState,
   type LedgerFilterState,
 } from '@/lib/instruments/url-state'
-import { formatClock, toSeconds, type LedgerRow } from '@/components/instruments/ledger-model'
+import {
+  formatClock,
+  inRange,
+  matchesQuery,
+  type LedgerRow,
+} from '@/components/instruments/ledger-model'
 
 interface LedgerStore {
   /** The shareable state — the same object the URL codec reads and writes. */
@@ -30,8 +35,13 @@ export const useLedgerStore = create<LedgerStore>(() => ({
 const set = useLedgerStore.setState
 const get = useLedgerStore.getState
 
+/**
+ * Every filter edit drops the addressed claim. `claim` names the row a link was built around;
+ * once the reader changes what the ledger is showing, that row may no longer be on screen, and
+ * a stale `claim` in the URL would keep pointing the next visitor at something they cannot see.
+ */
 function patch(next: Partial<InstrumentUrlState>) {
-  const filters = { ...get().filters, ...next }
+  const filters = { ...get().filters, claim: null, ...next }
   if (!instrumentStatesEqual(filters, get().filters)) set({ filters })
 }
 
@@ -84,32 +94,28 @@ export function closeDossier() {
 }
 
 /**
- * Send the reader to a claim, clearing whatever would have hidden it. A cross-reference that
- * silently lands on a filtered-out row is worse than no cross-reference.
+ * Send the reader to a claim, clearing whatever would have hidden it and nothing else. A
+ * cross-reference that silently lands on a filtered-out row is worse than no cross-reference,
+ * but a shared link carrying both a query and a claim it matches should survive intact.
  */
 export function focusClaim(id: string, row: LedgerRow | undefined) {
   const { filters } = get()
-  const rangeHides =
-    filters.range !== null &&
-    row !== undefined &&
-    (row.seconds < toSeconds(filters.range[0]) || row.seconds > toSeconds(filters.range[1]))
+
+  if (row === undefined) {
+    set({ dossier: null, flash: id, filters: { ...filters, claim: id } })
+    return
+  }
 
   set({
     dossier: null,
     flash: id,
     filters: {
-      ...filters,
       claim: id,
-      query: '',
-      range: rangeHides ? null : filters.range,
-      verdicts:
-        row && filters.verdicts.length > 0 && !filters.verdicts.includes(row.state)
-          ? []
-          : filters.verdicts,
-      sections:
-        row && filters.sections.length > 0 && !filters.sections.includes(row.claim.section)
-          ? []
-          : filters.sections,
+      audit: filters.audit,
+      query: matchesQuery(row, filters.query) ? filters.query : '',
+      range: filters.range && inRange(row, filters.range) ? filters.range : null,
+      verdicts: filters.verdicts.includes(row.state) ? filters.verdicts : [],
+      sections: filters.sections.includes(row.claim.section) ? filters.sections : [],
     },
   })
 }
