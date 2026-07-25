@@ -235,5 +235,25 @@ test('a dossier renders through the sanitized pipeline, never as raw markdown', 
   assert.equal(tree.type, 'root')
   assert.ok(tree.children.length > 0)
 
+  // The sanitize step must actually bite: no script/style elements, no event handlers,
+  // no javascript: URLs anywhere in the rendered tree.
+  const walk = (node: { type: string; children?: unknown[] } & Record<string, unknown>) => {
+    if (node.type === 'element') {
+      const tagName = node.tagName as string
+      assert.ok(tagName !== 'script' && tagName !== 'style', `dossier emits <${tagName}>`)
+      const properties = (node.properties ?? {}) as Record<string, unknown>
+      for (const [key, value] of Object.entries(properties)) {
+        assert.ok(!/^on/i.test(key), `dossier carries handler attribute ${key}`)
+        if (typeof value === 'string') {
+          assert.ok(!/^\s*javascript:/i.test(value), `dossier carries javascript: URL in ${key}`)
+        }
+      }
+    }
+    for (const child of node.children ?? []) {
+      walk(child as { type: string; children?: unknown[] } & Record<string, unknown>)
+    }
+  }
+  walk(tree as unknown as { type: string; children?: unknown[] } & Record<string, unknown>)
+
   await assert.rejects(async () => dossierToHast(SLUG, 'not-a-dossier'))
 })

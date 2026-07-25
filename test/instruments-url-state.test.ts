@@ -28,7 +28,7 @@ test('every parameter round-trips', () => {
   const state: InstrumentUrlState = {
     verdicts: ['confirmed', 'debunked'],
     sections: ['A', 'N'],
-    claim: 'C145',
+    claim: 'C144',
     range: ['0:10:00', '1:20:30'],
     query: 'apollo',
     audit: true,
@@ -37,7 +37,7 @@ test('every parameter round-trips', () => {
   const search = serializeInstrumentState(state)
   assert.equal(
     search,
-    '?v=confirmed%2Cdebunked&s=A%2CN&claim=C145&range=0%3A10%3A00-1%3A20%3A30&q=apollo&audit=1',
+    '?v=confirmed%2Cdebunked&s=A%2CN&claim=C144&range=0%3A10%3A00-1%3A20%3A30&q=apollo&audit=1',
   )
   assert.deepEqual(parse(search), state)
   assert.equal(instrumentStatesEqual(parse(search), state), true)

@@ -15,7 +15,7 @@ import {
  * generation. Callers must render this under a `<Suspense>` boundary.
  */
 export function useInstrumentUrlState(
-  vocabulary?: InstrumentVocabulary,
+  vocabulary: InstrumentVocabulary,
 ): [InstrumentUrlState, (next: InstrumentUrlState) => void] {
   const searchParams = useSearchParams()
   const [state, setState] = useState(() => parseInstrumentState(searchParams, vocabulary))

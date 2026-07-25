@@ -24,6 +24,7 @@ interface LedgerFixture {
   total: number
   unassigned: string[]
   claims: number
+  verdicts: Record<string, number>
 }
 
 /**
@@ -38,6 +39,16 @@ const LEDGER_FIXTURES: Record<string, LedgerFixture> = {
     total: 435,
     unassigned: ['C145'],
     claims: 434,
+    // Per-claim entries, not the coverage note's stated totals (which disagree; both sum
+    // to 388, so only a per-verdict check catches drift).
+    verdicts: {
+      confirmed: 180,
+      likely: 52,
+      contested: 59,
+      unsupported: 64,
+      debunked: 20,
+      unfalsifiable: 13,
+    },
   },
 }
 
@@ -62,6 +73,18 @@ function checkLedgerFixture(slug: string, ledger: ClaimsLedger | null) {
 
   if (!same) {
     fail(`${slug} ledger drifted from its recorded fixture: ${JSON.stringify(actual)}`)
+  }
+
+  const verdictCounts: Record<string, number> = {}
+  for (const claim of ledger.claims) {
+    if (claim.verdict) verdictCounts[claim.verdict] = (verdictCounts[claim.verdict] ?? 0) + 1
+  }
+  for (const [verdict, count] of Object.entries(expected.verdicts)) {
+    if (verdictCounts[verdict] !== count) {
+      fail(
+        `${slug} verdict drift: expected ${count} ${verdict}, found ${verdictCounts[verdict] ?? 0}`,
+      )
+    }
   }
 }
 

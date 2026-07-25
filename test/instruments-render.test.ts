@@ -226,6 +226,15 @@ test('a substring spanning two blocks does not match', async () => {
   assert.match(html, /data-mark-id="m1"/)
 })
 
+test('a substring spanning a hard line break does not match', async () => {
+  // Two trailing spaces force a <br> inside one paragraph.
+  const markdown = 'A line ending in Hello  \nWorld starts the next line.'
+  await assert.rejects(
+    async () => render(markdown, [mark({ id: 'm1', text: 'HelloWorld' })]),
+    /does not occur in the document/,
+  )
+})
+
 test('a mark targeting sanitize-stripped content fails the build', async () => {
   await assert.rejects(
     async () =>

@@ -82,6 +82,13 @@ const BLOCK_TAGS = new Set([
 ])
 
 /**
+ * Void separators: childless elements that still break a run of prose (`<br>` splits a
+ * line, `<hr>` splits a section). Containment-based boundaries never fire for them, so
+ * the walk inserts a boundary explicitly when it passes one.
+ */
+const VOID_SEPARATORS = new Set(['br', 'hr'])
+
+/**
  * Unmatchable by construction: mark text is authored prose, and `resolve` rejects any
  * mark that contains this character outright.
  */
@@ -119,6 +126,14 @@ function collectTextSlots(tree: Root): FlatText {
         offsets.set(child, offset)
         chunks.push(child.value)
         offset += child.value.length
+        continue
+      }
+      if (child.type === 'element' && VOID_SEPARATORS.has(child.tagName)) {
+        if (lastBlock !== null) {
+          chunks.push(BLOCK_BOUNDARY)
+          offset += BLOCK_BOUNDARY.length
+          lastBlock = null
+        }
         continue
       }
       if ('children' in child) {
