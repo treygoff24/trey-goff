@@ -361,7 +361,9 @@ if (instrumentCheck.instrumented.length === 0) {
   console.log(`   Instrumented slugs: ${instrumentCheck.instrumented.join(', ')}`)
   console.log(`   Ordinary essays asserted clean: ${instrumentCheck.plainChecked}`)
   if (instrumentCheck.failures.length === 0) {
-    console.log('   ✓ Instrument chunks reach every instrumented piece and no ordinary essay')
+    console.log(
+      '   ✓ Instrument client code present in every instrumented piece, absent from every ordinary essay',
+    )
   } else {
     for (const failure of instrumentCheck.failures) console.log(`   ✗ ${failure}`)
   }

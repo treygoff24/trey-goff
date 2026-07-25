@@ -2,6 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import {
   BUCKET_COUNT,
+  bucketIndexAt,
   buildLedgerModel,
   inRange,
   matchesFilters,
@@ -42,6 +43,24 @@ test('the episode strip is an integer partition — no claim can fall in two buc
     model.rows.length,
     'the buckets do not account for every claim exactly once',
   )
+})
+
+test('the brush reads back the bucket it was set from, for every bucket on the real span', () => {
+  for (const bucket of model.buckets) {
+    // What TimeSpine does when a bucket is brushed: set the range to the bucket's own bounds,
+    // then resolve both ends back to indices. Deriving those from a float `span / BUCKET_COUNT`
+    // step disagreed with the rounded starts on roughly half of them.
+    assert.equal(
+      bucketIndexAt(model.buckets, toSeconds(secondsToClock(bucket.from))),
+      bucket.index,
+      `bucket ${bucket.index} starts at ${bucket.from}s but reads back as another bucket`,
+    )
+    assert.equal(
+      bucketIndexAt(model.buckets, toSeconds(secondsToClock(bucket.to))),
+      bucket.index,
+      `bucket ${bucket.index} ends at ${bucket.to}s but reads back as another bucket`,
+    )
+  }
 })
 
 test('a brush over one bucket claims only the rows that bucket counted', () => {

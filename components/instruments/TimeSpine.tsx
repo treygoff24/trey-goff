@@ -17,6 +17,7 @@ import {
   BUCKET_COUNT,
   TERRAIN_MIN_CLAIMS,
   TERRAIN_WINDOW,
+  bucketIndexAt,
   formatClock,
   formatMinutes,
   toSeconds,
@@ -169,14 +170,13 @@ export default function TimeSpine() {
     if (!range) return null
     const from = toSeconds(range[0])
     const to = toSeconds(range[1])
-    const step = model.span / BUCKET_COUNT
     return {
       from,
       to,
-      first: Math.max(0, Math.min(BUCKET_COUNT - 1, Math.floor(from / step))),
-      last: Math.max(0, Math.min(BUCKET_COUNT - 1, Math.ceil(to / step) - 1)),
+      first: bucketIndexAt(model.buckets, from),
+      last: bucketIndexAt(model.buckets, to),
     }
-  }, [range, model.span])
+  }, [range, model.buckets])
 
   useEffect(() => {
     if (!brush) return
@@ -241,14 +241,15 @@ export default function TimeSpine() {
         const delta = step || (event.key === 'ArrowRight' ? 1 : -1)
         const next = moveFocus(focused + delta)
         // Shift drags the edge the reader is standing on, so the same gesture that widens a
-        // window from the outside shrinks it from the inside. On a one-bucket window there is
-        // no near edge to pick, so it widens.
+        // window from the outside shrinks it from the inside. From mid-selection there is no
+        // edge underfoot, so the nearer one moves — ties go to the leading edge. On a
+        // one-bucket window there is no near edge to pick, so it widens.
         if (event.shiftKey && brush) {
-          if (brush.first === brush.last)
-            brushBuckets(Math.min(brush.first, next), Math.max(brush.last, next))
-          else if (focused === brush.last) brushBuckets(brush.first, Math.max(brush.first, next))
-          else if (focused === brush.first) brushBuckets(Math.min(brush.last, next), brush.last)
-          else brushBuckets(Math.min(brush.first, next), Math.max(brush.last, next))
+          if (brush.first === brush.last) brushBuckets(brush.first, next)
+          else if (focused === brush.last) brushBuckets(brush.first, next)
+          else if (focused === brush.first) brushBuckets(next, brush.last)
+          else if (focused - brush.first <= brush.last - focused) brushBuckets(next, brush.last)
+          else brushBuckets(brush.first, next)
         }
         break
       }

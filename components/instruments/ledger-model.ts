@@ -167,6 +167,17 @@ function bucketStart(index: number, span: number): number {
   return Math.round((index * span) / BUCKET_COUNT)
 }
 
+/**
+ * The bucket a clock position falls in, read off the strip's own integer bounds. Recomputing it
+ * from `span / BUCKET_COUNT` instead drifts against the rounded starts and lands on the wrong
+ * bucket for roughly half of them.
+ */
+export function bucketIndexAt(buckets: readonly LedgerBucket[], seconds: number): number {
+  let index = 0
+  while (index + 1 < buckets.length && buckets[index + 1]!.from <= seconds) index += 1
+  return index
+}
+
 function buildBuckets(rows: readonly LedgerRow[], span: number): LedgerBucket[] {
   const starts = Array.from({ length: BUCKET_COUNT }, (_, index) => bucketStart(index, span))
   const buckets: LedgerBucket[] = starts.map((from, index) => ({

@@ -73,8 +73,8 @@ const ClaimRow = memo(function ClaimRow({ row, hidden, flashed, hasDossier, span
         <h4 className="font-newsreader text-lg leading-snug font-medium text-text-1">
           {claim.title}
         </h4>
-        <p className="mt-2 text-sm leading-relaxed text-text-2">{claim.claim}</p>
-        <p className="mt-2 text-sm leading-relaxed">
+        <p className="mt-2 max-w-[68ch] text-sm leading-relaxed text-text-2">{claim.claim}</p>
+        <p className="mt-2 max-w-[68ch] text-sm leading-relaxed">
           <span className="font-mono text-xs tracking-[0.12em] uppercase" style={{ color }}>
             {claim.verdictLabel ?? 'unverified'}
           </span>

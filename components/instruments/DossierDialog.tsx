@@ -8,6 +8,8 @@ import { closeDossier, focusClaim, useLedgerStore } from '@/components/instrumen
 import { INSTRUMENT_SENTINEL } from '@/components/instruments/sentinel'
 
 interface DossierPanel {
+  /** Which dossier this body belongs to, so a reopen never paints the previous one. */
+  id: string
   title: string
   content: ReactElement
 }
@@ -66,7 +68,7 @@ export default function DossierDialog({ slug }: { slug: string }) {
       })
       .then((data) => {
         if (cancelled) return
-        const loaded = { title: data.title, content: hastToReact(data.hast) }
+        const loaded = { id: open, title: data.title, content: hastToReact(data.hast) }
         cache.current.set(open, loaded)
         setPanel(loaded)
       })
@@ -100,7 +102,10 @@ export default function DossierDialog({ slug }: { slug: string }) {
     return () => dialog.removeEventListener('click', onClick)
   }, [model.byId])
 
-  const title = panel?.title ?? (open ? open.replace(/-/g, ' ') : '')
+  // The effect clears a stale panel, but not before the render that reopens the dialog, so the
+  // body is gated on identity rather than on the clearing having already happened.
+  const body = panel && panel.id === open ? panel : null
+  const title = body?.title ?? (open ? open.replace(/-/g, ' ') : '')
 
   return (
     <dialog
@@ -127,9 +132,9 @@ export default function DossierDialog({ slug }: { slug: string }) {
           <div
             ref={bodyRef}
             className="prose tg-scroll max-w-none overflow-y-auto px-6 py-6"
-            aria-busy={panel === null && !failed}
+            aria-busy={body === null && !failed}
           >
-            {panel?.content ?? (
+            {body?.content ?? (
               <p className="text-sm text-text-2" role="status">
                 {failed ? 'That finding could not be loaded.' : 'Loading the finding…'}
               </p>

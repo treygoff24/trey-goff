@@ -61,7 +61,35 @@ function composite(value: string, base: [number, number, number]): [number, numb
   }) as [number, number, number]
 }
 
+function mix(
+  over: [number, number, number],
+  base: [number, number, number],
+  alpha: number,
+): [number, number, number] {
+  return [0, 1, 2].map((channel) => over[channel]! * alpha + base[channel]! * (1 - alpha)) as [
+    number,
+    number,
+    number,
+  ]
+}
+
+/** A text token as painted: the opaque ones are hex, the dimmed ones are rgba over the ground. */
+function paint(value: string, base: [number, number, number]): [number, number, number] {
+  return value.startsWith('#') ? srgbFromHex(value) : composite(value, base)
+}
+
+function relativeLuminance(colour: [number, number, number]): number {
+  return luminance(colour.map(toLinear) as [number, number, number])
+}
+
 const pageGround = srgbFromHex(declaration('color-bg-0'))
+
+/**
+ * The ledger's filter bar and the rail's collapsed strip both paint on `bg-bg-0/95`, which the
+ * browser composites over whatever is behind them. Their own text tokens are translucent too,
+ * so a foreground here is two blends deep and cannot be read off `--color-bg-0` directly.
+ */
+const stickyGround = mix(pageGround, pageGround, 0.95)
 
 /**
  * Every ground instrument text is actually painted on. The page background is the easy one;
@@ -105,6 +133,29 @@ test('every verdict colour clears WCAG AA on every ground it is painted on', () 
       const ratio = contrast(foreground, ground)
       assert.ok(ratio >= 4.5, `${state} is ${ratio.toFixed(2)}:1 on ${name}, below AA`)
     }
+  }
+})
+
+test('the sticky bar and its chips clear WCAG AA on the translucent ground they paint on', () => {
+  const ground = relativeLuminance(stickyGround)
+
+  // The status readout is `text-text-2`; the rail's collapsed strip is `text-text-3` at 11px.
+  // Both are small text, so both owe the full 4.5:1.
+  for (const token of ['color-text-1', 'color-text-2', 'color-text-3']) {
+    const foreground = relativeLuminance(paint(declaration(token), stickyGround))
+    const ratio = contrast(foreground, ground)
+    assert.ok(ratio >= 4.5, `--${token} is ${ratio.toFixed(2)}:1 on the sticky bar, below AA`)
+  }
+
+  for (const state of LEDGER_STATE_VALUES) {
+    const value = declaration(`color-verdict-${state}`)
+    const parts = value.match(/oklch\(([\d.]+)\s+([\d.]+)\s+([\d.]+)\)/)
+    assert.ok(parts, `--color-verdict-${state} is not a plain oklch() triple: ${value}`)
+    const foreground = luminance(
+      linearFromOklch(Number(parts[1]), Number(parts[2]), Number(parts[3])),
+    )
+    const ratio = contrast(foreground, ground)
+    assert.ok(ratio >= 4.5, `the ${state} chip is ${ratio.toFixed(2)}:1 on the sticky bar, below AA`)
   }
 })
 
