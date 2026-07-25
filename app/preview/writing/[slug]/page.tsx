@@ -72,9 +72,14 @@ export default async function EssayPreviewPage({ params }: PageProps) {
           </span>
         )}
 
-        <h1 className="font-satoshi text-4xl font-medium text-text-1 mb-4">{essay.title}</h1>
+        {/* Deliberately the production essay's own type, not a preview approximation. A draft
+            is reviewed here before it ships, and a header set in a different family at a
+            different size means the review is of a page that will never exist. */}
+        <h1 className="mt-6 mb-5 font-newsreader text-[clamp(2.4rem,4.8vw,3.5rem)] leading-[1.08] font-medium tracking-[-0.02em] text-balance text-text-1">
+          {essay.title}
+        </h1>
 
-        <p className="text-xl text-text-2 mb-6">{essay.summary}</p>
+        <p className="mb-7 max-w-2xl text-xl leading-relaxed text-text-2">{essay.summary}</p>
 
         <div className="flex flex-wrap items-center gap-4 text-sm text-text-3">
           <time dateTime={essay.date}>{formatDate(essay.date)}</time>

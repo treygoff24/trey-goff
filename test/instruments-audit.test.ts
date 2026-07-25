@@ -306,6 +306,15 @@ test('the draft bench reaches none of the surfaces that publish an essay', () =>
     !JSON.stringify(index).includes(DEMO),
     'the search index carries no trace of the bench',
   )
+
+  // Feed and sitemap both gate on `status !== 'draft'` (app/feed.xml/route.ts,
+  // app/sitemap.ts — the sitemap only in production builds). Assert the predicate they
+  // share rather than rendering each route here.
+  const draftFiltered = allEssays.filter((essay) => essay.status !== 'draft')
+  assert.ok(
+    !draftFiltered.some((essay) => essay.slug === DEMO),
+    'the feed/sitemap draft predicate drops the bench',
+  )
 })
 
 test('every instrument component rides the isolation sentinel', () => {
@@ -348,5 +357,14 @@ test('every instrument component rides the isolation sentinel', () => {
       carries(name),
       `${name} is mounted by the article but never reaches the sentinel the isolation check reads`,
     )
+  }
+})
+
+test('safeHref admits only parseable http(s) URLs', async () => {
+  const { safeHref } = await import('@/lib/instruments/href')
+  assert.equal(safeHref('https://example.com/x'), 'https://example.com/x')
+  assert.equal(safeHref('http://example.com'), 'http://example.com/')
+  for (const bad of ['javascript:alert(1)', 'data:text/html,x', 'ftp://x', '//evil', 'not a url', '']) {
+    assert.equal(safeHref(bad), null, bad)
   }
 })

@@ -257,9 +257,9 @@ function verifyInstrumentIsolation(): InstrumentCheck {
   const instrumented = all.filter((slug) => !skipped.includes(slug))
   const failures: string[] = []
 
-  // Nothing to prove until a piece is actually instrumented and published.
-  if (instrumented.length === 0) return { instrumented, skipped, plainChecked: 0, failures }
-
+  // Positive artifact proof needs a published instrumented piece, but the leak scan below
+  // must run whenever any instrument content exists — draft-only is exactly when a leak
+  // would otherwise go unwatched.
   for (const slug of instrumented) {
     const { pages, chunks } = essayArtifacts(slug)
     if (pages.length === 0) {

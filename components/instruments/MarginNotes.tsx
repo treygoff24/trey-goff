@@ -90,7 +90,8 @@ export function AnnotationCard({
   // reaches the Dismiss button.
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose()
+      // A modal owns Escape while it is open; notes must not dismiss underneath it.
+      if (event.key === 'Escape' && !document.querySelector('dialog[open]')) onClose()
     }
     document.addEventListener('keydown', onKeyDown)
     return () => document.removeEventListener('keydown', onKeyDown)
