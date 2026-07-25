@@ -196,12 +196,36 @@ export const sourceSchema = z.object({
     .optional(),
 })
 
+/**
+ * How firmly the figure is held. A sourced stat that is nonetheless an estimate says so in
+ * the dialog rather than letting the headline number imply a precision it does not have.
+ */
+export const confidenceSchema = z.enum(['firm', 'estimated', 'contested'])
+
 export const statSchema = z.object({
   id: z.string().min(1),
   value: z.string().min(1),
   label: z.string().min(1),
+  /** How the figure was arrived at — the arithmetic, the sample, the year it is stated for. */
   detail: z.string().min(1).optional(),
+  confidence: confidenceSchema,
   sources: z.array(sourceSchema).min(1),
+})
+
+/**
+ * A pinned footnote. Anchored exactly as a mark is — (section anchor, exact substring,
+ * occurrence) against the rendered tree — so a note whose text drifts fails the build rather
+ * than silently detaching from the sentence it annotates.
+ */
+export const marginNoteSchema = z.object({
+  id: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+  anchor: z.string().min(1).nullable(),
+  text: z.string().min(1),
+  occurrence: z.number().int().positive().optional(),
+  /** A short kicker above the note — the authority's name, the caveat's subject. */
+  label: z.string().min(1).optional(),
+  body: z.string().min(1),
+  sources: z.array(sourceSchema).optional(),
 })
 
 export const forecastStatusSchema = z.enum([
@@ -246,6 +270,137 @@ export const forecastCardSchema = z
     }
   })
 
+/**
+ * Chart tones are roles, not colours: `primary` is the piece's own line of argument,
+ * `counter` the voice arguing against it, `neutral` context. The tokens they resolve to are
+ * declared once in `app/globals.css` and contrast-tested there.
+ */
+export const chartToneSchema = z.enum(['primary', 'counter', 'neutral'])
+
+const chartFrameFields = {
+  id: z.string().min(1),
+  title: z.string().min(1),
+  caption: z.string().min(1).optional(),
+  source: sourceSchema.optional(),
+  /** What a screen reader is told the figure shows. Never derived from the title alone. */
+  summary: z.string().min(1),
+}
+
+export const slopeChartSchema = z.object({
+  ...chartFrameFields,
+  kind: z.literal('slope'),
+  fromLabel: z.string().min(1),
+  toLabel: z.string().min(1),
+  unit: z.string().optional(),
+  series: z
+    .array(
+      z.object({
+        label: z.string().min(1),
+        tone: chartToneSchema.default('neutral'),
+        from: z.number(),
+        to: z.number(),
+        fromNote: z.string().min(1).optional(),
+        toNote: z.string().min(1).optional(),
+      }),
+    )
+    .min(2),
+  /** A horizontal reference line, e.g. the population share the slopes are read against. */
+  reference: z.object({ value: z.number(), label: z.string().min(1) }).optional(),
+})
+
+export const seriesChartSchema = z.object({
+  ...chartFrameFields,
+  kind: z.literal('series'),
+  xLabel: z.string().min(1).optional(),
+  yLabel: z.string().min(1).optional(),
+  unit: z.string().optional(),
+  series: z
+    .array(
+      z.object({
+        label: z.string().min(1),
+        tone: chartToneSchema.default('primary'),
+        points: z.array(z.object({ x: z.number(), y: z.number() })).min(2),
+      }),
+    )
+    .min(1),
+})
+
+export const barsChartSchema = z.object({
+  ...chartFrameFields,
+  kind: z.literal('bars'),
+  unit: z.string().optional(),
+  bars: z
+    .array(
+      z.object({
+        label: z.string().min(1),
+        value: z.number(),
+        tone: chartToneSchema.default('primary'),
+        note: z.string().min(1).optional(),
+      }),
+    )
+    .min(1),
+})
+
+export const timelineChartSchema = z.object({
+  ...chartFrameFields,
+  kind: z.literal('timeline'),
+  events: z
+    .array(
+      z.object({
+        date: z.string().regex(/^\d{4}-\d{2}(?:-\d{2})?$/),
+        label: z.string().min(1),
+        note: z.string().min(1).optional(),
+        tone: chartToneSchema.default('neutral'),
+      }),
+    )
+    .min(2),
+})
+
+export const chartSchema = z.discriminatedUnion('kind', [
+  slopeChartSchema,
+  seriesChartSchema,
+  barsChartSchema,
+  timelineChartSchema,
+])
+
+/** Ids are how the markdown addresses an instrument, so a duplicate is an authoring error. */
+function uniqueIds<T extends { id: string }>(items: T[], ctx: z.RefinementCtx, what: string) {
+  const seen = new Set<string>()
+  for (const [index, item] of items.entries()) {
+    if (seen.has(item.id)) {
+      ctx.addIssue({ code: 'custom', message: `duplicate ${what} id ${item.id}`, path: [index] })
+    }
+    seen.add(item.id)
+  }
+}
+
+/**
+ * Everything anchored into the prose of one piece. Marks and notes share an id namespace
+ * because they share the anchoring pass, and a collision between them would be silent.
+ */
+export const marksDocumentSchema = z
+  .object({
+    marks: z.array(markSchema).default([]),
+    notes: z.array(marginNoteSchema).default([]),
+    scopes: z.array(scopeSchema).default([]),
+  })
+  .superRefine((document, ctx) => {
+    uniqueIds([...document.marks, ...document.notes], ctx, 'annotation')
+    uniqueIds(document.scopes, ctx, 'scope')
+  })
+
+export const statsDocumentSchema = z
+  .array(statSchema)
+  .superRefine((stats, ctx) => uniqueIds(stats, ctx, 'stat'))
+
+export const forecastsDocumentSchema = z
+  .array(forecastCardSchema)
+  .superRefine((cards, ctx) => uniqueIds(cards, ctx, 'forecast'))
+
+export const chartsDocumentSchema = z
+  .array(chartSchema)
+  .superRefine((charts, ctx) => uniqueIds(charts, ctx, 'chart'))
+
 export type Verdict = z.infer<typeof verdictSchema>
 export type ClaimStatus = z.infer<typeof claimStatusSchema>
 export type ClaimType = z.infer<typeof claimTypeSchema>
@@ -259,6 +414,15 @@ export type Source = z.infer<typeof sourceSchema>
 export type Stat = z.infer<typeof statSchema>
 export type ForecastStatus = z.infer<typeof forecastStatusSchema>
 export type ForecastCard = z.infer<typeof forecastCardSchema>
+export type Confidence = z.infer<typeof confidenceSchema>
+export type MarginNote = z.infer<typeof marginNoteSchema>
+export type ChartTone = z.infer<typeof chartToneSchema>
+export type SlopeChart = z.infer<typeof slopeChartSchema>
+export type SeriesChart = z.infer<typeof seriesChartSchema>
+export type BarsChart = z.infer<typeof barsChartSchema>
+export type TimelineChart = z.infer<typeof timelineChartSchema>
+export type Chart = z.infer<typeof chartSchema>
+export type MarksDocument = z.infer<typeof marksDocumentSchema>
 
 export const VERDICTS = verdictSchema.options
 export const MARK_KINDS = markKindSchema.options

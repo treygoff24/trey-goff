@@ -6,21 +6,30 @@ import { buildLedgerModel, type LedgerModel } from '@/components/instruments/led
 import { INSTRUMENT_SENTINEL } from '@/components/instruments/sentinel'
 
 interface LedgerContextValue {
-  model: LedgerModel
+  /** Null on an instrumented piece that carries no claims ledger — an audited essay, say. */
+  model: LedgerModel | null
   /** Dossier slugs this piece ships, so a claim can tell a live link from a dead end. */
   dossiers: readonly string[]
 }
 
 const LedgerContext = createContext<LedgerContextValue | null>(null)
 
-export function useLedger(): LedgerContextValue {
+/** For instruments that read the ledger if there is one: the rail, the audit control. */
+export function useOptionalLedger(): LedgerContextValue {
   const value = useContext(LedgerContext)
   if (!value) throw new Error('instrument components must render inside <LedgerProvider>')
   return value
 }
 
+/** For instruments that are the ledger: the spine, the rows, the dossier slide-over. */
+export function useLedger(): LedgerContextValue & { model: LedgerModel } {
+  const value = useOptionalLedger()
+  if (!value.model) throw new Error('this instrument needs a claims ledger and the piece has none')
+  return { ...value, model: value.model }
+}
+
 interface LedgerProviderProps {
-  ledger: ClientLedger
+  ledger: ClientLedger | null
   dossiers: readonly string[]
   children: ReactNode
 }
@@ -31,7 +40,10 @@ interface LedgerProviderProps {
  * expensive part and must not recompute when a filter changes.
  */
 export default function LedgerProvider({ ledger, dossiers, children }: LedgerProviderProps) {
-  const value = useMemo(() => ({ model: buildLedgerModel(ledger), dossiers }), [ledger, dossiers])
+  const value = useMemo(
+    () => ({ model: ledger ? buildLedgerModel(ledger) : null, dossiers }),
+    [ledger, dossiers],
+  )
 
   return (
     <LedgerContext.Provider value={value}>

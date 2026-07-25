@@ -1,5 +1,28 @@
 import type { Element, ElementContent, Parent, Root, RootContent, Text } from 'hast'
-import type { Mark } from '@/lib/instruments/types'
+import type { MarginNote, Mark } from '@/lib/instruments/types'
+
+/**
+ * One anchored thing. Marks and margin notes differ only in what they emit around the span
+ * they resolve to, so they share the resolver: they are located against the same flat text,
+ * they collide with each other rather than only among their own kind, and a note that fails
+ * to resolve fails the build exactly as loudly as a mark that does.
+ */
+export interface Annotation {
+  id: string
+  anchor: string | null
+  text: string
+  occurrence?: number
+  /** How the annotation names itself in a build failure, e.g. `mark m1 (killed)`. */
+  describe: string
+  wrap: (node: ElementContent) => Element
+  /**
+   * Whether the last of this annotation's wraps should be flagged. A span crossing an element
+   * boundary emits several wraps; anything that renders a control (a note's marker, a mark's
+   * note card) must render it once, on the last one. Annotations with nothing to render stay
+   * unflagged so their markup is exactly what Wave 1 emitted.
+   */
+  stampLast: boolean
+}
 
 const HEADING_TAGS = new Map([
   ['h1', 1],
@@ -24,15 +47,15 @@ interface Region {
 }
 
 interface ResolvedMark {
-  mark: Mark
+  annotation: Annotation
   order: number
   start: number
   end: number
 }
 
 export class MarkResolutionError extends Error {
-  constructor(mark: Mark, reason: string) {
-    super(`mark ${mark.id} (${mark.kind}) ${reason}: ${JSON.stringify(mark.text)}`)
+  constructor(annotation: Annotation, reason: string) {
+    super(`${annotation.describe} ${reason}: ${JSON.stringify(annotation.text)}`)
     this.name = 'MarkResolutionError'
   }
 }
@@ -193,71 +216,111 @@ function headingRegions(
   return regions
 }
 
-function resolve(marks: readonly Mark[], flat: string, regions: Map<string, Region>) {
+function resolve(annotations: readonly Annotation[], flat: string, regions: Map<string, Region>) {
   const resolved: ResolvedMark[] = []
   const ids = new Set<string>()
 
-  for (const [order, mark] of marks.entries()) {
-    if (ids.has(mark.id)) throw new MarkResolutionError(mark, 'duplicates an earlier mark id')
-    ids.add(mark.id)
+  for (const [order, annotation] of annotations.entries()) {
+    if (ids.has(annotation.id)) {
+      throw new MarkResolutionError(annotation, 'duplicates an earlier mark id')
+    }
+    ids.add(annotation.id)
 
-    if (mark.text.includes(BLOCK_BOUNDARY)) {
-      throw new MarkResolutionError(mark, 'contains the block-boundary sentinel')
+    if (annotation.text.includes(BLOCK_BOUNDARY)) {
+      throw new MarkResolutionError(annotation, 'contains the block-boundary sentinel')
     }
 
     let region: Region
-    if (mark.anchor === null) {
+    if (annotation.anchor === null) {
       region = { start: 0, end: flat.length }
     } else {
-      const found = regions.get(mark.anchor)
-      if (!found) throw new MarkResolutionError(mark, `names unknown anchor #${mark.anchor}`)
+      const found = regions.get(annotation.anchor)
+      if (!found) {
+        throw new MarkResolutionError(annotation, `names unknown anchor #${annotation.anchor}`)
+      }
       region = found
     }
 
     const matches: number[] = []
     for (
-      let at = flat.indexOf(mark.text, region.start);
-      at !== -1 && at + mark.text.length <= region.end;
-      at = flat.indexOf(mark.text, at + 1)
+      let at = flat.indexOf(annotation.text, region.start);
+      at !== -1 && at + annotation.text.length <= region.end;
+      at = flat.indexOf(annotation.text, at + 1)
     ) {
       matches.push(at)
     }
 
     if (matches.length === 0) {
       throw new MarkResolutionError(
-        mark,
-        mark.anchor === null
+        annotation,
+        annotation.anchor === null
           ? 'does not occur in the document'
-          : `does not occur under #${mark.anchor}`,
+          : `does not occur under #${annotation.anchor}`,
       )
     }
-    if (mark.occurrence === undefined && matches.length > 1) {
-      throw new MarkResolutionError(mark, `occurs ${matches.length} times and names no occurrence`)
+    if (annotation.occurrence === undefined && matches.length > 1) {
+      throw new MarkResolutionError(
+        annotation,
+        `occurs ${matches.length} times and names no occurrence`,
+      )
     }
-    const start = matches[(mark.occurrence ?? 1) - 1]
+    const start = matches[(annotation.occurrence ?? 1) - 1]
     if (start === undefined) {
       throw new MarkResolutionError(
-        mark,
-        `names occurrence ${mark.occurrence} but occurs ${matches.length} time(s)`,
+        annotation,
+        `names occurrence ${annotation.occurrence} but occurs ${matches.length} time(s)`,
       )
     }
 
-    resolved.push({ mark, order, start, end: start + mark.text.length })
+    resolved.push({ annotation, order, start, end: start + annotation.text.length })
   }
 
   return resolved
 }
 
-function wrap(node: ElementContent, mark: Mark): Element {
+function markAnnotation(mark: Mark): Annotation {
   return {
-    type: 'element',
-    tagName: 'mark',
-    properties: {
-      className: ['instrument-mark'],
-      dataMarkId: mark.id,
-      dataMarkKind: mark.kind,
-    },
-    children: [node],
+    id: mark.id,
+    anchor: mark.anchor,
+    text: mark.text,
+    occurrence: mark.occurrence,
+    describe: `mark ${mark.id} (${mark.kind})`,
+    stampLast: mark.note !== undefined,
+    wrap: (node) => ({
+      type: 'element',
+      tagName: 'mark',
+      properties: {
+        className: ['instrument-mark'],
+        dataMarkId: mark.id,
+        dataMarkKind: mark.kind,
+      },
+      children: [node],
+    }),
+  }
+}
+
+/**
+ * A note's wrap carries the index the reader sees, which is document order rather than
+ * authoring order — so the number is stamped after resolution, through this box.
+ */
+interface NoteOrdinal {
+  value: number
+}
+
+function noteAnnotation(note: MarginNote, ordinal: NoteOrdinal): Annotation {
+  return {
+    id: note.id,
+    anchor: note.anchor,
+    text: note.text,
+    occurrence: note.occurrence,
+    describe: `margin note ${note.id}`,
+    stampLast: true,
+    wrap: (node) => ({
+      type: 'element',
+      tagName: 'instrument-note',
+      properties: { dataNoteId: note.id, dataNoteIndex: String(ordinal.value) },
+      children: [node],
+    }),
   }
 }
 
@@ -282,7 +345,7 @@ function rebuildSlot(slot: TextSlot, covering: ResolvedMark[]): ElementContent[]
       .sort((a, b) => a.start - b.start || b.end - a.end || a.order - b.order)
 
     let node: ElementContent = { type: 'text', value: slot.node.value.slice(from, to) }
-    for (const { mark } of applied.reverse()) node = wrap(node, mark)
+    for (const { annotation } of applied.reverse()) node = annotation.wrap(node)
     out.push(node)
   }
 
@@ -290,24 +353,84 @@ function rebuildSlot(slot: TextSlot, covering: ResolvedMark[]): ElementContent[]
 }
 
 /**
- * Wraps each mark's span in `<mark>` elements, resolved against the final tree rather than
- * the markdown source. A span crossing element boundaries is split into one wrap per text
- * node it touches. Anything that fails to resolve to exactly one span throws, which fails
- * the build — a mark that silently doesn't render is worse than no mark.
- *
- * Mutates `tree` in place and returns it.
+ * A note whose span crosses an element boundary is emitted as several wraps. Only the last
+ * one may carry the marker, or a note straddling an `<em>` would sprout two markers for one
+ * footnote. The pass runs over the finished tree, where document order is unambiguous.
  */
-export function applyMarks(tree: Root, marks: readonly Mark[]): Root {
-  if (marks.length === 0) return tree
+function stampLastWraps(tree: Root, stamped: ReadonlySet<string>): void {
+  const last = new Map<string, Element>()
+
+  const walk = (parent: Parent) => {
+    for (const child of parent.children) {
+      if (child.type !== 'element') continue
+      const id = child.properties?.dataNoteId ?? child.properties?.dataMarkId
+      if (typeof id === 'string' && stamped.has(id)) last.set(id, child)
+      walk(child)
+    }
+  }
+
+  walk(tree)
+  for (const element of last.values()) {
+    element.properties = { ...element.properties, dataAnnotationLast: 'true' }
+  }
+}
+
+interface PieceAnnotations {
+  marks?: readonly Mark[]
+  notes?: readonly MarginNote[]
+}
+
+export interface AnnotatedTree {
+  tree: Root
+  /** Note ids in document order — the order the markers are numbered and listed in. */
+  noteOrder: string[]
+}
+
+/**
+ * Wraps each annotated span, resolved against the final tree rather than the markdown source.
+ * A span crossing element boundaries is split into one wrap per text node it touches.
+ * Anything that fails to resolve to exactly one span throws, which fails the build — an
+ * annotation that silently doesn't render is worse than no annotation.
+ *
+ * Mutates `tree` in place.
+ */
+export function applyAnnotations(
+  tree: Root,
+  { marks = [], notes = [] }: PieceAnnotations,
+): AnnotatedTree {
+  if (marks.length === 0 && notes.length === 0) return { tree, noteOrder: [] }
+
+  const ordinals = new Map(notes.map((note) => [note.id, { value: 0 }]))
+  const annotations = [
+    ...marks.map(markAnnotation),
+    ...notes.map((note) => noteAnnotation(note, ordinals.get(note.id)!)),
+  ]
 
   const { slots, flat, offsets } = collectTextSlots(tree)
-  const resolved = resolve(marks, flat, headingRegions(tree, offsets, flat.length))
+  const resolved = resolve(annotations, flat, headingRegions(tree, offsets, flat.length))
+
+  const noteIds = new Set(notes.map((note) => note.id))
+  const noteOrder = resolved
+    .filter((entry) => noteIds.has(entry.annotation.id))
+    .sort((a, b) => a.start - b.start)
+    .map((entry) => entry.annotation.id)
+  for (const [index, id] of noteOrder.entries()) ordinals.get(id)!.value = index + 1
 
   for (const slot of [...slots].reverse()) {
-    const covering = resolved.filter((mark) => mark.start < slot.end && mark.end > slot.start)
+    const covering = resolved.filter((entry) => entry.start < slot.end && entry.end > slot.start)
     if (covering.length === 0) continue
     slot.parent.children.splice(slot.index, 1, ...rebuildSlot(slot, covering))
   }
 
-  return tree
+  const stamped = new Set(
+    annotations.filter((annotation) => annotation.stampLast).map((annotation) => annotation.id),
+  )
+  if (stamped.size > 0) stampLastWraps(tree, stamped)
+
+  return { tree, noteOrder }
+}
+
+/** Marks alone — the Wave 1 entry point, unchanged in behaviour. */
+export function applyMarks(tree: Root, marks: readonly Mark[]): Root {
+  return applyAnnotations(tree, { marks }).tree
 }

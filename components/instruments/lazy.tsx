@@ -19,3 +19,21 @@ export const LazyInstrumentRail = dynamic(() => import('@/components/instruments
 export const LazyTimeSpine = dynamic(() => import('@/components/instruments/TimeSpine'))
 export const LazyClaimLedger = dynamic(() => import('@/components/instruments/ClaimLedger'))
 export const LazyDossierDialog = dynamic(() => import('@/components/instruments/DossierDialog'))
+
+export const LazyAuditProvider = dynamic(() => import('@/components/instruments/AuditProvider'))
+export const LazyAuditLayer = dynamic(() => import('@/components/instruments/AuditLayer'))
+export const LazyNotesList = dynamic(() => import('@/components/instruments/MarginNotes'))
+export const LazyStat = dynamic(() => import('@/components/instruments/Stat'))
+export const LazyForecastCard = dynamic(() => import('@/components/instruments/ForecastCard'))
+export const LazyChart = dynamic(() => import('@/components/instruments/Chart'))
+
+/**
+ * The two annotation components are named exports of modules whose default export is a
+ * different instrument, so they take the long way round to the same async chunk.
+ */
+export const LazyMarkSpan = dynamic(() =>
+  import('@/components/instruments/AuditLayer').then((module) => module.MarkSpan),
+)
+export const LazyNoteMarker = dynamic(() =>
+  import('@/components/instruments/MarginNotes').then((module) => module.NoteMarker),
+)

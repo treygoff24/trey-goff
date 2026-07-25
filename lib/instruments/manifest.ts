@@ -2,7 +2,18 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import type { Root } from 'hast'
 import { z } from 'zod'
-import { claimsLedgerSchema, type ClaimsLedger } from '@/lib/instruments/types'
+import {
+  chartsDocumentSchema,
+  claimsLedgerSchema,
+  forecastsDocumentSchema,
+  marksDocumentSchema,
+  statsDocumentSchema,
+  type Chart,
+  type ClaimsLedger,
+  type ForecastCard,
+  type MarksDocument,
+  type Stat,
+} from '@/lib/instruments/types'
 import { markdownToHast } from '@/lib/instruments/render'
 
 const INSTRUMENTS_DIR = join(process.cwd(), 'content/instruments')
@@ -15,6 +26,7 @@ export const instrumentIdSchema = z.enum([
   'audit-layer',
   'forecast-card',
   'stats',
+  'charts',
 ])
 
 /**
@@ -43,6 +55,7 @@ export const instrumentManifestSchema = z.object({
       marks: z.string().min(1).optional(),
       stats: z.string().min(1).optional(),
       forecasts: z.string().min(1).optional(),
+      charts: z.string().min(1).optional(),
     })
     .default({}),
   dossiers: z.array(z.string().min(1)).default([]),
@@ -114,6 +127,69 @@ export function getClaimsLedger(slug: string): ClaimsLedger | null {
   )
   ledgerCache.set(slug, ledger)
   return ledger
+}
+
+/**
+ * The four authoring files that hang off a manifest, each read at most once per process.
+ * A declared file that fails its schema throws here, which fails the build — the same
+ * bargain the claims ledger strikes.
+ */
+function dataLoader<T>(key: keyof InstrumentManifest['data'], parse: (raw: unknown) => T) {
+  const cache = new Map<string, T>()
+  return (slug: string): T | null => {
+    const manifest = getInstrumentManifest(slug)
+    const file = manifest?.data[key]
+    if (!file) return null
+
+    const cached = cache.get(slug)
+    if (cached !== undefined) return cached
+
+    const parsed = parse(readJson(join(INSTRUMENTS_DIR, slug, file)))
+    cache.set(slug, parsed)
+    return parsed
+  }
+}
+
+export const getMarksDocument: (slug: string) => MarksDocument | null = dataLoader('marks', (raw) =>
+  marksDocumentSchema.parse(raw),
+)
+export const getStats: (slug: string) => Stat[] | null = dataLoader('stats', (raw) =>
+  statsDocumentSchema.parse(raw),
+)
+export const getForecasts: (slug: string) => ForecastCard[] | null = dataLoader(
+  'forecasts',
+  (raw) => forecastsDocumentSchema.parse(raw),
+)
+export const getCharts: (slug: string) => Chart[] | null = dataLoader('charts', (raw) =>
+  chartsDocumentSchema.parse(raw),
+)
+
+export interface InstrumentPiece {
+  manifest: InstrumentManifest
+  ledger: ClaimsLedger | null
+  annotations: MarksDocument | null
+  stats: Stat[] | null
+  forecasts: ForecastCard[] | null
+  charts: Chart[] | null
+}
+
+/**
+ * Everything a route needs to render an instrumented piece, or null when the slug takes the
+ * ordinary essay path. Both `/writing/[slug]` and the authenticated preview go through here,
+ * so a piece cannot render one way in draft and another way once published.
+ */
+export function loadInstrumentPiece(slug: string): InstrumentPiece | null {
+  const manifest = getInstrumentManifest(slug)
+  if (!manifest) return null
+
+  return {
+    manifest,
+    ledger: getClaimsLedger(slug),
+    annotations: getMarksDocument(slug),
+    stats: getStats(slug),
+    forecasts: getForecasts(slug),
+    charts: getCharts(slug),
+  }
 }
 
 export function dossierPath(slug: string, dossier: string): string {

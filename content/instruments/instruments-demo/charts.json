@@ -1,0 +1,81 @@
+[
+  {
+    "id": "line-share",
+    "kind": "slope",
+    "title": "Figure 1 · Share of weekday boardings by line",
+    "summary": "Slope chart: the Green and Ochre lines lose share between 2015 and 2025 while the Blue line gains and the Rust line is flat.",
+    "caption": "Invented figures for a city that does not exist. The chart is here to prove that four converging endpoint labels do not collide.",
+    "fromLabel": "2015",
+    "toLabel": "2025",
+    "unit": "%",
+    "reference": { "value": 25, "label": "an even quarter of the system" },
+    "series": [
+      { "label": "Green line", "tone": "primary", "from": 38, "to": 22, "fromNote": "2015", "toNote": "2025" },
+      { "label": "Ochre line", "tone": "neutral", "from": 30, "to": 23, "fromNote": "2015", "toNote": "2025" },
+      { "label": "Blue line", "tone": "counter", "from": 18, "to": 33, "fromNote": "2015", "toNote": "2025" },
+      { "label": "Rust line", "tone": "neutral", "from": 14, "to": 22, "fromNote": "2015", "toNote": "2025" }
+    ]
+  },
+  {
+    "id": "ridership",
+    "kind": "series",
+    "title": "Figure 2 · Weekday boardings, 2015 to 2025",
+    "summary": "Line chart: total weekday boardings fall from 412,000 in 2015 to 284,000 in 2025, with the steepest fall across 2020 and 2021.",
+    "caption": "Both series are invented. The counter series is the null version of the argument: the same decline without a closure-year break.",
+    "xLabel": "year",
+    "yLabel": "boardings",
+    "series": [
+      {
+        "label": "Reported",
+        "tone": "primary",
+        "points": [
+          { "x": 2015, "y": 412000 },
+          { "x": 2017, "y": 389000 },
+          { "x": 2019, "y": 366000 },
+          { "x": 2021, "y": 298000 },
+          { "x": 2023, "y": 291000 },
+          { "x": 2025, "y": 284000 }
+        ]
+      },
+      {
+        "label": "Null version",
+        "tone": "counter",
+        "points": [
+          { "x": 2015, "y": 412000 },
+          { "x": 2017, "y": 386000 },
+          { "x": 2019, "y": 360000 },
+          { "x": 2021, "y": 334000 },
+          { "x": 2023, "y": 308000 },
+          { "x": 2025, "y": 282000 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "reasons",
+    "kind": "bars",
+    "title": "Figure 3 · Reasons given for riding less",
+    "summary": "Bar chart: of riders who said they ride less, 41 percent named frequency, 28 percent named fare, 19 percent named the closures and 12 percent named safety.",
+    "caption": "From the survey the piece declines to lean on. Shown because the argument cites it, not because it can carry the argument.",
+    "unit": "%",
+    "bars": [
+      { "label": "Service frequency", "value": 41, "tone": "primary" },
+      { "label": "Fare increases", "value": 28, "tone": "primary" },
+      { "label": "The closures", "value": 19, "tone": "counter", "note": "the answer the common explanation needs to be the largest" },
+      { "label": "Safety", "value": 12, "tone": "neutral" }
+    ]
+  },
+  {
+    "id": "closures",
+    "kind": "timeline",
+    "title": "Figure 4 · The closure years",
+    "summary": "Timeline: four events from the first closure in March 2020 to the reconstruction promised for September 2027.",
+    "caption": "Dates as announced by the authority. The last entry is the one this piece is betting on.",
+    "events": [
+      { "date": "2020-03", "label": "Green line closed for tunnel works", "tone": "neutral" },
+      { "date": "2021-06", "label": "Ochre line reduced to a weekday-only timetable", "tone": "neutral" },
+      { "date": "2023-01", "label": "Fares raised for the third time in four years", "note": "the change the null version treats as the real cause", "tone": "counter" },
+      { "date": "2027-09", "label": "Reconstructed series due", "note": "the date the forecast card resolves on", "tone": "primary" }
+    ]
+  }
+]

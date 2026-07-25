@@ -6,6 +6,8 @@ import { TagPill } from '@/components/ui/TagPill'
 import { TableOfContents, MobileTableOfContents } from '@/components/writing/TableOfContents'
 import { Prose } from '@/components/content/Prose'
 import { markdownToHtml } from '@/lib/markdown'
+import { loadInstrumentPiece } from '@/lib/instruments/manifest'
+import { InstrumentArticle } from '@/components/instruments/InstrumentArticle'
 import { canAccessDraftPreview, PREVIEW_SESSION_COOKIE } from '@/lib/preview-auth'
 
 export const dynamic = 'force-dynamic'
@@ -43,17 +45,21 @@ export default async function EssayPreviewPage({ params }: PageProps) {
     notFound()
   }
 
-  const contentHtml = await markdownToHtml(essay.content)
+  // A piece with an instrument manifest renders through the instrument seam here too, so a
+  // draft is previewed as the thing it will be rather than as plain prose. The auth gate
+  // above is untouched: this branch is chosen after access has already been decided.
+  const piece = loadInstrumentPiece(slug)
+  const contentHtml = piece ? '' : await markdownToHtml(essay.content)
 
   return (
-    <article className="mx-auto max-w-4xl px-4 py-16">
+    <article className={`mx-auto px-4 py-16 ${piece ? 'max-w-[88rem]' : 'max-w-4xl'}`}>
       {/* Preview banner */}
       <div className="mb-8 rounded-lg border border-warm/40 bg-warm/10 px-4 py-3 text-sm text-warm">
         Draft preview
       </div>
 
       {/* Header */}
-      <header className="mb-12">
+      <header className={`mb-12 ${piece ? 'max-w-4xl' : ''}`}>
         {essay.status === 'draft' && (
           <span className="mb-4 inline-block rounded-full bg-error/10 px-3 py-1 text-sm font-medium text-error">
             Draft
@@ -87,17 +93,23 @@ export default async function EssayPreviewPage({ params }: PageProps) {
         )}
       </header>
 
-      {/* Mobile TOC */}
-      <MobileTableOfContents contentSelector="#essay-content" sourceId={essay.slug} />
+      {piece ? (
+        <InstrumentArticle markdown={essay.content} {...piece} />
+      ) : (
+        <>
+          {/* Mobile TOC */}
+          <MobileTableOfContents contentSelector="#essay-content" sourceId={essay.slug} />
 
-      {/* Content with desktop TOC */}
-      <div className="grid gap-12 lg:grid-cols-[1fr_200px]">
-        <Prose>
-          <div id="essay-content" dangerouslySetInnerHTML={{ __html: contentHtml }} />
-        </Prose>
+          {/* Content with desktop TOC */}
+          <div className="grid gap-12 lg:grid-cols-[1fr_200px]">
+            <Prose>
+              <div id="essay-content" dangerouslySetInnerHTML={{ __html: contentHtml }} />
+            </Prose>
 
-        <TableOfContents contentSelector="#essay-content" sourceId={essay.slug} />
-      </div>
+            <TableOfContents contentSelector="#essay-content" sourceId={essay.slug} />
+          </div>
+        </>
+      )}
     </article>
   )
 }

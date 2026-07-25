@@ -1,0 +1,12 @@
+[
+  {
+    "id": "reconstruction",
+    "question": "Will the 2027 reconstructed ridership series show a break at the closure years?",
+    "forCase": "The reconstruction shows a visible step down across the closure years on at least three of the four lines, and the slope after the step is flatter than the slope before it. That is the shape the common explanation predicts and nothing else in the data predicts it.",
+    "againstCase": "The reconstruction shows one continuous slope through the closure years. If that happens the closures were incidental, the decline is a fare and frequency story, and the four paragraphs above that lean on the closures should be read as wrong rather than as unproven.",
+    "confidence": 0.4,
+    "stated": "2026-07-25",
+    "resolvesOn": "2027-09-30",
+    "status": "open"
+  }
+]

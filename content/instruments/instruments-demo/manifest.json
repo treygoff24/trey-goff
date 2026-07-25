@@ -1,0 +1,11 @@
+{
+  "slug": "instruments-demo",
+  "accent": { "hue": 82, "chroma": 0.1 },
+  "instruments": ["instrument-rail", "audit-layer", "margin-notes", "stats", "forecast-card", "charts"],
+  "data": {
+    "marks": "marks.json",
+    "stats": "stats.json",
+    "forecasts": "forecasts.json",
+    "charts": "charts.json"
+  }
+}

@@ -56,6 +56,16 @@ function toSeconds(timestamp: string): number {
   return timestamp.split(':').reduce((total, part) => total * 60 + Number(part), 0)
 }
 
+/**
+ * A piece with no ledger. Every id-bearing parameter is then unknown by definition and gets
+ * dropped, which leaves `audit` — the one piece of state an unledgered piece still shares.
+ */
+export const EMPTY_VOCABULARY: InstrumentVocabulary = {
+  sections: new Set(),
+  claims: new Set(),
+  duration: 0,
+}
+
 /** The vocabulary a claims ledger defines: its declared sections, its claim ids, its span. */
 export function vocabularyFromLedger(ledger: ClientLedger): InstrumentVocabulary {
   const stamps = ledger.claims.flatMap((claim) => claim.timestamps.map(toSeconds))

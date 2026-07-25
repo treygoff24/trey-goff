@@ -1,0 +1,22 @@
+[
+  {
+    "id": "ridership-drop",
+    "value": "31%",
+    "label": "fall in weekday boardings, 2015 to 2025",
+    "detail": "Stated on the cover of the 2025 annual report. Dividing 2025 weekday boardings by the 2015 figure in the same report's Table 4 gives 27 percent instead; the report does not say which base year or which definition of a weekday it is using.",
+    "confidence": "contested",
+    "sources": [
+      {
+        "title": "Annual report 2025 (placeholder)",
+        "url": "https://example.com/annual-report-2025",
+        "quote": "Weekday boardings have fallen 31 percent over the past decade.",
+        "retrieved": "2026-07-25"
+      },
+      {
+        "title": "Annual report 2025, Table 4 (placeholder)",
+        "url": "https://example.com/annual-report-2025-table-4",
+        "retrieved": "2026-07-25"
+      }
+    ]
+  }
+]

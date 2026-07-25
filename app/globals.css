@@ -73,6 +73,18 @@
   --color-verdict-unfalsifiable: oklch(0.8 0.11 305);
   --color-verdict-unverified: oklch(0.72 0.02 160);
 
+  /* The four kinds of self-audit, and the three roles a figure can draw in. Same rule as the
+     verdicts: lightness carries the contrast, and the sweep in
+     test/instruments-contrast.test.ts holds every one of them to AA on every ground. */
+  --color-mark-killed: oklch(0.75 0.16 25);
+  --color-mark-his-read: oklch(0.87 0.13 92);
+  --color-mark-counter-evidence: oklch(0.85 0.1 196);
+  --color-mark-refused: oklch(0.8 0.11 305);
+
+  --color-chart-primary: oklch(0.84 0.13 158);
+  --color-chart-counter: oklch(0.85 0.1 196);
+  --color-chart-neutral: oklch(0.8 0.02 160);
+
   --font-satoshi: var(--font-body), system-ui, sans-serif;
   --font-newsreader: var(--font-display), Georgia, 'Times New Roman', serif;
   --font-mono: var(--font-label), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -1026,4 +1038,307 @@ html[data-konami='true'] a {
   text-decoration: underline;
   text-decoration-style: dotted;
   text-underline-offset: 3px;
+}
+
+/* ---------------------------------------------------------------------------
+   The audit grammar
+
+   Marked passages, pinned notes, sourced stats, the forecast card and the chart
+   kit. Everything here is scoped to `.instrument-scope`; an ordinary essay never
+   loads the components and never matches these rules.
+   --------------------------------------------------------------------------- */
+
+/* A mark is in the markup whether or not the audit is lit — the annotation is part of the
+   document. Unlit it reads as a hairline; lit, it takes a wash of its own kind's colour. */
+.instrument-scope .instrument-mark {
+  background: transparent;
+  color: inherit;
+  padding: 0 0.06em;
+  border-bottom: 1px dashed transparent;
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.instrument-scope .instrument-mark[data-audit='on'] {
+  border-bottom-color: var(--mark-color);
+  background-color: color-mix(in oklab, var(--mark-color) 15%, transparent);
+}
+
+.instrument-scope .instrument-mark[data-audit='on'][data-lit='true'] {
+  background-color: color-mix(in oklab, var(--mark-color) 26%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--mark-color) 45%, transparent);
+}
+
+.tg-mark-marker,
+.tg-note-marker {
+  font-family: var(--font-mono);
+  font-size: 0.68em;
+  line-height: 1;
+  vertical-align: super;
+  margin-inline-start: 0.15em;
+  padding: 0.15em 0.3em;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border-2);
+  color: var(--color-text-2);
+}
+
+.tg-mark-marker[aria-expanded='true'],
+.tg-note-marker[aria-expanded='true'] {
+  color: var(--instrument-accent);
+  border-color: var(--instrument-accent);
+}
+
+.tg-note-span {
+  border-bottom: 1px solid var(--instrument-accent-hairline);
+}
+
+/* The card sits in the flow by default — it is a block that opens under the line it annotates.
+   Above the margin breakpoint the packer gives it a `top` and it floats out to the right of
+   the measure, level with its own marker. */
+.tg-annotation-card {
+  display: block;
+  margin: 0.75rem 0 1rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--color-border-1);
+  border-inline-start-width: 3px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-1);
+  font-family: var(--font-satoshi);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--color-text-2);
+}
+
+.tg-annotation-kicker {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.tg-annotation-body {
+  display: block;
+}
+
+.tg-annotation-sources {
+  display: block;
+  margin-top: 0.4rem;
+}
+
+.tg-annotation-sources a {
+  color: var(--instrument-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  margin-inline-end: 0.75rem;
+}
+
+.tg-annotation-close {
+  display: block;
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-3);
+}
+
+@media (min-width: 72rem) {
+  .tg-annotation-card {
+    position: absolute;
+    /* A fallback only: the packer overwrites this with the measured edge of the prose. */
+    inset-inline-start: calc(65ch + 2rem);
+    width: 14rem;
+    margin: 0;
+    background: transparent;
+    border-block-width: 0;
+    border-inline-end-width: 0;
+    border-radius: 0;
+    z-index: 10;
+  }
+}
+
+/* The one positioned ancestor the note cards resolve against. */
+.instrument-flow {
+  position: relative;
+}
+
+.tg-notes-list ol {
+  list-style: none;
+  padding: 0;
+}
+
+/* ---------- the audit control ---------- */
+
+.tg-audit,
+.tg-forecast {
+  border: 1px solid var(--color-border-1);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-1);
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.tg-audit-switch {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-2);
+  color: var(--color-text-2);
+}
+
+.tg-audit-switch[data-on='true'] {
+  border-color: var(--instrument-accent);
+  color: var(--instrument-accent);
+  background: var(--instrument-accent-quiet);
+}
+
+.tg-audit-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 0.2rem 0.7rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border-1);
+}
+
+.tg-audit-chip[data-on='true'] {
+  border-color: currentColor;
+  background: color-mix(in oklab, currentColor 14%, transparent);
+}
+
+.tg-audit-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: var(--radius-full);
+  background: currentColor;
+}
+
+.tg-audit-count {
+  color: var(--color-text-3);
+  font-size: 0.66rem;
+}
+
+/* ---------- sourced stats ---------- */
+
+.tg-stat-button {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  border-bottom: 1px dotted var(--instrument-accent-hairline);
+}
+
+.tg-stat-value {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--instrument-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.tg-stat-label {
+  font-size: 0.86em;
+  color: var(--color-text-2);
+}
+
+.tg-stat-dialog {
+  /* Tailwind's preflight zeroes every margin, which takes the centring a modal `<dialog>`
+     gets for free out from under it and pins the panel to the top-left corner. */
+  margin: auto;
+  width: min(38rem, calc(100vw - 2rem));
+  max-height: min(80vh, 44rem);
+  padding: 0;
+  border: 1px solid var(--color-border-2);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-1);
+  color: var(--color-text-1);
+  overflow: hidden;
+}
+
+.tg-stat-dialog::backdrop {
+  background: color-mix(in oklab, var(--color-bg-0) 82%, transparent);
+}
+
+/* ---------- the chart kit ---------- */
+
+.tg-chart-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.tg-chart-series {
+  transition: opacity 0.2s ease;
+}
+
+.tg-chart-bar {
+  transition: opacity 0.2s ease;
+}
+
+.tg-chart-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+.tg-chart-key[aria-pressed='true'] {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.tg-chart-swatch {
+  width: 0.7rem;
+  height: 0.18rem;
+  border-radius: var(--radius-full);
+  background: currentColor;
+}
+
+/* Reserved rather than conditional: a readout that appears and disappears reflows the figure
+   under the reader's cursor every time they move it. */
+.tg-chart-readout {
+  min-height: 1.5rem;
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--color-text-2);
+}
+
+.tg-timeline {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-inline-start: 1px solid var(--color-border-1);
+}
+
+.tg-timeline-event {
+  position: relative;
+  padding-inline-start: 1.25rem;
+  padding-block: 0.6rem;
+  transition: opacity 0.2s ease;
+}
+
+.tg-timeline-dot {
+  position: absolute;
+  inset-inline-start: -0.3rem;
+  top: 0.95rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: var(--radius-full);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .instrument-scope .instrument-mark,
+  .tg-chart-series,
+  .tg-chart-bar,
+  .tg-timeline-event {
+    transition: none;
+  }
 }

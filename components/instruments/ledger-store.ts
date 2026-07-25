@@ -81,6 +81,16 @@ export function setRange(range: [number, number] | null) {
   })
 }
 
+/**
+ * The audit switch. It is the one piece of instrument state that is not a ledger filter, so
+ * it sets `audit` directly rather than going through `patch` — lighting the marks must not
+ * drop the claim a reader arrived on.
+ */
+export function setAudit(audit: boolean) {
+  const { filters } = get()
+  if (filters.audit !== audit) set({ filters: { ...filters, audit } })
+}
+
 export function clearFilters() {
   patch({ verdicts: [], sections: [], query: '', range: null, claim: null })
 }

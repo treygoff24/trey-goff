@@ -7,7 +7,7 @@ import { Prose } from '@/components/content/Prose'
 import { RelatedLinks } from '@/components/content/RelatedLinks'
 import { SubscribeForm } from '@/components/newsletter/SubscribeForm'
 import { markdownToHtml } from '@/lib/markdown'
-import { getClaimsLedger, getInstrumentManifest } from '@/lib/instruments/manifest'
+import { loadInstrumentPiece } from '@/lib/instruments/manifest'
 import { InstrumentArticle } from '@/components/instruments/InstrumentArticle'
 import { generateArticleSchema, generateBreadcrumbSchema } from '@/lib/structured-data'
 import { getBacklinksForEssay, getOutgoingLinksForEssay } from '@/lib/backlinks'
@@ -53,9 +53,8 @@ export default async function EssayPage({ params }: PageProps) {
 
   // A piece with an instrument manifest renders through the instrument seam; every other
   // essay takes the byte-identical path it always has.
-  const manifest = getInstrumentManifest(slug)
-  const ledger = manifest ? getClaimsLedger(slug) : null
-  const instrumented = manifest !== null && ledger !== null
+  const piece = loadInstrumentPiece(slug)
+  const instrumented = piece !== null
 
   const contentHtml = instrumented ? '' : await markdownToHtml(essay.content)
   const articleSchema = generateArticleSchema({
@@ -129,8 +128,8 @@ export default async function EssayPage({ params }: PageProps) {
           )}
         </header>
 
-        {manifest && ledger ? (
-          <InstrumentArticle markdown={essay.content} manifest={manifest} ledger={ledger} />
+        {piece ? (
+          <InstrumentArticle markdown={essay.content} {...piece} />
         ) : (
           <>
             {/* Mobile TOC */}

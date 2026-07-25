@@ -1,13 +1,29 @@
 import type { Element, Root } from 'hast'
 import type { InstrumentManifest } from '@/lib/instruments/manifest'
-import type { ClaimsLedger, ClientLedger } from '@/lib/instruments/types'
+import type {
+  Chart,
+  ClaimsLedger,
+  ClientLedger,
+  ForecastCard,
+  MarksDocument,
+  Stat,
+} from '@/lib/instruments/types'
 import { hastToReact, markdownToHast } from '@/lib/instruments/render'
+import { applyAnnotations } from '@/lib/instruments/marks'
 import { Prose } from '@/components/content/Prose'
 import {
+  LazyAuditLayer,
+  LazyAuditProvider,
+  LazyChart,
   LazyClaimLedger,
   LazyDossierDialog,
+  LazyForecastCard,
   LazyInstrumentRail,
   LazyLedgerProvider,
+  LazyMarkSpan,
+  LazyNoteMarker,
+  LazyNotesList,
+  LazyStat,
   LazyTimeSpine,
   LazyUrlStateSync,
 } from '@/components/instruments/lazy'
@@ -49,22 +65,46 @@ function clientLedger(ledger: ClaimsLedger): ClientLedger {
 interface InstrumentArticleProps {
   markdown: string
   manifest: InstrumentManifest
-  ledger: ClaimsLedger
+  ledger: ClaimsLedger | null
+  annotations: MarksDocument | null
+  stats: Stat[] | null
+  forecasts: ForecastCard[] | null
+  charts: Chart[] | null
 }
 
 /**
  * The instrument branch of `/writing/[slug]`. The article body still comes from the same
  * markdown chain every essay runs; what differs is that it is compiled to React rather than
- * to an HTML string, so the instrument tags authored in the piece become live components.
+ * to an HTML string, so the instrument tags authored in the piece become live components and
+ * the annotated spans become marks and note markers.
  */
-export async function InstrumentArticle({ markdown, manifest, ledger }: InstrumentArticleProps) {
-  const tree = await markdownToHast(markdown)
+export async function InstrumentArticle({
+  markdown,
+  manifest,
+  ledger,
+  annotations,
+  stats,
+  forecasts,
+  charts,
+}: InstrumentArticleProps) {
+  const parsed = await markdownToHast(markdown)
+  const { tree, noteOrder } = applyAnnotations(parsed, {
+    marks: annotations?.marks,
+    notes: annotations?.notes,
+  })
   const headings = headingsOf(tree)
-  const forClient = clientLedger(ledger)
+  const forClient = ledger ? clientLedger(ledger) : null
 
   const body = hastToReact(tree, {
     'instrument-spine': () => <LazyTimeSpine />,
     'instrument-ledger': () => <LazyClaimLedger />,
+    'instrument-audit': () => <LazyAuditLayer />,
+    'instrument-notes': () => <LazyNotesList />,
+    'instrument-stat': (props) => <LazyStat {...props} />,
+    'instrument-forecast': (props) => <LazyForecastCard {...props} />,
+    'instrument-chart': (props) => <LazyChart {...props} />,
+    'instrument-note': (props) => <LazyNoteMarker {...props} />,
+    mark: (props) => <LazyMarkSpan {...props} />,
   })
 
   return (
@@ -78,16 +118,25 @@ export async function InstrumentArticle({ markdown, manifest, ledger }: Instrume
       }
     >
       <LazyLedgerProvider ledger={forClient} dossiers={manifest.dossiers}>
-        <LazyUrlStateSync ledger={forClient} />
-        <div className="grid gap-x-12 gap-y-6 lg:grid-cols-[minmax(0,1fr)_15rem]">
-          <Prose className="instrument-prose">
-            <div id="essay-content" className="instrument-flow">
-              {body}
-            </div>
-          </Prose>
-          <LazyInstrumentRail headings={headings} />
-        </div>
-        <LazyDossierDialog slug={manifest.slug} />
+        <LazyAuditProvider
+          marks={annotations?.marks ?? []}
+          notes={annotations?.notes ?? []}
+          noteOrder={noteOrder}
+          stats={stats ?? []}
+          forecasts={forecasts ?? []}
+          charts={charts ?? []}
+        >
+          <LazyUrlStateSync ledger={forClient} />
+          <div className="grid gap-x-12 gap-y-6 lg:grid-cols-[minmax(0,1fr)_15rem]">
+            <Prose className="instrument-prose">
+              <div id="essay-content" className="instrument-flow">
+                {body}
+              </div>
+            </Prose>
+            <LazyInstrumentRail headings={headings} />
+          </div>
+          {ledger && <LazyDossierDialog slug={manifest.slug} />}
+        </LazyAuditProvider>
       </LazyLedgerProvider>
     </div>
   )

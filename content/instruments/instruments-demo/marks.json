@@ -1,0 +1,63 @@
+{
+  "marks": [
+    {
+      "id": "killed-headline-stat",
+      "kind": "killed",
+      "anchor": "what-the-bench-measures",
+      "text": "could not reconstruct it from the tables",
+      "note": "The report's own tables give a decline of 27 percent over the same period. Neither figure is wrong on its face; the report just does not say which one it is quoting."
+    },
+    {
+      "id": "his-read-not-knowing",
+      "kind": "his-read",
+      "anchor": "what-the-bench-measures",
+      "text": "which I believe but cannot show"
+    },
+    {
+      "id": "counter-two-lines",
+      "kind": "counter-evidence",
+      "anchor": "where-the-argument-thins-out",
+      "text": "the single strongest piece of evidence"
+    },
+    {
+      "id": "refused-complaint-records",
+      "kind": "refused",
+      "anchor": "where-the-argument-thins-out",
+      "text": "I have not read them and will not describe what I was told they contain",
+      "note": "The records were offered by someone with no authority to release them. Reading them would have made every later paragraph unpublishable, and describing them second-hand would have been worse."
+    }
+  ],
+  "notes": [
+    {
+      "id": "note-farebox",
+      "anchor": "what-the-bench-measures",
+      "text": "the farebox data it does not publish",
+      "label": "Unpublished series",
+      "body": "The farebox series is released to the board quarterly and to nobody else. The figures used here come from three board packets that were posted in error and later removed.",
+      "sources": [{ "title": "Board packet archive (placeholder)", "url": "https://example.com/board-packets" }]
+    },
+    {
+      "id": "note-response-rate",
+      "anchor": "where-the-argument-thins-out",
+      "text": "response rate low enough",
+      "label": "Response rate",
+      "body": "Eleven percent, against a target of forty. The authority's own methods appendix calls a result at that rate indicative only."
+    },
+    {
+      "id": "note-weighting",
+      "anchor": "where-the-argument-thins-out",
+      "text": "declined to weight it",
+      "label": "Weighting",
+      "body": "Weighting an eleven percent sample to the ridership frame would have implied a precision the sample cannot carry. Declining to weight it was the right call and it is why the survey cannot bear the argument built on it."
+    },
+    {
+      "id": "note-no-effect",
+      "anchor": "where-the-argument-thins-out",
+      "text": "closures had almost no effect at all",
+      "label": "The null version",
+      "body": "On this reading the decline is a fare and frequency story that began years before the closures and simply continued through them.",
+      "sources": [{ "title": "Service change log (placeholder)", "url": "https://example.com/service-changes" }]
+    }
+  ],
+  "scopes": []
+}

@@ -1,12 +1,12 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { useLedger } from '@/components/instruments/LedgerProvider'
+import { useOptionalLedger } from '@/components/instruments/LedgerProvider'
 import { Spectrum } from '@/components/instruments/Spectrum'
 import { INSTRUMENT_SENTINEL } from '@/components/instruments/sentinel'
 import { clearFilters, toggleSection, useLedgerStore } from '@/components/instruments/ledger-store'
 import { isFiltered, matchesFilters } from '@/components/instruments/use-filtered-rows'
-import { formatClock, sectionAnchor } from '@/components/instruments/ledger-model'
+import { formatClock, sectionAnchor, type LedgerModel } from '@/components/instruments/ledger-model'
 
 /** Headings the rail tracks: the article's own, then every ledger section. */
 function useReadingPosition(ids: readonly string[]) {
@@ -31,8 +31,7 @@ function useReadingPosition(ids: readonly string[]) {
   return active
 }
 
-function StateSummary() {
-  const { model } = useLedger()
+function StateSummary({ model }: { model: LedgerModel }) {
   const filters = useLedgerStore((state) => state.filters)
   const visible = useMemo(
     () => model.rows.filter((row) => matchesFilters(row, filters)).length,
@@ -74,18 +73,18 @@ function secondsOf(timestamp: string): number {
  * standing, and how each section's verdicts fall. Below 1024px it collapses to a sticky strip.
  */
 export default function InstrumentRail({ headings }: { headings: { id: string; text: string }[] }) {
-  const { model } = useLedger()
+  const { model } = useOptionalLedger()
   const filters = useLedgerStore((state) => state.filters)
   const sectionIds = useMemo(
-    () => model.sections.map((section) => sectionAnchor(section.id)),
-    [model.sections],
+    () => (model ? model.sections.map((section) => sectionAnchor(section.id)) : []),
+    [model],
   )
   const ids = useMemo(
     () => [...headings.map((heading) => heading.id), ...sectionIds],
     [headings, sectionIds],
   )
   const active = useReadingPosition(ids)
-  const activeSection = model.sections.find((section) => sectionAnchor(section.id) === active)
+  const activeSection = model?.sections.find((section) => sectionAnchor(section.id) === active)
 
   return (
     <>
@@ -96,11 +95,14 @@ export default function InstrumentRail({ headings }: { headings: { id: string; t
         <p className="truncate font-mono text-[11px] tracking-[0.12em] text-text-3 uppercase">
           {activeSection
             ? `${activeSection.id} · ${activeSection.title}`
-            : (headings.find((heading) => heading.id === active)?.text ?? 'The claims ledger')}
+            : (headings.find((heading) => heading.id === active)?.text ??
+              (model ? 'The claims ledger' : 'The piece'))}
         </p>
-        <div className="mt-1">
-          <StateSummary />
-        </div>
+        {model && (
+          <div className="mt-1">
+            <StateSummary model={model} />
+          </div>
+        )}
       </div>
 
       <nav
@@ -110,9 +112,11 @@ export default function InstrumentRail({ headings }: { headings: { id: string; t
       >
         <div className="tg-scroll sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto pb-8">
           <p className="tg-instrument-label">Where you are</p>
-          <div className="mt-2 border-b border-border-1 pb-3">
-            <StateSummary />
-          </div>
+          {model && (
+            <div className="mt-2 border-b border-border-1 pb-3">
+              <StateSummary model={model} />
+            </div>
+          )}
 
           {headings.length > 0 && (
             <ul className="mt-4 space-y-2">
@@ -133,47 +137,51 @@ export default function InstrumentRail({ headings }: { headings: { id: string; t
             </ul>
           )}
 
-          <p className="tg-instrument-label mt-6">Sections</p>
-          <ul className="mt-2 space-y-2">
-            {model.sections.map((section) => {
-              const anchor = sectionAnchor(section.id)
-              const on = filters.sections.includes(section.id)
-              return (
-                <li key={section.id} className="grid grid-cols-[1.75rem_1fr] items-start gap-2">
-                  <button
-                    type="button"
-                    aria-pressed={on}
-                    aria-label={`Show only section ${section.id}`}
-                    title={`Filter the ledger to section ${section.id}`}
-                    onClick={() => toggleSection(section.id)}
-                    className="flex size-6 items-center justify-center rounded-xs border font-mono text-xs"
-                    style={{
-                      color: on ? 'var(--instrument-accent)' : 'var(--color-text-3)',
-                      borderColor: on ? 'var(--instrument-accent)' : 'var(--color-border-1)',
-                    }}
-                  >
-                    {section.id}
-                  </button>
-                  <a
-                    href={`#${anchor}`}
-                    className="block text-xs leading-snug"
-                    style={{
-                      color: active === anchor ? 'var(--color-text-1)' : 'var(--color-text-3)',
-                    }}
-                  >
-                    {section.title}
-                    <span className="mt-1 block">
-                      <Spectrum
-                        counts={section.counts}
-                        mini
-                        label={`Full verdict mix for section ${section.id}, before any filter`}
-                      />
-                    </span>
-                  </a>
-                </li>
-              )
-            })}
-          </ul>
+          {model && (
+            <>
+              <p className="tg-instrument-label mt-6">Sections</p>
+              <ul className="mt-2 space-y-2">
+                {model.sections.map((section) => {
+                  const anchor = sectionAnchor(section.id)
+                  const on = filters.sections.includes(section.id)
+                  return (
+                    <li key={section.id} className="grid grid-cols-[1.75rem_1fr] items-start gap-2">
+                      <button
+                        type="button"
+                        aria-pressed={on}
+                        aria-label={`Show only section ${section.id}`}
+                        title={`Filter the ledger to section ${section.id}`}
+                        onClick={() => toggleSection(section.id)}
+                        className="flex size-6 items-center justify-center rounded-xs border font-mono text-xs"
+                        style={{
+                          color: on ? 'var(--instrument-accent)' : 'var(--color-text-3)',
+                          borderColor: on ? 'var(--instrument-accent)' : 'var(--color-border-1)',
+                        }}
+                      >
+                        {section.id}
+                      </button>
+                      <a
+                        href={`#${anchor}`}
+                        className="block text-xs leading-snug"
+                        style={{
+                          color: active === anchor ? 'var(--color-text-1)' : 'var(--color-text-3)',
+                        }}
+                      >
+                        {section.title}
+                        <span className="mt-1 block">
+                          <Spectrum
+                            counts={section.counts}
+                            mini
+                            label={`Full verdict mix for section ${section.id}, before any filter`}
+                          />
+                        </span>
+                      </a>
+                    </li>
+                  )
+                })}
+              </ul>
+            </>
+          )}
         </div>
       </nav>
     </>

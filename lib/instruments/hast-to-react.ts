@@ -21,6 +21,15 @@ export const INSTRUMENT_TAGS = [
   'instrument-ledger',
   'instrument-notes',
   'instrument-scope',
+  'instrument-chart',
+  'instrument-audit',
+  /**
+   * The one tag no author writes: the mark compiler emits it around an annotated span, and
+   * it is listed here so the sanitize schema of the two pipelines still differs by exactly
+   * this set — the wrap is produced after sanitization, but a dossier body compiled on the
+   * client goes through the same schema and must not be able to smuggle one in.
+   */
+  'instrument-note',
 ] as const
 
 export type InstrumentTag = (typeof INSTRUMENT_TAGS)[number]
