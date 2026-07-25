@@ -6,8 +6,14 @@ import {
   instrumentStatesEqual,
   parseInstrumentState,
   serializeInstrumentState,
+  vocabularyFromLedger,
   type InstrumentUrlState,
 } from '@/lib/instruments/url-state'
+import { getClaimsLedger } from '@/lib/instruments/manifest'
+
+const ledger = getClaimsLedger('ufo-claims-ledger')
+assert.ok(ledger, 'ufo-claims-ledger has a claims ledger')
+const vocabulary = vocabularyFromLedger(ledger)
 
 function parse(search: string): InstrumentUrlState {
   return parseInstrumentState(new URLSearchParams(search))
@@ -107,4 +113,37 @@ test('parsing is total — no input throws', () => {
     const state = parse(search)
     assert.deepEqual(parse(serializeInstrumentState(state)), state, `stable for ${search}`)
   }
+})
+
+test('the ledger vocabulary is its own sections, claims, and span', () => {
+  assert.equal(vocabulary.sections.has('A'), true)
+  assert.equal(vocabulary.sections.has('D'), false)
+  assert.equal(vocabulary.claims.has('C144'), true)
+  assert.equal(vocabulary.claims.has('C145'), false, 'C145 is unassigned')
+  assert.equal(vocabulary.claims.size, 434)
+  assert.ok(vocabulary.duration > 0)
+})
+
+test('ids the piece does not contain are dropped when a vocabulary is given', () => {
+  const parsed = parseInstrumentState(new URLSearchParams('?s=A,D,Z&claim=C145'), vocabulary)
+  assert.deepEqual(parsed.sections, ['A'])
+  assert.equal(parsed.claim, null)
+
+  assert.equal(parseInstrumentState(new URLSearchParams('?claim=C144'), vocabulary).claim, 'C144')
+  assert.equal(parseInstrumentState(new URLSearchParams('?claim=C999'), vocabulary).claim, null)
+})
+
+test('minute and second components are bounded, and a range must fit the episode', () => {
+  assert.equal(parse('?range=0:99:99-1:00:00').range, null)
+  assert.equal(parse('?range=0:10:60-0:20:00').range, null)
+  assert.deepEqual(parse('?range=0:10:59-0:20:00').range, ['0:10:59', '0:20:00'])
+
+  assert.equal(
+    parseInstrumentState(new URLSearchParams('?range=0:00:00-99:00:00'), vocabulary).range,
+    null,
+  )
+  assert.deepEqual(
+    parseInstrumentState(new URLSearchParams('?range=0:00:00-0:00:10'), vocabulary).range,
+    ['0:00:00', '0:00:10'],
+  )
 })

@@ -1,4 +1,9 @@
-import { verdictSchema, type Verdict } from '@/lib/instruments/types'
+import {
+  TIMESTAMP_PATTERN,
+  verdictSchema,
+  type ClaimsLedger,
+  type Verdict,
+} from '@/lib/instruments/types'
 
 export interface InstrumentUrlState {
   verdicts: Verdict[]
@@ -28,10 +33,33 @@ export const DEFAULT_INSTRUMENT_STATE: InstrumentUrlState = {
   audit: false,
 }
 
-const SECTION = /^[A-Z]$/
-const CLAIM_ID = /^C\d{3}$/
-const TIMESTAMP = /^\d+:\d{2}:\d{2}$/
 const MAX_QUERY = 120
+
+/**
+ * What the piece actually contains. Shape validation alone lets a URL name section `Z` or
+ * claim `C145` — ids that parse but do not exist — so every id-bearing parameter is
+ * checked against the piece's own data.
+ */
+export interface InstrumentVocabulary {
+  sections: ReadonlySet<string>
+  claims: ReadonlySet<string>
+  /** Inclusive upper bound of the episode, in seconds. */
+  duration: number
+}
+
+function toSeconds(timestamp: string): number {
+  return timestamp.split(':').reduce((total, part) => total * 60 + Number(part), 0)
+}
+
+/** The vocabulary a claims ledger defines: its declared sections, its claim ids, its span. */
+export function vocabularyFromLedger(ledger: ClaimsLedger): InstrumentVocabulary {
+  const stamps = ledger.claims.flatMap((claim) => claim.timestamps.map(toSeconds))
+  return {
+    sections: new Set(ledger.sections.map((section) => section.id)),
+    claims: new Set(ledger.claims.map((claim) => claim.id)),
+    duration: Math.max(0, ...stamps),
+  }
+}
 
 interface ReadableParams {
   get(name: string): string | null
@@ -47,22 +75,33 @@ function list(params: ReadableParams, name: string, keep: (value: string) => boo
   return [...new Set(values)]
 }
 
-function seconds(timestamp: string): number {
-  return timestamp.split(':').reduce((total, part) => total * 60 + Number(part), 0)
-}
-
-function parseRange(raw: string | null): [string, string] | null {
+function parseRange(
+  raw: string | null,
+  vocabulary?: InstrumentVocabulary,
+): [string, string] | null {
   if (raw === null) return null
   const [from, to, ...rest] = raw.split('-')
   if (from === undefined || to === undefined || rest.length > 0) return null
-  if (!TIMESTAMP.test(from) || !TIMESTAMP.test(to)) return null
-  return seconds(from) <= seconds(to) ? [from, to] : null
+  if (!TIMESTAMP_PATTERN.test(from) || !TIMESTAMP_PATTERN.test(to)) return null
+  if (toSeconds(from) > toSeconds(to)) return null
+  if (vocabulary && toSeconds(to) > vocabulary.duration) return null
+  return [from, to]
 }
 
-/** Reads state out of a query string. Anything malformed is dropped, never thrown on. */
-export function parseInstrumentState(params: ReadableParams): InstrumentUrlState {
+/**
+ * Reads state out of a query string. Anything malformed is dropped, never thrown on.
+ * Passing the piece's vocabulary additionally drops ids the piece does not contain.
+ */
+export function parseInstrumentState(
+  params: ReadableParams,
+  vocabulary?: InstrumentVocabulary,
+): InstrumentUrlState {
   const claim = params.get(PARAMS.claim)
   const query = params.get(PARAMS.query) ?? ''
+  const knownSection = (value: string) =>
+    vocabulary ? vocabulary.sections.has(value) : /^[A-Z]$/.test(value)
+  const knownClaim = (value: string) =>
+    vocabulary ? vocabulary.claims.has(value) : /^C\d{3}$/.test(value)
 
   return {
     verdicts: list(
@@ -70,9 +109,9 @@ export function parseInstrumentState(params: ReadableParams): InstrumentUrlState
       PARAMS.verdicts,
       (value) => verdictSchema.safeParse(value).success,
     ) as Verdict[],
-    sections: list(params, PARAMS.sections, (value) => SECTION.test(value)),
-    claim: claim !== null && CLAIM_ID.test(claim) ? claim : null,
-    range: parseRange(params.get(PARAMS.range)),
+    sections: list(params, PARAMS.sections, knownSection),
+    claim: claim !== null && knownClaim(claim) ? claim : null,
+    range: parseRange(params.get(PARAMS.range), vocabulary),
     query: query.length <= MAX_QUERY ? query : '',
     audit: params.get(PARAMS.audit) === '1',
   }

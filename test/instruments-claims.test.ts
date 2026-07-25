@@ -3,8 +3,19 @@ import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import test from 'node:test'
-import { getClaimsLedger, getInstrumentManifest, isInstrumented } from '@/lib/instruments/manifest'
-import { claimsLedgerSchema, countVerdicts, VERDICTS } from '@/lib/instruments/types'
+import {
+  dossierToHast,
+  getClaimsLedger,
+  getInstrumentManifest,
+  isInstrumented,
+} from '@/lib/instruments/manifest'
+import {
+  claimsLedgerSchema,
+  countVerdicts,
+  markSchema,
+  sourceSchema,
+  VERDICTS,
+} from '@/lib/instruments/types'
 
 const SLUG = 'ufo-claims-ledger'
 const DIR = join(process.cwd(), 'content/instruments', SLUG)
@@ -176,4 +187,53 @@ test('the schema rejects a worked claim with no verdict', () => {
     ),
   })
   assert.equal(result.success, false)
+})
+
+test('the schema rejects an unassigned id outside the canonical range', () => {
+  const result = claimsLedgerSchema.safeParse({
+    ...ledger,
+    canonicalIds: { ...ledger.canonicalIds, unassigned: ['C999'] },
+  })
+  assert.equal(result.success, false)
+})
+
+test('the schema rejects a canonical id that is neither claimed nor unassigned', () => {
+  const result = claimsLedgerSchema.safeParse({
+    ...ledger,
+    canonicalIds: { ...ledger.canonicalIds, unassigned: ['C144'] },
+    claims: ledger.claims.filter((claim) => claim.id !== 'C144'),
+  })
+  assert.equal(result.success, false)
+})
+
+test('only http and https links pass the schemas', () => {
+  const source = { title: 'A filing', url: 'https://example.com/filing' }
+  assert.equal(sourceSchema.safeParse(source).success, true)
+  for (const url of ['javascript:alert(1)', 'data:text/html,<script>', 'ftp://example.com']) {
+    assert.equal(sourceSchema.safeParse({ ...source, url }).success, false, url)
+  }
+
+  assert.equal(
+    claimsLedgerSchema.safeParse({
+      ...ledger,
+      source: { ...ledger.source, url: 'javascript:alert(1)' },
+    }).success,
+    false,
+  )
+})
+
+test('mark ids are slugs', () => {
+  const mark = { id: 'moon-photos-1', kind: 'killed', anchor: null, text: 'a passage' }
+  assert.equal(markSchema.safeParse(mark).success, true)
+  for (const id of ['Moon Photos', 'moon_photos', '-leading', 'trailing-']) {
+    assert.equal(markSchema.safeParse({ ...mark, id }).success, false, id)
+  }
+})
+
+test('a dossier renders through the sanitized pipeline, never as raw markdown', async () => {
+  const tree = await dossierToHast(SLUG, 'tehran')
+  assert.equal(tree.type, 'root')
+  assert.ok(tree.children.length > 0)
+
+  await assert.rejects(async () => dossierToHast(SLUG, 'not-a-dossier'))
 })

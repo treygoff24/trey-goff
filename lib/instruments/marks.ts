@@ -37,13 +37,78 @@ export class MarkResolutionError extends Error {
   }
 }
 
-function collectTextSlots(tree: Root): TextSlot[] {
-  const slots: TextSlot[] = []
-  let offset = 0
+/**
+ * Elements that end a run of prose. Text in two different blocks is never contiguous for
+ * a reader, so the flat string keeps them apart with `BLOCK_BOUNDARY` — otherwise a mark
+ * could "uniquely" match a substring that only exists because two paragraphs were joined.
+ */
+const BLOCK_TAGS = new Set([
+  'address',
+  'article',
+  'aside',
+  'blockquote',
+  'dd',
+  'div',
+  'dl',
+  'dt',
+  'fieldset',
+  'figcaption',
+  'figure',
+  'footer',
+  'form',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'header',
+  'hr',
+  'li',
+  'main',
+  'nav',
+  'ol',
+  'p',
+  'pre',
+  'section',
+  'table',
+  'tbody',
+  'td',
+  'tfoot',
+  'th',
+  'thead',
+  'tr',
+  'ul',
+])
 
-  const walk = (parent: Parent) => {
+/**
+ * Unmatchable by construction: mark text is authored prose, and `resolve` rejects any
+ * mark that contains this character outright.
+ */
+export const BLOCK_BOUNDARY = '\u0000'
+
+interface FlatText {
+  slots: TextSlot[]
+  flat: string
+  offsets: Map<Text, number>
+}
+
+function collectTextSlots(tree: Root): FlatText {
+  const slots: TextSlot[] = []
+  const offsets = new Map<Text, number>()
+  const chunks: string[] = []
+  let offset = 0
+  let lastBlock: Parent | null = null
+
+  const walk = (parent: Parent, block: Parent) => {
     for (const [index, child] of parent.children.entries()) {
       if (child.type === 'text') {
+        if (lastBlock !== null && lastBlock !== block) {
+          chunks.push(BLOCK_BOUNDARY)
+          offset += BLOCK_BOUNDARY.length
+        }
+        lastBlock = block
+
         slots.push({
           node: child,
           parent,
@@ -51,35 +116,43 @@ function collectTextSlots(tree: Root): TextSlot[] {
           start: offset,
           end: offset + child.value.length,
         })
+        offsets.set(child, offset)
+        chunks.push(child.value)
         offset += child.value.length
         continue
       }
-      if ('children' in child) walk(child)
+      if ('children' in child) {
+        const nested =
+          child.type === 'element' && BLOCK_TAGS.has(child.tagName) ? (child as Parent) : block
+        walk(child, nested)
+      }
     }
   }
 
-  walk(tree)
-  return slots
+  walk(tree, tree)
+  return { slots, flat: chunks.join(''), offsets }
 }
 
-function headingRegions(tree: Root, slots: TextSlot[], total: number): Map<string, Region> {
-  const slotStarts = new Map<Parent, number>()
-  for (const slot of slots) {
-    if (!slotStarts.has(slot.parent)) slotStarts.set(slot.parent, slot.start)
-  }
-
+function headingRegions(
+  tree: Root,
+  offsets: Map<Text, number>,
+  total: number,
+): Map<string, Region> {
   const headings: { id: string; depth: number; start: number }[] = []
 
+  /**
+   * The lowest offset of any text anywhere under the heading — not the first direct text
+   * child. `## *First* rest` starts at `First`, not at ` rest`.
+   */
   const firstOffsetIn = (node: RootContent | Root): number | null => {
-    if (node.type === 'text') return null
+    if (node.type === 'text') return offsets.get(node) ?? null
     if (!('children' in node)) return null
-    const own = slotStarts.get(node)
-    if (own !== undefined) return own
+    let lowest: number | null = null
     for (const child of node.children) {
       const nested = firstOffsetIn(child)
-      if (nested !== null) return nested
+      if (nested !== null && (lowest === null || nested < lowest)) lowest = nested
     }
-    return null
+    return lowest
   }
 
   const walk = (parent: Parent) => {
@@ -112,6 +185,10 @@ function resolve(marks: readonly Mark[], flat: string, regions: Map<string, Regi
   for (const [order, mark] of marks.entries()) {
     if (ids.has(mark.id)) throw new MarkResolutionError(mark, 'duplicates an earlier mark id')
     ids.add(mark.id)
+
+    if (mark.text.includes(BLOCK_BOUNDARY)) {
+      throw new MarkResolutionError(mark, 'contains the block-boundary sentinel')
+    }
 
     let region: Region
     if (mark.anchor === null) {
@@ -208,9 +285,8 @@ function rebuildSlot(slot: TextSlot, covering: ResolvedMark[]): ElementContent[]
 export function applyMarks(tree: Root, marks: readonly Mark[]): Root {
   if (marks.length === 0) return tree
 
-  const slots = collectTextSlots(tree)
-  const flat = slots.map((slot) => slot.node.value).join('')
-  const resolved = resolve(marks, flat, headingRegions(tree, slots, flat.length))
+  const { slots, flat, offsets } = collectTextSlots(tree)
+  const resolved = resolve(marks, flat, headingRegions(tree, offsets, flat.length))
 
   for (const slot of [...slots].reverse()) {
     const covering = resolved.filter((mark) => mark.start < slot.end && mark.end > slot.start)

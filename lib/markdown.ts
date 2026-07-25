@@ -1,12 +1,5 @@
-import { unified } from 'unified'
-import remarkParse from 'remark-parse'
-import remarkGfm from 'remark-gfm'
-import { remarkWikilinks } from '@/lib/remark-wikilinks'
-import remarkRehype from 'remark-rehype'
-import rehypeRaw from 'rehype-raw'
-import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
-import rehypeSlug from 'rehype-slug'
 import rehypeStringify from 'rehype-stringify'
+import { createMarkdownProcessor } from '@/lib/markdown-pipeline'
 
 /**
  * Converts markdown to HTML using unified/remark/rehype pipeline.
@@ -20,24 +13,7 @@ import rehypeStringify from 'rehype-stringify'
  * Used by notes page and essay pages to render content-collections raw markdown.
  */
 export async function markdownToHtml(markdown: string): Promise<string> {
-  const sanitizeSchema = {
-    ...defaultSchema,
-    attributes: {
-      ...defaultSchema.attributes,
-      '*': [...(defaultSchema.attributes?.['*'] || [])],
-    },
-  }
-
-  const file = await unified()
-    .use(remarkParse)
-    .use(remarkGfm)
-    .use(remarkWikilinks)
-    .use(remarkRehype, { allowDangerousHtml: true })
-    .use(rehypeRaw)
-    .use(rehypeSanitize, sanitizeSchema)
-    .use(rehypeSlug)
-    .use(rehypeStringify)
-    .process(markdown)
+  const file = await createMarkdownProcessor().use(rehypeStringify).process(markdown)
 
   return String(file)
 }

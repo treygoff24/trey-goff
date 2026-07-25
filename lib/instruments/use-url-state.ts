@@ -6,6 +6,7 @@ import {
   instrumentStateUrl,
   parseInstrumentState,
   type InstrumentUrlState,
+  type InstrumentVocabulary,
 } from '@/lib/instruments/url-state'
 
 /**
@@ -13,21 +14,23 @@ import {
  * never touches the server `searchParams` prop, which would opt the route out of static
  * generation. Callers must render this under a `<Suspense>` boundary.
  */
-export function useInstrumentUrlState(): [InstrumentUrlState, (next: InstrumentUrlState) => void] {
+export function useInstrumentUrlState(
+  vocabulary?: InstrumentVocabulary,
+): [InstrumentUrlState, (next: InstrumentUrlState) => void] {
   const searchParams = useSearchParams()
-  const [state, setState] = useState(() => parseInstrumentState(searchParams))
+  const [state, setState] = useState(() => parseInstrumentState(searchParams, vocabulary))
 
   useEffect(() => {
-    setState(parseInstrumentState(searchParams))
-  }, [searchParams])
+    setState(parseInstrumentState(searchParams, vocabulary))
+  }, [searchParams, vocabulary])
 
   useEffect(() => {
     const onPopState = () => {
-      setState(parseInstrumentState(new URLSearchParams(window.location.search)))
+      setState(parseInstrumentState(new URLSearchParams(window.location.search), vocabulary))
     }
     window.addEventListener('popstate', onPopState)
     return () => window.removeEventListener('popstate', onPopState)
-  }, [])
+  }, [vocabulary])
 
   const commit = useCallback((next: InstrumentUrlState) => {
     setState(next)

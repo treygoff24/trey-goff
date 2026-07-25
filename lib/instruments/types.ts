@@ -15,7 +15,12 @@ export const claimStatusSchema = z.enum(['worked', 'unverified'])
 export const claimTypeSchema = z.enum(['A', 'B', 'C', 'A/B'])
 
 const claimIdSchema = z.string().regex(/^C\d{3}$/)
-const timestampSchema = z.string().regex(/^\d+:\d{2}:\d{2}$/)
+/** `h:mm:ss` with real minute and second components — `9:99:99` is not a timestamp. */
+export const TIMESTAMP_PATTERN = /^\d+:[0-5]\d:[0-5]\d$/
+const timestampSchema = z.string().regex(TIMESTAMP_PATTERN)
+
+/** Links reach the reader as `href`; `javascript:` and `data:` never do. */
+const httpUrlSchema = z.url({ protocol: /^https?$/ })
 
 export const claimSectionSchema = z.object({
   id: z.string().regex(/^[A-Z]$/),
@@ -50,7 +55,7 @@ export const claimsLedgerSchema = z
     source: z.object({
       title: z.string().min(1),
       episode: z.string().min(1),
-      url: z.string().url(),
+      url: httpUrlSchema,
       date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
     }),
     canonicalIds: z.object({
@@ -77,6 +82,12 @@ export const claimsLedgerSchema = z
     const unassignedIds = new Set(unassigned)
     if (unassignedIds.size !== unassigned.length) {
       fail('unassigned ids contain duplicates', ['canonicalIds', 'unassigned'])
+    }
+    for (const id of unassignedIds) {
+      const number = Number(id.slice(1))
+      if (number < firstNumber || number > lastNumber) {
+        fail(`unassigned id ${id} falls outside ${first}–${last}`, ['canonicalIds', 'unassigned'])
+      }
     }
     if (ledger.claims.length !== total - unassignedIds.size) {
       fail(
@@ -128,6 +139,15 @@ export const claimsLedgerSchema = z
         ])
       }
     }
+
+    for (let number = firstNumber; number <= lastNumber; number += 1) {
+      const id = `C${String(number).padStart(3, '0')}`
+      if (!seen.has(id) && !unassignedIds.has(id)) {
+        fail(`${id} is in the canonical range but neither claimed nor recorded unassigned`, [
+          'claims',
+        ])
+      }
+    }
   })
 
 /**
@@ -137,7 +157,7 @@ export const claimsLedgerSchema = z
 export const markKindSchema = z.enum(['killed', 'his-read', 'counter-evidence', 'refused'])
 
 export const markSchema = z.object({
-  id: z.string().min(1),
+  id: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   kind: markKindSchema,
   /** Heading id the substring lives under; null searches the whole document. */
   anchor: z.string().min(1).nullable(),
@@ -156,7 +176,7 @@ export const scopeSchema = z.object({
 
 export const sourceSchema = z.object({
   title: z.string().min(1),
-  url: z.string().url(),
+  url: httpUrlSchema,
   quote: z.string().min(1).optional(),
   retrieved: z
     .string()

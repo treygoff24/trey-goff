@@ -41,6 +41,15 @@ test('the instrument HAST stringifies byte-identically to markdownToHtml', async
   }
 })
 
+test('instrument tags do not survive the ordinary essay path', async () => {
+  const markdown = '<instrument-stat data-id="gdp"></instrument-stat>\n\nafter'
+  const ordinary = await markdownToHtml(markdown)
+  assert.doesNotMatch(ordinary, /instrument-stat/)
+  assert.match(ordinary, /after/)
+
+  assert.match(stringify(await markdownToHast(markdown)), /<instrument-stat data-id="gdp">/)
+})
+
 test('instrument tags survive sanitization; unknown tags still do not', async () => {
   const html = stringify(
     await markdownToHast('<instrument-stat data-id="gdp" data-value="4.1"></instrument-stat>'),
@@ -193,4 +202,34 @@ test('marks leave the surrounding tree and its text content untouched', async ()
 test('no marks means no tree changes at all', async () => {
   const markdown = '# Title\n\nbody text'
   assert.equal(await render(markdown, []), await markdownToHtml(markdown))
+})
+
+test('a heading region starts at its first nested text, not its first direct text', async () => {
+  const markdown = '## *First* rest\n\nalpha\n\n## Second\n\nbeta'
+  const html = await render(markdown, [mark({ id: 'm1', anchor: 'first-rest', text: 'First' })])
+  assert.match(html, /data-mark-id="m1"/)
+  assert.match(html, /<h2 id="first-rest"><em><mark[^>]*>First<\/mark><\/em>/)
+})
+
+test('a substring spanning two blocks does not match', async () => {
+  const markdown = 'A paragraph ending in Hello\n\nWorld starts the next one.'
+  await assert.rejects(
+    async () => render(markdown, [mark({ id: 'm1', text: 'HelloWorld' })]),
+    /does not occur in the document/,
+  )
+  await assert.rejects(
+    async () => render('- Hello\n- World', [mark({ id: 'm1', text: 'HelloWorld' })]),
+    /does not occur in the document/,
+  )
+
+  const html = await render(markdown, [mark({ id: 'm1', text: 'ending in Hello' })])
+  assert.match(html, /data-mark-id="m1"/)
+})
+
+test('a mark targeting sanitize-stripped content fails the build', async () => {
+  await assert.rejects(
+    async () =>
+      render('<script>alert(1)</script>\n\nvisible text', [mark({ id: 'm1', text: 'alert(1)' })]),
+    /does not occur in the document/,
+  )
 })

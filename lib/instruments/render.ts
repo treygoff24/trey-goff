@@ -2,14 +2,7 @@ import type { ReactElement } from 'react'
 import { Fragment, jsx, jsxs } from 'react/jsx-runtime'
 import type { Root } from 'hast'
 import { toJsxRuntime, type Components } from 'hast-util-to-jsx-runtime'
-import { unified } from 'unified'
-import remarkParse from 'remark-parse'
-import remarkGfm from 'remark-gfm'
-import { remarkWikilinks } from '@/lib/remark-wikilinks'
-import remarkRehype from 'remark-rehype'
-import rehypeRaw from 'rehype-raw'
-import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
-import rehypeSlug from 'rehype-slug'
+import { createMarkdownProcessor } from '@/lib/markdown-pipeline'
 import { applyMarks } from '@/lib/instruments/marks'
 import type { Mark } from '@/lib/instruments/types'
 
@@ -28,36 +21,15 @@ export const INSTRUMENT_TAGS = [
 
 export type InstrumentTag = (typeof INSTRUMENT_TAGS)[number]
 
-const sanitizeSchema = {
-  ...defaultSchema,
-  tagNames: [...(defaultSchema.tagNames ?? []), ...INSTRUMENT_TAGS],
-  attributes: {
-    ...defaultSchema.attributes,
-    '*': [...(defaultSchema.attributes?.['*'] || [])],
-    // `id` is deliberately absent: sanitization clobbers it to `user-content-*`, so
-    // instrument nodes identify themselves through `data-*` instead.
-    ...Object.fromEntries(INSTRUMENT_TAGS.map((tag) => [tag, ['data*']])),
-  },
-}
-
-function processor() {
-  return unified()
-    .use(remarkParse)
-    .use(remarkGfm)
-    .use(remarkWikilinks)
-    .use(remarkRehype, { allowDangerousHtml: true })
-    .use(rehypeRaw)
-    .use(rehypeSanitize, sanitizeSchema)
-    .use(rehypeSlug)
-}
-
 /**
- * The same remark/rehype chain `lib/markdown.ts` runs, stopped one step short of
- * stringification. `test/instruments-render.test.ts` holds the two paths byte-identical
- * for ordinary markdown.
+ * The same processor `lib/markdown.ts` builds, with the instrument tags as its only
+ * schema delta and stopped one step short of stringification.
+ * `test/instruments-render.test.ts` holds the two paths byte-identical for ordinary
+ * markdown, and holds the delta one-directional: instrument tags do not survive the
+ * ordinary path.
  */
 export async function markdownToHast(markdown: string): Promise<Root> {
-  const pipeline = processor()
+  const pipeline = createMarkdownProcessor({ allowedCustomTags: INSTRUMENT_TAGS })
   return (await pipeline.run(pipeline.parse(markdown))) as Root
 }
 

@@ -1,7 +1,9 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
+import type { Root } from 'hast'
 import { z } from 'zod'
 import { claimsLedgerSchema, type ClaimsLedger } from '@/lib/instruments/types'
+import { markdownToHast } from '@/lib/instruments/render'
 
 const INSTRUMENTS_DIR = join(process.cwd(), 'content/instruments')
 
@@ -114,10 +116,22 @@ export function getClaimsLedger(slug: string): ClaimsLedger | null {
   return ledger
 }
 
+export function dossierPath(slug: string, dossier: string): string {
+  return join(INSTRUMENTS_DIR, slug, 'dossiers', `${dossier}.md`)
+}
+
 export function readDossier(slug: string, dossier: string): string {
   const manifest = getInstrumentManifest(slug)
   if (!manifest?.dossiers.includes(dossier)) {
     throw new Error(`${slug} has no dossier named ${dossier}`)
   }
-  return readFileSync(join(INSTRUMENTS_DIR, slug, 'dossiers', `${dossier}.md`), 'utf8')
+  return readFileSync(dossierPath(slug, dossier), 'utf8')
+}
+
+/**
+ * Dossier markdown as a sanitized tree, ready for `hastToReact`. Consumers render this —
+ * never the raw markdown, and never through `dangerouslySetInnerHTML`.
+ */
+export async function dossierToHast(slug: string, dossier: string): Promise<Root> {
+  return markdownToHast(readDossier(slug, dossier))
 }
