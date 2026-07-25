@@ -1,7 +1,22 @@
 {
   "version": "1.0.0",
-  "generated": "2026-06-01T22:09:12.014Z",
+  "generated": "2026-07-25T18:22:55.994Z",
   "entries": [
+    {
+      "id": "ufo-claims-ledger",
+      "slug": "ufo-claims-ledger",
+      "title": "The Claims Ledger: What Survived Contact With the Record",
+      "excerpt": "Every claim made in a three-hour interview about NASA and Apollo photography, numbered, timestamped, and worked to a public verdict — laid along the interview’s own clock.",
+      "tags": [
+        "epistemics",
+        "evidence",
+        "space",
+        "method"
+      ],
+      "publishedAt": "2026-07-25",
+      "readingTime": 5,
+      "status": "published"
+    },
     {
       "id": "agent-long-term-memory",
       "slug": "agent-long-term-memory",

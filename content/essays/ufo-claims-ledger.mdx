@@ -1,0 +1,60 @@
+---
+title: 'The Claims Ledger: What Survived Contact With the Record'
+date: '2026-07-25'
+summary: 'Every claim made in a three-hour interview about NASA and Apollo photography, numbered, timestamped, and worked to a public verdict — laid along the interview’s own clock.'
+tags: ['epistemics', 'evidence', 'space', 'method']
+status: 'published'
+featured: true
+---
+
+Jesse Michels spent three hours with the physicist Maaneli Derakhshani on the question of whether NASA censored Apollo photography. That conversation makes a great many assertions. Some of them are true, several are false, and a large number are the kind of claim that sounds like evidence but turns out, on inspection, to be a story about someone who once said something.
+
+The usual response to a piece like that is a rebuttal: pick the four weakest claims, knock them down, and treat the rest as beneath notice. That is cheap, and it is also unfalsifiable in its own way — nobody can check what you chose not to address.
+
+So this is the other thing instead. Every claim in the episode is logged: 434 of them, each numbered, attributed to the person who made it, stamped with the minute it was said, and sorted into one of twenty-one subjects. Of those, 388 have been worked to a public verdict with the reasoning attached. Forty-six have not, and are marked as not yet worked rather than quietly dropped.
+
+You can read the result as a list. But the episode is a conversation, not a document, and conversations have a shape in time — they warm up, they wander, they collapse. So the ledger is laid along the interview's own clock first.
+
+<instrument-spine></instrument-spine>
+
+## How to read this
+
+The spine is a picture of the episode; the ledger below it is the record. They are wired together in both directions. Brush a stretch of the spine and the ledger narrows to the claims made in it. Click any claim's timestamp and the spine scopes to the fifteen minutes around it. The verdict chips filter, and the search box covers claim text, speaker, and the reasoning behind each verdict — so `aristarchus`, `DERAKHSHANI`, and `single-source` are all valid ways in.
+
+Whatever you end up looking at, the address bar holds it. A filtered, brushed, searched view is a link you can send someone, and it will come back the way you left it.
+
+Three of the twenty-three working files behind these verdicts are published here in full, as findings dossiers: the 1976 Tehran incident and the DSP satellites, the lunar geology anomalies, and the photo-scrubbing whistleblowers. Claims those files cover carry a link into them, and every claim id mentioned inside a dossier is a button back to the row. The other twenty working files are named on the claims they support and are deliberately not links. A dead end you can see beats a link that pretends.
+
+## The method, and what it is not
+
+Two things in this page are constructs rather than measurements, and both are stated here rather than left for you to discover.
+
+**The confidence line is invented.** The curve running through the spine is a rolling mean of verdict weight across a seven-minute window either side of each point, on these weights and no others:
+
+| Verdict | Weight |
+| --- | --- |
+| confirmed | +1 |
+| likely | +0.5 |
+| contested | 0 |
+| unsupported | −0.5 |
+| debunked | −1 |
+| unfalsifiable | *no weight* |
+| not yet worked | *no weight* |
+
+`unfalsifiable` and `not yet worked` carry no weight because neither is a judgement about the world: the first says the claim cannot be tested, the second says nobody has tried. Averaging them in would let unworked stretches of tape masquerade as neutral ones. Where a window holds fewer than six scored claims, the line breaks rather than continuing — a gap, not a guess. Nothing about this metric is standard, and a different set of weights would draw a different landscape. The weights are printed above so you can decide what you think of the ones chosen.
+
+**Two numbers in the source disagree, and the ledger picks one.** The original coverage note states per-verdict totals that differ slightly from the totals you get by counting the per-claim entries, though both sum to 388. This page counts the entries, on the reasoning that the individual verdicts are the primary record and the summary is a derived note. Where you see a count here, it came from the rows.
+
+One more artefact worth knowing about: the canonical ids run C001 through C435, which is 435 numbers for 434 claims. `C145` is an unassigned number, not a lost claim. It has been left as a hole rather than closed up, because renumbering a public ledger to make it tidy is how citations rot.
+
+## The record
+
+<instrument-ledger></instrument-ledger>
+
+## What this does and does not settle
+
+A verdict here is a judgement about a single assertion, made against the sources named in the reasoning. It is not a verdict on the episode, on either speaker, or on the question of whether anything unusual has ever appeared in a NASA photograph. Nine claims can be confirmed in a row and still be doing no work for the argument they were recruited into; a debunked claim does not retroactively convict the person who repeated it in good faith.
+
+What the ledger does settle is narrower and more useful: for any given assertion in those three hours, there is now a public statement of what it was, who made it, when, what was checked, and what was found. Disagree with any of the 388 and the reasoning is sitting right there to argue with.
+
+That is the whole point. The record is the argument.

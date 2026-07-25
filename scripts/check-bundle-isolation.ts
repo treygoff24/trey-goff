@@ -168,6 +168,90 @@ function resolveRouteArtifacts(route: string): RouteAnalysis | null {
   return { route, artifacts, chunks, forbidden }
 }
 
+/**
+ * Instrument isolation.
+ *
+ * The forbidden-package scan cannot see first-party code, so it would pass even if every
+ * essay shipped the ledger. Instead each instrument component stamps a sentinel string onto
+ * its root, and we compare two concrete built slugs of the same `/writing/[slug]` route: the
+ * instrumented one must carry the sentinel in its client chunks, an ordinary essay must not.
+ */
+const INSTRUMENT_SENTINEL = 'tg-instrument-chunk-v1'
+const INSTRUMENTS_DIR = 'content/instruments'
+const ESSAYS_DIR = 'content/essays'
+
+function instrumentedSlugs(): string[] {
+  if (!fs.existsSync(INSTRUMENTS_DIR)) return []
+  return fs
+    .readdirSync(INSTRUMENTS_DIR, { withFileTypes: true })
+    .filter(
+      (entry) =>
+        entry.isDirectory() &&
+        fs.existsSync(path.join(INSTRUMENTS_DIR, entry.name, 'manifest.json')),
+    )
+    .map((entry) => entry.name)
+    .sort()
+}
+
+function essaySlugs(): string[] {
+  if (!fs.existsSync(ESSAYS_DIR)) return []
+  return fs
+    .readdirSync(ESSAYS_DIR)
+    .filter((file) => file.endsWith('.mdx'))
+    .map((file) => file.replace(/\.mdx$/, ''))
+    .sort()
+}
+
+/** Every artifact a prerendered `/writing/<slug>` page pulls in, chunks included. */
+function essayArtifacts(slug: string): string[] {
+  const pageArtifacts = [
+    path.join(SERVER_APP_DIR, `writing/${slug}.html`),
+    path.join(SERVER_APP_DIR, `writing/${slug}.rsc`),
+  ].filter((candidate) => fs.existsSync(candidate))
+
+  const chunks = unique(pageArtifacts.flatMap((artifact) => extractChunks(readText(artifact))))
+  return unique([...pageArtifacts, ...chunks.map(staticChunkPath).filter(fs.existsSync)])
+}
+
+function carriesSentinel(slug: string): boolean {
+  return essayArtifacts(slug).some((artifact) => readText(artifact).includes(INSTRUMENT_SENTINEL))
+}
+
+interface InstrumentCheck {
+  instrumented: string | null
+  plain: string | null
+  failures: string[]
+}
+
+function verifyInstrumentIsolation(): InstrumentCheck {
+  const instrumented = instrumentedSlugs()
+  const plainSlugs = essaySlugs().filter((slug) => !instrumented.includes(slug))
+  const failures: string[] = []
+
+  // Nothing to prove until a piece is actually instrumented.
+  if (instrumented.length === 0) return { instrumented: null, plain: null, failures }
+
+  for (const slug of instrumented) {
+    const artifacts = essayArtifacts(slug)
+    if (artifacts.length === 0) {
+      failures.push(`instrumented slug ${slug} has no built page artifacts`)
+      continue
+    }
+    if (!carriesSentinel(slug)) {
+      failures.push(`instrumented slug ${slug} ships no instrument chunk`)
+    }
+  }
+
+  const plain = plainSlugs.find((slug) => essayArtifacts(slug).length > 0) ?? null
+  if (plain === null) {
+    failures.push('no ordinary essay was built to compare the instrumented slug against')
+  } else if (carriesSentinel(plain)) {
+    failures.push(`ordinary essay ${plain} loads instrument code`)
+  }
+
+  return { instrumented: instrumented[0] ?? null, plain, failures }
+}
+
 function verifyAppRoutesExist(): string[] {
   const appRoutes = readJsonRecord(path.join(NEXT_DIR, 'app-path-routes-manifest.json'))
   return PROTECTED_ROUTES.filter((route) => appRoutes[routeToAppPath(route)] !== route)
@@ -205,6 +289,7 @@ const missingArtifacts = PROTECTED_ROUTES.filter((_, index) => routeAnalyses[ind
 const analyses = routeAnalyses.filter((analysis): analysis is RouteAnalysis => analysis !== null)
 const interactiveWarning = verifyInteractiveDynamicImport()
 const machineWarning = verifyMachineDynamicImport()
+const instrumentCheck = verifyInstrumentIsolation()
 const violations = analyses.flatMap((analysis) =>
   analysis.forbidden.map((hit) => ({ route: analysis.route, ...hit })),
 )
@@ -239,7 +324,21 @@ if (machineWarning) {
   console.log('   ✓ /machine keeps MachineWorld dynamically imported')
 }
 
+console.log('\n4. Instrument isolation')
+if (instrumentCheck.instrumented === null) {
+  console.log('   – no instrumented pieces built; nothing to isolate')
+} else {
+  console.log(`   Instrumented slug: ${instrumentCheck.instrumented}`)
+  console.log(`   Compared against:  ${instrumentCheck.plain ?? '(none found)'}`)
+  if (instrumentCheck.failures.length === 0) {
+    console.log('   ✓ Instrument chunks reach the instrumented piece and no ordinary essay')
+  } else {
+    for (const failure of instrumentCheck.failures) console.log(`   ✗ ${failure}`)
+  }
+}
+
 const failures = [
+  ...instrumentCheck.failures,
   ...missingAppRoutes.map((route) => `missing app route mapping: ${route}`),
   ...missingArtifacts.map((route) => `missing route artifacts: ${route}`),
   ...violations.map((violation) => `${violation.route} imports ${violation.label}`),
@@ -252,6 +351,7 @@ console.log(`Protected routes: ${PROTECTED_ROUTES.length}`)
 console.log(`Missing app route mappings: ${missingAppRoutes.length}`)
 console.log(`Missing route artifacts: ${missingArtifacts.length}`)
 console.log(`Forbidden package violations: ${violations.length}`)
+console.log(`Instrument isolation failures: ${instrumentCheck.failures.length}`)
 console.log(`Warnings: ${(interactiveWarning ? 1 : 0) + (machineWarning ? 1 : 0)}`)
 
 if (failures.length > 0) {

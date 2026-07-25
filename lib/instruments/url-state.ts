@@ -1,12 +1,17 @@
-import {
-  TIMESTAMP_PATTERN,
-  verdictSchema,
-  type ClaimsLedger,
-  type Verdict,
-} from '@/lib/instruments/types'
+import { TIMESTAMP_PATTERN, verdictSchema, type ClaimsLedger } from '@/lib/instruments/types'
+
+/**
+ * What a verdict filter can name. The six verdicts, plus the state of the claims that carry
+ * none: `unverified` is a status in the data rather than a verdict, but a reader filtering
+ * the ledger meets it as a seventh band and must be able to share that view.
+ */
+export const LEDGER_STATE_VALUES = [...verdictSchema.options, 'unverified'] as const
+export type LedgerFilterState = (typeof LEDGER_STATE_VALUES)[number]
+
+const LEDGER_STATES: ReadonlySet<string> = new Set(LEDGER_STATE_VALUES)
 
 export interface InstrumentUrlState {
-  verdicts: Verdict[]
+  verdicts: LedgerFilterState[]
   sections: string[]
   claim: string | null
   /** Inclusive timestamp brush over the episode, as `h:mm:ss` bounds. */
@@ -104,11 +109,9 @@ export function parseInstrumentState(
     vocabulary ? vocabulary.claims.has(value) : /^C\d{3}$/.test(value)
 
   return {
-    verdicts: list(
-      params,
-      PARAMS.verdicts,
-      (value) => verdictSchema.safeParse(value).success,
-    ) as Verdict[],
+    verdicts: list(params, PARAMS.verdicts, (value) =>
+      LEDGER_STATES.has(value),
+    ) as LedgerFilterState[],
     sections: list(params, PARAMS.sections, knownSection),
     claim: claim !== null && knownClaim(claim) ? claim : null,
     range: parseRange(params.get(PARAMS.range), vocabulary),

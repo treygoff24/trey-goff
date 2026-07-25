@@ -57,6 +57,22 @@
 }
 
 :root {
+  /* Verdict palette — the data colors an instrumented piece adjudicates with. Declared
+     here rather than in `@theme` because nothing references them through a Tailwind
+     utility: Tailwind emits only the theme variables its generated utilities use, so a
+     token reached solely through `var()` has to live outside the theme block or it is
+     tree-shaken out of the stylesheet.
+
+     Stated in oklch so lightness is the contrast knob: every one of these clears 4.5:1 on
+     --color-bg-0, asserted by test/instruments-contrast.test.ts. */
+  --color-verdict-confirmed: oklch(0.84 0.13 158);
+  --color-verdict-likely: oklch(0.85 0.1 196);
+  --color-verdict-contested: oklch(0.87 0.13 92);
+  --color-verdict-unsupported: oklch(0.81 0.14 57);
+  --color-verdict-debunked: oklch(0.75 0.16 25);
+  --color-verdict-unfalsifiable: oklch(0.8 0.11 305);
+  --color-verdict-unverified: oklch(0.72 0.02 160);
+
   --font-satoshi: var(--font-body), system-ui, sans-serif;
   --font-newsreader: var(--font-display), Georgia, 'Times New Roman', serif;
   --font-mono: var(--font-label), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -894,4 +910,88 @@ html[data-konami='true'] a {
 
 .tg-scroll::-webkit-scrollbar-thumb:hover {
   background: color-mix(in oklab, var(--color-accent) 45%, transparent);
+}
+
+/* ---------------------------------------------------------------------------
+   Instrumented pieces
+
+   A piece with an instrument manifest earns one accent of its own. The manifest
+   supplies hue and chroma only; lightness is fixed here so the accent cannot be
+   authored into a contrast failure. Site green stays on the chrome — nothing in
+   this block touches anything outside `.instrument-scope`.
+   --------------------------------------------------------------------------- */
+
+.instrument-scope {
+  --instrument-accent: oklch(0.85 var(--instrument-chroma) var(--instrument-hue));
+  --instrument-accent-quiet: oklch(0.85 var(--instrument-chroma) var(--instrument-hue) / 0.18);
+  --instrument-accent-hairline: oklch(0.85 var(--instrument-chroma) var(--instrument-hue) / 0.4);
+}
+
+.instrument-scope :focus-visible {
+  outline: 1.5px solid var(--instrument-accent);
+  outline-offset: 3px;
+}
+
+/* Prose keeps its measure; instrument blocks take the full column. */
+.instrument-prose {
+  max-width: none;
+}
+
+.instrument-prose > :not(.instrument-block) {
+  max-width: 65ch;
+}
+
+.instrument-block {
+  margin-block: clamp(2rem, 4vw, 3.5rem);
+}
+
+.tg-instrument-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--instrument-accent);
+}
+
+/* The spine's transparent bucket overlay: a real listbox sitting on the drawing. */
+.tg-bucket:focus-visible {
+  outline: 1.5px solid var(--instrument-accent);
+  outline-offset: -1px;
+}
+
+/* A claim jumped to from a dossier says so for a beat. Content is never gated on
+   this — the row is fully visible before, during, and after. */
+@keyframes instrumentFlash {
+  from {
+    background-color: var(--instrument-accent-quiet);
+  }
+  to {
+    background-color: transparent;
+  }
+}
+
+.tg-claim[data-flash='true'] {
+  animation: instrumentFlash 1.6s ease-out both;
+}
+
+.tg-dossier::backdrop {
+  background: color-mix(in oklab, var(--color-bg-0) 82%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tg-claim[data-flash='true'] {
+    animation: none;
+    outline: 1.5px solid var(--instrument-accent);
+    outline-offset: 4px;
+  }
+}
+
+/* Claim ids inside a dossier are controls, not prose. */
+.tg-claim-ref {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  color: var(--instrument-accent);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
 }

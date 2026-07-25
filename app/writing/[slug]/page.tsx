@@ -7,6 +7,8 @@ import { Prose } from '@/components/content/Prose'
 import { RelatedLinks } from '@/components/content/RelatedLinks'
 import { SubscribeForm } from '@/components/newsletter/SubscribeForm'
 import { markdownToHtml } from '@/lib/markdown'
+import { getClaimsLedger, getInstrumentManifest } from '@/lib/instruments/manifest'
+import { InstrumentArticle } from '@/components/instruments/InstrumentArticle'
 import { generateArticleSchema, generateBreadcrumbSchema } from '@/lib/structured-data'
 import { getBacklinksForEssay, getOutgoingLinksForEssay } from '@/lib/backlinks'
 import { isNewsletterEnabled, siteUrl } from '@/lib/site-config'
@@ -49,7 +51,13 @@ export default async function EssayPage({ params }: PageProps) {
     notFound()
   }
 
-  const contentHtml = await markdownToHtml(essay.content)
+  // A piece with an instrument manifest renders through the instrument seam; every other
+  // essay takes the byte-identical path it always has.
+  const manifest = getInstrumentManifest(slug)
+  const ledger = manifest ? getClaimsLedger(slug) : null
+  const instrumented = manifest !== null && ledger !== null
+
+  const contentHtml = instrumented ? '' : await markdownToHtml(essay.content)
   const articleSchema = generateArticleSchema({
     title: essay.title,
     summary: essay.summary,
@@ -78,7 +86,7 @@ export default async function EssayPage({ params }: PageProps) {
           __html: serializeJsonLd(breadcrumbSchema),
         }}
       />
-      <article className="mx-auto max-w-4xl px-4 py-16">
+      <article className={`mx-auto px-4 py-16 ${instrumented ? 'max-w-6xl' : 'max-w-4xl'}`}>
         {/* Header */}
         <header className="mb-12">
           <p className="tg-eyebrow text-warm">
@@ -121,17 +129,23 @@ export default async function EssayPage({ params }: PageProps) {
           )}
         </header>
 
-        {/* Mobile TOC */}
-        <MobileTableOfContents contentSelector="#essay-content" sourceId={essay.slug} />
+        {manifest && ledger ? (
+          <InstrumentArticle markdown={essay.content} manifest={manifest} ledger={ledger} />
+        ) : (
+          <>
+            {/* Mobile TOC */}
+            <MobileTableOfContents contentSelector="#essay-content" sourceId={essay.slug} />
 
-        {/* Content with desktop TOC */}
-        <div className="grid gap-12 lg:grid-cols-[1fr_200px]">
-          <Prose>
-            <div id="essay-content" dangerouslySetInnerHTML={{ __html: contentHtml }} />
-          </Prose>
+            {/* Content with desktop TOC */}
+            <div className="grid gap-12 lg:grid-cols-[1fr_200px]">
+              <Prose>
+                <div id="essay-content" dangerouslySetInnerHTML={{ __html: contentHtml }} />
+              </Prose>
 
-          <TableOfContents contentSelector="#essay-content" sourceId={essay.slug} />
-        </div>
+              <TableOfContents contentSelector="#essay-content" sourceId={essay.slug} />
+            </div>
+          </>
+        )}
 
         {(outgoingLinks.length > 0 || backlinks.length > 0) && (
           <section className="mt-12 rounded-lg border border-border-1 bg-surface-1 p-6">
