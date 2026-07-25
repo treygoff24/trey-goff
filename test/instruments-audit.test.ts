@@ -302,10 +302,7 @@ test('the draft bench reaches none of the surfaces that publish an essay', () =>
   )
 
   const index = generateSearchIndex()
-  assert.ok(
-    !JSON.stringify(index).includes(DEMO),
-    'the search index carries no trace of the bench',
-  )
+  assert.ok(!JSON.stringify(index).includes(DEMO), 'the search index carries no trace of the bench')
 
   // Feed and sitemap both gate on `status !== 'draft'` (app/feed.xml/route.ts,
   // app/sitemap.ts — the sitemap only in production builds). Assert the predicate they
@@ -364,7 +361,14 @@ test('safeHref admits only parseable http(s) URLs', async () => {
   const { safeHref } = await import('@/lib/instruments/href')
   assert.equal(safeHref('https://example.com/x'), 'https://example.com/x')
   assert.equal(safeHref('http://example.com'), 'http://example.com/')
-  for (const bad of ['javascript:alert(1)', 'data:text/html,x', 'ftp://x', '//evil', 'not a url', '']) {
+  for (const bad of [
+    'javascript:alert(1)',
+    'data:text/html,x',
+    'ftp://x',
+    '//evil',
+    'not a url',
+    '',
+  ]) {
     assert.equal(safeHref(bad), null, bad)
   }
 })
@@ -376,10 +380,7 @@ test('the publication cover shows only published instrumented pieces', async () 
     pieces.some((piece) => piece.slug === 'ufo-claims-ledger'),
     'the shipped ledger is on the cover',
   )
-  assert.ok(
-    !pieces.some((piece) => piece.slug === DEMO),
-    'the draft bench never reaches the cover',
-  )
+  assert.ok(!pieces.some((piece) => piece.slug === DEMO), 'the draft bench never reaches the cover')
 })
 
 test('a one-piece publication nav renders identity, not links', async () => {
@@ -390,7 +391,10 @@ test('a one-piece publication nav renders identity, not links', async () => {
 
   const pieces = publishedInstrumentedPieces()
   const first = pieces[0]
-  assert.ok(first && pieces.length === 1, 'this test pins the n=1 rendering; update it when n grows')
+  assert.ok(
+    first && pieces.length === 1,
+    'this test pins the n=1 rendering; update it when n grows',
+  )
 
   const html = renderToStaticMarkup(createElement(PublicationNav, { slug: first.slug, pieces }))
   assert.ok(html.length > 0, 'nav renders at n=1')

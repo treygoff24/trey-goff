@@ -25,7 +25,8 @@ export function useModalDialog(open: boolean): RefObject<HTMLDialogElement | nul
 
     if (open) {
       if (!dialog.open) {
-        trigger.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
+        trigger.current =
+          document.activeElement instanceof HTMLElement ? document.activeElement : null
         dialog.showModal()
       }
       return

@@ -149,10 +149,7 @@ export default function Stat(props: InstrumentNodeProps) {
         <span className="sr-only"> — open sources and details</span>
       </button>
       {mounted &&
-        createPortal(
-          <StatDialog stat={stat} open={open} onClose={onClose} />,
-          document.body,
-        )}
+        createPortal(<StatDialog stat={stat} open={open} onClose={onClose} />, document.body)}
     </span>
   )
 }

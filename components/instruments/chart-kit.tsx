@@ -124,8 +124,7 @@ export function ChartFrame({
   const keys = useRef<(HTMLButtonElement | null)[]>([])
 
   const active = previewed ?? pinned
-  const readout =
-    detailed ?? entries.find((entry) => entry.label === active)?.readout ?? null
+  const readout = detailed ?? entries.find((entry) => entry.label === active)?.readout ?? null
 
   // Roving tabindex: the group is one tab stop, and the arrows move within it. With nothing
   // pinned the first key holds the stop, so the group is reachable before anything is chosen.

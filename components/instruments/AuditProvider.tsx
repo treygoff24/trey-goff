@@ -169,7 +169,10 @@ function useNotePacking(open: ReadonlySet<string>, margin: boolean) {
       const top = Math.max(0, item.at)
       if (start !== null) item.slot.card.style.insetInlineStart = start
       item.slot.card.style.top = `${Math.round(top)}px`
-      item.slot.card.style.setProperty('--note-drift', `${Math.round(Math.max(0, top - item.want))}px`)
+      item.slot.card.style.setProperty(
+        '--note-drift',
+        `${Math.round(Math.max(0, top - item.want))}px`,
+      )
     }
   }, [open, margin])
 

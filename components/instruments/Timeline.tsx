@@ -26,7 +26,6 @@ function formatMonth(date: string): string {
  * gives each event a full line and reads the way the rest of the piece does.
  */
 export default function Timeline({ chart }: { chart: TimelineChart }) {
-
   const entries = useMemo<ChartEntry[]>(
     () =>
       chart.events.map((event) => ({

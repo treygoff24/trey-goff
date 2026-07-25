@@ -70,7 +70,9 @@ export default function ForecastCard(props: InstrumentNodeProps) {
       <div className="mt-6 grid gap-6 sm:grid-cols-2">
         <div
           className="border-t pt-4"
-          style={{ borderColor: 'color-mix(in oklab, var(--color-chart-primary) 50%, transparent)' }}
+          style={{
+            borderColor: 'color-mix(in oklab, var(--color-chart-primary) 50%, transparent)',
+          }}
         >
           <h3
             className="font-mono text-[11px] tracking-[0.14em] uppercase"
