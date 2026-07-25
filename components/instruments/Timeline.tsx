@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import type { TimelineChart } from '@/lib/instruments/types'
 import {
   ChartFrame,
@@ -26,7 +26,6 @@ function formatMonth(date: string): string {
  * gives each event a full line and reads the way the rest of the piece does.
  */
 export default function Timeline({ chart }: { chart: TimelineChart }) {
-  const [active, setActive] = useState<string | null>(null)
 
   const entries = useMemo<ChartEntry[]>(
     () =>
@@ -46,10 +45,8 @@ export default function Timeline({ chart }: { chart: TimelineChart }) {
       caption={chart.caption}
       source={chart.source}
       entries={entries}
-      active={active}
-      onActive={setActive}
     >
-      {() => (
+      {({ active }) => (
         <ol className="tg-timeline">
           {chart.events.map((event) => (
             <li

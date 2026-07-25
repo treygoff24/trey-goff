@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import type { BarsChart } from '@/lib/instruments/types'
 import {
   ChartFrame,
@@ -15,7 +15,6 @@ import {
  * are clipped on a phone.
  */
 export default function Bars({ chart }: { chart: BarsChart }) {
-  const [active, setActive] = useState<string | null>(null)
   const max = Math.max(...chart.bars.map((bar) => bar.value))
 
   const entries = useMemo<ChartEntry[]>(
@@ -36,10 +35,8 @@ export default function Bars({ chart }: { chart: BarsChart }) {
       caption={chart.caption}
       source={chart.source}
       entries={entries}
-      active={active}
-      onActive={setActive}
     >
-      {() => (
+      {({ active }) => (
         <ul className="space-y-3">
           {chart.bars.map((bar) => (
             <li

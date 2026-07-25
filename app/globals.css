@@ -73,7 +73,7 @@
   --color-verdict-unfalsifiable: oklch(0.8 0.11 305);
   --color-verdict-unverified: oklch(0.72 0.02 160);
 
-  /* The four kinds of self-audit, and the three roles a figure can draw in. Same rule as the
+  /* The four kinds of self-audit, and the four roles a figure can draw in. Same rule as the
      verdicts: lightness carries the contrast, and the sweep in
      test/instruments-contrast.test.ts holds every one of them to AA on every ground. */
   --color-mark-killed: oklch(0.75 0.16 25);
@@ -81,9 +81,13 @@
   --color-mark-counter-evidence: oklch(0.85 0.1 196);
   --color-mark-refused: oklch(0.8 0.11 305);
 
-  --color-chart-primary: oklch(0.84 0.13 158);
+  /* The chart roles are the mark hues again, so a figure inside an audited piece is coloured
+     out of the same box as the prose around it. Four separated hues rather than three plus a
+     grey: two series sharing the grey read as one disabled line, which is a chart that lies. */
+  --color-chart-primary: oklch(0.87 0.13 92);
   --color-chart-counter: oklch(0.85 0.1 196);
-  --color-chart-neutral: oklch(0.8 0.02 160);
+  --color-chart-context: oklch(0.8 0.11 305);
+  --color-chart-contrast: oklch(0.75 0.16 25);
 
   --font-satoshi: var(--font-body), system-ui, sans-serif;
   --font-newsreader: var(--font-display), Georgia, 'Times New Roman', serif;
@@ -1049,15 +1053,34 @@ html[data-konami='true'] a {
    --------------------------------------------------------------------------- */
 
 /* A mark is in the markup whether or not the audit is lit — the annotation is part of the
-   document. Unlit it reads as a hairline; lit, it takes a wash of its own kind's colour. */
+   document. Unlit it reads as a hairline in its own kind's colour, quiet enough not to compete
+   with the prose and present enough that a reader who never touches the switch can still see
+   that the piece marks itself. Lit, the hairline takes a wash. */
 .instrument-scope .instrument-mark {
   background: transparent;
   color: inherit;
   padding: 0 0.06em;
-  border-bottom: 1px dashed transparent;
+  border-bottom: 1px dashed color-mix(in oklab, var(--mark-color) 42%, transparent);
   transition:
     background-color 0.25s ease,
     border-color 0.25s ease;
+}
+
+/* A killed claim is struck through whether or not the audit is lit. The strike is the finding
+   — the piece looked, found the claim false, and left it in — so hiding it behind a switch
+   would let the page read as if the claim still stood. */
+.instrument-scope .instrument-mark[data-mark-kind='killed'] {
+  text-decoration: line-through;
+  text-decoration-color: color-mix(in oklab, var(--mark-color) 70%, transparent);
+  text-decoration-thickness: 1px;
+}
+
+/* The tail an annotation ending inside a link leaves behind: it carries the control and
+   nothing else, so it must not paint a mark's decoration around an empty box. */
+.instrument-scope .instrument-mark[data-annotation-tail='true'] {
+  padding: 0;
+  border-bottom: 0;
+  text-decoration: none;
 }
 
 .instrument-scope .instrument-mark[data-audit='on'] {
@@ -1098,16 +1121,23 @@ html[data-konami='true'] a {
    the measure, level with its own marker. */
 .tg-annotation-card {
   display: block;
+  position: relative;
   margin: 0.75rem 0 1rem;
   padding: 0.7rem 0.85rem;
   border: 1px solid var(--color-border-1);
-  border-inline-start-width: 3px;
   border-radius: var(--radius-sm);
   background: var(--color-surface-1);
   font-family: var(--font-satoshi);
   font-size: 0.82rem;
   line-height: 1.5;
   color: var(--color-text-2);
+}
+
+/* The block a card opens into, appended to the end of whatever paragraph or list item cites
+   it. A card that opened where the marker sits would cut its own sentence in half and leave
+   the rest of it starting on a new line with a bare full stop. */
+.tg-annotation-slot {
+  display: block;
 }
 
 .tg-annotation-kicker {
@@ -1152,12 +1182,31 @@ html[data-konami='true'] a {
     inset-inline-start: calc(65ch + 2rem);
     width: 14rem;
     margin: 0;
-    background: transparent;
-    border-block-width: 0;
-    border-inline-end-width: 0;
-    border-radius: 0;
     z-index: 10;
   }
+
+  /* The leader line. `--note-drift` is how far the packer had to push this card away from the
+     line that cites it; the rule spans exactly that distance back up the margin, so a card
+     that did not move draws nothing and one pushed 300px down still points at its own anchor.
+     Without it, packing trades an overlap for a card that belongs to no sentence in
+     particular. */
+  .tg-annotation-card::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: -0.75rem;
+    top: calc(0.85rem - var(--note-drift, 0px));
+    height: var(--note-drift, 0px);
+    border-inline-start: 1px solid var(--color-border-2);
+  }
+}
+
+/* Hovering or focusing a card lights the marker it belongs to. The leader line answers "which
+   line is this about" at a glance; this answers it exactly. */
+.tg-mark-marker[data-anchored='true'],
+.tg-note-marker[data-anchored='true'] {
+  color: var(--instrument-accent);
+  border-color: var(--instrument-accent);
+  background: var(--instrument-accent-quiet);
 }
 
 /* The one positioned ancestor the note cards resolve against. */
@@ -1289,16 +1338,33 @@ html[data-konami='true'] a {
   font-size: 0.72rem;
 }
 
-.tg-chart-key[aria-pressed='true'] {
+/* Pinned is a state of the legend, not of the focus ring: a reader tabbing through the keys
+   previews each one without changing what the figure has selected. */
+.tg-chart-key[aria-checked='true'] {
   text-decoration: underline;
   text-underline-offset: 4px;
 }
 
 .tg-chart-swatch {
-  width: 0.7rem;
-  height: 0.18rem;
+  width: 0.8rem;
+  height: 0.22rem;
   border-radius: var(--radius-full);
   background: currentColor;
+}
+
+.tg-chart-key[aria-checked='true'] .tg-chart-swatch {
+  height: 0.34rem;
+}
+
+/* Every plotted point is a tab stop that writes into the readout, which is the only way a
+   keyboard reaches a single observation rather than a whole series. */
+.tg-chart-point {
+  cursor: default;
+}
+
+.tg-chart-point:focus-visible {
+  outline: 2px solid var(--instrument-accent);
+  outline-offset: 2px;
 }
 
 /* Reserved rather than conditional: a readout that appears and disappears reflows the figure

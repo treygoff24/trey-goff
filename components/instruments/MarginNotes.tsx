@@ -1,10 +1,48 @@
 'use client'
 
-import { useCallback, useEffect, useRef, type ReactNode } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 import type { Source } from '@/lib/instruments/types'
+import { safeHref } from '@/lib/instruments/href'
 import { useAudit } from '@/components/instruments/AuditProvider'
 import { attr, type InstrumentNodeProps } from '@/components/instruments/annotation-props'
 import { INSTRUMENT_SENTINEL } from '@/components/instruments/sentinel'
+
+/** Where a card is allowed to open: the end of whatever block of prose cites it. */
+const BLOCK_SELECTOR = 'p, li, blockquote, figcaption, h1, h2, h3, h4, h5, h6'
+
+/**
+ * The block-level box a card is portalled into, appended to the end of the paragraph that
+ * cites it and torn down with the card.
+ *
+ * Two problems, one answer. A card rendered where its marker sits is a block box in the middle
+ * of a paragraph, so opening a note below the margin breakpoint cuts its own sentence in half
+ * and leaves the remainder starting a fresh line with a bare full stop. And when the marked
+ * span ends inside a link, that same position puts a button and a set of source links inside
+ * an `<a>` — nested interactive content, where a click on either can navigate instead. Moving
+ * the card to the end of the block fixes both, and moves nothing else: the card is portalled,
+ * not copied, so there is still exactly one of it for Find and for a screen reader.
+ */
+function useCardSlot(marker: HTMLElement | null): HTMLElement | null {
+  const [slot, setSlot] = useState<HTMLElement | null>(null)
+
+  useLayoutEffect(() => {
+    const block = marker?.closest(BLOCK_SELECTOR)
+    if (!block) return
+
+    const host = document.createElement('span')
+    host.className = 'tg-annotation-slot'
+    block.appendChild(host)
+    setSlot(host)
+
+    return () => {
+      host.remove()
+      setSlot(null)
+    }
+  }, [marker])
+
+  return slot
+}
 
 interface AnnotationCardProps {
   id: string
@@ -35,21 +73,54 @@ export function AnnotationCard({
 }: AnnotationCardProps) {
   const { registerNote } = useAudit()
   const cardRef = useRef<HTMLSpanElement>(null)
+  const slot = useCardSlot(marker)
 
-  useEffect(() => {
+  // A layout effect, not a passive one: the packer runs in a layout effect of its own, and a
+  // card that registers after it has already run sits at whatever position the stylesheet gave
+  // it until something else triggers a repack.
+  useLayoutEffect(() => {
     const card = cardRef.current
     if (!card || !marker) return
     registerNote(id, { marker, card })
     return () => registerNote(id, null)
-  }, [id, marker, registerNote])
+  }, [id, marker, slot, registerNote])
 
-  return (
+  // A pinned card is a disclosure, and Escape closes a disclosure. The marker's own
+  // `aria-expanded` already promises that; this keeps the promise for a reader who never
+  // reaches the Dismiss button.
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose()
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [onClose])
+
+  // Which line is this about. The leader line answers it at a glance; lighting the marker
+  // answers it exactly, which is what a card the packer has pushed a long way down needs.
+  const anchor = useCallback(
+    (lit: boolean) => {
+      if (!marker) return
+      if (lit) marker.dataset.anchored = 'true'
+      else delete marker.dataset.anchored
+    },
+    [marker],
+  )
+
+  useEffect(() => () => anchor(false), [anchor])
+
+  if (!slot) return null
+
+  return createPortal(
     <span
       ref={cardRef}
       role="note"
       className="tg-annotation-card"
-      style={{ borderInlineStartColor: tone }}
       data-instrument={INSTRUMENT_SENTINEL}
+      onMouseEnter={() => anchor(true)}
+      onMouseLeave={() => anchor(false)}
+      onFocus={() => anchor(true)}
+      onBlur={() => anchor(false)}
     >
       <span className="tg-annotation-kicker" style={{ color: tone }}>
         {kicker}
@@ -57,18 +128,24 @@ export function AnnotationCard({
       <span className="tg-annotation-body">{body}</span>
       {sources && sources.length > 0 && (
         <span className="tg-annotation-sources">
-          {sources.map((source) => (
-            <a key={source.url} href={source.url} rel="noreferrer noopener" target="_blank">
-              {source.title}
-            </a>
-          ))}
+          {sources.map((source) => {
+            const href = safeHref(source.url)
+            return href === null ? (
+              <span key={source.url}>{source.title}</span>
+            ) : (
+              <a key={source.url} href={href} rel="noreferrer noopener" target="_blank">
+                {source.title}
+              </a>
+            )
+          })}
         </span>
       )}
       <button type="button" className="tg-annotation-close" onClick={onClose}>
         Dismiss
         <span className="sr-only"> this note</span>
       </button>
-    </span>
+    </span>,
+    slot,
   )
 }
 
@@ -164,18 +241,25 @@ export default function NotesList() {
                 <p className="text-sm leading-relaxed text-text-2">{note.body}</p>
                 {note.sources && note.sources.length > 0 && (
                   <p className="mt-1 flex flex-wrap gap-x-4 text-sm">
-                    {note.sources.map((source) => (
-                      <a
-                        key={source.url}
-                        href={source.url}
-                        rel="noreferrer noopener"
-                        target="_blank"
-                        className="underline underline-offset-4"
-                        style={{ color: 'var(--instrument-accent)' }}
-                      >
-                        {source.title}
-                      </a>
-                    ))}
+                    {note.sources.map((source) => {
+                      const href = safeHref(source.url)
+                      return href === null ? (
+                        <span key={source.url} className="text-text-3">
+                          {source.title}
+                        </span>
+                      ) : (
+                        <a
+                          key={source.url}
+                          href={href}
+                          rel="noreferrer noopener"
+                          target="_blank"
+                          className="underline underline-offset-4"
+                          style={{ color: 'var(--instrument-accent)' }}
+                        >
+                          {source.title}
+                        </a>
+                      )
+                    })}
                   </p>
                 )}
               </div>

@@ -222,7 +222,7 @@ function resolve(annotations: readonly Annotation[], flat: string, regions: Map<
 
   for (const [order, annotation] of annotations.entries()) {
     if (ids.has(annotation.id)) {
-      throw new MarkResolutionError(annotation, 'duplicates an earlier mark id')
+      throw new MarkResolutionError(annotation, 'duplicates an earlier annotation id')
     }
     ids.add(annotation.id)
 
@@ -352,26 +352,59 @@ function rebuildSlot(slot: TextSlot, covering: ResolvedMark[]): ElementContent[]
   return out
 }
 
+interface LastWrap {
+  element: Element
+  /** Root-first chain of ancestors, so the pass can see whether the wrap sits inside a link. */
+  ancestors: { node: Parent; child: RootContent }[]
+}
+
 /**
  * A note whose span crosses an element boundary is emitted as several wraps. Only the last
  * one may carry the marker, or a note straddling an `<em>` would sprout two markers for one
  * footnote. The pass runs over the finished tree, where document order is unambiguous.
+ *
+ * When that last wrap sits inside an `<a>`, the flag goes on an empty copy of the wrap placed
+ * immediately after the link instead. A marked passage may legitimately end inside a link —
+ * Wave 1 allows it and a test pins it — but the control the flag renders is a `<button>`, and
+ * a button inside an anchor is invalid markup whose clicks the browser is free to resolve as
+ * navigation. The marked text stays inside the link, where the author put it; only the control
+ * moves out, to the first position after the link where it is legal.
  */
 function stampLastWraps(tree: Root, stamped: ReadonlySet<string>): void {
-  const last = new Map<string, Element>()
+  const last = new Map<string, LastWrap>()
 
-  const walk = (parent: Parent) => {
+  const walk = (parent: Parent, ancestors: LastWrap['ancestors']) => {
     for (const child of parent.children) {
       if (child.type !== 'element') continue
       const id = child.properties?.dataNoteId ?? child.properties?.dataMarkId
-      if (typeof id === 'string' && stamped.has(id)) last.set(id, child)
-      walk(child)
+      if (typeof id === 'string' && stamped.has(id)) last.set(id, { element: child, ancestors })
+      walk(child, [...ancestors, { node: parent, child }])
     }
   }
 
-  walk(tree)
-  for (const element of last.values()) {
-    element.properties = { ...element.properties, dataAnnotationLast: 'true' }
+  walk(tree, [])
+
+  for (const { element, ancestors } of last.values()) {
+    const link = ancestors.find(
+      (step) => step.child.type === 'element' && step.child.tagName === 'a',
+    )
+
+    if (!link) {
+      element.properties = { ...element.properties, dataAnnotationLast: 'true' }
+      continue
+    }
+
+    const tail: Element = {
+      type: 'element',
+      tagName: element.tagName,
+      properties: {
+        ...element.properties,
+        dataAnnotationLast: 'true',
+        dataAnnotationTail: 'true',
+      },
+      children: [],
+    }
+    link.node.children.splice(link.node.children.indexOf(link.child) + 1, 0, tail)
   }
 }
 

@@ -101,10 +101,16 @@ function useMediaQuery(query: string): boolean {
  */
 function useNotePacking(open: ReadonlySet<string>, margin: boolean) {
   const slots = useRef(new Map<string, NoteSlot>())
+  // Cards register from their own layout effect, which runs after this hook's. Bumping a
+  // counter on every add and remove is what makes the pass rerun with the new card in it —
+  // without it a note opened after the first pass keeps its unpositioned `top` until the next
+  // resize, which on a still page is never.
+  const [revision, setRevision] = useState(0)
 
   const registerNote = useCallback((id: string, slot: NoteSlot | null) => {
     if (slot) slots.current.set(id, slot)
-    else slots.current.delete(id)
+    else if (!slots.current.delete(id)) return
+    setRevision((current) => current + 1)
   }, [])
 
   const pack = useCallback(() => {
@@ -114,6 +120,7 @@ function useNotePacking(open: ReadonlySet<string>, margin: boolean) {
       for (const [, slot] of opened) {
         slot.card.style.top = ''
         slot.card.style.insetInlineStart = ''
+        slot.card.style.removeProperty('--note-drift')
       }
       return
     }
@@ -128,19 +135,41 @@ function useNotePacking(open: ReadonlySet<string>, margin: boolean) {
     // Document order, measured rather than declared: mark notes and margin notes share the
     // margin and the anchoring pass numbers only the latter.
     const placed = opened
-      .map(([, slot]) => ({ slot, top: slot.marker.getBoundingClientRect().top }))
-      .sort((a, b) => a.top - b.top)
+      .flatMap(([, slot]) => {
+        const layer = slot.card.offsetParent
+        if (!(layer instanceof HTMLElement)) return []
+        const want = slot.marker.getBoundingClientRect().top - layer.getBoundingClientRect().top
+        return [{ slot, layer, want, at: want, height: slot.card.offsetHeight }]
+      })
+      .sort((a, b) => a.want - b.want)
 
+    if (placed.length === 0) return
+
+    // Down from the top, each card clearing the one above it.
     let cursor = -Infinity
-    for (const { slot, top: markerTop } of placed) {
-      const layer = slot.card.offsetParent
-      if (!(layer instanceof HTMLElement)) continue
+    for (const item of placed) {
+      item.at = Math.max(item.want, cursor)
+      cursor = item.at + item.height + NOTE_GAP
+    }
 
-      const desired = markerTop - layer.getBoundingClientRect().top
-      if (start !== null) slot.card.style.insetInlineStart = start
-      const top = Math.max(desired, cursor + NOTE_GAP)
-      slot.card.style.top = `${Math.round(top)}px`
-      cursor = top + slot.card.offsetHeight
+    // Then back up from the bottom. The forward pass alone only ever pushes down, so a stack
+    // that starts near the end of the piece walks off the bottom of the layer and paints over
+    // the notes list and whatever follows it. This pass is what bounds it.
+    const layerHeight = placed[0]!.layer.clientHeight
+    let floor = layerHeight
+    for (let index = placed.length - 1; index >= 0; index -= 1) {
+      const item = placed[index]!
+      item.at = Math.min(item.at, floor - item.height)
+      floor = item.at - NOTE_GAP
+    }
+
+    for (const item of placed) {
+      // More cards than margin: the backward pass can push the first one above the layer, and
+      // a card the reader has to scroll up out of the article to read is worse than an overlap.
+      const top = Math.max(0, item.at)
+      if (start !== null) item.slot.card.style.insetInlineStart = start
+      item.slot.card.style.top = `${Math.round(top)}px`
+      item.slot.card.style.setProperty('--note-drift', `${Math.round(Math.max(0, top - item.want))}px`)
     }
   }, [open, margin])
 
@@ -151,7 +180,7 @@ function useNotePacking(open: ReadonlySet<string>, margin: boolean) {
     const observer = new ResizeObserver(() => pack())
     observer.observe(layer)
     return () => observer.disconnect()
-  }, [pack])
+  }, [pack, revision])
 
   return registerNote
 }

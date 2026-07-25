@@ -268,14 +268,51 @@ export const forecastCardSchema = z
         path: ['resolvedOn'],
       })
     }
+    // The resolution prose is the card's own account of how it did. An open card that already
+    // carries one is claiming a score it has not earned; a resolved one without it is a status
+    // chip with nothing behind it.
+    if (card.status === 'open' && card.resolution !== undefined) {
+      ctx.addIssue({
+        code: 'custom',
+        message: `${card.id} is open but already states how it resolved`,
+        path: ['resolution'],
+      })
+    }
+    if (card.status !== 'open' && card.resolution === undefined) {
+      ctx.addIssue({
+        code: 'custom',
+        message: `${card.id} is ${card.status} but does not say what happened`,
+        path: ['resolution'],
+      })
+    }
   })
 
 /**
  * Chart tones are roles, not colours: `primary` is the piece's own line of argument,
- * `counter` the voice arguing against it, `neutral` context. The tokens they resolve to are
- * declared once in `app/globals.css` and contrast-tested there.
+ * `counter` the voice arguing against it, `context` the background it is read against, and
+ * `contrast` a fourth category that belongs to neither side. Four is the count a categorical
+ * palette needs before two series in one figure can share a tone and read as one grey line.
+ *
+ * The tokens they resolve to are the audit grammar's own hues — a figure in an audited piece
+ * is coloured out of the same box as the marks — declared once in `app/globals.css` and held
+ * to AA by `test/instruments-contrast.test.ts`.
  */
-export const chartToneSchema = z.enum(['primary', 'counter', 'neutral'])
+export const chartToneSchema = z.enum(['primary', 'counter', 'context', 'contrast'])
+
+/**
+ * A figure's labels are its identity: React keys them, the legend addresses them, and the
+ * highlight matches on them. Two entries sharing a label therefore light together and key
+ * against each other, so a duplicate is an authoring error rather than a rendering quirk.
+ */
+function uniqueLabels(entries: readonly { label: string }[], ctx: z.RefinementCtx) {
+  const seen = new Set<string>()
+  for (const [index, entry] of entries.entries()) {
+    if (seen.has(entry.label)) {
+      ctx.addIssue({ code: 'custom', message: `duplicate label ${entry.label}`, path: [index] })
+    }
+    seen.add(entry.label)
+  }
+}
 
 const chartFrameFields = {
   id: z.string().min(1),
@@ -296,14 +333,15 @@ export const slopeChartSchema = z.object({
     .array(
       z.object({
         label: z.string().min(1),
-        tone: chartToneSchema.default('neutral'),
+        tone: chartToneSchema.default('context'),
         from: z.number(),
         to: z.number(),
         fromNote: z.string().min(1).optional(),
         toNote: z.string().min(1).optional(),
       }),
     )
-    .min(2),
+    .min(2)
+    .superRefine(uniqueLabels),
   /** A horizontal reference line, e.g. the population share the slopes are read against. */
   reference: z.object({ value: z.number(), label: z.string().min(1) }).optional(),
 })
@@ -322,7 +360,8 @@ export const seriesChartSchema = z.object({
         points: z.array(z.object({ x: z.number(), y: z.number() })).min(2),
       }),
     )
-    .min(1),
+    .min(1)
+    .superRefine(uniqueLabels),
 })
 
 export const barsChartSchema = z.object({
@@ -338,7 +377,8 @@ export const barsChartSchema = z.object({
         note: z.string().min(1).optional(),
       }),
     )
-    .min(1),
+    .min(1)
+    .superRefine(uniqueLabels),
 })
 
 export const timelineChartSchema = z.object({
@@ -350,10 +390,11 @@ export const timelineChartSchema = z.object({
         date: z.string().regex(/^\d{4}-\d{2}(?:-\d{2})?$/),
         label: z.string().min(1),
         note: z.string().min(1).optional(),
-        tone: chartToneSchema.default('neutral'),
+        tone: chartToneSchema.default('context'),
       }),
     )
-    .min(2),
+    .min(2)
+    .superRefine(uniqueLabels),
 })
 
 export const chartSchema = z.discriminatedUnion('kind', [
@@ -426,6 +467,7 @@ export type MarksDocument = z.infer<typeof marksDocumentSchema>
 
 export const VERDICTS = verdictSchema.options
 export const MARK_KINDS = markKindSchema.options
+export const CHART_TONES = chartToneSchema.options
 
 export function countVerdicts(claims: readonly Claim[]): Record<Verdict, number> {
   const counts = Object.fromEntries(VERDICTS.map((verdict) => [verdict, 0])) as Record<

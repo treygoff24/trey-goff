@@ -95,6 +95,16 @@ export async function InstrumentArticle({
   const headings = headingsOf(tree)
   const forClient = ledger ? clientLedger(ledger) : null
 
+  // Whether this piece has an audit at all. The ledger essay does not: mounting the provider
+  // for it anyway pulled a client chunk, a `matchMedia` subscription and a `ResizeObserver`
+  // onto a page with no mark, note, stat, forecast or figure for any of them to act on.
+  const audited =
+    (annotations?.marks.length ?? 0) > 0 ||
+    (annotations?.notes.length ?? 0) > 0 ||
+    (stats?.length ?? 0) > 0 ||
+    (forecasts?.length ?? 0) > 0 ||
+    (charts?.length ?? 0) > 0
+
   const body = hastToReact(tree, {
     'instrument-spine': () => <LazyTimeSpine />,
     'instrument-ledger': () => <LazyClaimLedger />,
@@ -107,6 +117,21 @@ export async function InstrumentArticle({
     mark: (props) => <LazyMarkSpan {...props} />,
   })
 
+  const article = (
+    <>
+      <LazyUrlStateSync ledger={forClient} />
+      <div className="grid gap-x-12 gap-y-6 lg:grid-cols-[minmax(0,1fr)_15rem]">
+        <Prose className="instrument-prose">
+          <div id="essay-content" className="instrument-flow">
+            {body}
+          </div>
+        </Prose>
+        <LazyInstrumentRail headings={headings} />
+      </div>
+      {ledger && <LazyDossierDialog slug={manifest.slug} />}
+    </>
+  )
+
   return (
     <div
       className="instrument-scope"
@@ -118,25 +143,20 @@ export async function InstrumentArticle({
       }
     >
       <LazyLedgerProvider ledger={forClient} dossiers={manifest.dossiers}>
-        <LazyAuditProvider
-          marks={annotations?.marks ?? []}
-          notes={annotations?.notes ?? []}
-          noteOrder={noteOrder}
-          stats={stats ?? []}
-          forecasts={forecasts ?? []}
-          charts={charts ?? []}
-        >
-          <LazyUrlStateSync ledger={forClient} />
-          <div className="grid gap-x-12 gap-y-6 lg:grid-cols-[minmax(0,1fr)_15rem]">
-            <Prose className="instrument-prose">
-              <div id="essay-content" className="instrument-flow">
-                {body}
-              </div>
-            </Prose>
-            <LazyInstrumentRail headings={headings} />
-          </div>
-          {ledger && <LazyDossierDialog slug={manifest.slug} />}
-        </LazyAuditProvider>
+        {audited ? (
+          <LazyAuditProvider
+            marks={annotations?.marks ?? []}
+            notes={annotations?.notes ?? []}
+            noteOrder={noteOrder}
+            stats={stats ?? []}
+            forecasts={forecasts ?? []}
+            charts={charts ?? []}
+          >
+            {article}
+          </LazyAuditProvider>
+        ) : (
+          article
+        )}
       </LazyLedgerProvider>
     </div>
   )

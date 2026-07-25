@@ -94,6 +94,31 @@ test('a mark spanning a link keeps the anchor intact', async () => {
   assert.equal([...html.matchAll(/data-mark-id="m1"/g)].length, 2)
 })
 
+test('a noted mark ending inside a link puts its control after the link, not in it', async () => {
+  const html = await render('See [the filing](https://example.com) for detail.', [
+    mark({ id: 'm1', kind: 'counter-evidence', text: 'the filing', note: 'why this is marked' }),
+  ])
+
+  // The marked words stay inside the anchor, where the author put them.
+  assert.match(html, /<a href="https:\/\/example\.com"><mark[^>]*>the filing<\/mark><\/a>/)
+
+  // The flag that renders the button is on a tail after the anchor, so nothing interactive is
+  // ever nested inside it.
+  const anchorEnd = html.indexOf('</a>')
+  assert.doesNotMatch(html.slice(0, anchorEnd), /data-annotation-last/)
+  assert.match(html.slice(anchorEnd), /data-annotation-last="true"/)
+  assert.match(html.slice(anchorEnd), /data-annotation-tail="true"/)
+  assert.equal([...html.matchAll(/data-annotation-last="true"/g)].length, 1)
+})
+
+test('a noted mark clear of any link is flagged in place', async () => {
+  const html = await render('The tables disagree with each other.', [
+    mark({ id: 'm1', text: 'The tables', note: 'why this is marked' }),
+  ])
+  assert.doesNotMatch(html, /data-annotation-tail/)
+  assert.match(html, /<mark[^>]*data-annotation-last="true"[^>]*>The tables<\/mark>/)
+})
+
 test('anchors scope a mark to one section', async () => {
   const markdown = '## First\n\nrepeated phrase here\n\n## Second\n\nrepeated phrase here'
   const html = await render(markdown, [
@@ -176,7 +201,7 @@ test('an unknown anchor and a duplicate mark id both fail the build', async () =
   await assert.rejects(
     async () =>
       render('alpha beta', [mark({ id: 'm1', text: 'alpha' }), mark({ id: 'm1', text: 'beta' })]),
-    /duplicates an earlier mark id/,
+    /duplicates an earlier annotation id/,
   )
 })
 

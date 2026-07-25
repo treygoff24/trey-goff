@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import type { SeriesChart } from '@/lib/instruments/types'
 import {
   ChartFrame,
@@ -19,8 +19,6 @@ function format(value: number): string {
 
 /** A line over a shared x axis — the kit's workhorse for anything that runs over time. */
 export default function Series({ chart }: { chart: SeriesChart }) {
-  const [active, setActive] = useState<string | null>(null)
-
   const entries = useMemo<ChartEntry[]>(
     () =>
       chart.series.map((series) => {
@@ -43,16 +41,17 @@ export default function Series({ chart }: { chart: SeriesChart }) {
       caption={chart.caption}
       source={chart.source}
       entries={entries}
-      active={active}
-      onActive={setActive}
     >
-      {(width) => {
+      {({ width, active, preview, detail }) => {
         const compact = isCompact(width)
-        const height = compact ? 200 : 260
+        // The x-axis label and the tick labels are two rows, not one. Sharing a baseline put
+        // the middle of "year" straight through the last tick whenever both were set.
+        const axisRows = chart.xLabel ? 46 : 30
+        const height = (compact ? 200 : 260) + (chart.xLabel ? 14 : 0)
         const left = compact ? 40 : 56
         const right = 16
         const top = 16
-        const bottom = height - 30
+        const bottom = height - axisRows
 
         const points = chart.series.flatMap((series) => series.points)
         const x = scale(extent(points.map((point) => point.x)), [left, width - right])
@@ -103,7 +102,7 @@ export default function Series({ chart }: { chart: SeriesChart }) {
               <text
                 key={value}
                 x={index === 0 ? left : width - right}
-                y={height - 10}
+                y={bottom + 16}
                 fill="var(--color-text-3)"
                 fontSize="10.5"
                 textAnchor={index === 0 ? 'start' : 'end'}
@@ -134,15 +133,40 @@ export default function Series({ chart }: { chart: SeriesChart }) {
                     strokeWidth={active === series.label ? 2.6 : 2}
                     strokeLinejoin="round"
                   />
-                  {series.points.map((point) => (
-                    <circle
-                      key={`${point.x}-${point.y}`}
-                      cx={x(point.x)}
-                      cy={y(point.y)}
-                      r={active === series.label ? 3.2 : 2}
-                      fill={colour}
-                    />
-                  ))}
+                  {/* Every observation is a tab stop that writes itself into the readout. The
+                      legend can only ever say what a whole series did; a reader who wants the
+                      1,000 in 2021 has no other way to reach it without a pointer. */}
+                  {series.points.map((point) => {
+                    const readout = `${series.label}: ${format(point.y)}${chart.unit ?? ''} at ${point.x}`
+                    const raise = () => {
+                      preview(series.label)
+                      detail(readout)
+                    }
+                    const lower = () => {
+                      preview(null)
+                      detail(null)
+                    }
+                    return (
+                      <circle
+                        key={`${point.x}-${point.y}`}
+                        className="tg-chart-point"
+                        cx={x(point.x)}
+                        cy={y(point.y)}
+                        r={active === series.label ? 3.2 : 2}
+                        fill={colour}
+                        // A 2px dot is not a target. The transparent stroke is hit area only.
+                        stroke="transparent"
+                        strokeWidth={14}
+                        tabIndex={0}
+                        role="img"
+                        aria-label={readout}
+                        onFocus={raise}
+                        onBlur={lower}
+                        onMouseEnter={raise}
+                        onMouseLeave={lower}
+                      />
+                    )
+                  })}
                 </g>
               )
             })}

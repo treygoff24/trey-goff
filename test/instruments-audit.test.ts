@@ -22,6 +22,9 @@ import {
   getStats,
   loadInstrumentPiece,
 } from '@/lib/instruments/manifest'
+import { allEssays } from 'content-collections'
+import { visibleEditionEssays } from '@/lib/edition/manifest'
+import { generateSearchIndex } from '@/lib/search/generate-index'
 
 const DEMO = 'instruments-demo'
 
@@ -93,7 +96,7 @@ test('marks and notes share one id namespace and one resolver', async () => {
         marks: [{ id: 'shared', kind: 'killed', anchor: null, text: 'alpha' }],
         notes: [note({ id: 'shared', text: 'beta' })],
       }),
-    /duplicates an earlier mark id/,
+    /duplicates an earlier annotation id/,
   )
 })
 
@@ -156,6 +159,76 @@ test('a resolved forecast must carry the date it resolved on', () => {
   )
 })
 
+test('a forecast may only state how it resolved once it has resolved', () => {
+  const base = {
+    id: 'f',
+    question: 'q',
+    forCase: 'a',
+    againstCase: 'b',
+    confidence: 0.5,
+    stated: '2026-01-01',
+    resolvesOn: '2027-01-01',
+  }
+
+  // An open card claiming a score it has not earned.
+  assert.throws(() =>
+    forecastsDocumentSchema.parse([{ ...base, status: 'open', resolution: 'it happened' }]),
+  )
+
+  // A resolved card whose status chip has nothing behind it.
+  for (const status of ['resolved-yes', 'resolved-no', 'ambiguous', 'withdrawn']) {
+    assert.throws(
+      () => forecastsDocumentSchema.parse([{ ...base, status, resolvedOn: '2027-01-02' }]),
+      `${status} without a resolution should be rejected`,
+    )
+  }
+
+  assert.doesNotThrow(() => forecastsDocumentSchema.parse([{ ...base, status: 'open' }]))
+})
+
+test('a figure may not give two of its entries the same label', () => {
+  const frame = { id: 'c', title: 't', summary: 's' }
+
+  assert.throws(() =>
+    chartsDocumentSchema.parse([
+      {
+        ...frame,
+        kind: 'bars',
+        bars: [
+          { label: 'same', value: 1 },
+          { label: 'same', value: 2 },
+        ],
+      },
+    ]),
+  )
+  assert.throws(() =>
+    chartsDocumentSchema.parse([
+      {
+        ...frame,
+        kind: 'slope',
+        fromLabel: 'a',
+        toLabel: 'b',
+        series: [
+          { label: 'same', from: 1, to: 2 },
+          { label: 'same', from: 3, to: 4 },
+        ],
+      },
+    ]),
+  )
+  assert.doesNotThrow(() =>
+    chartsDocumentSchema.parse([
+      {
+        ...frame,
+        kind: 'bars',
+        bars: [
+          { label: 'one', value: 1 },
+          { label: 'two', value: 2 },
+        ],
+      },
+    ]),
+  )
+})
+
 test('duplicate instrument ids are rejected in every authoring document', () => {
   assert.throws(() =>
     marksDocumentSchema.parse({
@@ -209,6 +282,30 @@ test('the demo piece exercises every instrument in the audit grammar', () => {
 test('the demo piece stays a draft, so it is reachable only behind the preview auth', () => {
   const markdown = readFileSync(join(process.cwd(), `content/essays/${DEMO}.mdx`), 'utf8')
   assert.match(markdown.split(/^---$/m)[1] ?? '', /^status:\s*draft\s*$/m)
+})
+
+test('the draft bench reaches none of the surfaces that publish an essay', () => {
+  // The frontmatter check above says the bench is marked a draft. This one says the mark is
+  // load-bearing: every surface that would otherwise announce the piece to a reader — the
+  // writing index, both feeds, the sitemap, the search index and the Edition catalog — filters
+  // it out. A draft that leaks into the feed is behind the preview auth in name only.
+  assert.equal(
+    allEssays.find((essay) => essay.slug === DEMO)?.status,
+    'draft',
+    'the bench is the draft this test is about',
+  )
+
+  const published = visibleEditionEssays(allEssays)
+  assert.ok(
+    published.length > 0 && !published.some((essay) => essay.slug === DEMO),
+    'the Edition and writing filters drop the bench',
+  )
+
+  const index = generateSearchIndex()
+  assert.ok(
+    !JSON.stringify(index).includes(DEMO),
+    'the search index carries no trace of the bench',
+  )
 })
 
 test('every instrument component rides the isolation sentinel', () => {

@@ -14,8 +14,8 @@ const STATUS_COPY: Record<ForecastStatus, { label: string; tone: string }> = {
   open: { label: 'Open', tone: 'var(--instrument-accent)' },
   'resolved-yes': { label: 'Resolved — it happened', tone: 'var(--color-chart-primary)' },
   'resolved-no': { label: 'Resolved — it did not', tone: 'var(--color-chart-counter)' },
-  ambiguous: { label: 'Resolved — ambiguous', tone: 'var(--color-chart-neutral)' },
-  withdrawn: { label: 'Withdrawn', tone: 'var(--color-chart-neutral)' },
+  ambiguous: { label: 'Resolved — ambiguous', tone: 'var(--color-chart-context)' },
+  withdrawn: { label: 'Withdrawn', tone: 'var(--color-chart-context)' },
 }
 
 function formatDay(date: string): string {
@@ -63,8 +63,15 @@ export default function ForecastCard(props: InstrumentNodeProps) {
         {card.question}
       </h2>
 
+      {/* The two sides are not symmetrical and should not look it. The falsification side is
+          the one that costs the author something, so it carries the heavier rule and its own
+          ground — weight rather than a red warning colour, which would read as an error state
+          rather than as the condition under which the piece admits it was wrong. */}
       <div className="mt-6 grid gap-6 sm:grid-cols-2">
-        <div className="border-t-2 pt-4" style={{ borderColor: 'var(--color-chart-primary)' }}>
+        <div
+          className="border-t pt-4"
+          style={{ borderColor: 'color-mix(in oklab, var(--color-chart-primary) 50%, transparent)' }}
+        >
           <h3
             className="font-mono text-[11px] tracking-[0.14em] uppercase"
             style={{ color: 'var(--color-chart-primary)' }}
@@ -73,14 +80,17 @@ export default function ForecastCard(props: InstrumentNodeProps) {
           </h3>
           <p className="mt-2 text-sm leading-relaxed text-text-2">{card.forCase}</p>
         </div>
-        <div className="border-t-2 pt-4" style={{ borderColor: 'var(--color-chart-counter)' }}>
+        <div
+          className="-mx-3 rounded-sm border-t-[3px] bg-surface-1 px-3 pt-4 pb-3"
+          style={{ borderColor: 'var(--color-chart-counter)' }}
+        >
           <h3
-            className="font-mono text-[11px] tracking-[0.14em] uppercase"
+            className="font-mono text-[11px] font-semibold tracking-[0.14em] uppercase"
             style={{ color: 'var(--color-chart-counter)' }}
           >
             If this is wrong
           </h3>
-          <p className="mt-2 text-sm leading-relaxed text-text-2">{card.againstCase}</p>
+          <p className="mt-2 text-sm leading-relaxed text-text-1">{card.againstCase}</p>
         </div>
       </div>
 

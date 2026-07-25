@@ -1,9 +1,11 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import type { Confidence, Stat as StatData } from '@/lib/instruments/types'
+import { safeHref } from '@/lib/instruments/href'
 import { useAudit } from '@/components/instruments/AuditProvider'
+import { useModalDialog } from '@/components/instruments/dialog'
 import { nodeId, type InstrumentNodeProps } from '@/components/instruments/annotation-props'
 import { INSTRUMENT_SENTINEL } from '@/components/instruments/sentinel'
 
@@ -21,8 +23,16 @@ const CONFIDENCE_COPY: Record<Confidence, string> = {
  * The panel is a native `<dialog>`, portalled to the body because a stat is inline inside a
  * paragraph and a dialog is not phrasing content.
  */
-function StatDialog({ stat, onClose }: { stat: StatData; onClose: () => void }) {
-  const ref = useRef<HTMLDialogElement>(null)
+function StatDialog({
+  stat,
+  open,
+  onClose,
+}: {
+  stat: StatData
+  open: boolean
+  onClose: () => void
+}) {
+  const ref = useModalDialog(open)
 
   // The backdrop is listened to on the live node rather than through an `onClick` prop: a
   // click handler on the dialog element itself reads as a click handler on non-interactive
@@ -30,14 +40,13 @@ function StatDialog({ stat, onClose }: { stat: StatData; onClose: () => void }) 
   useEffect(() => {
     const dialog = ref.current
     if (!dialog) return
-    if (!dialog.open) dialog.showModal()
 
     const onClick = (event: globalThis.MouseEvent) => {
       if (event.target === dialog) onClose()
     }
     dialog.addEventListener('click', onClick)
     return () => dialog.removeEventListener('click', onClick)
-  }, [onClose])
+  }, [ref, onClose])
 
   return (
     <dialog
@@ -83,15 +92,19 @@ function StatDialog({ stat, onClose }: { stat: StatData; onClose: () => void }) 
           <ul className="mt-2 space-y-3">
             {stat.sources.map((source) => (
               <li key={source.url} className="border-l border-border-2 pl-3">
-                <a
-                  href={source.url}
-                  rel="noreferrer noopener"
-                  target="_blank"
-                  className="text-sm underline underline-offset-4"
-                  style={{ color: 'var(--instrument-accent)' }}
-                >
-                  {source.title}
-                </a>
+                {safeHref(source.url) === null ? (
+                  <span className="text-sm text-text-2">{source.title}</span>
+                ) : (
+                  <a
+                    href={safeHref(source.url)!}
+                    rel="noreferrer noopener"
+                    target="_blank"
+                    className="text-sm underline underline-offset-4"
+                    style={{ color: 'var(--instrument-accent)' }}
+                  >
+                    {source.title}
+                  </a>
+                )}
                 {source.quote && (
                   <p className="mt-1 text-sm leading-relaxed text-text-3 italic">
                     “{source.quote}”
@@ -117,6 +130,7 @@ export default function Stat(props: InstrumentNodeProps) {
   const [mounted, setMounted] = useState(false)
   const id = nodeId(props) ?? ''
   const stat = stats.get(id)
+  const onClose = useCallback(() => setOpen(false), [])
 
   useEffect(() => setMounted(true), [])
 
@@ -134,9 +148,11 @@ export default function Stat(props: InstrumentNodeProps) {
         <span className="tg-stat-label">{stat.label}</span>
         <span className="sr-only"> — open sources and details</span>
       </button>
-      {open &&
-        mounted &&
-        createPortal(<StatDialog stat={stat} onClose={() => setOpen(false)} />, document.body)}
+      {mounted &&
+        createPortal(
+          <StatDialog stat={stat} open={open} onClose={onClose} />,
+          document.body,
+        )}
     </span>
   )
 }

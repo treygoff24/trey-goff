@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import type { ChartTone, Source } from '@/lib/instruments/types'
+import { safeHref } from '@/lib/instruments/href'
 import { INSTRUMENT_SENTINEL } from '@/components/instruments/sentinel'
 
 /**
@@ -69,6 +70,17 @@ export interface ChartEntry {
   readout: string
 }
 
+/** What a figure's drawing is handed: its measured width, and the two ways it can talk back. */
+export interface ChartDrawing {
+  width: number
+  /** The entry currently raised — pinned by the legend, or previewed under a pointer. */
+  active: string | null
+  /** Raise an entry without pinning it. Hover and point focus both go through here. */
+  preview: (label: string | null) => void
+  /** Put an arbitrary line in the readout, for a single observation rather than a series. */
+  detail: (text: string | null) => void
+}
+
 export interface ChartFrameProps {
   id: string
   title: string
@@ -76,9 +88,7 @@ export interface ChartFrameProps {
   caption?: string
   source?: Source
   entries: ChartEntry[]
-  active: string | null
-  onActive: (label: string | null) => void
-  children: (width: number) => ReactNode
+  children: (drawing: ChartDrawing) => ReactNode
 }
 
 /**
@@ -89,6 +99,14 @@ export interface ChartFrameProps {
  * tooltip that follows the cursor inside an SVG is the single most reliable source of
  * horizontal-overflow bugs at 390px — so the readout is a fixed region beneath the drawing
  * that both hover and focus write into, and it announces itself politely when it changes.
+ *
+ * Selection and attention are two different things, and conflating them is what made the first
+ * version contradict itself: focus raised a series, so pressing Space on the focused key
+ * lowered the one the reader had just arrived at while `aria-pressed` still said it was on.
+ * Here the legend is a radio group — exactly one key can be pinned, arrow keys move the
+ * selection the way a radio group is expected to, and clicking the pinned key clears it —
+ * while hover and point focus only *preview*, which changes what is raised without ever
+ * contradicting what `aria-checked` says is chosen.
  */
 export function ChartFrame({
   id,
@@ -97,15 +115,46 @@ export function ChartFrame({
   caption,
   source,
   entries,
-  active,
-  onActive,
   children,
 }: ChartFrameProps) {
   const [ref, width] = useChartWidth()
-  const readout = useMemo(
-    () => entries.find((entry) => entry.label === active)?.readout ?? null,
-    [entries, active],
-  )
+  const [pinned, setPinned] = useState<string | null>(null)
+  const [previewed, setPreviewed] = useState<string | null>(null)
+  const [detailed, setDetailed] = useState<string | null>(null)
+  const keys = useRef<(HTMLButtonElement | null)[]>([])
+
+  const active = previewed ?? pinned
+  const readout =
+    detailed ?? entries.find((entry) => entry.label === active)?.readout ?? null
+
+  // Roving tabindex: the group is one tab stop, and the arrows move within it. With nothing
+  // pinned the first key holds the stop, so the group is reachable before anything is chosen.
+  const chosen = entries.findIndex((entry) => entry.label === pinned)
+  const stop = chosen === -1 ? 0 : chosen
+
+  const move = (from: number, step: number) => {
+    const to = (from + step + entries.length) % entries.length
+    setPinned(entries[to]!.label)
+    keys.current[to]?.focus()
+  }
+
+  const onKeyDown = (event: React.KeyboardEvent, index: number) => {
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      event.preventDefault()
+      move(index, 1)
+    }
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      event.preventDefault()
+      move(index, -1)
+    }
+  }
+
+  const drawing: ChartDrawing = {
+    width,
+    active,
+    preview: setPreviewed,
+    detail: setDetailed,
+  }
 
   return (
     <figure
@@ -118,23 +167,34 @@ export function ChartFrame({
       </p>
 
       <div ref={ref} className="mt-3">
-        {children(width)}
+        {children(drawing)}
       </div>
 
       <p className="sr-only">{summary}</p>
 
-      <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-2" onMouseLeave={() => onActive(null)}>
-        {entries.map((entry) => (
+      <ul
+        role="radiogroup"
+        aria-labelledby={`chart-${id}-title`}
+        className="mt-3 flex flex-wrap gap-x-4 gap-y-2"
+        onMouseLeave={() => setPreviewed(null)}
+      >
+        {entries.map((entry, index) => (
           <li key={entry.label}>
             <button
+              ref={(node) => {
+                keys.current[index] = node
+              }}
               type="button"
+              role="radio"
               className="tg-chart-key"
-              aria-pressed={active === entry.label}
+              aria-checked={pinned === entry.label}
+              tabIndex={index === stop ? 0 : -1}
               style={{ color: toneColor(entry.tone) }}
-              onFocus={() => onActive(entry.label)}
-              onBlur={() => onActive(null)}
-              onMouseEnter={() => onActive(entry.label)}
-              onClick={() => onActive(active === entry.label ? null : entry.label)}
+              onKeyDown={(event) => onKeyDown(event, index)}
+              onFocus={() => setPreviewed(entry.label)}
+              onBlur={() => setPreviewed(null)}
+              onMouseEnter={() => setPreviewed(entry.label)}
+              onClick={() => setPinned(pinned === entry.label ? null : entry.label)}
             >
               <span aria-hidden="true" className="tg-chart-swatch" />
               {entry.label}
@@ -153,15 +213,19 @@ export function ChartFrame({
           {source && (
             <>
               {caption ? ' ' : ''}
-              <a
-                href={source.url}
-                rel="noreferrer noopener"
-                target="_blank"
-                className="underline underline-offset-4"
-                style={{ color: 'var(--instrument-accent)' }}
-              >
-                {source.title}
-              </a>
+              {safeHref(source.url) === null ? (
+                source.title
+              ) : (
+                <a
+                  href={safeHref(source.url)!}
+                  rel="noreferrer noopener"
+                  target="_blank"
+                  className="underline underline-offset-4"
+                  style={{ color: 'var(--instrument-accent)' }}
+                >
+                  {source.title}
+                </a>
+              )}
             </>
           )}
         </figcaption>

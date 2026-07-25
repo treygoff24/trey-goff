@@ -223,8 +223,19 @@ function sentinelHits(paths: readonly string[]): string[] {
   return paths.filter((candidate) => readText(candidate).includes(INSTRUMENT_SENTINEL))
 }
 
+/**
+ * A draft essay is not in `generateStaticParams` on a production build, so it has no page on
+ * disk to inspect. That is not a leak — it is the draft gate working — and treating it as one
+ * would mean an instrumented piece could never be developed behind the preview route.
+ */
+function isDraft(slug: string): boolean {
+  const frontmatter = readText(path.join(ESSAYS_DIR, `${slug}.mdx`)).split('---')[1] ?? ''
+  return /^status:\s*['"]?draft['"]?\s*$/m.test(frontmatter)
+}
+
 interface InstrumentCheck {
   instrumented: string[]
+  skipped: string[]
   plainChecked: number
   failures: string[]
 }
@@ -241,11 +252,13 @@ interface InstrumentCheck {
  *    arbitrary plain slug let a non-representative essay hide a leak in all the others.
  */
 function verifyInstrumentIsolation(): InstrumentCheck {
-  const instrumented = instrumentedSlugs()
+  const all = instrumentedSlugs()
+  const skipped = all.filter(isDraft)
+  const instrumented = all.filter((slug) => !skipped.includes(slug))
   const failures: string[] = []
 
-  // Nothing to prove until a piece is actually instrumented.
-  if (instrumented.length === 0) return { instrumented, plainChecked: 0, failures }
+  // Nothing to prove until a piece is actually instrumented and published.
+  if (instrumented.length === 0) return { instrumented, skipped, plainChecked: 0, failures }
 
   for (const slug of instrumented) {
     const { pages, chunks } = essayArtifacts(slug)
@@ -265,7 +278,7 @@ function verifyInstrumentIsolation(): InstrumentCheck {
   }
 
   const plain = essaySlugs()
-    .filter((slug) => !instrumented.includes(slug))
+    .filter((slug) => !all.includes(slug))
     .map((slug) => ({ slug, ...essayArtifacts(slug) }))
     .filter((essay) => essay.pages.length > 0)
 
@@ -279,7 +292,7 @@ function verifyInstrumentIsolation(): InstrumentCheck {
     }
   }
 
-  return { instrumented, plainChecked: plain.length, failures }
+  return { instrumented, skipped, plainChecked: plain.length, failures }
 }
 
 function verifyAppRoutesExist(): string[] {
@@ -355,8 +368,11 @@ if (machineWarning) {
 }
 
 console.log('\n4. Instrument isolation')
+if (instrumentCheck.skipped.length > 0) {
+  console.log(`   Draft (not built, not checked): ${instrumentCheck.skipped.join(', ')}`)
+}
 if (instrumentCheck.instrumented.length === 0) {
-  console.log('   – no instrumented pieces built; nothing to isolate')
+  console.log('   – no published instrumented pieces built; nothing to isolate')
 } else {
   console.log(`   Instrumented slugs: ${instrumentCheck.instrumented.join(', ')}`)
   console.log(`   Ordinary essays asserted clean: ${instrumentCheck.plainChecked}`)

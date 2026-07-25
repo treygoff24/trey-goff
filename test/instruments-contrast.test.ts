@@ -3,6 +3,14 @@ import assert from 'node:assert/strict'
 import { readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { LEDGER_STATE_VALUES } from '../lib/instruments/url-state'
+import { CHART_TONES, MARK_KINDS } from '../lib/instruments/types'
+
+/** Every data colour the instrument layer paints text in, by its token name. */
+const DATA_TOKENS = [
+  ...LEDGER_STATE_VALUES.map((state) => `color-verdict-${state}`),
+  ...MARK_KINDS.map((kind) => `color-mark-${kind}`),
+  ...CHART_TONES.map((tone) => `color-chart-${tone}`),
+]
 
 const css = readFileSync(join(process.cwd(), 'app/globals.css'), 'utf8')
 
@@ -120,11 +128,11 @@ const grounds: [string, number][] = [
   ],
 ]
 
-test('every verdict colour clears WCAG AA on every ground it is painted on', () => {
-  for (const state of LEDGER_STATE_VALUES) {
-    const value = declaration(`color-verdict-${state}`)
+test('every data colour clears WCAG AA on every ground it is painted on', () => {
+  for (const state of DATA_TOKENS) {
+    const value = declaration(state)
     const parts = value.match(/oklch\(([\d.]+)\s+([\d.]+)\s+([\d.]+)\)/)
-    assert.ok(parts, `--color-verdict-${state} is not a plain oklch() triple: ${value}`)
+    assert.ok(parts, `--${state} is not a plain oklch() triple: ${value}`)
     const foreground = luminance(
       linearFromOklch(Number(parts[1]), Number(parts[2]), Number(parts[3])),
     )
@@ -155,7 +163,10 @@ test('the sticky bar and its chips clear WCAG AA on the translucent ground they 
       linearFromOklch(Number(parts[1]), Number(parts[2]), Number(parts[3])),
     )
     const ratio = contrast(foreground, ground)
-    assert.ok(ratio >= 4.5, `the ${state} chip is ${ratio.toFixed(2)}:1 on the sticky bar, below AA`)
+    assert.ok(
+      ratio >= 4.5,
+      `the ${state} chip is ${ratio.toFixed(2)}:1 on the sticky bar, below AA`,
+    )
   }
 })
 
@@ -163,8 +174,8 @@ test('verdict tokens are declared outside @theme so Tailwind cannot shake them o
   const theme = css.slice(css.indexOf('@theme {'), css.indexOf('\n}\n', css.indexOf('@theme {')))
   assert.doesNotMatch(
     theme,
-    /--color-verdict-/,
-    'verdict tokens are reached only through var(); inside @theme they are dropped from the build',
+    /--color-verdict-|--color-mark-|--color-chart-/,
+    'data tokens are reached only through var(); inside @theme they are dropped from the build',
   )
 })
 

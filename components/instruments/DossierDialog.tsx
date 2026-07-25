@@ -5,6 +5,7 @@ import type { Root } from 'hast'
 import { hastToReact } from '@/lib/instruments/hast-to-react'
 import { useLedger } from '@/components/instruments/LedgerProvider'
 import { closeDossier, focusClaim, useLedgerStore } from '@/components/instruments/ledger-store'
+import { useModalDialog } from '@/components/instruments/dialog'
 import { INSTRUMENT_SENTINEL } from '@/components/instruments/sentinel'
 
 interface DossierPanel {
@@ -33,20 +34,16 @@ interface DossierResponse {
 export default function DossierDialog({ slug }: { slug: string }) {
   const { model } = useLedger()
   const open = useLedgerStore((state) => state.dossier)
-  const ref = useRef<HTMLDialogElement>(null)
+  const ref = useModalDialog(Boolean(open))
   const bodyRef = useRef<HTMLDivElement>(null)
   const cache = useRef(new Map<string, DossierPanel>())
   const [panel, setPanel] = useState<DossierPanel | null>(null)
   const [failed, setFailed] = useState(false)
 
+  // `useModalDialog` owns opening, closing and focus return; this only resets the scroll so a
+  // reopened panel does not start halfway down the previous finding.
   useEffect(() => {
-    const dialog = ref.current
-    if (!dialog) return
-    if (open && !dialog.open) {
-      dialog.showModal()
-      if (bodyRef.current) bodyRef.current.scrollTop = 0
-    }
-    if (!open && dialog.open) dialog.close()
+    if (open && bodyRef.current) bodyRef.current.scrollTop = 0
   }, [open])
 
   useEffect(() => {
@@ -100,7 +97,7 @@ export default function DossierDialog({ slug }: { slug: string }) {
 
     dialog.addEventListener('click', onClick)
     return () => dialog.removeEventListener('click', onClick)
-  }, [model.byId])
+  }, [ref, model.byId])
 
   // The effect clears a stale panel, but not before the render that reopens the dialog, so the
   // body is gated on identity rather than on the clearing having already happened.

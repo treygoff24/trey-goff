@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import type { SlopeChart } from '@/lib/instruments/types'
 import {
   ChartFrame,
@@ -52,12 +52,15 @@ function deCollide(wanted: { key: string; want: number }[], top: number, bottom:
     floor = item.at - MIN_GAP
   }
 
+  // The plot is sized from the series count so both passes fit, but a caller is free to draw
+  // this at any height it likes and the backward pass only ever pushes up. Clamping into the
+  // band is the guarantee that no label ever paints outside the figure it belongs to.
+  for (const item of placed) item.at = Math.min(Math.max(item.at, top), bottom)
+
   return placed
 }
 
 export default function Slope({ chart }: { chart: SlopeChart }) {
-  const [active, setActive] = useState<string | null>(null)
-
   const entries = useMemo<ChartEntry[]>(
     () =>
       chart.series.map((series) => ({
@@ -76,14 +79,16 @@ export default function Slope({ chart }: { chart: SlopeChart }) {
       caption={chart.caption}
       source={chart.source}
       entries={entries}
-      active={active}
-      onActive={setActive}
     >
-      {(width) => {
+      {({ width, active, preview, detail }) => {
         const compact = isCompact(width)
         const left = compact ? 34 : 168
         const right = compact ? 46 : 96
-        const height = Math.max(220, Math.min(360, chart.series.length * 46 + 120))
+        // No upper bound. A cap on the height with no cap on the series count is a promise the
+        // de-collision pass cannot keep: past about five series the labels need more room than
+        // 360px has, and the pass has to choose between overlapping them and pushing them off
+        // the plot. Growing the plot instead is the only answer that keeps the chart honest.
+        const height = Math.max(220, chart.series.length * 46 + 120)
         const top = 24
         const bottom = height - 24
 
@@ -163,8 +168,47 @@ export default function Slope({ chart }: { chart: SlopeChart }) {
                     stroke={colour}
                     strokeWidth={active === series.label ? 2.6 : 2}
                   />
-                  <circle cx={x0} cy={fromY} r={3.5} fill={colour} />
-                  <circle cx={x1} cy={toY} r={3.5} fill={colour} />
+                  {/* The two endpoints are the figure's only real observations, so they are
+                      the two things a keyboard has to be able to reach. */}
+                  {(
+                    [
+                      { at: 'from', cx: x0, cy: fromY, value: series.from, when: chart.fromLabel },
+                      { at: 'to', cx: x1, cy: toY, value: series.to, when: chart.toLabel },
+                    ] as const
+                  ).map((point) => {
+                    const readout = `${series.label}: ${point.value}${chart.unit ?? ''} in ${point.when}`
+                    return (
+                      <circle
+                        key={point.at}
+                        className="tg-chart-point"
+                        cx={point.cx}
+                        cy={point.cy}
+                        r={3.5}
+                        fill={colour}
+                        stroke="transparent"
+                        strokeWidth={14}
+                        tabIndex={0}
+                        role="img"
+                        aria-label={readout}
+                        onFocus={() => {
+                          preview(series.label)
+                          detail(readout)
+                        }}
+                        onBlur={() => {
+                          preview(null)
+                          detail(null)
+                        }}
+                        onMouseEnter={() => {
+                          preview(series.label)
+                          detail(readout)
+                        }}
+                        onMouseLeave={() => {
+                          preview(null)
+                          detail(null)
+                        }}
+                      />
+                    )
+                  })}
 
                   {Math.abs(labelRight - toY) > 2 && (
                     <line
