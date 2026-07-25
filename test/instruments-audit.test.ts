@@ -368,3 +368,31 @@ test('safeHref admits only parseable http(s) URLs', async () => {
     assert.equal(safeHref(bad), null, bad)
   }
 })
+
+test('the publication cover shows only published instrumented pieces', async () => {
+  const { publishedInstrumentedPieces } = await import('@/lib/instruments/publication')
+  const pieces = publishedInstrumentedPieces()
+  assert.ok(
+    pieces.some((piece) => piece.slug === 'ufo-claims-ledger'),
+    'the shipped ledger is on the cover',
+  )
+  assert.ok(
+    !pieces.some((piece) => piece.slug === DEMO),
+    'the draft bench never reaches the cover',
+  )
+})
+
+test('a one-piece publication nav renders identity, not links', async () => {
+  const { createElement } = await import('react')
+  const { renderToStaticMarkup } = await import('react-dom/server')
+  const { PublicationNav } = await import('@/components/instruments/PublicationNav')
+  const { publishedInstrumentedPieces } = await import('@/lib/instruments/publication')
+
+  const pieces = publishedInstrumentedPieces()
+  const first = pieces[0]
+  assert.ok(first && pieces.length === 1, 'this test pins the n=1 rendering; update it when n grows')
+
+  const html = renderToStaticMarkup(createElement(PublicationNav, { slug: first.slug, pieces }))
+  assert.ok(html.length > 0, 'nav renders at n=1')
+  assert.doesNotMatch(html, /<a\s/, 'no links to other pieces exist yet, so none render')
+})

@@ -4,7 +4,10 @@ import {
   instrumentedSlugs,
   loadInstrumentPiece,
 } from '@/lib/instruments/manifest'
-import { LEDGER_STATES, type LedgerState } from '@/components/instruments/ledger-model'
+import {
+  LEDGER_STATE_VALUES as LEDGER_STATES,
+  type LedgerFilterState as LedgerState,
+} from '@/lib/instruments/url-state'
 import type { InstrumentId } from '@/lib/instruments/manifest'
 
 /**

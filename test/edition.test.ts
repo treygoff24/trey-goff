@@ -332,4 +332,20 @@ test('the system prompt is byte-identical for a frozen catalog', () => {
   const withInstrumented = frozen.map((item) => ({ ...item, instrumented: true }))
   assert.equal(buildEditionSystemPrompt(withInstrumented), prompt)
   assert.ok(!prompt.includes('instrumented'))
+
+  // The digest alone cannot catch a future optional field that is undefined on this fixture,
+  // so pin the read set itself: serialization may touch exactly the six allowed fields.
+  const ALLOWED = new Set(['type', 'slug', 'title', 'date', 'summary', 'tags'])
+  const guarded = frozen.map(
+    (item) =>
+      new Proxy(item, {
+        get(target, prop, receiver) {
+          if (typeof prop === 'string' && !ALLOWED.has(prop)) {
+            throw new Error(`buildEditionSystemPrompt read undeclared field: ${prop}`)
+          }
+          return Reflect.get(target, prop, receiver)
+        },
+      }),
+  )
+  assert.equal(buildEditionSystemPrompt(guarded), prompt)
 })
