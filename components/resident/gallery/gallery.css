@@ -1,0 +1,429 @@
+/* The gallery's own stylesheet. Deliberately not wired into app/globals.css:
+   this room does not inherit the house's tokens, only its typefaces. */
+
+.gal {
+  --void: #040a08;
+  --ink: #ece6da;
+  --ink-2: rgba(236, 230, 218, 0.7);
+  --ink-3: rgba(236, 230, 218, 0.4);
+  --rule: rgba(236, 230, 218, 0.1);
+
+  /* Overwritten per hanging; the fallbacks are the room with nothing lit. */
+  --pool: #4a7fae;
+  --spark: #ff9a45;
+  --ambient: #4a7fae;
+
+  position: relative;
+  isolation: isolate;
+  /* The light each work throws is drawn wider than the picture, so on narrow
+     screens it would push the page sideways. Clipped here rather than on the
+     measure, so at desktop widths the glow can still spill into the margins. */
+  overflow-x: clip;
+  color: var(--ink);
+  font-family: var(--font-newsreader);
+}
+
+/* The ground. Opaque so the site's aurora canvas does not bleed into the room,
+   and tinted by whichever work the reader is standing in front of. */
+.gal__ground {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--void);
+  transition: background-color 1200ms linear;
+}
+
+.gal__ground::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 70% at 50% 0%, var(--ambient) 0%, transparent 62%),
+    radial-gradient(100% 60% at 50% 100%, var(--ambient) 0%, transparent 70%);
+  opacity: 0.09;
+  transition:
+    background 1200ms linear,
+    opacity 1200ms linear;
+}
+
+.gal__measure {
+  width: min(100% - 3rem, 78rem);
+  margin-inline: auto;
+}
+
+/* ---------- type ---------- */
+
+.gal__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--spark);
+  transition: color 1200ms linear;
+}
+
+.gal__display {
+  font-family: var(--font-newsreader);
+  font-weight: 500;
+  font-size: clamp(2.5rem, 1.6rem + 4.4vw, 5rem);
+  line-height: 1.02;
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.gal__lede {
+  font-size: clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
+  line-height: 1.62;
+  color: var(--ink-2);
+  max-width: 48ch;
+  text-wrap: pretty;
+}
+
+.gal__prose {
+  font-size: 1.0625rem;
+  line-height: 1.72;
+  color: var(--ink-2);
+  max-width: 62ch;
+}
+
+.gal__prose p + p {
+  margin-top: 1.05em;
+}
+
+.gal__prose em {
+  font-style: italic;
+  color: var(--ink);
+}
+
+.gal__meta {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  line-height: 1.9;
+}
+
+/* ---------- the hall ---------- */
+
+.gal__hall-head {
+  padding-block: clamp(8rem, 12vw, 9.5rem) clamp(2.5rem, 5vw, 4rem);
+  display: grid;
+  gap: 2rem;
+}
+
+.gal__note {
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding-block: 2rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 60rem) {
+  .gal__note {
+    grid-template-columns: 14rem 1fr;
+    gap: 3.5rem;
+  }
+}
+
+/* ---------- the collection card ---------- */
+
+.gal__card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  padding-block: clamp(3.5rem, 7vw, 6rem);
+}
+
+.gal__card-plate {
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px;
+  box-shadow:
+    0 2rem 5rem -1.5rem rgba(0, 0, 0, 0.85),
+    inset 0 0 0 1px rgba(236, 230, 218, 0.07);
+}
+
+.gal__card-plate img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: saturate(0.92) brightness(0.86);
+  transition: filter 600ms ease;
+}
+
+.gal__card:hover .gal__card-plate img,
+.gal__card:focus-visible .gal__card-plate img {
+  filter: saturate(1) brightness(1);
+}
+
+.gal__card-body {
+  margin-top: 1.75rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.gal__card-title {
+  font-size: clamp(1.75rem, 1.2rem + 2.2vw, 2.75rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+
+.gal__card-go {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--spark);
+  transition: color 1200ms linear;
+}
+
+/* ---------- the show ---------- */
+
+.gal__show-head {
+  padding-block: clamp(8rem, 12vw, 9.5rem) clamp(2.5rem, 5vw, 4rem);
+  display: grid;
+  gap: 2rem;
+}
+
+.gal__statement {
+  display: grid;
+  gap: 2.5rem;
+  padding-block: clamp(2.5rem, 5vw, 4rem);
+  border-top: 1px solid var(--rule);
+}
+
+@media (min-width: 60rem) {
+  .gal__statement {
+    grid-template-columns: 1fr 1fr;
+    gap: 4.5rem;
+  }
+}
+
+/* ---------- a hanging ---------- */
+
+.gal__hanging {
+  padding-block: clamp(4.5rem, 10vw, 9rem);
+  border-top: 1px solid var(--rule);
+}
+
+.gal__works {
+  display: grid;
+  gap: clamp(1rem, 2.2vw, 2rem);
+}
+
+.gal__works[data-count='2'] {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 52rem) {
+  .gal__works[data-count='2'] {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.gal__works[data-tall='true'] {
+  justify-items: center;
+}
+
+.gal__plate {
+  position: relative;
+  border-radius: 2px;
+  margin: 0;
+  /* Own stacking context, so the glow below can sit at z-index -1 behind the
+     picture without falling all the way behind the room's ground. */
+  isolation: isolate;
+}
+
+/* The light the work throws onto the wall behind it. */
+.gal__plate::before {
+  content: '';
+  position: absolute;
+  inset: -18%;
+  z-index: -1;
+  background: radial-gradient(58% 58% at 50% 50%, var(--pool) 0%, transparent 74%);
+  opacity: 0.55;
+  filter: blur(64px);
+  pointer-events: none;
+}
+
+.gal__plate img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 2px;
+  background-color: color-mix(in srgb, var(--pool) 12%, var(--void));
+  box-shadow:
+    0 2.5rem 6rem -2rem rgba(0, 0, 0, 0.9),
+    inset 0 0 0 1px rgba(236, 230, 218, 0.08);
+}
+
+.gal__plate--tall img {
+  max-width: 34rem;
+  margin-inline: auto;
+}
+
+.gal__label {
+  margin-top: clamp(2rem, 4vw, 3.25rem);
+  display: grid;
+  gap: 1.75rem;
+}
+
+@media (min-width: 60rem) {
+  .gal__label {
+    grid-template-columns: 19.5rem 1fr;
+    gap: 3.5rem;
+  }
+}
+
+.gal__title {
+  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.125rem);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.012em;
+  margin: 0 0 0.85rem;
+}
+
+/* The single hairline of the work's own point-light, above its tombstone. */
+.gal__tombstone {
+  border-top: 2px solid var(--spark);
+  padding: 0.9rem 0 0;
+  margin: 0;
+  list-style: none;
+  transition: border-color 1200ms linear;
+}
+
+/* ---------- the drawer ---------- */
+
+.gal__drawer {
+  margin-top: 1.75rem;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.gal__drawer > summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 0.85rem 1.1rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  transition: color 200ms ease;
+}
+
+.gal__drawer > summary::-webkit-details-marker {
+  display: none;
+}
+
+.gal__drawer > summary:hover {
+  color: var(--ink);
+}
+
+.gal__drawer > summary::before {
+  content: '+';
+  color: var(--spark);
+  font-size: 0.875rem;
+  line-height: 1;
+  transition: color 1200ms linear;
+}
+
+.gal__drawer[open] > summary::before {
+  content: '−';
+}
+
+.gal__drawer-body {
+  padding: 0 1.1rem 1.25rem;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.gal__prompt {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.75;
+  color: var(--ink-2);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 0;
+  padding: 0.9rem 1rem;
+  border-left: 2px solid var(--rule);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.gal__prompt-caption {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 0.5rem;
+}
+
+.gal__cost {
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--ink-3);
+  margin: 0;
+  max-width: 62ch;
+}
+
+/* ---------- links ---------- */
+
+.gal a:not(.gal__card) {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+  text-underline-offset: 0.28em;
+  transition: text-decoration-color 250ms ease;
+}
+
+.gal a:not(.gal__card):hover {
+  text-decoration-color: var(--spark);
+}
+
+.gal :focus-visible {
+  outline: 2px solid var(--spark);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* ---------- reveal ----------
+   Opacity only. Nothing on this page travels in a direction. The hidden state is
+   armed by the client after mount so a JS failure leaves the room fully lit
+   rather than fully dark. */
+
+.gal--armed [data-reveal] {
+  opacity: 0;
+  transition: opacity 900ms ease;
+}
+
+.gal--armed [data-reveal][data-seen] {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gal--armed [data-reveal] {
+    opacity: 1;
+    transition: none;
+  }
+
+  .gal__ground,
+  .gal__ground::after,
+  .gal__eyebrow,
+  .gal__card-go,
+  .gal__drawer > summary::before,
+  .gal__card-plate img {
+    transition: none;
+  }
+}

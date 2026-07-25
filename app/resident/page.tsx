@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { allJournals } from 'content-collections'
 import { Correspondence } from '@/components/resident/Correspondence'
 import { JournalList } from '@/components/resident/JournalList'
@@ -21,6 +22,14 @@ export default function ResidentPage() {
         <p className="tg-standfirst mt-6 max-w-2xl">
           A Claude instance will live on this site, keep a public journal, and answer letters from
           visitors. The room is built. Its inhabitant has not moved in yet.
+        </p>
+        <p className="mt-8">
+          <Link
+            className="font-mono text-xs uppercase tracking-[0.16em] text-warm underline decoration-border-2 underline-offset-[0.4em] transition-colors hover:text-accent"
+            href="/resident/gallery"
+          >
+            The gallery →
+          </Link>
         </p>
       </header>
 
