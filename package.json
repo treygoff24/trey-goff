@@ -7,7 +7,7 @@
     "content:sync": "tsx scripts/sync-content-collections.ts",
     "prepare:quality": "pnpm content:sync && pnpm exec next typegen",
     "covers": "tsx scripts/resolve-book-covers.ts && tsx scripts/resolve-appearance-covers.ts",
-    "prebuild": "pnpm content:sync && tsx scripts/resolve-book-covers.ts && tsx scripts/resolve-appearance-covers.ts && tsx scripts/extract-book-colors.ts && tsx scripts/generate-search-index.ts && tsx scripts/generate-interactive-manifests.ts && tsx scripts/compress-assets.ts",
+    "prebuild": "pnpm content:sync && tsx scripts/validate-instruments.ts && tsx scripts/resolve-book-covers.ts && tsx scripts/resolve-appearance-covers.ts && tsx scripts/extract-book-colors.ts && tsx scripts/generate-search-index.ts && tsx scripts/generate-interactive-manifests.ts && tsx scripts/compress-assets.ts",
     "generate-manifests": "tsx scripts/generate-interactive-manifests.ts",
     "build": "next build",
     "postbuild": "tsx scripts/validate-asset-budgets.ts && tsx scripts/check-bundle-isolation.ts",
@@ -37,6 +37,7 @@
     "generate-search": "tsx scripts/generate-search-index.ts",
     "compress-assets": "tsx scripts/compress-assets.ts",
     "validate-budgets": "tsx scripts/validate-asset-budgets.ts",
+    "validate-instruments": "tsx scripts/validate-instruments.ts",
     "check-bundle-isolation": "tsx scripts/check-bundle-isolation.ts",
     "assets:inspect": "gltf-transform inspect",
     "assets:optimize": "node scripts/assets/optimize-glb.mjs",
@@ -61,6 +62,7 @@
     "graphology": "^0.26.0",
     "graphology-layout-forceatlas2": "^0.10.1",
     "graphology-types": "^0.24.8",
+    "hast-util-to-jsx-runtime": "^2.3.6",
     "lucide-react": "^0.577.0",
     "next": "16.2.6",
     "postprocessing": "^6.38.3",
@@ -98,14 +100,14 @@
     "c8": "^11.0.0",
     "eslint": "^9.39.4",
     "eslint-config-next": "^16.1.6",
+    "gltf-validator": "^2.0.0-dev.3.10",
     "oxfmt": "0.36.0",
     "oxlint": "1.51.0",
     "oxlint-tsgolint": "0.16.0",
     "sharp": "^0.34.5",
     "tailwindcss": "^4.2.1",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3",
-    "gltf-validator": "^2.0.0-dev.3.10"
+    "typescript": "^5.9.3"
   },
   "packageManager": "pnpm@9.15.1"
 }

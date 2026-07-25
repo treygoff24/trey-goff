@@ -1,0 +1,42 @@
+{
+  "slug": "ufo-claims-ledger",
+  "accent": {
+    "hue": 196,
+    "chroma": 0.12
+  },
+  "instruments": [
+    "instrument-rail",
+    "time-spine",
+    "claim-ledger"
+  ],
+  "data": {
+    "claims": "claims.json"
+  },
+  "dossiers": [
+    "moon-geology",
+    "photo-whistleblowers",
+    "tehran"
+  ],
+  "provenance": [
+    {
+      "path": "claims.json",
+      "source": "claims.md",
+      "sha256": "98ae0857522fdb2435d063a49b8b7061c5c8e5b2f280215359c715f569dedcd8"
+    },
+    {
+      "path": "dossiers/moon-geology.md",
+      "source": "dossiers/moon-geology.md",
+      "sha256": "2b64817b4154d60f90c7f17364fe867d36e56b254c74b6f8e737b0be8829274d"
+    },
+    {
+      "path": "dossiers/photo-whistleblowers.md",
+      "source": "dossiers/photo-whistleblowers.md",
+      "sha256": "c4b05118517b6c92de4fe4cee94294e8dacfa195c96a258980497b3c8b619393"
+    },
+    {
+      "path": "dossiers/tehran.md",
+      "source": "dossiers/tehran.md",
+      "sha256": "78d8a4af362f0fbf74b4dd0e40344292fe41f1cb61c494f5adb523e82a5d02f2"
+    }
+  ]
+}
