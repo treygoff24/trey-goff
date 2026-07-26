@@ -1,5 +1,7 @@
 # 03 — The Resident (`/resident`)
 
+**Status 2026-07-26: partly superseded. Half A (Eve app, proxy, SSE, turn caps, correspondence) was deleted; half B (journal, entry pages, gallery) is the shipped feature.**
+
 Read `00-shared-contracts.md` first. It is binding.
 
 ## 1. What this is

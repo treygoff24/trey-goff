@@ -10,6 +10,7 @@ const navItems = [
   { href: '/projects', label: 'Projects' },
   { href: '/library', label: 'Library' },
   { href: '/machine', label: 'Machine' },
+  { href: '/resident', label: 'Resident' },
   { href: '/about', label: 'About' },
 ]
 
@@ -67,8 +68,8 @@ export function TopNav() {
           Trey Goff
         </Link>
 
-        {/* Below 360px the five links only fit on one line with a tighter
-            gap and slightly smaller type — otherwise "About" wraps alone. */}
+        {/* Narrow viewports get a tighter gap and smaller type so the links
+            wrap to two balanced lines instead of stranding one alone. */}
         <div className="flex flex-wrap items-center gap-x-5 gap-y-1 max-[360px]:gap-x-3 md:gap-8">
           {navItems.map((item) => {
             const isActive = pathname === item.href || pathname?.startsWith(item.href + '/')

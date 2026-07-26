@@ -76,7 +76,6 @@ export default defineConfig({
       NEXT_DIST_DIR: '.next-e2e',
       // Lab features run enabled under e2e; dormant states are unit-tested.
       NEXT_PUBLIC_ENABLE_EDITION: 'true',
-      NEXT_PUBLIC_ENABLE_RESIDENT: 'true',
       ANNEX_SECRET: 'e2e-annex-secret-with-at-least-thirty-two-chars',
       ANNEX_GITHUB_TOKEN: 'e2e-annex-github-token',
       ANNEX_CONTENT_REPO: 'e2e/annex-content',

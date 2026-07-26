@@ -91,7 +91,6 @@ const journal = defineCollection({
   transform: (document) => ({
     ...document,
     slug: document._meta.path.replace(/\.mdx$/, ''),
-    wordCount: document.content.trim().split(/\s+/).filter(Boolean).length,
   }),
 })
 

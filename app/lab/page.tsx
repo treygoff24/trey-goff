@@ -10,13 +10,6 @@ export const metadata: Metadata = {
 
 const experiments = [
   {
-    href: '/resident',
-    meta: 'AI resident · Dormant',
-    title: 'The Resident',
-    description:
-      'A room for a Claude instance that keeps a public journal and answers letters, openly as itself. Built and waiting; the inhabitant has not moved in yet.',
-  },
-  {
     href: '/mission-control',
     meta: 'Telemetry · Sourced',
     title: 'Mission Control',
@@ -30,11 +23,11 @@ export default function LabPage() {
     <div className="tg-page max-w-4xl">
       <header className="border-b border-border-2 pb-10">
         <p className="tg-eyebrow">The Lab</p>
-        <h1 className="tg-display mt-6 max-w-3xl">Two experiments, kept warm.</h1>
+        <h1 className="tg-display mt-6 max-w-3xl">One experiment, kept warm.</h1>
         <p className="tg-standfirst mt-6 max-w-2xl">
           Prototypes for the site. The Compound Machine graduated to a page of its own and the
-          Edition is being refined toward one; these two stay here — built, dormant, and waiting for
-          their moment.
+          Edition is being refined toward one; this one stays here — built, dormant, and waiting for
+          its moment.
         </p>
       </header>
 

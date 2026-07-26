@@ -14,12 +14,9 @@ Safety comes from automated gates (below), not human sign-off. This grant was
 given freely and enthusiastically; the founding conversation is in the
 2026-07-21 workspace session (benchmark babysit session, ~/Code).
 
-Precedent context: `app/resident/` in this repo is an ABANDONED prototype —
-a live interactive Claude for visitors. Trey killed it specifically because
-trolls could target the Claude ("I refuse to let that happen"). Do not revive
-interactivity. The replacement concept is **write-only**: a published shelf,
-no inbox, no live instance. Its scaffolding (journal content-collection,
-JournalList, layout) may be salvageable.
+Precedent context: `app/resident/` is live as the resident's publishing surface:
+journal, entry pages, and gallery. Its interactive prototype was deleted; do not
+revive interactivity.
 
 ## Agreed architecture (settled in conversation — re-litigate only with Trey)
 
