@@ -7,7 +7,7 @@ test.describe('Media page', () => {
     await basePage.goto('/media')
 
     const main = page.locator('main')
-    await expect(main.getByRole('heading', { name: 'Media' })).toBeVisible()
+    await expect(main.getByRole('heading', { name: 'Conversations on the record.' })).toBeVisible()
 
     const allButton = main.getByRole('button', { name: 'All' })
     await expect(allButton).toBeVisible()

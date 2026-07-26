@@ -5,6 +5,11 @@ import { withContentCollections } from '@content-collections/next'
 const projectRoot = fileURLToPath(new URL('.', import.meta.url))
 
 export const nextConfig: NextConfig = {
+  // .next is a single-writer resource: a `next build` run while a dev server is live silently
+  // clobbers the server's chunks and the wreckage surfaces as mass element-not-found in e2e.
+  // Lanes that must coexist with other agents (the e2e webServer sets NEXT_DIST_DIR=.next-e2e)
+  // get their own output tree instead.
+  distDir: process.env.NEXT_DIST_DIR || '.next',
   // Enable React strict mode for better development experience
   reactStrictMode: true,
   // Must match `turbopack.root` — Next warns if tracing root and Turbopack root differ.

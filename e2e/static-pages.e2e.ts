@@ -47,8 +47,8 @@ test.describe('Static content pages', () => {
     const basePage = new BasePage(page)
     await basePage.goto('/projects')
 
-    await expect(page.getByRole('heading', { name: "Systems I'm building" })).toBeVisible()
-    await expect(page.getByText(/websites, command-line & agent tooling/i)).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'One machine, many hands' })).toBeVisible()
+    await expect(page.getByText(/command-line tools, agent infrastructure/i)).toBeVisible()
 
     const rows = page.locator('article')
     const rowCount = await rows.count()

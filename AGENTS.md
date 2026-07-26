@@ -17,6 +17,7 @@ This repo is Trey Goff's Next.js 16 personal site with MDX content, generated se
 - `pnpm lint` and `pnpm typecheck` are the authoritative Oxc/TS7 gates; `pnpm lint:legacy` and `pnpm typecheck:legacy` are comparison lanes only.
 - If you edit `content/` or `content/library/books.json`, run `pnpm prebuild` and commit the generated `public/*.json` artifacts (including `book-colors.json`, produced from cover JPGs during prebuild).
 - Preserve postbuild checks such as asset budgets and bundle isolation when touching interactive or heavy frontend code.
+- `.next` is a single-writer resource: never run `pnpm build` (or any script that builds, e.g. bundle-isolation checks) while another agent's dev server is live in this tree — the build clobbers the server's chunks silently and surfaces later as mass element-not-found in browser suites. The e2e webServer isolates itself via `NEXT_DIST_DIR=.next-e2e`; if you need a concurrent build lane, set your own `NEXT_DIST_DIR`.
 - Keep visual changes aligned with the established App Router, MDX, and content-generation structure instead of scattering one-off scripts or assets.
 
 ## Draft preview (production)

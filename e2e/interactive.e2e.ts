@@ -10,7 +10,7 @@ test.describe('Interactive entry', () => {
 
     if (!interactiveWorldEnabled) {
       await expect(page.getByRole('heading', { name: /404/, level: 1 })).toBeVisible()
-      await expect(page.getByRole('link', { name: 'Return to Base' })).toBeVisible()
+      await expect(page.getByRole('link', { name: 'Return home' })).toBeVisible()
       return
     }
 

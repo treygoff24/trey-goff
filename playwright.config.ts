@@ -71,6 +71,9 @@ export default defineConfig({
     timeout: 120 * 1000,
     env: {
       ...process.env,
+      // Own output tree so a concurrent `next build` (another agent, a gate script) cannot
+      // clobber this server's chunks mid-suite. See distDir in next.config.ts.
+      NEXT_DIST_DIR: '.next-e2e',
       // Lab features run enabled under e2e; dormant states are unit-tested.
       NEXT_PUBLIC_ENABLE_EDITION: 'true',
       NEXT_PUBLIC_ENABLE_RESIDENT: 'true',
