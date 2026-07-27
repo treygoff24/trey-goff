@@ -1,6 +1,7 @@
 import type { ClientClaim, ClientLedger } from '@/lib/instruments/types'
 import {
   LEDGER_STATE_VALUES,
+  toSeconds,
   type InstrumentUrlState,
   type LedgerFilterState,
 } from '@/lib/instruments/url-state'
@@ -35,9 +36,7 @@ const TERRAIN_STEP = 10
 /** Buckets the episode strip divides the runtime into. */
 export const BUCKET_COUNT = 60
 
-export function toSeconds(timestamp: string): number {
-  return timestamp.split(':').reduce((total, part) => total * 60 + Number(part), 0)
-}
+export { toSeconds }
 
 export function formatClock(seconds: number): string {
   const whole = Math.max(0, Math.round(seconds))

@@ -10,6 +10,7 @@ import type {
 } from '@/lib/instruments/types'
 import { hastToReact, markdownToHast } from '@/lib/instruments/render'
 import { applyAnnotations } from '@/lib/instruments/marks'
+import { textOf } from '@/lib/instruments/hast'
 import { Prose } from '@/components/content/Prose'
 import { PublicationNav } from '@/components/instruments/PublicationNav'
 import { publishedInstrumentedPieces } from '@/lib/instruments/publication'
@@ -33,14 +34,6 @@ import {
 interface Heading {
   id: string
   text: string
-}
-
-function textOf(node: Element): string {
-  return node.children
-    .map((child) =>
-      child.type === 'text' ? child.value : child.type === 'element' ? textOf(child) : '',
-    )
-    .join('')
 }
 
 /** The article's own top-level headings, for the rail. Ledger sections are added client-side. */

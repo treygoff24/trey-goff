@@ -1,6 +1,7 @@
 import appearancesData from '@/content/media/appearances.json'
 import transmissionsData from '@/content/transmissions/publications.json'
 import { attemptDate, isStale, isValidDate, type Instrument } from './instrument'
+import { isHttpUrl } from '@/lib/mission-control/url'
 
 export interface OrbitEntry {
   title: string
@@ -28,16 +29,6 @@ function absentOrbit(now: Date): Instrument<OrbitEntry[]> {
     asOf: attemptDate(now),
     source,
     stale: false,
-  }
-}
-
-function isHttpUrl(value: unknown): value is string {
-  if (typeof value !== 'string' || value.trim() === '') return false
-  try {
-    const url = new URL(value)
-    return url.protocol === 'http:' || url.protocol === 'https:'
-  } catch {
-    return false
   }
 }
 

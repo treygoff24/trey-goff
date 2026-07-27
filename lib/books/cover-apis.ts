@@ -1,3 +1,5 @@
+import { escapeXml, truncate } from '@/lib/text'
+
 // Open Library API (no auth required)
 export async function fetchOpenLibraryCover(isbn: string): Promise<string | null> {
   const sizes = ['L', 'M', 'S'] // Try large first
@@ -86,27 +88,4 @@ export function generatePlaceholderCover(title: string, author: string): string 
   `.trim()
 
   return `data:image/svg+xml,${encodeURIComponent(svg)}`
-}
-
-function escapeXml(str: string): string {
-  return str.replace(/[<>&'"]/g, (c) => {
-    switch (c) {
-      case '<':
-        return '&lt;'
-      case '>':
-        return '&gt;'
-      case '&':
-        return '&amp;'
-      case "'":
-        return '&apos;'
-      case '"':
-        return '&quot;'
-      default:
-        return c
-    }
-  })
-}
-
-function truncate(str: string, max: number): string {
-  return str.length > max ? str.slice(0, max - 1) + '...' : str
 }

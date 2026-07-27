@@ -1,4 +1,5 @@
 import { attemptDate, isValidDate, type Instrument } from './instrument'
+import { isHttpUrl } from '@/lib/mission-control/url'
 
 export interface ActivityDay {
   date: string
@@ -64,16 +65,6 @@ function isRepo(value: unknown): value is GitHubRepo {
     typeof repo.fork === 'boolean' &&
     typeof repo.private === 'boolean'
   )
-}
-
-function isHttpUrl(value: unknown): value is string {
-  if (typeof value !== 'string' || value.trim() === '') return false
-  try {
-    const url = new URL(value)
-    return url.protocol === 'http:' || url.protocol === 'https:'
-  } catch {
-    return false
-  }
 }
 
 export async function getShippingInstrument(

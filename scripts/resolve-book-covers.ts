@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs'
 import { resolveAllCovers } from '../lib/books/covers'
 import type { BooksData } from '../lib/books/types'
+import { escapeXml, truncate } from '../lib/text'
 
 const COVERS_DIR = './public/covers'
 
@@ -110,29 +111,6 @@ function generateLocalPlaceholder(
   </svg>`.trim()
 
   return `data:image/svg+xml,${encodeURIComponent(svg)}`
-}
-
-function escapeXml(str: string): string {
-  return str.replace(/[<>&'"]/g, (c) => {
-    switch (c) {
-      case '<':
-        return '&lt;'
-      case '>':
-        return '&gt;'
-      case '&':
-        return '&amp;'
-      case "'":
-        return '&apos;'
-      case '"':
-        return '&quot;'
-      default:
-        return c
-    }
-  })
-}
-
-function truncate(str: string, max: number): string {
-  return str.length > max ? str.slice(0, max - 1) + '...' : str
 }
 
 main().catch(console.error)

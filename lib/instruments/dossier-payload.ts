@@ -1,5 +1,6 @@
 import type { Element, ElementContent, Root, RootContent } from 'hast'
 import { dossierToHast, getClaimsLedger, getInstrumentManifest } from '@/lib/instruments/manifest'
+import { isElement, textOf } from '@/lib/instruments/hast'
 
 /**
  * A dossier as it crosses the wire: the sanitized tree the markdown pipeline produced, with
@@ -14,10 +15,6 @@ export interface DossierPayload {
 }
 
 const CLAIM_ID = /\b(C\d{3})\b/g
-
-function isElement(node: RootContent | ElementContent): node is Element {
-  return node.type === 'element'
-}
 
 /**
  * Turns every claim id mentioned in a dossier into a real control. Done here, on the tree,
@@ -63,12 +60,6 @@ function splitTitle(tree: Root): { title: string; body: Root } {
     title,
     body: { ...tree, children: tree.children.filter((_, at) => at !== index) },
   }
-}
-
-function textOf(node: Element): string {
-  return node.children
-    .map((child) => (child.type === 'text' ? child.value : isElement(child) ? textOf(child) : ''))
-    .join('')
 }
 
 /** Parser positions carry no meaning past the build and roughly double the payload. */

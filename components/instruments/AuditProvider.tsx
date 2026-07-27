@@ -4,7 +4,6 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -21,6 +20,7 @@ import {
   type Stat,
 } from '@/lib/instruments/types'
 import { INSTRUMENT_SENTINEL } from '@/components/instruments/sentinel'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 
 /** Everything an audited piece ships alongside its prose, as authored. */
 export interface PieceInstruments {
@@ -73,20 +73,6 @@ export function useAudit(): AuditContextValue {
 const MARGIN_QUERY = '(min-width: 72rem)'
 /** Vertical breathing room between two notes the packer has had to push apart. */
 const NOTE_GAP = 12
-
-function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(false)
-
-  useEffect(() => {
-    const media = window.matchMedia(query)
-    setMatches(media.matches)
-    const onChange = (event: MediaQueryListEvent) => setMatches(event.matches)
-    media.addEventListener('change', onChange)
-    return () => media.removeEventListener('change', onChange)
-  }, [query])
-
-  return matches
-}
 
 /**
  * Interval packing over the open notes.
