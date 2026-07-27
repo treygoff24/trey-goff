@@ -30,7 +30,7 @@ const BOOK_BASE_HEIGHT = 0.9
 const BOOK_BASE_DEPTH = 0.6
 
 // Colors for book covers (tier-based)
-const TIER_COLORS: Record<string, string> = {
+const TIER_COLORS: Record<BookManifestEntry['tier'], string> = {
   favorites: '#7C5CFF', // Accent purple
   recommended: '#FFB86B', // Warm gold
   read: '#4a5568', // Dark slate
@@ -109,7 +109,6 @@ function DustMotes() {
       const baseY = positions[i * 3 + 1]!
       const baseZ = positions[i * 3 + 2]!
 
-      // Gentle sinusoidal drift
       const t = timeRef.current + i * 0.1
       const driftX = Math.sin(t * velocities[i * 3]!) * 0.3
       const driftY = Math.sin(t * 0.5 + i) * 0.15
@@ -761,7 +760,7 @@ export function LibraryRoom({ debug = false, onDoorActivate, onContentSelect }: 
     (book: BookManifestEntry) => {
       if (!onContentSelect) return
 
-      const tierLabels: Record<string, string> = {
+      const tierLabels: Record<BookManifestEntry['tier'], string> = {
         favorites: '⭐ Favorites',
         recommended: 'Recommended',
         read: 'Read',

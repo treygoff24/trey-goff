@@ -1,5 +1,21 @@
 import { escapeXml, truncate } from '@/lib/text'
 
+/**
+ * The slice of a Google Books volume this module reads. The payload is remote and
+ * unvalidated, so every level is optional — the guard below is what turns it into a URL.
+ */
+interface GoogleBooksVolume {
+  volumeInfo?: {
+    imageLinks?: {
+      thumbnail?: string
+    }
+  }
+}
+
+interface GoogleBooksSearchResponse {
+  items?: GoogleBooksVolume[]
+}
+
 // Open Library API (no auth required)
 export async function fetchOpenLibraryCover(isbn: string): Promise<string | null> {
   const sizes = ['L', 'M', 'S'] // Try large first
@@ -46,11 +62,12 @@ export async function fetchGoogleBooksCover(
 
   try {
     const response = await fetch(url)
-    const data = await response.json()
+    const data = (await response.json()) as GoogleBooksSearchResponse
+    const thumbnail = data.items?.[0]?.volumeInfo?.imageLinks?.thumbnail
 
-    if (data.items?.[0]?.volumeInfo?.imageLinks?.thumbnail) {
+    if (thumbnail) {
       // Google returns http URLs, convert to https and get larger size
-      let coverUrl = data.items[0].volumeInfo.imageLinks.thumbnail
+      let coverUrl = thumbnail
       coverUrl = coverUrl.replace('http://', 'https://')
       coverUrl = coverUrl.replace('zoom=1', 'zoom=2') // Larger image
 

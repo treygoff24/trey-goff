@@ -18,7 +18,7 @@ const ROOM_WIDTH = 22
 const ROOM_DEPTH = 18
 const ROOM_HEIGHT = 7
 
-const STATUS_COLORS: Record<string, string> = {
+const STATUS_COLORS: Record<ProjectManifestEntry['status'], string> = {
   active: '#48bb78',
   shipped: '#4299e1',
   'on-hold': '#ed8936',
@@ -26,7 +26,7 @@ const STATUS_COLORS: Record<string, string> = {
   idea: '#9f7aea',
 }
 
-const TYPE_COLORS: Record<string, string> = {
+const TYPE_COLORS: Record<ProjectManifestEntry['type'], string> = {
   software: '#7C5CFF',
   policy: '#FFB86B',
   professional: '#4299e1',
@@ -380,7 +380,7 @@ export function ProjectsRoom({
     (project: ProjectManifestEntry) => {
       if (!onContentSelect) return
 
-      const statusLabels: Record<string, string> = {
+      const statusLabels: Record<ProjectManifestEntry['status'], string> = {
         active: '🟢 Active',
         shipped: '🚀 Shipped',
         'on-hold': '⏸️ On Hold',
@@ -388,7 +388,7 @@ export function ProjectsRoom({
         idea: '💡 Idea',
       }
 
-      const typeLabels: Record<string, string> = {
+      const typeLabels: Record<ProjectManifestEntry['type'], string> = {
         software: 'Software',
         policy: 'Policy',
         professional: 'Professional',

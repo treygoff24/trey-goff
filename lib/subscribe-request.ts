@@ -36,6 +36,15 @@ export function isJsonContentType(request: NextRequest): boolean {
   return base === 'application/json'
 }
 
+/**
+ * What `POST /api/subscribe` puts in its JSON body. Every path through the route returns
+ * exactly one of these two keys, so the client reads both as optional.
+ */
+export interface SubscribeResponse {
+  message?: string
+  error?: string
+}
+
 export type ParseSubscribeBodyResult =
   | { ok: true; email: string }
   | { ok: false; status: number; error: string }

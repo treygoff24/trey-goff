@@ -102,13 +102,10 @@ const cylinderFragmentShader = /* glsl */ `
     float windows = sin(vUv.x * 80.0) * sin(vUv.y * 200.0);
     windows = step(0.7, windows) * 0.3;
     
-    // Base metallic color
     vec3 baseColor = uColor * (0.3 + panels * 0.2);
     
-    // Add rim glow
     vec3 rimColor = vec3(0.4, 0.6, 1.0) * fresnel * uGlowIntensity;
     
-    // Add window lights
     vec3 windowColor = vec3(1.0, 0.9, 0.7) * windows;
     
     vec3 finalColor = baseColor + rimColor + windowColor;
@@ -166,7 +163,6 @@ const terrainVertexShader = /* glsl */ `
   void main() {
     vUv = uv;
     
-    // Generate terrain height
     vec2 noiseCoord = position.xz * 0.02;
     float elevation = fbm(noiseCoord) * 15.0;
     
@@ -209,7 +205,6 @@ const terrainFragmentShader = /* glsl */ `
   varying vec3 vNormal;
   
   void main() {
-    // Height-based coloring
     float heightFactor = smoothstep(0.0, 20.0, vElevation);
     vec3 color = mix(uBaseColor, uHighColor, heightFactor);
     
@@ -218,7 +213,6 @@ const terrainFragmentShader = /* glsl */ `
     float gridLine = smoothstep(0.02, 0.0, min(grid.x, grid.y));
     color += uGlowColor * gridLine * 0.3;
     
-    // Simple lighting
     vec3 lightDir = normalize(vec3(0.5, 1.0, 0.3));
     float diffuse = max(dot(vNormal, lightDir), 0.0);
     color *= 0.5 + diffuse * 0.5;

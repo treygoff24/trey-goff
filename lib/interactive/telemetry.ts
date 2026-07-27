@@ -1,8 +1,6 @@
 /**
  * Telemetry for Interactive route.
  * Tracks load milestones, engagement events, and performance metrics.
- *
- * Note: In production, replace console logging with actual analytics service.
  */
 
 import type { RoomId } from './types'

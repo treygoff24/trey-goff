@@ -236,7 +236,6 @@ test.describe('Knowledge Graph Page - Mobile', () => {
     await graphPage.expectGraphRendered()
 
     // On mobile, sidebar should be below the graph or hidden
-    // Just verify the page is usable
     await expect(graphPage.graphCanvas).toBeVisible()
     await expect(graphPage.pageTitle).toBeVisible()
   })
@@ -250,11 +249,8 @@ test.describe('Knowledge Graph Page - Loading state', () => {
     // Note: This may be flaky if the graph loads very quickly
     await page.goto('/graph')
 
-    // The loading indicator should appear briefly
-    // We check if it was ever visible by checking if it exists
     const loadingIndicator = page.getByText('Loading graph...')
 
-    // Either loading is visible or graph is already rendered
     const isLoading = await loadingIndicator.isVisible()
     const isCanvas = await graphPage.graphCanvas.isVisible()
 

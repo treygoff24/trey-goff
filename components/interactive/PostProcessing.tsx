@@ -52,7 +52,6 @@ function EffectsRenderer({ settings }: { settings: PostProcessingSettings }) {
     multisampling,
   } = settings
 
-  // Build effect list based on what's enabled
   const effects: React.ReactElement[] = []
 
   if (ssao) {

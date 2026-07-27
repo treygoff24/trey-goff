@@ -30,7 +30,6 @@ const CONFIG = {
   propsDir: 'public/assets/props',
   manifestPath: 'public/manifests/assets.manifest.json',
 
-  // Per-chunk budgets
   chunkBudgets: {
     maxDownloadSize: 2 * 1024 * 1024, // 2MB
     maxTriangles: 100_000,
@@ -39,14 +38,12 @@ const CONFIG = {
     maxVRAM: 50 * 1024 * 1024, // 50MB
   },
 
-  // Scene-wide budgets
   sceneBudgets: {
     maxTotalTriangles: 300_000,
     maxTotalDrawCalls: 100,
     maxPeakMemory: 500 * 1024 * 1024, // 500MB with 2 chunks
   },
 
-  // Required compression checks
   requiredExtensions: {
     meshopt: true, // All meshes must use Meshopt
     ktx2: false, // KTX2 is optional if toktx not available
@@ -196,14 +193,12 @@ function runValidation(): FullValidationResult {
   console.log('Asset Budget Validation\n')
   console.log('='.repeat(50))
 
-  // 1. Directory structure
   console.log('\n1. Checking directory structure...')
   const dirResult = validateDirectoryStructure()
   allErrors.push(...dirResult.errors)
   allWarnings.push(...dirResult.warnings)
   console.log(`   ${dirResult.passed ? '✓' : '✗'} Directory structure`)
 
-  // 2. Manifest exists
   console.log('\n2. Checking asset manifest...')
   const manifestResult = validateManifestExists()
   if (!manifestResult.passed || !manifestResult.manifest) {
@@ -216,7 +211,6 @@ function runValidation(): FullValidationResult {
     chunksValidated = Object.keys(manifest.chunks).length
     propsValidated = Object.keys(manifest.props).length
 
-    // 3. Asset references
     console.log('\n3. Validating asset references...')
     const refResult = validateAssetReferences(manifest)
     allErrors.push(...refResult.errors)
@@ -226,7 +220,6 @@ function runValidation(): FullValidationResult {
       console.log(`     - ${err}`)
     }
 
-    // 4. Size budgets
     console.log('\n4. Validating size budgets...')
     const sizeResult = validateChunkSizes(manifest)
     allErrors.push(...sizeResult.errors)
@@ -244,7 +237,6 @@ function runValidation(): FullValidationResult {
     }
   }
 
-  // 5. Loose assets
   console.log('\n5. Checking for loose assets...')
   const looseResult = validateNoLooseAssets()
   allErrors.push(...looseResult.errors)

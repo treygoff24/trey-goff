@@ -53,7 +53,6 @@ const fragmentShader = /* glsl */ `
   }
 
   void main() {
-    // Scan lines - horizontal moving lines
     float scanLine = sin(vUv.y * 80.0 - uTime * 2.0) * 0.5 + 0.5;
     scanLine = pow(scanLine, 8.0) * 0.15;
 
@@ -68,30 +67,23 @@ const fragmentShader = /* glsl */ `
     float edgeGlow = 1.0 - (edgeX * edgeY);
     edgeGlow = pow(edgeGlow, 2.0) * 0.4;
 
-    // Subtle noise/static
     float noise = hash(vUv * 100.0 + uTime) * 0.03;
 
-    // View-dependent fresnel for 3D effect
     float fresnel = 1.0 - max(dot(vViewDir, vNormal), 0.0);
     fresnel = pow(fresnel, 3.0) * 0.2;
 
-    // Base glow - center is brighter
     float centerGlow = 1.0 - length(vUv - 0.5) * 0.8;
     centerGlow = clamp(centerGlow, 0.0, 1.0);
 
-    // Breathing pulse
     float pulse = 1.0 + sin(uTime * 1.5) * 0.08;
 
-    // Combine effects
     float intensity = (centerGlow + scanLine + sweepLine + edgeGlow + noise + fresnel) * uIntensity * pulse;
 
-    // Active state boost
     intensity *= 0.6 + uActive * 0.6;
 
     // HDR output for bloom
     vec3 color = uColor * intensity * 1.8;
 
-    // Alpha for soft edges
     float alpha = clamp(intensity * 1.2, 0.0, 0.95);
 
     gl_FragColor = vec4(color, alpha);
@@ -138,11 +130,9 @@ export function HolographicScreen({
 
     u.uIntensity.value = intensity
 
-    // Smooth active transition
     const targetActive = isActive ? 1.0 : 0.0
     u.uActive.value += (targetActive - u.uActive.value) * 0.1
 
-    // Only animate if not reduced motion
     if (!reducedMotion) {
       u.uTime.value = state.clock.elapsedTime
     }

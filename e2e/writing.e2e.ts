@@ -340,7 +340,6 @@ test.describe('Essay Detail Page', () => {
       const count = await essayLinks.count()
 
       if (count > 0) {
-        // Navigate through essays looking for one with evergreen badge
         for (let i = 0; i < Math.min(count, 5); i++) {
           await page.goto('/writing')
           const links = page.locator('article a')
@@ -357,7 +356,6 @@ test.describe('Essay Detail Page', () => {
             return
           }
         }
-        // No evergreen essays found - that's okay, skip
         test.skip()
       } else {
         test.skip()

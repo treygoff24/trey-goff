@@ -166,7 +166,6 @@ function PerformanceMonitor() {
   const { gl } = useThree()
 
   useFrame(() => {
-    // Log performance every 5 seconds in development
     if (process.env.NODE_ENV === 'development') {
       const info = gl.info
       if (Math.random() < 0.003) {
@@ -194,7 +193,6 @@ export function RendererRoot({
 }: RendererRootProps) {
   const [isSetupComplete, setIsSetupComplete] = useState(false)
 
-  // Get quality settings with reduced motion applied if needed
   let settings = getQualitySettings(qualityTier)
   if (reducedMotion) {
     settings = applyReducedMotion(settings)

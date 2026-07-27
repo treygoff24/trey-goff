@@ -29,7 +29,6 @@ const vertexShader = /* glsl */ `
   void main() {
     vUv = uv;
 
-    // World position for grid calculation
     vec4 worldPos = modelMatrix * vec4(position, 1.0);
     vWorldPos = worldPos.xyz;
 
@@ -54,7 +53,6 @@ const fragmentShader = /* glsl */ `
   varying vec3 vViewDir;
 
   void main() {
-    // Calculate grid lines based on world position
     vec2 gridPos = vWorldPos.xz / uGridSize;
 
     // Anti-aliased grid lines using derivatives
@@ -63,11 +61,9 @@ const fragmentShader = /* glsl */ `
     vec2 lines = smoothstep(lineWidth, vec2(0.0), grid);
     float gridLine = max(lines.x, lines.y);
 
-    // Glow at intersections
     float intersection = lines.x * lines.y;
     float intersectionGlow = intersection * 2.0;
 
-    // Subtle pulse on grid lines
     float pulse = sin(vWorldPos.x * 0.5 + uTime * 0.3) * 0.5 + 0.5;
     pulse = pulse * 0.1 + 0.9;
 
@@ -75,19 +71,15 @@ const fragmentShader = /* glsl */ `
     float fresnel = 1.0 - max(dot(vViewDir, vec3(0.0, 1.0, 0.0)), 0.0);
     fresnel = pow(fresnel, 3.0) * 0.15;
 
-    // Distance fade - grid fades in distance
     float distFromCenter = length(vWorldPos.xz) * 0.05;
     float distFade = 1.0 - smoothstep(0.0, 1.0, distFromCenter);
 
-    // Combine grid effects
     float gridEffect = (gridLine + intersectionGlow) * uGridIntensity * pulse * distFade;
 
-    // Base floor color with grid overlay
     vec3 color = uBaseColor;
     color += uGridColor * gridEffect;
     color += uGridColor * fresnel;
 
-    // Slight vignette from center
     float vignette = 1.0 - length(vUv - 0.5) * 0.3;
     color *= vignette;
 

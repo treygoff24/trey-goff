@@ -1,4 +1,20 @@
 import { escapeXml, truncate } from '@/lib/text'
+import type { AppearanceType } from '@/lib/media/types'
+
+/**
+ * The slice of an iTunes Search API podcast result this module reads. The payload is
+ * remote and unvalidated, so every field is optional — the guards below are what turn
+ * one into a URL.
+ */
+interface ITunesPodcastResult {
+  collectionName?: string
+  artworkUrl100?: string
+  artworkUrl600?: string
+}
+
+interface ITunesSearchResponse {
+  results?: ITunesPodcastResult[]
+}
 
 // iTunes Search API for podcast artwork (no auth required)
 export async function fetchPodcastArtwork(podcastName: string): Promise<string | null> {
@@ -7,11 +23,12 @@ export async function fetchPodcastArtwork(podcastName: string): Promise<string |
 
   try {
     const response = await fetch(url)
-    const data = await response.json()
+    const data = (await response.json()) as ITunesSearchResponse
+    const results = data.results
 
-    if (data.results && data.results.length > 0) {
+    if (results && results.length > 0) {
       const normalizedSearch = podcastName.toLowerCase().trim()
-      const match = data.results.find((result: { collectionName?: string }) => {
+      const match = results.find((result) => {
         const resultName = result.collectionName?.toLowerCase().trim() || ''
         return (
           resultName === normalizedSearch ||
@@ -20,13 +37,13 @@ export async function fetchPodcastArtwork(podcastName: string): Promise<string |
         )
       })
 
-      const result = match || data.results[0]
+      const result = match || results[0]
 
       // iTunes returns artworkUrl60, artworkUrl100, artworkUrl600
-      if (result.artworkUrl600) {
+      if (result?.artworkUrl600) {
         return result.artworkUrl600
       }
-      if (result.artworkUrl100) {
+      if (result?.artworkUrl100) {
         return result.artworkUrl100.replace('100x100', '600x600')
       }
     }
@@ -74,13 +91,13 @@ export async function verifyYouTubeThumbnail(url: string): Promise<string | null
 export function generatePlaceholderCover(
   title: string,
   showName: string,
-  type: 'podcast' | 'youtube' | 'talk' | 'interview',
+  type: AppearanceType,
 ): string {
   // Create a gradient based on title hash for variety
   const hash = (title + showName).split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
   const hue = hash % 360
 
-  const iconPaths: Record<string, string> = {
+  const iconPaths: Record<AppearanceType, string> = {
     podcast:
       'M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3h-1.75c0 2.03-1.64 3.68-3.66 3.91V17h-1v-2.09C9.15 14.68 7.51 13.03 7.51 11H5.75c0 3.04 2.35 5.54 5.25 5.91V20h2v-3.09c2.9-.37 5.25-2.87 5.25-5.91h-0.09z',
     youtube:

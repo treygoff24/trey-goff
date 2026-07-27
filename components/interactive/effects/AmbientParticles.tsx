@@ -37,19 +37,16 @@ const vertexShader = /* glsl */ `
   varying float vAlpha;
 
   void main() {
-    // Animate position - gentle floating drift
     vec3 pos = position;
 
     // Vertical drift with wrap-around
     pos.y += mod(uTime * uSpeed * 0.1 + aOffset * uBounds.y, uBounds.y) - uBounds.y * 0.5;
 
-    // Subtle horizontal sway
     pos.x += sin(uTime * uSpeed * 0.2 + aOffset * 6.28) * 0.3;
     pos.z += cos(uTime * uSpeed * 0.15 + aOffset * 6.28) * 0.3;
 
     vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
 
-    // Size attenuation based on distance
     float sizeAttenuation = 300.0 / -mvPosition.z;
     gl_PointSize = uSize * aScale * sizeAttenuation;
 
@@ -57,7 +54,6 @@ const vertexShader = /* glsl */ `
     float heightFade = 1.0 - abs(pos.y / (uBounds.y * 0.5));
     heightFade = clamp(heightFade, 0.0, 1.0);
 
-    // Twinkle effect
     float twinkle = sin(uTime * 2.0 + aOffset * 100.0) * 0.3 + 0.7;
 
     vAlpha = heightFade * twinkle;
@@ -74,15 +70,12 @@ const fragmentShader = /* glsl */ `
   varying float vAlpha;
 
   void main() {
-    // Circular point with soft edge
     vec2 center = gl_PointCoord - 0.5;
     float dist = length(center);
 
-    // Soft circular falloff
     float alpha = 1.0 - smoothstep(0.3, 0.5, dist);
     alpha *= vAlpha;
 
-    // Slight glow center
     float glow = 1.0 - smoothstep(0.0, 0.3, dist);
     vec3 color = uColor * (1.0 + glow * 0.5);
 
@@ -117,12 +110,10 @@ export function AmbientParticles({
     const off = new Float32Array(count)
 
     for (let i = 0; i < count; i++) {
-      // Deterministic random position within bounds
       pos[i * 3] = (seededRandom(i * 3) - 0.5) * bounds[0]
       pos[i * 3 + 1] = (seededRandom(i * 3 + 1) - 0.5) * bounds[1] + bounds[1] * 0.5
       pos[i * 3 + 2] = (seededRandom(i * 3 + 2) - 0.5) * bounds[2]
 
-      // Deterministic random scale variation
       scl[i] = 0.5 + seededRandom(i + 1000) * 1.0
 
       // Deterministic random offset for animation phase

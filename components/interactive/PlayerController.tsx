@@ -180,7 +180,6 @@ function useMobileControls(isMobile: boolean, yaw: React.MutableRefObject<number
 
           raycaster.setFromCamera(new THREE.Vector2(x, y), camera)
 
-          // For now, project to ground plane (Y=0)
           const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0)
           const point = new THREE.Vector3()
           raycaster.ray.intersectPlane(plane, point)

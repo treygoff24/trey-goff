@@ -159,7 +159,6 @@ test.describe('Notes Page', () => {
       const cardCount = await notesPage.noteCards.count()
 
       if (cardCount > 0) {
-        // Find a note with tags
         for (let i = 0; i < Math.min(cardCount, 5); i++) {
           const card = notesPage.noteCards.nth(i)
           const tags = card.locator('a[class*="TagPill"], span[class*="tag"], a[href*="tag"]')
@@ -170,7 +169,6 @@ test.describe('Notes Page', () => {
             return
           }
         }
-        // No tags found on any notes - that's okay
         test.skip()
       } else {
         test.skip()
@@ -183,7 +181,6 @@ test.describe('Notes Page', () => {
       const cardCount = await notesPage.noteCards.count()
 
       if (cardCount > 0) {
-        // Look for notes with h3 titles
         for (let i = 0; i < Math.min(cardCount, 5); i++) {
           const card = notesPage.noteCards.nth(i)
           const title = card.locator('h3')
@@ -194,7 +191,6 @@ test.describe('Notes Page', () => {
             return
           }
         }
-        // No titles found - that's okay, titles are optional
         test.skip()
       } else {
         test.skip()

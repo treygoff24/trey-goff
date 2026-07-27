@@ -10,7 +10,7 @@ interface ModalDismissOptions {
    * Truthy while the modal is open. Pass the modal's content object rather than a plain
    * boolean to also re-arm the focus trap whenever that content changes.
    */
-  open: unknown
+  open: boolean | object | null | undefined
   /** Close callback */
   onClose: () => void
   /** Container whose focusable children the Tab cycle is confined to */

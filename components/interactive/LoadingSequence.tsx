@@ -88,13 +88,11 @@ export function LoadingSequence({
 }: LoadingSequenceProps) {
   const [showHints, setShowHints] = useState(false)
 
-  // Show hints after a delay
   useEffect(() => {
     const timer = setTimeout(() => setShowHints(true), 2000)
     return () => clearTimeout(timer)
   }, [])
 
-  // Trigger complete callback when ready
   useEffect(() => {
     if (phase === 'ready' && onComplete) {
       const timer = setTimeout(onComplete, 500)
@@ -102,7 +100,6 @@ export function LoadingSequence({
     }
   }, [phase, onComplete])
 
-  // Fade out when complete
   if (phase === 'complete') {
     return (
       <div

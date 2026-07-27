@@ -67,14 +67,12 @@ const floorFragmentShader = /* glsl */ `
   uniform float uGridWidth;
   
   void main() {
-    // Create grid pattern based on world position
     vec2 grid = abs(fract(vWorldPos.xz * uGridScale) - 0.5);
     float gridLine = 1.0 - step(uGridWidth, min(grid.x, grid.y));
     
     // Subtle noise-like variation using world position
     float variation = sin(vWorldPos.x * 3.0) * sin(vWorldPos.z * 3.0) * 0.02;
     
-    // Mix base color with grid lines
     vec3 color = mix(uBaseColor + variation, uGridColor, gridLine * 0.3);
     
     gl_FragColor = vec4(color, 1.0);
@@ -111,16 +109,13 @@ const metalFragmentShader = /* glsl */ `
     // Fresnel effect for metallic sheen
     float fresnel = pow(1.0 - max(dot(vViewDir, vNormal), 0.0), 3.0);
     
-    // Simple lighting
     vec3 lightDir = normalize(vec3(0.5, 1.0, 0.3));
     float NdotL = max(dot(vNormal, lightDir), 0.0);
     float diffuse = mix(0.3, 1.0, NdotL);
     
-    // Specular highlight
     vec3 halfDir = normalize(lightDir + vViewDir);
     float spec = pow(max(dot(vNormal, halfDir), 0.0), mix(8.0, 64.0, 1.0 - uRoughness));
     
-    // Combine
     vec3 color = uColor * diffuse;
     color += vec3(1.0) * spec * uMetalness * 0.5;
     color += fresnel * uMetalness * 0.15;
@@ -157,18 +152,14 @@ const plaqueFragmentShader = /* glsl */ `
   varying vec3 vViewDir;
   
   void main() {
-    // Edge glow (fresnel)
     float fresnel = pow(1.0 - max(dot(vViewDir, vNormal), 0.0), 2.5);
     
-    // Breathing pulse
     float pulse = 0.8 + 0.2 * sin(uTime * 1.5);
     
-    // Border glow effect
     float border = smoothstep(0.0, 0.1, vUv.x) * smoothstep(0.0, 0.1, 1.0 - vUv.x);
     border *= smoothstep(0.0, 0.1, vUv.y) * smoothstep(0.0, 0.1, 1.0 - vUv.y);
     float edgeGlow = 1.0 - border;
     
-    // Combine effects
     vec3 color = uBaseColor;
     color += uGlowColor * fresnel * uGlowIntensity * pulse;
     color += uGlowColor * edgeGlow * 0.5 * pulse;

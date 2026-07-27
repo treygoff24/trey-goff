@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from 'react'
 import { cn } from '@/lib/utils'
+import type { SubscribeResponse } from '@/lib/subscribe-request'
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
 
@@ -22,7 +23,7 @@ export function SubscribeForm({ compact = false }: { compact?: boolean }) {
         body: JSON.stringify({ email }),
       })
 
-      const data = await response.json()
+      const data = (await response.json()) as SubscribeResponse
 
       if (response.ok) {
         setStatus('success')
