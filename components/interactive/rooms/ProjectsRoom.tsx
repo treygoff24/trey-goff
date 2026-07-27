@@ -9,7 +9,7 @@ import { DoorTrigger } from '../DoorTrigger'
 import { HolographicScreen, TechFloorGrid, AmbientParticles, GlowRing } from '../effects'
 import type { ProjectsManifest, ProjectManifestEntry } from '@/lib/interactive/manifest-types'
 import type { OverlayContent } from '../ContentOverlay'
-import type { RoomProps } from './index'
+import type { RoomProps } from './types'
 
 /** The slice of the shared room contract this room reads. */
 type ProjectsRoomProps = Pick<RoomProps, 'debug' | 'onDoorActivate' | 'onContentSelect'>

@@ -8,7 +8,7 @@ import { THREE_COLORS } from '@/lib/interactive/colors'
 import { DoorTrigger } from '../DoorTrigger'
 import type { BooksManifest, BookManifestEntry } from '@/lib/interactive/manifest-types'
 import type { OverlayContent } from '../ContentOverlay'
-import type { RoomProps } from './index'
+import type { RoomProps } from './types'
 
 /** The slice of the shared room contract this room reads. */
 type LibraryRoomProps = Pick<RoomProps, 'debug' | 'onDoorActivate' | 'onContentSelect'>

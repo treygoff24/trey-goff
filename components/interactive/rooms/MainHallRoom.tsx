@@ -7,7 +7,7 @@ import { RigidBody, CuboidCollider } from '@react-three/rapier'
 import * as THREE from 'three'
 import { THREE_COLORS } from '@/lib/interactive/colors'
 import { DoorTrigger, type DoorConfig } from '../DoorTrigger'
-import type { RoomProps } from './index'
+import type { RoomProps } from './types'
 
 /** The slice of the shared room contract this room reads. */
 type MainHallRoomProps = Pick<RoomProps, 'debug' | 'onDoorActivate'>

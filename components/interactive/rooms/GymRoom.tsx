@@ -13,7 +13,7 @@ import type {
   LiftsManifest,
   LiftsManifestEntry,
 } from '@/lib/interactive/manifest-types'
-import type { RoomProps } from './index'
+import type { RoomProps } from './types'
 
 /** The slice of the shared room contract this room reads. */
 type GymRoomProps = Pick<RoomProps, 'debug' | 'onDoorActivate'>

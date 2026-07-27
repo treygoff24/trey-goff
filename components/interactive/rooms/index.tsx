@@ -1,37 +1,13 @@
 'use client'
 
-import { Suspense, lazy, type ComponentType } from 'react'
+import { Suspense, lazy } from 'react'
 import type { RoomId } from '@/lib/interactive/types'
 import type { QualityTier } from '@/lib/interactive/capabilities'
 import type { OverlayContent } from '../ContentOverlay'
 import { DoorTrigger } from '../DoorTrigger'
+import type { RoomConfig, RoomProps } from './types'
 
-export interface RoomProps {
-  debug?: boolean
-  onDoorActivate?: (
-    targetRoom: RoomId,
-    spawnPosition: [number, number, number],
-    spawnRotation: number,
-  ) => void
-  onContentSelect?: (content: OverlayContent) => void
-  /** Quality tier for atmospheric effects */
-  qualityTier?: QualityTier
-  /** Whether reduced motion is preferred */
-  reducedMotion?: boolean
-}
-
-export interface RoomConfig {
-  /** The room component */
-  Component: ComponentType<RoomProps>
-  /** Default spawn position when entering this room */
-  defaultSpawn: [number, number, number]
-  /** Default spawn rotation (Y-axis) when entering this room */
-  defaultRotation: number
-  /** Display name for UI */
-  displayName: string
-  /** Whether room is ready (has real assets vs placeholder) */
-  isPlaceholder: boolean
-}
+export type { RoomConfig, RoomProps } from './types'
 
 const ExteriorRoom = lazy(() => import('./ExteriorRoom').then((m) => ({ default: m.ExteriorRoom })))
 
