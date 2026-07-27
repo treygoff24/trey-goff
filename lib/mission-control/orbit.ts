@@ -1,6 +1,6 @@
 import appearancesData from '@/content/media/appearances.json'
 import transmissionsData from '@/content/transmissions/publications.json'
-import { attemptDate, isStale, isValidDate, type Instrument } from './instrument'
+import { absentInstrument, attemptDate, isStale, isValidDate, type Instrument } from './instrument'
 import { isHttpUrl } from '@/lib/mission-control/url'
 import type { Appearance } from '@/lib/media/types'
 import type { Transmission } from '@/lib/transmissions/types'
@@ -29,15 +29,6 @@ interface PublicationsSource {
 }
 
 const source = 'content/transmissions/publications.json · content/media/appearances.json'
-
-function absentOrbit(now: Date): Instrument<OrbitEntry[]> {
-  return {
-    data: null,
-    asOf: attemptDate(now),
-    source,
-    stale: false,
-  }
-}
 
 function isAppearanceSource(value: unknown): value is AppearancesSource {
   if (!value || typeof value !== 'object') return false
@@ -83,7 +74,7 @@ export function aggregateOrbit(
   now = new Date(),
 ): Instrument<OrbitEntry[]> {
   if (!isAppearanceSource(appearancesData) || !isPublicationsSource(transmissionsData)) {
-    return absentOrbit(now)
+    return absentInstrument<OrbitEntry[]>(source, now)
   }
   const appearances = appearancesData
   const publications = transmissionsData

@@ -1,4 +1,4 @@
-import { attemptDate, isValidDate, type Instrument } from './instrument'
+import { absentInstrument, isValidDate, type Instrument } from './instrument'
 import { isHttpUrl } from '@/lib/mission-control/url'
 
 export interface ActivityDay {
@@ -160,11 +160,6 @@ export async function getShippingInstrument(
       stale: false,
     }
   } catch {
-    return {
-      data: null,
-      asOf: attemptDate(now),
-      source,
-      stale: false,
-    }
+    return absentInstrument(source, now)
   }
 }

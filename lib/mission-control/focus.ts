@@ -1,5 +1,5 @@
 import nowData from '@/data/now.json'
-import { attemptDate, isStale, isValidDate, type Instrument } from './instrument'
+import { absentInstrument, isStale, isValidDate, type Instrument } from './instrument'
 
 export interface FocusData {
   mission: string
@@ -36,17 +36,8 @@ function isFocusSource(value: unknown): value is FocusSource {
   )
 }
 
-function absentFocus(now: Date): Instrument<FocusData> {
-  return {
-    data: null,
-    asOf: attemptDate(now),
-    source: 'data/now.json',
-    stale: false,
-  }
-}
-
 export function aggregateFocus(source: unknown, now = new Date()): Instrument<FocusData> {
-  if (!isFocusSource(source)) return absentFocus(now)
+  if (!isFocusSource(source)) return absentInstrument('data/now.json', now)
 
   return {
     data: {

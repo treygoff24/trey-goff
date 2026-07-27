@@ -1,5 +1,5 @@
 import liftsData from '@/data/lifts.json'
-import { attemptDate, isStale, isValidDate, type Instrument } from './instrument'
+import { absentInstrument, isStale, isValidDate, type Instrument } from './instrument'
 import type { LiftName } from '@/lib/interactive/manifest-types'
 
 export type { LiftName }
@@ -47,12 +47,7 @@ function isLiftRecord(value: unknown): value is LiftRecord {
 }
 
 function absentStrength(now: Date): Instrument<StrengthData> {
-  return {
-    data: null,
-    asOf: attemptDate(now),
-    source: 'data/lifts.json',
-    stale: false,
-  }
+  return absentInstrument('data/lifts.json', now)
 }
 
 export function aggregateLifts(source: unknown, now = new Date()): Instrument<StrengthData> {
