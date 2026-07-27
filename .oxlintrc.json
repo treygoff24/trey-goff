@@ -19,9 +19,7 @@
     "build/**",
     "next-env.d.ts",
     ".content-collections/**",
-    "docs/designs/**",
-    "test/.broken/**",
-    "verify-arch.cjs"
+    "docs/designs/**"
   ],
   "rules": {
     "@next/next/google-font-display": "warn",
