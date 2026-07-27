@@ -272,7 +272,7 @@ export function ChunkManager({ debug = false, onChunkActive, onChunkDisposed }: 
 
   useEffect(() => {
     // Store methods on window for debugging (development only)
-    if (debug && typeof window !== 'undefined') {
+    if (debug) {
       window.__chunkManager = {
         loadChunk,
         activateRoom,

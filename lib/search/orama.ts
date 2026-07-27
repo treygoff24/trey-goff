@@ -14,10 +14,10 @@ type OramaSchema = {
 }
 
 let db: Orama<OramaSchema> | null = null
-let initPromise: Promise<void> | null = null
+let initPromise: Promise<Orama<OramaSchema>> | null = null
 
-export async function initializeSearch(): Promise<void> {
-  if (db) return
+export async function initializeSearch(): Promise<Orama<OramaSchema>> {
+  if (db) return db
   if (initPromise) return initPromise
 
   initPromise = (async () => {
@@ -31,7 +31,7 @@ export async function initializeSearch(): Promise<void> {
       const index: SearchIndex = await response.json()
 
       // Create Orama database
-      db = create({
+      const created = create({
         schema: {
           id: 'string',
           type: 'string',
@@ -47,7 +47,7 @@ export async function initializeSearch(): Promise<void> {
 
       // Insert all documents
       for (const doc of index.documents) {
-        await insert(db, {
+        await insert(created, {
           id: doc.id,
           type: doc.type,
           title: doc.title,
@@ -59,6 +59,9 @@ export async function initializeSearch(): Promise<void> {
           priority: doc.priority || 5,
         })
       }
+
+      db = created
+      return created
     } catch (error) {
       db = null
       initPromise = null
@@ -79,20 +82,13 @@ export interface SearchResult {
 }
 
 export async function searchDocuments(query: string): Promise<SearchResult[]> {
-  if (!db) {
-    await initializeSearch()
-  }
+  const index = await initializeSearch()
 
   if (!query.trim()) {
     return []
   }
 
-  if (!db) {
-    console.error('Search database failed to initialize')
-    return []
-  }
-
-  const results = await search(db, {
+  const results = await search(index, {
     term: query,
     properties: ['title', 'description', 'content', 'tags', 'keywords'],
     boost: {

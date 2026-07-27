@@ -36,7 +36,7 @@ interface ProjectsPageProps {
 
 export default async function ProjectsPage({ searchParams }: ProjectsPageProps) {
   const params = await searchParams
-  const requested = Array.isArray(params?.tool) ? params.tool[0] : params?.tool
+  const requested = Array.isArray(params.tool) ? params.tool[0] : params.tool
   const openToolId = requested && toolById.get(requested)?.featured ? requested : undefined
 
   const siteProject = [...allProjects].sort((a, b) => a.featuredRank - b.featuredRank)[0]

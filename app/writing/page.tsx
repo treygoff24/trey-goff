@@ -22,7 +22,7 @@ export default async function WritingPage({ searchParams }: WritingPageProps) {
     ? allEssays.filter((essay) => essay.status !== 'draft')
     : allEssays
 
-  const activeTag = Array.isArray(params?.tag) ? params?.tag[0] : params?.tag
+  const activeTag = Array.isArray(params.tag) ? params.tag[0] : params.tag
   const sortedEssays = [...visibleEssays].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   )

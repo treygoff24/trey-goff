@@ -38,14 +38,10 @@ function pruneExpiredRateLimits(now: number) {
   }
 }
 
-function checkRateLimit(ip: string): { allowed: boolean; retryAfter?: number } {
+function checkRateLimit(ip: string): { allowed: true } | { allowed: false; retryAfter: number } {
   const now = Date.now()
+  // Every entry past its window is gone after this, so anything still mapped is live.
   pruneExpiredRateLimits(now)
-  const entry = rateLimitMap.get(ip)
-
-  if (entry && now >= entry.resetAt) {
-    rateLimitMap.delete(ip)
-  }
 
   const current = rateLimitMap.get(ip)
   if (!current) {
@@ -117,7 +113,7 @@ export async function POST(request: NextRequest) {
         {
           status: 429,
           headers: {
-            'Retry-After': String(rateLimit.retryAfter || 60),
+            'Retry-After': String(rateLimit.retryAfter),
           },
         },
       )
