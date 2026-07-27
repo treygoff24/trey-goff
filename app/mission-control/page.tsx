@@ -8,7 +8,7 @@ import { Sparkline } from '@/components/mission-control/Sparkline'
 import { TopicStrip } from '@/components/mission-control/TopicStrip'
 import { EditorialIndexRow } from '@/components/site/EditorialIndexRow'
 import { getFocusInstrument } from '@/lib/mission-control/focus'
-import type { Instrument } from '@/lib/mission-control/instrument'
+import type { InstrumentReading } from '@/lib/mission-control/instrument'
 import { getStrengthInstrument } from '@/lib/mission-control/lifts'
 import { getOrbitInstrument } from '@/lib/mission-control/orbit'
 import { getReadingInstrument } from '@/lib/mission-control/reading'
@@ -61,7 +61,7 @@ function InstrumentHeader({
 }: {
   id: string
   title: string
-  instrument: Instrument<unknown>
+  instrument: InstrumentReading
   cadence: string
 }) {
   return (
@@ -94,7 +94,7 @@ function InstrumentSection({
 }: {
   id: string
   title: string
-  instrument: Instrument<unknown>
+  instrument: InstrumentReading
   cadence: string
   children: React.ReactNode
 }) {

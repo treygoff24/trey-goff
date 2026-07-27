@@ -1,8 +1,16 @@
-export interface Instrument<T> {
-  data: T | null
+/**
+ * The provenance every instrument carries, independent of its payload. Consumers that
+ * only render the header (source, timestamp, staleness) take this instead of an
+ * `Instrument<unknown>`, so the payload type never has to be erased to say "I ignore it".
+ */
+export interface InstrumentReading {
   asOf: string
   source: string
   stale: boolean
+}
+
+export interface Instrument<T> extends InstrumentReading {
+  data: T | null
 }
 
 export function isValidDate(value: unknown): value is string {

@@ -63,6 +63,16 @@ function titleKey(title: string): string {
     .trim()
 }
 
+/**
+ * One section as it arrives from the model's streaming JSON: the keys are the ones the
+ * schema asks for, but every value is still unvalidated (and, mid-stream, half-formed).
+ */
+interface StreamedEditionSection {
+  kind?: unknown
+  lede?: unknown
+  slugs?: unknown
+}
+
 export function resolveEditionSections(
   catalog: readonly EditionClientCatalogItem[],
   sections: unknown,
@@ -74,7 +84,7 @@ export function resolveEditionSections(
   return sections.slice(0, 4).flatMap((section) => {
     if (!section || typeof section !== 'object') return []
 
-    const candidate = section as { kind?: unknown; lede?: unknown; slugs?: unknown }
+    const candidate = section as StreamedEditionSection
     if (typeof candidate.kind !== 'string' || !KINDS.has(candidate.kind as EditionKind)) {
       return []
     }

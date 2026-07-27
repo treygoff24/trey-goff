@@ -18,6 +18,24 @@ interface ChunkData {
   loadedAt: number
 }
 
+/**
+ * The debug surface `ChunkManager` parks on `window` when `debug` is set, so a console
+ * session can drive chunk loading by hand. Declared rather than cast so the handle stays
+ * in step with the callbacks it exposes.
+ */
+export interface ChunkManagerDebugApi {
+  loadChunk: (room: RoomId) => Promise<void>
+  activateRoom: (room: RoomId) => void
+  disposeRoom: (room: RoomId) => void
+  getLoadedChunks: () => RoomId[]
+}
+
+declare global {
+  interface Window {
+    __chunkManager?: ChunkManagerDebugApi
+  }
+}
+
 interface ChunkManagerProps {
   /** Enable debug logging */
   debug?: boolean
@@ -319,7 +337,7 @@ export function ChunkManager({ debug = false, onChunkActive, onChunkDisposed }: 
   useEffect(() => {
     // Store methods on window for debugging (development only)
     if (debug && typeof window !== 'undefined') {
-      ;(window as unknown as Record<string, unknown>).__chunkManager = {
+      window.__chunkManager = {
         loadChunk,
         activateRoom,
         disposeRoom,

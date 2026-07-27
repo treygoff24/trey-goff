@@ -165,29 +165,37 @@ export function disposeObject(object: THREE.Object3D): void {
 }
 
 /**
+ * The texture-bearing slots across three's built-in materials. `THREE.Material` itself
+ * declares none of them, so the slot list doubles as the key type: only these names are
+ * readable off a material here, rather than any arbitrary string.
+ */
+const TEXTURE_SLOTS = [
+  'map',
+  'normalMap',
+  'roughnessMap',
+  'metalnessMap',
+  'aoMap',
+  'emissiveMap',
+  'bumpMap',
+  'displacementMap',
+  'alphaMap',
+  'envMap',
+  'lightMap',
+  'specularMap',
+] as const
+
+type TextureSlot = (typeof TEXTURE_SLOTS)[number]
+
+/** A material viewed through its optional texture slots. Any given subclass fills a subset. */
+type TexturedMaterial = THREE.Material & Partial<Record<TextureSlot, THREE.Texture | null>>
+
+/**
  * Dispose of a material and all its textures.
  */
 function disposeMaterial(material: THREE.Material): void {
-  // Get all texture properties
-  const texturePropNames = [
-    'map',
-    'normalMap',
-    'roughnessMap',
-    'metalnessMap',
-    'aoMap',
-    'emissiveMap',
-    'bumpMap',
-    'displacementMap',
-    'alphaMap',
-    'envMap',
-    'lightMap',
-    'specularMap',
-  ] as const
-
-  // Type-safe texture disposal for materials with texture properties
-  const materialAsAny = material as unknown as Record<string, THREE.Texture | undefined>
-  for (const prop of texturePropNames) {
-    const texture = materialAsAny[prop]
+  const textured = material as TexturedMaterial
+  for (const prop of TEXTURE_SLOTS) {
+    const texture = textured[prop]
     if (texture instanceof THREE.Texture) {
       disposeTexture(texture)
     }

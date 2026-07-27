@@ -206,7 +206,7 @@ function generateAssetManifest(results: CompressionResult[]): void {
   }
 
   const manifestPath = path.join(CONFIG.manifestDir, 'assets.manifest.json')
-  const result = writeStableJsonFile(manifestPath, manifest as unknown as Record<string, unknown>, {
+  const result = writeStableJsonFile(manifestPath, manifest, {
     preserveKeys: ['generated'],
   })
   console.log(
@@ -246,13 +246,9 @@ async function main(): Promise<void> {
       props: {},
     }
     const manifestPath = path.join(CONFIG.manifestDir, 'assets.manifest.json')
-    const result = writeStableJsonFile(
-      manifestPath,
-      emptyManifest as unknown as Record<string, unknown>,
-      {
-        preserveKeys: ['generated'],
-      },
-    )
+    const result = writeStableJsonFile(manifestPath, emptyManifest, {
+      preserveKeys: ['generated'],
+    })
     console.log(
       `${result.changed ? 'Created empty asset manifest' : 'Empty asset manifest unchanged'}: ${manifestPath}${
         result.preservedTimestamp ? ' (preserved generated)' : ''

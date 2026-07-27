@@ -25,6 +25,16 @@ interface GitHubDirectoryItem {
   type: string
 }
 
+/**
+ * The fields this module reads off GitHub's "get file contents" response. Typed as
+ * `unknown` because the payload is remote and unvalidated — the guards below are what
+ * turn it into a string.
+ */
+interface GitHubFileContent {
+  encoding?: unknown
+  content?: unknown
+}
+
 let cache: { repo: string; expiresAt: number; entries: AnnexEntry[] } | undefined
 
 function githubHeaders(token: string): HeadersInit {
@@ -64,7 +74,7 @@ async function fetchEntry(
 ): Promise<AnnexEntry> {
   const data = await fetchJson(`${repoUrl}/contents/${item.path}`, token, fetcher)
   if (!data || typeof data !== 'object') throw new Error('Invalid GitHub file response')
-  const file = data as Record<string, unknown>
+  const file = data as GitHubFileContent
   if (file.encoding !== 'base64' || typeof file.content !== 'string') {
     throw new Error('Invalid GitHub file content')
   }
