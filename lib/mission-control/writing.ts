@@ -25,51 +25,42 @@ function countWords(content: string): number {
 }
 
 export function getWritingInstrument(now = new Date()): Instrument<WritingData> {
-  try {
-    const essays = allEssays.filter((essay) => essay.status !== 'draft')
-    const months = Array.from({ length: 24 }, (_, index) => {
-      const date = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - (23 - index), 1))
-      return { month: monthKey(date), count: 0 }
-    })
-    const counts = new Map(months.map((month) => [month.month, month]))
+  const essays = allEssays.filter((essay) => essay.status !== 'draft')
+  const months = Array.from({ length: 24 }, (_, index) => {
+    const date = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - (23 - index), 1))
+    return { month: monthKey(date), count: 0 }
+  })
+  const counts = new Map(months.map((month) => [month.month, month]))
 
-    for (const item of [...essays, ...allNotes]) {
-      const month = counts.get(item.date.slice(0, 7))
-      if (month) month.count += 1
-    }
+  for (const item of [...essays, ...allNotes]) {
+    const month = counts.get(item.date.slice(0, 7))
+    if (month) month.count += 1
+  }
 
-    const latestEssay = [...essays].sort((a, b) => b.date.localeCompare(a.date))[0] ?? null
-    const sourceDates = [...essays, ...allNotes]
-      .map((item) => item.date)
-      .sort()
-      .reverse()
+  const latestEssay = [...essays].sort((a, b) => b.date.localeCompare(a.date))[0] ?? null
+  const sourceDates = [...essays, ...allNotes]
+    .map((item) => item.date)
+    .sort()
+    .reverse()
 
-    return {
-      data: {
-        months,
-        latestEssay: latestEssay
-          ? {
-              title: latestEssay.title,
-              slug: latestEssay.slug,
-              date: latestEssay.date,
-              summary: latestEssay.summary,
-              readingTime: latestEssay.readingTime,
-            }
-          : null,
-        wordCount:
-          essays.reduce((total, essay) => total + essay.wordCount, 0) +
-          allNotes.reduce((total, note) => total + countWords(note.content), 0),
-      },
-      asOf: sourceDates[0] ?? attemptDate(now),
-      source: 'content-collections · essays + notes',
-      stale: false,
-    }
-  } catch {
-    return {
-      data: null,
-      asOf: attemptDate(now),
-      source: 'content-collections · essays + notes',
-      stale: false,
-    }
+  return {
+    data: {
+      months,
+      latestEssay: latestEssay
+        ? {
+            title: latestEssay.title,
+            slug: latestEssay.slug,
+            date: latestEssay.date,
+            summary: latestEssay.summary,
+            readingTime: latestEssay.readingTime,
+          }
+        : null,
+      wordCount:
+        essays.reduce((total, essay) => total + essay.wordCount, 0) +
+        allNotes.reduce((total, note) => total + countWords(note.content), 0),
+    },
+    asOf: sourceDates[0] ?? attemptDate(now),
+    source: 'content-collections · essays + notes',
+    stale: false,
   }
 }

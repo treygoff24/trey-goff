@@ -25,8 +25,17 @@ function toReadingBook(book: Book): ReadingBook {
   }
 }
 
+function absentReading(now: Date): Instrument<ReadingData> {
+  return {
+    data: null,
+    asOf: attemptDate(now),
+    source: 'content/library/books.json',
+    stale: false,
+  }
+}
+
 function aggregateReading(source: BooksData, now = new Date()): Instrument<ReadingData> {
-  if (!Array.isArray(source.books) || !source.lastUpdated) throw new Error('Invalid books data')
+  if (!Array.isArray(source.books) || !source.lastUpdated) return absentReading(now)
 
   return {
     data: {
@@ -46,14 +55,5 @@ function aggregateReading(source: BooksData, now = new Date()): Instrument<Readi
 }
 
 export function getReadingInstrument(now = new Date()): Instrument<ReadingData> {
-  try {
-    return aggregateReading(booksData as BooksData, now)
-  } catch {
-    return {
-      data: null,
-      asOf: attemptDate(now),
-      source: 'content/library/books.json',
-      stale: false,
-    }
-  }
+  return aggregateReading(booksData as BooksData, now)
 }

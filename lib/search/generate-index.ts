@@ -7,12 +7,8 @@ import { isNewsletterEnabled } from '@/lib/site-config'
 
 // Load books data
 function loadBooks(): BooksData['books'] {
-  try {
-    const booksData: BooksData = JSON.parse(readFileSync('./content/library/books.json', 'utf-8'))
-    return booksData.books
-  } catch {
-    return []
-  }
+  const booksData: BooksData = JSON.parse(readFileSync('./content/library/books.json', 'utf-8'))
+  return booksData.books
 }
 
 // Navigation pages (static)

@@ -82,43 +82,39 @@ export function aggregateOrbit(
   transmissionsData: unknown,
   now = new Date(),
 ): Instrument<OrbitEntry[]> {
-  try {
-    if (!isAppearanceSource(appearancesData) || !isPublicationsSource(transmissionsData)) {
-      throw new Error('Invalid orbit data')
-    }
-    const appearances = appearancesData
-    const publications = transmissionsData
-    const data = [
-      ...appearances.appearances.map((item) => ({
-        title: item.title,
-        venue: item.show,
-        date: item.date,
-        url: item.url,
-        kind: 'appearance' as const,
-      })),
-      ...publications.transmissions.map((item) => ({
-        title: item.title,
-        venue: item.publication,
-        date: item.date,
-        url: item.url,
-        kind: 'publication' as const,
-      })),
-    ]
-      .sort((a, b) => b.date.localeCompare(a.date))
-      .slice(0, 3)
-    const asOf =
-      [appearances.lastUpdated, publications.lastUpdated, ...data.map((item) => item.date)]
-        .sort()
-        .reverse()[0] ?? attemptDate(now)
-
-    return {
-      data,
-      asOf,
-      source,
-      stale: isStale(asOf, 30, now),
-    }
-  } catch {
+  if (!isAppearanceSource(appearancesData) || !isPublicationsSource(transmissionsData)) {
     return absentOrbit(now)
+  }
+  const appearances = appearancesData
+  const publications = transmissionsData
+  const data = [
+    ...appearances.appearances.map((item) => ({
+      title: item.title,
+      venue: item.show,
+      date: item.date,
+      url: item.url,
+      kind: 'appearance' as const,
+    })),
+    ...publications.transmissions.map((item) => ({
+      title: item.title,
+      venue: item.publication,
+      date: item.date,
+      url: item.url,
+      kind: 'publication' as const,
+    })),
+  ]
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .slice(0, 3)
+  const asOf =
+    [appearances.lastUpdated, publications.lastUpdated, ...data.map((item) => item.date)]
+      .sort()
+      .reverse()[0] ?? attemptDate(now)
+
+  return {
+    data,
+    asOf,
+    source,
+    stale: isStale(asOf, 30, now),
   }
 }
 

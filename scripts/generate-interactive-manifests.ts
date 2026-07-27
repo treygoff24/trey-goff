@@ -64,18 +64,7 @@ function statusToTier(status: string, rating?: number): BookTier {
 }
 
 function generateBooksManifest(): BooksManifest {
-  let booksData: BooksData
-
-  try {
-    booksData = JSON.parse(readFileSync('./content/library/books.json', 'utf-8'))
-  } catch {
-    console.warn('Could not read books.json, generating empty manifest')
-    return {
-      version: MANIFEST_VERSION,
-      generated: new Date().toISOString(),
-      entries: [],
-    }
-  }
+  const booksData: BooksData = JSON.parse(readFileSync('./content/library/books.json', 'utf-8'))
 
   const entries: BookManifestEntry[] = booksData.books
     .filter((book) => book.status !== 'abandoned')
@@ -179,18 +168,7 @@ function generateLiftsManifest(): LiftsManifest {
     }
   }
 
-  let liftsData: LiftsSourceData
-  try {
-    liftsData = JSON.parse(readFileSync(liftsPath, 'utf-8'))
-  } catch {
-    console.warn('Could not parse lifts.json, generating empty manifest')
-    return {
-      version: MANIFEST_VERSION,
-      generated: new Date().toISOString(),
-      total: { weight: 0, unit: 'lb', date: new Date().toISOString() },
-      lifts: [],
-    }
-  }
+  const liftsData: LiftsSourceData = JSON.parse(readFileSync(liftsPath, 'utf-8'))
 
   const liftNames: LiftName[] = ['squat', 'bench', 'deadlift']
   const lifts: LiftsManifestEntry[] = liftNames.map((lift) => ({
