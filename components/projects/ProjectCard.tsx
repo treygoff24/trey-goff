@@ -1,25 +1,22 @@
 import Link from 'next/link'
+import type { Project } from 'content-collections'
 import { TagPill } from '@/components/ui/TagPill'
 import { cn } from '@/lib/utils'
 
-interface ProjectLink {
-  label: string
-  url: string
-}
-
 interface ProjectCardProps {
-  project: {
-    slug: string
-    name: string
-    oneLiner: string
-    problem: string
-    approach: string
-    status: 'active' | 'shipped' | 'on-hold' | 'archived' | 'idea'
-    type: 'software' | 'policy' | 'professional' | 'experiment'
-    roles: string[]
-    links: ProjectLink[]
-    tags: string[]
-  }
+  project: Pick<
+    Project,
+    | 'slug'
+    | 'name'
+    | 'oneLiner'
+    | 'problem'
+    | 'approach'
+    | 'status'
+    | 'type'
+    | 'roles'
+    | 'links'
+    | 'tags'
+  >
 }
 
 const statusStyles: Record<ProjectCardProps['project']['status'], string> = {

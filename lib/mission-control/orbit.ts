@@ -2,6 +2,8 @@ import appearancesData from '@/content/media/appearances.json'
 import transmissionsData from '@/content/transmissions/publications.json'
 import { attemptDate, isStale, isValidDate, type Instrument } from './instrument'
 import { isHttpUrl } from '@/lib/mission-control/url'
+import type { Appearance } from '@/lib/media/types'
+import type { Transmission } from '@/lib/transmissions/types'
 
 export interface OrbitEntry {
   title: string
@@ -11,14 +13,19 @@ export interface OrbitEntry {
   kind: 'appearance' | 'publication'
 }
 
+/**
+ * The orbit guards only need the fields they actually validate, but the field
+ * names and types come from the canonical content shapes so a rename upstream
+ * breaks here instead of silently failing the guard at runtime.
+ */
 interface AppearancesSource {
   lastUpdated: string
-  appearances: Array<{ title: string; show: string; date: string; url: string }>
+  appearances: Array<Pick<Appearance, 'title' | 'show' | 'date' | 'url'>>
 }
 
 interface PublicationsSource {
   lastUpdated: string
-  transmissions: Array<{ title: string; publication: string; date: string; url: string }>
+  transmissions: Array<Pick<Transmission, 'title' | 'publication' | 'date' | 'url'>>
 }
 
 const source = 'content/transmissions/publications.json · content/media/appearances.json'

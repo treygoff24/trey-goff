@@ -16,6 +16,7 @@ import { execFileSync } from 'child_process'
 import { createHash } from 'crypto'
 import * as fs from 'fs'
 import * as path from 'path'
+import type { AssetManifest } from './lib/asset-manifest-types'
 import { writeStableJsonFile } from './lib/stable-json'
 
 // =============================================================================
@@ -184,13 +185,6 @@ async function compressAsset(
 // =============================================================================
 // Manifest Generation
 // =============================================================================
-
-interface AssetManifest {
-  version: string
-  generated: string
-  chunks: Record<string, { file: string; size: number }>
-  props: Record<string, { file: string; size: number }>
-}
 
 function generateAssetManifest(results: CompressionResult[]): void {
   const manifest: AssetManifest = {

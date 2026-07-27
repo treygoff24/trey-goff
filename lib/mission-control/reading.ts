@@ -3,11 +3,8 @@ import { calculateReadingStats, getTopicBreakdown } from '@/lib/books'
 import type { Book, BooksData } from '@/lib/books/types'
 import { attemptDate, isStale, type Instrument } from './instrument'
 
-export interface ReadingBook {
-  id: string
-  title: string
-  author: string
-  rating?: number
+/** The slice of a `Book` the mission-control shelf renders, plus a resolved cover path. */
+export type ReadingBook = Pick<Book, 'id' | 'title' | 'author' | 'rating'> & {
   cover: string
 }
 

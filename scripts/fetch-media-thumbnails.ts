@@ -1,21 +1,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs'
+import type { AppearancesData } from '@/lib/media/types'
 
 const THUMBNAILS_DIR = './public/thumbnails'
-
-interface Appearance {
-  id: string
-  title: string
-  show: string
-  type: string
-  url: string
-  youtubeUrl?: string
-  [key: string]: unknown
-}
-
-interface AppearancesData {
-  lastUpdated: string
-  appearances: Appearance[]
-}
 
 function extractYouTubeVideoId(url: string): string | null {
   // Handle various YouTube URL formats

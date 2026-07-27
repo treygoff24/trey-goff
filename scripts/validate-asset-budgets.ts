@@ -22,6 +22,7 @@
 
 import * as fs from 'fs'
 import * as path from 'path'
+import type { AssetManifest } from './lib/asset-manifest-types'
 
 // =============================================================================
 // Configuration
@@ -64,13 +65,6 @@ interface ValidationResult {
   passed: boolean
   errors: string[]
   warnings: string[]
-}
-
-interface AssetManifest {
-  version: string
-  generated: string
-  chunks: Record<string, { file: string; size: number }>
-  props: Record<string, { file: string; size: number }>
 }
 
 // =============================================================================

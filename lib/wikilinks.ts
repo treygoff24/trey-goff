@@ -6,9 +6,11 @@ import { getTopicsIndex } from '@/lib/topics'
 
 const WIKILINK_REGEX = /\[\[([^[\]]+)\]\]/g
 
-type MdastNode = {
+/** Minimal structural view of an mdast node — only the fields this repo reads or writes. */
+export type MdastNode = {
   type: string
   value?: string
+  url?: string
   children?: MdastNode[]
 }
 

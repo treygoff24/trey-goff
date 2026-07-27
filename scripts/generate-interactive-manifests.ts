@@ -162,16 +162,8 @@ function generateProjectsManifest(): ProjectsManifest {
 
 interface LiftsSourceData {
   lastUpdated: string
-  lifts: {
-    squat: LiftRecord
-    bench: LiftRecord
-    deadlift: LiftRecord
-  }
-  history?: {
-    squat?: LiftRecord[]
-    bench?: LiftRecord[]
-    deadlift?: LiftRecord[]
-  }
+  lifts: Record<LiftName, LiftRecord>
+  history?: Partial<Record<LiftName, LiftRecord[]>>
 }
 
 function generateLiftsManifest(): LiftsManifest {

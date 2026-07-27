@@ -1,8 +1,14 @@
 import liftsData from '@/data/lifts.json'
 import { attemptDate, isStale, isValidDate, type Instrument } from './instrument'
+import type { LiftName } from '@/lib/interactive/manifest-types'
 
-export type LiftName = 'squat' | 'bench' | 'deadlift'
+export type { LiftName }
 
+/**
+ * Raw shape of `data/lifts.json` before validation. Deliberately looser than
+ * the validated `LiftRecord` in `@/lib/interactive/manifest-types`: this one
+ * describes untrusted input, so `unit` and `type` stay open strings.
+ */
 export interface LiftRecord {
   weight: number
   unit: string

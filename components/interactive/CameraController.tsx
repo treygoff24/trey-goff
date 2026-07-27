@@ -4,12 +4,13 @@ import { useRef, useEffect } from 'react'
 import { useThree, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { useInteractiveStore } from '@/lib/interactive/store'
+import type { CameraMode } from '@/lib/interactive/types'
 
 // =============================================================================
 // Types
 // =============================================================================
 
-export type CameraMode = 'third-person' | 'first-person'
+export type { CameraMode }
 
 interface CameraControllerProps {
   /** Target position to follow as [x, y, z] tuple */

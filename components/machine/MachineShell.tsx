@@ -21,15 +21,13 @@ import {
   type MachineSim,
 } from '@/lib/machine/sim'
 import { normalizeSeed, randomSeed } from '@/lib/machine/seed'
-import { MachineConsole, type LedgerState } from './MachineConsole'
+import { MachineConsole, type LedgerState, type Panel } from './MachineConsole'
 import styles from './machine.module.css'
 
 const MachineWorld = dynamic(() => import('./MachineWorld').then((module) => module.MachineWorld), {
   ssr: false,
   loading: () => <LoadingWorld message="Lighting the first districts…" />,
 })
-
-type Panel = 'left' | 'right'
 
 interface MachineRun {
   left: MachineSim

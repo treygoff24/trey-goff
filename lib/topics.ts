@@ -1,10 +1,9 @@
 import { allEssays, allNotes, allProjects } from 'content-collections'
+import type { Essay, Note, Project } from 'content-collections'
 import { getAllBooks } from '@/lib/books'
 import type { Book } from '@/lib/books/types'
 
-type Essay = (typeof allEssays)[number]
-type Note = (typeof allNotes)[number]
-export type Project = (typeof allProjects)[number]
+export type { Project }
 
 export type TopicSource = 'essay' | 'note' | 'book' | 'project'
 

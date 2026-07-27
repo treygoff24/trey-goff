@@ -1,4 +1,5 @@
 import { allEssays, allNotes } from 'content-collections'
+import type { Essay } from 'content-collections'
 import { attemptDate, type Instrument } from './instrument'
 
 export interface WritingMonth {
@@ -6,15 +7,12 @@ export interface WritingMonth {
   count: number
 }
 
+/** The slice of an essay the writing instrument surfaces. */
+export type LatestEssay = Pick<Essay, 'title' | 'slug' | 'date' | 'summary' | 'readingTime'>
+
 export interface WritingData {
   months: WritingMonth[]
-  latestEssay: {
-    title: string
-    slug: string
-    date: string
-    summary: string
-    readingTime: number
-  } | null
+  latestEssay: LatestEssay | null
   wordCount: number
 }
 
