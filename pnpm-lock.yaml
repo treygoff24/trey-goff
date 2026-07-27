@@ -138,6 +138,9 @@ importers:
       '@types/jsdom':
         specifier: ^28.0.3
         version: 28.0.3
+      '@types/mdast':
+        specifier: ^4.0.4
+        version: 4.0.4
       '@types/node':
         specifier: ^25.4.0
         version: 25.4.0
@@ -150,6 +153,9 @@ importers:
       '@types/three':
         specifier: ^0.183.1
         version: 0.183.1
+      '@types/unist':
+        specifier: ^3.0.3
+        version: 3.0.3
       '@typescript/native-preview':
         specifier: 7.0.0-dev.20260309.1
         version: 7.0.0-dev.20260309.1
