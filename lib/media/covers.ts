@@ -1,16 +1,14 @@
 import fs from 'fs/promises'
 import { fetchPodcastArtwork, verifyYouTubeThumbnail, generatePlaceholderCover } from './cover-apis'
 import type { Appearance } from './types'
+import type { CoverCache } from '@/lib/cover-cache'
 
 const COVER_CACHE_FILE = './.appearance-cover-cache.json'
 
-interface CoverCache {
-  [appearanceId: string]: {
-    url: string
-    resolvedAt: string
-    source: 'manual' | 'youtube' | 'itunes' | 'placeholder'
-  }
-}
+/** Where an appearance cover can come from, in the order the resolver tries them. */
+type AppearanceCoverSource = 'manual' | 'youtube' | 'itunes' | 'placeholder'
+
+type AppearanceCoverCache = CoverCache<AppearanceCoverSource>
 
 async function resolveAppearanceCover(appearance: Appearance): Promise<string> {
   // 1. Manual override via showArtwork
@@ -47,7 +45,7 @@ async function resolveAppearanceCover(appearance: Appearance): Promise<string> {
 export async function resolveAllCovers(appearances: Appearance[]): Promise<Map<string, string>> {
   const results = new Map<string, string>()
 
-  let cache: CoverCache = {}
+  let cache: AppearanceCoverCache = {}
   try {
     const cacheData = await fs.readFile(COVER_CACHE_FILE, 'utf-8')
     cache = JSON.parse(cacheData)
@@ -68,7 +66,7 @@ export async function resolveAllCovers(appearances: Appearance[]): Promise<Map<s
     const coverUrl = await resolveAppearanceCover(appearance)
     results.set(appearance.id, coverUrl)
 
-    let source: CoverCache[string]['source'] = 'placeholder'
+    let source: AppearanceCoverSource = 'placeholder'
     if (appearance.showArtwork) {
       source = 'manual'
     } else if (coverUrl.includes('youtube.com') || coverUrl.includes('ytimg')) {

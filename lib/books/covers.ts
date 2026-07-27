@@ -5,16 +5,14 @@ import {
   generatePlaceholderCover,
 } from './cover-apis'
 import type { Book } from './types'
+import type { CoverCache } from '@/lib/cover-cache'
 
 const COVER_CACHE_FILE = './.cover-cache.json'
 
-interface CoverCache {
-  [bookId: string]: {
-    url: string
-    resolvedAt: string
-    source: 'manual' | 'openlibrary' | 'google' | 'placeholder'
-  }
-}
+/** Where a book cover can come from, in the order the resolver tries them. */
+type BookCoverSource = 'manual' | 'openlibrary' | 'google' | 'placeholder'
+
+type BookCoverCache = CoverCache<BookCoverSource>
 
 async function resolveBookCover(book: Book): Promise<string> {
   // 1. Manual override
@@ -45,7 +43,7 @@ async function resolveBookCover(book: Book): Promise<string> {
 export async function resolveAllCovers(books: Book[]): Promise<Map<string, string>> {
   const results = new Map<string, string>()
 
-  let cache: CoverCache = {}
+  let cache: BookCoverCache = {}
   try {
     const cacheData = await fs.readFile(COVER_CACHE_FILE, 'utf-8')
     cache = JSON.parse(cacheData)
@@ -66,7 +64,7 @@ export async function resolveAllCovers(books: Book[]): Promise<Map<string, strin
     const coverUrl = await resolveBookCover(book)
     results.set(book.id, coverUrl)
 
-    let source: CoverCache[string]['source'] = 'placeholder'
+    let source: BookCoverSource = 'placeholder'
     if (book.coverUrl) {
       source = 'manual'
     } else if (coverUrl.includes('openlibrary')) {

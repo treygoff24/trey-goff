@@ -6,6 +6,7 @@
 import { allEssays, allProjects } from 'content-collections'
 import { readFileSync, mkdirSync, existsSync } from 'fs'
 import type { BooksData } from '@/lib/books/types'
+import { LIFT_NAMES } from '@/lib/interactive/manifest-types'
 import type {
   EssaysManifest,
   EssayManifestEntry,
@@ -154,8 +155,7 @@ function generateLiftsManifest(): LiftsManifest {
 
   const liftsData: LiftsSourceData = JSON.parse(readFileSync(liftsPath, 'utf-8'))
 
-  const liftNames: LiftName[] = ['squat', 'bench', 'deadlift']
-  const lifts: LiftsManifestEntry[] = liftNames.map((lift) => ({
+  const lifts: LiftsManifestEntry[] = LIFT_NAMES.map((lift) => ({
     lift,
     pr: liftsData.lifts[lift],
     history: liftsData.history?.[lift],

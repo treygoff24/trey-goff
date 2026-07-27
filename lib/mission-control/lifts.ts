@@ -1,6 +1,6 @@
 import liftsData from '@/data/lifts.json'
 import { absentInstrument, isStale, isValidDate, type Instrument } from './instrument'
-import type { LiftName } from '@/lib/interactive/manifest-types'
+import { LIFT_NAMES, type LiftName } from '@/lib/interactive/manifest-types'
 
 export type { LiftName }
 
@@ -31,8 +31,6 @@ export interface StrengthData {
   total: number
   unit: string
 }
-
-const liftNames: LiftName[] = ['squat', 'bench', 'deadlift']
 
 function isLiftRecord(value: unknown): value is LiftRecord {
   if (!value || typeof value !== 'object') return false
@@ -67,7 +65,7 @@ export function aggregateLifts(source: unknown, now = new Date()): Instrument<St
   }
 
   const lifts: StrengthData['lifts'] = []
-  for (const name of liftNames) {
+  for (const name of LIFT_NAMES) {
     const current = liftsSource.lifts[name]
     if (!isLiftRecord(current)) return absentStrength(now)
     const historyValue = liftsSource.history?.[name]
