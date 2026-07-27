@@ -5,7 +5,7 @@ export const SUBSCRIBE_MAX_BODY_BYTES = 4096
 const EMAIL_REGEX =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
 
-export const MAX_EMAIL_LENGTH = 320
+const MAX_EMAIL_LENGTH = 320
 
 /**
  * Prefer platform-provided client IP on Vercel, then fall back conservatively.
@@ -34,6 +34,15 @@ export function isJsonContentType(request: NextRequest): boolean {
   if (!ct) return false
   const base = ct.split(';')[0]?.trim().toLowerCase()
   return base === 'application/json'
+}
+
+/**
+ * What `POST /api/subscribe` puts in its JSON body. Every path through the route returns
+ * exactly one of these two keys, so the client reads both as optional.
+ */
+export interface SubscribeResponse {
+  message?: string
+  error?: string
 }
 
 export type ParseSubscribeBodyResult =

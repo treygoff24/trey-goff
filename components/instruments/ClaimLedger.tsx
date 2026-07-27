@@ -15,6 +15,7 @@ import {
   useLedgerStore,
 } from '@/components/instruments/ledger-store'
 import { isFiltered, matchesFilters } from '@/components/instruments/use-filtered-rows'
+import type { ClaimType } from '@/lib/instruments/types'
 import {
   LEDGER_STATES,
   emptyCounts,
@@ -28,7 +29,7 @@ import {
 /** Half-width of the window a timestamp button scopes to, in seconds. */
 const STAMP_WINDOW = 450
 
-const TYPE_LABELS: Record<string, string> = {
+const TYPE_LABELS: Record<ClaimType, string> = {
   A: 'Type A — person X said Y',
   B: 'Type B — document or event Z exists',
   C: 'Type C — direct assertion about the world',

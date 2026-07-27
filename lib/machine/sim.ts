@@ -150,7 +150,7 @@ export function setInstitutionTargets(sim: MachineSim, values: InstitutionValues
   Object.assign(sim.targets, copyInstitutions(values))
 }
 
-export function institutionParameters(values: InstitutionValues) {
+function institutionParameters(values: InstitutionValues) {
   return {
     annualExpropriationRisk:
       PARAMS.annualExpropriationMax -

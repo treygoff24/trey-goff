@@ -1,7 +1,9 @@
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 
-interface RelatedLink {
+/** One row in a related-links list. Kept loose so backlinks, outgoing links and topic
+ * signals can all feed the same list without each caller restating the shape. */
+export interface RelatedLink {
   id?: string
   title: string
   url: string

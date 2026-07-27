@@ -27,7 +27,6 @@ function sanitizeSchema(allowedCustomTags: readonly string[]) {
     tagNames: [...(defaultSchema.tagNames ?? []), ...allowedCustomTags],
     attributes: {
       ...defaultSchema.attributes,
-      '*': [...(defaultSchema.attributes?.['*'] || [])],
       // `id` is deliberately absent from custom tags: sanitization clobbers it to
       // `user-content-*`, so instrument nodes identify themselves through `data-*`.
       ...Object.fromEntries(allowedCustomTags.map((tag) => [tag, ['data*']])),

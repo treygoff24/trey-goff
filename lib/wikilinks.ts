@@ -1,3 +1,4 @@
+import type { Nodes } from 'mdast'
 import { unified } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkGfm from 'remark-gfm'
@@ -6,9 +7,16 @@ import { getTopicsIndex } from '@/lib/topics'
 
 const WIKILINK_REGEX = /\[\[([^[\]]+)\]\]/g
 
-type MdastNode = {
-  type: string
+/**
+ * Minimal structural view of an mdast node — only the fields this repo reads or writes.
+ * `type` is the real mdast node-name union rather than a bare string, so a typo in a
+ * comparison or in a node this module synthesises fails to compile instead of silently
+ * never matching.
+ */
+export type MdastNode = {
+  type: Nodes['type']
   value?: string
+  url?: string
   children?: MdastNode[]
 }
 
@@ -50,7 +58,7 @@ export function normalizeWikiKey(value: string): string {
     .trim()
 }
 
-export function parseWikilinkToken(raw: string): { target: string; label: string } {
+function parseWikilinkToken(raw: string): { target: string; label: string } {
   const [targetPart = '', labelPart = ''] = raw.split('|').map((part) => part.trim())
   if (labelPart) {
     const target = targetPart || labelPart
@@ -122,7 +130,7 @@ export function extractWikilinksFromMarkdown(markdown: string): string[] {
   return targets
 }
 
-export function getWikiLinkIndex(): WikiLinkIndex {
+function getWikiLinkIndex(): WikiLinkIndex {
   if (cachedIndex) return cachedIndex
 
   const keyToTargetId = new Map<string, string>()

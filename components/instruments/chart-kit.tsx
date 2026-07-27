@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
-import type { ChartTone, Source } from '@/lib/instruments/types'
+import type { ChartFrameFields, ChartTone } from '@/lib/instruments/types'
 import { safeHref } from '@/lib/instruments/href'
 import { INSTRUMENT_SENTINEL } from '@/components/instruments/sentinel'
 
@@ -19,7 +19,7 @@ const COMPACT_WIDTH = 560
 const useMeasureEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
 
 /** The drawn width, measured before paint so the first frame is already at the real size. */
-export function useChartWidth(): [React.RefObject<HTMLDivElement | null>, number] {
+function useChartWidth(): [React.RefObject<HTMLDivElement | null>, number] {
   const ref = useRef<HTMLDivElement>(null)
   const [width, setWidth] = useState(DEFAULT_WIDTH)
 
@@ -82,11 +82,8 @@ export interface ChartDrawing {
 }
 
 export interface ChartFrameProps {
-  id: string
-  title: string
-  summary: string
-  caption?: string
-  source?: Source
+  /** Any chart — the frame reads only the fields every chart kind shares. */
+  chart: ChartFrameFields
   entries: ChartEntry[]
   children: (drawing: ChartDrawing) => ReactNode
 }
@@ -108,15 +105,8 @@ export interface ChartFrameProps {
  * while hover and point focus only *preview*, which changes what is raised without ever
  * contradicting what `aria-checked` says is chosen.
  */
-export function ChartFrame({
-  id,
-  title,
-  summary,
-  caption,
-  source,
-  entries,
-  children,
-}: ChartFrameProps) {
+export function ChartFrame({ chart, entries, children }: ChartFrameProps) {
+  const { id, title, summary, caption, source } = chart
   const [ref, width] = useChartWidth()
   const [pinned, setPinned] = useState<string | null>(null)
   const [previewed, setPreviewed] = useState<string | null>(null)

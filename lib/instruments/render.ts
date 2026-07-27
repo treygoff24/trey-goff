@@ -1,20 +1,8 @@
-import type { ReactElement } from 'react'
 import type { Element, ElementContent, Root } from 'hast'
-import {
-  INSTRUMENT_TAGS,
-  hastToReact,
-  type InstrumentComponents,
-} from '@/lib/instruments/hast-to-react'
+import { INSTRUMENT_TAGS } from '@/lib/instruments/hast-to-react'
 import { createMarkdownProcessor } from '@/lib/markdown-pipeline'
-import { applyMarks } from '@/lib/instruments/marks'
-import type { Mark } from '@/lib/instruments/types'
 
-export {
-  INSTRUMENT_TAGS,
-  hastToReact,
-  type InstrumentComponents,
-  type InstrumentTag,
-} from '@/lib/instruments/hast-to-react'
+export { INSTRUMENT_TAGS, hastToReact } from '@/lib/instruments/hast-to-react'
 
 /**
  * The same processor `lib/markdown.ts` builds, with the instrument tags as its only
@@ -63,18 +51,4 @@ function unwrapInstrumentParagraphs(node: Root | Element): void {
   }
 
   if (changed) node.children = children as typeof node.children
-}
-
-interface RenderOptions {
-  marks?: readonly Mark[]
-  components?: InstrumentComponents
-}
-
-export async function renderInstruments(
-  markdown: string,
-  options: RenderOptions = {},
-): Promise<ReactElement> {
-  const tree = await markdownToHast(markdown)
-  applyMarks(tree, options.marks ?? [])
-  return hastToReact(tree, options.components)
 }

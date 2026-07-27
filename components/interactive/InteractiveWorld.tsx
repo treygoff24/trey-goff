@@ -7,7 +7,7 @@ import Link from 'next/link'
 import type { QualityTier } from '@/lib/interactive/capabilities'
 import { useInteractiveStore } from '@/lib/interactive/store'
 import type { RoomId } from '@/lib/interactive/types'
-import { RendererRoot } from './RendererRoot'
+import { RendererRoot, type RendererRootProps } from './RendererRoot'
 import { PlayerController, keyboardControlsMap } from './PlayerController'
 import { LoadingSequence, type LoadingPhase } from './LoadingSequence'
 import { CameraController } from './CameraController'
@@ -18,24 +18,14 @@ import { ContentOverlay, useContentOverlay, type OverlayContent } from './Conten
 import { PostProcessing } from './PostProcessing'
 import { SettingsMenu, useSettingsMenu } from './SettingsMenu'
 
-// =============================================================================
-// Types
-// =============================================================================
-
-interface InteractiveWorldProps {
-  qualityTier: QualityTier
-  reducedMotion: boolean
-  isMobile: boolean
-  onReady: () => void
-  onError: (error: Error) => void
-  onTierChange?: (tier: Exclude<QualityTier, 'auto'>) => void
+/**
+ * Everything the renderer needs — forwarded verbatim to `RendererRoot`, so it is derived
+ * from that contract rather than restated — plus the settings-menu callbacks this shell owns.
+ */
+interface InteractiveWorldProps extends Omit<RendererRootProps, 'children'> {
   onQualityChange?: (tier: QualityTier) => void
   onReducedMotionChange?: (enabled: boolean) => void
 }
-
-// =============================================================================
-// Camera Integration
-// =============================================================================
 
 /**
  * Connects the camera to the player position from the store.
@@ -56,10 +46,6 @@ function CameraIntegration({ reducedMotion }: { reducedMotion: boolean }) {
     />
   )
 }
-
-// =============================================================================
-// Main Scene Content
-// =============================================================================
 
 interface SceneContentProps {
   reducedMotion: boolean
@@ -82,16 +68,13 @@ function SceneContent({
   onDoorActivate,
   onContentSelect,
 }: SceneContentProps) {
-  // Get current room and spawn from store
   // spawnPosition/spawnRotation only change during room transitions, not every frame
   const currentRoom = useInteractiveStore((s) => s.player.currentRoom) ?? 'exterior'
   const spawnPosition = useInteractiveStore((s) => s.player.spawnPosition)
   const spawnRotation = useInteractiveStore((s) => s.player.spawnRotation)
 
-  // Ref to track if we've set initial room
   const hasSetInitialRoom = useRef(false)
 
-  // Set initial room on first render
   useEffect(() => {
     if (!hasSetInitialRoom.current) {
       hasSetInitialRoom.current = true
@@ -145,10 +128,6 @@ function SceneContent({
   )
 }
 
-// =============================================================================
-// Main Component
-// =============================================================================
-
 /**
  * InteractiveWorld - The main 3D world component.
  *
@@ -173,13 +152,10 @@ export function InteractiveWorld({
   const [loadingStatus, setLoadingStatus] = useState('Initializing...')
   const [isWorldReady, setIsWorldReady] = useState(false)
 
-  // Content overlay state
   const { content: overlayContent, openOverlay, closeOverlay } = useContentOverlay()
 
-  // Settings menu state
   const { isOpen: isSettingsOpen, openSettings, closeSettings } = useSettingsMenu()
 
-  // Handle quality change from settings
   const handleQualityChange = useCallback(
     (tier: QualityTier) => {
       onQualityChange?.(tier)
@@ -187,7 +163,6 @@ export function InteractiveWorld({
     [onQualityChange],
   )
 
-  // Handle reduced motion change from settings
   const handleReducedMotionChange = useCallback(
     (enabled: boolean) => {
       onReducedMotionChange?.(enabled)
@@ -202,7 +177,6 @@ export function InteractiveWorld({
     spawnRotation: number
   } | null>(null)
 
-  // Timeout refs for cleanup
   const loadingTimeoutRefs = useRef<ReturnType<typeof setTimeout>[]>([])
 
   // Room transition state with swap callback
@@ -220,7 +194,6 @@ export function InteractiveWorld({
       store.setSpawnPosition(spawn)
       store.setSpawnRotation(rotation)
 
-      // Update room and player position/rotation
       store.setCurrentRoom(targetRoom as RoomId)
       store.setPlayerPosition(spawn)
       store.setPlayerRotation([0, rotation, 0])
@@ -232,17 +205,14 @@ export function InteractiveWorld({
     },
   })
 
-  // Handle door activation from rooms
   const handleDoorActivate = useCallback(
     (targetRoom: RoomId, spawnPosition: [number, number, number], spawnRotation: number) => {
-      // Store transition info and start the fade
       pendingTransition.current = { targetRoom, spawnPosition, spawnRotation }
       startTransition(targetRoom)
     },
     [startTransition],
   )
 
-  // Handle content selection from rooms
   const handleContentSelect = useCallback(
     (content: OverlayContent) => {
       openOverlay(content)
@@ -278,7 +248,6 @@ export function InteractiveWorld({
     onReady()
   }, [onReady])
 
-  // Cleanup timeouts on unmount
   useEffect(() => {
     const timeouts = loadingTimeoutRefs.current
     return () => {

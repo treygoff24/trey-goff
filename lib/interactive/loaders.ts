@@ -9,10 +9,6 @@ import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.j
 import * as THREE from 'three'
 import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
-// =============================================================================
-// Loader Singleton Management
-// =============================================================================
-
 let gltfLoader: GLTFLoader | null = null
 let ktx2Loader: KTX2Loader | null = null
 let isInitialized = false
@@ -30,12 +26,10 @@ const KTX2_TRANSCODER_PATH = 'https://cdn.jsdelivr.net/npm/three@0.183.2/example
 export function initializeLoaders(gl: THREE.WebGLRenderer): void {
   if (isInitialized) return
 
-  // Initialize KTX2Loader with GPU transcoder
   ktx2Loader = new KTX2Loader()
   ktx2Loader.setTranscoderPath(KTX2_TRANSCODER_PATH)
   ktx2Loader.detectSupport(gl)
 
-  // Initialize GLTFLoader with extensions
   gltfLoader = new GLTFLoader()
   gltfLoader.setKTX2Loader(ktx2Loader)
   gltfLoader.setMeshoptDecoder(MeshoptDecoder)
@@ -47,7 +41,7 @@ export function initializeLoaders(gl: THREE.WebGLRenderer): void {
  * Get the configured GLTF loader.
  * @throws Error if loaders not initialized
  */
-export function getGLTFLoader(): GLTFLoader {
+function getGLTFLoader(): GLTFLoader {
   if (!gltfLoader) {
     throw new Error('Loaders not initialized. Call initializeLoaders() first.')
   }
@@ -65,10 +59,6 @@ export function disposeLoaders(): void {
   gltfLoader = null
   isInitialized = false
 }
-
-// =============================================================================
-// Asset Loading Utilities
-// =============================================================================
 
 export interface LoadProgress {
   loaded: number
@@ -89,13 +79,11 @@ export async function loadGLTF(url: string, options?: LoadOptions): Promise<GLTF
   const loader = getGLTFLoader()
 
   return new Promise((resolve, reject) => {
-    // Check for abort before starting
     if (options?.signal?.aborted) {
       reject(new DOMException('Load aborted', 'AbortError'))
       return
     }
 
-    // Handle abort during load
     const abortHandler = () => {
       reject(new DOMException('Load aborted', 'AbortError'))
     }
@@ -125,24 +113,11 @@ export async function loadGLTF(url: string, options?: LoadOptions): Promise<GLTF
 }
 
 /**
- * Preload a GLTF file without returning it.
- * Useful for warming caches.
- */
-export async function preloadGLTF(url: string): Promise<void> {
-  await loadGLTF(url)
-}
-
-// =============================================================================
-// Asset Disposal Utilities
-// =============================================================================
-
-/**
  * Recursively dispose of all GPU resources in a Three.js object.
  * Handles geometries, materials, textures, and ImageBitmaps.
  */
 export function disposeObject(object: THREE.Object3D): void {
   object.traverse((child) => {
-    // Dispose geometry
     if (
       child instanceof THREE.Mesh ||
       child instanceof THREE.Line ||
@@ -152,7 +127,6 @@ export function disposeObject(object: THREE.Object3D): void {
         child.geometry.dispose()
       }
 
-      // Dispose materials
       const materials = Array.isArray(child.material) ? child.material : [child.material]
       for (const material of materials) {
         if (material) {
@@ -173,29 +147,37 @@ export function disposeObject(object: THREE.Object3D): void {
 }
 
 /**
+ * The texture-bearing slots across three's built-in materials. `THREE.Material` itself
+ * declares none of them, so the slot list doubles as the key type: only these names are
+ * readable off a material here, rather than any arbitrary string.
+ */
+const TEXTURE_SLOTS = [
+  'map',
+  'normalMap',
+  'roughnessMap',
+  'metalnessMap',
+  'aoMap',
+  'emissiveMap',
+  'bumpMap',
+  'displacementMap',
+  'alphaMap',
+  'envMap',
+  'lightMap',
+  'specularMap',
+] as const
+
+type TextureSlot = (typeof TEXTURE_SLOTS)[number]
+
+/** A material viewed through its optional texture slots. Any given subclass fills a subset. */
+type TexturedMaterial = THREE.Material & Partial<Record<TextureSlot, THREE.Texture | null>>
+
+/**
  * Dispose of a material and all its textures.
  */
 function disposeMaterial(material: THREE.Material): void {
-  // Get all texture properties
-  const texturePropNames = [
-    'map',
-    'normalMap',
-    'roughnessMap',
-    'metalnessMap',
-    'aoMap',
-    'emissiveMap',
-    'bumpMap',
-    'displacementMap',
-    'alphaMap',
-    'envMap',
-    'lightMap',
-    'specularMap',
-  ] as const
-
-  // Type-safe texture disposal for materials with texture properties
-  const materialAsAny = material as unknown as Record<string, THREE.Texture | undefined>
-  for (const prop of texturePropNames) {
-    const texture = materialAsAny[prop]
+  const textured = material as TexturedMaterial
+  for (const prop of TEXTURE_SLOTS) {
+    const texture = textured[prop]
     if (texture instanceof THREE.Texture) {
       disposeTexture(texture)
     }
@@ -216,10 +198,6 @@ function disposeTexture(texture: THREE.Texture): void {
 
   texture.dispose()
 }
-
-// =============================================================================
-// Debug Utilities
-// =============================================================================
 
 /**
  * Log memory usage from renderer.info.

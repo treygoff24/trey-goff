@@ -115,7 +115,7 @@ const VOID_SEPARATORS = new Set(['br', 'hr'])
  * Unmatchable by construction: mark text is authored prose, and `resolve` rejects any
  * mark that contains this character outright.
  */
-export const BLOCK_BOUNDARY = '\u0000'
+const BLOCK_BOUNDARY = '\u0000'
 
 interface FlatText {
   slots: TextSlot[]

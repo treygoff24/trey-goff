@@ -1,11 +1,4 @@
-import { resolveWikiLink, splitWikilinkText } from '@/lib/wikilinks'
-
-type MdastNode = {
-  type: string
-  value?: string
-  url?: string
-  children?: MdastNode[]
-}
+import { resolveWikiLink, splitWikilinkText, type MdastNode } from '@/lib/wikilinks'
 
 const skipParentTypes = new Set(['link', 'linkReference', 'inlineCode', 'code'])
 

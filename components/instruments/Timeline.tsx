@@ -37,14 +37,7 @@ export default function Timeline({ chart }: { chart: TimelineChart }) {
   )
 
   return (
-    <ChartFrame
-      id={chart.id}
-      title={chart.title}
-      summary={chart.summary}
-      caption={chart.caption}
-      source={chart.source}
-      entries={entries}
-    >
+    <ChartFrame chart={chart} entries={entries}>
       {({ active }) => (
         <ol className="tg-timeline">
           {chart.events.map((event) => (

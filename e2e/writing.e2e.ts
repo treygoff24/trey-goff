@@ -78,7 +78,6 @@ test.describe('Writing Page', () => {
 
       if (cardCount > 0) {
         const firstCard = writingPage.essayCards.first()
-        // Card should have a link with title
         await expect(firstCard.locator('a')).toBeVisible()
       }
     })
@@ -88,7 +87,6 @@ test.describe('Writing Page', () => {
 
       if (cardCount > 0) {
         const firstCard = writingPage.essayCards.first()
-        // Should have a date
         await expect(firstCard.locator('time')).toBeVisible()
       }
     })
@@ -98,7 +96,6 @@ test.describe('Writing Page', () => {
 
       if (cardCount > 0) {
         const firstCard = writingPage.essayCards.first()
-        // Should show reading time (e.g., "5 min read")
         await expect(firstCard.getByText(/\d+ min/)).toBeVisible()
       }
     })
@@ -140,7 +137,6 @@ test.describe('Essay Detail Page', () => {
 
   test.beforeEach(async ({ page }) => {
     essayPage = new EssayDetailPage(page)
-    // First go to writing to find an essay
     await page.goto('/writing', { waitUntil: 'domcontentloaded' })
   })
 
@@ -235,7 +231,6 @@ test.describe('Essay Detail Page', () => {
       const opened = await openFirstEssay(page, essayPage)
 
       if (opened) {
-        // Mobile TOC button should be visible (if essay has headings)
         const mobileTocButton = page.getByRole('button', { name: 'On this page' })
         const isMobileTocVisible = await mobileTocButton.isVisible()
 
@@ -257,7 +252,6 @@ test.describe('Essay Detail Page', () => {
         if (isMobileTocVisible) {
           await mobileTocButton.click()
 
-          // Dropdown should appear
           const dropdown = page.locator('.lg\\:hidden ul')
           await expect(dropdown).toBeVisible()
         }
@@ -283,7 +277,6 @@ test.describe('Essay Detail Page', () => {
           if (linkCount > 0) {
             await links.first().click()
 
-            // Dropdown should close
             await expect(dropdown).not.toBeVisible()
           }
         }
@@ -347,7 +340,6 @@ test.describe('Essay Detail Page', () => {
       const count = await essayLinks.count()
 
       if (count > 0) {
-        // Navigate through essays looking for one with evergreen badge
         for (let i = 0; i < Math.min(count, 5); i++) {
           await page.goto('/writing')
           const links = page.locator('article a')
@@ -364,7 +356,6 @@ test.describe('Essay Detail Page', () => {
             return
           }
         }
-        // No evergreen essays found - that's okay, skip
         test.skip()
       } else {
         test.skip()

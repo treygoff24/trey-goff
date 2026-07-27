@@ -1,6 +1,9 @@
 import appearancesData from '@/content/media/appearances.json'
 import transmissionsData from '@/content/transmissions/publications.json'
-import { attemptDate, isStale, isValidDate, type Instrument } from './instrument'
+import { absentInstrument, attemptDate, isStale, isValidDate, type Instrument } from './instrument'
+import { isHttpUrl } from '@/lib/mission-control/url'
+import type { Appearance } from '@/lib/media/types'
+import type { Transmission } from '@/lib/transmissions/types'
 
 export interface OrbitEntry {
   title: string
@@ -10,36 +13,22 @@ export interface OrbitEntry {
   kind: 'appearance' | 'publication'
 }
 
+/**
+ * The orbit guards only need the fields they actually validate, but the field
+ * names and types come from the canonical content shapes so a rename upstream
+ * breaks here instead of silently failing the guard at runtime.
+ */
 interface AppearancesSource {
   lastUpdated: string
-  appearances: Array<{ title: string; show: string; date: string; url: string }>
+  appearances: Array<Pick<Appearance, 'title' | 'show' | 'date' | 'url'>>
 }
 
 interface PublicationsSource {
   lastUpdated: string
-  transmissions: Array<{ title: string; publication: string; date: string; url: string }>
+  transmissions: Array<Pick<Transmission, 'title' | 'publication' | 'date' | 'url'>>
 }
 
 const source = 'content/transmissions/publications.json · content/media/appearances.json'
-
-function absentOrbit(now: Date): Instrument<OrbitEntry[]> {
-  return {
-    data: null,
-    asOf: attemptDate(now),
-    source,
-    stale: false,
-  }
-}
-
-function isHttpUrl(value: unknown): value is string {
-  if (typeof value !== 'string' || value.trim() === '') return false
-  try {
-    const url = new URL(value)
-    return url.protocol === 'http:' || url.protocol === 'https:'
-  } catch {
-    return false
-  }
-}
 
 function isAppearanceSource(value: unknown): value is AppearancesSource {
   if (!value || typeof value !== 'object') return false
@@ -84,43 +73,39 @@ export function aggregateOrbit(
   transmissionsData: unknown,
   now = new Date(),
 ): Instrument<OrbitEntry[]> {
-  try {
-    if (!isAppearanceSource(appearancesData) || !isPublicationsSource(transmissionsData)) {
-      throw new Error('Invalid orbit data')
-    }
-    const appearances = appearancesData
-    const publications = transmissionsData
-    const data = [
-      ...appearances.appearances.map((item) => ({
-        title: item.title,
-        venue: item.show,
-        date: item.date,
-        url: item.url,
-        kind: 'appearance' as const,
-      })),
-      ...publications.transmissions.map((item) => ({
-        title: item.title,
-        venue: item.publication,
-        date: item.date,
-        url: item.url,
-        kind: 'publication' as const,
-      })),
-    ]
-      .sort((a, b) => b.date.localeCompare(a.date))
-      .slice(0, 3)
-    const asOf =
-      [appearances.lastUpdated, publications.lastUpdated, ...data.map((item) => item.date)]
-        .sort()
-        .reverse()[0] ?? attemptDate(now)
+  if (!isAppearanceSource(appearancesData) || !isPublicationsSource(transmissionsData)) {
+    return absentInstrument<OrbitEntry[]>(source, now)
+  }
+  const appearances = appearancesData
+  const publications = transmissionsData
+  const data = [
+    ...appearances.appearances.map((item) => ({
+      title: item.title,
+      venue: item.show,
+      date: item.date,
+      url: item.url,
+      kind: 'appearance' as const,
+    })),
+    ...publications.transmissions.map((item) => ({
+      title: item.title,
+      venue: item.publication,
+      date: item.date,
+      url: item.url,
+      kind: 'publication' as const,
+    })),
+  ]
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .slice(0, 3)
+  const asOf =
+    [appearances.lastUpdated, publications.lastUpdated, ...data.map((item) => item.date)]
+      .sort()
+      .reverse()[0] ?? attemptDate(now)
 
-    return {
-      data,
-      asOf,
-      source,
-      stale: isStale(asOf, 30, now),
-    }
-  } catch {
-    return absentOrbit(now)
+  return {
+    data,
+    asOf,
+    source,
+    stale: isStale(asOf, 30, now),
   }
 }
 

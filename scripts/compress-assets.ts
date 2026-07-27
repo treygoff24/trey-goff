@@ -16,11 +16,8 @@ import { execFileSync } from 'child_process'
 import { createHash } from 'crypto'
 import * as fs from 'fs'
 import * as path from 'path'
+import type { AssetManifest } from './lib/asset-manifest-types'
 import { writeStableJsonFile } from './lib/stable-json'
-
-// =============================================================================
-// Configuration
-// =============================================================================
 
 const CONFIG = {
   sourceDir: 'public/assets/source',
@@ -49,10 +46,6 @@ const CONFIG = {
   ],
 }
 
-// =============================================================================
-// Utility Functions
-// =============================================================================
-
 function ensureDir(dir: string): void {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true })
@@ -79,10 +72,6 @@ function cleanOldVersions(outputDir: string, baseName: string): void {
     }
   }
 }
-
-// =============================================================================
-// Compression Functions
-// =============================================================================
 
 interface CompressionResult {
   sourceName: string
@@ -128,18 +117,15 @@ async function compressAsset(
 
   console.log(`  Compressing ${sourceName}...`)
 
-  // Clean old versions
   cleanOldVersions(outputDir, baseName)
 
   try {
-    // Step 1: Apply Meshopt compression
     execFileSync(
       'npx',
       ['gltf-transform', 'optimize', sourcePath, tempPath, '--compress', 'meshopt'],
       { stdio: 'pipe' },
     )
 
-    // Step 2: Apply KTX2 texture compression
     // Note: Requires KTX-Software CLI tools installed
     // For CI, we'll skip KTX2 if toktx isn't available
     const ktx2Mode = useUastc ? 'uastc' : 'etc1s'
@@ -148,7 +134,6 @@ async function compressAsset(
       execFileSync('npx', ['gltf-transform', 'ktx2', tempPath, outputPath, '--mode', ktx2Mode], {
         stdio: 'pipe',
       })
-      // Remove temp file
       fs.unlinkSync(tempPath)
     } catch {
       // KTX2 compression failed (likely missing toktx), use meshopt-only
@@ -173,23 +158,11 @@ async function compressAsset(
     }
   } catch (error) {
     console.error(`    Error compressing ${sourceName}:`, error)
-    // Clean up temp file if it exists
     if (fs.existsSync(tempPath)) {
       fs.unlinkSync(tempPath)
     }
     return null
   }
-}
-
-// =============================================================================
-// Manifest Generation
-// =============================================================================
-
-interface AssetManifest {
-  version: string
-  generated: string
-  chunks: Record<string, { file: string; size: number }>
-  props: Record<string, { file: string; size: number }>
 }
 
 function generateAssetManifest(results: CompressionResult[]): void {
@@ -212,7 +185,7 @@ function generateAssetManifest(results: CompressionResult[]): void {
   }
 
   const manifestPath = path.join(CONFIG.manifestDir, 'assets.manifest.json')
-  const result = writeStableJsonFile(manifestPath, manifest as unknown as Record<string, unknown>, {
+  const result = writeStableJsonFile(manifestPath, manifest, {
     preserveKeys: ['generated'],
   })
   console.log(
@@ -222,20 +195,14 @@ function generateAssetManifest(results: CompressionResult[]): void {
   )
 }
 
-// =============================================================================
-// Main
-// =============================================================================
-
 async function main(): Promise<void> {
   console.log('Asset Compression Pipeline\n')
 
-  // Ensure directories exist
   ensureDir(CONFIG.sourceDir)
   ensureDir(CONFIG.chunkOutputDir)
   ensureDir(CONFIG.propOutputDir)
   ensureDir(CONFIG.manifestDir)
 
-  // Check if source directory has any GLB files
   const sourceFiles = fs.existsSync(CONFIG.sourceDir)
     ? fs.readdirSync(CONFIG.sourceDir).filter((f) => f.endsWith('.glb'))
     : []
@@ -252,13 +219,9 @@ async function main(): Promise<void> {
       props: {},
     }
     const manifestPath = path.join(CONFIG.manifestDir, 'assets.manifest.json')
-    const result = writeStableJsonFile(
-      manifestPath,
-      emptyManifest as unknown as Record<string, unknown>,
-      {
-        preserveKeys: ['generated'],
-      },
-    )
+    const result = writeStableJsonFile(manifestPath, emptyManifest, {
+      preserveKeys: ['generated'],
+    })
     console.log(
       `${result.changed ? 'Created empty asset manifest' : 'Empty asset manifest unchanged'}: ${manifestPath}${
         result.preservedTimestamp ? ' (preserved generated)' : ''
@@ -269,7 +232,6 @@ async function main(): Promise<void> {
 
   const results: CompressionResult[] = []
 
-  // Process chunk assets
   console.log('Processing chunk assets:')
   for (const asset of CONFIG.chunkAssets) {
     const sourcePath = path.join(CONFIG.sourceDir, asset)
@@ -278,7 +240,6 @@ async function main(): Promise<void> {
     if (result) results.push(result)
   }
 
-  // Process prop assets
   console.log('\nProcessing prop assets:')
   for (const asset of CONFIG.propAssets) {
     const sourcePath = path.join(CONFIG.sourceDir, asset)
@@ -287,12 +248,10 @@ async function main(): Promise<void> {
     if (result) results.push(result)
   }
 
-  // Generate manifest
   if (results.length > 0) {
     generateAssetManifest(results)
   }
 
-  // Summary
   console.log('\n=== Compression Summary ===')
   console.log(`Total assets processed: ${results.length}`)
   if (results.length > 0) {

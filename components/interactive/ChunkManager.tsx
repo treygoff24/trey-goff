@@ -8,14 +8,28 @@ import { useInteractiveStore } from '@/lib/interactive/store'
 import { loadGLTF, disposeObject, logMemoryUsage } from '@/lib/interactive/loaders'
 import type { RoomId, ChunkState } from '@/lib/interactive/types'
 
-// =============================================================================
-// Types
-// =============================================================================
-
 interface ChunkData {
   gltf: GLTF
   scene: THREE.Group
   loadedAt: number
+}
+
+/**
+ * The debug surface `ChunkManager` parks on `window` when `debug` is set, so a console
+ * session can drive chunk loading by hand. Declared rather than cast so the handle stays
+ * in step with the callbacks it exposes.
+ */
+export interface ChunkManagerDebugApi {
+  loadChunk: (room: RoomId) => Promise<void>
+  activateRoom: (room: RoomId) => void
+  disposeRoom: (room: RoomId) => void
+  getLoadedChunks: () => RoomId[]
+}
+
+declare global {
+  interface Window {
+    __chunkManager?: ChunkManagerDebugApi
+  }
 }
 
 interface ChunkManagerProps {
@@ -26,10 +40,6 @@ interface ChunkManagerProps {
   /** Callback when chunk is disposed */
   onChunkDisposed?: (room: RoomId) => void
 }
-
-// =============================================================================
-// Constants
-// =============================================================================
 
 const CHUNK_BASE_PATH = '/assets/chunks/'
 const MAX_MEMORY_MB = 500
@@ -48,10 +58,6 @@ const CHUNK_PATHS: Record<RoomId, string> = {
   garage: `${CHUNK_BASE_PATH}garage.glb`,
 }
 
-// =============================================================================
-// State Machine Logging
-// =============================================================================
-
 function logStateTransition(
   room: RoomId,
   from: ChunkState | null,
@@ -61,10 +67,6 @@ function logStateTransition(
   if (!debug) return
   console.log(`[ChunkManager] ${room}: ${from ?? 'init'} → ${to}`)
 }
-
-// =============================================================================
-// Main Component
-// =============================================================================
 
 /**
  * ChunkManager - Manages chunk loading, activation, and disposal.
@@ -87,37 +89,29 @@ export function ChunkManager({ debug = false, onChunkActive, onChunkDisposed }: 
   const chunksRef = useRef<Map<RoomId, ChunkData>>(new Map())
   const abortControllersRef = useRef<Map<RoomId, AbortController>>(new Map())
 
-  // Store selectors
   const chunkStates = useInteractiveStore((s) => s.chunkStates)
   const activeChunk = useInteractiveStore((s) => s.activeChunk)
   const setChunkState = useInteractiveStore((s) => s.setChunkState)
   const activateChunk = useInteractiveStore((s) => s.activateChunk)
 
-  // ==========================================================================
-  // Chunk Loading
-  // ==========================================================================
-
   const loadChunk = useCallback(
     async (room: RoomId): Promise<void> => {
       const currentState = chunkStates.get(room)?.state
 
-      // Skip if already loaded/active/dormant
       if (currentState === 'loaded' || currentState === 'active' || currentState === 'dormant') {
         return
       }
 
-      // Skip if already loading (abort controller exists)
+      // A live abort controller means a load is already in flight.
       if (abortControllersRef.current.has(room)) {
         return
       }
 
-      // Set state to preloading if not already
       if (currentState !== 'preloading') {
         logStateTransition(room, currentState ?? null, 'preloading', debug)
         setChunkState(room, 'preloading')
       }
 
-      // Create abort controller for this load
       const controller = new AbortController()
       abortControllersRef.current.set(room, controller)
 
@@ -132,13 +126,11 @@ export function ChunkManager({ debug = false, onChunkActive, onChunkDisposed }: 
           },
         })
 
-        // Check if aborted during load
         if (controller.signal.aborted) {
           disposeObject(gltf.scene)
           return
         }
 
-        // Store chunk data
         const chunkData: ChunkData = {
           gltf,
           scene: gltf.scene,
@@ -154,7 +146,6 @@ export function ChunkManager({ debug = false, onChunkActive, onChunkDisposed }: 
           logStateTransition(room, 'preloading', 'unloaded', debug)
           setChunkState(room, 'unloaded')
         } else {
-          // Real error - log and reset
           console.error(`[ChunkManager] Failed to load ${room}:`, error)
           setChunkState(room, 'unloaded')
         }
@@ -165,27 +156,20 @@ export function ChunkManager({ debug = false, onChunkActive, onChunkDisposed }: 
     [chunkStates, setChunkState, debug],
   )
 
-  // ==========================================================================
-  // Chunk Activation
-  // ==========================================================================
-
   const activateRoom = useCallback(
     (room: RoomId): void => {
       const chunk = chunksRef.current.get(room)
       const currentState = chunkStates.get(room)?.state
 
-      // Can only activate from loaded or dormant state
       if (!chunk || (currentState !== 'loaded' && currentState !== 'dormant')) {
         console.warn(`[ChunkManager] Cannot activate ${room} from state ${currentState}`)
         return
       }
 
-      // Remove from scene if dormant (it was hidden but still attached)
+      // A dormant chunk is still attached to the scene, just hidden.
       if (currentState === 'dormant') {
-        // Scene was kept but hidden - make visible
         chunk.scene.visible = true
       } else {
-        // Add to main scene
         scene.add(chunk.scene)
       }
 
@@ -196,10 +180,6 @@ export function ChunkManager({ debug = false, onChunkActive, onChunkDisposed }: 
     },
     [chunkStates, scene, activateChunk, onChunkActive, debug],
   )
-
-  // ==========================================================================
-  // Chunk Disposal
-  // ==========================================================================
 
   const disposeRoom = useCallback(
     (room: RoomId): void => {
@@ -217,13 +197,10 @@ export function ChunkManager({ debug = false, onChunkActive, onChunkDisposed }: 
         return
       }
 
-      // Remove from scene
       scene.remove(chunk.scene)
 
-      // Dispose GPU resources
       disposeObject(chunk.scene)
 
-      // Clear from storage
       chunksRef.current.delete(room)
 
       logStateTransition(room, chunkStates.get(room)?.state ?? null, 'disposed', debug)
@@ -238,26 +215,18 @@ export function ChunkManager({ debug = false, onChunkActive, onChunkDisposed }: 
     [scene, chunkStates, gl, onChunkDisposed, setChunkState, debug],
   )
 
-  // ==========================================================================
-  // Dormant Handling
-  // ==========================================================================
-
   const makeDormant = useCallback(
     (room: RoomId): void => {
       const chunk = chunksRef.current.get(room)
       if (!chunk) return
 
-      // Hide but keep in scene for potential reactivation
+      // Keep it attached so reactivation costs nothing but a visibility flip.
       chunk.scene.visible = false
 
       logStateTransition(room, 'active', 'dormant', debug)
     },
     [debug],
   )
-
-  // ==========================================================================
-  // Memory Pressure Check
-  // ==========================================================================
 
   useEffect(() => {
     if (!debug) return
@@ -274,17 +243,10 @@ export function ChunkManager({ debug = false, onChunkActive, onChunkDisposed }: 
     return () => clearInterval(interval)
   }, [gl, debug])
 
-  // ==========================================================================
-  // State Change Reactions
-  // ==========================================================================
-
-  // Track previous active chunk to handle transitions
   const prevActiveChunk = useRef<RoomId | null>(null)
 
   useEffect(() => {
-    // Handle active chunk change
     if (activeChunk !== prevActiveChunk.current) {
-      // Mark previous as dormant
       if (prevActiveChunk.current) {
         makeDormant(prevActiveChunk.current)
       }
@@ -292,17 +254,14 @@ export function ChunkManager({ debug = false, onChunkActive, onChunkDisposed }: 
     }
   }, [activeChunk, makeDormant])
 
-  // Watch for preloading state and trigger actual load
   useEffect(() => {
     for (const [room, info] of chunkStates) {
-      // If state is preloading but we haven't started loading yet
       if (info.state === 'preloading' && !abortControllersRef.current.has(room)) {
         void loadChunk(room)
       }
     }
   }, [chunkStates, loadChunk])
 
-  // Watch for disposed state and clean up
   useEffect(() => {
     for (const [room, info] of chunkStates) {
       if (info.state === 'disposed' && chunksRef.current.has(room)) {
@@ -311,15 +270,10 @@ export function ChunkManager({ debug = false, onChunkActive, onChunkDisposed }: 
     }
   }, [chunkStates, disposeRoom])
 
-  // ==========================================================================
-  // Public API via imperative handle
-  // ==========================================================================
-
-  // Expose methods for external use (door triggers, etc.)
   useEffect(() => {
     // Store methods on window for debugging (development only)
-    if (debug && typeof window !== 'undefined') {
-      ;(window as unknown as Record<string, unknown>).__chunkManager = {
+    if (debug) {
+      window.__chunkManager = {
         loadChunk,
         activateRoom,
         disposeRoom,
@@ -328,38 +282,5 @@ export function ChunkManager({ debug = false, onChunkActive, onChunkDisposed }: 
     }
   }, [loadChunk, activateRoom, disposeRoom, debug])
 
-  // Component doesn't render anything - it's a controller
   return null
-}
-
-// =============================================================================
-// Hooks for External Use
-// =============================================================================
-
-/**
- * Hook to trigger chunk preloading.
- * Use near doors to preload target room.
- */
-export function usePreloadChunk() {
-  const setChunkState = useInteractiveStore((s) => s.setChunkState)
-
-  const preload = useCallback(
-    (room: RoomId) => {
-      const state = useInteractiveStore.getState().chunkStates.get(room)?.state
-      if (state === 'unloaded' || state === 'disposed') {
-        // Trigger preload by setting state (ChunkManager will react)
-        setChunkState(room, 'preloading')
-      }
-    },
-    [setChunkState],
-  )
-
-  return preload
-}
-
-/**
- * Hook to get chunk state for a room.
- */
-export function useChunkState(room: RoomId) {
-  return useInteractiveStore((s) => s.chunkStates.get(room))
 }

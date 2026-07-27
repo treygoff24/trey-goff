@@ -1,24 +1,20 @@
 import fs from 'fs/promises'
 import { fetchPodcastArtwork, verifyYouTubeThumbnail, generatePlaceholderCover } from './cover-apis'
 import type { Appearance } from './types'
+import type { CoverCache } from '@/lib/cover-cache'
 
 const COVER_CACHE_FILE = './.appearance-cover-cache.json'
 
-interface CoverCache {
-  [appearanceId: string]: {
-    url: string
-    resolvedAt: string
-    source: 'manual' | 'youtube' | 'itunes' | 'placeholder'
-  }
-}
+/** Where an appearance cover can come from, in the order the resolver tries them. */
+type AppearanceCoverSource = 'manual' | 'youtube' | 'itunes' | 'placeholder'
 
-export async function resolveAppearanceCover(appearance: Appearance): Promise<string> {
-  // 1. Manual override via showArtwork
+type AppearanceCoverCache = CoverCache<AppearanceCoverSource>
+
+async function resolveAppearanceCover(appearance: Appearance): Promise<string> {
   if (appearance.showArtwork) {
     return appearance.showArtwork
   }
 
-  // 2. Try YouTube if we have a YouTube URL
   const youtubeUrl = appearance.youtubeUrl || appearance.url
   if (youtubeUrl.includes('youtube.com') || youtubeUrl.includes('youtu.be')) {
     const ytThumb = await verifyYouTubeThumbnail(youtubeUrl)
@@ -27,7 +23,6 @@ export async function resolveAppearanceCover(appearance: Appearance): Promise<st
     }
   }
 
-  // 3. Try iTunes Search API for podcast artwork
   if (
     appearance.type === 'podcast' ||
     appearance.type === 'interview' ||
@@ -40,15 +35,13 @@ export async function resolveAppearanceCover(appearance: Appearance): Promise<st
     }
   }
 
-  // 4. Generate placeholder
   return generatePlaceholderCover(appearance.title, appearance.show, appearance.type)
 }
 
 export async function resolveAllCovers(appearances: Appearance[]): Promise<Map<string, string>> {
   const results = new Map<string, string>()
 
-  // Load existing cache
-  let cache: CoverCache = {}
+  let cache: AppearanceCoverCache = {}
   try {
     const cacheData = await fs.readFile(COVER_CACHE_FILE, 'utf-8')
     cache = JSON.parse(cacheData)
@@ -56,9 +49,7 @@ export async function resolveAllCovers(appearances: Appearance[]): Promise<Map<s
     // No cache exists
   }
 
-  // Process appearances with rate limiting
   for (const appearance of appearances) {
-    // Check cache first (unless manual override)
     const cachedEntry = cache[appearance.id]
     if (cachedEntry && !appearance.showArtwork) {
       results.set(appearance.id, cachedEntry.url)
@@ -70,8 +61,7 @@ export async function resolveAllCovers(appearances: Appearance[]): Promise<Map<s
     const coverUrl = await resolveAppearanceCover(appearance)
     results.set(appearance.id, coverUrl)
 
-    // Determine source
-    let source: CoverCache[string]['source'] = 'placeholder'
+    let source: AppearanceCoverSource = 'placeholder'
     if (appearance.showArtwork) {
       source = 'manual'
     } else if (coverUrl.includes('youtube.com') || coverUrl.includes('ytimg')) {
@@ -80,7 +70,6 @@ export async function resolveAllCovers(appearances: Appearance[]): Promise<Map<s
       source = 'itunes'
     }
 
-    // Update cache
     cache[appearance.id] = {
       url: coverUrl,
       resolvedAt: new Date().toISOString(),
@@ -91,7 +80,6 @@ export async function resolveAllCovers(appearances: Appearance[]): Promise<Map<s
     await new Promise((resolve) => setTimeout(resolve, 300))
   }
 
-  // Save cache
   await fs.writeFile(COVER_CACHE_FILE, JSON.stringify(cache, null, 2))
 
   return results

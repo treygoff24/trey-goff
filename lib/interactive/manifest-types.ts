@@ -3,9 +3,22 @@
  * These manifests are generated at build time from content sources.
  */
 
-// =============================================================================
-// Essays Manifest (from content/essays/*.mdx)
-// =============================================================================
+/**
+ * The header every generated manifest carries. `scripts/generate-interactive-manifests.ts`
+ * stamps both fields on every manifest it writes, so they live in one place rather than
+ * being repeated per manifest.
+ */
+export interface ManifestEnvelope {
+  /** Manifest schema version */
+  version: string
+  /** ISO timestamp of the generating build */
+  generated: string
+}
+
+/** The common manifest shape: the envelope plus a flat list of entries. */
+export interface EntriesManifest<Entry> extends ManifestEnvelope {
+  entries: Entry[]
+}
 
 export interface EssayManifestEntry {
   /** Unique identifier (slug) */
@@ -28,15 +41,7 @@ export interface EssayManifestEntry {
   status: 'draft' | 'published' | 'evergreen'
 }
 
-export interface EssaysManifest {
-  version: string
-  generated: string
-  entries: EssayManifestEntry[]
-}
-
-// =============================================================================
-// Books Manifest (from content/library/books.json)
-// =============================================================================
+export type EssaysManifest = EntriesManifest<EssayManifestEntry>
 
 export type BookTier = 'favorites' | 'recommended' | 'read' | 'reading' | 'want'
 
@@ -63,15 +68,7 @@ export interface BookManifestEntry {
   year?: number
 }
 
-export interface BooksManifest {
-  version: string
-  generated: string
-  entries: BookManifestEntry[]
-}
-
-// =============================================================================
-// Projects Manifest (from content/projects/*.mdx)
-// =============================================================================
+export type BooksManifest = EntriesManifest<BookManifestEntry>
 
 export interface ProjectLink {
   label: string
@@ -99,17 +96,12 @@ export interface ProjectManifestEntry {
   featuredRank?: number
 }
 
-export interface ProjectsManifest {
-  version: string
-  generated: string
-  entries: ProjectManifestEntry[]
-}
+export type ProjectsManifest = EntriesManifest<ProjectManifestEntry>
 
-// =============================================================================
-// Lifts Manifest (from data/lifts.json)
-// =============================================================================
+/** The three lifts the gym surfaces, in display order. */
+export const LIFT_NAMES = ['squat', 'bench', 'deadlift'] as const
 
-export type LiftName = 'squat' | 'bench' | 'deadlift'
+export type LiftName = (typeof LIFT_NAMES)[number]
 
 export interface LiftRecord {
   /** Weight lifted */
@@ -133,22 +125,9 @@ export interface LiftsManifestEntry {
   history?: LiftRecord[]
 }
 
-export interface LiftsManifest {
-  version: string
-  generated: string
+export interface LiftsManifest extends ManifestEnvelope {
   /** Total (sum of best squat, bench, deadlift) */
   total: LiftRecord
   /** Individual lift PRs */
   lifts: LiftsManifestEntry[]
-}
-
-// =============================================================================
-// Combined Manifest Type
-// =============================================================================
-
-export interface InteractiveManifests {
-  essays: EssaysManifest
-  books: BooksManifest
-  projects: ProjectsManifest
-  lifts: LiftsManifest
 }

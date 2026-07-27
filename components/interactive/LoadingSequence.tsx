@@ -3,10 +3,6 @@
 import { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
 
-// =============================================================================
-// Types
-// =============================================================================
-
 export type LoadingPhase =
   | 'initializing'
   | 'loading-assets'
@@ -22,10 +18,6 @@ interface LoadingSequenceProps {
   reducedMotion?: boolean
 }
 
-// =============================================================================
-// Loading Messages
-// =============================================================================
-
 const PHASE_MESSAGES: Record<LoadingPhase, string> = {
   initializing: 'Initializing...',
   'loading-assets': 'Loading assets...',
@@ -40,10 +32,6 @@ const LOADING_HINTS = [
   'Press Esc to open the settings menu',
   'Explore rooms to discover content',
 ] as const
-
-// =============================================================================
-// Components
-// =============================================================================
 
 function ProgressBar({ progress, reducedMotion }: { progress: number; reducedMotion?: boolean }) {
   const clampedProgress = Math.min(100, Math.max(0, progress))
@@ -91,10 +79,6 @@ function LoadingHint() {
   )
 }
 
-// =============================================================================
-// Main Component
-// =============================================================================
-
 export function LoadingSequence({
   phase,
   progress,
@@ -104,13 +88,11 @@ export function LoadingSequence({
 }: LoadingSequenceProps) {
   const [showHints, setShowHints] = useState(false)
 
-  // Show hints after a delay
   useEffect(() => {
     const timer = setTimeout(() => setShowHints(true), 2000)
     return () => clearTimeout(timer)
   }, [])
 
-  // Trigger complete callback when ready
   useEffect(() => {
     if (phase === 'ready' && onComplete) {
       const timer = setTimeout(onComplete, 500)
@@ -118,7 +100,6 @@ export function LoadingSequence({
     }
   }, [phase, onComplete])
 
-  // Fade out when complete
   if (phase === 'complete') {
     return (
       <div

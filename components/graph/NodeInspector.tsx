@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import type { GraphNode } from '@/lib/graph/types'
+import type { GraphNode, NodeType } from '@/lib/graph/types'
 import { NODE_COLORS } from '@/lib/graph/types'
 import { formatDate } from '@/lib/utils'
 
@@ -10,7 +10,7 @@ interface NodeInspectorProps {
   isMobile?: boolean
 }
 
-const TYPE_LABELS: Record<string, string> = {
+const TYPE_LABELS: Record<NodeType, string> = {
   essay: 'Essay',
   note: 'Note',
   book: 'Book',

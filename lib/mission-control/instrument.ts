@@ -1,8 +1,16 @@
-export interface Instrument<T> {
-  data: T | null
+/**
+ * The provenance every instrument carries, independent of its payload. Consumers that
+ * only render the header (source, timestamp, staleness) take this instead of an
+ * `Instrument<unknown>`, so the payload type never has to be erased to say "I ignore it".
+ */
+export interface InstrumentReading {
   asOf: string
   source: string
   stale: boolean
+}
+
+export interface Instrument<T> extends InstrumentReading {
+  data: T | null
 }
 
 export function isValidDate(value: unknown): value is string {
@@ -26,4 +34,18 @@ export function isStale(asOf: string, cadenceDays: number, now = new Date()): bo
 
 export function attemptDate(now: Date): string {
   return now.toISOString()
+}
+
+/**
+ * The reading an instrument returns when its source is missing or fails validation: no
+ * data, stamped with the moment we looked rather than a source date, and never stale —
+ * "we checked just now and there was nothing" is current information, not old data.
+ */
+export function absentInstrument<T>(source: string, now: Date): Instrument<T> {
+  return {
+    data: null,
+    asOf: attemptDate(now),
+    source,
+    stale: false,
+  }
 }

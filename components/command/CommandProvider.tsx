@@ -28,7 +28,6 @@ export function CommandPaletteProvider({ children }: { children: ReactNode }) {
     return () => document.documentElement.removeAttribute('data-command-palette-ready')
   }, [])
 
-  // Global keyboard shortcut: Cmd+K / Ctrl+K
   useLayoutEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {

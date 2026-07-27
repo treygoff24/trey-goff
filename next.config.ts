@@ -10,7 +10,6 @@ export const nextConfig: NextConfig = {
   // Lanes that must coexist with other agents (the e2e webServer sets NEXT_DIST_DIR=.next-e2e)
   // get their own output tree instead.
   distDir: process.env.NEXT_DIST_DIR || '.next',
-  // Enable React strict mode for better development experience
   reactStrictMode: true,
   // Must match `turbopack.root` — Next warns if tracing root and Turbopack root differ.
   // Both anchor to this app so a parent-level lockfile does not widen the workspace root.

@@ -16,7 +16,7 @@ Two examples of in-voice sections:
 1. {"kind":"essays","lede":"Start where his argument starts: rules decide what people get to build together. I shelve these two side by side, and not by accident.","slugs":["peer-reviewed-paper-prospera-governance","the-voluntaryist-constitution"]}
 2. {"kind":"projects","lede":"You came to inspect the machinery. The archive holds a working system, not a claim about one. He built it; I keep it dusted.","slugs":["the-control-room"]}`
 
-export const EDITION_BIO =
+const EDITION_BIO =
   "Trey Goff is an institutional designer, public-policy economist, writer, reader, and software builder. He was Próspera's first full-time employee and now serves as chief of staff and director of public affairs. His work centers on governance reform, special jurisdictions, technology, and tools for working alongside AI."
 
 export function buildEditionSystemPrompt(catalog: readonly EditionCatalogItem[]): string {

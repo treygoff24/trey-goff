@@ -6,22 +6,6 @@ import { join } from 'node:path'
 const projectRoot = join(__dirname, '..')
 
 describe('A11y Focus-Visible Styles', () => {
-  describe('CodeBlock copy button', () => {
-    it('floating copy button should have focus-visible:opacity-100', () => {
-      const filePath = join(projectRoot, 'components/mdx/CodeBlock.tsx')
-      const content = readFileSync(filePath, 'utf-8')
-      const hasFloatingButton = /className="[^"]*opacity-0[^"]*group-hover:opacity-100[^"]*"/.test(
-        content,
-      )
-      assert.ok(hasFloatingButton, 'Found floating copy button')
-      const hasFocusVisible =
-        /className="[^"]*opacity-0[^"]*group-hover:opacity-100[^"]*focus-visible:opacity-100[^"]*"/.test(
-          content,
-        )
-      assert.ok(hasFocusVisible, 'Floating copy button should have focus-visible:opacity-100')
-    })
-  })
-
   describe('NoteCard anchor link', () => {
     it('should have focus-visible styles for keyboard users', () => {
       const filePath = join(projectRoot, 'components/notes/NoteCard.tsx')

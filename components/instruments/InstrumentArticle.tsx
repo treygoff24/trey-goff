@@ -1,15 +1,9 @@
 import type { Element, Root } from 'hast'
-import type { InstrumentManifest } from '@/lib/instruments/manifest'
-import type {
-  Chart,
-  ClaimsLedger,
-  ClientLedger,
-  ForecastCard,
-  MarksDocument,
-  Stat,
-} from '@/lib/instruments/types'
+import type { InstrumentPiece } from '@/lib/instruments/manifest'
+import type { ClaimsLedger, ClientLedger } from '@/lib/instruments/types'
 import { hastToReact, markdownToHast } from '@/lib/instruments/render'
 import { applyAnnotations } from '@/lib/instruments/marks'
+import { textOf } from '@/lib/instruments/hast'
 import { Prose } from '@/components/content/Prose'
 import { PublicationNav } from '@/components/instruments/PublicationNav'
 import { publishedInstrumentedPieces } from '@/lib/instruments/publication'
@@ -35,14 +29,6 @@ interface Heading {
   text: string
 }
 
-function textOf(node: Element): string {
-  return node.children
-    .map((child) =>
-      child.type === 'text' ? child.value : child.type === 'element' ? textOf(child) : '',
-    )
-    .join('')
-}
-
 /** The article's own top-level headings, for the rail. Ledger sections are added client-side. */
 function headingsOf(tree: Root): Heading[] {
   return tree.children
@@ -64,14 +50,12 @@ function clientLedger(ledger: ClaimsLedger): ClientLedger {
   }
 }
 
-interface InstrumentArticleProps {
+/**
+ * Everything `loadInstrumentPiece` returns, plus the raw markdown the route already has.
+ * Derived from `InstrumentPiece` so a field added to the loader cannot go unrendered here.
+ */
+interface InstrumentArticleProps extends InstrumentPiece {
   markdown: string
-  manifest: InstrumentManifest
-  ledger: ClaimsLedger | null
-  annotations: MarksDocument | null
-  stats: Stat[] | null
-  forecasts: ForecastCard[] | null
-  charts: Chart[] | null
 }
 
 /**

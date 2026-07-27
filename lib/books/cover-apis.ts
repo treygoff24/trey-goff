@@ -1,3 +1,21 @@
+import { escapeXml, truncate } from '@/lib/text'
+
+/**
+ * The slice of a Google Books volume this module reads. The payload is remote and
+ * unvalidated, so every level is optional — the guard below is what turns it into a URL.
+ */
+interface GoogleBooksVolume {
+  volumeInfo?: {
+    imageLinks?: {
+      thumbnail?: string
+    }
+  }
+}
+
+interface GoogleBooksSearchResponse {
+  items?: GoogleBooksVolume[]
+}
+
 // Open Library API (no auth required)
 export async function fetchOpenLibraryCover(isbn: string): Promise<string | null> {
   const sizes = ['L', 'M', 'S'] // Try large first
@@ -44,11 +62,12 @@ export async function fetchGoogleBooksCover(
 
   try {
     const response = await fetch(url)
-    const data = await response.json()
+    const data = (await response.json()) as GoogleBooksSearchResponse
+    const thumbnail = data.items?.[0]?.volumeInfo?.imageLinks?.thumbnail
 
-    if (data.items?.[0]?.volumeInfo?.imageLinks?.thumbnail) {
+    if (thumbnail) {
       // Google returns http URLs, convert to https and get larger size
-      let coverUrl = data.items[0].volumeInfo.imageLinks.thumbnail
+      let coverUrl = thumbnail
       coverUrl = coverUrl.replace('http://', 'https://')
       coverUrl = coverUrl.replace('zoom=1', 'zoom=2') // Larger image
 
@@ -61,7 +80,6 @@ export async function fetchGoogleBooksCover(
   return null
 }
 
-// Generate placeholder SVG
 export function generatePlaceholderCover(title: string, author: string): string {
   // Create a gradient based on title hash for variety
   const hash = title.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
@@ -86,27 +104,4 @@ export function generatePlaceholderCover(title: string, author: string): string 
   `.trim()
 
   return `data:image/svg+xml,${encodeURIComponent(svg)}`
-}
-
-function escapeXml(str: string): string {
-  return str.replace(/[<>&'"]/g, (c) => {
-    switch (c) {
-      case '<':
-        return '&lt;'
-      case '>':
-        return '&gt;'
-      case '&':
-        return '&amp;'
-      case "'":
-        return '&apos;'
-      case '"':
-        return '&quot;'
-      default:
-        return c
-    }
-  })
-}
-
-function truncate(str: string, max: number): string {
-  return str.length > max ? str.slice(0, max - 1) + '...' : str
 }

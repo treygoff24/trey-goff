@@ -1,45 +1,13 @@
 'use client'
 
-import { Suspense, lazy, type ComponentType } from 'react'
+import { Suspense, lazy } from 'react'
 import type { RoomId } from '@/lib/interactive/types'
 import type { QualityTier } from '@/lib/interactive/capabilities'
 import type { OverlayContent } from '../ContentOverlay'
 import { DoorTrigger } from '../DoorTrigger'
+import type { RoomConfig, RoomProps } from './types'
 
-// =============================================================================
-// Types
-// =============================================================================
-
-export interface RoomProps {
-  debug?: boolean
-  onDoorActivate?: (
-    targetRoom: RoomId,
-    spawnPosition: [number, number, number],
-    spawnRotation: number,
-  ) => void
-  onContentSelect?: (content: OverlayContent) => void
-  /** Quality tier for atmospheric effects */
-  qualityTier?: QualityTier
-  /** Whether reduced motion is preferred */
-  reducedMotion?: boolean
-}
-
-export interface RoomConfig {
-  /** The room component */
-  Component: ComponentType<RoomProps>
-  /** Default spawn position when entering this room */
-  defaultSpawn: [number, number, number]
-  /** Default spawn rotation (Y-axis) when entering this room */
-  defaultRotation: number
-  /** Display name for UI */
-  displayName: string
-  /** Whether room is ready (has real assets vs placeholder) */
-  isPlaceholder: boolean
-}
-
-// =============================================================================
-// Lazy-loaded Room Components
-// =============================================================================
+export type { RoomConfig, RoomProps } from './types'
 
 const ExteriorRoom = lazy(() => import('./ExteriorRoom').then((m) => ({ default: m.ExteriorRoom })))
 
@@ -51,11 +19,20 @@ const GymRoom = lazy(() => import('./GymRoom').then((m) => ({ default: m.GymRoom
 
 const ProjectsRoom = lazy(() => import('./ProjectsRoom').then((m) => ({ default: m.ProjectsRoom })))
 
+/** Where a placeholder room puts its way back to the main hall, and where that lands you. */
+interface PlaceholderReturnDoor {
+  /** Door position inside the placeholder room. */
+  doorPos: [number, number, number]
+  /** Door facing inside the placeholder room. */
+  doorRot?: number
+  /** Spawn position in the main hall on return. */
+  returnPos: [number, number, number]
+  /** Spawn facing in the main hall on return. */
+  returnRot: number
+}
+
 // Return door positions for each placeholder room (position in mainhall when returning)
-const PLACEHOLDER_RETURN_DOORS: Record<
-  string,
-  { doorPos: [number, number, number]; returnPos: [number, number, number]; returnRot: number }
-> = {
+const PLACEHOLDER_RETURN_DOORS: Partial<Record<RoomId, PlaceholderReturnDoor>> = {
   library: {
     doorPos: [6, 2, 0],
     doorRot: -Math.PI / 2,
@@ -65,21 +42,13 @@ const PLACEHOLDER_RETURN_DOORS: Record<
   gym: { doorPos: [-6, 2, 0], doorRot: Math.PI / 2, returnPos: [7, 0, 0], returnRot: Math.PI / 2 },
   projects: { doorPos: [0, 2, 6], doorRot: 0, returnPos: [0, 0, -10], returnRot: 0 },
   garage: { doorPos: [0, 2, -6], doorRot: Math.PI, returnPos: [0, 0, 5], returnRot: Math.PI },
-} as Record<
-  string,
-  {
-    doorPos: [number, number, number]
-    doorRot?: number
-    returnPos: [number, number, number]
-    returnRot: number
-  }
->
+}
 
 // Placeholder component for rooms not yet built
 function PlaceholderRoom({ roomId, onDoorActivate, debug }: { roomId: RoomId } & RoomProps) {
-  const doorConfig = PLACEHOLDER_RETURN_DOORS[roomId] ?? {
-    doorPos: [0, 2, 6] as [number, number, number],
-    returnPos: [0, 0, 0] as [number, number, number],
+  const doorConfig: PlaceholderReturnDoor = PLACEHOLDER_RETURN_DOORS[roomId] ?? {
+    doorPos: [0, 2, 6],
+    returnPos: [0, 0, 0],
     returnRot: 0,
   }
 
@@ -125,15 +94,11 @@ function PlaceholderRoom({ roomId, onDoorActivate, debug }: { roomId: RoomId } &
   )
 }
 
-// =============================================================================
-// Room Registry
-// =============================================================================
-
 /**
  * Registry of all rooms with their configurations.
  * Rooms are lazy-loaded to enable code splitting.
  */
-export const ROOM_REGISTRY: Record<RoomId, RoomConfig> = {
+const ROOM_REGISTRY: Record<RoomId, RoomConfig> = {
   exterior: {
     Component: ExteriorRoom,
     defaultSpawn: [0, 0, 10],
@@ -177,10 +142,6 @@ export const ROOM_REGISTRY: Record<RoomId, RoomConfig> = {
     isPlaceholder: true,
   },
 }
-
-// =============================================================================
-// Room Renderer Component
-// =============================================================================
 
 interface RoomRendererProps {
   roomId: RoomId
@@ -231,10 +192,6 @@ export function RoomRenderer({
   )
 }
 
-// =============================================================================
-// Utility Functions
-// =============================================================================
-
 /**
  * Get the default spawn position for a room.
  */
@@ -247,18 +204,4 @@ export function getRoomSpawn(roomId: RoomId): [number, number, number] {
  */
 export function getRoomRotation(roomId: RoomId): number {
   return ROOM_REGISTRY[roomId]?.defaultRotation ?? 0
-}
-
-/**
- * Check if a room has real assets or is a placeholder.
- */
-export function isRoomReady(roomId: RoomId): boolean {
-  return !ROOM_REGISTRY[roomId]?.isPlaceholder
-}
-
-/**
- * Get all room IDs that are ready (not placeholders).
- */
-export function getReadyRooms(): RoomId[] {
-  return (Object.keys(ROOM_REGISTRY) as RoomId[]).filter((id) => !ROOM_REGISTRY[id].isPlaceholder)
 }

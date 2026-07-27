@@ -20,7 +20,6 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
   const [isLayoutRunning, setIsLayoutRunning] = useState(false)
   const [useFallbackCanvas, setUseFallbackCanvas] = useState(false)
 
-  // Initialize graph and sigma
   useEffect(() => {
     if (!useFallbackCanvas || !fallbackCanvasRef.current) return
 
@@ -67,10 +66,8 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
     if (useFallbackCanvas) return
     if (!containerRef.current) return
 
-    // Create graphology instance
     const graph = new Graph()
 
-    // Add nodes
     for (const node of data.nodes) {
       graph.addNode(node.id, {
         label: node.label,
@@ -78,30 +75,25 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
         color: node.color,
         x: Math.random() * 100,
         y: Math.random() * 100,
-        // Store metadata for inspector
         nodeType: node.type,
         url: node.url,
         meta: node.meta,
       })
     }
 
-    // Add edges
     for (const edge of data.edges) {
-      // Skip if nodes don't exist
       if (!graph.hasNode(edge.source) || !graph.hasNode(edge.target)) continue
+      // The generated graph can list the same pair twice; skip the duplicate rather than
+      // letting addEdge throw, so any *other* failure from addEdge still surfaces.
+      if (graph.hasEdge(edge.source, edge.target)) continue
 
-      try {
-        graph.addEdge(edge.source, edge.target, {
-          weight: edge.weight,
-          edgeType: edge.type, // Store as edgeType to avoid Sigma's reserved 'type' attribute
-          color: 'rgba(255, 255, 255, 0.15)',
-        })
-      } catch {
-        // Edge might already exist
-      }
+      graph.addEdge(edge.source, edge.target, {
+        weight: edge.weight,
+        edgeType: edge.type, // Store as edgeType to avoid Sigma's reserved 'type' attribute
+        color: 'rgba(255, 255, 255, 0.15)',
+      })
     }
 
-    // Run ForceAtlas2 layout
     setIsLayoutRunning(true)
     forceAtlas2.assign(graph, {
       iterations: 100,
@@ -135,7 +127,6 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
 
     sigmaRef.current = sigma
 
-    // Handle node click
     sigma.on('clickNode', ({ node }) => {
       const nodeData = graph.getNodeAttributes(node)
       if (onNodeClick) {
@@ -151,14 +142,12 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
       }
     })
 
-    // Handle background click
     sigma.on('clickStage', () => {
       if (onNodeClick) {
         onNodeClick(null)
       }
     })
 
-    // Hover effects
     sigma.on('enterNode', ({ node }) => {
       sigma.setSetting('labelRenderedSizeThreshold', 0)
       const neighbors = new Set(graph.neighbors(node))
@@ -190,14 +179,12 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
       sigma.refresh()
     })
 
-    // Cleanup
     return () => {
       sigma.kill()
       sigmaRef.current = null
     }
   }, [data, isMobile, onNodeClick, useFallbackCanvas])
 
-  // Zoom controls
   const zoomIn = useCallback(() => {
     if (sigmaRef.current) {
       const camera = sigmaRef.current.getCamera()

@@ -14,7 +14,6 @@ export function useSearch() {
   const [isInitialized, setIsInitialized] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Initialize search on first use (lazy load)
   const initialize = useCallback(async () => {
     if (isInitialized) return true
     setIsLoading(true)
@@ -31,7 +30,6 @@ export function useSearch() {
     }
   }, [isInitialized])
 
-  // Search when query changes
   useEffect(() => {
     if (!query.trim()) {
       setResults([])

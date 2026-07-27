@@ -6,30 +6,12 @@ import { RigidBody, CuboidCollider } from '@react-three/rapier'
 import * as THREE from 'three'
 import { THREE_COLORS } from '@/lib/interactive/colors'
 import { DoorTrigger } from '../DoorTrigger'
-import type { RoomId } from '@/lib/interactive/types'
 import type { BooksManifest, BookManifestEntry } from '@/lib/interactive/manifest-types'
 import type { OverlayContent } from '../ContentOverlay'
+import type { RoomProps } from './types'
 
-// =============================================================================
-// Types
-// =============================================================================
-
-interface LibraryRoomProps {
-  /** Show debug visualizations */
-  debug?: boolean
-  /** Callback when door is activated */
-  onDoorActivate?: (
-    targetRoom: RoomId,
-    spawnPosition: [number, number, number],
-    spawnRotation: number,
-  ) => void
-  /** Callback when content is selected for overlay */
-  onContentSelect?: (content: OverlayContent) => void
-}
-
-// =============================================================================
-// Constants
-// =============================================================================
+/** The slice of the shared room contract this room reads. */
+type LibraryRoomProps = Pick<RoomProps, 'debug' | 'onDoorActivate' | 'onContentSelect'>
 
 const ROOM_WIDTH = 18
 const ROOM_DEPTH = 16
@@ -48,7 +30,7 @@ const BOOK_BASE_HEIGHT = 0.9
 const BOOK_BASE_DEPTH = 0.6
 
 // Colors for book covers (tier-based)
-const TIER_COLORS: Record<string, string> = {
+const TIER_COLORS: Record<BookManifestEntry['tier'], string> = {
   favorites: '#7C5CFF', // Accent purple
   recommended: '#FFB86B', // Warm gold
   read: '#4a5568', // Dark slate
@@ -99,10 +81,6 @@ const dustParticleData = (() => {
   return { positions: pos, sizes: siz, velocities: vel }
 })()
 
-// =============================================================================
-// Visual Enhancement Components
-// =============================================================================
-
 /**
  * Floating dust motes that catch the light.
  * Uses Points geometry for efficient rendering.
@@ -131,7 +109,6 @@ function DustMotes() {
       const baseY = positions[i * 3 + 1]!
       const baseZ = positions[i * 3 + 2]!
 
-      // Gentle sinusoidal drift
       const t = timeRef.current + i * 0.1
       const driftX = Math.sin(t * velocities[i * 3]!) * 0.3
       const driftY = Math.sin(t * 0.5 + i) * 0.15
@@ -202,14 +179,12 @@ function Fireplace() {
   useFrame((state) => {
     const t = state.clock.elapsedTime
 
-    // Animate flame mesh scale
     if (flameRef.current) {
       const flicker = 0.9 + Math.sin(t * 8) * 0.05 + Math.sin(t * 13) * 0.05
       flameRef.current.scale.y = flicker
       flameRef.current.scale.x = 0.95 + Math.sin(t * 10) * 0.05
     }
 
-    // Animate light intensity
     if (lightRef.current) {
       const intensity = 0.8 + Math.sin(t * 6) * 0.15 + Math.sin(t * 11) * 0.1
       lightRef.current.intensity = intensity
@@ -325,10 +300,6 @@ function MoonlitWindow() {
   )
 }
 
-// =============================================================================
-// Book Instance Data
-// =============================================================================
-
 interface BookInstance {
   book: BookManifestEntry
   position: [number, number, number]
@@ -341,18 +312,15 @@ interface BookInstance {
 function generateBookInstances(books: BookManifestEntry[]): BookInstance[] {
   const instances: BookInstance[] = []
 
-  // Shelf positions (back wall and side walls)
   const shelfPositions: Array<{
     position: [number, number, number]
     rotation: number
     capacity: number
   }> = [
-    // Back wall shelves
     { position: [-5, 0, -ROOM_DEPTH / 2 + 0.5], rotation: 0, capacity: 8 },
     { position: [-1.5, 0, -ROOM_DEPTH / 2 + 0.5], rotation: 0, capacity: 8 },
     { position: [2, 0, -ROOM_DEPTH / 2 + 0.5], rotation: 0, capacity: 8 },
     { position: [5.5, 0, -ROOM_DEPTH / 2 + 0.5], rotation: 0, capacity: 8 },
-    // Side wall shelves (left)
     { position: [-ROOM_WIDTH / 2 + 0.5, 0, -3], rotation: Math.PI / 2, capacity: 8 },
     { position: [-ROOM_WIDTH / 2 + 0.5, 0, 3], rotation: Math.PI / 2, capacity: 8 },
   ]
@@ -370,11 +338,9 @@ function generateBookInstances(books: BookManifestEntry[]): BookInstance[] {
         const book = books[bookIndex]
         if (!book) break
 
-        // Slight random variations
         const widthVariation = 0.8 + Math.random() * 0.4
         const heightVariation = 0.85 + Math.random() * 0.3
 
-        // Position within slot
         const slotOffset = (slot - shelf.capacity / 2 + 0.5) * 0.35
         const x = shelf.position[0] + (shelf.rotation === 0 ? slotOffset : 0)
         const y = shelf.position[1] + levelY
@@ -400,10 +366,6 @@ function generateBookInstances(books: BookManifestEntry[]): BookInstance[] {
 
   return instances
 }
-
-// =============================================================================
-// Sub-components
-// =============================================================================
 
 /**
  * Library floor with wood texture appearance.
@@ -763,10 +725,6 @@ function Books({
   )
 }
 
-// =============================================================================
-// Main Component
-// =============================================================================
-
 /**
  * LibraryRoom - Displays books from the manifest on bookshelves.
  */
@@ -798,12 +756,11 @@ export function LibraryRoom({ debug = false, onDoorActivate, onContentSelect }: 
     return () => controller.abort()
   }, [])
 
-  // Convert book to overlay content
   const handleBookSelect = useCallback(
     (book: BookManifestEntry) => {
       if (!onContentSelect) return
 
-      const tierLabels: Record<string, string> = {
+      const tierLabels: Record<BookManifestEntry['tier'], string> = {
         favorites: '⭐ Favorites',
         recommended: 'Recommended',
         read: 'Read',

@@ -28,14 +28,7 @@ export default function Bars({ chart }: { chart: BarsChart }) {
   )
 
   return (
-    <ChartFrame
-      id={chart.id}
-      title={chart.title}
-      summary={chart.summary}
-      caption={chart.caption}
-      source={chart.source}
-      entries={entries}
-    >
+    <ChartFrame chart={chart} entries={entries}>
       {({ active }) => (
         <ul className="space-y-3">
           {chart.bars.map((bar) => (

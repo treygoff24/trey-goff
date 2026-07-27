@@ -3,10 +3,6 @@ import test, { describe } from 'node:test'
 import { generateSearchIndex } from '@/lib/search/generate-index'
 import { isNewsletterEnabled } from '@/lib/site-config'
 
-// ============================================
-// Search index structure tests
-// ============================================
-
 describe('generateSearchIndex structure', () => {
   test('returns valid SearchIndex structure', () => {
     const index = generateSearchIndex()
@@ -27,10 +23,6 @@ describe('generateSearchIndex structure', () => {
     assert.ok(index.documents.length > 0, 'Should have at least one document')
   })
 })
-
-// ============================================
-// Document structure tests
-// ============================================
 
 describe('search document structure', () => {
   test('all documents have required fields', () => {
@@ -76,10 +68,6 @@ describe('search document structure', () => {
     }
   })
 })
-
-// ============================================
-// Navigation pages tests
-// ============================================
 
 describe('navigation pages in search index', () => {
   test('subscribe page respects the newsletter feature flag', () => {
@@ -162,10 +150,6 @@ describe('navigation pages in search index', () => {
   })
 })
 
-// ============================================
-// Quick actions tests
-// ============================================
-
 describe('quick actions in search index', () => {
   test('includes RSS Feed action', () => {
     const { documents } = generateSearchIndex()
@@ -192,10 +176,6 @@ describe('quick actions in search index', () => {
     assert.ok(copyUrl?.keywords?.includes('link'), 'Copy URL should have link keyword')
   })
 })
-
-// ============================================
-// Content documents tests
-// ============================================
 
 describe('content documents in search index', () => {
   test('essay documents link to /writing/<slug>', () => {
@@ -271,10 +251,6 @@ describe('content documents in search index', () => {
   })
 })
 
-// ============================================
-// Priority tests
-// ============================================
-
 describe('search document priorities', () => {
   test('evergreen essays have higher priority than regular essays', () => {
     const { documents } = generateSearchIndex()
@@ -318,10 +294,6 @@ describe('search document priorities', () => {
   })
 })
 
-// ============================================
-// Tags and keywords tests
-// ============================================
-
 describe('search document tags and keywords', () => {
   test('essay documents include tags', () => {
     const { documents } = generateSearchIndex()
@@ -352,10 +324,6 @@ describe('search document tags and keywords', () => {
     }
   })
 })
-
-// ============================================
-// Easter eggs tests
-// ============================================
 
 describe('easter eggs in search index', () => {
   test('includes hidden powerlifting page', () => {

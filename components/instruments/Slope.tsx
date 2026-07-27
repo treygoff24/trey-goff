@@ -72,14 +72,7 @@ export default function Slope({ chart }: { chart: SlopeChart }) {
   )
 
   return (
-    <ChartFrame
-      id={chart.id}
-      title={chart.title}
-      summary={chart.summary}
-      caption={chart.caption}
-      source={chart.source}
-      entries={entries}
-    >
+    <ChartFrame chart={chart} entries={entries}>
       {({ width, active, preview, detail }) => {
         const compact = isCompact(width)
         const left = compact ? 34 : 168

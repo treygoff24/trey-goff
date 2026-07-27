@@ -74,8 +74,28 @@ export type BookSchemaInput = {
   publisher?: string
 }
 
+/** A schema.org Person or Organization reference, as it appears inside a Book node. */
+interface AgentNode {
+  '@type': 'Person' | 'Organization'
+  name: string
+}
+
+/** A schema.org Book node. Optional keys are omitted entirely when the source lacks them. */
+export interface BookSchemaNode {
+  '@type': 'Book'
+  '@id'?: string
+  name: string
+  author: AgentNode
+  isbn?: string
+  url?: string
+  image?: string
+  datePublished?: string
+  publisher?: AgentNode
+  inLanguage: string
+}
+
 /** One Book node for use inside `@graph` (no root `@context`). */
-export function bookSchemaNode(book: BookSchemaInput): Record<string, unknown> {
+function bookSchemaNode(book: BookSchemaInput): BookSchemaNode {
   return {
     '@type': 'Book',
     ...(book.url ? { '@id': book.url } : {}),
@@ -90,13 +110,6 @@ export function bookSchemaNode(book: BookSchemaInput): Record<string, unknown> {
     ...(book.year ? { datePublished: `${book.year}` } : {}),
     ...(book.publisher ? { publisher: { '@type': 'Organization', name: book.publisher } } : {}),
     inLanguage: 'en',
-  }
-}
-
-export function generateBookSchema(book: BookSchemaInput) {
-  return {
-    '@context': 'https://schema.org',
-    ...bookSchemaNode(book),
   }
 }
 

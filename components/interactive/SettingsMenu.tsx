@@ -1,13 +1,10 @@
 'use client'
 
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { cn } from '@/lib/utils'
 import { useInteractiveStore } from '@/lib/interactive/store'
+import { useModalDismiss } from '@/hooks/useModalDismiss'
 import type { QualityTier } from '@/lib/interactive/capabilities'
-
-// =============================================================================
-// Types
-// =============================================================================
 
 interface SettingsMenuProps {
   /** Whether menu is open */
@@ -24,20 +21,12 @@ interface SettingsMenuProps {
   onReducedMotionChange: (enabled: boolean) => void
 }
 
-// =============================================================================
-// Quality Tier Options
-// =============================================================================
-
 const QUALITY_OPTIONS: Array<{ value: QualityTier; label: string; description: string }> = [
   { value: 'auto', label: 'Auto', description: 'Adjusts based on performance' },
   { value: 'low', label: 'Low', description: 'Best performance, minimal effects' },
   { value: 'medium', label: 'Medium', description: 'Balanced visuals and performance' },
   { value: 'high', label: 'High', description: 'Best visuals, requires good GPU' },
 ]
-
-// =============================================================================
-// Sub-components
-// =============================================================================
 
 function SettingRow({
   label,
@@ -89,21 +78,30 @@ function Toggle({
   )
 }
 
-function Select({
+/**
+ * Generic over the value union so a caller's setting type flows through instead of
+ * collapsing to `string` and needing an assertion on the way back out. The change handler
+ * resolves the DOM's string back to the option that produced it, which is where the
+ * narrowing is actually earned — a native select can only emit one of its own values.
+ */
+function Select<T extends string>({
   value,
   onChange,
   options,
   label,
 }: {
-  value: string
-  onChange: (value: string) => void
-  options: Array<{ value: string; label: string }>
+  value: T
+  onChange: (value: T) => void
+  options: ReadonlyArray<{ value: T; label: string }>
   label: string
 }) {
   return (
     <select
       value={value}
-      onChange={(e) => onChange(e.target.value)}
+      onChange={(e) => {
+        const selected = options.find((option) => option.value === e.target.value)
+        if (selected) onChange(selected.value)
+      }}
       aria-label={label}
       className="rounded-lg border border-border-1 bg-surface-1 px-3 py-1.5 text-sm text-text-1 focus:outline-none focus:ring-2 focus:ring-warm"
     >
@@ -115,10 +113,6 @@ function Select({
     </select>
   )
 }
-
-// =============================================================================
-// Main Component
-// =============================================================================
 
 export function SettingsMenu({
   isOpen,
@@ -132,74 +126,19 @@ export function SettingsMenu({
   const cameraMode = useInteractiveStore((s) => s.settings.cameraMode)
   const updateSettings = useInteractiveStore((s) => s.updateSettings)
 
-  // Close on Escape key
-  useEffect(() => {
-    if (!isOpen) return
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose()
-      }
-    }
-
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [isOpen, onClose])
-
-  // Close on click outside
-  const handleBackdropClick = useCallback(
-    (e: React.MouseEvent) => {
-      if (e.target === e.currentTarget) {
-        onClose()
-      }
-    },
-    [onClose],
-  )
-
-  const handleBackdropKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose()
-      }
-    },
-    [onClose],
-  )
-
-  // Focus trap
-  useEffect(() => {
-    if (!isOpen || !menuRef.current) return
-
-    const focusableElements = menuRef.current.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-    )
-    const firstElement = focusableElements[0] as HTMLElement
-    const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement
-
-    firstElement?.focus()
-
-    const handleTab = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab') return
-
-      if (e.shiftKey && document.activeElement === firstElement) {
-        e.preventDefault()
-        lastElement?.focus()
-      } else if (!e.shiftKey && document.activeElement === lastElement) {
-        e.preventDefault()
-        firstElement?.focus()
-      }
-    }
-
-    document.addEventListener('keydown', handleTab)
-    return () => document.removeEventListener('keydown', handleTab)
-  }, [isOpen])
+  const { onBackdropClick, onBackdropKeyDown } = useModalDismiss({
+    open: isOpen,
+    onClose,
+    containerRef: menuRef,
+  })
 
   if (!isOpen) return null
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-bg-0/80 p-4 backdrop-blur-sm"
-      onClick={handleBackdropClick}
-      onKeyDown={handleBackdropKeyDown}
+      onClick={onBackdropClick}
+      onKeyDown={onBackdropKeyDown}
       role="dialog"
       aria-modal="true"
       aria-labelledby="settings-title"
@@ -238,7 +177,7 @@ export function SettingsMenu({
           >
             <Select
               value={qualityTier}
-              onChange={(v) => onQualityChange(v as QualityTier)}
+              onChange={onQualityChange}
               options={QUALITY_OPTIONS}
               label="Graphics quality"
             />
@@ -253,7 +192,7 @@ export function SettingsMenu({
           >
             <Select
               value={cameraMode ?? 'third-person'}
-              onChange={(v) => updateSettings({ cameraMode: v as 'first-person' | 'third-person' })}
+              onChange={(cameraMode) => updateSettings({ cameraMode })}
               options={[
                 { value: 'third-person', label: 'Third Person' },
                 { value: 'first-person', label: 'First Person' },
@@ -285,10 +224,6 @@ export function SettingsMenu({
     </div>
   )
 }
-
-// =============================================================================
-// Hook for settings state
-// =============================================================================
 
 export function useSettingsMenu() {
   const [isOpen, setIsOpen] = React.useState(false)

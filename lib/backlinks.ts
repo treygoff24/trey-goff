@@ -6,12 +6,12 @@ import {
   type WikiLinkTarget,
 } from '@/lib/wikilinks'
 
-export interface LinkEntry {
-  id: string
-  type: WikiLinkType
-  title: string
-  url: string
-}
+/**
+ * A wikilink target as the backlink panels render it. Identical to the resolver's
+ * `WikiLinkTarget` minus the `slug`, which only the resolver needs — derived rather than
+ * restated so a field added upstream shows up here.
+ */
+export type LinkEntry = Omit<WikiLinkTarget, 'slug'>
 
 interface SourceEntry extends LinkEntry {
   content: string

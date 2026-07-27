@@ -1,8 +1,14 @@
 import liftsData from '@/data/lifts.json'
-import { attemptDate, isStale, isValidDate, type Instrument } from './instrument'
+import { absentInstrument, isStale, isValidDate, type Instrument } from './instrument'
+import { LIFT_NAMES, type LiftName } from '@/lib/interactive/manifest-types'
 
-export type LiftName = 'squat' | 'bench' | 'deadlift'
+export type { LiftName }
 
+/**
+ * Raw shape of `data/lifts.json` before validation. Deliberately looser than
+ * the validated `LiftRecord` in `@/lib/interactive/manifest-types`: this one
+ * describes untrusted input, so `unit` and `type` stay open strings.
+ */
 export interface LiftRecord {
   weight: number
   unit: string
@@ -26,8 +32,6 @@ export interface StrengthData {
   unit: string
 }
 
-const liftNames: LiftName[] = ['squat', 'bench', 'deadlift']
-
 function isLiftRecord(value: unknown): value is LiftRecord {
   if (!value || typeof value !== 'object') return false
   const record = value as LiftRecord
@@ -41,69 +45,59 @@ function isLiftRecord(value: unknown): value is LiftRecord {
 }
 
 function absentStrength(now: Date): Instrument<StrengthData> {
-  return {
-    data: null,
-    asOf: attemptDate(now),
-    source: 'data/lifts.json',
-    stale: false,
-  }
+  return absentInstrument('data/lifts.json', now)
 }
 
 export function aggregateLifts(source: unknown, now = new Date()): Instrument<StrengthData> {
-  try {
-    if (!source || typeof source !== 'object') return absentStrength(now)
-    const liftsSource = source as LiftsSource
+  if (!source || typeof source !== 'object') return absentStrength(now)
+  const liftsSource = source as LiftsSource
+  if (
+    !isValidDate(liftsSource.lastUpdated) ||
+    !liftsSource.lifts ||
+    typeof liftsSource.lifts !== 'object' ||
+    Array.isArray(liftsSource.lifts) ||
+    (liftsSource.history !== undefined &&
+      (!liftsSource.history ||
+        typeof liftsSource.history !== 'object' ||
+        Array.isArray(liftsSource.history)))
+  ) {
+    return absentStrength(now)
+  }
+
+  const lifts: StrengthData['lifts'] = []
+  for (const name of LIFT_NAMES) {
+    const current = liftsSource.lifts[name]
+    if (!isLiftRecord(current)) return absentStrength(now)
+    const historyValue = liftsSource.history?.[name]
     if (
-      !isValidDate(liftsSource.lastUpdated) ||
-      !liftsSource.lifts ||
-      typeof liftsSource.lifts !== 'object' ||
-      Array.isArray(liftsSource.lifts) ||
-      (liftsSource.history !== undefined &&
-        (!liftsSource.history ||
-          typeof liftsSource.history !== 'object' ||
-          Array.isArray(liftsSource.history)))
+      historyValue !== undefined &&
+      (!Array.isArray(historyValue) || !historyValue.every(isLiftRecord))
     ) {
       return absentStrength(now)
     }
+    const history = historyValue ?? []
+    if (history.some((record) => record.unit !== current.unit)) return absentStrength(now)
 
-    const lifts = liftNames.map((name) => {
-      const current = liftsSource.lifts[name]
-      if (!isLiftRecord(current)) throw new Error(`Invalid ${name} record`)
-      const historyValue = liftsSource.history?.[name]
-      if (
-        historyValue !== undefined &&
-        (!Array.isArray(historyValue) || !historyValue.every(isLiftRecord))
-      ) {
-        throw new Error(`Invalid ${name} history`)
-      }
-      const history = historyValue ?? []
-      if (history.some((record) => record.unit !== current.unit)) {
-        throw new Error(`Mixed ${name} units`)
-      }
-
-      return {
-        name,
-        current,
-        progression: [...history, current].sort((a, b) => a.date.localeCompare(b.date)),
-      }
+    lifts.push({
+      name,
+      current,
+      progression: [...history, current].sort((a, b) => a.date.localeCompare(b.date)),
     })
+  }
 
-    if (!lifts.every((lift) => lift.current.unit === lifts[0]!.current.unit)) {
-      return absentStrength(now)
-    }
-
-    return {
-      data: {
-        lifts,
-        total: lifts.reduce((total, lift) => total + lift.current.weight, 0),
-        unit: lifts[0]!.current.unit,
-      },
-      asOf: liftsSource.lastUpdated,
-      source: 'data/lifts.json',
-      stale: isStale(liftsSource.lastUpdated, 90, now),
-    }
-  } catch {
+  if (!lifts.every((lift) => lift.current.unit === lifts[0]!.current.unit)) {
     return absentStrength(now)
+  }
+
+  return {
+    data: {
+      lifts,
+      total: lifts.reduce((total, lift) => total + lift.current.weight, 0),
+      unit: lifts[0]!.current.unit,
+    },
+    asOf: liftsSource.lastUpdated,
+    source: 'data/lifts.json',
+    stale: isStale(liftsSource.lastUpdated, 90, now),
   }
 }
 

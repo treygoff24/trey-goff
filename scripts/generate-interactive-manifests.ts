@@ -6,6 +6,7 @@
 import { allEssays, allProjects } from 'content-collections'
 import { readFileSync, mkdirSync, existsSync } from 'fs'
 import type { BooksData } from '@/lib/books/types'
+import { LIFT_NAMES } from '@/lib/interactive/manifest-types'
 import type {
   EssaysManifest,
   EssayManifestEntry,
@@ -23,10 +24,6 @@ import { writeStableJsonFile } from './lib/stable-json'
 
 const MANIFEST_VERSION = '1.0.0'
 const MANIFESTS_DIR = './public/manifests'
-
-// =============================================================================
-// Essays Manifest
-// =============================================================================
 
 function generateEssaysManifest(): EssaysManifest {
   const entries: EssayManifestEntry[] = allEssays
@@ -50,10 +47,6 @@ function generateEssaysManifest(): EssaysManifest {
   }
 }
 
-// =============================================================================
-// Books Manifest
-// =============================================================================
-
 function statusToTier(status: string, rating?: number): BookTier {
   // Map book status to display tier
   if (status === 'read' && rating === 5) return 'favorites'
@@ -64,18 +57,7 @@ function statusToTier(status: string, rating?: number): BookTier {
 }
 
 function generateBooksManifest(): BooksManifest {
-  let booksData: BooksData
-
-  try {
-    booksData = JSON.parse(readFileSync('./content/library/books.json', 'utf-8'))
-  } catch {
-    console.warn('Could not read books.json, generating empty manifest')
-    return {
-      version: MANIFEST_VERSION,
-      generated: new Date().toISOString(),
-      entries: [],
-    }
-  }
+  const booksData: BooksData = JSON.parse(readFileSync('./content/library/books.json', 'utf-8'))
 
   const entries: BookManifestEntry[] = booksData.books
     .filter((book) => book.status !== 'abandoned')
@@ -116,10 +98,6 @@ function generateBooksManifest(): BooksManifest {
   }
 }
 
-// =============================================================================
-// Projects Manifest
-// =============================================================================
-
 function generateProjectsManifest(): ProjectsManifest {
   const entries: ProjectManifestEntry[] = allProjects
     .map((project) => ({
@@ -156,22 +134,10 @@ function generateProjectsManifest(): ProjectsManifest {
   }
 }
 
-// =============================================================================
-// Lifts Manifest
-// =============================================================================
-
 interface LiftsSourceData {
   lastUpdated: string
-  lifts: {
-    squat: LiftRecord
-    bench: LiftRecord
-    deadlift: LiftRecord
-  }
-  history?: {
-    squat?: LiftRecord[]
-    bench?: LiftRecord[]
-    deadlift?: LiftRecord[]
-  }
+  lifts: Record<LiftName, LiftRecord>
+  history?: Partial<Record<LiftName, LiftRecord[]>>
 }
 
 function generateLiftsManifest(): LiftsManifest {
@@ -187,27 +153,14 @@ function generateLiftsManifest(): LiftsManifest {
     }
   }
 
-  let liftsData: LiftsSourceData
-  try {
-    liftsData = JSON.parse(readFileSync(liftsPath, 'utf-8'))
-  } catch {
-    console.warn('Could not parse lifts.json, generating empty manifest')
-    return {
-      version: MANIFEST_VERSION,
-      generated: new Date().toISOString(),
-      total: { weight: 0, unit: 'lb', date: new Date().toISOString() },
-      lifts: [],
-    }
-  }
+  const liftsData: LiftsSourceData = JSON.parse(readFileSync(liftsPath, 'utf-8'))
 
-  const liftNames: LiftName[] = ['squat', 'bench', 'deadlift']
-  const lifts: LiftsManifestEntry[] = liftNames.map((lift) => ({
+  const lifts: LiftsManifestEntry[] = LIFT_NAMES.map((lift) => ({
     lift,
     pr: liftsData.lifts[lift],
     history: liftsData.history?.[lift],
   }))
 
-  // Calculate total (sum of PRs)
   const totalWeight =
     liftsData.lifts.squat.weight + liftsData.lifts.bench.weight + liftsData.lifts.deadlift.weight
 
@@ -231,53 +184,29 @@ function generateLiftsManifest(): LiftsManifest {
   }
 }
 
-// =============================================================================
-// Main
-// =============================================================================
-
 function main() {
-  // Ensure manifests directory exists
   mkdirSync(MANIFESTS_DIR, { recursive: true })
 
-  // Generate all manifests
   const essays = generateEssaysManifest()
   const books = generateBooksManifest()
   const projects = generateProjectsManifest()
   const lifts = generateLiftsManifest()
 
-  // Write manifests
   const writes = [
-    writeStableJsonFile(
-      `${MANIFESTS_DIR}/essays.manifest.json`,
-      essays as unknown as Record<string, unknown>,
-      {
-        preserveKeys: ['generated'],
-      },
-    ),
-    writeStableJsonFile(
-      `${MANIFESTS_DIR}/books.manifest.json`,
-      books as unknown as Record<string, unknown>,
-      {
-        preserveKeys: ['generated'],
-      },
-    ),
-    writeStableJsonFile(
-      `${MANIFESTS_DIR}/projects.manifest.json`,
-      projects as unknown as Record<string, unknown>,
-      {
-        preserveKeys: ['generated'],
-      },
-    ),
-    writeStableJsonFile(
-      `${MANIFESTS_DIR}/lifts.manifest.json`,
-      lifts as unknown as Record<string, unknown>,
-      {
-        preserveKeys: ['generated'],
-      },
-    ),
+    writeStableJsonFile(`${MANIFESTS_DIR}/essays.manifest.json`, essays, {
+      preserveKeys: ['generated'],
+    }),
+    writeStableJsonFile(`${MANIFESTS_DIR}/books.manifest.json`, books, {
+      preserveKeys: ['generated'],
+    }),
+    writeStableJsonFile(`${MANIFESTS_DIR}/projects.manifest.json`, projects, {
+      preserveKeys: ['generated'],
+    }),
+    writeStableJsonFile(`${MANIFESTS_DIR}/lifts.manifest.json`, lifts, {
+      preserveKeys: ['generated'],
+    }),
   ]
 
-  // Summary
   console.log('Generated Interactive manifests:')
   console.log(`  - essays.manifest.json: ${essays.entries.length} entries`)
   console.log(`  - books.manifest.json: ${books.entries.length} entries`)

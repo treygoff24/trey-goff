@@ -50,9 +50,7 @@ export class GraphPage extends BasePage {
   }
 
   async expectGraphRendered() {
-    // Wait for loading to complete
     await expect(this.loadingIndicator).not.toBeVisible({ timeout: 15000 })
-    // Canvas should be visible
     await expect(this.graphCanvas).toBeVisible()
   }
 
@@ -101,14 +99,11 @@ export class GraphPage extends BasePage {
   }
 
   async expectNodeInspectorHasContent() {
-    // When a node is selected, the inspector shows its details
-    // Should not show the empty state message
     await expect(this.page.getByText('Select a node to see details')).not.toBeVisible()
   }
 
   async expectLegendVisible() {
     await expect(this.legend).toBeVisible()
-    // Legend should show all node types
     await expect(this.legendItems.getByText('Essays', { exact: true })).toBeVisible()
     await expect(this.legendItems.getByText('Notes', { exact: true })).toBeVisible()
     await expect(this.legendItems.getByText('Books', { exact: true })).toBeVisible()

@@ -67,4 +67,10 @@ test-results/
 _scratch/
 
 # Porting/source drafts
-content/essays/_agent-memory.source.md
+content/essays/_*.source.md
+content/essays/_*DRAFT*.md
+
+# Local agent scratch + tooling output
+result_scratch/
+.papercuts.jsonl
+__pycache__/

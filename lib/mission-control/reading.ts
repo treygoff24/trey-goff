@@ -1,13 +1,10 @@
 import booksData from '@/content/library/books.json'
 import { calculateReadingStats, getTopicBreakdown } from '@/lib/books'
 import type { Book, BooksData } from '@/lib/books/types'
-import { attemptDate, isStale, type Instrument } from './instrument'
+import { absentInstrument, isStale, type Instrument } from './instrument'
 
-export interface ReadingBook {
-  id: string
-  title: string
-  author: string
-  rating?: number
+/** The slice of a `Book` the mission-control shelf renders, plus a resolved cover path. */
+export type ReadingBook = Pick<Book, 'id' | 'title' | 'author' | 'rating'> & {
   cover: string
 }
 
@@ -28,8 +25,10 @@ function toReadingBook(book: Book): ReadingBook {
   }
 }
 
-export function aggregateReading(source: BooksData, now = new Date()): Instrument<ReadingData> {
-  if (!Array.isArray(source.books) || !source.lastUpdated) throw new Error('Invalid books data')
+function aggregateReading(source: BooksData, now = new Date()): Instrument<ReadingData> {
+  if (!Array.isArray(source.books) || !source.lastUpdated) {
+    return absentInstrument('content/library/books.json', now)
+  }
 
   return {
     data: {
@@ -49,14 +48,5 @@ export function aggregateReading(source: BooksData, now = new Date()): Instrumen
 }
 
 export function getReadingInstrument(now = new Date()): Instrument<ReadingData> {
-  try {
-    return aggregateReading(booksData as BooksData, now)
-  } catch {
-    return {
-      data: null,
-      asOf: attemptDate(now),
-      source: 'content/library/books.json',
-      stale: false,
-    }
-  }
+  return aggregateReading(booksData as BooksData, now)
 }

@@ -14,7 +14,7 @@ import {
   getInstrumentManifest,
   instrumentedSlugs,
 } from '@/lib/instruments/manifest'
-import type { ClaimsLedger } from '@/lib/instruments/types'
+import { countVerdicts, type ClaimsLedger, type Verdict } from '@/lib/instruments/types'
 
 const INSTRUMENTS_DIR = join(process.cwd(), 'content/instruments')
 
@@ -24,7 +24,7 @@ interface LedgerFixture {
   total: number
   unassigned: string[]
   claims: number
-  verdicts: Record<string, number>
+  verdicts: Partial<Record<Verdict, number>>
 }
 
 /**
@@ -75,15 +75,10 @@ function checkLedgerFixture(slug: string, ledger: ClaimsLedger | null) {
     fail(`${slug} ledger drifted from its recorded fixture: ${JSON.stringify(actual)}`)
   }
 
-  const verdictCounts: Record<string, number> = {}
-  for (const claim of ledger.claims) {
-    if (claim.verdict) verdictCounts[claim.verdict] = (verdictCounts[claim.verdict] ?? 0) + 1
-  }
-  for (const [verdict, count] of Object.entries(expected.verdicts)) {
+  const verdictCounts = countVerdicts(ledger.claims)
+  for (const [verdict, count] of Object.entries(expected.verdicts) as [Verdict, number][]) {
     if (verdictCounts[verdict] !== count) {
-      fail(
-        `${slug} verdict drift: expected ${count} ${verdict}, found ${verdictCounts[verdict] ?? 0}`,
-      )
+      fail(`${slug} verdict drift: expected ${count} ${verdict}, found ${verdictCounts[verdict]}`)
     }
   }
 }

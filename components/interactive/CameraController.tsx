@@ -4,12 +4,9 @@ import { useRef, useEffect } from 'react'
 import { useThree, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { useInteractiveStore } from '@/lib/interactive/store'
+import type { CameraMode } from '@/lib/interactive/types'
 
-// =============================================================================
-// Types
-// =============================================================================
-
-export type CameraMode = 'third-person' | 'first-person'
+export type { CameraMode }
 
 interface CameraControllerProps {
   /** Target position to follow as [x, y, z] tuple */
@@ -30,22 +27,13 @@ interface CameraControllerProps {
   lookAtHeight?: number
 }
 
-// =============================================================================
-// Constants
-// =============================================================================
-
 const DEFAULT_DISTANCE = 4
 const DEFAULT_HEIGHT_OFFSET = 2.8
 const DEFAULT_LOOK_AT_HEIGHT = 1.35
 const LERP_FACTOR = 0.1
 const LERP_FACTOR_INSTANT = 1.0
 const MIN_DISTANCE = 1
-const MAX_DISTANCE = 8
 const COLLISION_OFFSET = 0.3
-
-// =============================================================================
-// Collision Detection
-// =============================================================================
 
 /**
  * Check for obstacles between camera and target.
@@ -62,40 +50,31 @@ function checkCameraCollision(
   raycaster.set(origin, direction)
   raycaster.far = maxDistance
 
-  // Get all meshes that could block the camera
   const intersects = raycaster.intersectObjects(scene.children, true)
 
   for (const intersection of intersects) {
     const obj = intersection.object
 
-    // Skip objects tagged to ignore camera collision
     if (obj.userData?.cameraIgnore) continue
 
     // Skip transparent objects (handle both single and multi-material)
     const material = (obj as THREE.Mesh).material
     if (material) {
       if (Array.isArray(material)) {
-        // Multi-material: skip if all materials are transparent
         if (material.every((m) => m.transparent)) continue
       } else if ((material as THREE.Material).transparent) {
         continue
       }
     }
 
-    // Skip ground planes (check by geometry type or name)
     if (obj.name === 'ground' || obj.name === 'grid') continue
     if (obj.parent?.name === 'player') continue
 
-    // Found a collision - return safe distance
     return Math.max(MIN_DISTANCE, intersection.distance - COLLISION_OFFSET)
   }
 
   return maxDistance
 }
-
-// =============================================================================
-// Main Component
-// =============================================================================
 
 export function CameraController({
   targetPosition,
@@ -117,13 +96,11 @@ export function CameraController({
   const raycaster = useRef(new THREE.Raycaster())
   const directionToCamera = useRef(new THREE.Vector3())
 
-  // Store settings
   const settings = useInteractiveStore((s) => s.settings)
   const actualMode = settings.cameraMode ?? mode
   const actualDistance = settings.cameraDistance ?? distance
   const lerpFactor = reducedMotion ? LERP_FACTOR_INSTANT : LERP_FACTOR
 
-  // Initialize camera position on mount
   // Note: Using individual array elements to avoid unstable dependency
   const [tx, ty, tz] = targetPosition
   useEffect(() => {
@@ -133,7 +110,6 @@ export function CameraController({
       currentPosition.current.copy(targetVec.current)
       currentPosition.current.y += lookAtHeight
     } else {
-      // Third-person: position behind and above target
       // Use same +sin/+cos as per-frame update for consistency
       currentPosition.current.set(
         targetVec.current.x + Math.sin(targetYaw) * actualDistance,
@@ -144,25 +120,18 @@ export function CameraController({
     camera.position.copy(currentPosition.current)
   }, [actualMode, tx, ty, tz, targetYaw, actualDistance, heightOffset, lookAtHeight, camera])
 
-  // Update camera each frame
   useFrame(() => {
-    // Update target vector from tuple
     targetVec.current.set(targetPosition[0], targetPosition[1], targetPosition[2])
 
-    // Get pitch value (default to 0 if not provided)
     const pitch = targetPitch ?? 0
 
     if (actualMode === 'first-person') {
-      // First-person: camera at eye level, looking forward
       desiredPosition.current.copy(targetVec.current)
       desiredPosition.current.y += lookAtHeight
 
-      // Smooth transition
       currentPosition.current.lerp(desiredPosition.current, lerpFactor)
       camera.position.copy(currentPosition.current)
 
-      // Look direction from yaw and pitch
-      // Apply pitch to Y offset of look target
       const lookDistance = 10
       lookAtPoint.current.set(
         currentPosition.current.x - Math.sin(targetYaw) * lookDistance * Math.cos(pitch),
@@ -171,15 +140,12 @@ export function CameraController({
       )
       camera.lookAt(lookAtPoint.current)
     } else {
-      // Third-person: camera behind and above target
-      // Calculate desired position
       desiredPosition.current.set(
         targetVec.current.x + Math.sin(targetYaw) * actualDistance,
         targetVec.current.y + heightOffset,
         targetVec.current.z + Math.cos(targetYaw) * actualDistance,
       )
 
-      // Check for camera collision
       directionToCamera.current.subVectors(desiredPosition.current, targetVec.current).normalize()
       const safeDistance = checkCameraCollision(
         raycaster.current,
@@ -189,7 +155,6 @@ export function CameraController({
         scene,
       )
 
-      // Apply safe distance if collision detected
       if (safeDistance < actualDistance) {
         desiredPosition.current.set(
           targetVec.current.x + Math.sin(targetYaw) * safeDistance,
@@ -198,12 +163,9 @@ export function CameraController({
         )
       }
 
-      // Smooth transition
       currentPosition.current.lerp(desiredPosition.current, lerpFactor)
       camera.position.copy(currentPosition.current)
 
-      // Look at target with pitch offset
-      // Pitch adjusts the look height relative to target
       lookAtPoint.current.copy(targetVec.current)
       lookAtPoint.current.y += lookAtHeight + Math.sin(pitch) * 5
       camera.lookAt(lookAtPoint.current)
@@ -211,40 +173,4 @@ export function CameraController({
   })
 
   return null
-}
-
-// =============================================================================
-// Hook for external camera control
-// =============================================================================
-
-export function useCameraSettings() {
-  const settings = useInteractiveStore((s) => s.settings)
-  const updateSettings = useInteractiveStore((s) => s.updateSettings)
-
-  const setCameraMode = (mode: CameraMode) => {
-    updateSettings({ cameraMode: mode })
-  }
-
-  const setCameraDistance = (distance: number) => {
-    updateSettings({ cameraDistance: Math.max(MIN_DISTANCE, Math.min(MAX_DISTANCE, distance)) })
-  }
-
-  const setCameraSensitivity = (sensitivity: number) => {
-    updateSettings({ cameraSensitivity: Math.max(0.1, Math.min(2, sensitivity)) })
-  }
-
-  const setInvertY = (invert: boolean) => {
-    updateSettings({ invertY: invert })
-  }
-
-  return {
-    mode: settings.cameraMode,
-    distance: settings.cameraDistance,
-    sensitivity: settings.cameraSensitivity,
-    invertY: settings.invertY,
-    setCameraMode,
-    setCameraDistance,
-    setCameraSensitivity,
-    setInvertY,
-  }
 }

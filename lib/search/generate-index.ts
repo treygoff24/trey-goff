@@ -5,14 +5,9 @@ import type { SearchDocument, SearchIndex } from './types'
 import type { BooksData } from '@/lib/books/types'
 import { isNewsletterEnabled } from '@/lib/site-config'
 
-// Load books data
 function loadBooks(): BooksData['books'] {
-  try {
-    const booksData: BooksData = JSON.parse(readFileSync('./content/library/books.json', 'utf-8'))
-    return booksData.books
-  } catch {
-    return []
-  }
+  const booksData: BooksData = JSON.parse(readFileSync('./content/library/books.json', 'utf-8'))
+  return booksData.books
 }
 
 // Navigation pages (static)
@@ -146,13 +141,10 @@ const easterEggs: SearchDocument[] = [
 export function generateSearchIndex(): SearchIndex {
   const documents: SearchDocument[] = []
 
-  // Add navigation
   documents.push(...navigationPages)
 
-  // Add actions
   documents.push(...quickActions)
 
-  // Add essays
   for (const essay of allEssays) {
     if (essay.status === 'draft') continue
 
@@ -168,7 +160,6 @@ export function generateSearchIndex(): SearchIndex {
     })
   }
 
-  // Add notes
   for (const note of allNotes) {
     documents.push({
       id: `note-${note.slug}`,
@@ -181,7 +172,6 @@ export function generateSearchIndex(): SearchIndex {
     })
   }
 
-  // Add books
   const books = loadBooks()
   for (const book of books) {
     documents.push({
@@ -197,7 +187,6 @@ export function generateSearchIndex(): SearchIndex {
     })
   }
 
-  // Add projects
   for (const project of allProjects) {
     documents.push({
       id: `project-${project.slug}`,

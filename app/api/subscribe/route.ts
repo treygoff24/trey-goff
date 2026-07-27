@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createRateLimiter } from '@/lib/rate-limit'
 import { isNewsletterEnabled } from '@/lib/site-config'
 import {
   getTrustedClientIp,
@@ -8,59 +9,17 @@ import {
 } from '@/lib/subscribe-request'
 
 const BUTTONDOWN_API_KEY = process.env.BUTTONDOWN_API_KEY
-const RATE_LIMIT_MAX_REQUESTS = 5
-const RATE_LIMIT_WINDOW_MS = 60000
 
 interface ButtondownError {
   detail?: string
   email?: string[]
 }
 
-interface RateLimitEntry {
-  count: number
-  resetAt: number
-}
-
 type LimitedBodyReadResult =
   | { ok: true; body: string }
   | { ok: false; status: number; error: string }
 
-// WARNING: In-memory rate limiting is best-effort only. This Map resets on
-// serverless cold starts and is not shared across instances. For production-grade
-// protection, use distributed rate limiting (e.g. Upstash/Redis).
-const rateLimitMap = new Map<string, RateLimitEntry>()
-
-function pruneExpiredRateLimits(now: number) {
-  for (const [ip, entry] of rateLimitMap.entries()) {
-    if (now >= entry.resetAt) {
-      rateLimitMap.delete(ip)
-    }
-  }
-}
-
-function checkRateLimit(ip: string): { allowed: boolean; retryAfter?: number } {
-  const now = Date.now()
-  pruneExpiredRateLimits(now)
-  const entry = rateLimitMap.get(ip)
-
-  if (entry && now >= entry.resetAt) {
-    rateLimitMap.delete(ip)
-  }
-
-  const current = rateLimitMap.get(ip)
-  if (!current) {
-    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS })
-    return { allowed: true }
-  }
-
-  if (current.count >= RATE_LIMIT_MAX_REQUESTS) {
-    const retryAfter = Math.ceil((current.resetAt - now) / 1000)
-    return { allowed: false, retryAfter }
-  }
-
-  current.count++
-  return { allowed: true }
-}
+const subscribeRateLimit = createRateLimiter({ maxRequests: 5, windowMs: 60000 })
 
 async function readRequestBodyWithLimit(request: NextRequest): Promise<LimitedBodyReadResult> {
   if (!request.body) {
@@ -109,7 +68,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const clientIP = getTrustedClientIp(request)
-    const rateLimit = checkRateLimit(clientIP)
+    const rateLimit = subscribeRateLimit.check(clientIP)
 
     if (!rateLimit.allowed) {
       return NextResponse.json(
@@ -117,7 +76,7 @@ export async function POST(request: NextRequest) {
         {
           status: 429,
           headers: {
-            'Retry-After': String(rateLimit.retryAfter || 60),
+            'Retry-After': String(rateLimit.retryAfter),
           },
         },
       )

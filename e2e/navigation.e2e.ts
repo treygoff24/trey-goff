@@ -61,7 +61,6 @@ test.describe('Navigation - Desktop', () => {
     test('should highlight current page in navigation', async ({ page }) => {
       await page.goto('/writing')
 
-      // Writing link should have active styling
       const writingLink = basePage.topNav.getByRole('link', { name: 'Writing' })
       await expect(writingLink).toHaveAttribute('aria-current', 'page')
     })
@@ -78,7 +77,6 @@ test.describe('Navigation - Desktop', () => {
     })
 
     test('should have footer links', async () => {
-      // Footer typically has social links, RSS, etc.
       const footerLinks = basePage.footer.locator('a')
       const linkCount = await footerLinks.count()
 
@@ -136,15 +134,12 @@ test.describe('Skip Link - Accessibility', () => {
   })
 
   test('should have skip link for keyboard navigation', async () => {
-    // Skip link should exist but be visually hidden
     await expect(basePage.skipLink).toBeAttached()
   })
 
   test('should become visible when focused', async ({ page }) => {
-    // Tab to focus the skip link
     await page.keyboard.press('Tab')
 
-    // Skip link should now be visible
     await expect(basePage.skipLink).toBeVisible()
   })
 
@@ -176,10 +171,8 @@ test.describe('Navigation - Sticky header', () => {
     const basePage = new BasePage(page)
     await basePage.goto('/library')
 
-    // Scroll down
     await page.evaluate(() => window.scrollBy(0, 500))
 
-    // Header should still be visible
     const header = page.getByRole('banner')
     await expect(header).toBeVisible()
     await expect(header).toBeInViewport()

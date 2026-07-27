@@ -1,16 +1,12 @@
 'use client'
 
-import { useRef, useEffect, useMemo, useCallback } from 'react'
+import { useRef, useMemo, useCallback } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Text } from '@react-three/drei'
 import * as THREE from 'three'
 import { useInteractiveStore } from '@/lib/interactive/store'
-import type { RoomId } from '@/lib/interactive/types'
+import type { ChunkState, RoomId } from '@/lib/interactive/types'
 import { THREE_COLORS } from '@/lib/interactive/colors'
-
-// =============================================================================
-// Types
-// =============================================================================
 
 interface DoorTriggerProps {
   /** Position of the door */
@@ -43,17 +39,17 @@ interface DoorTriggerProps {
   labelRotation?: number
 }
 
-// =============================================================================
-// Constants
-// =============================================================================
-
 const DEFAULT_PRELOAD_DISTANCE = 15
 const DEFAULT_ACTIVATION_DISTANCE = 3
 const DEFAULT_SIZE: [number, number] = [2, 3]
 
-// =============================================================================
-// Main Component
-// =============================================================================
+/**
+ * Placeholder rooms ship without a GLB, so they never reach 'loaded' — 'unloaded' has to
+ * count as enterable or those doors would never open.
+ */
+function canEnter(state: ChunkState | undefined): boolean {
+  return state === 'loaded' || state === 'dormant' || state === 'unloaded' || state === 'preloading'
+}
 
 /**
  * DoorTrigger - Invisible trigger zone that:
@@ -81,7 +77,6 @@ export function DoorTrigger({
   // Reusable vector for distance calculations (avoid per-frame allocation)
   const playerVecRef = useRef(new THREE.Vector3())
 
-  // Store state
   const playerPosition = useInteractiveStore((s) => s.player.position)
   const setChunkState = useInteractiveStore((s) => s.setChunkState)
   const chunkStates = useInteractiveStore((s) => s.chunkStates)
@@ -90,15 +85,21 @@ export function DoorTrigger({
   const hasTriggeredPreload = useRef(false)
   const isWithinActivation = useRef(false)
 
-  // Calculate player distance each frame
+  const enterTargetRoom = useCallback(() => {
+    const targetState = chunkStates.get(targetRoom)?.state
+    if (canEnter(targetState)) {
+      onActivate?.(targetRoom, spawnPosition, spawnRotation)
+    } else if (debug) {
+      console.log(`[DoorTrigger] Cannot enter ${targetRoom} - state: ${targetState}`)
+    }
+  }, [chunkStates, targetRoom, spawnPosition, spawnRotation, onActivate, debug])
+
   useFrame(() => {
     if (!enabled) return
 
-    // Reuse vector to avoid allocation
     playerVecRef.current.set(playerPosition[0], playerPosition[1], playerPosition[2])
     const distance = playerVecRef.current.distanceTo(doorPosition)
 
-    // Check preload trigger
     if (distance <= preloadDistance && !hasTriggeredPreload.current) {
       const targetState = chunkStates.get(targetRoom)?.state
       if (targetState === 'unloaded' || targetState === 'disposed') {
@@ -113,57 +114,14 @@ export function DoorTrigger({
       hasTriggeredPreload.current = false
     }
 
-    // Check activation zone
     const wasWithin = isWithinActivation.current
     isWithinActivation.current = distance <= activationDistance
 
     // Auto-activate when player enters activation zone
     if (isWithinActivation.current && !wasWithin && enabled) {
-      const targetState = chunkStates.get(targetRoom)?.state
-      // Allow transition if chunk is loaded, dormant, or if this is a placeholder room (unloaded)
-      // Placeholder rooms don't have GLB assets so they'll never reach 'loaded'
-      const canEnter =
-        targetState === 'loaded' ||
-        targetState === 'dormant' ||
-        targetState === 'unloaded' ||
-        targetState === 'preloading'
-
-      if (canEnter) {
-        onActivate?.(targetRoom, spawnPosition, spawnRotation)
-      } else if (debug) {
-        console.log(`[DoorTrigger] Cannot enter ${targetRoom} - state: ${targetState}`)
-      }
+      enterTargetRoom()
     }
   })
-
-  // Handle interaction (E key or tap)
-  // This is called by InteractionSystem when player interacts with door mesh
-  const handleInteract = useCallback(() => {
-    if (!enabled || !isWithinActivation.current) return
-
-    const targetState = chunkStates.get(targetRoom)?.state
-    const canEnter =
-      targetState === 'loaded' ||
-      targetState === 'dormant' ||
-      targetState === 'unloaded' ||
-      targetState === 'preloading'
-
-    if (canEnter) {
-      onActivate?.(targetRoom, spawnPosition, spawnRotation)
-    } else if (debug) {
-      console.log(`[DoorTrigger] Cannot enter ${targetRoom} - state: ${targetState}`)
-    }
-  }, [enabled, chunkStates, targetRoom, spawnPosition, spawnRotation, onActivate, debug])
-
-  // Store handle interact for external access
-  useEffect(() => {
-    if (groupRef.current) {
-      groupRef.current.userData.onInteract = handleInteract
-      groupRef.current.userData.targetRoom = targetRoom
-      groupRef.current.userData.spawnPosition = spawnPosition
-      groupRef.current.userData.spawnRotation = spawnRotation
-    }
-  }, [handleInteract, targetRoom, spawnPosition, spawnRotation])
 
   return (
     <group ref={groupRef} position={position} name={`door-${targetRoom}`}>
@@ -226,10 +184,6 @@ export function DoorTrigger({
   )
 }
 
-// =============================================================================
-// Door Configuration Helper
-// =============================================================================
-
 export interface DoorConfig {
   id: string
   position: [number, number, number]
@@ -239,40 +193,4 @@ export interface DoorConfig {
   size?: [number, number]
   label?: string
   labelRotation?: number
-}
-
-/**
- * Render multiple doors from configuration.
- */
-export function DoorTriggers({
-  doors,
-  onActivate,
-  debug = false,
-}: {
-  doors: DoorConfig[]
-  onActivate?: (
-    targetRoom: RoomId,
-    spawnPosition: [number, number, number],
-    spawnRotation: number,
-  ) => void
-  debug?: boolean
-}) {
-  return (
-    <>
-      {doors.map((door) => (
-        <DoorTrigger
-          key={door.id}
-          position={door.position}
-          targetRoom={door.targetRoom}
-          spawnPosition={door.spawnPosition}
-          spawnRotation={door.spawnRotation}
-          size={door.size}
-          label={door.label}
-          labelRotation={door.labelRotation}
-          onActivate={onActivate}
-          debug={debug}
-        />
-      ))}
-    </>
-  )
 }

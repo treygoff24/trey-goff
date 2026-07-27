@@ -148,7 +148,11 @@ function useStructureGeometry(enabled: boolean) {
       new GLTFLoader().load(STRUCTURE_MODEL, (gltf) => {
         if (cancelled) return
         gltf.scene.traverse((node) => {
-          const mesh = node as unknown as { geometry?: import('three').BufferGeometry }
+          // `Object3D` declares no geometry; `Mesh` and friends add it. Widening to the
+          // optional slot reads the mesh case without pretending every node is a Mesh.
+          const mesh = node as import('three').Object3D & {
+            geometry?: import('three').BufferGeometry
+          }
           if (!loaded && mesh.geometry) loaded = mesh.geometry
         })
         if (loaded) setGeometry(loaded)

@@ -7,35 +7,15 @@ import { RigidBody, CuboidCollider } from '@react-three/rapier'
 import * as THREE from 'three'
 import { THREE_COLORS } from '@/lib/interactive/colors'
 import { DoorTrigger } from '../DoorTrigger'
-import type { RoomId } from '@/lib/interactive/types'
+import type { RoomProps } from './types'
 
-// =============================================================================
-// Types
-// =============================================================================
-
-interface ExteriorRoomProps {
-  /** Show debug visualizations */
-  debug?: boolean
-  /** Callback when door is activated */
-  onDoorActivate?: (
-    targetRoom: RoomId,
-    spawnPosition: [number, number, number],
-    spawnRotation: number,
-  ) => void
-}
-
-// =============================================================================
-// Constants
-// =============================================================================
+/** The slice of the shared room contract this room reads. */
+type ExteriorRoomProps = Pick<RoomProps, 'debug' | 'onDoorActivate'>
 
 const GROUND_SIZE = 100
 const MANSION_WIDTH = 20
 const MANSION_DEPTH = 15
 const MANSION_HEIGHT = 12
-
-// =============================================================================
-// Shaders
-// =============================================================================
 
 const skyVertexShader = /* glsl */ `
   varying vec3 vWorldPosition;
@@ -122,13 +102,10 @@ const cylinderFragmentShader = /* glsl */ `
     float windows = sin(vUv.x * 80.0) * sin(vUv.y * 200.0);
     windows = step(0.7, windows) * 0.3;
     
-    // Base metallic color
     vec3 baseColor = uColor * (0.3 + panels * 0.2);
     
-    // Add rim glow
     vec3 rimColor = vec3(0.4, 0.6, 1.0) * fresnel * uGlowIntensity;
     
-    // Add window lights
     vec3 windowColor = vec3(1.0, 0.9, 0.7) * windows;
     
     vec3 finalColor = baseColor + rimColor + windowColor;
@@ -186,7 +163,6 @@ const terrainVertexShader = /* glsl */ `
   void main() {
     vUv = uv;
     
-    // Generate terrain height
     vec2 noiseCoord = position.xz * 0.02;
     float elevation = fbm(noiseCoord) * 15.0;
     
@@ -229,7 +205,6 @@ const terrainFragmentShader = /* glsl */ `
   varying vec3 vNormal;
   
   void main() {
-    // Height-based coloring
     float heightFactor = smoothstep(0.0, 20.0, vElevation);
     vec3 color = mix(uBaseColor, uHighColor, heightFactor);
     
@@ -238,7 +213,6 @@ const terrainFragmentShader = /* glsl */ `
     float gridLine = smoothstep(0.02, 0.0, min(grid.x, grid.y));
     color += uGlowColor * gridLine * 0.3;
     
-    // Simple lighting
     vec3 lightDir = normalize(vec3(0.5, 1.0, 0.3));
     float diffuse = max(dot(vNormal, lightDir), 0.0);
     color *= 0.5 + diffuse * 0.5;
@@ -246,10 +220,6 @@ const terrainFragmentShader = /* glsl */ `
     gl_FragColor = vec4(color, 1.0);
   }
 `
-
-// =============================================================================
-// Sub-components
-// =============================================================================
 
 /**
  * Procedural sky dome with gradient and subtle effects.
@@ -882,10 +852,6 @@ function Garage() {
   )
 }
 
-// =============================================================================
-// Colliders
-// =============================================================================
-
 function ExteriorColliders() {
   const garagePos: [number, number, number] = [-25, 3.5, -15]
   const garageSize: [number, number, number] = [6, 3.5, 5]
@@ -914,10 +880,6 @@ function ExteriorColliders() {
     </>
   )
 }
-
-// =============================================================================
-// Main Component
-// =============================================================================
 
 export function ExteriorRoom({ debug = false, onDoorActivate }: ExteriorRoomProps) {
   return (

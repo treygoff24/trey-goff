@@ -1,22 +1,18 @@
 import booksData from '@/content/library/books.json'
 import type { Book, BooksData, BookStatus } from './types'
 
-// Get all books
 export function getAllBooks(): Book[] {
   return (booksData as BooksData).books
 }
 
-// Get books by status
 export function getBooksByStatus(status: BookStatus): Book[] {
   return getAllBooks().filter((book) => book.status === status)
 }
 
-// Get a single book by ID
 export function getBookById(id: string): Book | undefined {
   return getAllBooks().find((book) => book.id === id)
 }
 
-// Get all unique topics
 export function getAllTopics(): string[] {
   const topics = new Set<string>()
   getAllBooks().forEach((book) => {
@@ -25,7 +21,6 @@ export function getAllTopics(): string[] {
   return Array.from(topics).sort()
 }
 
-// Get all unique genres
 export function getAllGenres(): string[] {
   const genres = new Set<string>()
   getAllBooks().forEach((book) => {
@@ -34,7 +29,6 @@ export function getAllGenres(): string[] {
   return Array.from(genres).sort()
 }
 
-// Get reading statistics
 export function calculateReadingStats(books: Book[]) {
   const readBooks = books.filter((b) => b.status === 'read')
   const ratedReadBooks = readBooks.filter((b) => typeof b.rating === 'number')
@@ -51,10 +45,6 @@ export function calculateReadingStats(books: Book[]) {
         : 0,
     fiveStarBooks: readBooks.filter((b) => b.rating === 5).length,
   }
-}
-
-export function getReadingStats() {
-  return calculateReadingStats(getAllBooks())
 }
 
 // Books read per year (based on dateRead)
@@ -115,7 +105,6 @@ export function getTopicBreakdown(books: Book[], limit = 6) {
   return [...topEntries, { topic: 'Other', count: otherCount }]
 }
 
-// Sort books
 export function sortBooks(
   books: Book[],
   sortBy: 'title' | 'author' | 'year' | 'rating' | 'dateRead' = 'title',
@@ -138,7 +127,6 @@ export function sortBooks(
   })
 }
 
-// Filter books
 export function filterBooks(
   books: Book[],
   filters: {

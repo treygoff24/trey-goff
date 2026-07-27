@@ -28,7 +28,7 @@ const KIND_COPY: Record<MarkKind, { label: string; gloss: string }> = {
   },
 }
 
-export function markKindColor(kind: MarkKind): string {
+function markKindColor(kind: MarkKind): string {
   return `var(--color-mark-${kind})`
 }
 

@@ -18,7 +18,7 @@ import { markdownToHast } from '@/lib/instruments/render'
 
 const INSTRUMENTS_DIR = join(process.cwd(), 'content/instruments')
 
-export const instrumentIdSchema = z.enum([
+const instrumentIdSchema = z.enum([
   'instrument-rail',
   'time-spine',
   'claim-ledger',
@@ -34,12 +34,12 @@ export const instrumentIdSchema = z.enum([
  * hue and chroma, the instrument branch turns them into custom properties. Raw colors
  * never appear here.
  */
-export const accentSchema = z.object({
+const accentSchema = z.object({
   hue: z.number().min(0).max(360),
   chroma: z.number().min(0).max(0.4),
 })
 
-export const provenanceEntrySchema = z.object({
+const provenanceEntrySchema = z.object({
   path: z.string().min(1),
   source: z.string().min(1),
   sha256: z.string().regex(/^[0-9a-f]{64}$/),
@@ -196,7 +196,7 @@ export function dossierPath(slug: string, dossier: string): string {
   return join(INSTRUMENTS_DIR, slug, 'dossiers', `${dossier}.md`)
 }
 
-export function readDossier(slug: string, dossier: string): string {
+function readDossier(slug: string, dossier: string): string {
   const manifest = getInstrumentManifest(slug)
   if (!manifest?.dossiers.includes(dossier)) {
     throw new Error(`${slug} has no dossier named ${dossier}`)

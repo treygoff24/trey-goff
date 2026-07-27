@@ -20,7 +20,7 @@ export interface InstrumentUrlState {
   audit: boolean
 }
 
-export const PARAMS = {
+const PARAMS = {
   verdicts: 'v',
   sections: 's',
   claim: 'claim',
@@ -52,7 +52,8 @@ export interface InstrumentVocabulary {
   duration: number
 }
 
-function toSeconds(timestamp: string): number {
+/** `h:mm:ss` (or `m:ss`) to a second count. */
+export function toSeconds(timestamp: string): number {
   return timestamp.split(':').reduce((total, part) => total * 60 + Number(part), 0)
 }
 

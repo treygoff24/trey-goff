@@ -115,13 +115,22 @@ function extractChunks(text: string): string[] {
   )
 }
 
+/**
+ * One entry of Next's `react-loadable-manifest.json`: a dynamically imported module and the
+ * chunk files it pulls in. Fields stay optional and loosely typed because this is a build
+ * artifact read off disk, not a value this repo produces.
+ */
+interface LoadableManifestEntry {
+  files?: unknown
+}
+
 function collectLoadableChunks(filePath: string): string[] {
   const manifest = readJsonRecord(filePath)
   const chunks: string[] = []
 
   for (const value of Object.values(manifest)) {
     if (!value || typeof value !== 'object' || Array.isArray(value)) continue
-    const files = (value as Record<string, unknown>).files
+    const { files } = value as LoadableManifestEntry
     if (!Array.isArray(files)) continue
     for (const file of files) {
       if (typeof file === 'string' && file.endsWith('.js')) chunks.push(file)

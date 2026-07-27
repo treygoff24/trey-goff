@@ -16,19 +16,16 @@ import type {
 import { DEFAULT_SETTINGS } from './types'
 import type { QualityTier } from './capabilities'
 
-// =============================================================================
-// Constants
-// =============================================================================
-
 const STORAGE_KEY = 'trey-interactive-state'
 const MAX_DORMANT_CHUNKS = 2
 
 /** Rooms in load priority order */
-const ROOM_IDS: RoomId[] = ['exterior', 'mainhall', 'library', 'gym', 'projects', 'garage']
+const ROOM_IDS: readonly RoomId[] = ['exterior', 'mainhall', 'library', 'gym', 'projects', 'garage']
 
-// =============================================================================
-// Initial State
-// =============================================================================
+/** Narrows a URL- or storage-sourced string to a room the registry actually knows. */
+function isRoomId(value: string): value is RoomId {
+  return (ROOM_IDS as readonly string[]).includes(value)
+}
 
 function createInitialChunkStates(): Map<RoomId, ChunkInfo> {
   const map = new Map<RoomId, ChunkInfo>()
@@ -45,15 +42,12 @@ function createInitialChunkStates(): Map<RoomId, ChunkInfo> {
 }
 
 const initialState: InteractiveStoreState = {
-  // Chunks
   chunkStates: createInitialChunkStates(),
   activeChunk: null,
 
-  // Quality
   qualityTier: 'auto',
   effectiveQualityTier: 'medium',
 
-  // Player
   player: {
     position: [0, 0, 0],
     rotation: [0, 0, 0],
@@ -64,25 +58,17 @@ const initialState: InteractiveStoreState = {
     isInteracting: false,
   },
 
-  // Settings
   settings: { ...DEFAULT_SETTINGS },
 
-  // Loading
   isLoading: true,
   loadingProgress: 0,
   loadingStatus: 'Initializing...',
 
-  // Error
   error: null,
 
-  // Session
   sessionStartTime: Date.now(),
   lastInteractionTime: Date.now(),
 }
-
-// =============================================================================
-// Persistence Helpers
-// =============================================================================
 
 interface PersistedState {
   qualityTier: QualityTier
@@ -140,10 +126,7 @@ function getUrlRoom(): RoomId | null {
   const params = new URLSearchParams(window.location.search)
   const room = params.get('room')
 
-  if (room && ROOM_IDS.includes(room as RoomId)) {
-    return room as RoomId
-  }
-  return null
+  return room && isRoomId(room) ? room : null
 }
 
 function updateUrlRoom(room: RoomId | null): void {
@@ -160,17 +143,9 @@ function updateUrlRoom(room: RoomId | null): void {
   window.history.replaceState({}, '', url.toString())
 }
 
-// =============================================================================
-// Store Creation
-// =============================================================================
-
 export const useInteractiveStore = create<InteractiveStore>()(
   subscribeWithSelector((set, get) => ({
     ...initialState,
-
-    // =========================================================================
-    // Chunk Management
-    // =========================================================================
 
     setChunkState: (room: RoomId, state: ChunkState) => {
       set((s) => {
@@ -191,12 +166,10 @@ export const useInteractiveStore = create<InteractiveStore>()(
     activateChunk: (room: RoomId) => {
       const initialState = get()
 
-      // Mark previous active chunk as dormant
       if (initialState.activeChunk && initialState.activeChunk !== room) {
         get().setChunkState(initialState.activeChunk, 'dormant')
       }
 
-      // Activate new chunk
       get().setChunkState(room, 'active')
       set({ activeChunk: room })
 
@@ -210,7 +183,6 @@ export const useInteractiveStore = create<InteractiveStore>()(
       }
 
       if (dormantChunks.length > MAX_DORMANT_CHUNKS) {
-        // Dispose oldest dormant chunks
         dormantChunks.sort((a, b) => a.lastActiveAt - b.lastActiveAt)
         const toDispose = dormantChunks.slice(0, dormantChunks.length - MAX_DORMANT_CHUNKS)
         for (const chunk of toDispose) {
@@ -239,10 +211,6 @@ export const useInteractiveStore = create<InteractiveStore>()(
       }, 100)
     },
 
-    // =========================================================================
-    // Quality
-    // =========================================================================
-
     setQualityTier: (tier: QualityTier) => {
       set({ qualityTier: tier })
       get().saveToStorage()
@@ -251,10 +219,6 @@ export const useInteractiveStore = create<InteractiveStore>()(
     setEffectiveQualityTier: (tier: Exclude<QualityTier, 'auto'>) => {
       set({ effectiveQualityTier: tier })
     },
-
-    // =========================================================================
-    // Player
-    // =========================================================================
 
     setPlayerPosition: (position) => {
       set((s) => ({
@@ -300,10 +264,6 @@ export const useInteractiveStore = create<InteractiveStore>()(
       }))
     },
 
-    // =========================================================================
-    // Settings
-    // =========================================================================
-
     updateSettings: (partial) => {
       set((s) => ({
         settings: { ...s.settings, ...partial },
@@ -316,10 +276,6 @@ export const useInteractiveStore = create<InteractiveStore>()(
       get().saveToStorage()
     },
 
-    // =========================================================================
-    // Loading
-    // =========================================================================
-
     setLoading: (isLoading) => {
       set({ isLoading })
     },
@@ -331,35 +287,21 @@ export const useInteractiveStore = create<InteractiveStore>()(
       }))
     },
 
-    // =========================================================================
-    // Error
-    // =========================================================================
-
     setError: (error) => {
       set({ error })
     },
 
-    // =========================================================================
-    // Session
-    // =========================================================================
-
     recordInteraction: () => {
       set({ lastInteractionTime: Date.now() })
     },
-
-    // =========================================================================
-    // Persistence
-    // =========================================================================
 
     saveToStorage: () => {
       saveToLocalStorage(get())
     },
 
     loadFromStorage: () => {
-      // First check URL for room
       const urlRoom = getUrlRoom()
 
-      // Then load from localStorage
       const stored = loadFromLocalStorage()
 
       if (stored || urlRoom) {
@@ -368,7 +310,6 @@ export const useInteractiveStore = create<InteractiveStore>()(
           ...stored,
           player: {
             ...(stored?.player ?? s.player),
-            // URL room takes precedence
             currentRoom: urlRoom ?? stored?.player?.currentRoom ?? null,
           },
         }))
@@ -376,28 +317,3 @@ export const useInteractiveStore = create<InteractiveStore>()(
     },
   })),
 )
-
-// =============================================================================
-// Selectors (for optimized subscriptions)
-// =============================================================================
-
-export const selectChunkState = (room: RoomId) => (state: InteractiveStore) =>
-  state.chunkStates.get(room)
-
-export const selectActiveChunk = (state: InteractiveStore) => state.activeChunk
-
-export const selectQualityTier = (state: InteractiveStore) => state.qualityTier
-
-export const selectEffectiveQualityTier = (state: InteractiveStore) => state.effectiveQualityTier
-
-export const selectPlayerPosition = (state: InteractiveStore) => state.player.position
-
-export const selectCurrentRoom = (state: InteractiveStore) => state.player.currentRoom
-
-export const selectSettings = (state: InteractiveStore) => state.settings
-
-export const selectIsLoading = (state: InteractiveStore) => state.isLoading
-
-export const selectLoadingProgress = (state: InteractiveStore) => state.loadingProgress
-
-export const selectError = (state: InteractiveStore) => state.error

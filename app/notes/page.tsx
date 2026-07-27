@@ -1,7 +1,6 @@
 import { allNotes } from 'content-collections'
 import { NoteCard } from '@/components/notes/NoteCard'
-import { markdownToHtml } from '@/lib/markdown'
-import { getBacklinksForNote, getOutgoingLinksForNote } from '@/lib/backlinks'
+import { renderNotes } from '@/lib/notes'
 
 export const metadata = {
   title: 'Notes',
@@ -16,14 +15,7 @@ export default async function NotesPage() {
   // Convert raw markdown to HTML. This runs at build time (static generation)
   // since the page has no dynamic segments or revalidation config.
   // Content-collections returns raw markdown, so we process it here.
-  const notesWithHtml = await Promise.all(
-    sortedNotes.map(async (note) => ({
-      ...note,
-      html: await markdownToHtml(note.content),
-      backlinks: getBacklinksForNote(note.slug),
-      outgoing: getOutgoingLinksForNote(note.slug),
-    })),
-  )
+  const notesWithHtml = await renderNotes(sortedNotes)
 
   return (
     <div className="tg-page max-w-2xl">
@@ -42,19 +34,7 @@ export default async function NotesPage() {
       ) : (
         <div className="border-t border-border-2">
           {notesWithHtml.map((note) => (
-            <NoteCard
-              key={note.slug}
-              slug={note.slug}
-              date={note.date}
-              type={note.type}
-              title={note.title}
-              content={note.html}
-              tags={note.tags}
-              source={note.source}
-              sourceTitle={note.sourceTitle}
-              backlinks={note.backlinks}
-              outgoing={note.outgoing}
-            />
+            <NoteCard key={note.slug} note={note} />
           ))}
         </div>
       )}

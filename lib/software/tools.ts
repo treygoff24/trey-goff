@@ -42,9 +42,9 @@ export interface Station {
 const data = toolsData as { stations: Station[]; tools: Tool[] }
 
 export const stations: Station[] = data.stations
-export const tools: Tool[] = data.tools
+const tools: Tool[] = data.tools
 
-export const featuredTools = tools.filter((t) => t.featured).sort((a, b) => a.order - b.order)
+const featuredTools = tools.filter((t) => t.featured).sort((a, b) => a.order - b.order)
 
 export const ledgerTools = tools
   .filter((t) => !t.featured)

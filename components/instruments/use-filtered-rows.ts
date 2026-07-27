@@ -6,7 +6,7 @@ import { useLedger } from '@/components/instruments/LedgerProvider'
 import { useLedgerStore } from '@/components/instruments/ledger-store'
 import { matchesFilters } from '@/components/instruments/ledger-model'
 
-export { inRange, matchesFilters, matchesQuery } from '@/components/instruments/ledger-model'
+export { matchesFilters } from '@/components/instruments/ledger-model'
 
 export function useVisibleIds(): ReadonlySet<string> {
   const { model } = useLedger()

@@ -4,19 +4,8 @@ import { getAllBooks } from '@/lib/books'
 import bookColors from '@/public/book-colors.json'
 import coverMap from '@/public/cover-map.json'
 import type { EditionCatalogItem } from '@/lib/edition/catalog'
+import type { AppearancesData } from '@/lib/media/types'
 import { getAllTransmissions } from '@/lib/transmissions'
-
-interface AppearanceData {
-  appearances: Array<{
-    id: string
-    title: string
-    show: string
-    type: string
-    date: string
-    url: string
-    summary: string
-  }>
-}
 
 export function visibleEditionEssays<T extends { status: string }>(essays: readonly T[]): T[] {
   return essays.filter((essay) => essay.status !== 'draft')
@@ -137,7 +126,7 @@ const transmissionItems: EditionCatalogItem[] = getAllTransmissions().map((item)
   meta: item.publication,
 }))
 
-const appearanceItems: EditionCatalogItem[] = (appearancesData as AppearanceData).appearances.map(
+const appearanceItems: EditionCatalogItem[] = (appearancesData as AppearancesData).appearances.map(
   (item) => ({
     type: 'transmissions',
     slug: `appearance:${item.id}`,

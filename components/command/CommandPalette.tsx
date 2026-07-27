@@ -38,14 +38,12 @@ export function CommandPalette() {
   const { open, setOpen } = useCommandPalette()
   const { query, setQuery, results, isLoading, initialize, error } = useSearch()
 
-  // Initialize search when palette opens
   useEffect(() => {
     if (open) {
       void initialize()
     }
   }, [open, initialize])
 
-  // Clear query when closing
   useEffect(() => {
     if (!open) {
       setQuery('')
@@ -64,7 +62,6 @@ export function CommandPalette() {
       return
     }
 
-    // Navigate
     router.push(url)
   }
 

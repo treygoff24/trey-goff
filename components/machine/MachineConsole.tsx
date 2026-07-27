@@ -11,7 +11,7 @@ export interface LedgerState {
   history: number[]
 }
 
-type Panel = 'left' | 'right'
+export type Panel = 'left' | 'right'
 
 interface MachineConsoleProps {
   seed: number
