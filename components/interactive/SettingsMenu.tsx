@@ -1,8 +1,9 @@
 'use client'
 
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { cn } from '@/lib/utils'
 import { useInteractiveStore } from '@/lib/interactive/store'
+import { useModalDismiss } from '@/hooks/useModalDismiss'
 import type { QualityTier } from '@/lib/interactive/capabilities'
 
 interface SettingsMenuProps {
@@ -125,72 +126,19 @@ export function SettingsMenu({
   const cameraMode = useInteractiveStore((s) => s.settings.cameraMode)
   const updateSettings = useInteractiveStore((s) => s.updateSettings)
 
-  useEffect(() => {
-    if (!isOpen) return
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose()
-      }
-    }
-
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [isOpen, onClose])
-
-  const handleBackdropClick = useCallback(
-    (e: React.MouseEvent) => {
-      if (e.target === e.currentTarget) {
-        onClose()
-      }
-    },
-    [onClose],
-  )
-
-  const handleBackdropKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose()
-      }
-    },
-    [onClose],
-  )
-
-  // Focus trap
-  useEffect(() => {
-    if (!isOpen || !menuRef.current) return
-
-    const focusableElements = menuRef.current.querySelectorAll<HTMLElement>(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-    )
-    const firstElement = focusableElements[0]
-    const lastElement = focusableElements[focusableElements.length - 1]
-
-    firstElement?.focus()
-
-    const handleTab = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab') return
-
-      if (e.shiftKey && document.activeElement === firstElement) {
-        e.preventDefault()
-        lastElement?.focus()
-      } else if (!e.shiftKey && document.activeElement === lastElement) {
-        e.preventDefault()
-        firstElement?.focus()
-      }
-    }
-
-    document.addEventListener('keydown', handleTab)
-    return () => document.removeEventListener('keydown', handleTab)
-  }, [isOpen])
+  const { onBackdropClick, onBackdropKeyDown } = useModalDismiss({
+    open: isOpen,
+    onClose,
+    containerRef: menuRef,
+  })
 
   if (!isOpen) return null
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-bg-0/80 p-4 backdrop-blur-sm"
-      onClick={handleBackdropClick}
-      onKeyDown={handleBackdropKeyDown}
+      onClick={onBackdropClick}
+      onKeyDown={onBackdropKeyDown}
       role="dialog"
       aria-modal="true"
       aria-labelledby="settings-title"

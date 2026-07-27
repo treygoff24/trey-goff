@@ -5,7 +5,7 @@ import { useFrame } from '@react-three/fiber'
 import { Text } from '@react-three/drei'
 import * as THREE from 'three'
 import { useInteractiveStore } from '@/lib/interactive/store'
-import type { RoomId } from '@/lib/interactive/types'
+import type { ChunkState, RoomId } from '@/lib/interactive/types'
 import { THREE_COLORS } from '@/lib/interactive/colors'
 
 interface DoorTriggerProps {
@@ -44,6 +44,14 @@ const DEFAULT_ACTIVATION_DISTANCE = 3
 const DEFAULT_SIZE: [number, number] = [2, 3]
 
 /**
+ * Placeholder rooms ship without a GLB, so they never reach 'loaded' — 'unloaded' has to
+ * count as enterable or those doors would never open.
+ */
+function canEnter(state: ChunkState | undefined): boolean {
+  return state === 'loaded' || state === 'dormant' || state === 'unloaded' || state === 'preloading'
+}
+
+/**
  * DoorTrigger - Invisible trigger zone that:
  * 1. Preloads target room when player is within preloadDistance
  * 2. Shows interaction prompt when within activationDistance
@@ -77,6 +85,15 @@ export function DoorTrigger({
   const hasTriggeredPreload = useRef(false)
   const isWithinActivation = useRef(false)
 
+  const enterTargetRoom = useCallback(() => {
+    const targetState = chunkStates.get(targetRoom)?.state
+    if (canEnter(targetState)) {
+      onActivate?.(targetRoom, spawnPosition, spawnRotation)
+    } else if (debug) {
+      console.log(`[DoorTrigger] Cannot enter ${targetRoom} - state: ${targetState}`)
+    }
+  }, [chunkStates, targetRoom, spawnPosition, spawnRotation, onActivate, debug])
+
   useFrame(() => {
     if (!enabled) return
 
@@ -102,40 +119,15 @@ export function DoorTrigger({
 
     // Auto-activate when player enters activation zone
     if (isWithinActivation.current && !wasWithin && enabled) {
-      const targetState = chunkStates.get(targetRoom)?.state
-      // Allow transition if chunk is loaded, dormant, or if this is a placeholder room (unloaded)
-      // Placeholder rooms don't have GLB assets so they'll never reach 'loaded'
-      const canEnter =
-        targetState === 'loaded' ||
-        targetState === 'dormant' ||
-        targetState === 'unloaded' ||
-        targetState === 'preloading'
-
-      if (canEnter) {
-        onActivate?.(targetRoom, spawnPosition, spawnRotation)
-      } else if (debug) {
-        console.log(`[DoorTrigger] Cannot enter ${targetRoom} - state: ${targetState}`)
-      }
+      enterTargetRoom()
     }
   })
 
   // This is called by InteractionSystem when player interacts with door mesh
   const handleInteract = useCallback(() => {
     if (!enabled || !isWithinActivation.current) return
-
-    const targetState = chunkStates.get(targetRoom)?.state
-    const canEnter =
-      targetState === 'loaded' ||
-      targetState === 'dormant' ||
-      targetState === 'unloaded' ||
-      targetState === 'preloading'
-
-    if (canEnter) {
-      onActivate?.(targetRoom, spawnPosition, spawnRotation)
-    } else if (debug) {
-      console.log(`[DoorTrigger] Cannot enter ${targetRoom} - state: ${targetState}`)
-    }
-  }, [enabled, chunkStates, targetRoom, spawnPosition, spawnRotation, onActivate, debug])
+    enterTargetRoom()
+  }, [enabled, enterTargetRoom])
 
   useEffect(() => {
     if (groupRef.current) {

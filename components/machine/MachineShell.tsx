@@ -188,6 +188,21 @@ export function MachineShell() {
     }
   }, [])
 
+  /** Pushes the current simulation state into the ledgers and bumps the render version. */
+  const publishLedgers = useCallback((current: MachineRun, isSplit: boolean) => {
+    setLeftLedger((ledger) => ({
+      current: snapshotSimulation(current.left),
+      history: [...ledger.history.slice(-119), current.left.aggregates.totalOutput],
+    }))
+    if (isSplit) {
+      setRightLedger((ledger) => ({
+        current: snapshotSimulation(current.right),
+        history: [...ledger.history.slice(-119), current.right.aggregates.totalOutput],
+      }))
+    }
+    setVersion((value) => value + 1)
+  }, [])
+
   useEffect(() => {
     if (!run || !capabilities || capabilities.reducedMotion || paused) return
     let frame = 0
@@ -208,17 +223,7 @@ export function MachineShell() {
       }
       if (run.left.tick - lastPublishedTick >= PARAMS.ticksPerSecond) {
         lastPublishedTick = run.left.tick
-        setLeftLedger((ledger) => ({
-          current: snapshotSimulation(run.left),
-          history: [...ledger.history.slice(-119), run.left.aggregates.totalOutput],
-        }))
-        if (split) {
-          setRightLedger((ledger) => ({
-            current: snapshotSimulation(run.right),
-            history: [...ledger.history.slice(-119), run.right.aggregates.totalOutput],
-          }))
-        }
-        setVersion((value) => value + 1)
+        publishLedgers(run, split)
       }
       frame = requestAnimationFrame(animate)
     }
@@ -237,7 +242,7 @@ export function MachineShell() {
       cancelAnimationFrame(frame)
       document.removeEventListener('visibilitychange', onVisibility)
     }
-  }, [capabilities, paused, run, split])
+  }, [capabilities, paused, run, split, publishLedgers])
 
   useEffect(() => {
     const chrome = document.querySelectorAll<HTMLElement>('header, footer')
@@ -321,18 +326,8 @@ export function MachineShell() {
     if (!run) return
     advanceSimulation(run.left, PARAMS.ticksPerYear * 5)
     if (split) advanceSimulation(run.right, PARAMS.ticksPerYear * 5)
-    setLeftLedger((ledger) => ({
-      current: snapshotSimulation(run.left),
-      history: [...ledger.history.slice(-119), run.left.aggregates.totalOutput],
-    }))
-    if (split) {
-      setRightLedger((ledger) => ({
-        current: snapshotSimulation(run.right),
-        history: [...ledger.history.slice(-119), run.right.aggregates.totalOutput],
-      }))
-    }
-    setVersion((value) => value + 1)
-  }, [run, split])
+    publishLedgers(run, split)
+  }, [run, split, publishLedgers])
 
   const reducedMotion = capabilities?.reducedMotion ?? false
   const worldVersion = reducedMotion ? version : 0

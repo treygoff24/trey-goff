@@ -2,12 +2,13 @@ import Link from 'next/link'
 import { formatDateRelative } from '@/lib/utils'
 import { RelatedLinks } from '@/components/content/RelatedLinks'
 
-interface NoteCardProps {
+/** A note record with its markdown already rendered and its link graph attached. */
+export interface NoteCardNote {
   slug: string
   date: string
   type: 'thought' | 'dispatch' | 'link'
   title?: string
-  content: string
+  html: string
   tags: string[]
   source?: string
   sourceTitle?: string
@@ -21,18 +22,20 @@ const typeLabels = {
   link: 'Link',
 }
 
-export function NoteCard({
-  slug,
-  date,
-  type,
-  title,
-  content,
-  tags,
-  source,
-  sourceTitle,
-  backlinks = [],
-  outgoing = [],
-}: NoteCardProps) {
+export function NoteCard({ note }: { note: NoteCardNote }) {
+  const {
+    slug,
+    date,
+    type,
+    title,
+    html,
+    tags,
+    source,
+    sourceTitle,
+    backlinks = [],
+    outgoing = [],
+  } = note
+
   return (
     <article id={slug} className="group border-b border-border-1 py-10 first:pt-0">
       <div className="mb-4 flex items-baseline justify-between gap-4">
@@ -61,7 +64,7 @@ export function NoteCard({
       )}
 
       <div className="text-text-2 prose prose-sm max-w-none">
-        <div dangerouslySetInnerHTML={{ __html: content }} />
+        <div dangerouslySetInnerHTML={{ __html: html }} />
       </div>
 
       {type === 'link' && source && (

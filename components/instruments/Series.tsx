@@ -34,14 +34,7 @@ export default function Series({ chart }: { chart: SeriesChart }) {
   )
 
   return (
-    <ChartFrame
-      id={chart.id}
-      title={chart.title}
-      summary={chart.summary}
-      caption={chart.caption}
-      source={chart.source}
-      entries={entries}
-    >
+    <ChartFrame chart={chart} entries={entries}>
       {({ width, active, preview, detail }) => {
         const compact = isCompact(width)
         // The x-axis label and the tick labels are two rows, not one. Sharing a baseline put

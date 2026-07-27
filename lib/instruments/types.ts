@@ -458,6 +458,8 @@ export type ForecastCard = z.infer<typeof forecastCardSchema>
 export type Confidence = z.infer<typeof confidenceSchema>
 export type MarginNote = z.infer<typeof marginNoteSchema>
 export type ChartTone = z.infer<typeof chartToneSchema>
+/** The fields `ChartFrame` draws its furniture from — shared by every chart kind. */
+export type ChartFrameFields = z.infer<z.ZodObject<typeof chartFrameFields>>
 export type SlopeChart = z.infer<typeof slopeChartSchema>
 export type SeriesChart = z.infer<typeof seriesChartSchema>
 export type BarsChart = z.infer<typeof barsChartSchema>

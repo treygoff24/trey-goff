@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
+import { useModalDismiss } from '@/hooks/useModalDismiss'
 
 export interface OverlayContent {
   type: 'book' | 'project' | 'post' | 'generic'
@@ -125,64 +126,11 @@ export function ContentOverlay({ content, onClose, reducedMotion = false }: Cont
     }
   }, [content])
 
-  useEffect(() => {
-    if (!content) return
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose()
-      }
-    }
-
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [content, onClose])
-
-  const handleBackdropClick = useCallback(
-    (e: React.MouseEvent) => {
-      if (e.target === e.currentTarget) {
-        onClose()
-      }
-    },
-    [onClose],
-  )
-
-  const handleBackdropKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose()
-      }
-    },
-    [onClose],
-  )
-
-  // Focus trap
-  useEffect(() => {
-    if (!content || !overlayRef.current) return
-
-    const focusableElements = overlayRef.current.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-    )
-    const firstElement = focusableElements[0] as HTMLElement
-    const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement
-
-    firstElement?.focus()
-
-    const handleTab = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab') return
-
-      if (e.shiftKey && document.activeElement === firstElement) {
-        e.preventDefault()
-        lastElement?.focus()
-      } else if (!e.shiftKey && document.activeElement === lastElement) {
-        e.preventDefault()
-        firstElement?.focus()
-      }
-    }
-
-    document.addEventListener('keydown', handleTab)
-    return () => document.removeEventListener('keydown', handleTab)
-  }, [content])
+  const { onBackdropClick, onBackdropKeyDown } = useModalDismiss({
+    open: content,
+    onClose,
+    containerRef: overlayRef,
+  })
 
   if (!content) return null
 
@@ -192,8 +140,8 @@ export function ContentOverlay({ content, onClose, reducedMotion = false }: Cont
         'fixed inset-0 z-50 flex items-center justify-center bg-bg-0/80 p-4 backdrop-blur-sm',
         !reducedMotion && 'animate-fade-in',
       )}
-      onClick={handleBackdropClick}
-      onKeyDown={handleBackdropKeyDown}
+      onClick={onBackdropClick}
+      onKeyDown={onBackdropKeyDown}
       role="dialog"
       aria-modal="true"
       aria-labelledby="overlay-title"

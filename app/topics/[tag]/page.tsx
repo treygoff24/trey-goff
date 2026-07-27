@@ -3,11 +3,10 @@ import { notFound } from 'next/navigation'
 import { EssayCard } from '@/components/writing/EssayCard'
 import { NoteCard } from '@/components/notes/NoteCard'
 import { TagPill } from '@/components/ui/TagPill'
-import { markdownToHtml } from '@/lib/markdown'
 import { cn } from '@/lib/utils'
 import { getTopicContent, getTopicHref, getTopicsIndex } from '@/lib/topics'
 import type { Project } from '@/lib/topics'
-import { getBacklinksForNote, getOutgoingLinksForNote } from '@/lib/backlinks'
+import { renderNotes } from '@/lib/notes'
 import { generateBreadcrumbSchema } from '@/lib/structured-data'
 import { siteUrl } from '@/lib/site-config'
 import { serializeJsonLd } from '@/lib/safe-json-ld'
@@ -96,14 +95,7 @@ export default async function TopicPage({ params }: PageProps) {
     return a.name.localeCompare(b.name)
   })
 
-  const notesWithHtml = await Promise.all(
-    sortedNotes.map(async (note) => ({
-      ...note,
-      html: await markdownToHtml(note.content),
-      backlinks: getBacklinksForNote(note.slug),
-      outgoing: getOutgoingLinksForNote(note.slug),
-    })),
-  )
+  const notesWithHtml = await renderNotes(sortedNotes)
 
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: 'Home', url: siteUrl },
@@ -175,19 +167,7 @@ export default async function TopicPage({ params }: PageProps) {
           ) : (
             <div className="space-y-6">
               {notesWithHtml.map((note) => (
-                <NoteCard
-                  key={note.slug}
-                  slug={note.slug}
-                  date={note.date}
-                  type={note.type}
-                  title={note.title}
-                  content={note.html}
-                  tags={note.tags}
-                  source={note.source}
-                  sourceTitle={note.sourceTitle}
-                  backlinks={note.backlinks}
-                  outgoing={note.outgoing}
-                />
+                <NoteCard key={note.slug} note={note} />
               ))}
             </div>
           )}
