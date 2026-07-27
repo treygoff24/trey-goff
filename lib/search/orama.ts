@@ -22,7 +22,6 @@ export async function initializeSearch(): Promise<Orama<OramaSchema>> {
 
   initPromise = (async () => {
     try {
-      // Fetch the pre-built index
       const response = await fetch('/search-index.json')
       if (!response.ok) {
         throw new Error(`Search index request failed: ${response.status}`)
@@ -30,7 +29,6 @@ export async function initializeSearch(): Promise<Orama<OramaSchema>> {
 
       const index: SearchIndex = await response.json()
 
-      // Create Orama database
       const created = create({
         schema: {
           id: 'string',
@@ -45,7 +43,6 @@ export async function initializeSearch(): Promise<Orama<OramaSchema>> {
         },
       })
 
-      // Insert all documents
       for (const doc of index.documents) {
         await insert(created, {
           id: doc.id,

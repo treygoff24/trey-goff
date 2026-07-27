@@ -38,7 +38,6 @@ test.describe('Command Palette', () => {
       await page.keyboard.press('Escape')
       await expect(commandPalette.dialog).not.toBeVisible()
 
-      // Reopen and verify query is cleared
       await commandPalette.openCommandPalette()
       await expect(commandPalette.searchInput).toHaveValue('')
     })
@@ -125,7 +124,6 @@ test.describe('Command Palette', () => {
     test('should filter results as user types', async () => {
       await commandPalette.openCommandPalette()
 
-      // Type a query
       await commandPalette.search('writing')
 
       await expect
@@ -134,7 +132,6 @@ test.describe('Command Palette', () => {
         })
         .toBeGreaterThan(0)
 
-      // Results should contain writing-related items
       const results = await commandPalette.getVisibleResults()
       const resultsText = results.join(' ').toLowerCase()
       expect(resultsText).toContain('writing')
@@ -157,7 +154,6 @@ test.describe('Command Palette', () => {
         })
         .toBeGreaterThan(0)
 
-      // Click on a result
       await commandPalette.selectResult('Library')
 
       await expect(page).toHaveURL('/library', { timeout: navigationTimeout })
@@ -196,10 +192,8 @@ test.describe('Command Palette', () => {
     test('should navigate results with arrow keys', async ({ page }) => {
       await commandPalette.openCommandPalette()
 
-      // Press down arrow to select first item
       await page.keyboard.press('ArrowDown')
 
-      // One item should be selected (aria-selected)
       await expect
         .poll(async () => commandPalette.commandList.locator('[aria-selected="true"]').count(), {
           timeout: 5000,
@@ -210,12 +204,10 @@ test.describe('Command Palette', () => {
     test('should select result with Enter key', async ({ page }) => {
       await commandPalette.openCommandPalette()
 
-      // Navigate to Writing
       await page.keyboard.press('ArrowDown')
       await page.keyboard.press('ArrowDown') // Move to Writing (second item)
       await page.keyboard.press('Enter')
 
-      // Should close palette and navigate
       await expect(commandPalette.dialog).not.toBeVisible()
     })
   })
@@ -239,11 +231,9 @@ test.describe('Command Palette - Mobile', () => {
   test('should be usable on mobile viewport', async ({ page }) => {
     await commandPalette.openCommandPalette()
 
-    // Dialog should be visible and properly sized
     await expect(commandPalette.dialog).toBeVisible()
     await expect(commandPalette.searchInput).toBeVisible()
 
-    // Navigation should work
     await commandPalette.selectResultExact('Library')
     await expect(page).toHaveURL('/library', { timeout: navigationTimeout })
   })

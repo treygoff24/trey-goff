@@ -15,14 +15,12 @@ type BookCoverSource = 'manual' | 'openlibrary' | 'google' | 'placeholder'
 type BookCoverCache = CoverCache<BookCoverSource>
 
 async function resolveBookCover(book: Book): Promise<string> {
-  // 1. Manual override
   if (book.coverUrl) {
     return book.coverUrl
   }
 
   const isbn = book.isbn13 || book.isbn
 
-  // 2. Try Open Library
   if (isbn) {
     const olCover = await fetchOpenLibraryCover(isbn)
     if (olCover) {
@@ -30,13 +28,11 @@ async function resolveBookCover(book: Book): Promise<string> {
     }
   }
 
-  // 3. Try Google Books
   const googleCover = await fetchGoogleBooksCover(isbn, book.title, book.author)
   if (googleCover) {
     return googleCover
   }
 
-  // 4. Generate placeholder
   return generatePlaceholderCover(book.title, book.author)
 }
 
@@ -52,7 +48,6 @@ export async function resolveAllCovers(books: Book[]): Promise<Map<string, strin
   }
 
   for (const book of books) {
-    // Check cache first (unless manual override)
     const cachedEntry = cache[book.id]
     if (cachedEntry && !book.coverUrl) {
       results.set(book.id, cachedEntry.url)

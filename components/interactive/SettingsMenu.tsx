@@ -125,7 +125,6 @@ export function SettingsMenu({
   const cameraMode = useInteractiveStore((s) => s.settings.cameraMode)
   const updateSettings = useInteractiveStore((s) => s.updateSettings)
 
-  // Close on Escape key
   useEffect(() => {
     if (!isOpen) return
 
@@ -139,7 +138,6 @@ export function SettingsMenu({
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, onClose])
 
-  // Close on click outside
   const handleBackdropClick = useCallback(
     (e: React.MouseEvent) => {
       if (e.target === e.currentTarget) {

@@ -75,7 +75,6 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
         color: node.color,
         x: Math.random() * 100,
         y: Math.random() * 100,
-        // Store metadata for inspector
         nodeType: node.type,
         url: node.url,
         meta: node.meta,
@@ -83,7 +82,6 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
     }
 
     for (const edge of data.edges) {
-      // Skip if nodes don't exist
       if (!graph.hasNode(edge.source) || !graph.hasNode(edge.target)) continue
 
       try {
@@ -97,7 +95,6 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
       }
     }
 
-    // Run ForceAtlas2 layout
     setIsLayoutRunning(true)
     forceAtlas2.assign(graph, {
       iterations: 100,

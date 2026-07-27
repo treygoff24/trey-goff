@@ -89,7 +89,6 @@ export interface RecoveryResult {
  * Get recovery strategy for an error.
  */
 export function getRecoveryStrategy(error: Error, currentAttempts: number): RecoveryResult {
-  // Context lost - prompt reload
   if (error instanceof ContextLostError) {
     recordContextLost()
     return {
@@ -99,7 +98,6 @@ export function getRecoveryStrategy(error: Error, currentAttempts: number): Reco
     }
   }
 
-  // Chunk load failure - retry with backoff
   if (error instanceof ChunkLoadError) {
     if (error.attempts < 3) {
       return {
@@ -115,7 +113,6 @@ export function getRecoveryStrategy(error: Error, currentAttempts: number): Reco
     }
   }
 
-  // Memory exhaustion - try to recover
   if (error instanceof MemoryExhaustionError) {
     recordMemoryWarning(error.usedMb, error.estimatedLimitMb)
     if (currentAttempts < 2) {
@@ -132,7 +129,6 @@ export function getRecoveryStrategy(error: Error, currentAttempts: number): Reco
     }
   }
 
-  // Shader error - use fallback materials
   if (error instanceof ShaderError) {
     return {
       success: true,
@@ -141,7 +137,6 @@ export function getRecoveryStrategy(error: Error, currentAttempts: number): Reco
     }
   }
 
-  // Unknown error - generic handling
   if (currentAttempts < 3) {
     return {
       success: true,

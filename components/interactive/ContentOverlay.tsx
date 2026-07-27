@@ -125,7 +125,6 @@ export function ContentOverlay({ content, onClose, reducedMotion = false }: Cont
     }
   }, [content])
 
-  // Close on Escape key
   useEffect(() => {
     if (!content) return
 
@@ -139,7 +138,6 @@ export function ContentOverlay({ content, onClose, reducedMotion = false }: Cont
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [content, onClose])
 
-  // Close on click outside
   const handleBackdropClick = useCallback(
     (e: React.MouseEvent) => {
       if (e.target === e.currentTarget) {

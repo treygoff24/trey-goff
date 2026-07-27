@@ -98,17 +98,14 @@ function suggestQualityTier(caps: {
   maxTextureSize: number | null
   renderer: string | null
 }): QualityTier {
-  // If no WebGL2, can't run at all
   if (!caps.webgl2) {
     return 'low' // Will be handled by fallback UI
   }
 
-  // Mobile always defaults to low
   if (caps.isMobile) {
     return 'low'
   }
 
-  // Check for known high-end GPUs
   if (caps.renderer) {
     const rendererLower = caps.renderer.toLowerCase()
     const isHighEnd =
@@ -116,14 +113,12 @@ function suggestQualityTier(caps: {
         rendererLower,
       )
     if (isHighEnd) {
-      // High memory + high-end GPU = high tier
       if (caps.deviceMemory && caps.deviceMemory >= 8) {
         return 'high'
       }
       return 'medium'
     }
 
-    // Check for integrated GPUs
     const isIntegrated =
       /intel|integrated|uhd|iris/i.test(rendererLower) && !/arc/i.test(rendererLower) // Intel Arc is dedicated
     if (isIntegrated) {
@@ -131,7 +126,6 @@ function suggestQualityTier(caps: {
     }
   }
 
-  // Check device memory
   if (caps.deviceMemory !== null) {
     if (caps.deviceMemory >= 8) {
       return 'medium'
@@ -141,6 +135,5 @@ function suggestQualityTier(caps: {
     }
   }
 
-  // Default to medium
   return 'medium'
 }

@@ -63,7 +63,6 @@ export async function fetchGoogleBooksCover(
   return null
 }
 
-// Generate placeholder SVG
 export function generatePlaceholderCover(title: string, author: string): string {
   // Create a gradient based on title hash for variety
   const hash = title.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)

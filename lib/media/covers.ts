@@ -11,12 +11,10 @@ type AppearanceCoverSource = 'manual' | 'youtube' | 'itunes' | 'placeholder'
 type AppearanceCoverCache = CoverCache<AppearanceCoverSource>
 
 async function resolveAppearanceCover(appearance: Appearance): Promise<string> {
-  // 1. Manual override via showArtwork
   if (appearance.showArtwork) {
     return appearance.showArtwork
   }
 
-  // 2. Try YouTube if we have a YouTube URL
   const youtubeUrl = appearance.youtubeUrl || appearance.url
   if (youtubeUrl.includes('youtube.com') || youtubeUrl.includes('youtu.be')) {
     const ytThumb = await verifyYouTubeThumbnail(youtubeUrl)
@@ -25,7 +23,6 @@ async function resolveAppearanceCover(appearance: Appearance): Promise<string> {
     }
   }
 
-  // 3. Try iTunes Search API for podcast artwork
   if (
     appearance.type === 'podcast' ||
     appearance.type === 'interview' ||
@@ -38,7 +35,6 @@ async function resolveAppearanceCover(appearance: Appearance): Promise<string> {
     }
   }
 
-  // 4. Generate placeholder
   return generatePlaceholderCover(appearance.title, appearance.show, appearance.type)
 }
 
@@ -54,7 +50,6 @@ export async function resolveAllCovers(appearances: Appearance[]): Promise<Map<s
   }
 
   for (const appearance of appearances) {
-    // Check cache first (unless manual override)
     const cachedEntry = cache[appearance.id]
     if (cachedEntry && !appearance.showArtwork) {
       results.set(appearance.id, cachedEntry.url)

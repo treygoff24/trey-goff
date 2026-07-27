@@ -2,7 +2,6 @@ import { mkdirSync } from 'fs'
 import { generateSearchIndex } from '../lib/search/generate-index'
 import { writeStableJsonFile } from './lib/stable-json'
 
-// Ensure public directory exists
 mkdirSync('./public', { recursive: true })
 
 const index = generateSearchIndex()

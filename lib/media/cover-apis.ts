@@ -23,7 +23,6 @@ export async function fetchPodcastArtwork(podcastName: string): Promise<string |
       const result = match || data.results[0]
 
       // iTunes returns artworkUrl60, artworkUrl100, artworkUrl600
-      // Get highest resolution available
       if (result.artworkUrl600) {
         return result.artworkUrl600
       }
@@ -38,7 +37,6 @@ export async function fetchPodcastArtwork(podcastName: string): Promise<string |
   return null
 }
 
-// Extract YouTube video ID from various URL formats
 function extractYouTubeId(url: string): string | null {
   const patterns = [/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s?]+)/]
   for (const pattern of patterns) {
@@ -73,7 +71,6 @@ export async function verifyYouTubeThumbnail(url: string): Promise<string | null
   return null
 }
 
-// Generate placeholder SVG for appearances
 export function generatePlaceholderCover(
   title: string,
   showName: string,
@@ -83,7 +80,6 @@ export function generatePlaceholderCover(
   const hash = (title + showName).split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
   const hue = hash % 360
 
-  // Icon based on type
   const iconPaths: Record<string, string> = {
     podcast:
       'M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3h-1.75c0 2.03-1.64 3.68-3.66 3.91V17h-1v-2.09C9.15 14.68 7.51 13.03 7.51 11H5.75c0 3.04 2.35 5.54 5.25 5.91V20h2v-3.09c2.9-.37 5.25-2.87 5.25-5.91h-0.09z',

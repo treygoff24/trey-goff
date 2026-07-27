@@ -35,7 +35,6 @@ test.describe('Notes Page', () => {
 
       if (cardCount > 0) {
         const firstCard = notesPage.noteCards.first()
-        // Should show type (Thought, Dispatch, or Link)
         const hasType = await firstCard.getByText(/Thought|Dispatch|Link/).isVisible()
         expect(hasType).toBe(true)
       } else {
@@ -58,7 +57,6 @@ test.describe('Notes Page', () => {
 
       if (cardCount > 0) {
         const firstCard = notesPage.noteCards.first()
-        // Content should be visible (rendered HTML)
         const content = firstCard.locator('.prose')
         await expect(content).toBeVisible()
       } else {
@@ -89,14 +87,11 @@ test.describe('Notes Page', () => {
         const firstCard = notesPage.noteCards.first()
         const id = await firstCard.getAttribute('id')
 
-        // Hover to reveal anchor link
         await firstCard.hover()
 
-        // Click anchor link
         const anchorLink = firstCard.getByRole('link', { name: 'Link to this note' })
         await anchorLink.click()
 
-        // URL should contain the hash
         await expect(page).toHaveURL(new RegExp(`#${id}`))
       } else {
         test.skip()
@@ -110,10 +105,8 @@ test.describe('Notes Page', () => {
         const firstCard = notesPage.noteCards.first()
         const id = await firstCard.getAttribute('id')
 
-        // Navigate directly to the hash
         await page.goto(`/notes#${id}`)
 
-        // The note should be in the viewport (scrolled to)
         const isInViewport = await firstCard.isVisible()
         expect(isInViewport).toBe(true)
       } else {
@@ -129,7 +122,6 @@ test.describe('Notes Page', () => {
 
       if (count > 0) {
         const firstThought = thoughtNotes.first()
-        // Should have thought emoji
         await expect(firstThought.getByText('Thought')).toBeVisible()
       }
     })
@@ -152,7 +144,6 @@ test.describe('Notes Page', () => {
         const firstLink = linkNotes.first()
         await expect(firstLink.getByText('Link')).toBeVisible()
 
-        // Link notes should have external source link
         const externalLink = firstLink.locator('a[target="_blank"]')
         const hasExternal = await externalLink.count()
         // Not all link-type notes might have source, so just check if visible when present
@@ -235,7 +226,6 @@ test.describe('Notes Page - Mobile', () => {
     if (cardCount > 0) {
       const firstCard = notesPage.noteCards.first()
 
-      // Card should be visible and reasonably sized
       const box = await firstCard.boundingBox()
       expect(box).toBeTruthy()
       expect(box!.width).toBeLessThanOrEqual(375) // Should fit mobile width

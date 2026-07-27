@@ -50,31 +50,26 @@ function checkCameraCollision(
   raycaster.set(origin, direction)
   raycaster.far = maxDistance
 
-  // Get all meshes that could block the camera
   const intersects = raycaster.intersectObjects(scene.children, true)
 
   for (const intersection of intersects) {
     const obj = intersection.object
 
-    // Skip objects tagged to ignore camera collision
     if (obj.userData?.cameraIgnore) continue
 
     // Skip transparent objects (handle both single and multi-material)
     const material = (obj as THREE.Mesh).material
     if (material) {
       if (Array.isArray(material)) {
-        // Multi-material: skip if all materials are transparent
         if (material.every((m) => m.transparent)) continue
       } else if ((material as THREE.Material).transparent) {
         continue
       }
     }
 
-    // Skip ground planes (check by geometry type or name)
     if (obj.name === 'ground' || obj.name === 'grid') continue
     if (obj.parent?.name === 'player') continue
 
-    // Found a collision - return safe distance
     return Math.max(MIN_DISTANCE, intersection.distance - COLLISION_OFFSET)
   }
 
@@ -115,7 +110,6 @@ export function CameraController({
       currentPosition.current.copy(targetVec.current)
       currentPosition.current.y += lookAtHeight
     } else {
-      // Third-person: position behind and above target
       // Use same +sin/+cos as per-frame update for consistency
       currentPosition.current.set(
         targetVec.current.x + Math.sin(targetYaw) * actualDistance,
@@ -132,15 +126,12 @@ export function CameraController({
     const pitch = targetPitch ?? 0
 
     if (actualMode === 'first-person') {
-      // First-person: camera at eye level, looking forward
       desiredPosition.current.copy(targetVec.current)
       desiredPosition.current.y += lookAtHeight
 
-      // Smooth transition
       currentPosition.current.lerp(desiredPosition.current, lerpFactor)
       camera.position.copy(currentPosition.current)
 
-      // Apply pitch to Y offset of look target
       const lookDistance = 10
       lookAtPoint.current.set(
         currentPosition.current.x - Math.sin(targetYaw) * lookDistance * Math.cos(pitch),
@@ -149,7 +140,6 @@ export function CameraController({
       )
       camera.lookAt(lookAtPoint.current)
     } else {
-      // Third-person: camera behind and above target
       desiredPosition.current.set(
         targetVec.current.x + Math.sin(targetYaw) * actualDistance,
         targetVec.current.y + heightOffset,
@@ -165,7 +155,6 @@ export function CameraController({
         scene,
       )
 
-      // Apply safe distance if collision detected
       if (safeDistance < actualDistance) {
         desiredPosition.current.set(
           targetVec.current.x + Math.sin(targetYaw) * safeDistance,
@@ -174,11 +163,9 @@ export function CameraController({
         )
       }
 
-      // Smooth transition
       currentPosition.current.lerp(desiredPosition.current, lerpFactor)
       camera.position.copy(currentPosition.current)
 
-      // Pitch adjusts the look height relative to target
       lookAtPoint.current.copy(targetVec.current)
       lookAtPoint.current.y += lookAtHeight + Math.sin(pitch) * 5
       camera.lookAt(lookAtPoint.current)

@@ -34,7 +34,6 @@ const typeIcons: Record<SearchResultType, React.ReactNode> = {
 }
 
 export function CommandResults({ results, onSelect }: CommandResultsProps) {
-  // Group results by type
   const grouped = results.reduce<Partial<Record<SearchResultType, SearchResult[]>>>(
     (acc, result) => {
       const type = result.type

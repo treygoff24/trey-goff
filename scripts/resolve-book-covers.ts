@@ -24,17 +24,13 @@ async function downloadImage(url: string, filepath: string): Promise<boolean> {
 async function main() {
   console.log('Resolving book covers...')
 
-  // Ensure directories exist
   mkdirSync('./public', { recursive: true })
   mkdirSync(COVERS_DIR, { recursive: true })
 
-  // Load books
   const booksData: BooksData = JSON.parse(readFileSync('./content/library/books.json', 'utf-8'))
 
-  // First, resolve URLs using the existing system
   const coverUrls = await resolveAllCovers(booksData.books)
 
-  // Now download each cover locally
   const coverMap: Record<string, string> = {}
   let downloaded = 0
   let skipped = 0
@@ -43,7 +39,6 @@ async function main() {
     const localPath = `${COVERS_DIR}/${bookId}.jpg`
     const publicPath = `/covers/${bookId}.jpg`
 
-    // Skip if already downloaded
     if (existsSync(localPath)) {
       coverMap[bookId] = publicPath
       skipped++
@@ -64,7 +59,6 @@ async function main() {
       downloaded++
     } else {
       // Fall back to the original URL (will fail due to CORS, but better than nothing)
-      // Or generate placeholder
       console.warn(`  Failed to download, using placeholder for: ${bookId}`)
       coverMap[bookId] = generateLocalPlaceholder(
         bookId,
@@ -76,7 +70,6 @@ async function main() {
     await new Promise((resolve) => setTimeout(resolve, 100))
   }
 
-  // Write cover mapping
   writeFileSync('./public/cover-map.json', JSON.stringify(coverMap, null, 2))
 
   console.log(`\nCover resolution complete:`)

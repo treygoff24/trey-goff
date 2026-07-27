@@ -33,13 +33,11 @@ export function TableOfContents({ contentSelector, sourceId }: TableOfContentsPr
   const [activeId, setActiveId] = useState<string>('')
   const [items, setItems] = useState<TocItem[]>([])
 
-  // Parse headings from rendered DOM
   useEffect(() => {
     setItems(parseHeadingsFromDom(contentSelector))
     setActiveId('')
   }, [contentSelector, sourceId])
 
-  // Track active heading on scroll
   useEffect(() => {
     const headings = items.flatMap((item) => {
       const heading = document.getElementById(item.id)

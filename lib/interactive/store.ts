@@ -166,7 +166,6 @@ export const useInteractiveStore = create<InteractiveStore>()(
     activateChunk: (room: RoomId) => {
       const initialState = get()
 
-      // Mark previous active chunk as dormant
       if (initialState.activeChunk && initialState.activeChunk !== room) {
         get().setChunkState(initialState.activeChunk, 'dormant')
       }
@@ -311,7 +310,6 @@ export const useInteractiveStore = create<InteractiveStore>()(
           ...stored,
           player: {
             ...(stored?.player ?? s.player),
-            // URL room takes precedence
             currentRoom: urlRoom ?? stored?.player?.currentRoom ?? null,
           },
         }))

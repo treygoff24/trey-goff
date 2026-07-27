@@ -52,7 +52,6 @@ export function GraphClient({ data }: GraphClientProps) {
     hasAppliedMobileDefaultRef.current = true
   }, [isMobile])
 
-  // Filter data based on visible types
   const filteredData = useMemo(() => {
     const filteredNodes = data.nodes.filter((node) => visibleTypes.has(node.type))
     const nodeIds = new Set(filteredNodes.map((n) => n.id))
@@ -62,7 +61,6 @@ export function GraphClient({ data }: GraphClientProps) {
     return { nodes: filteredNodes, edges: filteredEdges }
   }, [data, visibleTypes])
 
-  // Toggle node type visibility
   const toggleType = (type: NodeType) => {
     setVisibleTypes((prev) => {
       const next = new Set(prev)
@@ -75,7 +73,6 @@ export function GraphClient({ data }: GraphClientProps) {
     })
   }
 
-  // Count nodes by type
   const typeCounts = useMemo(() => {
     const counts: Record<NodeType, number> = {
       essay: 0,

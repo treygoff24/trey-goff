@@ -120,14 +120,12 @@ async function compressAsset(
   cleanOldVersions(outputDir, baseName)
 
   try {
-    // Step 1: Apply Meshopt compression
     execFileSync(
       'npx',
       ['gltf-transform', 'optimize', sourcePath, tempPath, '--compress', 'meshopt'],
       { stdio: 'pipe' },
     )
 
-    // Step 2: Apply KTX2 texture compression
     // Note: Requires KTX-Software CLI tools installed
     // For CI, we'll skip KTX2 if toktx isn't available
     const ktx2Mode = useUastc ? 'uastc' : 'etc1s'
@@ -160,7 +158,6 @@ async function compressAsset(
     }
   } catch (error) {
     console.error(`    Error compressing ${sourceName}:`, error)
-    // Clean up temp file if it exists
     if (fs.existsSync(tempPath)) {
       fs.unlinkSync(tempPath)
     }
@@ -206,7 +203,6 @@ async function main(): Promise<void> {
   ensureDir(CONFIG.propOutputDir)
   ensureDir(CONFIG.manifestDir)
 
-  // Check if source directory has any GLB files
   const sourceFiles = fs.existsSync(CONFIG.sourceDir)
     ? fs.readdirSync(CONFIG.sourceDir).filter((f) => f.endsWith('.glb'))
     : []

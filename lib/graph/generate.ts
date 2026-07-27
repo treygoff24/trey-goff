@@ -50,7 +50,6 @@ export function generateGraphData(): GraphData {
   const edges: GraphEdge[] = []
   const tagNodes = new Map<string, string>() // tag -> nodeId
 
-  // Helper to get or create a tag node
   function getTagNode(tag: string): string {
     const existingId = tagNodes.get(tag)
     if (existingId) return existingId

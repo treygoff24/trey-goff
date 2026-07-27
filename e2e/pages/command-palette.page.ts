@@ -44,7 +44,6 @@ export class CommandPalettePage extends BasePage {
 
   async search(query: string) {
     await this.searchInput.fill(query)
-    // Wait for search results to update
     await this.page.waitForTimeout(100)
   }
 
@@ -70,7 +69,6 @@ export class CommandPalettePage extends BasePage {
   }
 
   async selectResultByKeyboard(text: string) {
-    // Use arrow keys to navigate to the item, then press Enter
     const items = await this.commandList.getByRole('option').all()
     for (let i = 0; i < items.length; i++) {
       const item = items[i]

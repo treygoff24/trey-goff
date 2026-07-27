@@ -2,7 +2,6 @@ import appearancesData from '@/content/media/appearances.json'
 import appearanceCovers from '@/public/appearance-covers.json'
 import type { Appearance, AppearancesData, AppearanceType } from './types'
 
-// Pre-resolved cover map
 const coverMap = appearanceCovers as Record<string, string>
 
 export function getAllAppearances(): Appearance[] {

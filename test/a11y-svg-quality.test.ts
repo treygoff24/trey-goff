@@ -27,7 +27,6 @@ describe('A11y: SVG icons, quality buttons, loading', () => {
       const shellPath = path.join(process.cwd(), 'components/interactive/InteractiveShell.tsx')
       const content = await fs.readFile(shellPath, 'utf-8')
 
-      // Find the quality tier selection section (around line 218-236)
       // Look for the div containing all four quality buttons
       const qualityButtonsPattern =
         /<div[\s\S]*?className="grid grid-cols-4[^"]*"[\s\S]*?>[\s\S]*?['"]auto['"][\s\S]*?['"]low['"][\s\S]*?['"]medium['"][\s\S]*?['"]high['"][\s\S]*?<\/div>/
@@ -35,11 +34,9 @@ describe('A11y: SVG icons, quality buttons, loading', () => {
 
       assert.ok(qualitySection, 'Should find quality tier buttons section')
 
-      // Check for role="group" in the quality buttons container
       const hasRoleGroup = /role="group"/.test(qualitySection[0])
       assert.ok(hasRoleGroup, 'Quality buttons container should have role="group"')
 
-      // Check for accessible naming via either aria-label or aria-labelledby
       const hasAccessibleName =
         /aria-label="[^"]*[Qq]uality[^"]*"/.test(qualitySection[0]) ||
         /aria-labelledby="[^"]+"/.test(qualitySection[0])
@@ -55,7 +52,6 @@ describe('A11y: SVG icons, quality buttons, loading', () => {
       const loadingPath = path.join(process.cwd(), 'components/interactive/LoadingSequence.tsx')
       const content = await fs.readFile(loadingPath, 'utf-8')
 
-      // Count aria-live occurrences
       const ariaLiveMatches = content.match(/aria-live="[^"]+"/g)
       const count = ariaLiveMatches ? ariaLiveMatches.length : 0
 

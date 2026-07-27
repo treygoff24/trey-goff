@@ -44,7 +44,6 @@ export function TransitionOverlay({
   const [state, setState] = useState<TransitionState>('idle')
   const [opacity, setOpacity] = useState(0)
 
-  // Actual durations (0 if reduced motion)
   const fadeDuration = reducedMotion ? 0 : duration
   const holdTime = reducedMotion ? 50 : holdDuration
 
@@ -54,7 +53,6 @@ export function TransitionOverlay({
     }
   }, [isTransitioning, state])
 
-  // Handle fade out
   useEffect(() => {
     if (state !== 'fading-out') return
 
@@ -68,7 +66,6 @@ export function TransitionOverlay({
     return () => clearTimeout(timer)
   }, [state, fadeDuration, onFadeOutComplete])
 
-  // Handle black hold
   useEffect(() => {
     if (state !== 'black') return
 
@@ -79,7 +76,6 @@ export function TransitionOverlay({
     return () => clearTimeout(timer)
   }, [state, holdTime])
 
-  // Handle fade in
   useEffect(() => {
     if (state !== 'fading-in') return
 
@@ -93,10 +89,8 @@ export function TransitionOverlay({
     return () => clearTimeout(timer)
   }, [state, fadeDuration, onFadeInComplete])
 
-  // Reset when transition ends externally
   useEffect(() => {
     if (!isTransitioning && state !== 'idle') {
-      // Force reset if transition was cancelled
       setOpacity(0)
       setState('idle')
     }
