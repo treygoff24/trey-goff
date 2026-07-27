@@ -1,17 +1,8 @@
 import type { Element, ElementContent, Root } from 'hast'
-import {
-  INSTRUMENT_TAGS,
-  hastToReact,
-  type InstrumentComponents,
-} from '@/lib/instruments/hast-to-react'
+import { INSTRUMENT_TAGS } from '@/lib/instruments/hast-to-react'
 import { createMarkdownProcessor } from '@/lib/markdown-pipeline'
 
-export {
-  INSTRUMENT_TAGS,
-  hastToReact,
-  type InstrumentComponents,
-  type InstrumentTag,
-} from '@/lib/instruments/hast-to-react'
+export { INSTRUMENT_TAGS, hastToReact } from '@/lib/instruments/hast-to-react'
 
 /**
  * The same processor `lib/markdown.ts` builds, with the instrument tags as its only
