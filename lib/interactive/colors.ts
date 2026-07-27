@@ -25,5 +25,3 @@ export const THREE_COLORS = {
   surface1: '#1A1A1F',
   surface2: '#252530',
 } as const
-
-export type ThreeColorKey = keyof typeof THREE_COLORS

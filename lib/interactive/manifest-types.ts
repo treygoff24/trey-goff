@@ -131,10 +131,3 @@ export interface LiftsManifest extends ManifestEnvelope {
   /** Individual lift PRs */
   lifts: LiftsManifestEntry[]
 }
-
-export interface InteractiveManifests {
-  essays: EssaysManifest
-  books: BooksManifest
-  projects: ProjectsManifest
-  lifts: LiftsManifest
-}

@@ -38,4 +38,3 @@ export interface BooksData {
 }
 
 export type BookStatus = Book['status']
-export type BookRating = NonNullable<Book['rating']>

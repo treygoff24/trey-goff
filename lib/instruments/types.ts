@@ -9,10 +9,10 @@ export const verdictSchema = z.enum([
   'unfalsifiable',
 ])
 
-export const claimStatusSchema = z.enum(['worked', 'unverified'])
+const claimStatusSchema = z.enum(['worked', 'unverified'])
 
 /** A = "person X said Y", B = "document/event Z exists", C = direct assertion about the world. */
-export const claimTypeSchema = z.enum(['A', 'B', 'C', 'A/B'])
+const claimTypeSchema = z.enum(['A', 'B', 'C', 'A/B'])
 
 const claimIdSchema = z.string().regex(/^C\d{3}$/)
 /** `h:mm:ss` with real minute and second components — `9:99:99` is not a timestamp. */
@@ -22,12 +22,12 @@ const timestampSchema = z.string().regex(TIMESTAMP_PATTERN)
 /** Links reach the reader as `href`; `javascript:` and `data:` never do. */
 const httpUrlSchema = z.url({ protocol: /^https?$/ })
 
-export const claimSectionSchema = z.object({
+const claimSectionSchema = z.object({
   id: z.string().regex(/^[A-Z]$/),
   title: z.string().min(1),
 })
 
-export const claimSchema = z.object({
+const claimSchema = z.object({
   id: claimIdSchema,
   section: z.string().regex(/^[A-Z]$/),
   title: z.string().min(1),
@@ -166,7 +166,7 @@ export const claimsLedgerSchema = z
  * A marked passage in an audited essay. Anchoring is (section anchor, exact substring,
  * occurrence) resolved against the rendered tree — see `lib/instruments/marks.ts`.
  */
-export const markKindSchema = z.enum(['killed', 'his-read', 'counter-evidence', 'refused'])
+const markKindSchema = z.enum(['killed', 'his-read', 'counter-evidence', 'refused'])
 
 export const markSchema = z.object({
   id: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
@@ -179,7 +179,7 @@ export const markSchema = z.object({
   note: z.string().min(1).optional(),
 })
 
-export const scopeSchema = z.object({
+const scopeSchema = z.object({
   id: z.string().min(1),
   label: z.string().min(1),
   standing: z.enum(['in', 'out', 'partial']),
@@ -200,9 +200,9 @@ export const sourceSchema = z.object({
  * How firmly the figure is held. A sourced stat that is nonetheless an estimate says so in
  * the dialog rather than letting the headline number imply a precision it does not have.
  */
-export const confidenceSchema = z.enum(['firm', 'estimated', 'contested'])
+const confidenceSchema = z.enum(['firm', 'estimated', 'contested'])
 
-export const statSchema = z.object({
+const statSchema = z.object({
   id: z.string().min(1),
   value: z.string().min(1),
   label: z.string().min(1),
@@ -228,7 +228,7 @@ export const marginNoteSchema = z.object({
   sources: z.array(sourceSchema).optional(),
 })
 
-export const forecastStatusSchema = z.enum([
+const forecastStatusSchema = z.enum([
   'open',
   'resolved-yes',
   'resolved-no',
@@ -236,7 +236,7 @@ export const forecastStatusSchema = z.enum([
   'withdrawn',
 ])
 
-export const forecastCardSchema = z
+const forecastCardSchema = z
   .object({
     id: z.string().min(1),
     question: z.string().min(1),
@@ -297,7 +297,7 @@ export const forecastCardSchema = z
  * is coloured out of the same box as the marks — declared once in `app/globals.css` and held
  * to AA by `test/instruments-contrast.test.ts`.
  */
-export const chartToneSchema = z.enum(['primary', 'counter', 'context', 'contrast'])
+const chartToneSchema = z.enum(['primary', 'counter', 'context', 'contrast'])
 
 /**
  * A figure's labels are its identity: React keys them, the legend addresses them, and the
@@ -323,7 +323,7 @@ const chartFrameFields = {
   summary: z.string().min(1),
 }
 
-export const slopeChartSchema = z.object({
+const slopeChartSchema = z.object({
   ...chartFrameFields,
   kind: z.literal('slope'),
   fromLabel: z.string().min(1),
@@ -346,7 +346,7 @@ export const slopeChartSchema = z.object({
   reference: z.object({ value: z.number(), label: z.string().min(1) }).optional(),
 })
 
-export const seriesChartSchema = z.object({
+const seriesChartSchema = z.object({
   ...chartFrameFields,
   kind: z.literal('series'),
   xLabel: z.string().min(1).optional(),
@@ -364,7 +364,7 @@ export const seriesChartSchema = z.object({
     .superRefine(uniqueLabels),
 })
 
-export const barsChartSchema = z.object({
+const barsChartSchema = z.object({
   ...chartFrameFields,
   kind: z.literal('bars'),
   unit: z.string().optional(),
@@ -381,7 +381,7 @@ export const barsChartSchema = z.object({
     .superRefine(uniqueLabels),
 })
 
-export const timelineChartSchema = z.object({
+const timelineChartSchema = z.object({
   ...chartFrameFields,
   kind: z.literal('timeline'),
   events: z
@@ -397,7 +397,7 @@ export const timelineChartSchema = z.object({
     .superRefine(uniqueLabels),
 })
 
-export const chartSchema = z.discriminatedUnion('kind', [
+const chartSchema = z.discriminatedUnion('kind', [
   slopeChartSchema,
   seriesChartSchema,
   barsChartSchema,
