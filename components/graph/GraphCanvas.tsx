@@ -83,16 +83,15 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
 
     for (const edge of data.edges) {
       if (!graph.hasNode(edge.source) || !graph.hasNode(edge.target)) continue
+      // The generated graph can list the same pair twice; skip the duplicate rather than
+      // letting addEdge throw, so any *other* failure from addEdge still surfaces.
+      if (graph.hasEdge(edge.source, edge.target)) continue
 
-      try {
-        graph.addEdge(edge.source, edge.target, {
-          weight: edge.weight,
-          edgeType: edge.type, // Store as edgeType to avoid Sigma's reserved 'type' attribute
-          color: 'rgba(255, 255, 255, 0.15)',
-        })
-      } catch {
-        // Edge might already exist
-      }
+      graph.addEdge(edge.source, edge.target, {
+        weight: edge.weight,
+        edgeType: edge.type, // Store as edgeType to avoid Sigma's reserved 'type' attribute
+        color: 'rgba(255, 255, 255, 0.15)',
+      })
     }
 
     setIsLayoutRunning(true)
