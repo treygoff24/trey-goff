@@ -24,10 +24,6 @@ import { writeStableJsonFile } from './lib/stable-json'
 const MANIFEST_VERSION = '1.0.0'
 const MANIFESTS_DIR = './public/manifests'
 
-// =============================================================================
-// Essays Manifest
-// =============================================================================
-
 function generateEssaysManifest(): EssaysManifest {
   const entries: EssayManifestEntry[] = allEssays
     .filter((essay) => essay.status !== 'draft')
@@ -49,10 +45,6 @@ function generateEssaysManifest(): EssaysManifest {
     entries,
   }
 }
-
-// =============================================================================
-// Books Manifest
-// =============================================================================
 
 function statusToTier(status: string, rating?: number): BookTier {
   // Map book status to display tier
@@ -105,10 +97,6 @@ function generateBooksManifest(): BooksManifest {
   }
 }
 
-// =============================================================================
-// Projects Manifest
-// =============================================================================
-
 function generateProjectsManifest(): ProjectsManifest {
   const entries: ProjectManifestEntry[] = allProjects
     .map((project) => ({
@@ -145,10 +133,6 @@ function generateProjectsManifest(): ProjectsManifest {
   }
 }
 
-// =============================================================================
-// Lifts Manifest
-// =============================================================================
-
 interface LiftsSourceData {
   lastUpdated: string
   lifts: Record<LiftName, LiftRecord>
@@ -177,7 +161,6 @@ function generateLiftsManifest(): LiftsManifest {
     history: liftsData.history?.[lift],
   }))
 
-  // Calculate total (sum of PRs)
   const totalWeight =
     liftsData.lifts.squat.weight + liftsData.lifts.bench.weight + liftsData.lifts.deadlift.weight
 
@@ -201,21 +184,14 @@ function generateLiftsManifest(): LiftsManifest {
   }
 }
 
-// =============================================================================
-// Main
-// =============================================================================
-
 function main() {
-  // Ensure manifests directory exists
   mkdirSync(MANIFESTS_DIR, { recursive: true })
 
-  // Generate all manifests
   const essays = generateEssaysManifest()
   const books = generateBooksManifest()
   const projects = generateProjectsManifest()
   const lifts = generateLiftsManifest()
 
-  // Write manifests
   const writes = [
     writeStableJsonFile(`${MANIFESTS_DIR}/essays.manifest.json`, essays, {
       preserveKeys: ['generated'],
@@ -231,7 +207,6 @@ function main() {
     }),
   ]
 
-  // Summary
   console.log('Generated Interactive manifests:')
   console.log(`  - essays.manifest.json: ${essays.entries.length} entries`)
   console.log(`  - books.manifest.json: ${books.entries.length} entries`)

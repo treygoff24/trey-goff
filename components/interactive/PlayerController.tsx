@@ -14,10 +14,6 @@ type CharacterController = ReturnType<
   ReturnType<typeof useRapier>['world']['createCharacterController']
 >
 
-// =============================================================================
-// Types
-// =============================================================================
-
 export type PlayerControls =
   | 'forward'
   | 'backward'
@@ -44,10 +40,6 @@ interface PlayerControllerProps {
   onInteract?: (point: THREE.Vector3, direction: THREE.Vector3) => void
 }
 
-// =============================================================================
-// Constants
-// =============================================================================
-
 const MOVE_SPEED = 5
 const SPRINT_MULTIPLIER = 1.5
 const ROTATION_SPEED = 0.002
@@ -55,10 +47,6 @@ const MAX_PITCH = Math.PI / 2.5 // ~72 degrees, prevents looking straight up/dow
 const PLAYER_HEIGHT = 1.8
 const PLAYER_RADIUS = 0.4
 const INTERACTION_DISTANCE = 3
-
-// =============================================================================
-// Desktop Controls Hook
-// =============================================================================
 
 function useDesktopControls(
   isMobile: boolean,
@@ -69,7 +57,6 @@ function useDesktopControls(
   const pitch = useRef(0)
   const isLocked = useRef(false)
 
-  // Get keyboard state
   const forward = useKeyboardControls<PlayerControls>((state) => state.forward)
   const backward = useKeyboardControls<PlayerControls>((state) => state.backward)
   const left = useKeyboardControls<PlayerControls>((state) => state.left)
@@ -78,7 +65,6 @@ function useDesktopControls(
   const sprint = useKeyboardControls<PlayerControls>((state) => state.sprint)
   const interact = useKeyboardControls<PlayerControls>((state) => state.interact)
 
-  // Mouse look handler
   useEffect(() => {
     if (isMobile) return
 
@@ -118,7 +104,6 @@ function useDesktopControls(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMobile, gl.domElement])
 
-  // Interaction raycast with debounce
   const prevInteract = useRef(false)
   useEffect(() => {
     // Only trigger on key down transition, not continuously
@@ -148,21 +133,16 @@ function useDesktopControls(
   }
 }
 
-// =============================================================================
-// Mobile Controls Hook
-// =============================================================================
-
 function useMobileControls(isMobile: boolean, yaw: React.MutableRefObject<number>) {
   const { camera, gl, raycaster } = useThree()
   const targetPosition = useRef<THREE.Vector3 | null>(null)
   const touchStartPos = useRef<{ x: number; y: number } | null>(null)
 
-  // Function to clear target position
   const clearTarget = () => {
     targetPosition.current = null
   }
 
-  // Function to get current target (returns ref directly - do not mutate!)
+  // Returns the ref's Vector3 directly - callers must not mutate it.
   const getTarget = (): THREE.Vector3 | null => {
     return targetPosition.current
   }
@@ -198,7 +178,6 @@ function useMobileControls(isMobile: boolean, yaw: React.MutableRefObject<number
           const x = ((touch.clientX - rect.left) / rect.width) * 2 - 1
           const y = -((touch.clientY - rect.top) / rect.height) * 2 + 1
 
-          // Raycast to ground or objects
           raycaster.setFromCamera(new THREE.Vector2(x, y), camera)
 
           // For now, project to ground plane (Y=0)
@@ -231,10 +210,6 @@ function useMobileControls(isMobile: boolean, yaw: React.MutableRefObject<number
   return { getTarget, clearTarget }
 }
 
-// =============================================================================
-// Player Capsule Component
-// =============================================================================
-
 interface PlayerCapsuleProps {
   reducedMotion: boolean
 }
@@ -243,9 +218,8 @@ function PlayerCapsule({ reducedMotion }: PlayerCapsuleProps) {
   const meshRef = useRef<THREE.Mesh>(null)
 
   useFrame(() => {
-    // Subtle breathing animation for player avatar
+    // Placeholder: the capsule stands in for a player model that is not yet animated.
     if (!meshRef.current || reducedMotion) return
-    // No animation needed for now - this will be replaced with actual player model
   })
 
   return (
@@ -270,10 +244,6 @@ function PlayerCapsule({ reducedMotion }: PlayerCapsuleProps) {
   )
 }
 
-// =============================================================================
-// Main Controller (Physics Version with Rapier)
-// =============================================================================
-
 // Store update throttle interval (ms)
 const STORE_UPDATE_INTERVAL = 100
 
@@ -295,7 +265,6 @@ export function PlayerController({
   const rigidBodyRef = useRef<RapierRigidBody>(null)
   const characterControllerRef = useRef<CharacterController | null>(null)
 
-  // Rapier world access
   const { world } = useRapier()
 
   // Reusable vectors - allocated once to avoid GC pressure
@@ -308,32 +277,26 @@ export function PlayerController({
   const currentPosVec = useRef(new THREE.Vector3())
   const desiredMovement = useRef({ x: 0, y: 0, z: 0 })
 
-  // Store update throttling
   const lastStoreUpdate = useRef(0)
   // Track last store values to avoid per-frame allocations
   const lastStorePos = useRef<[number, number, number]>([...spawnPosition])
   const lastStoreRot = useRef<[number, number, number]>([0, spawnRotation, 0])
 
-  // Store integration
   const setPlayerPosition = useInteractiveStore((s) => s.setPlayerPosition)
   const setPlayerRotation = useInteractiveStore((s) => s.setPlayerRotation)
   const setIsMoving = useInteractiveStore((s) => s.setIsMoving)
   const recordInteraction = useInteractiveStore((s) => s.recordInteraction)
 
-  // Desktop controls (includes pitch tracking)
   const desktopControls = useDesktopControls(isMobile, yaw, onInteract)
 
-  // Mobile controls
   const mobileControls = useMobileControls(isMobile, yaw)
 
-  // Create character controller once
   useEffect(() => {
     if (!world || characterControllerRef.current) return
 
     // Create character controller with small offset for numerical stability
     const controller = world.createCharacterController(0.01)
 
-    // Configure controller behavior
     controller.enableAutostep(0.3, 0.2, true) // max height, min width, include dynamic
     controller.enableSnapToGround(0.3) // snap distance
     controller.setMaxSlopeClimbAngle((45 * Math.PI) / 180) // 45 degrees
@@ -360,13 +323,12 @@ export function PlayerController({
     [spawnPosition],
   )
 
-  // Update position on each frame
   useFrame((state, delta) => {
     const rigidBody = rigidBodyRef.current
     const controller = characterControllerRef.current
     if (!rigidBody || !controller) return
 
-    // Get current position from physics (reuse vector to avoid GC pressure)
+    // Reuse the vector rather than allocating one per frame.
     const translation = rigidBody.translation()
     currentPosVec.current.set(translation.x, translation.y, translation.z)
 
@@ -384,7 +346,6 @@ export function PlayerController({
         lastStorePos.current = [px, py, pz]
         setPlayerPosition(lastStorePos.current)
       }
-      // Include pitch (from desktop controls) in rotation
       const pitchVal = isMobile ? 0 : desktopControls.pitch.current
       if (lastStoreRot.current[0] !== pitchVal || lastStoreRot.current[1] !== yaw.current) {
         lastStoreRot.current = [pitchVal, yaw.current, 0]
@@ -397,7 +358,6 @@ export function PlayerController({
     let isMoving = false
 
     if (!isMobile) {
-      // Desktop movement
       if (desktopControls.forward) {
         moveDir.current.z -= 1
         isMoving = true
@@ -415,7 +375,6 @@ export function PlayerController({
         isMoving = true
       }
     } else {
-      // Mobile movement - move toward target
       const target = mobileControls.getTarget()
       if (target) {
         diffVec.current.set(
@@ -428,7 +387,6 @@ export function PlayerController({
           moveDir.current.copy(diffVec.current.normalize())
           isMoving = true
 
-          // Rotate to face movement direction
           yaw.current = Math.atan2(diffVec.current.x, diffVec.current.z)
         } else {
           mobileControls.clearTarget()
@@ -436,38 +394,30 @@ export function PlayerController({
       }
     }
 
-    // Normalize and apply movement
     if (moveDir.current.lengthSq() > 0) {
       moveDir.current.normalize()
 
-      // Rotate movement direction by yaw
       const cosYaw = Math.cos(yaw.current)
       const sinYaw = Math.sin(yaw.current)
       rotatedDir.current.x = moveDir.current.x * cosYaw + moveDir.current.z * sinYaw
       rotatedDir.current.y = 0
       rotatedDir.current.z = -moveDir.current.x * sinYaw + moveDir.current.z * cosYaw
 
-      // Apply speed
       const speed = desktopControls.sprint ? MOVE_SPEED * SPRINT_MULTIPLIER : MOVE_SPEED
       velocity.current.lerp(rotatedDir.current.multiplyScalar(speed), 0.1)
     } else {
-      // Decelerate
       velocity.current.lerp(zeroVec.current, 0.1)
     }
 
-    // Calculate desired movement for this frame
     desiredMovement.current.x = velocity.current.x * delta
     desiredMovement.current.y = -9.81 * delta // Gravity
     desiredMovement.current.z = velocity.current.z * delta
 
-    // Get the collider from the rigid body
     const collider = rigidBody.collider(0)
     if (collider) {
-      // Compute movement with collision detection
       controller.computeColliderMovement(collider, desiredMovement.current)
       const correctedMovement = controller.computedMovement()
 
-      // Apply corrected movement
       const newPos = {
         x: translation.x + correctedMovement.x,
         y: translation.y + correctedMovement.y,
@@ -484,7 +434,6 @@ export function PlayerController({
       w: Math.cos(yaw.current / 2),
     })
 
-    // Get final position for store update
     const finalTranslation = rigidBody.translation()
     const px = finalTranslation.x
     const py = finalTranslation.y - PLAYER_HEIGHT / 2 // Adjust for capsule center
@@ -505,7 +454,6 @@ export function PlayerController({
       setPlayerRotation(lastStoreRot.current)
     }
 
-    // Throttled store updates for telemetry only
     const now = state.clock.elapsedTime * 1000
     if (now - lastStoreUpdate.current > STORE_UPDATE_INTERVAL) {
       setIsMoving(isMoving)
@@ -515,7 +463,6 @@ export function PlayerController({
       lastStoreUpdate.current = now
     }
 
-    // Callback
     if (onPositionUpdate && posChanged) {
       onPositionUpdate(lastStorePos.current)
     }
@@ -535,10 +482,6 @@ export function PlayerController({
     </RigidBody>
   )
 }
-
-// =============================================================================
-// Keyboard Controls Map
-// =============================================================================
 
 export const keyboardControlsMap: { name: PlayerControls; keys: string[] }[] = [
   { name: 'forward', keys: ['KeyW', 'ArrowUp'] },

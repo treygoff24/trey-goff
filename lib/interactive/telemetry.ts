@@ -8,10 +8,6 @@
 import type { RoomId } from './types'
 import type { QualityTier } from './capabilities'
 
-// =============================================================================
-// Types
-// =============================================================================
-
 /** Load milestone events per spec */
 export type LoadMilestone =
   | 'capability_check_complete'
@@ -36,10 +32,6 @@ export type PerformanceEvent = 'fps_sample' | 'long_frame' | 'memory_warning' | 
 
 /** FPS buckets for sampling */
 export type FpsBucket = '0-15' | '15-30' | '30-45' | '45-60' | '60+'
-
-// =============================================================================
-// Telemetry State
-// =============================================================================
 
 interface TelemetryState {
   sessionId: string
@@ -66,10 +58,6 @@ const state: TelemetryState = {
 function generateSessionId(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
 }
-
-// =============================================================================
-// Event Dispatch
-// =============================================================================
 
 interface TelemetryEvent {
   type: string
@@ -102,12 +90,10 @@ function queueEvent(type: string, data: Record<string, unknown>): void {
 
   eventQueue.push(event)
 
-  // Log in development
   if (process.env.NODE_ENV === 'development') {
     console.log('[Telemetry]', type, data)
   }
 
-  // Auto-flush if queue is full
   if (eventQueue.length >= MAX_QUEUE_SIZE) {
     flushEvents()
   }
@@ -116,24 +102,18 @@ function queueEvent(type: string, data: Record<string, unknown>): void {
 function flushEvents(): void {
   if (eventQueue.length === 0) return
 
-  // In production, send to analytics service
-  // For now, just clear the queue
+  // No analytics backend is wired up yet, so flushing only drains the queue.
   const events = [...eventQueue]
   eventQueue.length = 0
-
-  // TODO: Replace with actual analytics call
-  // analytics.track(events);
 
   if (process.env.NODE_ENV === 'development') {
     console.log('[Telemetry] Flushed', events.length, 'events')
   }
 }
 
-// Set up periodic flush
 if (typeof window !== 'undefined') {
   setInterval(flushEvents, FLUSH_INTERVAL)
 
-  // Flush on page unload
   window.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') {
       flushEvents()
@@ -142,10 +122,6 @@ if (typeof window !== 'undefined') {
 
   window.addEventListener('beforeunload', flushEvents)
 }
-
-// =============================================================================
-// Load Milestones
-// =============================================================================
 
 const milestoneTimings: Map<LoadMilestone, number> = new Map()
 
@@ -183,10 +159,6 @@ export function getTimeToMilestone(milestone: LoadMilestone): number | null {
   return timing - state.sessionStartTime
 }
 
-// =============================================================================
-// Chunk Download Tracking
-// =============================================================================
-
 /**
  * Record chunk download complete.
  */
@@ -203,10 +175,6 @@ export function recordDownloadComplete(
   })
 }
 
-// =============================================================================
-// Engagement Events
-// =============================================================================
-
 /**
  * Record entry choice (Normal vs Interactive).
  */
@@ -220,7 +188,6 @@ export function recordEntryChoice(choice: 'normal' | 'interactive'): void {
 export function recordRoomEntered(room: RoomId): void {
   const now = Date.now()
 
-  // Calculate dwell time for previous room
   for (const [existingRoom, data] of state.roomDwellTimes) {
     if (existingRoom !== room && data.enterTime > 0) {
       const dwellTime = now - data.enterTime
@@ -234,7 +201,6 @@ export function recordRoomEntered(room: RoomId): void {
     }
   }
 
-  // Start tracking new room
   let roomData = state.roomDwellTimes.get(room)
   if (!roomData) {
     roomData = { enterTime: 0, totalTime: 0 }
@@ -278,10 +244,6 @@ export function recordReturnToNormal(fromRoom: RoomId | null): void {
   flushEvents()
 }
 
-// =============================================================================
-// Performance Sampling
-// =============================================================================
-
 const SAMPLE_INTERVAL = 5000 // 5 seconds
 
 /**
@@ -303,7 +265,6 @@ export function recordFpsSample(fps: number): void {
 
   const now = Date.now()
   if (now - state.lastSampleTime >= SAMPLE_INTERVAL) {
-    // Calculate average FPS over the interval
     const avgFps =
       state.fpsSamples.length > 0
         ? state.fpsSamples.reduce((a, b) => a + b, 0) / state.fpsSamples.length
@@ -356,10 +317,6 @@ export function recordContextLost(): void {
   })
   flushEvents()
 }
-
-// =============================================================================
-// Configuration
-// =============================================================================
 
 /**
  * Enable or disable telemetry.

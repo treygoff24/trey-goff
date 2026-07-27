@@ -10,7 +10,6 @@ export async function fetchPodcastArtwork(podcastName: string): Promise<string |
     const data = await response.json()
 
     if (data.results && data.results.length > 0) {
-      // Find best match by comparing names
       const normalizedSearch = podcastName.toLowerCase().trim()
       const match = data.results.find((result: { collectionName?: string }) => {
         const resultName = result.collectionName?.toLowerCase().trim() || ''
@@ -29,7 +28,6 @@ export async function fetchPodcastArtwork(podcastName: string): Promise<string |
         return result.artworkUrl600
       }
       if (result.artworkUrl100) {
-        // Request larger size by modifying URL
         return result.artworkUrl100.replace('100x100', '600x600')
       }
     }
@@ -55,7 +53,6 @@ export async function verifyYouTubeThumbnail(url: string): Promise<string | null
   const videoId = extractYouTubeId(url)
   if (!videoId) return null
 
-  // Try thumbnail sizes in order of preference
   const sizes = ['maxresdefault', 'sddefault', 'hqdefault', 'mqdefault']
 
   for (const size of sizes) {

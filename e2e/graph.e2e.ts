@@ -21,7 +21,6 @@ test.describe('Knowledge Graph Page', () => {
     test('should display node and connection counts', async ({ page }) => {
       await graphPage.expectGraphRendered()
 
-      // Stats should show node count
       await expect(page.getByText(/\d+ nodes/)).toBeVisible()
       await expect(page.getByText(/\d+ connections/)).toBeVisible()
     })
@@ -54,14 +53,12 @@ test.describe('Knowledge Graph Page', () => {
 
       const initialNodeCount = await graphPage.getNodeCount()
 
-      // Toggle off Essays
       await graphPage.toggleFilter('Essays')
 
       // Node count should decrease (or stay same if no essays)
       const filteredNodeCount = await graphPage.getNodeCount()
       expect(filteredNodeCount).toBeLessThanOrEqual(initialNodeCount)
 
-      // Filter button should show inactive state
       await graphPage.expectFilterInactive('Essays')
     })
 
@@ -70,11 +67,9 @@ test.describe('Knowledge Graph Page', () => {
 
       const initialNodeCount = await graphPage.getNodeCount()
 
-      // Toggle off then on
       await graphPage.toggleFilter('Essays')
       await graphPage.toggleFilter('Essays')
 
-      // Node count should return to initial
       const finalNodeCount = await graphPage.getNodeCount()
       expect(finalNodeCount).toBe(initialNodeCount)
     })
@@ -127,7 +122,6 @@ test.describe('Knowledge Graph Page', () => {
     test('should have interactive canvas', async () => {
       await graphPage.expectGraphRendered()
 
-      // Canvas should be clickable
       const canvas = graphPage.graphCanvas
       await expect(canvas).toBeVisible()
 
@@ -143,11 +137,9 @@ test.describe('Knowledge Graph Page', () => {
 
       await graphPage.expectGraphRendered()
 
-      // Scroll on canvas
       await graphPage.graphCanvas.hover()
       await page.mouse.wheel(0, -100)
 
-      // Graph should still be visible (zoom doesn't break it)
       await expect(graphPage.graphCanvas).toBeVisible()
     })
 
@@ -158,13 +150,11 @@ test.describe('Knowledge Graph Page', () => {
       const box = await canvas.boundingBox()
 
       if (box) {
-        // Drag to pan
         await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2)
         await page.mouse.down()
         await page.mouse.move(box.x + box.width / 2 + 50, box.y + box.height / 2 + 50)
         await page.mouse.up()
 
-        // Graph should still be visible
         await expect(canvas).toBeVisible()
       }
     })
@@ -186,7 +176,6 @@ test.describe('Knowledge Graph Page', () => {
     test('should display colored indicators for each type', async () => {
       await graphPage.expectGraphRendered()
 
-      // Each legend item should have a colored circle
       const colorIndicators = graphPage.legend.locator('.rounded-full')
 
       const count = await colorIndicators.count()

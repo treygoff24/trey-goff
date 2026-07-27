@@ -9,10 +9,6 @@ import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.j
 import * as THREE from 'three'
 import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
-// =============================================================================
-// Loader Singleton Management
-// =============================================================================
-
 let gltfLoader: GLTFLoader | null = null
 let ktx2Loader: KTX2Loader | null = null
 let isInitialized = false
@@ -30,12 +26,10 @@ const KTX2_TRANSCODER_PATH = 'https://cdn.jsdelivr.net/npm/three@0.183.2/example
 export function initializeLoaders(gl: THREE.WebGLRenderer): void {
   if (isInitialized) return
 
-  // Initialize KTX2Loader with GPU transcoder
   ktx2Loader = new KTX2Loader()
   ktx2Loader.setTranscoderPath(KTX2_TRANSCODER_PATH)
   ktx2Loader.detectSupport(gl)
 
-  // Initialize GLTFLoader with extensions
   gltfLoader = new GLTFLoader()
   gltfLoader.setKTX2Loader(ktx2Loader)
   gltfLoader.setMeshoptDecoder(MeshoptDecoder)
@@ -66,10 +60,6 @@ export function disposeLoaders(): void {
   isInitialized = false
 }
 
-// =============================================================================
-// Asset Loading Utilities
-// =============================================================================
-
 export interface LoadProgress {
   loaded: number
   total: number
@@ -89,13 +79,11 @@ export async function loadGLTF(url: string, options?: LoadOptions): Promise<GLTF
   const loader = getGLTFLoader()
 
   return new Promise((resolve, reject) => {
-    // Check for abort before starting
     if (options?.signal?.aborted) {
       reject(new DOMException('Load aborted', 'AbortError'))
       return
     }
 
-    // Handle abort during load
     const abortHandler = () => {
       reject(new DOMException('Load aborted', 'AbortError'))
     }
@@ -124,17 +112,12 @@ export async function loadGLTF(url: string, options?: LoadOptions): Promise<GLTF
   })
 }
 
-// =============================================================================
-// Asset Disposal Utilities
-// =============================================================================
-
 /**
  * Recursively dispose of all GPU resources in a Three.js object.
  * Handles geometries, materials, textures, and ImageBitmaps.
  */
 export function disposeObject(object: THREE.Object3D): void {
   object.traverse((child) => {
-    // Dispose geometry
     if (
       child instanceof THREE.Mesh ||
       child instanceof THREE.Line ||
@@ -144,7 +127,6 @@ export function disposeObject(object: THREE.Object3D): void {
         child.geometry.dispose()
       }
 
-      // Dispose materials
       const materials = Array.isArray(child.material) ? child.material : [child.material]
       for (const material of materials) {
         if (material) {
@@ -216,10 +198,6 @@ function disposeTexture(texture: THREE.Texture): void {
 
   texture.dispose()
 }
-
-// =============================================================================
-// Debug Utilities
-// =============================================================================
 
 /**
  * Log memory usage from renderer.info.

@@ -21,7 +21,6 @@ export interface DeviceCapabilities {
  * Should be called client-side only.
  */
 export function detectCapabilities(): DeviceCapabilities {
-  // Check reduced motion preference
   const reducedMotion =
     typeof window !== 'undefined'
       ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -33,19 +32,16 @@ export function detectCapabilities(): DeviceCapabilities {
       ? /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
       : false
 
-  // Get device memory (Chrome only)
   const deviceMemory =
     typeof navigator !== 'undefined' && 'deviceMemory' in navigator
       ? ((navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? null)
       : null
 
-  // Get hardware concurrency
   const hardwareConcurrency =
     typeof navigator !== 'undefined' && navigator.hardwareConcurrency
       ? navigator.hardwareConcurrency
       : null
 
-  // Check WebGL2 support and get renderer info
   let webgl2 = false
   let maxTextureSize: number | null = null
   let renderer: string | null = null
@@ -58,13 +54,11 @@ export function detectCapabilities(): DeviceCapabilities {
         webgl2 = true
         maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE)
 
-        // Get renderer info
         const debugInfo = gl.getExtension('WEBGL_debug_renderer_info')
         if (debugInfo) {
           renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)
         }
 
-        // Clean up
         gl.getExtension('WEBGL_lose_context')?.loseContext()
       }
     } catch {
@@ -72,7 +66,6 @@ export function detectCapabilities(): DeviceCapabilities {
     }
   }
 
-  // Suggest quality tier based on capabilities
   const suggestedTier = suggestQualityTier({
     webgl2,
     deviceMemory,

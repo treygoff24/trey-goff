@@ -45,7 +45,6 @@ async function resolveBookCover(book: Book): Promise<string> {
 export async function resolveAllCovers(books: Book[]): Promise<Map<string, string>> {
   const results = new Map<string, string>()
 
-  // Load existing cache
   let cache: CoverCache = {}
   try {
     const cacheData = await fs.readFile(COVER_CACHE_FILE, 'utf-8')
@@ -54,7 +53,6 @@ export async function resolveAllCovers(books: Book[]): Promise<Map<string, strin
     // No cache exists
   }
 
-  // Process books with rate limiting
   for (const book of books) {
     // Check cache first (unless manual override)
     const cachedEntry = cache[book.id]
@@ -68,7 +66,6 @@ export async function resolveAllCovers(books: Book[]): Promise<Map<string, strin
     const coverUrl = await resolveBookCover(book)
     results.set(book.id, coverUrl)
 
-    // Determine source
     let source: CoverCache[string]['source'] = 'placeholder'
     if (book.coverUrl) {
       source = 'manual'
@@ -78,7 +75,6 @@ export async function resolveAllCovers(books: Book[]): Promise<Map<string, strin
       source = 'google'
     }
 
-    // Update cache
     cache[book.id] = {
       url: coverUrl,
       resolvedAt: new Date().toISOString(),
@@ -89,7 +85,6 @@ export async function resolveAllCovers(books: Book[]): Promise<Map<string, strin
     await new Promise((resolve) => setTimeout(resolve, 200))
   }
 
-  // Save cache
   await fs.writeFile(COVER_CACHE_FILE, JSON.stringify(cache, null, 2))
 
   return results

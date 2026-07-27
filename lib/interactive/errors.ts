@@ -5,10 +5,6 @@
 
 import { recordContextLost, recordMemoryWarning } from './telemetry'
 
-// =============================================================================
-// Error Types
-// =============================================================================
-
 /** Base error class for Interactive errors */
 class InteractiveError extends Error {
   constructor(
@@ -82,10 +78,6 @@ export class ShaderError extends InteractiveError {
     this.name = 'ShaderError'
   }
 }
-
-// =============================================================================
-// Recovery Strategies
-// =============================================================================
 
 export interface RecoveryResult {
   success: boolean
@@ -165,10 +157,6 @@ export function getRecoveryStrategy(error: Error, currentAttempts: number): Reco
   }
 }
 
-// =============================================================================
-// Memory Monitoring
-// =============================================================================
-
 interface MemoryInfo {
   usedJSHeapSize: number
   totalJSHeapSize: number
@@ -215,10 +203,6 @@ export function monitorMemory(
   return () => clearInterval(intervalId)
 }
 
-// =============================================================================
-// Tab Suspension Recovery
-// =============================================================================
-
 /**
  * Monitor for tab suspension/restoration.
  * Returns cleanup function.
@@ -242,10 +226,6 @@ export function monitorTabSuspension(onRestore: () => void, onSuspend?: () => vo
     document.removeEventListener('visibilitychange', handleVisibilityChange)
   }
 }
-
-// =============================================================================
-// Retry Utilities
-// =============================================================================
 
 /**
  * Retry an async operation with exponential backoff.

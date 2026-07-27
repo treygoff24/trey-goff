@@ -9,10 +9,6 @@ import { THREE_COLORS } from '@/lib/interactive/colors'
 import { DoorTrigger } from '../DoorTrigger'
 import type { RoomId } from '@/lib/interactive/types'
 
-// =============================================================================
-// Types
-// =============================================================================
-
 interface ExteriorRoomProps {
   /** Show debug visualizations */
   debug?: boolean
@@ -24,18 +20,10 @@ interface ExteriorRoomProps {
   ) => void
 }
 
-// =============================================================================
-// Constants
-// =============================================================================
-
 const GROUND_SIZE = 100
 const MANSION_WIDTH = 20
 const MANSION_DEPTH = 15
 const MANSION_HEIGHT = 12
-
-// =============================================================================
-// Shaders
-// =============================================================================
 
 const skyVertexShader = /* glsl */ `
   varying vec3 vWorldPosition;
@@ -246,10 +234,6 @@ const terrainFragmentShader = /* glsl */ `
     gl_FragColor = vec4(color, 1.0);
   }
 `
-
-// =============================================================================
-// Sub-components
-// =============================================================================
 
 /**
  * Procedural sky dome with gradient and subtle effects.
@@ -882,10 +866,6 @@ function Garage() {
   )
 }
 
-// =============================================================================
-// Colliders
-// =============================================================================
-
 function ExteriorColliders() {
   const garagePos: [number, number, number] = [-25, 3.5, -15]
   const garageSize: [number, number, number] = [6, 3.5, 5]
@@ -914,10 +894,6 @@ function ExteriorColliders() {
     </>
   )
 }
-
-// =============================================================================
-// Main Component
-// =============================================================================
 
 export function ExteriorRoom({ debug = false, onDoorActivate }: ExteriorRoomProps) {
   return (

@@ -5,10 +5,6 @@
 
 import type { QualityTier } from './capabilities'
 
-// =============================================================================
-// Quality Settings Types
-// =============================================================================
-
 export interface QualitySettings {
   /** Device pixel ratio multiplier */
   dpr: number | [number, number]
@@ -48,10 +44,6 @@ export interface PostProcessingSettings {
   /** EffectComposer multisampling level */
   multisampling: number
 }
-
-// =============================================================================
-// Quality Tier Presets
-// =============================================================================
 
 export const QUALITY_PRESETS: Record<Exclude<QualityTier, 'auto'>, QualitySettings> = {
   low: {
@@ -128,10 +120,6 @@ export function getQualitySettings(tier: QualityTier): QualitySettings {
   return QUALITY_PRESETS[tier]
 }
 
-// =============================================================================
-// Auto-Tuning System
-// =============================================================================
-
 interface FrameSample {
   frameTime: number
   timestamp: number
@@ -203,7 +191,6 @@ export function recordFrameSample(
   state.samples.push(sample)
   state.sampleCount++
 
-  // Check if we have enough samples and cooldown has passed
   if (
     state.samples.length < AUTO_TUNE_CONFIG.sampleWindow ||
     now - state.lastAdjustment < AUTO_TUNE_CONFIG.adjustmentCooldown
@@ -211,7 +198,6 @@ export function recordFrameSample(
     return null
   }
 
-  // Calculate P95 frame time
   const sortedTimes = state.sortedTimes
   sortedTimes.length = state.samples.length
   for (let index = 0; index < state.samples.length; index++) {
@@ -223,16 +209,13 @@ export function recordFrameSample(
 
   let newTier: Exclude<QualityTier, 'auto'> | null = null
 
-  // Check for downgrade
   if (p95 > AUTO_TUNE_CONFIG.downgradeThreshold) {
     if (state.currentTier === 'high') {
       newTier = 'medium'
     } else if (state.currentTier === 'medium') {
       newTier = 'low'
     }
-  }
-  // Check for upgrade (never on mobile)
-  else if (p95 < AUTO_TUNE_CONFIG.upgradeThreshold && !state.isMobile) {
+  } else if (p95 < AUTO_TUNE_CONFIG.upgradeThreshold && !state.isMobile) {
     if (state.currentTier === 'low') {
       newTier = 'medium'
     } else if (state.currentTier === 'medium') {
@@ -256,10 +239,6 @@ export function getAutoTunedTier(state: AutoTuneState): Exclude<QualityTier, 'au
   return state.currentTier
 }
 
-// =============================================================================
-// Canvas Configuration
-// =============================================================================
-
 /**
  * Get R3F Canvas configuration for a quality tier.
  */
@@ -275,7 +254,6 @@ export function getCanvasConfig(settings: QualitySettings) {
       // Use sRGB color space for proper color handling
       outputColorSpace: 'srgb' as const,
     },
-    // Tone mapping and color management
     flat: false, // Enable color management
   }
 }

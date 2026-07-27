@@ -7,10 +7,6 @@ import { parseSubscribePostBody } from '@/lib/subscribe-request'
  */
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-// ============================================
-// Email validation tests
-// ============================================
-
 describe('email validation regex', () => {
   describe('valid emails', () => {
     const validEmails = [
@@ -82,10 +78,6 @@ describe('email validation regex', () => {
   })
 })
 
-// ============================================
-// Request body validation tests
-// ============================================
-
 describe('parseSubscribePostBody (JSON string)', () => {
   test('rejects invalid JSON', () => {
     const r = parseSubscribePostBody('')
@@ -136,10 +128,6 @@ describe('parseSubscribePostBody (JSON string)', () => {
   })
 })
 
-// ============================================
-// Response status code mapping tests
-// ============================================
-
 describe('API response status codes', () => {
   // Based on the route handler logic
   const statusCodes = {
@@ -171,10 +159,6 @@ describe('API response status codes', () => {
     assert.equal(statusCodes.NOT_CONFIGURED, 500)
   })
 })
-
-// ============================================
-// Buttondown error response parsing tests
-// ============================================
 
 describe('Buttondown error parsing', () => {
   interface ButtondownError {
@@ -222,10 +206,6 @@ describe('Buttondown error parsing', () => {
   })
 })
 
-// ============================================
-// Error message tests
-// ============================================
-
 describe('API error messages', () => {
   const errorMessages = {
     MISSING_API_KEY: 'Newsletter service not configured',
@@ -254,10 +234,6 @@ describe('API error messages', () => {
     assert.ok(errorMessages.ALREADY_SUBSCRIBED.includes('!'))
   })
 })
-
-// ============================================
-// Success response tests
-// ============================================
 
 describe('success response', () => {
   const successMessage = 'Success! Check your inbox to confirm.'

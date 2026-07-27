@@ -82,10 +82,6 @@ test('abandoned books are counted separately', () => {
   assert.equal(stats.read, 1)
 })
 
-// ============================================
-// sortBooks tests
-// ============================================
-
 describe('sortBooks', () => {
   const testBooks = [
     book({
@@ -185,10 +181,6 @@ describe('sortBooks', () => {
   })
 })
 
-// ============================================
-// filterBooks tests
-// ============================================
-
 describe('filterBooks', () => {
   const testBooks = [
     book({
@@ -259,18 +251,12 @@ describe('filterBooks', () => {
   })
 })
 
-// ============================================
-// Integration tests with actual book data
-// ============================================
-
 describe('book data access functions', () => {
   test('getAllTopics returns sorted unique topics', () => {
     const topics = getAllTopics()
     assert.ok(Array.isArray(topics))
-    // Should be alphabetically sorted
     const sorted = [...topics].sort()
     assert.deepEqual(topics, sorted)
-    // Should have no duplicates
     const unique = [...new Set(topics)]
     assert.deepEqual(topics, unique)
   })
@@ -278,10 +264,8 @@ describe('book data access functions', () => {
   test('getAllGenres returns sorted unique genres', () => {
     const genres = getAllGenres()
     assert.ok(Array.isArray(genres))
-    // Should be alphabetically sorted
     const sorted = [...genres].sort()
     assert.deepEqual(genres, sorted)
-    // Should have no duplicates
     const unique = [...new Set(genres)]
     assert.deepEqual(genres, unique)
   })
@@ -297,10 +281,6 @@ describe('book data access functions', () => {
     assert.ok(reading.every((b) => b.status === 'reading'))
   })
 })
-
-// ============================================
-// Reading breakdown helpers
-// ============================================
 
 describe('reading breakdown helpers', () => {
   test('getBooksReadByYear counts only read books by year', () => {

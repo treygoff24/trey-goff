@@ -5,10 +5,6 @@ import { cn } from '@/lib/utils'
 import { useInteractiveStore } from '@/lib/interactive/store'
 import type { QualityTier } from '@/lib/interactive/capabilities'
 
-// =============================================================================
-// Types
-// =============================================================================
-
 interface SettingsMenuProps {
   /** Whether menu is open */
   isOpen: boolean
@@ -24,20 +20,12 @@ interface SettingsMenuProps {
   onReducedMotionChange: (enabled: boolean) => void
 }
 
-// =============================================================================
-// Quality Tier Options
-// =============================================================================
-
 const QUALITY_OPTIONS: Array<{ value: QualityTier; label: string; description: string }> = [
   { value: 'auto', label: 'Auto', description: 'Adjusts based on performance' },
   { value: 'low', label: 'Low', description: 'Best performance, minimal effects' },
   { value: 'medium', label: 'Medium', description: 'Balanced visuals and performance' },
   { value: 'high', label: 'High', description: 'Best visuals, requires good GPU' },
 ]
-
-// =============================================================================
-// Sub-components
-// =============================================================================
 
 function SettingRow({
   label,
@@ -115,10 +103,6 @@ function Select({
     </select>
   )
 }
-
-// =============================================================================
-// Main Component
-// =============================================================================
 
 export function SettingsMenu({
   isOpen,
@@ -285,10 +269,6 @@ export function SettingsMenu({
     </div>
   )
 }
-
-// =============================================================================
-// Hook for settings state
-// =============================================================================
 
 export function useSettingsMenu() {
   const [isOpen, setIsOpen] = React.useState(false)

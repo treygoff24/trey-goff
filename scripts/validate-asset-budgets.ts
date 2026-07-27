@@ -24,10 +24,6 @@ import * as fs from 'fs'
 import * as path from 'path'
 import type { AssetManifest } from './lib/asset-manifest-types'
 
-// =============================================================================
-// Configuration
-// =============================================================================
-
 const CONFIG = {
   assetsDir: 'public/assets',
   chunksDir: 'public/assets/chunks',
@@ -57,19 +53,11 @@ const CONFIG = {
   },
 }
 
-// =============================================================================
-// Types
-// =============================================================================
-
 interface ValidationResult {
   passed: boolean
   errors: string[]
   warnings: string[]
 }
-
-// =============================================================================
-// Validation Functions
-// =============================================================================
 
 function validateManifestExists(): { passed: boolean; message?: string; manifest?: AssetManifest } {
   if (!fs.existsSync(CONFIG.manifestPath)) {
@@ -95,7 +83,6 @@ function validateAssetReferences(manifest: AssetManifest): ValidationResult {
   const errors: string[] = []
   const warnings: string[] = []
 
-  // Check chunk references
   for (const [name, info] of Object.entries(manifest.chunks)) {
     const filePath = path.join(CONFIG.chunksDir, info.file)
     if (!fs.existsSync(filePath)) {
@@ -103,7 +90,6 @@ function validateAssetReferences(manifest: AssetManifest): ValidationResult {
     }
   }
 
-  // Check prop references
   for (const [name, info] of Object.entries(manifest.props)) {
     const filePath = path.join(CONFIG.propsDir, info.file)
     if (!fs.existsSync(filePath)) {
@@ -189,10 +175,6 @@ function validateNoLooseAssets(): ValidationResult {
   }
 }
 
-// =============================================================================
-// Main Validation
-// =============================================================================
-
 interface FullValidationResult {
   passed: boolean
   errors: string[]
@@ -254,7 +236,6 @@ function runValidation(): FullValidationResult {
       console.log(`     - ${err}`)
     }
 
-    // Calculate total size
     for (const info of Object.values(manifest.chunks)) {
       totalSize += info.size
     }
@@ -273,7 +254,6 @@ function runValidation(): FullValidationResult {
     console.log(`     ⚠ ${warn}`)
   }
 
-  // Summary
   console.log('\n' + '='.repeat(50))
   console.log('SUMMARY')
   console.log('='.repeat(50))
@@ -313,10 +293,6 @@ function runValidation(): FullValidationResult {
     },
   }
 }
-
-// =============================================================================
-// Main
-// =============================================================================
 
 const result = runValidation()
 

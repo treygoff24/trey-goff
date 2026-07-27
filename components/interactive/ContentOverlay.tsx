@@ -5,10 +5,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
 
-// =============================================================================
-// Types
-// =============================================================================
-
 export interface OverlayContent {
   type: 'book' | 'project' | 'post' | 'generic'
   title: string
@@ -29,10 +25,6 @@ interface ContentOverlayProps {
   /** Reduced motion preference */
   reducedMotion?: boolean
 }
-
-// =============================================================================
-// Components
-// =============================================================================
 
 function OverlayHeader({
   type,
@@ -118,10 +110,6 @@ function OverlayTags({ tags }: { tags: string[] }) {
     </div>
   )
 }
-
-// =============================================================================
-// Main Component
-// =============================================================================
 
 export function ContentOverlay({ content, onClose, reducedMotion = false }: ContentOverlayProps) {
   const overlayRef = useRef<HTMLDivElement>(null)
@@ -258,10 +246,6 @@ export function ContentOverlay({ content, onClose, reducedMotion = false }: Cont
     </div>
   )
 }
-
-// =============================================================================
-// Hook for overlay state
-// =============================================================================
 
 export function useContentOverlay() {
   const [content, setContent] = useState<OverlayContent | null>(null)

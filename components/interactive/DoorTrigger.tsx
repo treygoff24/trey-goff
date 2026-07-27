@@ -8,10 +8,6 @@ import { useInteractiveStore } from '@/lib/interactive/store'
 import type { RoomId } from '@/lib/interactive/types'
 import { THREE_COLORS } from '@/lib/interactive/colors'
 
-// =============================================================================
-// Types
-// =============================================================================
-
 interface DoorTriggerProps {
   /** Position of the door */
   position: [number, number, number]
@@ -43,17 +39,9 @@ interface DoorTriggerProps {
   labelRotation?: number
 }
 
-// =============================================================================
-// Constants
-// =============================================================================
-
 const DEFAULT_PRELOAD_DISTANCE = 15
 const DEFAULT_ACTIVATION_DISTANCE = 3
 const DEFAULT_SIZE: [number, number] = [2, 3]
-
-// =============================================================================
-// Main Component
-// =============================================================================
 
 /**
  * DoorTrigger - Invisible trigger zone that:
@@ -81,7 +69,6 @@ export function DoorTrigger({
   // Reusable vector for distance calculations (avoid per-frame allocation)
   const playerVecRef = useRef(new THREE.Vector3())
 
-  // Store state
   const playerPosition = useInteractiveStore((s) => s.player.position)
   const setChunkState = useInteractiveStore((s) => s.setChunkState)
   const chunkStates = useInteractiveStore((s) => s.chunkStates)
@@ -90,15 +77,12 @@ export function DoorTrigger({
   const hasTriggeredPreload = useRef(false)
   const isWithinActivation = useRef(false)
 
-  // Calculate player distance each frame
   useFrame(() => {
     if (!enabled) return
 
-    // Reuse vector to avoid allocation
     playerVecRef.current.set(playerPosition[0], playerPosition[1], playerPosition[2])
     const distance = playerVecRef.current.distanceTo(doorPosition)
 
-    // Check preload trigger
     if (distance <= preloadDistance && !hasTriggeredPreload.current) {
       const targetState = chunkStates.get(targetRoom)?.state
       if (targetState === 'unloaded' || targetState === 'disposed') {
@@ -113,7 +97,6 @@ export function DoorTrigger({
       hasTriggeredPreload.current = false
     }
 
-    // Check activation zone
     const wasWithin = isWithinActivation.current
     isWithinActivation.current = distance <= activationDistance
 
@@ -136,7 +119,6 @@ export function DoorTrigger({
     }
   })
 
-  // Handle interaction (E key or tap)
   // This is called by InteractionSystem when player interacts with door mesh
   const handleInteract = useCallback(() => {
     if (!enabled || !isWithinActivation.current) return
@@ -155,7 +137,6 @@ export function DoorTrigger({
     }
   }, [enabled, chunkStates, targetRoom, spawnPosition, spawnRotation, onActivate, debug])
 
-  // Store handle interact for external access
   useEffect(() => {
     if (groupRef.current) {
       groupRef.current.userData.onInteract = handleInteract
@@ -225,10 +206,6 @@ export function DoorTrigger({
     </group>
   )
 }
-
-// =============================================================================
-// Door Configuration Helper
-// =============================================================================
 
 export interface DoorConfig {
   id: string

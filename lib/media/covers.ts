@@ -47,7 +47,6 @@ async function resolveAppearanceCover(appearance: Appearance): Promise<string> {
 export async function resolveAllCovers(appearances: Appearance[]): Promise<Map<string, string>> {
   const results = new Map<string, string>()
 
-  // Load existing cache
   let cache: CoverCache = {}
   try {
     const cacheData = await fs.readFile(COVER_CACHE_FILE, 'utf-8')
@@ -56,7 +55,6 @@ export async function resolveAllCovers(appearances: Appearance[]): Promise<Map<s
     // No cache exists
   }
 
-  // Process appearances with rate limiting
   for (const appearance of appearances) {
     // Check cache first (unless manual override)
     const cachedEntry = cache[appearance.id]
@@ -70,7 +68,6 @@ export async function resolveAllCovers(appearances: Appearance[]): Promise<Map<s
     const coverUrl = await resolveAppearanceCover(appearance)
     results.set(appearance.id, coverUrl)
 
-    // Determine source
     let source: CoverCache[string]['source'] = 'placeholder'
     if (appearance.showArtwork) {
       source = 'manual'
@@ -80,7 +77,6 @@ export async function resolveAllCovers(appearances: Appearance[]): Promise<Map<s
       source = 'itunes'
     }
 
-    // Update cache
     cache[appearance.id] = {
       url: coverUrl,
       resolvedAt: new Date().toISOString(),
@@ -91,7 +87,6 @@ export async function resolveAllCovers(appearances: Appearance[]): Promise<Map<s
     await new Promise((resolve) => setTimeout(resolve, 300))
   }
 
-  // Save cache
   await fs.writeFile(COVER_CACHE_FILE, JSON.stringify(cache, null, 2))
 
   return results

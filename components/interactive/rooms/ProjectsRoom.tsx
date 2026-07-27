@@ -11,10 +11,6 @@ import type { RoomId } from '@/lib/interactive/types'
 import type { ProjectsManifest, ProjectManifestEntry } from '@/lib/interactive/manifest-types'
 import type { OverlayContent } from '../ContentOverlay'
 
-// =============================================================================
-// Types
-// =============================================================================
-
 interface ProjectsRoomProps {
   /** Show debug visualizations */
   debug?: boolean
@@ -28,15 +24,10 @@ interface ProjectsRoomProps {
   onContentSelect?: (content: OverlayContent) => void
 }
 
-// =============================================================================
-// Constants
-// =============================================================================
-
 const ROOM_WIDTH = 22
 const ROOM_DEPTH = 18
 const ROOM_HEIGHT = 7
 
-// Status colors for project pedestals
 const STATUS_COLORS: Record<string, string> = {
   active: '#48bb78',
   shipped: '#4299e1',
@@ -45,17 +36,12 @@ const STATUS_COLORS: Record<string, string> = {
   idea: '#9f7aea',
 }
 
-// Type icons/colors
 const TYPE_COLORS: Record<string, string> = {
   software: '#7C5CFF',
   policy: '#FFB86B',
   professional: '#4299e1',
   experiment: '#48bb78',
 }
-
-// =============================================================================
-// Sub-components
-// =============================================================================
 
 /**
  * Museum walls with subtle emissive accent lines.
@@ -336,10 +322,6 @@ function MuseumDecor() {
   )
 }
 
-// =============================================================================
-// Collision Bodies
-// =============================================================================
-
 function ProjectsColliders() {
   const wallThickness = 0.5
   const wallHeight = ROOM_HEIGHT
@@ -373,10 +355,6 @@ function ProjectsColliders() {
     </>
   )
 }
-
-// =============================================================================
-// Main Component
-// =============================================================================
 
 export function ProjectsRoom({
   debug = false,

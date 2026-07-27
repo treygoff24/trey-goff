@@ -29,20 +29,12 @@ import {
 } from '@/lib/interactive/quality'
 import type { QualityTier } from '@/lib/interactive/capabilities'
 
-// =============================================================================
-// Types
-// =============================================================================
-
 interface PostProcessingProps {
   /** Current quality tier */
   qualityTier: QualityTier
   /** Whether reduced motion is preferred */
   reducedMotion: boolean
 }
-
-// =============================================================================
-// Effect Renderers
-// =============================================================================
 
 /**
  * Render effects based on PostProcessingSettings.
@@ -137,12 +129,7 @@ function EffectsRenderer({ settings }: { settings: PostProcessingSettings }) {
   return <EffectComposer multisampling={multisampling}>{effects}</EffectComposer>
 }
 
-// =============================================================================
-// Main Component
-// =============================================================================
-
 export function PostProcessing({ qualityTier, reducedMotion }: PostProcessingProps) {
-  // Get settings for the current tier
   let settings = getQualitySettings(qualityTier)
 
   // Apply reduced motion overrides

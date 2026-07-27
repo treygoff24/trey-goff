@@ -50,10 +50,8 @@ fi
 # regenerating is always correct — and it means we can stage the whole
 # allowlist afterward with no porcelain parsing, no baselines, no rename
 # or substring edge cases. Foreign WIP outside these paths is untouched.
-# Enumerated exactly — public/thumbnail-map.json is written by the media
-# pipeline, NOT prebuild, and must never be owned here. public/assets is
-# also left out: compress-assets only rewrites it when 3D sources change,
-# which a book sync never does.
+# Enumerated exactly — public/assets is left out: compress-assets only
+# rewrites it when 3D sources change, which a book sync never does.
 OWNED=(
   content/library/books.json
   public/covers

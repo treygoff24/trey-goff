@@ -5,10 +5,6 @@
 import type * as THREE from 'three'
 import type { QualityTier } from './capabilities'
 
-// =============================================================================
-// Room & Chunk Types
-// =============================================================================
-
 /** Room identifiers */
 export type RoomId = 'exterior' | 'mainhall' | 'library' | 'gym' | 'projects' | 'garage'
 
@@ -23,10 +19,6 @@ export interface ChunkInfo {
   lastActiveAt: number | null
   memoryEstimate: number // bytes
 }
-
-// =============================================================================
-// Settings Types
-// =============================================================================
 
 /** Camera mode */
 export type CameraMode = 'third-person' | 'first-person'
@@ -63,10 +55,6 @@ export const DEFAULT_SETTINGS: InteractiveSettings = {
   showDebug: false,
 }
 
-// =============================================================================
-// Spawn & Navigation Types
-// =============================================================================
-
 /** Spawn point definition */
 export interface SpawnPoint {
   position: [number, number, number]
@@ -85,10 +73,6 @@ export interface Door {
   label: string
 }
 
-// =============================================================================
-// Player State Types
-// =============================================================================
-
 /** Player position and state */
 export interface PlayerState {
   position: THREE.Vector3Tuple
@@ -102,51 +86,37 @@ export interface PlayerState {
   isInteracting: boolean
 }
 
-// =============================================================================
-// Store State Types
-// =============================================================================
-
 /** Main store state shape */
 export interface InteractiveStoreState {
-  // Chunk states
   chunkStates: Map<RoomId, ChunkInfo>
   activeChunk: RoomId | null
 
-  // Quality
   qualityTier: QualityTier
   effectiveQualityTier: Exclude<QualityTier, 'auto'>
 
-  // Player
   player: PlayerState
 
-  // Settings
   settings: InteractiveSettings
 
-  // Loading
   isLoading: boolean
   loadingProgress: number
   loadingStatus: string
 
-  // Error state
   error: Error | null
 
-  // Session
   sessionStartTime: number
   lastInteractionTime: number
 }
 
 /** Store actions */
 export interface InteractiveStoreActions {
-  // Chunk management
   setChunkState: (room: RoomId, state: ChunkState) => void
   activateChunk: (room: RoomId) => void
   disposeChunk: (room: RoomId) => void
 
-  // Quality
   setQualityTier: (tier: QualityTier) => void
   setEffectiveQualityTier: (tier: Exclude<QualityTier, 'auto'>) => void
 
-  // Player
   setPlayerPosition: (position: THREE.Vector3Tuple) => void
   setPlayerRotation: (rotation: THREE.Vector3Tuple) => void
   setSpawnPosition: (spawnPosition: THREE.Vector3Tuple) => void
@@ -155,21 +125,16 @@ export interface InteractiveStoreActions {
   setIsMoving: (isMoving: boolean) => void
   setIsInteracting: (isInteracting: boolean) => void
 
-  // Settings
   updateSettings: (partial: Partial<InteractiveSettings>) => void
   resetSettings: () => void
 
-  // Loading
   setLoading: (isLoading: boolean) => void
   setLoadingProgress: (progress: number, status?: string) => void
 
-  // Error
   setError: (error: Error | null) => void
 
-  // Session
   recordInteraction: () => void
 
-  // Persistence
   saveToStorage: () => void
   loadFromStorage: () => void
 }

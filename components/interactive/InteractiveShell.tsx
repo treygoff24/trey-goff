@@ -48,7 +48,6 @@ export function InteractiveShell({ className }: InteractiveShellProps) {
   const [showWorld, setShowWorld] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Detect capabilities on mount
   useEffect(() => {
     const caps = detectCapabilities()
     setCapabilities(caps)
@@ -62,40 +61,33 @@ export function InteractiveShell({ className }: InteractiveShellProps) {
     }
   }, [])
 
-  // Handle tier selection and start loading
   const handleEnter = useCallback(() => {
     if (!capabilities?.webgl2) return
     setPhase('loading')
     setShowWorld(true)
   }, [capabilities])
 
-  // Handle world load complete
   const handleWorldReady = useCallback(() => {
     setPhase('complete')
   }, [])
 
-  // Handle world error
   const handleWorldError = useCallback((err: Error) => {
     setError(err.message)
     setPhase('error')
   }, [])
 
-  // Handle auto-tuned tier change
   const handleTierChange = useCallback((tier: Exclude<QualityTier, 'auto'>) => {
     setSelectedTier(tier)
   }, [])
 
-  // Non-WebGL fallback
   if (phase === 'no-webgl') {
     return <FallbackUI />
   }
 
-  // Error state
   if (phase === 'error') {
     return <ErrorUI message={error} onRetry={() => window.location.reload()} />
   }
 
-  // Ready state - show entry UI
   if (phase === 'ready' && capabilities) {
     return (
       <EntryUI
@@ -107,12 +99,10 @@ export function InteractiveShell({ className }: InteractiveShellProps) {
     )
   }
 
-  // Detecting state
   if (phase === 'detecting') {
     return <LoadingScreen status="Detecting capabilities..." />
   }
 
-  // Loading/playing state
   return (
     <div className={`relative h-screen w-screen ${className ?? ''}`}>
       <a
@@ -147,10 +137,6 @@ export function InteractiveShell({ className }: InteractiveShellProps) {
     </div>
   )
 }
-
-// =============================================================================
-// Sub-components
-// =============================================================================
 
 function LoadingScreen({ status }: { status: string }) {
   return (

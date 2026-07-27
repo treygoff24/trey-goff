@@ -9,10 +9,6 @@ import { THREE_COLORS } from '@/lib/interactive/colors'
 import { DoorTrigger, type DoorConfig } from '../DoorTrigger'
 import type { RoomId } from '@/lib/interactive/types'
 
-// =============================================================================
-// Types
-// =============================================================================
-
 interface MainHallRoomProps {
   /** Show debug visualizations */
   debug?: boolean
@@ -23,10 +19,6 @@ interface MainHallRoomProps {
     spawnRotation: number,
   ) => void
 }
-
-// =============================================================================
-// Constants
-// =============================================================================
 
 const HALL_WIDTH = 20
 const HALL_DEPTH = 25
@@ -71,10 +63,6 @@ const DOOR_CONFIGS: DoorConfig[] = [
     labelRotation: 0,
   },
 ]
-
-// =============================================================================
-// Sub-components
-// =============================================================================
 
 /**
  * Floor with decorative marble-like pattern.
@@ -569,10 +557,6 @@ function CentralPedestal() {
     </group>
   )
 }
-
-// =============================================================================
-// Main Component
-// =============================================================================
 
 /**
  * Collision bodies for main hall - floor, walls, pillars, pedestal.

@@ -3,10 +3,6 @@ import test, { describe } from 'node:test'
 import { generateGraphData, generateSerializedGraphData } from '@/lib/graph/generate'
 import { NODE_COLORS, NODE_SIZES, type NodeType } from '@/lib/graph/types'
 
-// ============================================
-// Basic graph structure tests
-// ============================================
-
 describe('generateGraphData structure', () => {
   test('returns nodes and edges arrays', () => {
     const data = generateGraphData()
@@ -42,10 +38,6 @@ describe('generateGraphData structure', () => {
     }
   })
 })
-
-// ============================================
-// Node type tests
-// ============================================
 
 describe('graph node types', () => {
   test('graph note nodes link to /notes#<slug>', () => {
@@ -114,10 +106,6 @@ describe('graph node types', () => {
   })
 })
 
-// ============================================
-// Node styling tests
-// ============================================
-
 describe('graph node styling', () => {
   test('nodes use correct colors from NODE_COLORS', () => {
     const { nodes } = generateGraphData()
@@ -141,10 +129,6 @@ describe('graph node styling', () => {
     }
   })
 })
-
-// ============================================
-// Edge tests
-// ============================================
 
 describe('graph edges', () => {
   test('edge IDs follow source-target pattern', () => {
@@ -210,10 +194,6 @@ describe('graph edges', () => {
   })
 })
 
-// ============================================
-// Node metadata tests
-// ============================================
-
 describe('graph node metadata', () => {
   test('essay nodes have metadata with date and summary', () => {
     const { nodes } = generateGraphData()
@@ -256,10 +236,6 @@ describe('graph node metadata', () => {
   })
 })
 
-// ============================================
-// Serialization tests
-// ============================================
-
 describe('generateSerializedGraphData', () => {
   test('returns valid JSON string', () => {
     const serialized = generateSerializedGraphData()
@@ -274,10 +250,6 @@ describe('generateSerializedGraphData', () => {
     assert.deepEqual(parsed.edges.length, direct.edges.length)
   })
 })
-
-// ============================================
-// Uniqueness tests
-// ============================================
 
 describe('graph data integrity', () => {
   test('node IDs are unique', () => {

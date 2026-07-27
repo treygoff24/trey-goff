@@ -20,7 +20,6 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
   const [isLayoutRunning, setIsLayoutRunning] = useState(false)
   const [useFallbackCanvas, setUseFallbackCanvas] = useState(false)
 
-  // Initialize graph and sigma
   useEffect(() => {
     if (!useFallbackCanvas || !fallbackCanvasRef.current) return
 
@@ -67,10 +66,8 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
     if (useFallbackCanvas) return
     if (!containerRef.current) return
 
-    // Create graphology instance
     const graph = new Graph()
 
-    // Add nodes
     for (const node of data.nodes) {
       graph.addNode(node.id, {
         label: node.label,
@@ -85,7 +82,6 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
       })
     }
 
-    // Add edges
     for (const edge of data.edges) {
       // Skip if nodes don't exist
       if (!graph.hasNode(edge.source) || !graph.hasNode(edge.target)) continue
@@ -135,7 +131,6 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
 
     sigmaRef.current = sigma
 
-    // Handle node click
     sigma.on('clickNode', ({ node }) => {
       const nodeData = graph.getNodeAttributes(node)
       if (onNodeClick) {
@@ -151,14 +146,12 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
       }
     })
 
-    // Handle background click
     sigma.on('clickStage', () => {
       if (onNodeClick) {
         onNodeClick(null)
       }
     })
 
-    // Hover effects
     sigma.on('enterNode', ({ node }) => {
       sigma.setSetting('labelRenderedSizeThreshold', 0)
       const neighbors = new Set(graph.neighbors(node))
@@ -190,14 +183,12 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
       sigma.refresh()
     })
 
-    // Cleanup
     return () => {
       sigma.kill()
       sigmaRef.current = null
     }
   }, [data, isMobile, onNodeClick, useFallbackCanvas])
 
-  // Zoom controls
   const zoomIn = useCallback(() => {
     if (sigmaRef.current) {
       const camera = sigmaRef.current.getCamera()

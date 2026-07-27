@@ -26,7 +26,6 @@ export async function GET() {
     },
   })
 
-  // Add essays
   const publishedEssays = allEssays
     .filter((e) => e.status !== 'draft')
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
@@ -42,7 +41,6 @@ export async function GET() {
     })
   }
 
-  // Add notes
   const sortedNotes = [...allNotes].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   )

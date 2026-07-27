@@ -10,10 +10,6 @@ import type { RoomId } from '@/lib/interactive/types'
 import type { BooksManifest, BookManifestEntry } from '@/lib/interactive/manifest-types'
 import type { OverlayContent } from '../ContentOverlay'
 
-// =============================================================================
-// Types
-// =============================================================================
-
 interface LibraryRoomProps {
   /** Show debug visualizations */
   debug?: boolean
@@ -26,10 +22,6 @@ interface LibraryRoomProps {
   /** Callback when content is selected for overlay */
   onContentSelect?: (content: OverlayContent) => void
 }
-
-// =============================================================================
-// Constants
-// =============================================================================
 
 const ROOM_WIDTH = 18
 const ROOM_DEPTH = 16
@@ -98,10 +90,6 @@ const dustParticleData = (() => {
 
   return { positions: pos, sizes: siz, velocities: vel }
 })()
-
-// =============================================================================
-// Visual Enhancement Components
-// =============================================================================
 
 /**
  * Floating dust motes that catch the light.
@@ -202,14 +190,12 @@ function Fireplace() {
   useFrame((state) => {
     const t = state.clock.elapsedTime
 
-    // Animate flame mesh scale
     if (flameRef.current) {
       const flicker = 0.9 + Math.sin(t * 8) * 0.05 + Math.sin(t * 13) * 0.05
       flameRef.current.scale.y = flicker
       flameRef.current.scale.x = 0.95 + Math.sin(t * 10) * 0.05
     }
 
-    // Animate light intensity
     if (lightRef.current) {
       const intensity = 0.8 + Math.sin(t * 6) * 0.15 + Math.sin(t * 11) * 0.1
       lightRef.current.intensity = intensity
@@ -325,10 +311,6 @@ function MoonlitWindow() {
   )
 }
 
-// =============================================================================
-// Book Instance Data
-// =============================================================================
-
 interface BookInstance {
   book: BookManifestEntry
   position: [number, number, number]
@@ -341,18 +323,15 @@ interface BookInstance {
 function generateBookInstances(books: BookManifestEntry[]): BookInstance[] {
   const instances: BookInstance[] = []
 
-  // Shelf positions (back wall and side walls)
   const shelfPositions: Array<{
     position: [number, number, number]
     rotation: number
     capacity: number
   }> = [
-    // Back wall shelves
     { position: [-5, 0, -ROOM_DEPTH / 2 + 0.5], rotation: 0, capacity: 8 },
     { position: [-1.5, 0, -ROOM_DEPTH / 2 + 0.5], rotation: 0, capacity: 8 },
     { position: [2, 0, -ROOM_DEPTH / 2 + 0.5], rotation: 0, capacity: 8 },
     { position: [5.5, 0, -ROOM_DEPTH / 2 + 0.5], rotation: 0, capacity: 8 },
-    // Side wall shelves (left)
     { position: [-ROOM_WIDTH / 2 + 0.5, 0, -3], rotation: Math.PI / 2, capacity: 8 },
     { position: [-ROOM_WIDTH / 2 + 0.5, 0, 3], rotation: Math.PI / 2, capacity: 8 },
   ]
@@ -370,11 +349,9 @@ function generateBookInstances(books: BookManifestEntry[]): BookInstance[] {
         const book = books[bookIndex]
         if (!book) break
 
-        // Slight random variations
         const widthVariation = 0.8 + Math.random() * 0.4
         const heightVariation = 0.85 + Math.random() * 0.3
 
-        // Position within slot
         const slotOffset = (slot - shelf.capacity / 2 + 0.5) * 0.35
         const x = shelf.position[0] + (shelf.rotation === 0 ? slotOffset : 0)
         const y = shelf.position[1] + levelY
@@ -400,10 +377,6 @@ function generateBookInstances(books: BookManifestEntry[]): BookInstance[] {
 
   return instances
 }
-
-// =============================================================================
-// Sub-components
-// =============================================================================
 
 /**
  * Library floor with wood texture appearance.
@@ -763,10 +736,6 @@ function Books({
   )
 }
 
-// =============================================================================
-// Main Component
-// =============================================================================
-
 /**
  * LibraryRoom - Displays books from the manifest on bookshelves.
  */
@@ -798,7 +767,6 @@ export function LibraryRoom({ debug = false, onDoorActivate, onContentSelect }: 
     return () => controller.abort()
   }, [])
 
-  // Convert book to overlay content
   const handleBookSelect = useCallback(
     (book: BookManifestEntry) => {
       if (!onContentSelect) return

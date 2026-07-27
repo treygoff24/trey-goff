@@ -15,10 +15,6 @@ import type {
   LiftsManifestEntry,
 } from '@/lib/interactive/manifest-types'
 
-// =============================================================================
-// Types
-// =============================================================================
-
 interface GymRoomProps {
   /** Show debug visualizations */
   debug?: boolean
@@ -29,10 +25,6 @@ interface GymRoomProps {
     spawnRotation: number,
   ) => void
 }
-
-// =============================================================================
-// Constants
-// =============================================================================
 
 const ROOM_WIDTH = 20
 const ROOM_DEPTH = 18
@@ -58,10 +50,6 @@ const LIFT_NAMES: Record<LiftName, string> = {
   bench: 'BENCH',
   deadlift: 'DEADLIFT',
 }
-
-// =============================================================================
-// Shaders
-// =============================================================================
 
 // Rubber floor mat shader with grid lines
 const floorVertexShader = /* glsl */ `
@@ -197,10 +185,6 @@ const plaqueFragmentShader = /* glsl */ `
   }
 `
 
-// =============================================================================
-// Utility Functions
-// =============================================================================
-
 /**
  * Calculate plates needed for a given weight.
  * Returns an array of plate weights (for one side of the bar).
@@ -220,10 +204,6 @@ function calculatePlates(weight: number): number[] {
 
   return plates
 }
-
-// =============================================================================
-// Sub-components
-// =============================================================================
 
 /**
  * Gym floor with rubber mat grid pattern shader.
@@ -831,10 +811,6 @@ function GymBranding() {
     </group>
   )
 }
-
-// =============================================================================
-// Main Component
-// =============================================================================
 
 /**
  * Collision bodies for gym.

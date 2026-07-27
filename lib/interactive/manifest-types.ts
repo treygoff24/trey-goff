@@ -3,10 +3,6 @@
  * These manifests are generated at build time from content sources.
  */
 
-// =============================================================================
-// Essays Manifest (from content/essays/*.mdx)
-// =============================================================================
-
 export interface EssayManifestEntry {
   /** Unique identifier (slug) */
   id: string
@@ -33,10 +29,6 @@ export interface EssaysManifest {
   generated: string
   entries: EssayManifestEntry[]
 }
-
-// =============================================================================
-// Books Manifest (from content/library/books.json)
-// =============================================================================
 
 export type BookTier = 'favorites' | 'recommended' | 'read' | 'reading' | 'want'
 
@@ -68,10 +60,6 @@ export interface BooksManifest {
   generated: string
   entries: BookManifestEntry[]
 }
-
-// =============================================================================
-// Projects Manifest (from content/projects/*.mdx)
-// =============================================================================
 
 export interface ProjectLink {
   label: string
@@ -105,10 +93,6 @@ export interface ProjectsManifest {
   entries: ProjectManifestEntry[]
 }
 
-// =============================================================================
-// Lifts Manifest (from data/lifts.json)
-// =============================================================================
-
 export type LiftName = 'squat' | 'bench' | 'deadlift'
 
 export interface LiftRecord {
@@ -141,10 +125,6 @@ export interface LiftsManifest {
   /** Individual lift PRs */
   lifts: LiftsManifestEntry[]
 }
-
-// =============================================================================
-// Combined Manifest Type
-// =============================================================================
 
 export interface InteractiveManifests {
   essays: EssaysManifest

@@ -3,10 +3,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { cn } from '@/lib/utils'
 
-// =============================================================================
-// Types
-// =============================================================================
-
 export type TransitionState = 'idle' | 'fading-out' | 'black' | 'fading-in'
 
 interface TransitionOverlayProps {
@@ -24,16 +20,8 @@ interface TransitionOverlayProps {
   reducedMotion?: boolean
 }
 
-// =============================================================================
-// Constants
-// =============================================================================
-
 const DEFAULT_DURATION = 300 // ms
 const DEFAULT_HOLD = 200 // ms
-
-// =============================================================================
-// Main Component
-// =============================================================================
 
 /**
  * TransitionOverlay - Fade to black overlay for room transitions.
@@ -60,7 +48,6 @@ export function TransitionOverlay({
   const fadeDuration = reducedMotion ? 0 : duration
   const holdTime = reducedMotion ? 50 : holdDuration
 
-  // Start transition sequence
   useEffect(() => {
     if (isTransitioning && state === 'idle') {
       setState('fading-out')
@@ -71,7 +58,6 @@ export function TransitionOverlay({
   useEffect(() => {
     if (state !== 'fading-out') return
 
-    // Animate opacity to 1
     setOpacity(1)
 
     const timer = setTimeout(() => {
@@ -97,7 +83,6 @@ export function TransitionOverlay({
   useEffect(() => {
     if (state !== 'fading-in') return
 
-    // Animate opacity to 0
     setOpacity(0)
 
     const timer = setTimeout(() => {
@@ -117,7 +102,6 @@ export function TransitionOverlay({
     }
   }, [isTransitioning, state])
 
-  // Don't render if idle and fully transparent
   if (state === 'idle' && opacity === 0) {
     return null
   }
@@ -137,10 +121,6 @@ export function TransitionOverlay({
     />
   )
 }
-
-// =============================================================================
-// Hook for Transition Control
-// =============================================================================
 
 /**
  * Hook to manage room transition state.

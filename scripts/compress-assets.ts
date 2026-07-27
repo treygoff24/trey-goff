@@ -19,10 +19,6 @@ import * as path from 'path'
 import type { AssetManifest } from './lib/asset-manifest-types'
 import { writeStableJsonFile } from './lib/stable-json'
 
-// =============================================================================
-// Configuration
-// =============================================================================
-
 const CONFIG = {
   sourceDir: 'public/assets/source',
   chunkOutputDir: 'public/assets/chunks',
@@ -50,10 +46,6 @@ const CONFIG = {
   ],
 }
 
-// =============================================================================
-// Utility Functions
-// =============================================================================
-
 function ensureDir(dir: string): void {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true })
@@ -80,10 +72,6 @@ function cleanOldVersions(outputDir: string, baseName: string): void {
     }
   }
 }
-
-// =============================================================================
-// Compression Functions
-// =============================================================================
 
 interface CompressionResult {
   sourceName: string
@@ -129,7 +117,6 @@ async function compressAsset(
 
   console.log(`  Compressing ${sourceName}...`)
 
-  // Clean old versions
   cleanOldVersions(outputDir, baseName)
 
   try {
@@ -149,7 +136,6 @@ async function compressAsset(
       execFileSync('npx', ['gltf-transform', 'ktx2', tempPath, outputPath, '--mode', ktx2Mode], {
         stdio: 'pipe',
       })
-      // Remove temp file
       fs.unlinkSync(tempPath)
     } catch {
       // KTX2 compression failed (likely missing toktx), use meshopt-only
@@ -182,10 +168,6 @@ async function compressAsset(
   }
 }
 
-// =============================================================================
-// Manifest Generation
-// =============================================================================
-
 function generateAssetManifest(results: CompressionResult[]): void {
   const manifest: AssetManifest = {
     version: '1.0.0',
@@ -216,14 +198,9 @@ function generateAssetManifest(results: CompressionResult[]): void {
   )
 }
 
-// =============================================================================
-// Main
-// =============================================================================
-
 async function main(): Promise<void> {
   console.log('Asset Compression Pipeline\n')
 
-  // Ensure directories exist
   ensureDir(CONFIG.sourceDir)
   ensureDir(CONFIG.chunkOutputDir)
   ensureDir(CONFIG.propOutputDir)
@@ -259,7 +236,6 @@ async function main(): Promise<void> {
 
   const results: CompressionResult[] = []
 
-  // Process chunk assets
   console.log('Processing chunk assets:')
   for (const asset of CONFIG.chunkAssets) {
     const sourcePath = path.join(CONFIG.sourceDir, asset)
@@ -268,7 +244,6 @@ async function main(): Promise<void> {
     if (result) results.push(result)
   }
 
-  // Process prop assets
   console.log('\nProcessing prop assets:')
   for (const asset of CONFIG.propAssets) {
     const sourcePath = path.join(CONFIG.sourceDir, asset)
@@ -277,12 +252,10 @@ async function main(): Promise<void> {
     if (result) results.push(result)
   }
 
-  // Generate manifest
   if (results.length > 0) {
     generateAssetManifest(results)
   }
 
-  // Summary
   console.log('\n=== Compression Summary ===')
   console.log(`Total assets processed: ${results.length}`)
   if (results.length > 0) {

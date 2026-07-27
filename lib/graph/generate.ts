@@ -61,7 +61,6 @@ export function generateGraphData(): GraphData {
     return id
   }
 
-  // Process essays
   const publishedEssays = allEssays.filter((e) => e.status !== 'draft')
   for (const essay of publishedEssays) {
     const nodeId = `essay-${essay.slug}`
@@ -73,14 +72,12 @@ export function generateGraphData(): GraphData {
       }),
     )
 
-    // Connect to tags
     for (const tag of essay.tags) {
       const tagId = getTagNode(tag)
       edges.push(createEdge(nodeId, tagId, 'tag'))
     }
   }
 
-  // Process notes
   for (const note of allNotes) {
     const nodeId = `note-${note.slug}`
     const label = note.title || `Note: ${note.date}`
@@ -90,14 +87,12 @@ export function generateGraphData(): GraphData {
       }),
     )
 
-    // Connect to tags
     for (const tag of note.tags) {
       const tagId = getTagNode(tag)
       edges.push(createEdge(nodeId, tagId, 'tag'))
     }
   }
 
-  // Process books
   const books = getAllBooks()
   for (const book of books) {
     const nodeId = `book-${book.id}`
@@ -115,7 +110,6 @@ export function generateGraphData(): GraphData {
     }
   }
 
-  // Process transmissions (external publications)
   const transmissions = getAllTransmissions()
   for (const transmission of transmissions) {
     const nodeId = `transmission-${transmission.id}`
@@ -127,7 +121,6 @@ export function generateGraphData(): GraphData {
       }),
     )
 
-    // Connect to tags
     for (const tag of transmission.tags) {
       const tagId = getTagNode(tag)
       edges.push(createEdge(nodeId, tagId, 'tag'))

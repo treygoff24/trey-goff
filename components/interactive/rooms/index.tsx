@@ -6,10 +6,6 @@ import type { QualityTier } from '@/lib/interactive/capabilities'
 import type { OverlayContent } from '../ContentOverlay'
 import { DoorTrigger } from '../DoorTrigger'
 
-// =============================================================================
-// Types
-// =============================================================================
-
 export interface RoomProps {
   debug?: boolean
   onDoorActivate?: (
@@ -36,10 +32,6 @@ export interface RoomConfig {
   /** Whether room is ready (has real assets vs placeholder) */
   isPlaceholder: boolean
 }
-
-// =============================================================================
-// Lazy-loaded Room Components
-// =============================================================================
 
 const ExteriorRoom = lazy(() => import('./ExteriorRoom').then((m) => ({ default: m.ExteriorRoom })))
 
@@ -125,10 +117,6 @@ function PlaceholderRoom({ roomId, onDoorActivate, debug }: { roomId: RoomId } &
   )
 }
 
-// =============================================================================
-// Room Registry
-// =============================================================================
-
 /**
  * Registry of all rooms with their configurations.
  * Rooms are lazy-loaded to enable code splitting.
@@ -178,10 +166,6 @@ const ROOM_REGISTRY: Record<RoomId, RoomConfig> = {
   },
 }
 
-// =============================================================================
-// Room Renderer Component
-// =============================================================================
-
 interface RoomRendererProps {
   roomId: RoomId
   debug?: boolean
@@ -230,10 +214,6 @@ export function RoomRenderer({
     </Suspense>
   )
 }
-
-// =============================================================================
-// Utility Functions
-// =============================================================================
 
 /**
  * Get the default spawn position for a room.
