@@ -16,7 +16,7 @@ interface CoverCache {
   }
 }
 
-export async function resolveBookCover(book: Book): Promise<string> {
+async function resolveBookCover(book: Book): Promise<string> {
   // 1. Manual override
   if (book.coverUrl) {
     return book.coverUrl

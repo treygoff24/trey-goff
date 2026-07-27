@@ -331,35 +331,3 @@ export function ChunkManager({ debug = false, onChunkActive, onChunkDisposed }: 
   // Component doesn't render anything - it's a controller
   return null
 }
-
-// =============================================================================
-// Hooks for External Use
-// =============================================================================
-
-/**
- * Hook to trigger chunk preloading.
- * Use near doors to preload target room.
- */
-export function usePreloadChunk() {
-  const setChunkState = useInteractiveStore((s) => s.setChunkState)
-
-  const preload = useCallback(
-    (room: RoomId) => {
-      const state = useInteractiveStore.getState().chunkStates.get(room)?.state
-      if (state === 'unloaded' || state === 'disposed') {
-        // Trigger preload by setting state (ChunkManager will react)
-        setChunkState(room, 'preloading')
-      }
-    },
-    [setChunkState],
-  )
-
-  return preload
-}
-
-/**
- * Hook to get chunk state for a room.
- */
-export function useChunkState(room: RoomId) {
-  return useInteractiveStore((s) => s.chunkStates.get(room))
-}

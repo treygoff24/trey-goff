@@ -10,7 +10,7 @@ import { recordContextLost, recordMemoryWarning } from './telemetry'
 // =============================================================================
 
 /** Base error class for Interactive errors */
-export class InteractiveError extends Error {
+class InteractiveError extends Error {
   constructor(
     message: string,
     public readonly recoverable: boolean = true,

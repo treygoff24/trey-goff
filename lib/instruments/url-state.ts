@@ -20,7 +20,7 @@ export interface InstrumentUrlState {
   audit: boolean
 }
 
-export const PARAMS = {
+const PARAMS = {
   verdicts: 'v',
   sections: 's',
   claim: 'claim',

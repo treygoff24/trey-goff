@@ -5,7 +5,7 @@ export const SUBSCRIBE_MAX_BODY_BYTES = 4096
 const EMAIL_REGEX =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
 
-export const MAX_EMAIL_LENGTH = 320
+const MAX_EMAIL_LENGTH = 320
 
 /**
  * Prefer platform-provided client IP on Vercel, then fall back conservatively.

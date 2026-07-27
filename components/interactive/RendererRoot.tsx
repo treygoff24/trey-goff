@@ -10,7 +10,6 @@ import {
   applyReducedMotion,
   createAutoTuneState,
   recordFrameSample,
-  type QualitySettings,
 } from '@/lib/interactive/quality'
 import { initializeLoaders, disposeLoaders } from '@/lib/interactive/loaders'
 
@@ -285,19 +284,4 @@ export function RendererRoot({
       {isSetupComplete && children}
     </Canvas>
   )
-}
-
-// =============================================================================
-// Helper Hook for Quality Settings
-// =============================================================================
-
-/**
- * Hook to get current quality settings inside Canvas.
- */
-export function useQualitySettings(tier: QualityTier, reducedMotion: boolean): QualitySettings {
-  let settings = getQualitySettings(tier)
-  if (reducedMotion) {
-    settings = applyReducedMotion(settings)
-  }
-  return settings
 }

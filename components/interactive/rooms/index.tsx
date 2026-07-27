@@ -133,7 +133,7 @@ function PlaceholderRoom({ roomId, onDoorActivate, debug }: { roomId: RoomId } &
  * Registry of all rooms with their configurations.
  * Rooms are lazy-loaded to enable code splitting.
  */
-export const ROOM_REGISTRY: Record<RoomId, RoomConfig> = {
+const ROOM_REGISTRY: Record<RoomId, RoomConfig> = {
   exterior: {
     Component: ExteriorRoom,
     defaultSpawn: [0, 0, 10],
@@ -247,18 +247,4 @@ export function getRoomSpawn(roomId: RoomId): [number, number, number] {
  */
 export function getRoomRotation(roomId: RoomId): number {
   return ROOM_REGISTRY[roomId]?.defaultRotation ?? 0
-}
-
-/**
- * Check if a room has real assets or is a placeholder.
- */
-export function isRoomReady(roomId: RoomId): boolean {
-  return !ROOM_REGISTRY[roomId]?.isPlaceholder
-}
-
-/**
- * Get all room IDs that are ready (not placeholders).
- */
-export function getReadyRooms(): RoomId[] {
-  return (Object.keys(ROOM_REGISTRY) as RoomId[]).filter((id) => !ROOM_REGISTRY[id].isPlaceholder)
 }

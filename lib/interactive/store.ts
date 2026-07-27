@@ -376,28 +376,3 @@ export const useInteractiveStore = create<InteractiveStore>()(
     },
   })),
 )
-
-// =============================================================================
-// Selectors (for optimized subscriptions)
-// =============================================================================
-
-export const selectChunkState = (room: RoomId) => (state: InteractiveStore) =>
-  state.chunkStates.get(room)
-
-export const selectActiveChunk = (state: InteractiveStore) => state.activeChunk
-
-export const selectQualityTier = (state: InteractiveStore) => state.qualityTier
-
-export const selectEffectiveQualityTier = (state: InteractiveStore) => state.effectiveQualityTier
-
-export const selectPlayerPosition = (state: InteractiveStore) => state.player.position
-
-export const selectCurrentRoom = (state: InteractiveStore) => state.player.currentRoom
-
-export const selectSettings = (state: InteractiveStore) => state.settings
-
-export const selectIsLoading = (state: InteractiveStore) => state.isLoading
-
-export const selectLoadingProgress = (state: InteractiveStore) => state.loadingProgress
-
-export const selectError = (state: InteractiveStore) => state.error

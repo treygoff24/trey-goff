@@ -41,7 +41,6 @@ const DEFAULT_LOOK_AT_HEIGHT = 1.35
 const LERP_FACTOR = 0.1
 const LERP_FACTOR_INSTANT = 1.0
 const MIN_DISTANCE = 1
-const MAX_DISTANCE = 8
 const COLLISION_OFFSET = 0.3
 
 // =============================================================================
@@ -212,40 +211,4 @@ export function CameraController({
   })
 
   return null
-}
-
-// =============================================================================
-// Hook for external camera control
-// =============================================================================
-
-export function useCameraSettings() {
-  const settings = useInteractiveStore((s) => s.settings)
-  const updateSettings = useInteractiveStore((s) => s.updateSettings)
-
-  const setCameraMode = (mode: CameraMode) => {
-    updateSettings({ cameraMode: mode })
-  }
-
-  const setCameraDistance = (distance: number) => {
-    updateSettings({ cameraDistance: Math.max(MIN_DISTANCE, Math.min(MAX_DISTANCE, distance)) })
-  }
-
-  const setCameraSensitivity = (sensitivity: number) => {
-    updateSettings({ cameraSensitivity: Math.max(0.1, Math.min(2, sensitivity)) })
-  }
-
-  const setInvertY = (invert: boolean) => {
-    updateSettings({ invertY: invert })
-  }
-
-  return {
-    mode: settings.cameraMode,
-    distance: settings.cameraDistance,
-    sensitivity: settings.cameraSensitivity,
-    invertY: settings.invertY,
-    setCameraMode,
-    setCameraDistance,
-    setCameraSensitivity,
-    setInvertY,
-  }
 }

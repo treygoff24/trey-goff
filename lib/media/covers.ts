@@ -12,7 +12,7 @@ interface CoverCache {
   }
 }
 
-export async function resolveAppearanceCover(appearance: Appearance): Promise<string> {
+async function resolveAppearanceCover(appearance: Appearance): Promise<string> {
   // 1. Manual override via showArtwork
   if (appearance.showArtwork) {
     return appearance.showArtwork

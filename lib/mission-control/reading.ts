@@ -25,7 +25,7 @@ function toReadingBook(book: Book): ReadingBook {
   }
 }
 
-export function aggregateReading(source: BooksData, now = new Date()): Instrument<ReadingData> {
+function aggregateReading(source: BooksData, now = new Date()): Instrument<ReadingData> {
   if (!Array.isArray(source.books) || !source.lastUpdated) throw new Error('Invalid books data')
 
   return {

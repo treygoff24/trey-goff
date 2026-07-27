@@ -41,23 +41,13 @@ export async function fetchPodcastArtwork(podcastName: string): Promise<string |
 }
 
 // Extract YouTube video ID from various URL formats
-export function extractYouTubeId(url: string): string | null {
+function extractYouTubeId(url: string): string | null {
   const patterns = [/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s?]+)/]
   for (const pattern of patterns) {
     const match = url.match(pattern)
     if (match?.[1]) return match[1]
   }
   return null
-}
-
-// Get YouTube thumbnail URL
-export function getYouTubeThumbnail(url: string): string | null {
-  const videoId = extractYouTubeId(url)
-  if (!videoId) return null
-
-  // maxresdefault is highest quality but may not exist
-  // We return it and let the build script verify it exists
-  return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
 }
 
 // Verify a YouTube thumbnail exists (maxresdefault may 404)

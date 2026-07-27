@@ -47,7 +47,7 @@ export function initializeLoaders(gl: THREE.WebGLRenderer): void {
  * Get the configured GLTF loader.
  * @throws Error if loaders not initialized
  */
-export function getGLTFLoader(): GLTFLoader {
+function getGLTFLoader(): GLTFLoader {
   if (!gltfLoader) {
     throw new Error('Loaders not initialized. Call initializeLoaders() first.')
   }
@@ -122,14 +122,6 @@ export async function loadGLTF(url: string, options?: LoadOptions): Promise<GLTF
       },
     )
   })
-}
-
-/**
- * Preload a GLTF file without returning it.
- * Useful for warming caches.
- */
-export async function preloadGLTF(url: string): Promise<void> {
-  await loadGLTF(url)
 }
 
 // =============================================================================

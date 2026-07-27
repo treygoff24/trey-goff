@@ -52,7 +52,7 @@ export function normalizeWikiKey(value: string): string {
     .trim()
 }
 
-export function parseWikilinkToken(raw: string): { target: string; label: string } {
+function parseWikilinkToken(raw: string): { target: string; label: string } {
   const [targetPart = '', labelPart = ''] = raw.split('|').map((part) => part.trim())
   if (labelPart) {
     const target = targetPart || labelPart
@@ -124,7 +124,7 @@ export function extractWikilinksFromMarkdown(markdown: string): string[] {
   return targets
 }
 
-export function getWikiLinkIndex(): WikiLinkIndex {
+function getWikiLinkIndex(): WikiLinkIndex {
   if (cachedIndex) return cachedIndex
 
   const keyToTargetId = new Map<string, string>()

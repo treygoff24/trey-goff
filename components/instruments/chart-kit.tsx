@@ -19,7 +19,7 @@ const COMPACT_WIDTH = 560
 const useMeasureEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
 
 /** The drawn width, measured before paint so the first frame is already at the real size. */
-export function useChartWidth(): [React.RefObject<HTMLDivElement | null>, number] {
+function useChartWidth(): [React.RefObject<HTMLDivElement | null>, number] {
   const ref = useRef<HTMLDivElement>(null)
   const [width, setWidth] = useState(DEFAULT_WIDTH)
 

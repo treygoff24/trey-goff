@@ -8,7 +8,7 @@ export interface MachineQuality {
   bloom: boolean
 }
 
-export const MACHINE_QUALITY: Record<Exclude<QualityTier, 'auto'>, MachineQuality> = {
+const MACHINE_QUALITY: Record<Exclude<QualityTier, 'auto'>, MachineQuality> = {
   low: { agentCount: 1500, splitAgentCount: 750, dpr: 1, antialias: false, bloom: false },
   medium: {
     agentCount: 6000,

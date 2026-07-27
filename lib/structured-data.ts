@@ -75,7 +75,7 @@ export type BookSchemaInput = {
 }
 
 /** One Book node for use inside `@graph` (no root `@context`). */
-export function bookSchemaNode(book: BookSchemaInput): Record<string, unknown> {
+function bookSchemaNode(book: BookSchemaInput): Record<string, unknown> {
   return {
     '@type': 'Book',
     ...(book.url ? { '@id': book.url } : {}),
@@ -90,13 +90,6 @@ export function bookSchemaNode(book: BookSchemaInput): Record<string, unknown> {
     ...(book.year ? { datePublished: `${book.year}` } : {}),
     ...(book.publisher ? { publisher: { '@type': 'Organization', name: book.publisher } } : {}),
     inLanguage: 'en',
-  }
-}
-
-export function generateBookSchema(book: BookSchemaInput) {
-  return {
-    '@context': 'https://schema.org',
-    ...bookSchemaNode(book),
   }
 }
 

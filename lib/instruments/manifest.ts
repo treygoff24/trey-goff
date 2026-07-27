@@ -196,7 +196,7 @@ export function dossierPath(slug: string, dossier: string): string {
   return join(INSTRUMENTS_DIR, slug, 'dossiers', `${dossier}.md`)
 }
 
-export function readDossier(slug: string, dossier: string): string {
+function readDossier(slug: string, dossier: string): string {
   const manifest = getInstrumentManifest(slug)
   if (!manifest?.dossiers.includes(dossier)) {
     throw new Error(`${slug} has no dossier named ${dossier}`)

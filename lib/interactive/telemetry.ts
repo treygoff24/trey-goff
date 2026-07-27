@@ -188,13 +188,6 @@ export function getTimeToMilestone(milestone: LoadMilestone): number | null {
 // =============================================================================
 
 /**
- * Record chunk download start.
- */
-export function recordDownloadStart(chunkId: string): void {
-  recordMilestone('download_start', { chunkId })
-}
-
-/**
  * Record chunk download complete.
  */
 export function recordDownloadComplete(
@@ -250,20 +243,6 @@ export function recordRoomEntered(room: RoomId): void {
   roomData.enterTime = now
 
   queueEvent('engagement:room_entered', { room })
-}
-
-/**
- * Record book opened.
- */
-export function recordBookOpened(bookId: string, bookTitle: string): void {
-  queueEvent('engagement:book_opened', { bookId, bookTitle })
-}
-
-/**
- * Record project viewed.
- */
-export function recordProjectViewed(projectId: string, projectTitle: string): void {
-  queueEvent('engagement:project_viewed', { projectId, projectTitle })
 }
 
 /**

@@ -19,7 +19,7 @@ export type LedgerState = LedgerFilterState
  * numbers in its method note rather than smuggling them in — `unfalsifiable` and
  * `unverified` carry no weight because neither is a judgement about the world.
  */
-export const TERRAIN_WEIGHTS: Readonly<Partial<Record<LedgerState, number>>> = {
+const TERRAIN_WEIGHTS: Readonly<Partial<Record<LedgerState, number>>> = {
   confirmed: 1,
   likely: 0.5,
   contested: 0,

@@ -53,10 +53,6 @@ export function calculateReadingStats(books: Book[]) {
   }
 }
 
-export function getReadingStats() {
-  return calculateReadingStats(getAllBooks())
-}
-
 // Books read per year (based on dateRead)
 export function getBooksReadByYear(books: Book[]) {
   const counts = new Map<number, number>()

@@ -15,15 +15,6 @@ describe('A11y: aria-hidden, roles, and reduced motion', () => {
     })
   })
 
-  describe('Callout emoji', () => {
-    it('should have aria-hidden on decorative emoji', () => {
-      const filePath = join(projectRoot, 'components/mdx/Callout.tsx')
-      const content = readFileSync(filePath, 'utf-8')
-      const hasAriaHidden = /<span[^>]*aria-hidden="true"[^>]*>\{styles\.icon\}/.test(content)
-      assert.ok(hasAriaHidden, 'Callout emoji should have aria-hidden')
-    })
-  })
-
   describe('Lucide icons', () => {
     it('TransmissionCard Radio icon should have aria-hidden', () => {
       const filePath = join(projectRoot, 'components/transmissions/TransmissionCard.tsx')

@@ -195,7 +195,7 @@ export function oklchColor(hue: number, l = 0.74, c = 0.14, a = 1): string {
   return `oklch(${l} ${c} ${hue} / ${a})`
 }
 
-export function buildTopicCounts(books: readonly AuroraBook[]): Map<string, number> {
+function buildTopicCounts(books: readonly AuroraBook[]): Map<string, number> {
   const counts = new Map<string, number>()
   for (const book of books) {
     for (const topic of book.topics) {

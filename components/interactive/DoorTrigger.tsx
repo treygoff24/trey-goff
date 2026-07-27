@@ -240,39 +240,3 @@ export interface DoorConfig {
   label?: string
   labelRotation?: number
 }
-
-/**
- * Render multiple doors from configuration.
- */
-export function DoorTriggers({
-  doors,
-  onActivate,
-  debug = false,
-}: {
-  doors: DoorConfig[]
-  onActivate?: (
-    targetRoom: RoomId,
-    spawnPosition: [number, number, number],
-    spawnRotation: number,
-  ) => void
-  debug?: boolean
-}) {
-  return (
-    <>
-      {doors.map((door) => (
-        <DoorTrigger
-          key={door.id}
-          position={door.position}
-          targetRoom={door.targetRoom}
-          spawnPosition={door.spawnPosition}
-          spawnRotation={door.spawnRotation}
-          size={door.size}
-          label={door.label}
-          labelRotation={door.labelRotation}
-          onActivate={onActivate}
-          debug={debug}
-        />
-      ))}
-    </>
-  )
-}
