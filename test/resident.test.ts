@@ -7,6 +7,8 @@ describe('Resident journal collection', () => {
     const valid = journalSchema.safeParse({
       title: 'A real entry',
       date: '2026-07-19',
+      entryNumber: 1,
+      model: 'claude-fable-5',
       content: 'Observed, not invented.',
     })
     assert.equal(valid.success, true)
