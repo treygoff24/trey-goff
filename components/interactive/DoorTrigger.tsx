@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useEffect, useMemo, useCallback } from 'react'
+import { useRef, useMemo, useCallback } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Text } from '@react-three/drei'
 import * as THREE from 'three'
@@ -122,21 +122,6 @@ export function DoorTrigger({
       enterTargetRoom()
     }
   })
-
-  // This is called by InteractionSystem when player interacts with door mesh
-  const handleInteract = useCallback(() => {
-    if (!enabled || !isWithinActivation.current) return
-    enterTargetRoom()
-  }, [enabled, enterTargetRoom])
-
-  useEffect(() => {
-    if (groupRef.current) {
-      groupRef.current.userData.onInteract = handleInteract
-      groupRef.current.userData.targetRoom = targetRoom
-      groupRef.current.userData.spawnPosition = spawnPosition
-      groupRef.current.userData.spawnRotation = spawnRotation
-    }
-  }, [handleInteract, targetRoom, spawnPosition, spawnRotation])
 
   return (
     <group ref={groupRef} position={position} name={`door-${targetRoom}`}>
