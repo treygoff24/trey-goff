@@ -77,21 +77,30 @@ function Toggle({
   )
 }
 
-function Select({
+/**
+ * Generic over the value union so a caller's setting type flows through instead of
+ * collapsing to `string` and needing an assertion on the way back out. The change handler
+ * resolves the DOM's string back to the option that produced it, which is where the
+ * narrowing is actually earned — a native select can only emit one of its own values.
+ */
+function Select<T extends string>({
   value,
   onChange,
   options,
   label,
 }: {
-  value: string
-  onChange: (value: string) => void
-  options: Array<{ value: string; label: string }>
+  value: T
+  onChange: (value: T) => void
+  options: ReadonlyArray<{ value: T; label: string }>
   label: string
 }) {
   return (
     <select
       value={value}
-      onChange={(e) => onChange(e.target.value)}
+      onChange={(e) => {
+        const selected = options.find((option) => option.value === e.target.value)
+        if (selected) onChange(selected.value)
+      }}
       aria-label={label}
       className="rounded-lg border border-border-1 bg-surface-1 px-3 py-1.5 text-sm text-text-1 focus:outline-none focus:ring-2 focus:ring-warm"
     >
@@ -153,11 +162,11 @@ export function SettingsMenu({
   useEffect(() => {
     if (!isOpen || !menuRef.current) return
 
-    const focusableElements = menuRef.current.querySelectorAll(
+    const focusableElements = menuRef.current.querySelectorAll<HTMLElement>(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
     )
-    const firstElement = focusableElements[0] as HTMLElement
-    const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement
+    const firstElement = focusableElements[0]
+    const lastElement = focusableElements[focusableElements.length - 1]
 
     firstElement?.focus()
 
@@ -222,7 +231,7 @@ export function SettingsMenu({
           >
             <Select
               value={qualityTier}
-              onChange={(v) => onQualityChange(v as QualityTier)}
+              onChange={onQualityChange}
               options={QUALITY_OPTIONS}
               label="Graphics quality"
             />
@@ -237,7 +246,7 @@ export function SettingsMenu({
           >
             <Select
               value={cameraMode ?? 'third-person'}
-              onChange={(v) => updateSettings({ cameraMode: v as 'first-person' | 'third-person' })}
+              onChange={(cameraMode) => updateSettings({ cameraMode })}
               options={[
                 { value: 'third-person', label: 'Third Person' },
                 { value: 'first-person', label: 'First Person' },

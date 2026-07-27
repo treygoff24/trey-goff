@@ -92,7 +92,7 @@ const fragmentShader = /* glsl */ `
   }
 `
 
-interface GlowRingUniforms {
+type GlowRingUniforms = {
   uColor: THREE.IUniform<THREE.Color>
   uIntensity: THREE.IUniform<number>
   uTime: THREE.IUniform<number>
@@ -113,7 +113,7 @@ export function GlowRing({
 
   const colorVec = useMemo(() => new THREE.Color(color), [color])
 
-  const uniforms = useMemo(
+  const uniforms = useMemo<GlowRingUniforms>(
     () => ({
       uColor: { value: new THREE.Color() },
       uIntensity: { value: intensity },
@@ -128,7 +128,7 @@ export function GlowRing({
   useFrame((state) => {
     if (!materialRef.current) return
 
-    const u = materialRef.current.uniforms as unknown as GlowRingUniforms
+    const u = materialRef.current.uniforms as GlowRingUniforms
 
     if (!u.uColor.value.equals(colorVec)) {
       u.uColor.value.copy(colorVec)

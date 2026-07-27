@@ -20,7 +20,12 @@ const STORAGE_KEY = 'trey-interactive-state'
 const MAX_DORMANT_CHUNKS = 2
 
 /** Rooms in load priority order */
-const ROOM_IDS: RoomId[] = ['exterior', 'mainhall', 'library', 'gym', 'projects', 'garage']
+const ROOM_IDS: readonly RoomId[] = ['exterior', 'mainhall', 'library', 'gym', 'projects', 'garage']
+
+/** Narrows a URL- or storage-sourced string to a room the registry actually knows. */
+function isRoomId(value: string): value is RoomId {
+  return (ROOM_IDS as readonly string[]).includes(value)
+}
 
 function createInitialChunkStates(): Map<RoomId, ChunkInfo> {
   const map = new Map<RoomId, ChunkInfo>()
@@ -121,10 +126,7 @@ function getUrlRoom(): RoomId | null {
   const params = new URLSearchParams(window.location.search)
   const room = params.get('room')
 
-  if (room && ROOM_IDS.includes(room as RoomId)) {
-    return room as RoomId
-  }
-  return null
+  return room && isRoomId(room) ? room : null
 }
 
 function updateUrlRoom(room: RoomId | null): void {

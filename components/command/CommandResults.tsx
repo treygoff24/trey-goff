@@ -2,14 +2,18 @@
 
 import { CommandGroup, CommandItem } from '@/components/ui/command'
 import type { SearchResult } from '@/lib/search/orama'
+import type { SearchDocument } from '@/lib/search/types'
 import { Home, FileText, BookOpen, Book, Folder, Terminal, Zap } from 'lucide-react'
+
+/** The kinds a search hit can be — the same closed set the generated index is built from. */
+type SearchResultType = SearchDocument['type']
 
 interface CommandResultsProps {
   results: SearchResult[]
   onSelect: (url: string) => void
 }
 
-const typeLabels: Record<string, string> = {
+const typeLabels: Record<SearchResultType, string> = {
   page: 'Pages',
   essay: 'Essays',
   note: 'Notes',
@@ -19,7 +23,7 @@ const typeLabels: Record<string, string> = {
   action: 'Actions',
 }
 
-const typeIcons: Record<string, React.ReactNode> = {
+const typeIcons: Record<SearchResultType, React.ReactNode> = {
   page: <Home className="mr-2 h-4 w-4" />,
   essay: <FileText className="mr-2 h-4 w-4" />,
   note: <BookOpen className="mr-2 h-4 w-4" />,
@@ -31,18 +35,27 @@ const typeIcons: Record<string, React.ReactNode> = {
 
 export function CommandResults({ results, onSelect }: CommandResultsProps) {
   // Group results by type
-  const grouped = results.reduce(
+  const grouped = results.reduce<Partial<Record<SearchResultType, SearchResult[]>>>(
     (acc, result) => {
       const type = result.type
-      if (!acc[type]) acc[type] = []
-      acc[type].push(result)
+      const bucket = acc[type] ?? []
+      bucket.push(result)
+      acc[type] = bucket
       return acc
     },
-    {} as Record<string, SearchResult[]>,
+    {},
   )
 
   // Order: pages first, then essays, notes, books, projects, actions
-  const typeOrder = ['page', 'essay', 'note', 'book', 'project', 'tool', 'action']
+  const typeOrder: readonly SearchResultType[] = [
+    'page',
+    'essay',
+    'note',
+    'book',
+    'project',
+    'tool',
+    'action',
+  ]
 
   return (
     <>

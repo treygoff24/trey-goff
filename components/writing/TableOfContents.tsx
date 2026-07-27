@@ -18,17 +18,15 @@ function parseHeadingsFromDom(contentSelector: string): TocItem[] {
   const container = document.querySelector(contentSelector)
   if (!container) return []
 
-  const headingElements = Array.from(container.querySelectorAll('h1, h2, h3')) as HTMLElement[]
+  const headingElements = Array.from(container.querySelectorAll<HTMLHeadingElement>('h1, h2, h3'))
 
-  return headingElements
-    .map((heading) => {
-      const level = Number(heading.tagName.replace('H', ''))
-      const text = heading.textContent?.trim() || ''
-      const id = heading.id
-      if (!id || !text || !level) return null
-      return { id, text, level }
-    })
-    .filter(Boolean) as TocItem[]
+  return headingElements.flatMap((heading): TocItem[] => {
+    const level = Number(heading.tagName.replace('H', ''))
+    const text = heading.textContent?.trim() || ''
+    const id = heading.id
+    if (!id || !text || !level) return []
+    return [{ id, text, level }]
+  })
 }
 
 export function TableOfContents({ contentSelector, sourceId }: TableOfContentsProps) {
@@ -43,9 +41,10 @@ export function TableOfContents({ contentSelector, sourceId }: TableOfContentsPr
 
   // Track active heading on scroll
   useEffect(() => {
-    const headings = items
-      .map((item) => document.getElementById(item.id))
-      .filter(Boolean) as HTMLElement[]
+    const headings = items.flatMap((item) => {
+      const heading = document.getElementById(item.id)
+      return heading ? [heading] : []
+    })
 
     if (headings.length === 0) return
 

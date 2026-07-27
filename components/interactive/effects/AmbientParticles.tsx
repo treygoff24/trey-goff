@@ -90,7 +90,7 @@ const fragmentShader = /* glsl */ `
   }
 `
 
-interface ParticleUniforms {
+type ParticleUniforms = {
   uColor: THREE.IUniform<THREE.Color>
   uTime: THREE.IUniform<number>
   uSize: THREE.IUniform<number>
@@ -140,7 +140,7 @@ export function AmbientParticles({
     return geo
   }, [positions, scales, offsets])
 
-  const uniforms = useMemo(
+  const uniforms = useMemo<ParticleUniforms>(
     () => ({
       uColor: { value: new THREE.Color() },
       uTime: { value: 0 },
@@ -154,7 +154,7 @@ export function AmbientParticles({
   useFrame((state) => {
     if (!materialRef.current) return
 
-    const u = materialRef.current.uniforms as unknown as ParticleUniforms
+    const u = materialRef.current.uniforms as ParticleUniforms
 
     if (!u.uColor.value.equals(colorVec)) {
       u.uColor.value.copy(colorVec)

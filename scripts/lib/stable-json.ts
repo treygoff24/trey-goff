@@ -1,7 +1,10 @@
 import { existsSync, readFileSync, writeFileSync } from 'fs'
 
+/** Anything `JSON.parse` can hand back: the closure of the JSON grammar, and nothing else. */
+type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue }
+
 /** The shape a JSON object takes once it comes back off disk, with no schema attached. */
-type JsonRecord = Record<string, unknown>
+type JsonRecord = Record<string, JsonValue>
 
 /**
  * Shallow-copy a payload into a keyed record. Generator payloads are declared as
@@ -44,8 +47,10 @@ export function writeStableJsonFile<T extends object>(
       if (JSON.stringify(existingComparable) === JSON.stringify(nextComparable)) {
         const merged = toRecord(payload)
         for (const key of preserveKeys) {
-          if (key in existingPayload) {
-            merged[key] = existingPayload[key]
+          // JSON has no `undefined`, so a defined value is exactly a present key here.
+          const preserved = existingPayload[key]
+          if (preserved !== undefined) {
+            merged[key] = preserved
             preservedTimestamp = true
           }
         }

@@ -98,7 +98,7 @@ const fragmentShader = /* glsl */ `
   }
 `
 
-interface HolographicUniforms {
+type HolographicUniforms = {
   uColor: THREE.IUniform<THREE.Color>
   uIntensity: THREE.IUniform<number>
   uTime: THREE.IUniform<number>
@@ -117,7 +117,7 @@ export function HolographicScreen({
 
   const colorVec = useMemo(() => new THREE.Color(color), [color])
 
-  const uniforms = useMemo(
+  const uniforms = useMemo<HolographicUniforms>(
     () => ({
       uColor: { value: new THREE.Color() },
       uIntensity: { value: 1.0 },
@@ -130,7 +130,7 @@ export function HolographicScreen({
   useFrame((state) => {
     if (!materialRef.current) return
 
-    const u = materialRef.current.uniforms as unknown as HolographicUniforms
+    const u = materialRef.current.uniforms as HolographicUniforms
 
     if (!u.uColor.value.equals(colorVec)) {
       u.uColor.value.copy(colorVec)

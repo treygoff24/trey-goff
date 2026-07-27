@@ -95,7 +95,7 @@ const fragmentShader = /* glsl */ `
   }
 `
 
-interface TechFloorUniforms {
+type TechFloorUniforms = {
   uBaseColor: THREE.IUniform<THREE.Color>
   uGridColor: THREE.IUniform<THREE.Color>
   uGridIntensity: THREE.IUniform<number>
@@ -117,7 +117,7 @@ export function TechFloorGrid({
   const baseColorVec = useMemo(() => new THREE.Color(baseColor), [baseColor])
   const gridColorVec = useMemo(() => new THREE.Color(gridColor), [gridColor])
 
-  const uniforms = useMemo(
+  const uniforms = useMemo<TechFloorUniforms>(
     () => ({
       uBaseColor: { value: new THREE.Color() },
       uGridColor: { value: new THREE.Color() },
@@ -131,7 +131,7 @@ export function TechFloorGrid({
   useFrame((state) => {
     if (!materialRef.current) return
 
-    const u = materialRef.current.uniforms as unknown as TechFloorUniforms
+    const u = materialRef.current.uniforms as TechFloorUniforms
 
     if (!u.uBaseColor.value.equals(baseColorVec)) {
       u.uBaseColor.value.copy(baseColorVec)

@@ -22,6 +22,7 @@ export type LoadMilestone =
 export type EngagementEvent =
   | 'entry_choice'
   | 'room_entered'
+  | 'room_exited'
   | 'book_opened'
   | 'project_viewed'
   | 'quality_tier_changed'
@@ -29,6 +30,26 @@ export type EngagementEvent =
 
 /** Performance event types */
 export type PerformanceEvent = 'fps_sample' | 'long_frame' | 'memory_warning' | 'context_lost'
+
+/**
+ * Every event name this module can emit. Namespaced so a future analytics backend can route
+ * on the prefix, and closed so a typo in a `queueEvent` call is a compile error rather than a
+ * silently orphaned event stream.
+ */
+export type TelemetryEventType =
+  | `milestone:${LoadMilestone}`
+  | `engagement:${EngagementEvent}`
+  | `performance:${PerformanceEvent}`
+
+/**
+ * What an event payload may carry. Events are destined for an analytics wire, so the values
+ * are exactly the JSON-representable scalars and arrays of them — no functions, no class
+ * instances, nothing that would survive `console.log` but not `JSON.stringify`.
+ */
+export type TelemetryValue = string | number | boolean | null | readonly TelemetryValue[]
+
+/** The keyed bag of dimensions attached to one event. */
+export type TelemetryPayload = Readonly<Record<string, TelemetryValue>>
 
 /** FPS buckets for sampling */
 export type FpsBucket = '0-15' | '15-30' | '30-45' | '45-60' | '60+'
@@ -60,10 +81,10 @@ function generateSessionId(): string {
 }
 
 interface TelemetryEvent {
-  type: string
+  type: TelemetryEventType
   timestamp: number
   sessionId: string
-  data: Record<string, unknown>
+  data: TelemetryPayload
 }
 
 /** Queue of events to be sent */
@@ -78,7 +99,7 @@ const FLUSH_INTERVAL = 10000
 /** Whether telemetry is enabled */
 let isEnabled = true
 
-function queueEvent(type: string, data: Record<string, unknown>): void {
+function queueEvent(type: TelemetryEventType, data: TelemetryPayload): void {
   if (!isEnabled) return
 
   const event: TelemetryEvent = {
@@ -128,10 +149,7 @@ const milestoneTimings: Map<LoadMilestone, number> = new Map()
 /**
  * Record a load milestone.
  */
-export function recordMilestone(
-  milestone: LoadMilestone,
-  metadata?: Record<string, unknown>,
-): void {
+export function recordMilestone(milestone: LoadMilestone, metadata?: TelemetryPayload): void {
   const now = Date.now()
   milestoneTimings.set(milestone, now)
 

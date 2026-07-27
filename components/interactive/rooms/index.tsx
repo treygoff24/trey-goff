@@ -43,11 +43,20 @@ const GymRoom = lazy(() => import('./GymRoom').then((m) => ({ default: m.GymRoom
 
 const ProjectsRoom = lazy(() => import('./ProjectsRoom').then((m) => ({ default: m.ProjectsRoom })))
 
+/** Where a placeholder room puts its way back to the main hall, and where that lands you. */
+interface PlaceholderReturnDoor {
+  /** Door position inside the placeholder room. */
+  doorPos: [number, number, number]
+  /** Door facing inside the placeholder room. */
+  doorRot?: number
+  /** Spawn position in the main hall on return. */
+  returnPos: [number, number, number]
+  /** Spawn facing in the main hall on return. */
+  returnRot: number
+}
+
 // Return door positions for each placeholder room (position in mainhall when returning)
-const PLACEHOLDER_RETURN_DOORS: Record<
-  string,
-  { doorPos: [number, number, number]; returnPos: [number, number, number]; returnRot: number }
-> = {
+const PLACEHOLDER_RETURN_DOORS: Partial<Record<RoomId, PlaceholderReturnDoor>> = {
   library: {
     doorPos: [6, 2, 0],
     doorRot: -Math.PI / 2,
@@ -57,21 +66,13 @@ const PLACEHOLDER_RETURN_DOORS: Record<
   gym: { doorPos: [-6, 2, 0], doorRot: Math.PI / 2, returnPos: [7, 0, 0], returnRot: Math.PI / 2 },
   projects: { doorPos: [0, 2, 6], doorRot: 0, returnPos: [0, 0, -10], returnRot: 0 },
   garage: { doorPos: [0, 2, -6], doorRot: Math.PI, returnPos: [0, 0, 5], returnRot: Math.PI },
-} as Record<
-  string,
-  {
-    doorPos: [number, number, number]
-    doorRot?: number
-    returnPos: [number, number, number]
-    returnRot: number
-  }
->
+}
 
 // Placeholder component for rooms not yet built
 function PlaceholderRoom({ roomId, onDoorActivate, debug }: { roomId: RoomId } & RoomProps) {
-  const doorConfig = PLACEHOLDER_RETURN_DOORS[roomId] ?? {
-    doorPos: [0, 2, 6] as [number, number, number],
-    returnPos: [0, 0, 0] as [number, number, number],
+  const doorConfig: PlaceholderReturnDoor = PLACEHOLDER_RETURN_DOORS[roomId] ?? {
+    doorPos: [0, 2, 6],
+    returnPos: [0, 0, 0],
     returnRot: 0,
   }
 
