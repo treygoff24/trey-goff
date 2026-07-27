@@ -6,6 +6,7 @@ import Link from 'next/link'
 import clsx from 'clsx'
 import type {
   AuroraCategoryCode,
+  AuroraGraph,
   AuroraGraphBook,
   AuroraGraphEdge,
   AuroraGraphNode,
@@ -29,10 +30,12 @@ type Lens = 'constellation' | 'shelf' | 'river' | 'index'
 const FABLE_ID = '__fable__'
 const FABLE_STAR = { x: 940, y: -330, radius: 2.6 }
 
-type AuroraLibraryProps = {
-  books: AuroraGraphBook[]
-  nodes: AuroraGraphNode[]
-  edges: AuroraGraphEdge[]
+/**
+ * The serializable part of the graph the server hands the client, taken from `AuroraGraph`
+ * itself so a shape change upstream lands here instead of drifting. `topicCounts` and
+ * `maxDegree` stay behind: the server has already folded them into the node radii.
+ */
+type AuroraLibraryProps = Pick<AuroraGraph, 'books' | 'nodes' | 'edges'> & {
   topicCount: number
 }
 

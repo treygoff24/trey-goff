@@ -7,24 +7,16 @@ import { Text } from '@react-three/drei'
 import * as THREE from 'three'
 import { THREE_COLORS } from '@/lib/interactive/colors'
 import { DoorTrigger } from '../DoorTrigger'
-import type { RoomId } from '@/lib/interactive/types'
 import type {
   LiftName,
   LiftRecord,
   LiftsManifest,
   LiftsManifestEntry,
 } from '@/lib/interactive/manifest-types'
+import type { RoomProps } from './index'
 
-interface GymRoomProps {
-  /** Show debug visualizations */
-  debug?: boolean
-  /** Callback when door is activated */
-  onDoorActivate?: (
-    targetRoom: RoomId,
-    spawnPosition: [number, number, number],
-    spawnRotation: number,
-  ) => void
-}
+/** The slice of the shared room contract this room reads. */
+type GymRoomProps = Pick<RoomProps, 'debug' | 'onDoorActivate'>
 
 const ROOM_WIDTH = 20
 const ROOM_DEPTH = 18

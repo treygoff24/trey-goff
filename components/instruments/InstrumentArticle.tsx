@@ -1,13 +1,6 @@
 import type { Element, Root } from 'hast'
-import type { InstrumentManifest } from '@/lib/instruments/manifest'
-import type {
-  Chart,
-  ClaimsLedger,
-  ClientLedger,
-  ForecastCard,
-  MarksDocument,
-  Stat,
-} from '@/lib/instruments/types'
+import type { InstrumentPiece } from '@/lib/instruments/manifest'
+import type { ClaimsLedger, ClientLedger } from '@/lib/instruments/types'
 import { hastToReact, markdownToHast } from '@/lib/instruments/render'
 import { applyAnnotations } from '@/lib/instruments/marks'
 import { textOf } from '@/lib/instruments/hast'
@@ -57,14 +50,12 @@ function clientLedger(ledger: ClaimsLedger): ClientLedger {
   }
 }
 
-interface InstrumentArticleProps {
+/**
+ * Everything `loadInstrumentPiece` returns, plus the raw markdown the route already has.
+ * Derived from `InstrumentPiece` so a field added to the loader cannot go unrendered here.
+ */
+interface InstrumentArticleProps extends InstrumentPiece {
   markdown: string
-  manifest: InstrumentManifest
-  ledger: ClaimsLedger | null
-  annotations: MarksDocument | null
-  stats: Stat[] | null
-  forecasts: ForecastCard[] | null
-  charts: Chart[] | null
 }
 
 /**

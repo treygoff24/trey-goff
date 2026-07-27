@@ -13,7 +13,7 @@ import {
 } from '@/lib/interactive/quality'
 import { initializeLoaders, disposeLoaders } from '@/lib/interactive/loaders'
 
-interface RendererRootProps {
+export interface RendererRootProps {
   qualityTier: QualityTier
   reducedMotion: boolean
   onReady: () => void
@@ -84,13 +84,11 @@ function warmupShaders(gl: THREE.WebGLRenderer, scene: THREE.Scene, camera: THRE
   warmupMaterials.forEach((m) => m.dispose())
 }
 
-interface SetupProps {
-  qualityTier: QualityTier
-  isMobile: boolean
-  onReady: () => void
-  onError: (error: Error) => void
-  onTierChange?: (tier: Exclude<QualityTier, 'auto'>) => void
-}
+/** The renderer contract minus the parts only the Canvas wrapper handles. */
+type SetupProps = Pick<
+  RendererRootProps,
+  'qualityTier' | 'isMobile' | 'onReady' | 'onError' | 'onTierChange'
+>
 
 function Setup({ qualityTier, isMobile, onReady, onError, onTierChange }: SetupProps) {
   const { gl, scene, camera } = useThree()

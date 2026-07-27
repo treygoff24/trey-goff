@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { formatDateRelative } from '@/lib/utils'
-import { RelatedLinks } from '@/components/content/RelatedLinks'
+import { RelatedLinks, type RelatedLink } from '@/components/content/RelatedLinks'
 
 /** A note record with its markdown already rendered and its link graph attached. */
 export interface NoteCardNote {
@@ -12,8 +12,8 @@ export interface NoteCardNote {
   tags: string[]
   source?: string
   sourceTitle?: string
-  backlinks?: { id: string; title: string; url: string; type: string }[]
-  outgoing?: { id: string; title: string; url: string; type: string }[]
+  backlinks?: RelatedLink[]
+  outgoing?: RelatedLink[]
 }
 
 const typeLabels = {

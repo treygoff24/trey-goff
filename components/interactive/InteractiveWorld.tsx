@@ -7,7 +7,7 @@ import Link from 'next/link'
 import type { QualityTier } from '@/lib/interactive/capabilities'
 import { useInteractiveStore } from '@/lib/interactive/store'
 import type { RoomId } from '@/lib/interactive/types'
-import { RendererRoot } from './RendererRoot'
+import { RendererRoot, type RendererRootProps } from './RendererRoot'
 import { PlayerController, keyboardControlsMap } from './PlayerController'
 import { LoadingSequence, type LoadingPhase } from './LoadingSequence'
 import { CameraController } from './CameraController'
@@ -18,13 +18,11 @@ import { ContentOverlay, useContentOverlay, type OverlayContent } from './Conten
 import { PostProcessing } from './PostProcessing'
 import { SettingsMenu, useSettingsMenu } from './SettingsMenu'
 
-interface InteractiveWorldProps {
-  qualityTier: QualityTier
-  reducedMotion: boolean
-  isMobile: boolean
-  onReady: () => void
-  onError: (error: Error) => void
-  onTierChange?: (tier: Exclude<QualityTier, 'auto'>) => void
+/**
+ * Everything the renderer needs — forwarded verbatim to `RendererRoot`, so it is derived
+ * from that contract rather than restated — plus the settings-menu callbacks this shell owns.
+ */
+interface InteractiveWorldProps extends Omit<RendererRootProps, 'children'> {
   onQualityChange?: (tier: QualityTier) => void
   onReducedMotionChange?: (enabled: boolean) => void
 }

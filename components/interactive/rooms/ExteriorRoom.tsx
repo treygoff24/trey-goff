@@ -7,18 +7,10 @@ import { RigidBody, CuboidCollider } from '@react-three/rapier'
 import * as THREE from 'three'
 import { THREE_COLORS } from '@/lib/interactive/colors'
 import { DoorTrigger } from '../DoorTrigger'
-import type { RoomId } from '@/lib/interactive/types'
+import type { RoomProps } from './index'
 
-interface ExteriorRoomProps {
-  /** Show debug visualizations */
-  debug?: boolean
-  /** Callback when door is activated */
-  onDoorActivate?: (
-    targetRoom: RoomId,
-    spawnPosition: [number, number, number],
-    spawnRotation: number,
-  ) => void
-}
+/** The slice of the shared room contract this room reads. */
+type ExteriorRoomProps = Pick<RoomProps, 'debug' | 'onDoorActivate'>
 
 const GROUND_SIZE = 100
 const MANSION_WIDTH = 20

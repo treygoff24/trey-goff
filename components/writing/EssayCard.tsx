@@ -1,15 +1,17 @@
 import Link from 'next/link'
+import type { Essay } from 'content-collections'
 import { formatDate } from '@/lib/utils'
 import { TagPill } from '@/components/ui/TagPill'
 
-interface EssayCardProps {
-  title: string
-  slug: string
-  date: string
-  summary: string
-  tags: string[]
-  readingTime: number
-  status: 'draft' | 'published' | 'evergreen'
+/**
+ * The fields of an essay this card renders, taken from the collection type rather than
+ * restated — a frontmatter rename breaks here instead of silently rendering nothing.
+ * `featured` is optional because some lists suppress the treatment regardless of the flag.
+ */
+type EssayCardProps = Pick<
+  Essay,
+  'title' | 'slug' | 'date' | 'summary' | 'tags' | 'readingTime' | 'status'
+> & {
   featured?: boolean
 }
 

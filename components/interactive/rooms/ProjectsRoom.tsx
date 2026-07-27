@@ -7,22 +7,12 @@ import * as THREE from 'three'
 import { THREE_COLORS } from '@/lib/interactive/colors'
 import { DoorTrigger } from '../DoorTrigger'
 import { HolographicScreen, TechFloorGrid, AmbientParticles, GlowRing } from '../effects'
-import type { RoomId } from '@/lib/interactive/types'
 import type { ProjectsManifest, ProjectManifestEntry } from '@/lib/interactive/manifest-types'
 import type { OverlayContent } from '../ContentOverlay'
+import type { RoomProps } from './index'
 
-interface ProjectsRoomProps {
-  /** Show debug visualizations */
-  debug?: boolean
-  /** Callback when door is activated */
-  onDoorActivate?: (
-    targetRoom: RoomId,
-    spawnPosition: [number, number, number],
-    spawnRotation: number,
-  ) => void
-  /** Callback when content is selected for overlay */
-  onContentSelect?: (content: OverlayContent) => void
-}
+/** The slice of the shared room contract this room reads. */
+type ProjectsRoomProps = Pick<RoomProps, 'debug' | 'onDoorActivate' | 'onContentSelect'>
 
 const ROOM_WIDTH = 22
 const ROOM_DEPTH = 18
