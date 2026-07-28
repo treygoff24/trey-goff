@@ -43,21 +43,23 @@ function ChapterHead({ n, title, lede }: { n: string; title: string; lede: React
 
 /* ── Figure 1 · the script is the harness ─────────────────── */
 
+/* The bands mirror WORKFLOW_CODE line for line: one extractor, a parallel()
+   fan-out of verifiers, one reporter. Change one and change the other. */
 const STAGES: { label: string; chips: string[]; note: string }[] = [
   {
-    label: 'stage 1 · find',
-    chips: ['agent — read the logs', 'agent — read the call sites', 'agent — read the history'],
-    note: 'parallel() is a barrier — all three land before stage 2',
+    label: 'stage 1 · extract',
+    chips: ['agent — extract every claim'],
+    note: 'one call, one schema — a list, not prose',
   },
   {
     label: 'stage 2 · verify',
     chips: ['agent — check claim 1', 'agent — check claim 2', 'agent — check claim 3'],
-    note: 'one fresh window per claim, and none of them the author',
+    note: 'parallel() is a barrier — one window each',
   },
   {
-    label: 'stage 3 · synthesize',
+    label: 'stage 3 · report',
     chips: ['agent — write the one report'],
-    note: 'the only stage that gets to see everything',
+    note: 'the only stage that sees everything',
   },
 ]
 
@@ -92,11 +94,106 @@ const checked = await parallel(
 
 return agent(report(checked), { model: "opus" })`
 
-function WorkflowSpine() {
-  const SPINE_X = 40
-  const CHIP_X = 78
-  const CHIP_W = 300
+const SPINE_LABEL =
+  'The workflow script running three stages in order: one agent extracts every claim from the draft, one agent per claim verifies it in parallel, and one agent writes the single report.'
 
+/* Two geometries for one figure. The narrow one is not a shrunk copy — the
+   labels keep their size and the frame gets smaller around them, so 390px
+   reads without panning. CSS picks which one is in the document. */
+type SpineLayout = {
+  w: number
+  spineX: number
+  chipX: number
+  chipW: number
+  bandX: number
+  bandW: number
+  textX: number
+}
+
+const SPINE_WIDE: SpineLayout = {
+  w: 400,
+  spineX: 36,
+  chipX: 72,
+  chipW: 290,
+  bandX: 20,
+  bandW: 372,
+  textX: 72,
+}
+
+const SPINE_NARROW: SpineLayout = {
+  w: 300,
+  spineX: 16,
+  chipX: 44,
+  chipW: 250,
+  bandX: 2,
+  bandW: 294,
+  textX: 8,
+}
+
+function SpineSvg({ layout }: { layout: SpineLayout }) {
+  const { w, spineX, chipX, chipW, bandX, bandW, textX } = layout
+  const ctrl = (chipX - spineX) / 2
+
+  return (
+    <svg viewBox={`0 0 ${w} ${SPINE_H}`} role="img" aria-label={SPINE_LABEL}>
+      <line
+        className="wf-rail"
+        x1={spineX}
+        y1={12}
+        x2={spineX}
+        y2={SPINE_H - 8}
+        strokeDasharray="3 4"
+      />
+      {BANDS.map((stage) => {
+        const mid = stage.y + stage.h / 2
+        const lastChip = stage.y + HEAD_OFFSET + (stage.chips.length - 1) * CHIP_PITCH
+        return (
+          <g key={stage.label}>
+            <rect
+              className="wf-band"
+              x={bandX}
+              y={stage.y}
+              width={bandW}
+              height={stage.h}
+              rx={6}
+            />
+            <circle className="wf-tick" cx={spineX} cy={mid} r={4} />
+            {stage.chips.map((chip, j) => {
+              const cy = stage.y + HEAD_OFFSET + j * CHIP_PITCH
+              return (
+                <g key={chip}>
+                  <path
+                    className="wf-hop"
+                    d={`M${spineX},${mid} C ${spineX + ctrl},${mid} ${chipX - ctrl},${cy} ${chipX},${cy}`}
+                  />
+                  <rect
+                    className="wf-chip"
+                    x={chipX}
+                    y={cy - CHIP_H / 2}
+                    width={chipW}
+                    height={CHIP_H}
+                    rx={4}
+                  />
+                  <text className="wf-chip-t" x={chipX + 10} y={cy + 3.5}>
+                    {chip}
+                  </text>
+                </g>
+              )
+            })}
+            <text className="wf-band-t" x={textX} y={stage.y + 16}>
+              {stage.label}
+            </text>
+            <text className="wf-note" x={textX} y={lastChip + CHIP_H / 2 + 14}>
+              {stage.note}
+            </text>
+          </g>
+        )
+      })}
+    </svg>
+  )
+}
+
+function WorkflowSpine() {
   return (
     <div className="wf-fig rv">
       <div className="wf-spine">
@@ -105,72 +202,20 @@ function WorkflowSpine() {
           <pre>{WORKFLOW_CODE}</pre>
         </div>
         <div className="wf-diagram">
-          <svg
-            viewBox={`0 0 420 ${SPINE_H}`}
-            role="img"
-            aria-label="A workflow script running three stages in order: three agents find evidence in parallel, three fresh agents verify each claim, and one agent synthesizes the report."
-          >
-            <line
-              className="wf-rail"
-              x1={SPINE_X}
-              y1={12}
-              x2={SPINE_X}
-              y2={SPINE_H - 8}
-              strokeDasharray="3 4"
-            />
-            {BANDS.map((stage) => {
-              const mid = stage.y + stage.h / 2
-              const lastChip = stage.y + HEAD_OFFSET + (stage.chips.length - 1) * CHIP_PITCH
-              return (
-                <g key={stage.label}>
-                  <rect
-                    className="wf-band"
-                    x={SPINE_X - 16}
-                    y={stage.y}
-                    width={410 - SPINE_X + 16}
-                    height={stage.h}
-                    rx={6}
-                  />
-                  <circle className="wf-tick" cx={SPINE_X} cy={mid} r={4} />
-                  {stage.chips.map((chip, j) => {
-                    const cy = stage.y + HEAD_OFFSET + j * CHIP_PITCH
-                    return (
-                      <g key={chip}>
-                        <path
-                          className="wf-hop"
-                          d={`M${SPINE_X},${mid} C ${SPINE_X + 20},${mid} ${CHIP_X - 20},${cy} ${CHIP_X},${cy}`}
-                        />
-                        <rect
-                          className="wf-chip"
-                          x={CHIP_X}
-                          y={cy - CHIP_H / 2}
-                          width={CHIP_W}
-                          height={CHIP_H}
-                          rx={4}
-                        />
-                        <text className="wf-chip-t" x={CHIP_X + 11} y={cy + 3.5}>
-                          {chip}
-                        </text>
-                      </g>
-                    )
-                  })}
-                  <text className="wf-band-t" x={SPINE_X + 38} y={stage.y + 16}>
-                    {stage.label}
-                  </text>
-                  <text className="wf-note" x={SPINE_X + 38} y={lastChip + CHIP_H / 2 + 14}>
-                    {stage.note}
-                  </text>
-                </g>
-              )
-            })}
-          </svg>
+          <div className="wf-wide">
+            <SpineSvg layout={SPINE_WIDE} />
+          </div>
+          <div className="wf-narrow">
+            <SpineSvg layout={SPINE_NARROW} />
+          </div>
         </div>
       </div>
       <p className="wf-cap">
-        <b>Left is the whole harness. </b>The control flow is ordinary JavaScript — the loop, the
-        fan-out and the ordering are deterministic, decided by the script rather than improvised by
-        a model mid-run. Only the boxes on the right are model calls, and each one gets its own
-        clean window.
+        <b>Left is the whole harness. </b>The diagram is the same three lines, drawn: one extractor,
+        one verifier per claim, one reporter. The control flow is ordinary JavaScript — the loop, the
+        fan-out and the ordering are deterministic, decided by the script rather than improvised by a
+        model mid-run. Only the boxes on the right are model calls, and each one gets its own clean
+        window.
       </p>
     </div>
   )
@@ -194,56 +239,65 @@ const DELEGATE_LANES: Lane[] = [
   { t: 'judges(engines=["claude", …])', vendor: 'anthropic', cls: 'wf-l-claude' },
 ]
 
-function LanePanel({
-  lanes,
-  hub,
-  rule,
-  ruleTone,
-  merge,
-  label,
-}: {
+/* The rule under each panel. Only `token` carries full amber — it is the one
+   literal a reader types — and the sentence around it stays prose grey so the
+   two panels weigh the same. */
+type Rule = { token?: string; text: string }
+
+const RESUME_RULE: Rule = { text: 'interrupted? resuming picks the run back up' }
+const GATE_RULE: Rule = { token: 'gate=True', text: ' — the run pauses until I approve' }
+
+type PanelProps = {
   lanes: Lane[]
   hub: string
-  rule: string
+  rule: Rule
   ruleTone: 'gate' | 'note'
   merge: string
   label: string
-}) {
-  const HUB_R = 62
-  const CHIP_X = 94
-  const CHIP_W = 258
+}
+
+/* The vendor tag sits on its own line under its lane rather than competing for
+   the row — a 300-unit box scales up cleanly in a half-width card and still
+   fits a 390px screen, so one geometry serves both. */
+function LanePanel({ lanes, hub, rule, ruleTone, merge, label }: PanelProps) {
+  const ROW_TOP = 40
+  const ROW_PITCH = 54
+  const CHIP_X = 24
+  const CHIP_W = 272
+  const RAIL_X = 10
+  const lastTop = ROW_TOP + (lanes.length - 1) * ROW_PITCH
   return (
-    <svg viewBox="0 0 360 252" role="img" aria-label={label}>
-      <rect className="wf-hub" x={8} y={78} width={54} height={30} rx={5} />
-      <text className="wf-hub-t" x={35} y={97} textAnchor="middle">
+    <svg viewBox="0 0 300 312" role="img" aria-label={label}>
+      <rect className="wf-hub" x={2} y={0} width={58} height={26} rx={5} />
+      <text className="wf-hub-t" x={31} y={17} textAnchor="middle">
         {hub}
       </text>
+      <line
+        className="wf-rail"
+        x1={RAIL_X}
+        y1={26}
+        x2={RAIL_X}
+        y2={lastTop + 12}
+        strokeDasharray="3 4"
+      />
       {lanes.map((lane, i) => {
-        const cy = 32 + i * 38
+        const top = ROW_TOP + i * ROW_PITCH
         return (
           <g key={`${lane.vendor}-${i}`}>
-            <path
-              className={`wf-hop ${lane.cls}`}
-              d={`M${HUB_R},93 C ${HUB_R + 12},93 ${CHIP_X - 12},${cy} ${CHIP_X},${cy}`}
-            />
+            <path className={`wf-hop ${lane.cls}`} d={`M${RAIL_X},${top + 12} H ${CHIP_X}`} />
             <rect
               className={`wf-chip ${lane.cls}`}
               x={CHIP_X}
-              y={cy - 12}
+              y={top}
               width={CHIP_W}
               height={24}
               rx={4}
             />
-            <rect className={`wf-bar ${lane.cls}`} x={CHIP_X} y={cy - 12} width={4} height={24} />
-            <text className="wf-chip-t" x={CHIP_X + 14} y={cy + 3.5}>
+            <rect className={`wf-bar ${lane.cls}`} x={CHIP_X} y={top} width={4} height={24} />
+            <text className="wf-chip-t" x={CHIP_X + 14} y={top + 16}>
               {lane.t}
             </text>
-            <text
-              className={`wf-vendor ${lane.cls}`}
-              x={CHIP_X + CHIP_W - 10}
-              y={cy + 3}
-              textAnchor="end"
-            >
+            <text className={`wf-vendor ${lane.cls}`} x={CHIP_X + 14} y={top + 38}>
               {lane.vendor}
             </text>
           </g>
@@ -251,17 +305,18 @@ function LanePanel({
       })}
       <line
         className={ruleTone === 'gate' ? 'wf-gate' : 'wf-rail'}
-        x1={8}
-        y1={190}
-        x2={352}
-        y2={190}
+        x1={2}
+        y1={266}
+        x2={298}
+        y2={266}
         strokeDasharray="5 5"
       />
-      <text className={ruleTone === 'gate' ? 'wf-note wf-note-gate' : 'wf-note'} x={8} y={182}>
-        {rule}
+      <text className="wf-note" x={2} y={258}>
+        {rule.token ? <tspan className="wf-gate-tok">{rule.token}</tspan> : null}
+        {rule.text}
       </text>
-      <rect className="wf-merge" x={8} y={202} width={344} height={30} rx={5} />
-      <text className="wf-merge-t" x={180} y={221} textAnchor="middle">
+      <rect className="wf-merge" x={2} y={278} width={296} height={28} rx={5} />
+      <text className="wf-merge-t" x={150} y={296} textAnchor="middle">
         {merge}
       </text>
     </svg>
@@ -272,11 +327,11 @@ function VersusFigure() {
   return (
     <div className="wf-versus rv">
       <div className="wf-panel">
-        <h4>Dynamic workflows — one family, many windows</h4>
+        <h3>Dynamic workflows — one family, many windows</h3>
         <LanePanel
           hub="script"
           lanes={CLAUDE_LANES}
-          rule="interrupted? resuming the session picks the workflow back up"
+          rule={RESUME_RULE}
           ruleTone="note"
           merge="one result"
           label="Dynamic workflows: a script fanning out to four Claude agents — opus, sonnet, sonnet and haiku — each in its own worktree, merging into one result."
@@ -287,11 +342,11 @@ function VersusFigure() {
         </p>
       </div>
       <div className="wf-panel wf-panel-alt">
-        <h4>Delegate workflows — many families, many windows</h4>
+        <h3>Delegate workflows — many families, many windows</h3>
         <LanePanel
           hub="script"
           lanes={DELEGATE_LANES}
-          rule="gate=True — the whole run pauses here until I approve it"
+          rule={GATE_RULE}
           ruleTone="gate"
           merge="one result"
           label="Delegate workflows: a script fanning out to four different vendors' agents — Codex, Cursor, Kimi and a Claude judge panel — through a human approval gate into one result."
@@ -304,16 +359,19 @@ function VersusFigure() {
       </div>
       <ul className="wf-badges">
         <li>
-          <span className="k">resume</span>Kill it, resume it. Finished agents replay from the
+          <span className="k">resume</span>{' '}
+          Kill it, resume it. Finished agents replay from the
           journal instead of re-running; children still in flight get adopted.
         </li>
         <li>
-          <span className="k">gate</span>
-          <span className="inline-code">gate=True</span> stops the whole tree, drains what&apos;s in
-          flight, and waits for <span className="inline-code">workflow approve</span>.
+          <span className="k">gate</span>{' '}
+          <span className="inline-code">gate=True</span>{' '}
+          stops the whole tree, drains what&apos;s in flight, and waits for{' '}
+          <span className="inline-code">workflow approve</span>.
         </li>
         <li>
-          <span className="k">detached</span>A supervisor process owns the run, so closing the
+          <span className="k">detached</span>{' '}
+          A supervisor process owns the run, so closing the
           laptop lid is not an interruption. <span className="inline-code">--budget N</span> caps
           how many child runs it may ever spend.
         </li>
@@ -343,7 +401,7 @@ export function WorkflowsChapter() {
       <p className="section-label">Credit where it is due</p>
       <div className="twoup">
         <div className="rv">
-          <h3>Anthropic shipped this, and Thariq Shihipar and Sid Bidasaria built it</h3>
+          <h3>Thariq Shihipar and Sid Bidasaria built this</h3>
           <p>
             Anthropic shipped dynamic workflows at the end of May 2026. The idea is a genuinely new
             primitive, not a feature: <b>Claude writes its own harness on the fly</b>, custom-built
@@ -377,7 +435,7 @@ export function WorkflowsChapter() {
           </p>
         </div>
         <div className="rv" data-d="1">
-          <h3>Why it is a big deal</h3>
+          <h3>One context window stopped being the ceiling</h3>
           <p>
             Ask the default harness to do something big and it has to plan and execute in the same
             context window. That works for most coding, and it falls apart on long-running,
@@ -431,9 +489,9 @@ export function WorkflowsChapter() {
           <span className="idx">01</span>
           <p className="claim">Agentic laziness</p>
           <p className="payoff">
-            One long window declares victory after partial progress — twenty of the fifty items in a
+            One long window declares victory after partial progress — 35 of the 50 items in a
             security review, and a confident summary.{' '}
-            <b>A loop that spawns one agent per item cannot get bored on item twenty-one.</b>
+            <b>A loop that spawns one agent per item cannot get bored on item 36.</b>
           </p>
         </div>
         <div className="precept">
@@ -494,9 +552,9 @@ export function WorkflowsChapter() {
             <span className="inline-code">engine=</span> — codex, cursor, grok, claude, kimi, droid
             — and my <span className="inline-code">judges()</span> takes a list of them, because a
             ballot counted by three engines from three labs is a different instrument than a ballot
-            counted three times by one. My standing routing: Codex authors, Cursor and Grok review,
-            Claude judges. And the lanes have to be genuinely different families to count — Cursor
-            and Grok are both running Grok 4.5, so putting both on a judging panel buys you nothing.
+            counted three times by one. My standing routing: Codex authors, Cursor and Kimi review,
+            Claude judges. The lanes have to be genuinely different families to count — Cursor and
+            Grok are both running Grok 4.5, so putting both on one panel buys you nothing.
           </p>
         </div>
         <div className="rv" data-d="1">
@@ -530,7 +588,7 @@ export function WorkflowsChapter() {
         real loop, a fan-out over a work list, a barrier, a panel of judges, a budget, a gate. If
         the shape of the work is &quot;do this thing, well,&quot; just talk to one agent; a single
         bounded task does not need a supervisor and a journal.{' '}
-        <b>And be honest about the bill: workflows use significantly more tokens.</b> The article
+        <b>And be honest about the bill: workflows use significantly more tokens. </b>The article
         says it plainly and it is right — most coding tasks do not need a panel of five reviewers.
         The test I use is whether structure would change the answer, not just the confidence. If I
         would accept the first agent&apos;s output anyway, I saved myself a hundred thousand tokens
