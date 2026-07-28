@@ -718,9 +718,12 @@ export function StackShell() {
                   Once you run more than one agent, two of them will eventually edit the same file.
                   A tiny occupancy tool that answers &quot;is anyone working here?&quot; with an
                   exit code — <b>and a rule that a busy repo means stop, not write anyway</b> —
-                  removes an entire class of 2am mystery. The blueprint for building your own is in
-                  agent-build.md, back in chapter four. The stronger version is prevention, not
-                  detection: give each writer its own worktree and the collision never happens.
+                  removes an entire class of 2am mystery.{' '}
+                  <a className="inline-link" href="/stack/agent-build.md" download>
+                    Install for your setup here
+                  </a>
+                  . The stronger version is prevention, not detection: give each writer its own
+                  worktree and the collision never happens.
                 </p>
               </div>
               <div className="precept">

@@ -117,6 +117,15 @@ html:has(#stack-root) body > footer {
   color: var(--sk-accent);
   white-space: nowrap;
 }
+#stack-root .inline-link {
+  color: var(--sk-accent);
+  text-decoration: underline;
+  text-decoration-color: var(--sk-border-1);
+  text-underline-offset: 0.18em;
+}
+#stack-root .inline-link:hover {
+  text-decoration-color: var(--sk-accent);
+}
 
 /* ── Skip link ──────────────────────────────────────────── */
 #stack-root .skip {

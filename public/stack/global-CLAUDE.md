@@ -1,7 +1,5 @@
 # Global agent instructions (starter)
 
-<!-- DRAFT — pending sanitization pass and Trey's veto. Do not ship as-is. -->
-
 Adapt freely. Everything here is a rule I got tired of repeating.
 
 ## Git

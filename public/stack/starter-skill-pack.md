@@ -1,7 +1,5 @@
 # Starter skill pack
 
-<!-- DRAFT — pending real skill selection from the library and Trey's veto. -->
-
 Six skills that pay for themselves in a week. Frontmatter and shape below;
 paste any one into a session and say "create this skill for me."
 
