@@ -1718,7 +1718,8 @@ html:has(#stack-root) body > footer {
   #stack-root .fan svg {
     min-width: 34rem;
   }
-  #stack-root .figscroll-hint {
+  #stack-root .fan .figscroll-hint,
+  #stack-root [class] > .figscroll-hint {
     display: block;
   }
   #stack-root .shell {
