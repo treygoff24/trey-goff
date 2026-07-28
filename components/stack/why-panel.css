@@ -1,0 +1,418 @@
+/* ─────────────────────────────────────────────────────────────
+   "Why tho?" deep-dive panel — a reusable right slide-in sheet.
+   Portalled into #stack-root, so every --sk-* token inherits;
+   the var() fallbacks only matter if it is ever mounted outside.
+   All selectors are why-* namespaced, nothing leaks.
+   ───────────────────────────────────────────────────────────── */
+
+/* ── Trigger ────────────────────────────────────────────── */
+.why-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 1rem;
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--sk-border-1, rgba(232, 243, 236, 0.13));
+  border-radius: 999px;
+  background: none;
+  color: var(--sk-text-3, rgba(232, 243, 236, 0.55));
+  font-family: var(--sk-mono, ui-monospace, monospace);
+  font-size: 0.63rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    color 220ms var(--sk-ease, ease),
+    border-color 220ms var(--sk-ease, ease),
+    background 220ms var(--sk-ease, ease);
+}
+.why-trigger span {
+  transition: transform 220ms var(--sk-ease, ease);
+}
+.why-trigger:hover {
+  color: var(--sk-accent, #97e8bb);
+  border-color: var(--sk-border-2, rgba(151, 232, 187, 0.28));
+  background: var(--sk-surface-1, rgba(232, 243, 236, 0.055));
+}
+.why-trigger:hover span {
+  transform: translateX(3px);
+}
+
+/* ── Scrim + sheet ──────────────────────────────────────── */
+.why-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(2, 10, 6, 0.66);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 340ms var(--sk-ease, ease),
+    visibility 0s linear 340ms;
+}
+.why-root.open .why-scrim {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.why-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 81;
+  width: min(46rem, 100vw);
+  max-width: 100vw;
+  padding: clamp(1.3rem, 3vw, 2.4rem) clamp(1.15rem, 3vw, 2.6rem) 4rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-left: 1px solid var(--sk-border-1, rgba(232, 243, 236, 0.13));
+  background:
+    radial-gradient(90% 45% at 100% 0%, rgba(111, 214, 154, 0.09), transparent 62%),
+    var(--sk-bg-1, #061a10);
+  box-shadow: -28px 0 70px rgba(0, 0, 0, 0.45);
+  color: var(--sk-text-1, #e8f3ec);
+  transform: translateX(102%);
+  visibility: hidden;
+  transition:
+    transform 420ms var(--sk-ease, ease),
+    visibility 0s linear 420ms;
+}
+.why-root.open .why-panel {
+  transform: none;
+  visibility: visible;
+  transition-delay: 0s;
+}
+.why-panel:focus {
+  outline: none;
+}
+
+.why-still .why-panel,
+.why-still .why-scrim {
+  transition-duration: 0s;
+}
+
+.why-bar-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.4rem;
+}
+.why-kicker {
+  font-family: var(--sk-mono, ui-monospace, monospace);
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--sk-text-3, rgba(232, 243, 236, 0.55));
+}
+.why-close {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.3rem;
+  padding: 0 0.85rem;
+  border: 1px solid var(--sk-border-1, rgba(232, 243, 236, 0.13));
+  border-radius: 3px;
+  background: none;
+  color: var(--sk-text-2, rgba(232, 243, 236, 0.74));
+  font-family: var(--sk-mono, ui-monospace, monospace);
+  font-size: 0.63rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    color 200ms var(--sk-ease, ease),
+    border-color 200ms var(--sk-ease, ease);
+}
+.why-close:hover {
+  color: var(--sk-accent, #97e8bb);
+  border-color: var(--sk-border-2, rgba(151, 232, 187, 0.28));
+}
+
+.why-title {
+  margin: 0 0 1.4rem;
+  font-family: var(--sk-serif, ui-serif, Georgia, serif);
+  font-weight: 500;
+  font-size: clamp(1.5rem, 3.4vw, 2.05rem);
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+}
+
+/* ── Body copy ──────────────────────────────────────────── */
+.why-body {
+  max-width: 38rem;
+  font-size: 0.99rem;
+  line-height: 1.68;
+  color: var(--sk-text-2, rgba(232, 243, 236, 0.74));
+}
+.why-body p {
+  margin: 0 0 1.05em;
+}
+.why-body b {
+  color: var(--sk-text-1, #e8f3ec);
+  font-weight: 500;
+}
+.why-body h3 {
+  margin: 2rem 0 0.85rem;
+  font-family: var(--sk-serif, ui-serif, Georgia, serif);
+  font-weight: 500;
+  font-size: 1.16rem;
+  letter-spacing: -0.01em;
+  color: var(--sk-text-1, #e8f3ec);
+}
+.why-body a {
+  color: var(--sk-accent, #97e8bb);
+  text-decoration: none;
+  border-bottom: 1px solid var(--sk-border-2, rgba(151, 232, 187, 0.28));
+}
+.why-body a:hover {
+  border-bottom-color: var(--sk-accent, #97e8bb);
+}
+
+/* ── Figures ────────────────────────────────────────────── */
+.why-fig {
+  margin: 1.5rem 0 1.7rem;
+  padding: 1rem 1rem 0.85rem;
+  border: 1px solid var(--sk-border-1, rgba(232, 243, 236, 0.13));
+  border-radius: 8px;
+  background: rgba(4, 19, 12, 0.5);
+}
+.why-fig figcaption {
+  margin-top: 0.85rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--sk-border-1, rgba(232, 243, 236, 0.13));
+  font-family: var(--sk-mono, ui-monospace, monospace);
+  font-size: 0.6rem;
+  line-height: 1.65;
+  letter-spacing: 0.04em;
+  color: var(--sk-text-3, rgba(232, 243, 236, 0.55));
+}
+.why-scroll {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+.why-chart {
+  display: block;
+  width: 100%;
+  min-width: 30rem;
+  height: auto;
+}
+
+.why-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.2rem;
+  margin-bottom: 0.9rem;
+  font-family: var(--sk-mono, ui-monospace, monospace);
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+  color: var(--sk-text-3, rgba(232, 243, 236, 0.55));
+}
+.why-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+}
+.why-key i {
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+  display: block;
+}
+.why-key.sol i {
+  background: var(--sk-accent, #97e8bb);
+}
+.why-key.opus48 i {
+  background: var(--sk-sky, #7dd3fc);
+}
+.why-key.opus45 i {
+  background: var(--sk-violet, #c4b5fd);
+}
+
+/* Chart internals */
+.why-grid {
+  stroke: var(--sk-border-1, rgba(232, 243, 236, 0.13));
+  stroke-width: 1;
+}
+.why-grid.vt {
+  stroke-dasharray: 2 5;
+}
+.why-axis {
+  stroke: var(--sk-border-2, rgba(151, 232, 187, 0.28));
+  stroke-width: 1;
+}
+.why-ax,
+.why-axtitle,
+.why-pt {
+  font-family: var(--sk-mono, ui-monospace, monospace);
+  fill: var(--sk-text-3, rgba(232, 243, 236, 0.55));
+}
+.why-ax {
+  font-size: 11px;
+}
+.why-axtitle {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.why-pt {
+  font-size: 11px;
+}
+.why-series polyline {
+  fill: none;
+  stroke-width: 1.75;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.why-series circle {
+  stroke: var(--sk-bg-1, #061a10);
+  stroke-width: 1.5;
+}
+.why-series.sol polyline {
+  stroke: var(--sk-accent, #97e8bb);
+}
+.why-series.sol circle,
+.why-series.sol .why-pt {
+  fill: var(--sk-accent, #97e8bb);
+}
+.why-series.opus48 polyline {
+  stroke: var(--sk-sky, #7dd3fc);
+}
+.why-series.opus48 circle,
+.why-series.opus48 .why-pt {
+  fill: var(--sk-sky, #7dd3fc);
+}
+.why-series.opus45 polyline {
+  stroke: var(--sk-violet, #c4b5fd);
+}
+.why-series.opus45 circle,
+.why-series.opus45 .why-pt {
+  fill: var(--sk-violet, #c4b5fd);
+}
+
+/* ── Token-allocation strip ─────────────────────────────── */
+.why-alloc {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.why-alloc-row {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr) 8.5rem;
+  align-items: center;
+  gap: 0.8rem;
+}
+.why-alloc-t,
+.why-alloc-n {
+  font-family: var(--sk-mono, ui-monospace, monospace);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sk-text-3, rgba(232, 243, 236, 0.55));
+}
+.why-alloc-n b {
+  color: var(--sk-text-1, #e8f3ec);
+  font-weight: 400;
+}
+.why-alloc-bar {
+  display: flex;
+  gap: 2px;
+  height: 20px;
+}
+.why-alloc-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  flex-basis: 0;
+}
+/* Headroom is the point of the second row, so give the near-black cell an edge. */
+.why-alloc-bar i.c-free {
+  box-shadow: inset 0 0 0 1px var(--sk-border-1, rgba(232, 243, 236, 0.13));
+}
+@media (max-width: 34rem) {
+  .why-alloc-row {
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+  }
+  .why-alloc-n {
+    grid-column: 2;
+  }
+}
+
+/* ── Attention degradation strip ────────────────────────── */
+.why-needle {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.why-needle-row {
+  display: grid;
+  grid-template-columns: 11.5rem minmax(0, 1fr) 3rem;
+  align-items: center;
+  gap: 0.8rem;
+}
+.why-needle-l,
+.why-needle-v {
+  font-family: var(--sk-mono, ui-monospace, monospace);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  color: var(--sk-text-3, rgba(232, 243, 236, 0.55));
+}
+.why-needle-v {
+  text-align: right;
+  color: var(--sk-text-1, #e8f3ec);
+}
+.why-needle-track {
+  height: 18px;
+  border-radius: 2px;
+  background: var(--sk-surface-1, rgba(232, 243, 236, 0.055));
+  overflow: hidden;
+}
+.why-needle-fill {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+}
+.why-needle-fill.hi {
+  background: var(--sk-accent, #97e8bb);
+}
+.why-needle-fill.lo {
+  background: var(--sk-amber, #fbbf24);
+}
+@media (max-width: 34rem) {
+  .why-needle-row {
+    grid-template-columns: minmax(0, 1fr) 3rem;
+  }
+  .why-needle-l {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ── Sources ────────────────────────────────────────────── */
+.why-sources {
+  margin-top: 2.2rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--sk-border-1, rgba(232, 243, 236, 0.13));
+}
+.why-sources ul {
+  margin: 0.8rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: var(--sk-text-3, rgba(232, 243, 236, 0.55));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .why-panel,
+  .why-scrim,
+  .why-trigger,
+  .why-trigger span {
+    transition-duration: 0s;
+  }
+}

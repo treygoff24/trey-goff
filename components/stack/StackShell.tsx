@@ -11,6 +11,7 @@ import {
 import { useReducedMotion, useReveal } from '@/components/stack/hooks'
 import { Terminal } from '@/components/stack/Terminal'
 import { SubagentSavings } from '@/components/stack/SubagentSavings'
+import { WhyContext } from '@/components/stack/WhyPanel'
 import { WorktreesSection } from '@/components/stack/WorktreesSection'
 import {
   ContextFigure,
@@ -295,6 +296,7 @@ export function StackShell() {
 
             <p className="section-label">Basics: context windows</p>
             <ContextFigure />
+            <WhyContext />
 
             <div className="callout rv">
               <span className="k">The move</span>
