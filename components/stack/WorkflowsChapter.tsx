@@ -374,9 +374,9 @@ function VersusFigure() {
 
 export function WorkflowsChapter() {
   return (
-    <section className="chapter" id="ch9">
+    <section className="chapter" id="ch10">
       <ChapterHead
-        n="09"
+        n="10"
         title="Workflows"
         lede={
           <>
@@ -585,7 +585,7 @@ export function WorkflowsChapter() {
         by asking.
       </div>
 
-      <Pager prev={['#ch8', '08 · Build your own']} />
+      <Pager prev={['#ch9', '09 · Build your own']} next={['#ch11', '11 · The persona']} />
     </section>
   )
 }

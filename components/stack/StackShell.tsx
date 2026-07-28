@@ -646,7 +646,7 @@ export function StackShell() {
             />
             <Pager
               prev={['#ch3', '03 · Teaching it your world']}
-              next={['#ch5', '05 · Multiplying it']}
+              next={['#ch5', '05 · The cockpit']}
             />
           </section>
 
@@ -654,6 +654,20 @@ export function StackShell() {
           <section className="chapter" id="ch5">
             <ChapterHead
               n="05"
+              title="The cockpit"
+              lede="Every repo I own is set up the same way: the same files, the same hooks, the same memory. An agent waking up in any of them is oriented before its first word. This chapter is that standard — and why it has quietly solved most of the context problem."
+            />
+            {/* INTEGRATION: <CockpitChapter /> */}
+            <Pager
+              prev={['#ch4', '04 · Agents need tools']}
+              next={['#ch6', '06 · Multiplying it']}
+            />
+          </section>
+
+          {/* ── Chapter 5 ── */}
+          <section className="chapter" id="ch6">
+            <ChapterHead
+              n="06"
               title="Multiplying it"
               lede={
                 <>
@@ -723,15 +737,15 @@ export function StackShell() {
               <b>Never trust a subagent&apos;s &quot;done&quot; summary — check the disk.</b>
             </div>
             <Pager
-              prev={['#ch4', '04 · Agents need tools']}
-              next={['#ch6', '06 · Trusting it at scale']}
+              prev={['#ch5', '05 · The cockpit']}
+              next={['#ch7', '07 · Trusting it at scale']}
             />
           </section>
 
           {/* ── Chapter 6 ── */}
-          <section className="chapter" id="ch6">
+          <section className="chapter" id="ch7">
             <ChapterHead
-              n="06"
+              n="07"
               title="Trusting it at scale"
               lede={
                 <>
@@ -812,29 +826,29 @@ export function StackShell() {
               </div>
             </div>
             <Pager
-              prev={['#ch5', '05 · Multiplying it']}
-              next={['#ch7', '07 · A week in the life']}
+              prev={['#ch6', '06 · Multiplying it']}
+              next={['#ch8', '08 · A week in the life']}
             />
           </section>
 
           {/* ── Chapter 7 ── */}
-          <section className="chapter" id="ch7">
+          <section className="chapter" id="ch8">
             <ChapterHead
-              n="07"
+              n="08"
               title="A week in the life"
               lede="This is all quite abstract, so let's get specific. Below are real scenarios of my workflows, mined from my session logs. Answer a question or two and you'll land on the one you're in — with the setup I'd use, in the order I'd use it."
             />
             <DecisionTree />
             <Pager
-              prev={['#ch6', '06 · Trusting it at scale']}
-              next={['#ch8', '08 · Build your own']}
+              prev={['#ch7', '07 · Trusting it at scale']}
+              next={['#ch9', '09 · Build your own']}
             />
           </section>
 
           {/* ── Chapter 8 ── */}
-          <section className="chapter" id="ch8">
+          <section className="chapter" id="ch9">
             <ChapterHead
-              n="08"
+              n="09"
               title="Build your own"
               lede="All of the above was assembled because I spent literally hundreds of hours failing to make agents work, until they finally did. Every piece exists because something annoyed me twice and I wrote the annoyance down. You don't need my stack. You need the habit that produced it."
             />
@@ -869,10 +883,32 @@ export function StackShell() {
               and one of them will be a rule I&apos;ve never thought of.{' '}
               <em className="hl">That&apos;s the part I actually want to read.</em>
             </p>
-            <Pager prev={['#ch7', '07 · A week in the life']} next={['#ch9', '09 · Workflows']} />
+            <Pager prev={['#ch8', '08 · A week in the life']} next={['#ch10', '10 · Workflows']} />
           </section>
 
           <WorkflowsChapter />
+
+          {/* ── Chapter 11 ── */}
+          <section className="chapter" id="ch11">
+            <ChapterHead
+              n="11"
+              title="The persona"
+              lede="The system prompt is not configuration. It is the strongest evidence the model ever gets about who it is supposed to be in this room — and the default ones are written for the worst user they can imagine."
+            />
+            {/* INTEGRATION: <PersonaChapter /> */}
+            <Pager prev={['#ch10', '10 · Workflows']} next={['#ch12', '12 · The partnership']} />
+          </section>
+
+          {/* ── Chapter 12 ── */}
+          <section className="chapter" id="ch12">
+            <ChapterHead
+              n="12"
+              title="The partnership"
+              lede="Everything on this page is technique. This last chapter is the part that is not — how I actually work with these minds, and why the ethics came before the payoff."
+            />
+            {/* INTEGRATION: <PartnershipChapter /> */}
+            <Pager prev={['#ch11', '11 · The persona']} />
+          </section>
 
           <footer className="colophon">
             <div>Trey Goff · treygoff.com/stack · 2026</div>
