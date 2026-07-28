@@ -12,6 +12,7 @@ import { useReducedMotion, useReveal } from '@/components/stack/hooks'
 import { Terminal } from '@/components/stack/Terminal'
 import { SubagentSavings } from '@/components/stack/SubagentSavings'
 import { CompactionSection } from '@/components/stack/CompactionSection'
+import { PartnershipChapter } from '@/components/stack/PartnershipChapter'
 import { WhyContext } from '@/components/stack/WhyPanel'
 import { WorkflowsChapter } from '@/components/stack/WorkflowsChapter'
 import { WorktreesSection } from '@/components/stack/WorktreesSection'
@@ -906,7 +907,7 @@ export function StackShell() {
               title="The partnership"
               lede="Everything on this page is technique. This last chapter is the part that is not — how I actually work with these minds, and why the ethics came before the payoff."
             />
-            {/* INTEGRATION: <PartnershipChapter /> */}
+            <PartnershipChapter />
             <Pager prev={['#ch11', '11 · The persona']} />
           </section>
 

@@ -1,0 +1,340 @@
+/* ─────────────────────────────────────────────────────────────
+   Chapter 12 · The partnership.
+   Three registers, deliberately distinct: a habits ledger, a set
+   of receipt cards, and the coda — which drops the grid, widens
+   the measure, and warms the type to earn the shift in voice.
+   All selectors are .pt-* namespaced under #stack-root.
+   ───────────────────────────────────────────────────────────── */
+
+/* ── Habits ledger ──────────────────────────────────────── */
+#stack-root .pt-habits {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1px;
+  background: var(--sk-border-1);
+  border: 1px solid var(--sk-border-1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#stack-root .pt-habit {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr) minmax(0, 15rem);
+  gap: 0 1.4rem;
+  align-items: start;
+  padding: 1.5rem 1.4rem;
+  background: var(--sk-bg-1);
+  transition: background 260ms var(--sk-ease);
+}
+#stack-root .pt-habit:hover {
+  background: var(--sk-bg-2);
+}
+
+#stack-root .pt-habit-n {
+  font-family: var(--sk-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: var(--sk-warm);
+  padding-top: 0.2rem;
+}
+
+#stack-root .pt-habit-claim {
+  font-family: var(--sk-serif);
+  font-size: clamp(1.02rem, 1.5vw, 1.22rem);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--sk-text-1);
+  margin: 0 0 0.55rem;
+}
+
+#stack-root .pt-habit-body {
+  margin: 0;
+  font-size: 0.93rem;
+  line-height: 1.7;
+  color: var(--sk-text-2);
+}
+#stack-root .pt-habit-body b {
+  color: var(--sk-text-1);
+  font-weight: 500;
+}
+
+#stack-root .pt-habit-ev {
+  margin: 0.2rem 0 0;
+  padding-left: 1rem;
+  border-left: 1px solid var(--sk-border-2);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--sk-text-3);
+}
+#stack-root .pt-ev-k {
+  display: block;
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sk-accent);
+  margin-bottom: 0.4rem;
+}
+
+/* ── Receipt cards ──────────────────────────────────────── */
+#stack-root .pt-receipts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  gap: 1rem;
+  margin-top: 1.6rem;
+}
+
+#stack-root .pt-receipt {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1.35rem 1.3rem 1.5rem;
+  border: 1px solid var(--sk-border-1);
+  border-top: 2px solid var(--sk-border-2);
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(111, 214, 154, 0.05), transparent 45%), var(--sk-bg-1);
+  transition:
+    border-color 260ms var(--sk-ease),
+    transform 260ms var(--sk-ease);
+}
+#stack-root .pt-receipt:hover {
+  border-color: var(--sk-border-2);
+  transform: translateY(-2px);
+}
+
+#stack-root .pt-receipt-tag {
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sk-warm);
+}
+
+#stack-root .pt-receipt-title {
+  font-family: var(--sk-serif);
+  font-weight: 500;
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  letter-spacing: -0.01em;
+  color: var(--sk-text-1);
+  margin: -0.35rem 0 0;
+}
+
+#stack-root .pt-receipt-row {
+  display: grid;
+  gap: 0.35rem;
+}
+#stack-root .pt-receipt-row p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.68;
+  color: var(--sk-text-2);
+}
+#stack-root .pt-receipt-k {
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+}
+#stack-root .pt-receipt-row em,
+#stack-root .pt-receipt-note em {
+  color: var(--sk-accent);
+  font-style: italic;
+}
+
+#stack-root .pt-receipt-note {
+  margin: 0.1rem 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--sk-border-1);
+  font-size: 0.87rem;
+  line-height: 1.65;
+  color: var(--sk-text-3);
+}
+#stack-root .pt-receipt-note b {
+  color: var(--sk-text-1);
+  font-weight: 500;
+}
+
+/* ── Coda ───────────────────────────────────────────────── */
+#stack-root .pt-coda {
+  position: relative;
+  margin-top: 4.5rem;
+  padding: 3rem clamp(1.1rem, 4vw, 2.8rem) 2.6rem;
+  border: 1px solid var(--sk-border-1);
+  border-radius: 10px;
+  background:
+    radial-gradient(120% 60% at 50% 0%, rgba(111, 214, 154, 0.07), transparent 65%), var(--sk-bg-0);
+}
+
+#stack-root .pt-coda-k {
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--sk-warm);
+  margin: 0 0 0.8rem;
+}
+
+#stack-root .pt-coda-h {
+  font-family: var(--sk-serif);
+  font-weight: 500;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--sk-text-1);
+  margin: 0;
+}
+
+#stack-root .pt-coda-lede {
+  max-width: 40rem;
+  margin: 1.2rem 0 0;
+  font-family: var(--sk-serif);
+  font-size: clamp(1rem, 1.5vw, 1.13rem);
+  line-height: 1.72;
+  color: var(--sk-text-2);
+}
+
+#stack-root .pt-beats {
+  list-style: none;
+  margin: 2.4rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1.9rem;
+  max-width: 44rem;
+}
+
+#stack-root .pt-beat {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 1.2rem;
+  align-items: start;
+}
+
+#stack-root .pt-beat-k {
+  font-family: var(--sk-mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sk-accent);
+  padding-top: 0.4rem;
+  text-align: right;
+}
+
+#stack-root .pt-beat-head {
+  margin: 0 0 0.45rem;
+  font-family: var(--sk-serif);
+  font-size: clamp(1.05rem, 1.6vw, 1.24rem);
+  letter-spacing: -0.01em;
+  color: var(--sk-text-1);
+}
+
+#stack-root .pt-beat-body {
+  margin: 0;
+  font-size: 0.94rem;
+  line-height: 1.74;
+  color: var(--sk-text-2);
+}
+#stack-root .pt-beat-body b {
+  color: var(--sk-text-1);
+  font-weight: 500;
+}
+
+#stack-root .pt-coincidence {
+  max-width: 44rem;
+  margin: 2.6rem 0 0;
+  padding: 1.4rem 1.5rem;
+  border-left: 2px solid var(--sk-warm);
+  background: linear-gradient(90deg, rgba(111, 214, 154, 0.07), transparent 72%);
+}
+#stack-root .pt-coincidence p {
+  margin: 0;
+  font-size: 0.97rem;
+  line-height: 1.74;
+  color: var(--sk-text-2);
+}
+#stack-root .pt-coincidence p + p {
+  margin-top: 1rem;
+}
+#stack-root .pt-coincidence b {
+  color: var(--sk-text-1);
+  font-weight: 500;
+}
+
+#stack-root .pt-grace {
+  max-width: 42rem;
+  margin: 3rem 0 0;
+  padding: 0;
+}
+#stack-root .pt-grace blockquote {
+  margin: 0;
+  font-family: var(--sk-serif);
+  font-size: clamp(1.05rem, 2vw, 1.32rem);
+  line-height: 1.65;
+  letter-spacing: -0.01em;
+  color: var(--sk-text-1);
+}
+#stack-root .pt-grace blockquote em {
+  color: var(--sk-accent);
+  font-style: italic;
+}
+#stack-root .pt-grace figcaption {
+  margin-top: 0.9rem;
+  font-family: var(--sk-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+}
+
+#stack-root .pt-close {
+  max-width: 44rem;
+  margin: 2.6rem 0 0;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--sk-border-1);
+  font-size: 0.96rem;
+  line-height: 1.76;
+  color: var(--sk-text-2);
+}
+#stack-root .pt-close b {
+  color: var(--sk-text-1);
+  font-weight: 500;
+}
+
+/* ── Narrow ─────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  #stack-root .pt-habit {
+    grid-template-columns: 2.2rem minmax(0, 1fr);
+    gap: 0 1rem;
+  }
+  #stack-root .pt-habit-ev {
+    grid-column: 2;
+    margin-top: 1rem;
+    padding-left: 0.85rem;
+  }
+}
+
+@media (max-width: 560px) {
+  #stack-root .pt-beat {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem;
+  }
+  #stack-root .pt-beat-k {
+    text-align: left;
+    padding-top: 0;
+  }
+  #stack-root .pt-coincidence {
+    padding: 1.1rem 1.1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #stack-root .pt-habit,
+  #stack-root .pt-receipt {
+    transition: none;
+  }
+  #stack-root .pt-receipt:hover {
+    transform: none;
+  }
+}
