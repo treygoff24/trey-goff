@@ -85,11 +85,25 @@ export function ContextFigure() {
           </span>
         ))}
       </div>
-      <p className="ctxfig-cap">
-        <b>{spec.cap.lead}</b>
-        {spec.cap.body}
-        {spec.cap.tail ? <b>{spec.cap.tail}</b> : null}
-      </p>
+      {/* Both captions share one grid cell so the block reserves the taller and
+          toggling never shifts the page (same pattern as the savings figure). */}
+      <div className="ctxfig-caps">
+        {(Object.keys(CTX) as CtxKey[]).map((k) => {
+          const c = CTX[k].cap
+          const on = k === mode
+          return (
+            <p
+              key={k}
+              className={on ? 'ctxfig-cap is-on' : 'ctxfig-cap'}
+              aria-hidden={on ? undefined : true}
+            >
+              <b>{c.lead}</b>
+              {c.body}
+              {c.tail ? <b>{c.tail}</b> : null}
+            </p>
+          )
+        })}
+      </div>
     </div>
   )
 }
@@ -273,12 +287,22 @@ export function FanOut() {
 
   useEffect(() => {
     if (reduced) {
-      // Kill any in-flight staggered timers and settle to the finished state.
+      // Settle to the FINISHED picture — verdicts and payoff included. A reduced-motion
+      // reader scrolling past must still get the figure's whole argument.
       clearAll()
       setLiveOut(WORKERS.map(() => true))
       setLiveBack(WORKERS.map(() => true))
       setOutOn(true)
-      setLogs([{ mark: 'go', text: 'One brief, six windows. Press Dispatch to run it.' }])
+      setLogs([
+        { mark: 'go', text: 'One brief, six windows. Yours stays empty.' },
+        ...VERDICTS.map(
+          ([who, verdict, ok]): FanLog => ({
+            mark: ok ? 'ok' : 'bad',
+            text: `${who} — ${verdict}`,
+          }),
+        ),
+        { mark: 'sum', text: '6 windows spent. ~340 lines read. You read 6.' },
+      ])
     }
   }, [reduced, clearAll])
 

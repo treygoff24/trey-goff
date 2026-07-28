@@ -115,22 +115,26 @@ export function Terminal({
           Replay
         </button>
       </div>
-      {/* Reserve the final height up front so typing never shifts content below. */}
-      <pre
-        className="term-body"
-        aria-live="off"
-        style={{ minHeight: `${(lines.length * 1.37 + 2.3).toFixed(1)}rem` }}
-      >
-        {rendered.map((r, idx) => (
-          // ponytail: index keys are fine — the list is append-only within a play
-          <Line
-            key={idx}
-            line={r.line}
-            text={r.text}
-            caret={caret && idx === rendered.length - 1}
-          />
-        ))}
-        {caret && rendered.length === 0 ? <span className="caret" /> : null}
+      {/* An invisible copy of the full transcript reserves the exact settled height at any
+          width — a rem estimate under-reserved once lines started wrapping on phones. */}
+      <pre className="term-body" aria-live="off">
+        <span className="term-sizer" aria-hidden="true">
+          {lines.map((line, idx) => (
+            <Line key={idx} line={line} text={line.v} />
+          ))}
+        </span>
+        <span className="term-live">
+          {rendered.map((r, idx) => (
+            // ponytail: index keys are fine — the list is append-only within a play
+            <Line
+              key={idx}
+              line={r.line}
+              text={r.text}
+              caret={caret && idx === rendered.length - 1}
+            />
+          ))}
+          {caret && rendered.length === 0 ? <span className="caret" /> : null}
+        </span>
       </pre>
     </div>
   )
