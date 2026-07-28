@@ -38,23 +38,11 @@ export function ContextFigure() {
     (key: CtxKey) => {
       setMode(key)
       clearAll()
-      const target = ctxClasses(key)
-      if (reduced) {
-        setCells(target)
-        return
-      }
-      // Sweep the repaint left→right, matching the prototype's 1.6ms/cell stagger.
-      target.forEach((cls, i) => {
-        schedule(() => {
-          setCells((prev) => {
-            const next = [...prev]
-            next[i] = cls
-            return next
-          })
-        }, i * 1.6)
-      })
+      // One state update; the left→right sweep comes from per-cell
+      // transition-delay in the render, not from 320 timers.
+      setCells(ctxClasses(key))
     },
-    [clearAll, reduced, schedule],
+    [clearAll],
   )
 
   // Nudge to the curated state once the figure has been seen, so the point lands.
@@ -82,7 +70,11 @@ export function ContextFigure() {
       </div>
       <div className="cells" aria-hidden="true">
         {cells.map((cls, i) => (
-          <i key={i} className={cls} />
+          <i
+            key={i}
+            className={cls}
+            style={reduced ? undefined : { transitionDelay: `${(i * 1.6).toFixed(1)}ms` }}
+          />
         ))}
       </div>
       <div className="legend">
@@ -605,18 +597,35 @@ export function DecisionTree() {
 /* ── Ch.8 · copy the prompt ───────────────────────────────── */
 
 export function CopyPromptBlock({ text }: { text: string }) {
-  const [copied, setCopied] = useState(false)
+  const [label, setLabel] = useState('Copy')
+  const { schedule, clearAll } = useTimeouts()
   const copy = async () => {
-    await navigator.clipboard.writeText(text)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    let ok = true
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text)
+      } else {
+        // Insecure origins (e.g. LAN dev URLs) have no async clipboard.
+        const ta = document.createElement('textarea')
+        ta.value = text
+        document.body.appendChild(ta)
+        ta.select()
+        ok = document.execCommand('copy')
+        ta.remove()
+      }
+    } catch {
+      ok = false
+    }
+    clearAll()
+    setLabel(ok ? 'Copied ✓' : 'Copy failed — select it manually')
+    schedule(() => setLabel('Copy'), 2400)
   }
   return (
     <div className="prompt-block rv">
       <div className="ph">
         <span>start-tonight.md</span>
         <button className="copy-btn" type="button" onClick={copy}>
-          {copied ? 'Copied ✓' : 'Copy'}
+          {label}
         </button>
       </div>
       <pre>{text}</pre>

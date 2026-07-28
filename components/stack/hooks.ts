@@ -42,8 +42,10 @@ export function useOnceVisible<T extends HTMLElement>(onVisible: () => void, thr
 }
 
 /**
- * Scroll-reveal for every `.rv` under root. One observer for the page;
- * elements get `.in` on first intersection, matching the prototype.
+ * Scroll-reveal for every `.rv` under root. Progressive-enhancement shape:
+ * content is VISIBLE by default (SSR, JS failure, hydration error all safe).
+ * The observer's first callback arms offscreen elements (hides them) so they
+ * can animate in on intersection; anything already in view never hides.
  */
 export function useReveal(rootRef: React.RefObject<HTMLElement | null>, reduced: boolean) {
   useEffect(() => {
@@ -57,9 +59,12 @@ export function useReveal(rootRef: React.RefObject<HTMLElement | null>, reduced:
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
+          const el = e.target as HTMLElement
           if (e.isIntersecting) {
-            e.target.classList.add('in')
-            io.unobserve(e.target)
+            el.classList.add('in')
+            io.unobserve(el)
+          } else {
+            el.classList.add('rv-armed')
           }
         }
       },

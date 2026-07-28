@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useOnceVisible, useReducedMotion, useTimeouts } from '@/components/stack/hooks'
 
 export type TermLine = {
@@ -17,16 +17,23 @@ export type TermLine = {
 
 type Rendered = { line: TermLine; text: string }
 
-function Line({ line, text }: Rendered) {
+function Line({ line, text, caret }: Rendered & { caret?: boolean }) {
+  const caretEl = caret ? <span className="caret" /> : null
   if (line.t === 'cmd') {
     return (
       <span className="l cmd">
         <span className="p">{line.p ?? '$ '}</span>
         {text}
+        {caretEl}
       </span>
     )
   }
-  return <span className={`l ${line.c ?? ''}`}>{text || ' '}</span>
+  return (
+    <span className={`l ${line.c ?? ''}`}>
+      {text || (caret ? '' : ' ')}
+      {caretEl}
+    </span>
+  )
 }
 
 export function Terminal({
@@ -82,13 +89,13 @@ export function Terminal({
     nextLine()
   }, [clearAll, lines, reduced, schedule])
 
+  // Autoplay terminals (the hero) start on mount; the rest wait for intersection.
+  useEffect(() => {
+    if (autoplay && !playedRef.current) play()
+  }, [autoplay, play])
+
   const visRef = useOnceVisible<HTMLDivElement>(() => {
-    if (playedRef.current) return
-    if (autoplay || reduced) {
-      play()
-      return
-    }
-    play()
+    if (!playedRef.current) play()
   })
 
   return (
@@ -105,9 +112,14 @@ export function Terminal({
       <pre className="term-body" aria-live="off">
         {rendered.map((r, idx) => (
           // ponytail: index keys are fine — the list is append-only within a play
-          <Line key={idx} line={r.line} text={r.text} />
+          <Line
+            key={idx}
+            line={r.line}
+            text={r.text}
+            caret={caret && idx === rendered.length - 1}
+          />
         ))}
-        {caret ? <span className="caret" /> : null}
+        {caret && rendered.length === 0 ? <span className="caret" /> : null}
       </pre>
     </div>
   )

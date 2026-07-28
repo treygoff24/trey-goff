@@ -102,6 +102,8 @@ export function StackShell() {
   const [pct, setPct] = useState(0)
   const [railOpen, setRailOpen] = useState(false)
   const meterRef = useRef<HTMLDivElement | null>(null)
+  const railRef = useRef<HTMLElement | null>(null)
+  const toggleRef = useRef<HTMLButtonElement | null>(null)
 
   useEffect(() => {
     const root = rootRef.current
@@ -136,7 +138,12 @@ export function StackShell() {
   }, [])
 
   useEffect(() => {
-    if (!railOpen) return
+    if (!railOpen) {
+      // Restore focus to the toggle when the sheet closes via link/scrim/Escape.
+      if (document.activeElement?.closest('#stack-rail')) toggleRef.current?.focus()
+      return
+    }
+    railRef.current?.querySelector<HTMLElement>('.rail-link')?.focus()
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setRailOpen(false)
     }
@@ -156,7 +163,12 @@ export function StackShell() {
       {railOpen && (
         <div className="rail-scrim open" onClick={() => setRailOpen(false)} aria-hidden="true" />
       )}
-      <nav className={railOpen ? 'rail open' : 'rail'} id="stack-rail" aria-label="Chapters">
+      <nav
+        className={railOpen ? 'rail open' : 'rail'}
+        id="stack-rail"
+        aria-label="Chapters"
+        ref={railRef}
+      >
         <a className="rail-mark" href="#top">
           Trey Goff / treygoff.com
           <strong>The Setup</strong>
@@ -192,12 +204,14 @@ export function StackShell() {
         aria-expanded={railOpen}
         aria-controls="stack-rail"
         onClick={() => setRailOpen((v) => !v)}
+        ref={toggleRef}
       >
         <span>Chapters</span>
         <span className="pct">{CHAPTERS[active]?.n ?? '—'}</span>
       </button>
 
-      <main className="shell" id="top">
+      {/* The root layout already provides the <main> landmark; this is styling only. */}
+      <div className="shell" id="top">
         <div className="wrap">
           {/* ── Hero ── */}
           <header className="hero">
@@ -754,7 +768,7 @@ export function StackShell() {
             </div>
           </footer>
         </div>
-      </main>
+      </div>
     </div>
   )
 }

@@ -508,13 +508,18 @@ html:has(#stack-root) body > footer {
   color: var(--sk-accent);
 }
 
-/* ── Reveal ─────────────────────────────────────────────── */
+/* ── Reveal ───────────────────────────────────────────────
+   Visible by default: no JS, no reveal script, no problem.
+   JS arms offscreen elements (.rv-armed hides them) and .in
+   animates them back when they intersect. */
 #stack-root .rv {
-  opacity: 0;
-  transform: translateY(1.15rem);
   transition:
     opacity 700ms var(--sk-ease),
     transform 700ms var(--sk-ease);
+}
+#stack-root .rv.rv-armed {
+  opacity: 0;
+  transform: translateY(1.15rem);
 }
 #stack-root .rv.in {
   opacity: 1;
