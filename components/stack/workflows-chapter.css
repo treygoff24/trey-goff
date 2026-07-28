@@ -1,0 +1,343 @@
+/* ─────────────────────────────────────────────────────────────
+   /stack — chapter 09 "Workflows".
+   Scoped under #stack-root and built only from stack.css's own
+   custom properties, so the chapter inherits the field manual's
+   palette, type ramp and motion easing without redefining any.
+   ───────────────────────────────────────────────────────────── */
+
+/* ── Prose links ────────────────────────────────────────── */
+#stack-root .wf-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.4rem;
+  margin-top: 1.2rem;
+}
+#stack-root .wf-link {
+  font-family: var(--sk-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sk-accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(151, 232, 187, 0.3);
+  padding-bottom: 0.15rem;
+  transition: border-color 200ms var(--sk-ease);
+}
+#stack-root .wf-link:hover {
+  border-bottom-color: var(--sk-accent);
+}
+
+/* ── Figure 1 · script + spine ──────────────────────────── */
+#stack-root .wf-fig {
+  border: 1px solid var(--sk-border-1);
+  border-radius: 8px;
+  padding: clamp(1rem, 2.4vw, 1.6rem);
+  background:
+    radial-gradient(110% 130% at 6% 0%, rgba(111, 214, 154, 0.07), transparent 62%),
+    rgba(6, 26, 16, 0.5);
+  margin-top: 1.4rem;
+}
+#stack-root .wf-spine {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: clamp(1rem, 2.6vw, 1.9rem);
+  align-items: start;
+}
+#stack-root .wf-code {
+  border: 1px solid var(--sk-border-1);
+  border-radius: 7px;
+  overflow: hidden;
+  background: rgba(3, 14, 9, 0.85);
+}
+#stack-root .wf-code-name {
+  font-family: var(--sk-mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.14em;
+  color: var(--sk-text-3);
+  padding: 0.55rem 0.85rem;
+  border-bottom: 1px solid var(--sk-border-1);
+  background: rgba(232, 243, 236, 0.028);
+}
+#stack-root .wf-code pre {
+  margin: 0;
+  padding: 0.95rem 1rem 1.1rem;
+  font-family: var(--sk-mono);
+  font-size: 0.735rem;
+  line-height: 1.78;
+  color: var(--sk-text-2);
+  white-space: pre;
+  overflow-x: auto;
+}
+#stack-root .wf-diagram {
+  overflow-x: auto;
+}
+#stack-root .wf-diagram svg,
+#stack-root .wf-panel svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Shared SVG primitives across both figures */
+#stack-root .wf-rail {
+  stroke: var(--sk-border-1);
+  stroke-width: 1;
+}
+#stack-root .wf-band {
+  fill: rgba(232, 243, 236, 0.028);
+  stroke: var(--sk-border-1);
+  stroke-width: 1;
+}
+#stack-root .wf-tick {
+  fill: var(--sk-accent);
+}
+#stack-root .wf-hop {
+  fill: none;
+  stroke: var(--sk-border-2);
+  stroke-width: 1.1;
+}
+#stack-root .wf-chip {
+  fill: rgba(4, 19, 12, 0.92);
+  stroke: var(--sk-border-2);
+  stroke-width: 1;
+}
+#stack-root .wf-chip-t,
+#stack-root .wf-band-t,
+#stack-root .wf-note,
+#stack-root .wf-hub-t,
+#stack-root .wf-merge-t {
+  font-family: var(--sk-mono);
+  letter-spacing: 0.05em;
+}
+#stack-root .wf-chip-t {
+  font-size: 9px;
+  fill: var(--sk-text-2);
+}
+#stack-root .wf-band-t {
+  font-size: 8.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  fill: var(--sk-accent);
+}
+#stack-root .wf-note {
+  font-size: 8.5px;
+  fill: var(--sk-text-3);
+}
+#stack-root .wf-note-gate {
+  fill: var(--sk-amber);
+}
+#stack-root .wf-vendor {
+  font-family: var(--sk-mono);
+  font-size: 7.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+#stack-root .wf-cap {
+  margin-top: 1.1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--sk-border-1);
+  font-size: 0.92rem;
+  color: var(--sk-text-2);
+}
+#stack-root .wf-cap b {
+  color: var(--sk-text-1);
+  font-weight: 500;
+}
+
+/* ── API cheatsheet rows ────────────────────────────────── */
+#stack-root .wf-api {
+  margin-top: 1.6rem;
+  border-top: 1px solid var(--sk-border-1);
+}
+#stack-root .wf-api-row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.6fr) minmax(0, 1.4fr);
+  gap: clamp(0.8rem, 3vw, 2.2rem);
+  padding-block: 1rem;
+  border-bottom: 1px solid var(--sk-border-1);
+  align-items: baseline;
+}
+#stack-root .wf-api-row .sig {
+  font-family: var(--sk-mono);
+  font-size: 0.8rem;
+  color: var(--sk-accent);
+}
+#stack-root .wf-api-row .dsc {
+  font-size: 0.94rem;
+  line-height: 1.62;
+  color: var(--sk-text-2);
+}
+
+/* ── Figure 2 · one family vs many families ─────────────── */
+#stack-root .wf-versus {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(1rem, 2.6vw, 1.7rem);
+  margin-top: 1.5rem;
+}
+#stack-root .wf-panel {
+  border: 1px solid var(--sk-border-1);
+  border-radius: 8px;
+  padding: clamp(0.95rem, 2.2vw, 1.4rem);
+  background: rgba(6, 26, 16, 0.5);
+  overflow-x: auto;
+}
+#stack-root .wf-panel-alt {
+  border-color: var(--sk-border-2);
+  background:
+    radial-gradient(120% 140% at 92% 0%, rgba(111, 214, 154, 0.09), transparent 62%),
+    rgba(6, 26, 16, 0.55);
+}
+#stack-root .wf-panel h4 {
+  margin: 0 0 1rem;
+  font-family: var(--sk-mono);
+  font-size: 0.63rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+}
+#stack-root .wf-panel-alt h4 {
+  color: var(--sk-accent);
+}
+#stack-root .wf-panel p {
+  margin: 1rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--sk-text-3);
+}
+#stack-root .wf-panel p b {
+  color: var(--sk-text-1);
+  font-weight: 500;
+}
+#stack-root .wf-hub {
+  fill: rgba(151, 232, 187, 0.12);
+  stroke: var(--sk-accent);
+  stroke-width: 1;
+}
+#stack-root .wf-hub-t {
+  font-size: 9px;
+  fill: var(--sk-text-1);
+}
+#stack-root .wf-gate {
+  stroke: var(--sk-amber);
+  stroke-width: 1;
+  opacity: 0.7;
+}
+#stack-root .wf-merge {
+  fill: rgba(232, 243, 236, 0.035);
+  stroke: var(--sk-border-1);
+  stroke-width: 1;
+}
+#stack-root .wf-merge-t {
+  font-size: 9px;
+  fill: var(--sk-text-2);
+}
+
+/* Vendor lanes — the visual argument of the second figure. The left panel
+   repeats one colour four times; the right panel is four different ones. */
+#stack-root .wf-l-claude.wf-chip,
+#stack-root .wf-l-claude.wf-hop {
+  stroke: var(--sk-accent);
+}
+#stack-root .wf-l-claude.wf-bar,
+#stack-root .wf-l-claude.wf-vendor {
+  fill: var(--sk-accent);
+}
+#stack-root .wf-l-codex.wf-chip,
+#stack-root .wf-l-codex.wf-hop {
+  stroke: var(--sk-sky);
+}
+#stack-root .wf-l-codex.wf-bar,
+#stack-root .wf-l-codex.wf-vendor {
+  fill: var(--sk-sky);
+}
+#stack-root .wf-l-grok.wf-chip,
+#stack-root .wf-l-grok.wf-hop {
+  stroke: var(--sk-violet);
+}
+#stack-root .wf-l-grok.wf-hop {
+  stroke-dasharray: 4 3;
+}
+#stack-root .wf-l-grok.wf-bar,
+#stack-root .wf-l-grok.wf-vendor {
+  fill: var(--sk-violet);
+}
+#stack-root .wf-l-kimi.wf-chip,
+#stack-root .wf-l-kimi.wf-hop {
+  stroke: var(--sk-amber);
+}
+#stack-root .wf-l-kimi.wf-hop {
+  stroke-dasharray: 2 3;
+}
+#stack-root .wf-l-kimi.wf-bar,
+#stack-root .wf-l-kimi.wf-vendor {
+  fill: var(--sk-amber);
+}
+#stack-root .wf-bar {
+  stroke: none;
+}
+
+/* ── The three extras ───────────────────────────────────── */
+#stack-root .wf-badges {
+  grid-column: 1 / -1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--sk-border-1);
+}
+#stack-root .wf-badges li {
+  padding: 1rem 1.1rem 1.1rem 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--sk-text-3);
+  border-bottom: 1px solid var(--sk-border-1);
+}
+#stack-root .wf-badges .k {
+  display: block;
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sk-warm);
+  margin-bottom: 0.45rem;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 1080px) {
+  #stack-root .wf-spine,
+  #stack-root .wf-versus,
+  #stack-root .wf-api-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  #stack-root .wf-api-row .dsc {
+    margin-top: 0.4rem;
+  }
+  #stack-root .wf-badges {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 700px) {
+  /* Keep the diagram labels legible: pan a full-width figure, never shrink it. */
+  #stack-root .wf-diagram svg {
+    min-width: 27rem;
+  }
+  #stack-root .wf-panel svg {
+    min-width: 23rem;
+  }
+  #stack-root .wf-code pre {
+    font-size: 0.68rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #stack-root .wf-link,
+  #stack-root .wf-fig,
+  #stack-root .wf-versus {
+    transition-duration: 0.001ms !important;
+  }
+}

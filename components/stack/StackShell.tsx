@@ -12,6 +12,7 @@ import { useReducedMotion, useReveal } from '@/components/stack/hooks'
 import { Terminal } from '@/components/stack/Terminal'
 import { SubagentSavings } from '@/components/stack/SubagentSavings'
 import { WhyContext } from '@/components/stack/WhyPanel'
+import { WorkflowsChapter } from '@/components/stack/WorkflowsChapter'
 import { WorktreesSection } from '@/components/stack/WorktreesSection'
 import {
   ContextFigure,
@@ -839,8 +840,10 @@ export function StackShell() {
               and one of them will be a rule I&apos;ve never thought of.{' '}
               <em className="hl">That&apos;s the part I actually want to read.</em>
             </p>
-            <Pager prev={['#ch7', '07 · A week in the life']} />
+            <Pager prev={['#ch7', '07 · A week in the life']} next={['#ch9', '09 · Workflows']} />
           </section>
+
+          <WorkflowsChapter />
 
           <footer className="colophon">
             <div>Trey Goff · treygoff.com/stack · 2026</div>
