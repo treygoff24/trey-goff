@@ -306,7 +306,14 @@ function MiddleChart() {
             y1={py(CLOSED_BOOK)}
             y2={py(CLOSED_BOOK)}
           />
-          <text className="whyc-baselabel" x={g.x1} y={py(CLOSED_BOOK) - 7} textAnchor="end">
+          {/* Below the line and left-anchored: the right half of the line is
+              crowded by the 15th/20th point labels. */}
+          <text
+            className="whyc-baselabel"
+            x={g.x0 + 6}
+            y={py(CLOSED_BOOK) + 27}
+            textAnchor="start"
+          >
             closed-book, 56.1% — no documents at all
           </text>
           {MID_PTS.map(([pos, lbl]) => (

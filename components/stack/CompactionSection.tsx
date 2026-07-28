@@ -40,8 +40,10 @@ function accuracyAt(t: number): number {
 }
 
 function opacityFor(acc: number): number {
-  const f = (acc - ACC_LO) / (ACC_HI - ACC_LO)
-  return Math.min(1, Math.max(0, 0.14 + f * 0.86))
+  const f = Math.min(1, Math.max(0, (acc - ACC_LO) / (ACC_HI - ACC_LO)))
+  // Gamma-deepen the trough: linear mapping left the middle reading as
+  // "slightly less green" on real pixels instead of visibly dim.
+  return 0.1 + Math.pow(f, 1.7) * 0.9
 }
 
 /**
