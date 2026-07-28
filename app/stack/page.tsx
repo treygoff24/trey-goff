@@ -3,9 +3,9 @@ import { StackShell } from '@/components/stack/StackShell'
 import '@/components/stack/stack.css'
 
 export const metadata: Metadata = {
-  title: 'The Setup — how I actually build software now',
+  title: 'The Setup — how to build good software with untrustworthy agents',
   description:
-    'A complete, working agentic development stack, explained from first principles with the real artifacts attached. If you can open a terminal, you can have this by tonight.',
+    'A complete, working agentic development stack, explained from first principles and written with both the layman and the software engineer in mind.',
   openGraph: {
     title: 'The Setup',
     description:

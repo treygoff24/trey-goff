@@ -1,14 +1,15 @@
 import type { TermLine } from '@/components/stack/Terminal'
 
 export const CHAPTERS = [
-  { id: 'ch1', n: '01', title: 'Why any of this works' },
+  { id: 'ch1', n: '01', title: 'Key heuristics' },
   { id: 'ch2', n: '02', title: 'Day one' },
   { id: 'ch3', n: '03', title: 'Teaching it your world' },
-  { id: 'ch4', n: '04', title: 'Giving it hands' },
+  { id: 'ch4', n: '04', title: 'Agents need tools' },
   { id: 'ch5', n: '05', title: 'Multiplying it' },
   { id: 'ch6', n: '06', title: 'Trusting it at scale' },
   { id: 'ch7', n: '07', title: 'A week in the life' },
   { id: 'ch8', n: '08', title: 'Build your own' },
+  { id: 'ch9', n: '09', title: 'Workflows' },
 ] as const
 
 export const HERO_TERM: TermLine[] = [
@@ -74,7 +75,7 @@ export const CTX: Record<
     ],
     cap: {
       lead: 'The default.',
-      body: ' You opened a session, said "fix the login bug", and it went looking. Most of the window is now the search — files it read to rule out, output it never used, and a conversation that has drifted twice. The task itself is a sliver. This is what people mean when they say the model "got dumber halfway through."',
+      body: ' You opened a session, said "fix the login bug", and it went looking. Most of the context window is now the search: files it read to rule out, output it never used, and a conversation that has drifted twice. The task itself is a sliver of the window. This is what people mean when they say the model "got dumber halfway through."',
     },
   },
   good: {
@@ -88,7 +89,7 @@ export const CTX: Record<
     ],
     cap: {
       lead: 'The same job, briefed.',
-      body: ' A standing instruction file told it the conventions. A skill told it the procedure. You named the files. Now two-thirds of the window is headroom — room to be wrong twice, read the failing test, and still think clearly. ',
+      body: ' A standing instruction file told it the conventions. The CLAUDE.md gave it a repo map and what the software is for. A skill told it the procedure, and the directory has a logical structure and clear file naming. Now two-thirds of the context window is headroom — room to be wrong twice, read the failing test, and still think clearly. ',
       tail: 'Everything in this manual is a way of buying that green space.',
     },
   },
@@ -344,7 +345,7 @@ export const TREE: Record<string, TreeNode> = {
     steps: [
       {
         lead: 'Say what it does in three sentences',
-        rest: ' and ask it to argue with you about the shape before writing anything.',
+        rest: ' and ask the agent to argue with you about the shape before writing anything. Keep debating until you both agree on what this thing should be.',
       },
       {
         lead: 'Skip the plan document.',
@@ -352,7 +353,7 @@ export const TREE: Record<string, TreeNode> = {
       },
       {
         lead: 'One repo, one session, commit constantly.',
-        rest: ' Every green state gets a commit — that is your undo.',
+        rest: ' Every green state gets a commit — that is your undo. Subagents do all the work; the main agent is making sure what they build is actually what you requested.',
       },
       {
         lead: 'Ask it what it would do differently',
@@ -374,7 +375,7 @@ export const TREE: Record<string, TreeNode> = {
     steps: [
       {
         lead: 'Interview first.',
-        rest: ' Make it ask you everything whose answer changes the architecture, before it proposes one.',
+        rest: ' Make it ask you everything whose answer changes the architecture, before it proposes one. Matt Pocock has the best skill for this: grill-with-docs.',
       },
       {
         lead: 'Get a written plan',
@@ -382,11 +383,15 @@ export const TREE: Record<string, TreeNode> = {
       },
       {
         lead: 'Hand the plan to a fresh reviewer',
-        rest: ' with no memory of writing it. Dependency order and file collisions are what it catches.',
+        rest: ' with no memory of writing it. Dependency order and file collisions are what it catches. Ideally this is your other smartest model: Fable, GPT 5.6 Sol, Grok, K3, whatever.',
+      },
+      {
+        lead: 'Have your orchestrator read the review',
+        rest: ' and propose the patches to the plan — or just let it apply them directly, up to you.',
       },
       {
         lead: 'Execute in waves',
-        rest: ', each wave a small set of independent files, gate run at the coordinator between waves.',
+        rest: ', each wave a small set of independent files, gate run at the coordinator between waves. Each wave is built via subagent fan-out, to parallel-process as much as possible and keep the orchestrator’s window clean.',
       },
       {
         lead: 'Verify on disk after every fan-out.',
@@ -394,7 +399,7 @@ export const TREE: Record<string, TreeNode> = {
       },
       {
         lead: 'Fresh-eyes review before anything is pushed.',
-        rest: ' Then, and only then, ask for the go-ahead.',
+        rest: ' I always run three review-fix loops at the end of each wave, then a few review rounds of the whole build against the original plan by multiple frontier models. Then, and only then, ship it.',
       },
     ],
     ch: ['#ch5', '05 · Multiplying it'],
@@ -415,16 +420,16 @@ export const TREE: Record<string, TreeNode> = {
         rest: ' "Match the shape of the settings page" beats three paragraphs of description.',
       },
       {
-        lead: 'Name the gate command up front',
-        rest: ' so it is running your real check, not a check it invented.',
+        lead: 'Brainstorm.',
+        rest: ' If the feature is big enough, use the grill-with-docs skill. If it is fairly small and straightforward, pitch the model your idea, get feedback, brainstorm, then ask the model to repeat back what it will build and what it is for. Only when that reads correctly does it get the green light. Some features deserve the full plan-and-review loop, some do not — that is a judgment call.',
       },
       {
-        lead: 'Make it show you the diff in pieces.',
-        rest: ' One coherent commit per idea; a twelve-file commit is a review you will not do.',
+        lead: 'Subagent execution in waves.',
+        rest: ' Fan out as many subagents as possible in parallel.',
       },
       {
         lead: 'Review with something that did not write it',
-        rest: ', then run the gate yourself at the end anyway.',
+        rest: ', then run the gate yourself at the end anyway. Multi-model review-fix loops at the end of each wave, and of the whole feature branch against main at the end.',
       },
     ],
     ch: ['#ch6', '06 · Trusting it at scale'],
@@ -454,7 +459,7 @@ export const TREE: Record<string, TreeNode> = {
       },
       {
         lead: 'Then pick exactly one',
-        rest: ' and start a real session. The pile becomes a queue, and a queue is a solved problem.',
+        rest: ' and start a real session in that specific repo. The pile becomes a queue, and a queue is a solved problem.',
       },
     ],
     ch: ['#ch5', '05 · Multiplying it'],
@@ -468,7 +473,7 @@ export const TREE: Record<string, TreeNode> = {
     steps: [
       {
         lead: 'Get a reproduction first',
-        rest: ', and forbid changes until there is one. A failing command is the whole ballgame.',
+        rest: ', and forbid changes until there is one. A failing command is the whole ballgame. If it is particularly hairy, send three to five subagents on different models, all assigned to root-cause the issue independently.',
       },
       {
         lead: 'Minimize it.',

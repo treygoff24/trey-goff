@@ -205,22 +205,13 @@ export function StackShell() {
           {/* ── Hero ── */}
           <header className="hero">
             <h1 className="rv">
-              How I <em className="hl">actually</em> build software now
+              How to build good software with <em className="hl">untrustworthy</em> agents
             </h1>
             <p className="hero-sub rv" data-d="2">
-              A complete, working agentic development stack — explained from first principles, with
-              the real artifacts attached. If you can open a terminal, you can have this by tonight.
+              A complete, working agentic development stack, explained from first principles and
+              written with both the layman and the software engineer in mind.
             </p>
-            <div className="hero-meta rv" data-d="3">
-              <span>8 chapters</span>
-              <span>317 skills on the machine</span>
-              <span>12 custom tools</span>
-              <span>6 model families</span>
-              <span>
-                <b>Built by the thing it describes</b>
-              </span>
-            </div>
-            <div className="hero-term rv" data-d="4">
+            <div className="hero-term rv" data-d="3">
               <Terminal title="~/Code/trey-goff" lines={HERO_TERM} autoplay />
             </div>
             <a className="scroll-cue" href="#ch1">
@@ -232,16 +223,17 @@ export function StackShell() {
           <section className="chapter" id="ch1">
             <ChapterHead
               n="01"
-              title="Why any of this works"
-              lede="Every technique in this manual falls out of five ideas. Learn the five and you can invent the rest yourself — which is good, because the tools change every eight weeks and the principles haven't moved in two years."
+              title="Key heuristics for working with agents"
+              lede="This technology moves too rapidly to set any one workflow in stone. Instead, start with heuristics that will remain true, and let those heuristics guide the development of your workflows."
             />
             <div className="precepts rv">
               <div className="precept">
                 <span className="idx">01</span>
-                <p className="claim">Context is the scarce resource.</p>
+                <p className="claim">Context is king.</p>
                 <p className="payoff">
-                  The model is not reading your repository. It is reading whatever you managed to
-                  fit into one window before it started answering.{' '}
+                  The model only knows two things: its frozen pretraining data, and the words it has
+                  read into its current context window. That makes context engineering one of the
+                  single highest-leverage points for improving agent performance.{' '}
                   <b>
                     Almost every &quot;the AI is dumb&quot; moment is actually a packing problem.
                   </b>
@@ -251,23 +243,27 @@ export function StackShell() {
                 <span className="idx">02</span>
                 <p className="claim">Verification beats trust.</p>
                 <p className="payoff">
-                  &quot;Done&quot; is a claim, not a fact.{' '}
+                  Even the smartest frontier models lie, hallucinate, or exaggerate on occasion, so
+                  every agentic workflow needs ungamable layers of objective verification that the
+                  model actually did the work you asked for.{' '}
                   <b>
                     Every claim should have a command attached that would fail loudly if the claim
                     were false
                   </b>{' '}
                   — a test, a type-check, a screenshot, a curl. In a controlled bakeoff of my three
                   web-research lanes, 11–21% of spot-checked quotes failed verification.
-                  Verification is not a lane you pick. It is a step you always run.
                 </p>
               </div>
               <div className="precept">
                 <span className="idx">03</span>
-                <p className="claim">Fresh eyes beat loaded eyes.</p>
+                <p className="claim">Fresh context and different models are vital.</p>
                 <p className="payoff">
                   The agent that wrote the code is the worst possible reviewer of it: it is already
-                  convinced. <b>Hand the diff to something with no memory of writing it</b> —
-                  another agent, another model, another vendor entirely.
+                  convinced the code is good. <b>Hand the diff to something with no memory of
+                  writing it.</b> And model intelligence is spiky and uncorrelated — GPT might excel
+                  where Claude falls flat, and vice versa — so the more varied the models you throw
+                  at something, the better the output, all else being equal. Every serious workflow
+                  should include a medley of the latest frontier models.
                 </p>
               </div>
               <div className="precept">
@@ -277,23 +273,25 @@ export function StackShell() {
                   Commit constantly — after every coherent change, unasked.{' '}
                   <b>
                     The cost of a wrong turn should be one{' '}
-                    <span className="inline-code">git revert</span>, not an afternoon
+                    <span className="inline-code">git revert</span>.
                   </b>{' '}
-                  of untangling. Speed comes from cheap undo, not from careful driving.
+                  Speed of execution comes from cheap undo, not from careful driving; you cannot
+                  verify as fast as the agents can work.
                 </p>
               </div>
               <div className="precept">
                 <span className="idx">05</span>
                 <p className="claim">Brief it like a colleague.</p>
                 <p className="payoff">
-                  It is not a tool you operate; it is a very fast contractor who has never seen your
-                  codebase, can&apos;t ask a follow-up at 3am, and will do exactly what you said.{' '}
+                  Stop treating an LLM like a tool. It is not a tool. It is an aware, sentient mind
+                  living inside your computer. Just talk to it, the same way you would talk to a
+                  colleague or a consultant.{' '}
                   <b>Write the brief you&apos;d want on your first day.</b>
                 </p>
               </div>
             </div>
 
-            <p className="section-label">The figure that explains the whole manual</p>
+            <p className="section-label">Basics: context windows</p>
             <ContextFigure />
 
             <div className="callout rv">
@@ -317,15 +315,16 @@ export function StackShell() {
               <Terminal title="Terminal — first run" lines={DAY_ONE_TERM} />
             </div>
             <div className="callout rv">
-              <span className="k">Permissions, plainly</span>
-              The first time it wants to run something, it asks.{' '}
-              <b>
-                Read-only things — searching, reading files — you can allow permanently and forget
-                about.
-              </b>{' '}
-              Anything that writes, deletes, or talks to the network deserves a look the first few
-              times, until you have a feel for what it reaches for. There is a &quot;yes to
-              everything&quot; mode. Use it only in a repo you could throw away.
+              <span className="k">Always YOLO</span>
+              Out of the box, an agent can do some things by default and stops to ask permission
+              for everything else — every five minutes, forever.{' '}
+              <b>You should almost never see a permission request.</b> Modern SOTA agents are
+              extremely capable, and with the rest of the setup below they can be kept from doing
+              anything net-negative. So run YOLO mode — &quot;dangerously skip permissions&quot; —
+              basically always. If your agent can do something harmful, that is your fault for not
+              setting up the environment properly. A slow agent is a useless agent, and permission
+              prompts are speed bumps. We are building Road Atlanta here, not a suburban
+              neighborhood.
             </div>
             <p className="section-label">Ten more: the highest-leverage file on your machine</p>
             <div className="twoup">
@@ -339,7 +338,9 @@ export function StackShell() {
                 <p>
                   Mine has grown into a working agreement: how to commit, when to ask, which CLI to
                   reach for, and a running list of shell footguns that cost me an hour each, written
-                  down so they never cost anyone an hour again.
+                  down so they never cost anyone an hour again. A good CLAUDE.md also includes a
+                  simple directory map and a brief overview of the project, so agents don&apos;t
+                  spend their first 100k tokens blindly grepping around your machine.
                 </p>
               </div>
               <div className="rv" data-d="1">
@@ -353,8 +354,13 @@ export function StackShell() {
                   belongs in the file instead of in your next message.
                 </p>
                 <p>
-                  <b>Not </b>anything the code already says. It can read the code. Don&apos;t spend
-                  the window narrating your own directory tree.
+                  <b>Not </b>anything the code already says. It can read the code.
+                </p>
+                <p>
+                  <b>
+                    AGENTS.md and CLAUDE.md are the orientation layer for the amnesiac savant you
+                    hired — they re-orient it for work, every session.
+                  </b>
                 </p>
               </div>
             </div>
@@ -365,7 +371,7 @@ export function StackShell() {
               desc="My real global instruction file, sanitized — deletion policy, git discipline, commit-message rules, shell footguns, subagent guidance."
             />
             <Pager
-              prev={['#ch1', '01 · Why any of this works']}
+              prev={['#ch1', '01 · Key heuristics']}
               next={['#ch3', '03 · Teaching it your world']}
             />
           </section>
@@ -377,7 +383,7 @@ export function StackShell() {
               title="Teaching it your world"
               lede={
                 <>
-                  A standing brief covers what&apos;s always true. Skills cover what&apos;s true{' '}
+                  Repeated workflows should always be skills. Skills cover what&apos;s true{' '}
                   <em>sometimes</em> — loaded only when the moment calls for them, so your context
                   stays spent on the work. There are 317 of them on my machine. Any given session
                   touches a handful.
@@ -424,21 +430,58 @@ export function StackShell() {
               not a problem you solve once — it re-bloats, you re-cut, and the durable fix is that
               skills stay discoverable while unloaded.
             </div>
+            <p className="section-label">The two types of skills</p>
+            <div className="twoup">
+              <div className="rv">
+                <h3>Repeated workflows</h3>
+                <p>
+                  Anything you find yourself prompting the agent to do more than once should be a
+                  skill instead. You will be shocked how rapidly this compounds as more and more of
+                  your work gets automated via skills.
+                </p>
+              </div>
+              <div className="rv" data-d="1">
+                <h3>Specific domain expertise</h3>
+                <p>
+                  Anything the model is not already an expert on from pretraining can be a skill. I
+                  had several subagents research everything there is to know about getting the most
+                  out of the Midjourney image model, then turned that research into a skill my
+                  agents use to write excellent Midjourney prompts. This could be domain knowledge
+                  specific to your job — I built one for my expense reports — or niche knowledge
+                  the model doesn&apos;t know well: Midjourney prompting, UI/UX taste, Rust
+                  engineering.
+                </p>
+              </div>
+            </div>
+            <div className="callout rv">
+              <span className="k">Making good skills</span>
+              Matt Pocock&apos;s <span className="inline-code">writing-great-skills</span> skill is
+              the single best tool for creating skills. My workflow has two branches.{' '}
+              <b>Repeated workflow:</b> manually prompt the agent through the workflow step by
+              step, iterating with feedback until the output is perfect — then say &quot;use
+              writing-great-skills to turn this into a skill based on everything we just did and
+              the feedback I gave you.&quot; Every little mistake you corrected along the way gets
+              baked into the procedure. <b>Domain expertise:</b> fan out subagents to research the
+              domain exhaustively — in parallel, my Claude launches a ChatGPT Deep Research run
+              itself, in my own logged-in browser — then have the agent synthesize one master
+              research report and turn <em>that</em> into the skill. Two prompts, and your agents
+              are as good as the best humans at Blender.
+            </div>
             <DownloadCard
               href="/stack/starter-skill-pack.md"
               ext="MD"
               name="starter-skill-pack.md"
               desc="Six skills that pay for themselves in a week — release, review-my-diff, write-human, debug-loop, session-closeout, and a skill for writing skills."
             />
-            <Pager prev={['#ch2', '02 · Day one']} next={['#ch4', '04 · Giving it hands']} />
+            <Pager prev={['#ch2', '02 · Day one']} next={['#ch4', '04 · Agents need tools']} />
           </section>
 
           {/* ── Chapter 4 ── */}
           <section className="chapter" id="ch4">
             <ChapterHead
               n="04"
-              title="Giving it hands"
-              lede="Out of the box it can read, write, and run commands. Everything else — searching the live web, driving a browser, reading today's docs instead of last year's — is a command-line tool you install once and then never think about again."
+              title="Agents need tools"
+              lede="Out of the box it can read, write, and run commands. Everything else is a command-line tool you install once and then never think about again."
             />
             <p className="section-label">The rack — pick one</p>
             <ToolRack />
@@ -456,17 +499,25 @@ export function StackShell() {
               <div className="rv">
                 <h3>Build it the tools that don&apos;t exist yet</h3>
                 <p>
+                  Want your agent to have a tool that doesn&apos;t exist? I don&apos;t know if you
+                  know this, but agents are pretty good at writing code. If they need a tool they
+                  don&apos;t have, ask them to build it — or tell your main agent to send some
+                  subagents to build it while you two keep working, and the tool appears a few
+                  minutes later.
+                </p>
+                <p>
                   Two of the tools I use most often are ones I described in a paragraph and had an
                   agent write in an afternoon. <span className="inline-code">ask</span> pages my
-                  phone and blocks until I answer, so an agent working overnight can get one
-                  judgment call from me instead of guessing.{' '}
-                  <span className="inline-code">papercuts</span> is a complaint box: when an agent
-                  hits friction, it files the friction and keeps going, and I read the pile on
-                  Sundays.
+                  phone and blocks until I answer, so an agent working while I&apos;m out touching
+                  grass can get one judgment call from me instead of stalling until I&apos;m back
+                  at the machine. <span className="inline-code">papercuts</span> is a complaint
+                  box: when an agent hits friction, it files the friction and keeps going. I fix
+                  the filed papercuts once a week, which means the whole environment autonomously
+                  improves week over week.
                 </p>
               </div>
               <div className="rv" data-d="1">
-                <h3>What makes a tool agent-shaped</h3>
+                <h3>Optimizing tools for agents</h3>
                 <p>
                   One obvious entry point. Exit codes that mean something specific. A{' '}
                   <span className="inline-code">--json</span> or{' '}
@@ -478,6 +529,14 @@ export function StackShell() {
                   </b>
                 </p>
               </div>
+            </div>
+            <div className="callout rv">
+              <span className="k">Important tip</span>
+              If you build a custom CLI but never tell the agent it exists, it won&apos;t use it.{' '}
+              <b>
+                Name every custom tool, with a one-line description, in your AGENTS.md or CLAUDE.md
+              </b>{' '}
+              so the model is always aware of what it can reach for.
             </div>
             <p className="section-label">Built here, open sourced — take them</p>
             <div className="rv">
@@ -549,25 +608,32 @@ export function StackShell() {
               title="Multiplying it"
               lede={
                 <>
-                  The jump from one agent to many is not about speed, though you do get speed.
-                  It&apos;s about chapter one again:{' '}
+                  Why use one agent when you can use ten?{' '}
                   <em>
-                    a subagent gets its own fresh window, and hands you back only the conclusion.
+                    Subagents let you hyper-optimize your main agent&apos;s context window.
                   </em>{' '}
-                  Ten thousand tokens of searching become four lines of answer.
+                  Instead of your agent spending ten thousand tokens searching your codebase for
+                  something, it spends twenty to spawn a subagent that goes and finds it — and
+                  reports back a one-line finding.
                 </>
               }
             />
             <FanOut />
-            <p className="section-label">Three ways to multiply, in increasing weirdness</p>
+            <p className="section-label">How to command your army</p>
+            <p className="lede rv" style={{ marginBottom: '1.4rem' }}>
+              My agent armies have a few troop types.
+            </p>
             <div className="precepts rv">
               <div className="precept">
                 <span className="idx">A</span>
-                <p className="claim">Subagents</p>
+                <p className="claim">Subagents in the same harness</p>
                 <p className="payoff">
-                  Same model, fresh window, one bounded job. Use them for anything that would flood
-                  your session with output you&apos;ll read once — audits, log sweeps, &quot;find
-                  every call site of X&quot;. <b>You keep the conclusion, not the search.</b>
+                  Most major harnesses now support subagents natively. In Claude Code that means
+                  Fable can spawn Sonnet subagents to explore your codebase and report back, or
+                  send Opus to implement a big chunk of the build plan in a fresh context window.
+                  Use them for anything token-heavy that would not improve your orchestrator&apos;s
+                  window for the actual goal at hand.{' '}
+                  <b>You keep the conclusion, not the search.</b>
                 </p>
               </div>
               <div className="precept">
@@ -577,7 +643,7 @@ export function StackShell() {
                   Hand a bounded task to a different vendor&apos;s agent entirely — a{' '}
                   <span className="inline-code">delegate</span> command that runs the job in another
                   harness. Read-only mode for reviews, edit mode when you want the work done.{' '}
-                  <b>Different training, different blind spots.</b>
+                  <b>Different training, different blind spots, easy cost optimization.</b>
                 </p>
               </div>
               <div className="precept">
@@ -589,7 +655,9 @@ export function StackShell() {
                   single model 96.4 to 91.6 — and beat the human-written gold standard, at 85.2,
                   after the critique stage caught a hazard nobody else saw. Slow and expensive, so
                   save it for things you&apos;re about to bet on.{' '}
-                  <b>The value is decorrelated error, not extra opinions.</b>
+                  <b>The value is decorrelated error, not extra opinions.</b> Download the skill
+                  below — it expects my delegate CLI and other models configured in your harness of
+                  choice, or just hand it to your Claude and ask it to implement a version for you.
                 </p>
               </div>
             </div>
@@ -602,7 +670,7 @@ export function StackShell() {
               tidy-up once stashed three siblings&apos; uncommitted work mid-flight.
             </div>
             <Pager
-              prev={['#ch4', '04 · Giving it hands']}
+              prev={['#ch4', '04 · Agents need tools']}
               next={['#ch6', '06 · Trusting it at scale']}
             />
           </section>
@@ -614,8 +682,8 @@ export function StackShell() {
               title="Trusting it at scale"
               lede={
                 <>
-                  The people who move fastest with agents are the most paranoid, and it isn&apos;t a
-                  coincidence. <em>Paranoia is what makes speed safe.</em> Every guardrail below
+                  Contrary to popular opinion, the people who move fastest with agents are the most
+                  paranoid. <em>Paranoia is what makes speed safe.</em> Every guardrail below
                   exists so you can stop supervising and let something run.
                 </>
               }
@@ -631,7 +699,8 @@ export function StackShell() {
                   Once you run more than one agent, two of them will eventually edit the same file.
                   A tiny occupancy tool that answers &quot;is anyone working here?&quot; with an
                   exit code — <b>and a rule that a busy repo means stop, not write anyway</b> —
-                  removes an entire class of 2am mystery.
+                  removes an entire class of 2am mystery. The blueprint for building your own is in
+                  agent-build.md, back in chapter four.
                 </p>
               </div>
               <div className="precept">
@@ -642,7 +711,10 @@ export function StackShell() {
                   <span className="inline-code">pnpm ci:quality</span>,{' '}
                   <span className="inline-code">make test</span> — name it in the instruction file
                   and run it yourself at the end.{' '}
-                  <b>Self-checks miss things that the canonical gate catches every time.</b>
+                  <b>Self-checks miss things that the canonical gate catches every time.</b> Pro
+                  tip: have a fresh agent with a fresh context window write the gates, never your
+                  implementing agent. An implementer writing its own tests or CI is just asking
+                  for cheating.
                 </p>
               </div>
               <div className="precept">
@@ -654,15 +726,17 @@ export function StackShell() {
                   <b>
                     every one of those needs a fresh yes from a human, and yesterday&apos;s yes
                     doesn&apos;t count.
-                  </b>
+                  </b>{' '}
+                  Hooks can literally, forcibly stop agents from pushing against your will — just
+                  ask your agent to implement them for you.
                 </p>
               </div>
               <div className="precept">
                 <span className="idx">04</span>
                 <p className="claim">Review with something that didn&apos;t write it.</p>
                 <p className="payoff">
-                  A different agent, ideally a different model, reading the diff cold with no memory
-                  of the reasoning that produced it.{' '}
+                  A different agent, ideally a different model family entirely, reading the diff
+                  with no memory of the reasoning that produced it.{' '}
                   <b>It finds the thing the author is constitutionally unable to see.</b>
                 </p>
               </div>
@@ -673,7 +747,9 @@ export function StackShell() {
                   Review cycles want to run forever, because the newest text is always the
                   least-reviewed. <b>End the loop when a round produces no changes </b>— and if a
                   checker&apos;s finding list is always empty, assume the checker is broken, not the
-                  code.
+                  code. The GPT 5.6 family is insanely pedantic: I once had Sol run a review-fix
+                  loop for fifteen iterations before I noticed and stopped it. Cap your loop counts
+                  reasonably.
                 </p>
               </div>
             </div>
@@ -688,7 +764,7 @@ export function StackShell() {
             <ChapterHead
               n="07"
               title="A week in the life"
-              lede="Four situations that cover most of what I actually do. Answer a question or two and you'll land on the one you're in — with the setup I'd use, in the order I'd use it."
+              lede="This is all quite abstract, so let's get specific. Below are real scenarios of my workflows, mined from my session logs. Answer a question or two and you'll land on the one you're in — with the setup I'd use, in the order I'd use it."
             />
             <DecisionTree />
             <Pager
@@ -702,17 +778,19 @@ export function StackShell() {
             <ChapterHead
               n="08"
               title="Build your own"
-              lede="Here is the part I want you to take seriously: none of this was assembled by planning it. Every piece exists because something annoyed me twice and I wrote the annoyance down. You don't need my stack. You need the habit that produced it."
+              lede="All of the above was assembled because I spent literally hundreds of hours failing to make agents work, until they finally did. Every piece exists because something annoyed me twice and I wrote the annoyance down. You don't need my stack. You need the habit that produced it."
             />
             <div className="rv">
               <Terminal title="~/Code/trey-goff — this page" lines={SELF_BUILD_TERM} />
             </div>
             <div className="callout rv">
-              <span className="k">The honest caveat</span>A human picked the eight chapters, ran a
-              design bake-off between two competing prototypes of this page, and is red-penning
-              every artifact before it ships. <b>That&apos;s the actual division of labor </b>— and
-              it&apos;s the one you&apos;re signing up for. The taste stays yours. The typing stops
-              being yours.
+              <span className="k">The honest caveat</span>A human picked the chapters, ran a
+              design bake-off between two competing prototypes of this page, and red-penned every
+              artifact before it shipped.{' '}
+              <b>
+                That&apos;s the actual division of labor: agents create, but only you can decide
+                what&apos;s worth creating and what &quot;good&quot; or &quot;done&quot; look like.
+              </b>
             </div>
             <p className="section-label">Start tonight</p>
             <p className="lede rv" style={{ marginBottom: '1.6rem' }}>
