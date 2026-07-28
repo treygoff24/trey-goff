@@ -154,7 +154,8 @@ function createProgram(gl: WebGLRenderingContext) {
 export function AuroraBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const reducedMotion = useReducedMotion()
-  const disabled = usePathname() === '/machine'
+  const pathname = usePathname()
+  const disabled = pathname === '/machine' || pathname?.startsWith('/stack') === true
 
   useEffect(() => {
     if (disabled) return

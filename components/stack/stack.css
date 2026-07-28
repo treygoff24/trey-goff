@@ -9,6 +9,11 @@
 html:has(#stack-root) {
   scroll-behavior: smooth;
 }
+
+/* The field manual brings its own colophon; hide the site footer here. */
+html:has(#stack-root) body > footer {
+  display: none;
+}
 @media (prefers-reduced-motion: reduce) {
   html:has(#stack-root) {
     scroll-behavior: auto;

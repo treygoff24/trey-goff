@@ -43,6 +43,9 @@ export function TopNav() {
     return () => window.removeEventListener('scroll', update)
   }, [pathname])
 
+  // /stack is an immersive field-manual route with its own chapter rail.
+  if (pathname?.startsWith('/stack')) return null
+
   return (
     <header
       className={cn(
