@@ -10,6 +10,7 @@ import {
 } from '@/components/stack/data'
 import { useReducedMotion, useReveal } from '@/components/stack/hooks'
 import { Terminal } from '@/components/stack/Terminal'
+import { SubagentSavings } from '@/components/stack/SubagentSavings'
 import { WorktreesSection } from '@/components/stack/WorktreesSection'
 import {
   ContextFigure,
@@ -633,6 +634,7 @@ export function StackShell() {
               }
             />
             <FanOut />
+            <SubagentSavings />
             <p className="section-label">How to command your army</p>
             <p className="lede rv" style={{ marginBottom: '1.4rem' }}>
               My agent armies have a few troop types.
