@@ -44,14 +44,18 @@ export const DAY_ONE_TERM: TermLine[] = [
 ]
 
 export const SELF_BUILD_TERM: TermLine[] = [
-  { t: 'cmd', v: 'git log --oneline --author=agent -- components/stack/' },
-  { t: 'out', c: 'dim', v: 'a41f9c2  stack: chapter rail, deep links, prev/next' },
-  { t: 'out', c: 'dim', v: '7be3d10  stack: context-window figure, curated vs untended' },
-  { t: 'out', c: 'dim', v: '1c9a884  stack: terminal motif, typed not recorded' },
-  { t: 'out', c: 'dim', v: '3f02e57  stack: scaffold the eight chapters' },
+  { t: 'cmd', v: 'papercuts add "agent misidentified which model it was running as"' },
+  { t: 'out', c: 'dim', v: '✓ filed pc_4a21 · severity: minor · tag: identity' },
   { t: 'out', v: '' },
-  { t: 'cmd', v: '# the page you are reading wrote itself, then reviewed itself, twice' },
-  { t: 'out', c: 'ok', v: '✔ 4 files changed · 0 hand-written lines' },
+  { t: 'cmd', v: '# a few days later, an agent read the complaint pile and shipped:' },
+  { t: 'out', c: 'dim', v: 'hooks/announce-model.mjs — session start: tells every agent' },
+  { t: 'out', c: 'dim', v: 'which model it is actually running as. No more guessing.' },
+  { t: 'out', v: '' },
+  {
+    t: 'out',
+    c: 'ok',
+    v: '✔ complaint → tool, in one loop. True story. That is the whole system.',
+  },
 ]
 
 export type CtxKey = 'bad' | 'good'
@@ -242,20 +246,21 @@ export const TOOL_ORDER: { key: ToolKey; name: string; blurb: string; tag: strin
   },
 ]
 
+// The real delegate roster: OpenAI, xAI (twice, two harnesses), Moonshot, Zhipu, Anthropic.
 export const WORKERS = [
   { n: 'codex', job: 'audit the auth module' },
-  { n: 'grok', job: 'hunt N+1 queries' },
-  { n: 'sonnet', job: 'sweep dead exports' },
-  { n: 'gemini', job: 'check the migration' },
+  { n: 'cursor', job: 'hunt N+1 queries' },
+  { n: 'grok', job: 'sweep dead exports' },
   { n: 'kimi', job: 'red-team the copy' },
+  { n: 'glm', job: 'check the migration' },
   { n: 'opus', job: 'review the diff cold' },
 ]
 export const VERDICTS: [string, string, boolean][] = [
   ['codex', 'session fixture leaks between tests', false],
-  ['grok', 'clean — 2 queries, both indexed', true],
-  ['sonnet', '11 dead exports, safe to drop', true],
-  ['gemini', 'migration is not reversible', false],
+  ['cursor', 'clean — 2 queries, both indexed', true],
+  ['grok', '11 dead exports, safe to drop', true],
   ['kimi', 'three sentences nobody would say', true],
+  ['glm', 'migration is not reversible', false],
   ['opus', 'agrees with codex; has the repro', true],
 ]
 

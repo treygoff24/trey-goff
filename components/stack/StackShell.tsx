@@ -213,8 +213,9 @@ export function StackShell() {
             </p>
             <div className="hero-meta rv" data-d="3">
               <span>8 chapters</span>
-              <span>~22 min read</span>
-              <span>4 downloads</span>
+              <span>317 skills on the machine</span>
+              <span>12 custom tools</span>
+              <span>6 model families</span>
               <span>
                 <b>Built by the thing it describes</b>
               </span>
@@ -256,7 +257,9 @@ export function StackShell() {
                     Every claim should have a command attached that would fail loudly if the claim
                     were false
                   </b>{' '}
-                  — a test, a type-check, a screenshot, a curl. Run it yourself.
+                  — a test, a type-check, a screenshot, a curl. In a controlled bakeoff of my three
+                  web-research lanes, 11–21% of spot-checked quotes failed verification.
+                  Verification is not a lane you pick. It is a step you always run.
                 </p>
               </div>
               <div className="precept">
@@ -379,7 +382,8 @@ export function StackShell() {
                 <>
                   A standing brief covers what&apos;s always true. Skills cover what&apos;s true{' '}
                   <em>sometimes</em> — loaded only when the moment calls for them, so your context
-                  stays spent on the work.
+                  stays spent on the work. There are 317 of them on my machine. Any given session
+                  touches a handful.
                 </>
               }
             />
@@ -414,11 +418,14 @@ export function StackShell() {
             </div>
             <div className="callout rv">
               <span className="k">The failure mode nobody warns you about</span>
-              Instruction files rot. Mine hit fifty-six always-loaded skills before I noticed that{' '}
+              Instruction files rot. On one July morning I cut my always-loaded skill list from
+              fifty-six to twenty-five, because{' '}
               <b>
                 a rule the agent reads every session but never needs is just a tax on the window
               </b>
-              . Curate quarterly. Delete more than you add.
+              . As this page ships, the list has quietly regrown to seventy-nine. Context budget is
+              not a problem you solve once — it re-bloats, you re-cut, and the durable fix is that
+              skills stay discoverable while unloaded.
             </div>
             <DownloadCard
               href="/stack/starter-skill-pack.md"
@@ -475,6 +482,51 @@ export function StackShell() {
                   </b>
                 </p>
               </div>
+            </div>
+            <p className="section-label">Built here, open sourced — take them</p>
+            <div className="rv">
+              {[
+                {
+                  name: 'delegate-agent',
+                  desc: 'One CLI, ten agent runtimes, three trust modes.',
+                  href: 'https://github.com/treygoff24/delegate-agent',
+                },
+                {
+                  name: 'papercuts',
+                  desc: 'Where agents file complaints so friction becomes a backlog.',
+                  href: 'https://github.com/treygoff24/papercuts',
+                },
+                {
+                  name: 'elv',
+                  desc: 'The entire ElevenLabs API as 338 agent-callable operations.',
+                  href: 'https://github.com/treygoff24/elv',
+                },
+                {
+                  name: 'exa-agent-cli',
+                  desc: 'Web research as structured data — 68 commands, stable exit codes.',
+                  href: 'https://github.com/treygoff24/exa-agent-cli',
+                },
+                {
+                  name: 'receipts',
+                  desc: 'Answers that arrive with a URL, a quote, and a verdict.',
+                  href: 'https://github.com/treygoff24/receipts',
+                },
+              ].map((repo) => (
+                <a
+                  key={repo.name}
+                  className="dl"
+                  href={repo.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span className="ext">OSS</span>
+                  <span className="nm">
+                    {repo.name}
+                    <span className="ds">{repo.desc}</span>
+                  </span>
+                  <span className="go">GitHub ↗</span>
+                </a>
+              ))}
             </div>
             <DownloadCard
               href="/stack/agent-build.md"
@@ -538,8 +590,10 @@ export function StackShell() {
                 <p className="claim">The council</p>
                 <p className="payoff">
                   For decisions worth real time: four models propose, critique each other, defend,
-                  and a fifth judges. Slow and expensive, so save it for architecture calls and
-                  things you&apos;re about to bet on.{' '}
+                  and a fifth judges. In one blind-scored run the synthesized plan beat the best
+                  single model 96.4 to 91.6 — and beat the human-written gold standard, at 85.2,
+                  after the critique stage caught a hazard nobody else saw. Slow and expensive, so
+                  save it for things you&apos;re about to bet on.{' '}
                   <b>The value is decorrelated error, not extra opinions.</b>
                 </p>
               </div>
@@ -662,10 +716,11 @@ export function StackShell() {
               <Terminal title="~/Code/trey-goff — this page" lines={SELF_BUILD_TERM} />
             </div>
             <div className="callout rv">
-              <span className="k">The honest caveat</span>A human picked the eight chapters, argued
-              with two drafts, and killed a whole section that was showing off instead of teaching.{' '}
-              <b>That&apos;s the actual division of labor</b> — and it&apos;s the one you&apos;re
-              signing up for. The taste stays yours. The typing stops being yours.
+              <span className="k">The honest caveat</span>A human picked the eight chapters, ran a
+              design bake-off between two competing prototypes of this page, and is red-penning
+              every artifact before it ships. <b>That&apos;s the actual division of labor</b> — and
+              it&apos;s the one you&apos;re signing up for. The taste stays yours. The typing stops
+              being yours.
             </div>
             <p className="section-label">Start tonight</p>
             <p className="lede rv" style={{ marginBottom: '1.6rem' }}>
