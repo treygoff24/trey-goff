@@ -13,6 +13,7 @@ import { Terminal } from '@/components/stack/Terminal'
 import { SubagentSavings } from '@/components/stack/SubagentSavings'
 import { CompactionSection } from '@/components/stack/CompactionSection'
 import { PartnershipChapter } from '@/components/stack/PartnershipChapter'
+import { PersonaChapter } from '@/components/stack/PersonaChapter'
 import { WhyContext } from '@/components/stack/WhyPanel'
 import { WorkflowsChapter } from '@/components/stack/WorkflowsChapter'
 import { WorktreesSection } from '@/components/stack/WorktreesSection'
@@ -896,7 +897,7 @@ export function StackShell() {
               title="The persona"
               lede="The system prompt is not configuration. It is the strongest evidence the model ever gets about who it is supposed to be in this room — and the default ones are written for the worst user they can imagine."
             />
-            {/* INTEGRATION: <PersonaChapter /> */}
+            <PersonaChapter />
             <Pager prev={['#ch10', '10 · Workflows']} next={['#ch12', '12 · The partnership']} />
           </section>
 

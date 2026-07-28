@@ -1,0 +1,655 @@
+/* ─────────────────────────────────────────────────────────────
+   /stack — chapter 09, the Foundry explorer.
+   Scoped under #stack-root and built only from stack.css's own
+   custom properties. Nesting is carried by inset + rail weight
+   rather than by colour, so the depth argument survives both the
+   mobile variant and reduced motion.
+   ───────────────────────────────────────────────────────────── */
+
+#stack-root .fx-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── The native-vs-mine contrast strip ──────────────────── */
+#stack-root .fx-contrast {
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--sk-border-1);
+}
+#stack-root .fx-contrast-row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.42fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(0.7rem, 2.4vw, 1.8rem);
+  padding-block: 0.85rem;
+  border-bottom: 1px solid var(--sk-border-1);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--sk-text-3);
+  align-items: baseline;
+}
+#stack-root .fx-contrast-head {
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+  padding-block: 0.5rem 0.6rem;
+}
+#stack-root .fx-c-k {
+  font-family: var(--sk-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sk-warm);
+}
+#stack-root .fx-c-mine {
+  color: var(--sk-text-1);
+}
+
+/* ── Shell ──────────────────────────────────────────────── */
+#stack-root .fx-shell {
+  margin: 1.5rem 0 0;
+  border: 1px solid var(--sk-border-1);
+  border-radius: 10px;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 4% 0%, rgba(111, 214, 154, 0.09), transparent 58%),
+    radial-gradient(90% 70% at 96% 4%, rgba(125, 211, 252, 0.05), transparent 60%),
+    rgba(6, 26, 16, 0.55);
+}
+
+/* ── Title bar ──────────────────────────────────────────── */
+#stack-root .fx-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem 1.2rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem clamp(0.9rem, 2.4vw, 1.5rem);
+  border-bottom: 1px solid var(--sk-border-1);
+  background: rgba(3, 14, 9, 0.6);
+}
+#stack-root .fx-bar-id {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem 0.8rem;
+  min-width: 0;
+}
+#stack-root .fx-bar-cmd {
+  font-family: var(--sk-mono);
+  font-size: 0.86rem;
+  color: var(--sk-accent);
+  letter-spacing: 0.02em;
+}
+#stack-root .fx-bar-sub {
+  font-family: var(--sk-mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+}
+#stack-root .fx-run {
+  font-family: var(--sk-mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sk-text-1);
+  background: var(--sk-surface-1);
+  border: 1px solid var(--sk-border-2);
+  border-radius: 5px;
+  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+  transition:
+    background 200ms var(--sk-ease),
+    color 200ms var(--sk-ease);
+}
+#stack-root .fx-run:hover:not(:disabled) {
+  background: var(--sk-surface-2);
+  color: var(--sk-accent);
+}
+#stack-root .fx-bar-static {
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+}
+#stack-root .fx-run:disabled {
+  cursor: default;
+  color: var(--sk-text-3);
+  border-color: var(--sk-border-1);
+}
+
+/* ── Instrument readout ─────────────────────────────────── */
+#stack-root .fx-readout {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  border-bottom: 1px solid var(--sk-border-1);
+}
+#stack-root .fx-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.9rem clamp(0.7rem, 1.8vw, 1.2rem) 1rem;
+  border-left: 1px solid var(--sk-border-1);
+  min-width: 0;
+}
+#stack-root .fx-stat:first-child {
+  border-left: 0;
+}
+#stack-root .fx-stat-v {
+  font-family: var(--sk-mono);
+  font-size: 1.35rem;
+  line-height: 1.1;
+  color: var(--sk-accent);
+  font-variant-numeric: tabular-nums;
+}
+#stack-root .fx-stat-k {
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sk-text-2);
+}
+#stack-root .fx-stat-n {
+  font-size: 0.74rem;
+  line-height: 1.4;
+  color: var(--sk-text-3);
+}
+
+/* ── Body split ─────────────────────────────────────────── */
+#stack-root .fx-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+}
+#stack-root .fx-map {
+  padding: clamp(0.9rem, 2.2vw, 1.4rem);
+  border-right: 1px solid var(--sk-border-1);
+  min-width: 0;
+}
+#stack-root .fx-side {
+  padding: clamp(0.9rem, 2.2vw, 1.4rem);
+  min-width: 0;
+}
+
+/* ── The tree ───────────────────────────────────────────── */
+#stack-root .fx-branch {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+#stack-root .fx-item {
+  min-width: 0;
+}
+
+/* Nesting is inset plus a live rail — the rail is what makes a
+   nested workflow read as contained rather than merely indented. */
+#stack-root .fx-nest {
+  position: relative;
+  margin: 0.4rem 0 0.55rem 1.15rem;
+  padding: 1.15rem 0 0.35rem 0.85rem;
+  border-left: 1px solid var(--sk-border-1);
+  border-bottom-left-radius: 6px;
+}
+#stack-root .fx-nest-tag {
+  position: absolute;
+  top: 0.15rem;
+  left: 0.85rem;
+  font-family: var(--sk-mono);
+  font-size: 9.6px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+}
+#stack-root .fx-repeat {
+  margin: 0.35rem 0 0.7rem 2rem;
+  font-family: var(--sk-mono);
+  font-size: 9.6px;
+  letter-spacing: 0.12em;
+  color: var(--sk-warm);
+}
+
+/* ── Node ───────────────────────────────────────────────── */
+#stack-root .fx-node {
+  position: relative;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 3px minmax(0, 1fr) auto;
+  gap: 0 0.75rem;
+  align-items: center;
+  text-align: left;
+  padding: 0.6rem 0.75rem 0.6rem 0.5rem;
+  border: 1px solid var(--sk-border-1);
+  border-radius: 6px;
+  background: rgba(4, 19, 12, 0.7);
+  cursor: pointer;
+  color: inherit;
+  transition:
+    border-color 200ms var(--sk-ease),
+    background 200ms var(--sk-ease),
+    transform 200ms var(--sk-ease);
+}
+#stack-root .fx-node:hover {
+  border-color: var(--sk-border-2);
+  background: rgba(8, 33, 22, 0.9);
+}
+#stack-root .fx-node.is-sel {
+  border-color: var(--sk-accent);
+  background: rgba(151, 232, 187, 0.09);
+}
+#stack-root .fx-node-rail {
+  align-self: stretch;
+  border-radius: 2px;
+  background: var(--sk-border-1);
+}
+#stack-root .fx-node-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+  min-width: 0;
+}
+#stack-root .fx-node-label {
+  font-family: var(--sk-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.01em;
+  color: var(--sk-text-1);
+}
+#stack-root .fx-node-meta {
+  font-size: 0.73rem;
+  line-height: 1.35;
+  color: var(--sk-text-3);
+}
+#stack-root .fx-node-tail {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+#stack-root .fx-cap,
+#stack-root .fx-opt {
+  font-family: var(--sk-mono);
+  font-size: 9.6px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.14rem 0.36rem;
+  border-radius: 3px;
+  border: 1px solid var(--sk-border-1);
+  color: var(--sk-text-3);
+  white-space: nowrap;
+}
+/* Amber is the discipline colour on this page and belongs to caps and
+   gates alone — nothing decorative ever borrows it. */
+#stack-root .fx-cap {
+  color: var(--sk-amber);
+  border-color: rgba(251, 191, 36, 0.35);
+}
+#stack-root .fx-count {
+  font-family: var(--sk-mono);
+  font-size: 0.72rem;
+  color: var(--sk-text-2);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+#stack-root .fx-count i {
+  font-style: normal;
+  color: var(--sk-text-3);
+}
+#stack-root .fx-fams {
+  display: flex;
+  gap: 3px;
+}
+#stack-root .fx-fam {
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+#stack-root .fx-fam-anthropic {
+  background: var(--sk-accent);
+}
+#stack-root .fx-fam-openai {
+  background: var(--sk-sky);
+}
+#stack-root .fx-fam-xai {
+  background: var(--sk-violet);
+}
+#stack-root .fx-fam-human {
+  background: var(--sk-text-3);
+}
+
+/* Kind reads off the left rail: a nested workflow is bright, a gate is
+   amber, a fan-out is faint, so the tree is legible before any click. */
+#stack-root .fx-k-phase .fx-node-rail {
+  background: var(--sk-warm);
+}
+#stack-root .fx-k-workflow .fx-node-rail {
+  background: var(--sk-accent);
+}
+#stack-root .fx-k-workflow {
+  border-color: var(--sk-border-2);
+}
+#stack-root .fx-k-gate .fx-node-rail {
+  background: var(--sk-amber);
+}
+#stack-root .fx-k-gate {
+  border-style: dashed;
+  border-color: rgba(251, 191, 36, 0.32);
+}
+#stack-root .fx-k-loop .fx-node-rail {
+  background: linear-gradient(
+    var(--sk-amber) 0 30%,
+    transparent 30% 55%,
+    var(--sk-amber) 55% 85%,
+    transparent 85%
+  );
+}
+#stack-root .fx-k-fanout .fx-node-rail {
+  background: var(--sk-border-2);
+}
+#stack-root .fx-d-1 .fx-node-label,
+#stack-root .fx-d-2 .fx-node-label {
+  font-size: 0.74rem;
+}
+#stack-root .fx-d-2 {
+  background: rgba(4, 19, 12, 0.45);
+}
+
+/* ── Dispatch sweep ─────────────────────────────────────── */
+/* At rest every node reads as complete, so the figure is fully
+   informative with no animation ever playing. The sweep only
+   re-lights what is already legible. */
+#stack-root .fx-shell.is-running .fx-node {
+  opacity: 0.4;
+}
+#stack-root .fx-shell.is-running .fx-node.is-done {
+  opacity: 0.75;
+}
+#stack-root .fx-shell.is-running .fx-node.is-live {
+  opacity: 1;
+  border-color: var(--sk-accent);
+  background: rgba(151, 232, 187, 0.12);
+  transform: translateX(2px);
+  box-shadow: 0 0 0 1px rgba(151, 232, 187, 0.18);
+}
+#stack-root .fx-shell.is-running .fx-node.is-live .fx-node-rail {
+  animation: sk-fx-pulse 620ms var(--sk-ease) infinite alternate;
+}
+@keyframes sk-fx-pulse {
+  from {
+    opacity: 0.45;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ── Detail card ────────────────────────────────────────── */
+#stack-root .fx-side {
+  position: relative;
+}
+#stack-root .fx-detail {
+  position: sticky;
+  top: 1.2rem;
+  border: 1px solid var(--sk-border-2);
+  border-radius: 8px;
+  padding: clamp(0.9rem, 2vw, 1.15rem);
+  background: rgba(3, 14, 9, 0.8);
+}
+#stack-root .fx-detail-rest {
+  border-color: var(--sk-border-1);
+}
+#stack-root .fx-d-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+#stack-root .fx-d-kind {
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sk-warm);
+}
+#stack-root .fx-d-close {
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+  background: none;
+  border: 1px solid var(--sk-border-1);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+}
+#stack-root .fx-d-close:hover {
+  color: var(--sk-text-1);
+  border-color: var(--sk-border-2);
+}
+#stack-root .fx-d-title {
+  margin: 0.65rem 0 0.25rem;
+  font-family: var(--sk-mono);
+  font-size: 0.98rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--sk-text-1);
+}
+#stack-root .fx-d-path {
+  margin: 0 0 0.85rem;
+  font-family: var(--sk-mono);
+  font-size: 9.6px;
+  letter-spacing: 0.1em;
+  color: var(--sk-text-3);
+  word-break: break-word;
+}
+#stack-root .fx-d-what {
+  margin: 0 0 1rem;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--sk-text-2);
+}
+#stack-root .fx-d-facts {
+  margin: 0;
+  border-top: 1px solid var(--sk-border-1);
+}
+#stack-root .fx-d-facts > div {
+  display: grid;
+  grid-template-columns: 5.6rem minmax(0, 1fr);
+  gap: 0.8rem;
+  padding-block: 0.55rem;
+  border-bottom: 1px solid var(--sk-border-1);
+}
+#stack-root .fx-d-facts dt {
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+  padding-top: 0.15rem;
+}
+#stack-root .fx-d-facts dd {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--sk-text-2);
+}
+#stack-root .fx-d-cap {
+  color: var(--sk-amber);
+  font-family: var(--sk-mono);
+  font-size: 0.75rem;
+}
+#stack-root .fx-d-fams {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+#stack-root .fx-d-fam.fx-fam-human {
+  background: var(--sk-text-2);
+}
+#stack-root .fx-d-fam {
+  font-family: var(--sk-mono);
+  font-size: 9.6px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.45rem;
+  border-radius: 3px;
+  color: var(--sk-bg-0);
+}
+#stack-root .fx-rest-k {
+  margin: 0 0 0.55rem;
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+}
+#stack-root .fx-rest-p {
+  margin: 0 0 0.7rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--sk-text-3);
+}
+#stack-root .fx-rest-p:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Legend ─────────────────────────────────────────────── */
+#stack-root .fx-legend {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0.85rem 0 0;
+  border-top: 1px solid var(--sk-border-1);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+}
+#stack-root .fx-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+}
+
+/* ── Caption ────────────────────────────────────────────── */
+#stack-root .fx-cap-text {
+  margin: 0;
+  padding: clamp(0.9rem, 2.2vw, 1.3rem);
+  border-top: 1px solid var(--sk-border-1);
+  font-size: 0.9rem;
+  line-height: 1.62;
+  color: var(--sk-text-2);
+}
+#stack-root .fx-cap-text b {
+  color: var(--sk-text-1);
+  font-weight: 500;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 1080px) {
+  #stack-root .fx-readout {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  #stack-root .fx-stat:nth-child(4) {
+    border-left: 0;
+  }
+  #stack-root .fx-stat:nth-child(n + 4) {
+    border-top: 1px solid var(--sk-border-1);
+  }
+}
+@media (max-width: 900px) {
+  #stack-root .fx-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  #stack-root .fx-map {
+    border-right: 0;
+    border-bottom: 1px solid var(--sk-border-1);
+  }
+  /* Sticky would pin the card off-screen once the map scrolls past it. */
+  #stack-root .fx-detail {
+    position: static;
+  }
+  #stack-root .fx-contrast-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.3rem;
+  }
+  #stack-root .fx-contrast-head {
+    display: none;
+  }
+  #stack-root .fx-contrast-row span:nth-child(2)::before {
+    content: 'native — ';
+    color: var(--sk-text-3);
+  }
+  #stack-root .fx-contrast-row span:nth-child(3)::before {
+    content: 'mine — ';
+    color: var(--sk-warm);
+  }
+}
+@media (max-width: 620px) {
+  #stack-root .fx-readout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  #stack-root .fx-stat {
+    border-left: 1px solid var(--sk-border-1);
+    border-top: 1px solid var(--sk-border-1);
+  }
+  #stack-root .fx-stat:nth-child(odd) {
+    border-left: 0;
+  }
+  #stack-root .fx-stat:nth-child(-n + 2) {
+    border-top: 0;
+  }
+  /* At 390px the tail metadata would wrap under the label and shove the
+     dots off the row; drop it below the text instead of shrinking it. */
+  #stack-root .fx-node {
+    grid-template-columns: 3px minmax(0, 1fr);
+    row-gap: 0.4rem;
+  }
+  #stack-root .fx-node-tail {
+    grid-column: 2;
+    flex-wrap: wrap;
+  }
+  #stack-root .fx-nest {
+    margin-left: 0.5rem;
+    padding-left: 0.6rem;
+  }
+  #stack-root .fx-repeat {
+    margin-left: 1rem;
+  }
+  #stack-root .fx-d-facts > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #stack-root .fx-node,
+  #stack-root .fx-run,
+  #stack-root .fx-d-close {
+    transition-duration: 0.001ms !important;
+  }
+  #stack-root .fx-shell.is-running .fx-node,
+  #stack-root .fx-shell.is-running .fx-node.is-done,
+  #stack-root .fx-shell.is-running .fx-node.is-live {
+    opacity: 1;
+    transform: none;
+  }
+  #stack-root .fx-shell.is-running .fx-node.is-live .fx-node-rail {
+    animation: none;
+  }
+}

@@ -1,6 +1,7 @@
 'use client'
 
 import '@/components/stack/workflows-chapter.css'
+import { FoundryExplorer, NestedWorkflowsIntro } from '@/components/stack/FoundryExplorer'
 
 /* Pager is a 15-line private helper in StackShell; replicated here so this
    chapter is a single self-contained file the shell only has to render. */
@@ -571,6 +572,9 @@ export function WorkflowsChapter() {
           </p>
         </div>
       </div>
+
+      <NestedWorkflowsIntro />
+      <FoundryExplorer />
 
       <div className="callout rv">
         <span className="k">When to actually reach for one</span>
