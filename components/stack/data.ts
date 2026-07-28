@@ -278,7 +278,7 @@ export type TreeNode =
       crumb: string
       title: string
       quote: string
-      steps: { lead: string; rest: string }[]
+      steps: { lead: string; rest: string; link?: [string, string] }[]
       ch: [string, string]
     }
 
@@ -375,7 +375,11 @@ export const TREE: Record<string, TreeNode> = {
     steps: [
       {
         lead: 'Interview first.',
-        rest: ' Make it ask you everything whose answer changes the architecture, before it proposes one. Matt Pocock has the best skill for this: grill-with-docs.',
+        rest: ' Make it ask you everything whose answer changes the architecture, before it proposes one. Matt Pocock has the best skill for this:',
+        link: [
+          'grill-with-docs',
+          'https://github.com/mattpocock/skills/tree/main/skills/engineering/grill-with-docs',
+        ],
       },
       {
         lead: 'Get a written plan',
@@ -422,6 +426,10 @@ export const TREE: Record<string, TreeNode> = {
       {
         lead: 'Brainstorm.',
         rest: ' If the feature is big enough, use the grill-with-docs skill. If it is fairly small and straightforward, pitch the model your idea, get feedback, brainstorm, then ask the model to repeat back what it will build and what it is for. Only when that reads correctly does it get the green light. Some features deserve the full plan-and-review loop, some do not — that is a judgment call.',
+        link: [
+          'grill-with-docs',
+          'https://github.com/mattpocock/skills/tree/main/skills/engineering/grill-with-docs',
+        ],
       },
       {
         lead: 'Subagent execution in waves.',

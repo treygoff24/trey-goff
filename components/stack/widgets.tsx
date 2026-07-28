@@ -568,7 +568,7 @@ export function DecisionTree() {
             <div className="leaf-grid">
               <div>
                 <blockquote className="leaf-quote">
-                  “{node.quote}”<cite>Trey — draft voice, pending dictation</cite>
+                  “{node.quote}”<cite>Trey</cite>
                 </blockquote>
                 <div className="leaf-actions">
                   <button className="btn" type="button" onClick={() => go('root', true)}>
@@ -580,10 +580,18 @@ export function DecisionTree() {
                 </div>
               </div>
               <ol className="leaf-steps">
-                {node.steps.map((s: { lead: string; rest: string }) => (
+                {node.steps.map((s: { lead: string; rest: string; link?: [string, string] }) => (
                   <li key={s.lead}>
                     <b>{s.lead}</b>
                     {s.rest}
+                    {s.link && (
+                      <>
+                        {' '}
+                        <a href={s.link[1]} target="_blank" rel="noopener noreferrer">
+                          {s.link[0]} ↗
+                        </a>
+                      </>
+                    )}
                   </li>
                 ))}
               </ol>

@@ -455,8 +455,15 @@ export function StackShell() {
             </div>
             <div className="callout rv">
               <span className="k">Making good skills</span>
-              Matt Pocock&apos;s <span className="inline-code">writing-great-skills</span> skill is
-              the single best tool for creating skills. My workflow has two branches.{' '}
+              Matt Pocock&apos;s{' '}
+              <a
+                href="https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-great-skills"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="inline-code">writing-great-skills</span>
+              </a>{' '}
+              skill is the single best tool for creating skills. My workflow has two branches.{' '}
               <b>Repeated workflow:</b> manually prompt the agent through the workflow step by
               step, iterating with feedback until the output is perfect — then say &quot;use
               writing-great-skills to turn this into a skill based on everything we just did and
@@ -472,6 +479,12 @@ export function StackShell() {
               ext="MD"
               name="starter-skill-pack.md"
               desc="Six skills that pay for themselves in a week — release, review-my-diff, write-human, debug-loop, session-closeout, and a skill for writing skills."
+            />
+            <DownloadCard
+              href="/stack/midjourney-skill.md"
+              ext="MD"
+              name="midjourney-skill.md"
+              desc="The domain-expertise example from above, real and ready to use: my Midjourney prompting skill, distilled from a subagent research fan-out."
             />
             <Pager prev={['#ch2', '02 · Day one']} next={['#ch4', '04 · Agents need tools']} />
           </section>
@@ -661,6 +674,12 @@ export function StackShell() {
                 </p>
               </div>
             </div>
+            <DownloadCard
+              href="/stack/fusion-council-skill.md"
+              ext="MD"
+              name="fusion-council-skill.md"
+              desc="The council, as a skill: propose → critique → defend → synthesize → judge across model vendors. Bring your own multi-model plumbing, or have your agent build it."
+            />
             <div className="callout rv">
               <span className="k">Learned the hard way</span>
               Long parallel runs frequently land the meaty edits and then stop just short of the
