@@ -15,7 +15,7 @@
   border: 1px solid var(--sk-border-1, rgba(232, 243, 236, 0.13));
   border-radius: 999px;
   background: none;
-  color: var(--sk-text-3, rgba(232, 243, 236, 0.55));
+  color: var(--sk-text-2, rgba(232, 243, 236, 0.74));
   font-family: var(--sk-mono, ui-monospace, monospace);
   font-size: 0.63rem;
   letter-spacing: 0.18em;
@@ -29,12 +29,14 @@
 .why-trigger span {
   transition: transform 220ms var(--sk-ease, ease);
 }
-.why-trigger:hover {
+.why-trigger:hover,
+.why-trigger:focus-visible {
   color: var(--sk-accent, #97e8bb);
   border-color: var(--sk-border-2, rgba(151, 232, 187, 0.28));
   background: var(--sk-surface-1, rgba(232, 243, 236, 0.055));
 }
-.why-trigger:hover span {
+.why-trigger:hover span,
+.why-trigger:focus-visible span {
   transform: translateX(3px);
 }
 
@@ -94,19 +96,32 @@
   transition-duration: 0s;
 }
 
+/* The sheet runs to ~3000px; Close has to stay reachable from anywhere in it.
+   Negative margins let the bar span the panel's padding so nothing scrolls past
+   it at the edges, and the gradient plus blur keeps the corner glow visible. */
 .why-bar-top {
+  position: sticky;
+  top: 0;
+  z-index: 3;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 1rem;
-  margin-bottom: 1.4rem;
+  margin: calc(-1 * clamp(1.3rem, 3vw, 2.4rem)) calc(-1 * clamp(1.15rem, 3vw, 2.6rem)) 1.4rem;
+  padding: clamp(1.3rem, 3vw, 2.4rem) clamp(1.15rem, 3vw, 2.6rem) 0.8rem;
 }
-.why-kicker {
-  font-family: var(--sk-mono, ui-monospace, monospace);
-  font-size: 0.6rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--sk-text-3, rgba(232, 243, 236, 0.55));
+/* The scrim is its own layer so the mask can fade the blur out with it —
+   masking the bar itself would fade the Close button along with it. */
+.why-bar-top::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to bottom, rgba(6, 26, 16, 0.94) 58%, rgba(6, 26, 16, 0));
+  backdrop-filter: blur(7px);
+  -webkit-mask-image: linear-gradient(to bottom, #000 58%, transparent);
+  mask-image: linear-gradient(to bottom, #000 58%, transparent);
+  pointer-events: none;
 }
 .why-close {
   display: inline-flex;
@@ -175,7 +190,7 @@
 /* ── Figures ────────────────────────────────────────────── */
 .why-fig {
   margin: 1.5rem 0 1.7rem;
-  padding: 1rem 1rem 0.85rem;
+  padding: clamp(1rem, 2.4vw, 1.6rem);
   border: 1px solid var(--sk-border-1, rgba(232, 243, 236, 0.13));
   border-radius: 8px;
   background: rgba(4, 19, 12, 0.5);
@@ -194,10 +209,11 @@
   overflow-x: auto;
   overscroll-behavior-x: contain;
 }
+/* No min-width: the chart swaps to a phone geometry in a narrow container
+   instead of panning, so no series is ever off-screen. */
 .why-chart {
   display: block;
   width: 100%;
-  min-width: 30rem;
   height: auto;
 }
 
@@ -223,10 +239,10 @@
   display: block;
 }
 .why-key.sol i {
-  background: var(--sk-accent, #97e8bb);
+  background: var(--sk-sky, #7dd3fc);
 }
 .why-key.opus48 i {
-  background: var(--sk-sky, #7dd3fc);
+  background: var(--sk-accent, #97e8bb);
 }
 .why-key.opus45 i {
   background: var(--sk-violet, #c4b5fd);
@@ -272,18 +288,18 @@
   stroke-width: 1.5;
 }
 .why-series.sol polyline {
-  stroke: var(--sk-accent, #97e8bb);
+  stroke: var(--sk-sky, #7dd3fc);
 }
 .why-series.sol circle,
 .why-series.sol .why-pt {
-  fill: var(--sk-accent, #97e8bb);
+  fill: var(--sk-sky, #7dd3fc);
 }
 .why-series.opus48 polyline {
-  stroke: var(--sk-sky, #7dd3fc);
+  stroke: var(--sk-accent, #97e8bb);
 }
 .why-series.opus48 circle,
 .why-series.opus48 .why-pt {
-  fill: var(--sk-sky, #7dd3fc);
+  fill: var(--sk-accent, #97e8bb);
 }
 .why-series.opus45 polyline {
   stroke: var(--sk-violet, #c4b5fd);
@@ -395,6 +411,14 @@
   margin-top: 2.2rem;
   padding-top: 1.1rem;
   border-top: 1px solid var(--sk-border-1, rgba(232, 243, 236, 0.13));
+}
+.why-sources h3 {
+  margin: 0;
+  font-family: var(--sk-mono, ui-monospace, monospace);
+  font-weight: 400;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: var(--sk-text-2, rgba(232, 243, 236, 0.74));
 }
 .why-sources ul {
   margin: 0.8rem 0 0;
