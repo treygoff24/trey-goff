@@ -76,12 +76,15 @@ const LANES: Lane[] = [
 ]
 
 type LaneState = 'idle' | 'live' | 'merging' | 'merged' | 'dropped'
-type WtLog = { mark: 'go' | 'ok' | 'drop' | 'sum'; text: string }
+type WtLog = { mark: 'ok' | 'drop' | 'sum'; text: string }
+
+const CAPTION = 'One repo, four working copies, four branches. Nobody waits.'
+const FIG_LABEL =
+  'One repository fanning out into four worktrees, each on its own branch, merging back through a single gate one at a time'
 
 const FINAL_STATES: LaneState[] = LANES.map((l) => (l.files === 0 ? 'dropped' : 'merged'))
 const FINAL_DIRTY: number[] = LANES.map((l) => l.files)
 const REST_LOG: WtLog[] = [
-  { mark: 'go', text: 'One repo, four working copies, four branches. Nobody waits.' },
   { mark: 'ok', text: 'auth-wave merged — gate green' },
   { mark: 'ok', text: 'api-wave merged — gate green' },
   { mark: 'ok', text: 'ui-wave merged — gate green' },
@@ -100,13 +103,179 @@ const WT_TERM: TermLine[] = [
   { t: 'out', v: '~/Code/trey-goff-wt-ui      9e00afd [ui-wave]', c: 'ok' },
 ]
 
-/* ── Section ──────────────────────────────────────────────── */
+/* ── Figure geometry ──────────────────────────────────────────
+   The same figure is drawn twice: a landscape fan for room-sized
+   viewports and a stacked column for phones, where 720 units of
+   width would push the gate off the screen and quietly delete the
+   argument. Geometry lives in data so the two cannot drift. */
 
-const ROW_Y = [36, 94, 152, 210]
-const HUB_Y = 123
-const BOX_X = 252
-const BOX_W = 208
-const GATE_X = 594
+type Box = { x: number; y: number; w: number; h: number }
+
+type Geom = {
+  cls: string
+  vb: string
+  /** vertical centre of each worktree row */
+  rows: number[]
+  boxX: number
+  boxW: number
+  boxH: number
+  textPad: number
+  dirDy: number
+  brDy: number
+  cntDy: number
+  repo: Box
+  repoTx: number
+  repoTy: [number, number]
+  gate: Box
+  gateTx: number
+  gateTy: [number, number]
+  out: (cy: number, i: number) => string
+  back: (cy: number, i: number) => string
+}
+
+const WIDE: Geom = {
+  cls: 'wt-wide',
+  vb: '0 0 720 260',
+  rows: [36, 94, 152, 210],
+  boxX: 252,
+  boxW: 208,
+  boxH: 32,
+  textPad: 12,
+  dirDy: -2,
+  brDy: 9,
+  cntDy: 4,
+  repo: { x: 16, y: 103, w: 96, h: 40 },
+  repoTx: 64,
+  repoTy: [122, 134],
+  gate: { x: 594, y: 99, w: 108, h: 48 },
+  gateTx: 648,
+  gateTy: [119, 135],
+  // Lanes overshoot into every node they touch; the nodes paint after them and
+  // clip the overshoot, which is what keeps the joins from reading as gaps.
+  out: (cy) => `M106,123 C 186,123 200,${cy} 258,${cy}`,
+  back: (cy) => `M454,${cy} C 528,${cy} 552,123 600,123`,
+}
+
+const NARROW: Geom = {
+  cls: 'wt-narrow',
+  vb: '0 0 340 396',
+  rows: [100, 158, 216, 274],
+  boxX: 64,
+  boxW: 212,
+  boxH: 40,
+  textPad: 12,
+  dirDy: -5,
+  brDy: 11,
+  cntDy: 4,
+  repo: { x: 110, y: 8, w: 120, h: 40 },
+  repoTx: 170,
+  repoTy: [25, 39],
+  gate: { x: 100, y: 330, w: 140, h: 52 },
+  gateTx: 170,
+  gateTy: [352, 369],
+  // Each lane gets its own rail x so the four sweeps stay legible as four in a
+  // column this narrow; the longest trip takes the outermost rail.
+  out: (cy, i) => `M170,42 C ${48 - i * 8},48 ${48 - i * 8},${cy} 70,${cy}`,
+  back: (cy, i) => `M270,${cy} C ${316 - i * 8},${cy} ${316 - i * 8},330 170,336`,
+}
+
+type FigureProps = {
+  geom: Geom
+  states: LaneState[]
+  dirty: number[]
+  gateOn: boolean
+}
+
+function WorktreeFigure({ geom, states, dirty, gateOn }: FigureProps) {
+  return (
+    <svg className={geom.cls} viewBox={geom.vb} role="img" aria-label={FIG_LABEL}>
+      <g>
+        {LANES.map((lane, i) => {
+          const cy = geom.rows[i] ?? 0
+          const s = states[i] ?? 'idle'
+          // A removed worktree loses its lane entirely — that is the point of removing it.
+          const out = s !== 'idle' && s !== 'dropped'
+          const back = s === 'merging' || s === 'merged'
+          return (
+            <g key={lane.dir}>
+              <path d={geom.out(cy, i)} pathLength={300} className={out ? 'lane live' : 'lane'} />
+              <path d={geom.back(cy, i)} pathLength={300} className={back ? 'lane back' : 'lane'} />
+            </g>
+          )
+        })}
+      </g>
+      <g>
+        <rect
+          x={geom.repo.x}
+          y={geom.repo.y}
+          width={geom.repo.w}
+          height={geom.repo.h}
+          rx={5}
+          className="node on"
+        />
+        <text x={geom.repoTx} y={geom.repoTy[0]} className="hub" textAnchor="middle">
+          one repo
+        </text>
+        <text x={geom.repoTx} y={geom.repoTy[1]} textAnchor="middle">
+          main
+        </text>
+
+        {LANES.map((lane, i) => {
+          const cy = geom.rows[i] ?? 0
+          const s = states[i] ?? 'idle'
+          const n = dirty[i] ?? 0
+          return (
+            <g key={lane.dir} className={`wt-lane ${s}`}>
+              <rect
+                x={geom.boxX}
+                y={cy - geom.boxH / 2}
+                width={geom.boxW}
+                height={geom.boxH}
+                rx={4}
+                className="node"
+              />
+              <text x={geom.boxX + geom.textPad} y={cy + geom.dirDy}>
+                ../{lane.dir}
+              </text>
+              <text x={geom.boxX + geom.textPad} y={cy + geom.brDy} className="br">
+                {lane.branch}
+              </text>
+              <text
+                x={geom.boxX + geom.boxW - geom.textPad}
+                y={cy + geom.cntDy}
+                textAnchor="end"
+                className="cnt"
+              >
+                {s === 'dropped'
+                  ? 'removed'
+                  : s === 'merged'
+                    ? 'merged'
+                    : `${n} file${n === 1 ? '' : 's'}`}
+              </text>
+            </g>
+          )
+        })}
+
+        <rect
+          x={geom.gate.x}
+          y={geom.gate.y}
+          width={geom.gate.w}
+          height={geom.gate.h}
+          rx={5}
+          className={gateOn ? 'node gate on' : 'node gate'}
+        />
+        <text x={geom.gateTx} y={geom.gateTy[0]} className="hub" textAnchor="middle">
+          the gate
+        </text>
+        <text x={geom.gateTx} y={geom.gateTy[1]} textAnchor="middle">
+          one at a time
+        </text>
+      </g>
+    </svg>
+  )
+}
+
+/* ── Section ──────────────────────────────────────────────── */
 
 export function WorktreesSection() {
   const reduced = useReducedMotionLocal()
@@ -124,7 +293,7 @@ export function WorktreesSection() {
     setStates(LANES.map(() => 'idle'))
     setDirty(LANES.map(() => 0))
     setGateOn(false)
-    setLogs([{ mark: 'go', text: 'One repo, four working copies, four branches. Nobody waits.' }])
+    setLogs([])
 
     const step = reduced ? 1 : 230
     let t = 0
@@ -227,89 +396,32 @@ export function WorktreesSection() {
       </div>
 
       <div className="wt rv" ref={figRef}>
-        <svg
-          viewBox="0 0 720 260"
-          role="img"
-          aria-label="One repository fanning out into four worktrees, each on its own branch, merging back through a single gate one at a time"
-        >
-          <g>
-            {LANES.map((lane, i) => {
-              const y = ROW_Y[i] ?? HUB_Y
-              const s = states[i] ?? 'idle'
-              // A removed worktree loses its lane entirely — that is the point of removing it.
-              const out = s !== 'idle' && s !== 'dropped'
-              const back = s === 'merging' || s === 'merged'
-              return (
-                <g key={lane.dir}>
-                  <path
-                    d={`M112,${HUB_Y} C 186,${HUB_Y} 200,${y} ${BOX_X},${y}`}
-                    className={out ? 'lane live' : 'lane'}
-                  />
-                  <path
-                    d={`M${BOX_X + BOX_W},${y} C 528,${y} 552,${HUB_Y} ${GATE_X},${HUB_Y}`}
-                    className={back ? 'lane back' : 'lane'}
-                  />
-                </g>
-              )
-            })}
-          </g>
-          <g>
-            <rect x={16} y={HUB_Y - 20} width={96} height={40} rx={5} className="node on" />
-            <text x={64} y={HUB_Y - 1} className="hub" textAnchor="middle">
-              one repo
-            </text>
-            <text x={64} y={HUB_Y + 11} textAnchor="middle">
-              main
-            </text>
-
-            {LANES.map((lane, i) => {
-              const y = ROW_Y[i] ?? HUB_Y
-              const s = states[i] ?? 'idle'
-              const n = dirty[i] ?? 0
-              return (
-                <g key={lane.dir} className={`wt-lane ${s}`}>
-                  <rect x={BOX_X} y={y - 16} width={BOX_W} height={32} rx={4} className="node" />
-                  <text x={BOX_X + 12} y={y - 2}>
-                    ../{lane.dir}
-                  </text>
-                  <text x={BOX_X + 12} y={y + 9} className="br">
-                    {lane.branch}
-                  </text>
-                  <text x={BOX_X + BOX_W - 12} y={y + 4} textAnchor="end" className="cnt">
-                    {s === 'dropped'
-                      ? 'removed'
-                      : s === 'merged'
-                        ? 'merged'
-                        : `${n} file${n === 1 ? '' : 's'}`}
-                  </text>
-                </g>
-              )
-            })}
-
-            <rect
-              x={GATE_X}
-              y={HUB_Y - 24}
-              width={108}
-              height={48}
-              rx={5}
-              className={gateOn ? 'node gate on' : 'node gate'}
-            />
-            <text x={GATE_X + 54} y={HUB_Y - 4} className="hub" textAnchor="middle">
-              the gate
-            </text>
-            <text x={GATE_X + 54} y={HUB_Y + 12} textAnchor="middle">
-              one at a time
-            </text>
-          </g>
-        </svg>
+        <WorktreeFigure geom={WIDE} states={states} dirty={dirty} gateOn={gateOn} />
+        <WorktreeFigure geom={NARROW} states={states} dirty={dirty} gateOn={gateOn} />
         <div className="wt-ctl">
           <button className="btn" type="button" onClick={run}>
             Run the swarm
           </button>
+          <p className="wt-cap">{CAPTION}</p>
+        </div>
+        {/* The log fills in line by line, so its box has to already be the size
+            of the finished log or replaying the run shoves the page down. A
+            hidden copy of the settled text reserves exactly that height, which
+            a fixed min-height cannot do once the lines wrap. */}
+        <div className="wt-logwrap">
           <div className="wt-log" aria-live="polite">
             {logs.map((l, i) => (
               <div key={i}>
-                {l.mark === 'go' && <b>→ </b>}
+                {l.mark === 'ok' && <b>✔ </b>}
+                {l.mark === 'drop' && <span className="x">− </span>}
+                {l.mark === 'sum' && <b>= </b>}
+                {l.text}
+              </div>
+            ))}
+          </div>
+          <div className="wt-log wt-log-reserve" aria-hidden="true">
+            {REST_LOG.map((l, i) => (
+              <div key={i}>
                 {l.mark === 'ok' && <b>✔ </b>}
                 {l.mark === 'drop' && <span className="x">− </span>}
                 {l.mark === 'sum' && <b>= </b>}
