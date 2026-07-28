@@ -1,0 +1,112 @@
+/* ─────────────────────────────────────────────────────────────
+   Extras for the compaction "Why tho?" panel. Everything else it
+   needs already lives in why-panel.css; this file only adds the
+   series colours for its two charts and the mechanism aside.
+   All whyc-* namespaced.
+   ───────────────────────────────────────────────────────────── */
+
+/* Degradation chart series */
+.why-key.whyc-opus i {
+  background: var(--sk-accent, #97e8bb);
+}
+.why-key.whyc-sol i {
+  background: var(--sk-sky, #7dd3fc);
+}
+.why-key.whyc-gpt55 i {
+  background: var(--sk-violet, #c4b5fd);
+}
+.why-key.whyc-gem i {
+  background: var(--sk-amber, #fbbf24);
+}
+
+.why-series.whyc-opus polyline {
+  stroke: var(--sk-accent, #97e8bb);
+}
+.why-series.whyc-opus circle,
+.why-series.whyc-opus .why-pt {
+  fill: var(--sk-accent, #97e8bb);
+}
+.why-series.whyc-sol polyline {
+  stroke: var(--sk-sky, #7dd3fc);
+}
+.why-series.whyc-sol circle,
+.why-series.whyc-sol .why-pt {
+  fill: var(--sk-sky, #7dd3fc);
+}
+.why-series.whyc-gpt55 polyline {
+  stroke: var(--sk-violet, #c4b5fd);
+}
+.why-series.whyc-gpt55 circle,
+.why-series.whyc-gpt55 .why-pt {
+  fill: var(--sk-violet, #c4b5fd);
+}
+.why-series.whyc-gem polyline {
+  stroke: var(--sk-amber, #fbbf24);
+}
+.why-series.whyc-gem circle,
+.why-series.whyc-gem .why-pt {
+  fill: var(--sk-amber, #fbbf24);
+}
+
+/* The half-window band and its label */
+.whyc-band {
+  fill: var(--sk-surface-2, rgba(232, 243, 236, 0.1));
+}
+.whyc-bandline {
+  stroke: var(--sk-border-2, rgba(151, 232, 187, 0.28));
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+}
+.whyc-bandlabel {
+  font-family: var(--sk-mono, ui-monospace, monospace);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  fill: var(--sk-text-3, rgba(232, 243, 236, 0.55));
+}
+
+/* Lost-in-the-Middle chart: one series plus the closed-book rule */
+.why-series.whyc-mid polyline {
+  stroke: var(--sk-rose, #f87171);
+}
+.why-series.whyc-mid circle,
+.why-series.whyc-mid .why-pt {
+  fill: var(--sk-rose, #f87171);
+}
+.whyc-baseline {
+  stroke: var(--sk-text-3, rgba(232, 243, 236, 0.55));
+  stroke-width: 1;
+  stroke-dasharray: 5 4;
+}
+.whyc-baselabel {
+  font-family: var(--sk-mono, ui-monospace, monospace);
+  font-size: 11px;
+  fill: var(--sk-text-3, rgba(232, 243, 236, 0.55));
+}
+
+/* Mechanism aside — small type, quieter than body copy */
+.whyc-aside {
+  margin: 1.6rem 0;
+  padding: 1rem clamp(0.9rem, 2.2vw, 1.3rem);
+  border: 1px solid var(--sk-border-1, rgba(232, 243, 236, 0.13));
+  border-left: 2px solid var(--sk-border-2, rgba(151, 232, 187, 0.28));
+  border-radius: 6px;
+  background: var(--sk-surface-1, rgba(232, 243, 236, 0.055));
+  font-size: 0.84rem;
+  line-height: 1.62;
+}
+.whyc-aside h4 {
+  margin: 0 0 0.6rem;
+  font-family: var(--sk-mono, ui-monospace, monospace);
+  font-weight: 400;
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sk-text-2, rgba(232, 243, 236, 0.74));
+}
+.whyc-aside p {
+  margin: 0 0 0.75em;
+}
+.whyc-aside p:last-child {
+  margin-bottom: 0;
+}

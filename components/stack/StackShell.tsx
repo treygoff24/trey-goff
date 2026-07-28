@@ -11,6 +11,7 @@ import {
 import { useReducedMotion, useReveal } from '@/components/stack/hooks'
 import { Terminal } from '@/components/stack/Terminal'
 import { SubagentSavings } from '@/components/stack/SubagentSavings'
+import { CompactionSection } from '@/components/stack/CompactionSection'
 import { WhyContext } from '@/components/stack/WhyPanel'
 import { WorkflowsChapter } from '@/components/stack/WorkflowsChapter'
 import { WorktreesSection } from '@/components/stack/WorktreesSection'
@@ -324,6 +325,9 @@ export function StackShell() {
             <p className="section-label">Basics: context windows</p>
             <ContextFigure />
             <WhyContext />
+
+            <p className="section-label">Compaction: the half-window rule</p>
+            <CompactionSection />
 
             <div className="callout rv">
               <span className="k">The move</span>

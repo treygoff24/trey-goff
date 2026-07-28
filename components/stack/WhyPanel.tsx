@@ -417,38 +417,6 @@ function AllocStrip() {
   )
 }
 
-/* ── Attention degradation strip ──────────────────────────── */
-
-function NoLimaStrip() {
-  const bars: { label: string; v: number; tone: string }[] = [
-    { label: 'Under 1K tokens of context', v: 99.3, tone: 'hi' },
-    { label: 'At 32K tokens of context', v: 69.7, tone: 'lo' },
-  ]
-  return (
-    <figure className="why-fig">
-      <div
-        className="why-needle"
-        role="img"
-        aria-label="GPT-4o's NoLiMa retrieval score falls from 99.3 percent with under 1,000 tokens of context to 69.7 percent at 32,000 tokens."
-      >
-        {bars.map((b) => (
-          <div className="why-needle-row" key={b.label}>
-            <span className="why-needle-l">{b.label}</span>
-            <div className="why-needle-track">
-              <span className={`why-needle-fill ${b.tone}`} style={{ width: `${b.v}%` }} />
-            </div>
-            <span className="why-needle-v">{b.v}%</span>
-          </div>
-        ))}
-      </div>
-      <figcaption>
-        GPT-4o finding one fact buried in its context, as the context gets longer. It was one of the
-        best performers in the batch. Source: NoLiMa, 2025.
-      </figcaption>
-    </figure>
-  )
-}
-
 /* ── The chapter-1 instance ───────────────────────────────── */
 
 export function WhyContext() {
@@ -498,46 +466,18 @@ export function WhyContext() {
         So optimizing the context window is, in effect, buying back test-time compute for your
         actual problem. You are not turning the vendor&apos;s dial; you are making sure the thinking
         it already pays for lands on the thing you asked about instead of on everything piled around
-        it. The benchmarks say what happens next.
+        it.
       </p>
 
-      <h3>The other reason: the attention mechanism</h3>
       <p>
-        Optimizing context also serves another key purpose: taking advantage of the attention
-        mechanism.
+        There is a second half to this story — where the model&apos;s attention actually goes as the
+        window fills, and why the middle of a long context goes dim. That one gets its own deep dive
+        from the compaction section further down this chapter, research and all.
       </p>
       <p>
-        Attention is how a transformer decides what matters. It does not read your context front to
-        back the way you would. Every token gets related to every other token, all at once — that is
-        self-attention, and it is where the understanding actually happens. It is how the model
-        works out that this <em className="hl">it</em> refers to that function, that this stack
-        trace belongs to that test.
-      </p>
-      <p>
-        The catch is that those pairs multiply as the context grows. Anthropic&apos;s own
-        engineering write-up puts it plainly: models have an{' '}
-        <b>“attention budget” they draw on when parsing large volumes of context</b>, every new
-        token depletes it, and “as its context length increases, a model&apos;s ability to capture
-        these pairwise relationships gets stretched thin, creating a natural tension between context
-        size and attention focus.”
-      </p>
-      <p>
-        It is measurable, too. NoLiMa tested 13 models that all claim to handle at least 128K
-        tokens. By 32K — a sixth of a 200K window — 11 of them had fallen below half their
-        short-context performance. GPT-4o, one of the top performers in the batch, dropped from an
-        almost-perfect 99.3% to 69.7%.
-      </p>
-      <NoLimaStrip />
-      <p>
-        The older “Lost in the Middle” result is the positional version of the same problem: models
-        do best with information at the beginning or the end of the context and significantly worse
-        when the thing they need is buried in the middle — even models sold specifically as
-        long-context.
-      </p>
-      <p>
-        So a 200K window is not 200K of usable attention. It is 200K of room, and the more of it you
-        fill, the less sharply the model sees any single thing in it. Anthropic&apos;s version of
-        the conclusion is the closest thing this page has to a thesis:{' '}
+        For now, the short version: a 200K window is not 200K of usable attention. It is 200K of
+        room, and the more of it you fill, the less sharply the model sees any single thing in it.
+        Anthropic&apos;s version of the conclusion is the closest thing this page has to a thesis:{' '}
         <b>
           good context engineering means finding the smallest possible set of high-signal tokens
           that maximize the likelihood of some desired outcome.
@@ -569,39 +509,6 @@ export function WhyContext() {
               Anthropic — Effective context engineering for AI agents
             </a>{' '}
             — the attention budget
-          </li>
-          <li>
-            <a href="https://arxiv.org/abs/2502.05167" target="_blank" rel="noopener noreferrer">
-              NoLiMa — Long-Context Evaluation Beyond Literal Matching
-            </a>{' '}
-            — the 13-model degradation study
-          </li>
-          <li>
-            <a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener noreferrer">
-              Lost in the Middle — How Language Models Use Long Contexts
-            </a>{' '}
-            — the positional result, also published as the{' '}
-            <a
-              href="https://aclanthology.org/2024.tacl-1.9/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Transactions of the ACL edition
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://jalammar.github.io/illustrated-transformer/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              The Illustrated Transformer
-            </a>{' '}
-            — the readable explanation of self-attention, and{' '}
-            <a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener noreferrer">
-              Attention Is All You Need
-            </a>{' '}
-            — the paper underneath it
           </li>
         </ul>
       </div>

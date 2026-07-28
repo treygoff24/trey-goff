@@ -1,0 +1,177 @@
+/* ── Ch.1 · compaction figure ─────────────────────────────── */
+/* Geometry deliberately mirrors .ctxfig / .cells so the two chapter-1
+   figures read as the same instrument at two different settings. */
+
+#stack-root .cmp {
+  margin: 1.6rem 0 0;
+  border: 1px solid var(--sk-border-1);
+  border-radius: 8px;
+  padding: clamp(1.1rem, 2.4vw, 1.7rem);
+  background:
+    radial-gradient(110% 130% at 8% 0%, rgba(111, 214, 154, 0.08), transparent 60%),
+    rgba(6, 26, 16, 0.5);
+}
+#stack-root .cmp-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.1rem;
+}
+#stack-root .cmp-head .t {
+  font-family: var(--sk-mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+}
+
+/* Both window sizes occupy one grid cell, so the taller wins the reservation
+   and toggling never shifts the page. */
+#stack-root .cmp-stack {
+  display: grid;
+}
+#stack-root .cmp-stack .cmp-state {
+  grid-area: 1 / 1;
+  visibility: hidden;
+}
+#stack-root .cmp-stack .cmp-state.is-on {
+  visibility: visible;
+}
+
+#stack-root .cmp-scale {
+  margin: 0 0 0.75rem;
+  font-family: var(--sk-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+}
+#stack-root .cmp-scale b {
+  color: var(--sk-text-1);
+  font-weight: 400;
+}
+
+#stack-root .cmp-plot {
+  position: relative;
+}
+#stack-root .cmp-cells {
+  display: grid;
+  grid-template-columns: repeat(40, 1fr);
+  gap: 2px;
+}
+#stack-root .cmp-cell {
+  display: block;
+  aspect-ratio: 1;
+  border-radius: 1px;
+  background: var(--sk-accent);
+  transition:
+    opacity 520ms var(--sk-ease),
+    background 520ms var(--sk-ease);
+}
+#stack-root i.cmp-free {
+  background: rgba(232, 243, 236, 0.05);
+  opacity: 1;
+}
+
+/* Half-window marker. Sits above the grid, hairline down through it. */
+#stack-root .cmp-mark {
+  position: absolute;
+  top: -0.15rem;
+  bottom: -0.15rem;
+  width: 0;
+  border-left: 1px dashed var(--sk-amber);
+  pointer-events: none;
+}
+#stack-root .cmp-mark-t {
+  position: absolute;
+  top: 50%;
+  left: 0.45rem;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sk-bg-0);
+  background: var(--sk-amber);
+  border-radius: 3px;
+  padding: 0.22rem 0.42rem;
+}
+
+#stack-root .cmp-axis {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-top: 0.7rem;
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  color: var(--sk-text-3);
+}
+#stack-root .cmp-axis-mid {
+  color: var(--sk-amber);
+}
+
+#stack-root .cmp-note {
+  margin: 1.1rem 0 0;
+  padding: 0.85rem 1rem;
+  border-left: 2px solid var(--sk-amber);
+  background: linear-gradient(90deg, rgba(251, 191, 36, 0.08), transparent 72%);
+  font-size: 0.92rem;
+  color: var(--sk-text-2);
+}
+#stack-root .cmp-note .k {
+  display: block;
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sk-amber);
+  margin-bottom: 0.45rem;
+}
+
+#stack-root .cmp-cap {
+  margin-top: 1.1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--sk-border-1);
+  font-size: 0.92rem;
+  color: var(--sk-text-2);
+  min-height: 3.4rem;
+}
+#stack-root .cmp-cap b {
+  color: var(--sk-text-1);
+  font-weight: 500;
+}
+
+#stack-root .cmp-foot {
+  margin: 1.2rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--sk-text-3);
+}
+#stack-root .cmp-foot a {
+  color: var(--sk-text-2);
+}
+
+@media (max-width: 700px) {
+  /* Halve the columns rather than shrinking cells past the point of reading. */
+  #stack-root .cmp-cells {
+    grid-template-columns: repeat(20, 1fr);
+  }
+  #stack-root .cmp-axis {
+    /* Wrap rather than shrink: 0.6rem is the type floor. */
+    flex-wrap: wrap;
+  }
+  #stack-root .cmp-mark-t {
+    left: auto;
+    right: 0.45rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #stack-root .cmp-cell {
+    transition-duration: 0.001ms !important;
+  }
+}
