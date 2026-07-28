@@ -323,7 +323,7 @@ export function FanOut() {
             )
           })}
           <rect x={14} y={HUB.y - 17} width={82} height={34} rx={5} className="node on" />
-          <text x={27} y={HUB.y + 4} className="hub">
+          <text x={55} y={HUB.y + 4} className="hub" textAnchor="middle">
             you
           </text>
           <rect
@@ -334,7 +334,7 @@ export function FanOut() {
             rx={5}
             className={outOn ? 'node on' : 'node'}
           />
-          <text x={622} y={OUT.y + 4} className="hub">
+          <text x={658} y={OUT.y + 4} className="hub" textAnchor="middle">
             one answer
           </text>
         </g>
@@ -448,7 +448,7 @@ export function Gauntlet() {
           setLog(
             <>
               <span className="g">✔ Four gates green.</span> Commit landed locally. The push is
-              waiting on you — <b>and it will keep waiting.</b> Yesterday&apos;s &quot;ship it&quot;
+              waiting on you — <b>and it will keep waiting. </b>Yesterday&apos;s &quot;ship it&quot;
               does not authorize today&apos;s push.
             </>,
           )

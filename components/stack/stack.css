@@ -797,6 +797,9 @@ html:has(#stack-root) body > footer {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem 1.3rem;
+  /* Two-row reservation so toggling Untended/Curated never jumps the figure height. */
+  min-height: 2.5rem;
+  align-content: flex-start;
   font-family: var(--sk-mono);
   font-size: 0.62rem;
   letter-spacing: 0.06em;
@@ -1667,6 +1670,13 @@ html:has(#stack-root) body > footer {
   }
   #stack-root .term-body {
     font-size: 0.71rem;
+  }
+  /* Keep the fan-out labels legible: pan a full-width figure instead of shrinking it. */
+  #stack-root .fan {
+    overflow-x: auto;
+  }
+  #stack-root .fan svg {
+    min-width: 34rem;
   }
   #stack-root .dl {
     grid-template-columns: auto minmax(0, 1fr);

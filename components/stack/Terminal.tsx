@@ -115,7 +115,12 @@ export function Terminal({
           Replay
         </button>
       </div>
-      <pre className="term-body" aria-live="off">
+      {/* Reserve the final height up front so typing never shifts content below. */}
+      <pre
+        className="term-body"
+        aria-live="off"
+        style={{ minHeight: `${(lines.length * 1.37 + 2.3).toFixed(1)}rem` }}
+      >
         {rendered.map((r, idx) => (
           // ponytail: index keys are fine — the list is append-only within a play
           <Line

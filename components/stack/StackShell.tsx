@@ -363,7 +363,7 @@ export function StackShell() {
               <div className="rv" data-d="1">
                 <h3>What earns a line in it</h3>
                 <p>
-                  <b>Rules you would repeat to a new hire.</b> &quot;Commits are ungated, pushes
+                  <b>Rules you would repeat to a new hire. </b>&quot;Commits are ungated, pushes
                   need my go-ahead.&quot; &quot;This repo uses pnpm, never npm.&quot;
                 </p>
                 <p>
@@ -371,7 +371,7 @@ export function StackShell() {
                   belongs in the file instead of in your next message.
                 </p>
                 <p>
-                  <b>Not</b> anything the code already says. It can read the code. Don&apos;t spend
+                  <b>Not </b>anything the code already says. It can read the code. Don&apos;t spend
                   the window narrating your own directory tree.
                 </p>
               </div>
@@ -618,7 +618,7 @@ export function StackShell() {
               <span className="k">Learned the hard way</span>
               Long parallel runs frequently land the meaty edits and then stop just short of the
               trailing cleanup.{' '}
-              <b>Never trust a subagent&apos;s &quot;done&quot; summary — check the disk.</b> And
+              <b>Never trust a subagent&apos;s &quot;done&quot; summary — check the disk. </b>And
               brief every parallel writer never to run a tree-wide git command: one agent&apos;s
               tidy-up once stashed three siblings&apos; uncommitted work mid-flight.
             </div>
@@ -693,7 +693,7 @@ export function StackShell() {
                 <p className="claim">Stop the loop with a deletion.</p>
                 <p className="payoff">
                   Review cycles want to run forever, because the newest text is always the
-                  least-reviewed. <b>End the loop when a round produces no changes</b> — and if a
+                  least-reviewed. <b>End the loop when a round produces no changes </b>— and if a
                   checker&apos;s finding list is always empty, assume the checker is broken, not the
                   code.
                 </p>
@@ -711,7 +711,7 @@ export function StackShell() {
               n="07"
               eyebrow="Chapter seven · Practice"
               title="A week in the life"
-              lede="Four situations that cover most of what I actually do. Answer two questions and you'll land on the one you're in — with the setup I'd use, in the order I'd use it."
+              lede="Four situations that cover most of what I actually do. Answer a question or two and you'll land on the one you're in — with the setup I'd use, in the order I'd use it."
             />
             <DecisionTree />
             <Pager
@@ -734,7 +734,7 @@ export function StackShell() {
             <div className="callout rv">
               <span className="k">The honest caveat</span>A human picked the eight chapters, ran a
               design bake-off between two competing prototypes of this page, and is red-penning
-              every artifact before it ships. <b>That&apos;s the actual division of labor</b> — and
+              every artifact before it ships. <b>That&apos;s the actual division of labor </b>— and
               it&apos;s the one you&apos;re signing up for. The taste stays yours. The typing stops
               being yours.
             </div>
