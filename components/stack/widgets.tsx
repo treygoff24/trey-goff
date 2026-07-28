@@ -278,7 +278,8 @@ export function FanOut() {
   }, [reduced])
 
   const HUB = { x: 96, y: 130 }
-  const OUT = { x: 638, y: 130 }
+  // Lanes must terminate at the result box's left edge (x=610), not inside it.
+  const OUT = { x: 610, y: 130 }
   return (
     <div className="fan rv" ref={fanRef}>
       <svg

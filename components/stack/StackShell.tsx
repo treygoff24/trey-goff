@@ -66,27 +66,14 @@ function Pager({ prev, next }: { prev?: [string, string]; next?: [string, string
   )
 }
 
-function ChapterHead({
-  n,
-  eyebrow,
-  title,
-  lede,
-}: {
-  n: string
-  eyebrow: string
-  title: string
-  lede: React.ReactNode
-}) {
+function ChapterHead({ n, title, lede }: { n: string; title: string; lede: React.ReactNode }) {
   return (
     <div className="chapter-head">
       <span className="chapter-num" aria-hidden="true">
         {n}
       </span>
-      <p className="eyebrow rv">{eyebrow}</p>
-      <h2 className="rv" data-d="1">
-        {title}
-      </h2>
-      <p className="lede chapter-lede rv" data-d="2">
+      <h2 className="rv">{title}</h2>
+      <p className="lede chapter-lede rv" data-d="1">
         {lede}
       </p>
     </div>
@@ -217,11 +204,8 @@ export function StackShell() {
         <div className="wrap">
           {/* ── Hero ── */}
           <header className="hero">
-            <p className="eyebrow rv">A field manual · 2026</p>
-            <h1 className="rv" data-d="1">
-              The <em className="hl">setup</em>.
-              <br />
-              <span className="thin">How I actually build software now.</span>
+            <h1 className="rv">
+              How I <em className="hl">actually</em> build software now
             </h1>
             <p className="hero-sub rv" data-d="2">
               A complete, working agentic development stack — explained from first principles, with
@@ -248,7 +232,6 @@ export function StackShell() {
           <section className="chapter" id="ch1">
             <ChapterHead
               n="01"
-              eyebrow="Chapter one · First principles"
               title="Why any of this works"
               lede="Every technique in this manual falls out of five ideas. Learn the five and you can invent the rest yourself — which is good, because the tools change every eight weeks and the principles haven't moved in two years."
             />
@@ -326,7 +309,6 @@ export function StackShell() {
           <section className="chapter" id="ch2">
             <ChapterHead
               n="02"
-              eyebrow="Chapter two · Installation"
               title="Day one"
               lede="Twenty minutes from nothing to a working setup. Then one file that will do more for you than the next six months of prompt tips."
             />
@@ -392,7 +374,6 @@ export function StackShell() {
           <section className="chapter" id="ch3">
             <ChapterHead
               n="03"
-              eyebrow="Chapter three · Instruction"
               title="Teaching it your world"
               lede={
                 <>
@@ -456,7 +437,6 @@ export function StackShell() {
           <section className="chapter" id="ch4">
             <ChapterHead
               n="04"
-              eyebrow="Chapter four · Capability"
               title="Giving it hands"
               lede="Out of the box it can read, write, and run commands. Everything else — searching the live web, driving a browser, reading today's docs instead of last year's — is a command-line tool you install once and then never think about again."
             />
@@ -566,7 +546,6 @@ export function StackShell() {
           <section className="chapter" id="ch5">
             <ChapterHead
               n="05"
-              eyebrow="Chapter five · Parallelism"
               title="Multiplying it"
               lede={
                 <>
@@ -632,7 +611,6 @@ export function StackShell() {
           <section className="chapter" id="ch6">
             <ChapterHead
               n="06"
-              eyebrow="Chapter six · Guardrails"
               title="Trusting it at scale"
               lede={
                 <>
@@ -709,7 +687,6 @@ export function StackShell() {
           <section className="chapter" id="ch7">
             <ChapterHead
               n="07"
-              eyebrow="Chapter seven · Practice"
               title="A week in the life"
               lede="Four situations that cover most of what I actually do. Answer a question or two and you'll land on the one you're in — with the setup I'd use, in the order I'd use it."
             />
@@ -724,7 +701,6 @@ export function StackShell() {
           <section className="chapter" id="ch8">
             <ChapterHead
               n="08"
-              eyebrow="Chapter eight · Your turn"
               title="Build your own"
               lede="Here is the part I want you to take seriously: none of this was assembled by planning it. Every piece exists because something annoyed me twice and I wrote the annoyance down. You don't need my stack. You need the habit that produced it."
             />
