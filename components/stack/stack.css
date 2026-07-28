@@ -198,7 +198,9 @@ html:has(#stack-root) body > footer {
 }
 #stack-root .rail-nav {
   position: relative;
-  flex: 1;
+  /* Intrinsic height so the spine's 0-100% fill maps onto the links themselves;
+     flex: 1 stretched the track far below the last chapter on tall viewports. */
+  flex: 0 1 auto;
   min-height: 0;
   padding-left: 1.5rem;
   overflow-y: auto;
@@ -636,7 +638,8 @@ html:has(#stack-root) body > footer {
   color: var(--sk-violet);
 }
 #stack-root .term-body .box {
-  color: rgba(151, 232, 187, 0.45);
+  /* Carries readable text (the welcome box), not just box-drawing glyphs — keep AA. */
+  color: rgba(151, 232, 187, 0.72);
 }
 #stack-root .caret {
   display: inline-block;
@@ -862,6 +865,8 @@ html:has(#stack-root) body > footer {
   text-transform: uppercase;
   color: var(--sk-bg-0);
   background: var(--sk-warm);
+  min-width: 2.6rem;
+  text-align: center;
   padding: 0.34rem 0.5rem;
   border-radius: 3px;
 }
@@ -1585,6 +1590,10 @@ html:has(#stack-root) body > footer {
   color: var(--sk-accent);
   text-decoration: none;
   border-bottom: 1px solid rgba(151, 232, 187, 0.28);
+  /* 24px minimum target size (WCAG 2.5.8) without changing the visual line. */
+  display: inline-block;
+  padding-block: 0.35rem;
+  margin-block: -0.35rem;
 }
 
 /* ── Responsive ─────────────────────────────────────────── */
@@ -1652,6 +1661,8 @@ html:has(#stack-root) body > footer {
   }
   #stack-root .precept {
     grid-template-columns: 2.2rem minmax(0, 1fr);
+    /* Title hugs its own body; the group boundary stays the padded hairline. */
+    row-gap: 0;
   }
   #stack-root .precept .payoff {
     grid-column: 2;
@@ -1672,9 +1683,17 @@ html:has(#stack-root) body > footer {
   /* Keep the fan-out labels legible: pan a full-width figure instead of shrinking it. */
   #stack-root .fan {
     overflow-x: auto;
+    position: relative;
   }
   #stack-root .fan svg {
     min-width: 34rem;
+  }
+  #stack-root .figscroll-hint {
+    display: block;
+  }
+  #stack-root .shell {
+    /* The fixed chapter pill floats over the bottom edge; keep the last content clear of it. */
+    padding-bottom: 6rem;
   }
   #stack-root .dl {
     grid-template-columns: auto minmax(0, 1fr);
@@ -1707,4 +1726,14 @@ html:has(#stack-root) body > footer {
   #stack-root .caret {
     opacity: 1;
   }
+}
+
+/* Swipe hint for figures that pan horizontally on small screens. */
+#stack-root .figscroll-hint {
+  display: none;
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: var(--sk-text-3);
+  margin-bottom: 0.5rem;
 }

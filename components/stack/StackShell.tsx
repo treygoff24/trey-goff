@@ -137,12 +137,36 @@ export function StackShell() {
       return
     }
     railRef.current?.querySelector<HTMLElement>('.rail-link')?.focus()
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setRailOpen(false)
     }
     document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.body.style.overflow = prevOverflow
+    }
   }, [railOpen])
+
+  // Smooth scrolling breaks the browser's follow-the-focus behavior on Tab, so keyboard
+  // users lose the viewport (WCAG 2.4.11). Drop to auto while keyboarding, restore on pointer.
+  useEffect(() => {
+    const root = document.documentElement
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Tab') root.style.scrollBehavior = 'auto'
+    }
+    const onPointer = () => {
+      root.style.scrollBehavior = ''
+    }
+    document.addEventListener('keydown', onKeyDown)
+    document.addEventListener('pointerdown', onPointer)
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+      document.removeEventListener('pointerdown', onPointer)
+      root.style.scrollBehavior = ''
+    }
+  }, [])
 
   const spinePct = CHAPTERS.length > 1 ? (Math.max(0, active) / (CHAPTERS.length - 1)) * 100 : 0
 
@@ -203,8 +227,9 @@ export function StackShell() {
         <span className="pct">{CHAPTERS[active]?.n ?? '—'}</span>
       </button>
 
-      {/* The root layout already provides the <main> landmark; this is styling only. */}
-      <div className="shell" id="top">
+      {/* The root layout already provides the <main> landmark; this is styling only.
+          inert keeps the page content out of the tab order while the mobile sheet is open. */}
+      <div className="shell" id="top" inert={railOpen || undefined}>
         <div className="wrap">
           {/* ── Hero ── */}
           <header className="hero">
@@ -324,7 +349,7 @@ export function StackShell() {
               <span className="k">Always YOLO</span>
               Out of the box, an agent can do some things by default and stops to ask permission for
               everything else — every five minutes, forever.{' '}
-              <b>You should almost never see a permission request.</b> Modern SOTA agents are
+              <b>You should almost never see a permission request. </b>Modern SOTA agents are
               extremely capable, and with the rest of the setup below they can be kept from doing
               anything net-negative. So run YOLO mode — &quot;dangerously skip permissions&quot; —
               basically always. If your agent can do something harmful, that is your fault for not
@@ -469,21 +494,23 @@ export function StackShell() {
                 <span className="inline-code">writing-great-skills</span>
               </a>{' '}
               skill is the single best tool for creating skills. My workflow has two branches.{' '}
-              <b>Repeated workflow:</b> manually prompt the agent through the workflow step by step,
+              <b>Repeated workflow: </b>manually prompt the agent through the workflow step by step,
               iterating with feedback until the output is perfect — then say &quot;use
               writing-great-skills to turn this into a skill based on everything we just did and the
               feedback I gave you.&quot; Every little mistake you corrected along the way gets baked
-              into the procedure. <b>Domain expertise:</b> fan out subagents to research the domain
-              exhaustively — in parallel, my Claude launches a ChatGPT Deep Research run itself, in
-              my own logged-in browser — then have the agent synthesize one master research report
-              and turn <em>that</em> into the skill. Two prompts, and your agents are as good as the
-              best humans at Blender.
+              into the procedure. <b>Domain expertise: </b>suppose I want Claude to get really,
+              really good at driving Blender to create 3D assets. Fan out subagents to research
+              everything there is to know about it — in parallel, my Claude launches a ChatGPT Deep
+              Research run itself, in my own logged-in browser — then have the agent synthesize one
+              master research report and turn <em>that</em> into the skill. Two prompts, one for the
+              research and one for the skill, and your agents are as good as the best humans at
+              Blender.
             </div>
             <DownloadCard
               href="/stack/starter-skill-pack.md"
               ext="MD"
               name="starter-skill-pack.md"
-              desc="Six skills that pay for themselves in a week — release, review-my-diff, write-human, debug-loop, session-closeout, and a skill for writing skills."
+              desc="Six skills that pay for themselves in a week — ship-a-release, review-my-diff, write-human, debug-loop, session-closeout, and a skill for writing skills."
             />
             <DownloadCard
               href="/stack/midjourney-skill.md"
@@ -515,7 +542,7 @@ export function StackShell() {
             <p className="section-label">The part people skip</p>
             <div className="twoup">
               <div className="rv">
-                <h3>Build it the tools that don&apos;t exist yet</h3>
+                <h3>Build the tools that don&apos;t exist yet</h3>
                 <p>
                   Want your agent to have a tool that doesn&apos;t exist? I don&apos;t know if you
                   know this, but agents are pretty good at writing code. If they need a tool they

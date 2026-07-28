@@ -57,7 +57,7 @@ export function ContextFigure() {
     <div className="ctxfig rv" ref={figRef}>
       <div className="ctxfig-head">
         <span className="t">
-          One context window · <b>200,000 tokens</b> · every cell ≈ 500 tokens
+          One context window · <b>200,000 tokens</b> · 320 cells
         </span>
         <div className="toggle" role="group" aria-label="Context packing strategy">
           <button type="button" aria-pressed={mode === 'bad'} onClick={() => paint('bad')}>
@@ -273,15 +273,29 @@ export function FanOut() {
 
   useEffect(() => {
     if (reduced) {
+      // Kill any in-flight staggered timers and settle to the finished state.
+      clearAll()
+      setLiveOut(WORKERS.map(() => true))
+      setLiveBack(WORKERS.map(() => true))
+      setOutOn(true)
       setLogs([{ mark: 'go', text: 'One brief, six windows. Press Dispatch to run it.' }])
     }
-  }, [reduced])
+  }, [reduced, clearAll])
 
   const HUB = { x: 96, y: 130 }
   // Lanes must terminate at the result box's left edge (x=610), not inside it.
   const OUT = { x: 610, y: 130 }
   return (
-    <div className="fan rv" ref={fanRef}>
+    <div
+      className="fan rv"
+      ref={fanRef}
+      tabIndex={0}
+      role="region"
+      aria-label="Fan-out figure, scrolls horizontally on small screens"
+    >
+      <span className="figscroll-hint" aria-hidden="true">
+        swipe →
+      </span>
       <svg
         viewBox="0 0 720 260"
         role="img"
@@ -381,6 +395,13 @@ export function Gauntlet() {
     'Five checks stand between a generated diff and your main branch. Watch what happens the first time.',
   )
   const [btnLabel, setBtnLabel] = useState('Send a change through')
+
+  useEffect(() => {
+    if (!reduced) return
+    // A mid-run flip to reduced motion freezes the walk instead of ghost-running it.
+    clearAll()
+    setRunning(false)
+  }, [reduced, clearAll])
 
   const run = useCallback(() => {
     clearAll()
@@ -498,22 +519,26 @@ export function Gauntlet() {
 export function DecisionTree() {
   const [path, setPath] = useState<string[]>([])
   const bodyRef = useRef<HTMLDivElement | null>(null)
+  const wantsFocus = useRef(false)
 
   const go = (key: string, focus: boolean) => {
+    wantsFocus.current = focus
     setPath(key === 'root' ? [] : (prev) => [...prev, key])
-    if (focus) {
-      // Focus the new heading after render so keyboard/SR users land in the right place.
-      requestAnimationFrame(() => {
-        const h = bodyRef.current?.querySelector<HTMLElement>('.tree-q')
-        if (h) {
-          h.setAttribute('tabindex', '-1')
-          h.focus({ preventScroll: true })
-        }
-      })
-    }
   }
 
   const nodeKey = path[path.length - 1] ?? 'root'
+
+  // Focus the new heading after React commits the node swap — a rAF scheduled in the
+  // click handler can fire before the re-render, leaving focus on <body>.
+  useEffect(() => {
+    if (!wantsFocus.current) return
+    wantsFocus.current = false
+    const h = bodyRef.current?.querySelector<HTMLElement>('.tree-q')
+    if (h) {
+      h.setAttribute('tabindex', '-1')
+      h.focus({ preventScroll: true })
+    }
+  }, [nodeKey])
   const node = TREE[nodeKey] ?? TREE_ROOT
 
   return (
@@ -634,7 +659,7 @@ export function CopyPromptBlock({ text }: { text: string }) {
       <div className="ph">
         <span>start-tonight.md</span>
         <button className="copy-btn" type="button" onClick={copy}>
-          {label}
+          <span aria-live="polite">{label}</span>
         </button>
       </div>
       <pre>{text}</pre>

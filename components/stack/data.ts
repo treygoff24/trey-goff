@@ -16,7 +16,7 @@ export const HERO_TERM: TermLine[] = [
   { t: 'cmd', v: 'claude "build the page that explains how you were built"' },
   { t: 'out', v: '', d: 300 },
   { t: 'out', c: 'dim', v: '● Reading AGENTS.md, app/globals.css, app/page.tsx …' },
-  { t: 'out', c: 'dim', v: '● Drafting visual thesis → 8 chapters, one strong idea each' },
+  { t: 'out', c: 'dim', v: '● Drafting visual thesis → 9 chapters, one strong idea each' },
   { t: 'out', c: 'dim', v: '● Writing components/stack/ — rail, terminals, decision tree' },
   { t: 'out', c: 'dim', v: '● Screenshotting at 1440px and 390px, iterating on its own critique' },
   { t: 'out', v: '' },
@@ -399,7 +399,7 @@ export const TREE: Record<string, TreeNode> = {
       },
       {
         lead: 'Verify on disk after every fan-out.',
-        rest: ' Long parallel runs land the big edits and skip the trailing polish.',
+        rest: ' A subagent’s “done” summary is a claim; the diff on disk is the fact.',
       },
       {
         lead: 'Fresh-eyes review before anything is pushed.',
@@ -500,7 +500,7 @@ export const TREE: Record<string, TreeNode> = {
         rest: ' — different model, fresh context, no memory of the two dead ends.',
       },
     ],
-    ch: ['#ch1', '01 · Why any of this works'],
+    ch: ['#ch1', '01 · Key heuristics'],
   },
 }
 

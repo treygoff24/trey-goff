@@ -58,7 +58,7 @@ dumb" moment is actually a packing problem.**
 Even the smartest frontier models lie, hallucinate, or exaggerate on occasion. This means every agentic workflow must include ungamable layers of objective verification that the model actually did the work you asked it to do.  **Every claim should have a command attached
 that would fail loudly if the claim were false** — a test, a type-check, a
 screenshot, a curl. In a controlled bakeoff of my three web-research lanes,
-11–21% of spot-checked quotes failed verification. 
+11–21% of spot-checked quotes failed verification.
 
 **Precept 03 — Fresh context and different models are vital.**
 The agent that wrote the code is the worst possible reviewer of it: it is
@@ -181,7 +181,7 @@ each, written down so they never cost anyone an hour again. A good claude.md als
 my go-ahead." "This repo uses pnpm, never npm."
 **Scars.** Every time you correct the same mistake twice, that correction
 belongs in the file instead of in your next message.
-**Not** anything the code already says. It can read the code. 
+**Not** anything the code already says. It can read the code.
 
 **agents.md and claude.md are the orientation layer for the amnesiac savant you hired named claude to re-orient them for work each session.**
 
@@ -236,7 +236,7 @@ stay discoverable while unloaded.
 
 **repeated workflows:** Anything which you find yourself prompting the agent to do more than once should be a skill instead. You will be shocked how rapidly this has a compounding effect as more and more of your work gets automated via skills.
 
-**specific domain expertise:** Anything for which the model is not already an expert from the pretraining data can be a skill. For example, I had several subagents research everything there is to know about getting the most out of the Midjourney image generation model, then use that research to write a skill Claude or my other agents can use to help me create excellent midjourney prompts (download it here if you want it). This could be domain knowledge specific to your job (I built one for doing my expense reports), or niche knowledge the model doesn't know well (midjourney prompting, UI/UX design taste, Rust engineering, etc.). 
+**specific domain expertise:** Anything for which the model is not already an expert from the pretraining data can be a skill. For example, I had several subagents research everything there is to know about getting the most out of the Midjourney image generation model, then use that research to write a skill Claude or my other agents can use to help me create excellent midjourney prompts (download it here if you want it). This could be domain knowledge specific to your job (I built one for doing my expense reports), or niche knowledge the model doesn't know well (midjourney prompting, UI/UX design taste, Rust engineering, etc.).
 
 Callout: making good skills
 
@@ -324,7 +324,7 @@ so your agent builds them right the first time." [GATED — artifact below]
 
 ## Chapter 05 — Multiplying it
 
-**Lede:** Why use one agent when you can use 10 instead? Subagents are a tool allowing you to hyper optimize your main agent's context window. Instead of your agent spending ten thousand tokens searching for something in your codebase, it can spend 20 to spawn a subagent to go find it and have the subagent report back a one line finding. 
+**Lede:** Why use one agent when you can use 10 instead? Subagents are a tool allowing you to hyper optimize your main agent's context window. Instead of your agent spending ten thousand tokens searching for something in your codebase, it can spend 20 to spawn a subagent to go find it and have the subagent report back a one line finding.
 
 **Fan-out figure** (six lanes: codex · cursor · grok · kimi · glm · opus):
 - Jobs: audit the auth module · hunt N+1 queries · sweep dead exports ·
@@ -337,7 +337,7 @@ so your agent builds them right the first time." [GATED — artifact below]
   - ✗ glm — migration is not reversible
   - ✔ opus — agrees with codex; has the repro
   - = 6 windows spent. ~340 lines read. You read 6.
-  
+
   [here, we should add another context window visual. this one is "your agent fixing a bug without subagents" vs. "fixing a bug with subagents", and it visually shows how much context the subagents save by visually showing how you're outsourcing all those tokens to the subagents themselves]
 
 **Section label:** How to command your army
@@ -345,7 +345,7 @@ so your agent builds them right the first time." [GATED — artifact below]
 My agent armies have a few troop types:
 
 **A — Subagents in the same harness:** Most major harnesses now support subagents natively. In Claude Code, this means Fable can spawn Sonnet subagents to explore your codebase and report back, or send Opus to implement a big chunk of your build plan in a fresh context window. Use them for
-anything that is token heavy and would not improve your orchestrator's context window for the actual goal at hand. 
+anything that is token heavy and would not improve your orchestrator's context window for the actual goal at hand.
 
 **B — Cross-model delegation:** Hand a bounded task to a different vendor's
 agent entirely — a `delegate` command that runs the job in another harness.
@@ -480,7 +480,7 @@ Steps:
    each step.
 3. **Hand the plan to a fresh reviewer** with no memory of writing it.
    Dependency order and file collisions are what it catches. Ideally, this is your other smartest model; Fable, GPT 5.6 Sol, Grok, K3, whatever.
-4. Have your orchestrator read the review and propose to you the intended patches/changes to the plan, or just let it do it directly, up to you. 
+4. Have your orchestrator read the review and propose to you the intended patches/changes to the plan, or just let it do it directly, up to you.
 5. **Execute in waves**, each wave a small set of independent files, gate run
    at the coordinator between waves. Each wave is built via subagent fan out to parallel process as much as possible and keep the orchestrator's window clean.
 6. **Verify on disk after every fan-out.** Long parallel runs land the big
@@ -499,7 +499,7 @@ Steps:
 2. **Point it at the closest existing thing.** "Match the shape of the
    settings page" beats three paragraphs of description.
 3. **Brainstorm.** if the feature is big enough, use the grill with docs skill. if it's fairly small and straightforward, then pitch the model your idea, get feedback, brainstorm, then ask the model to repeat back to you what it will build and what the purpose of it is. only when that reads correctly do you give it the green light. (Note/callout or something: some features deserve the full plan plan review loop, some don't, that's a judgement call.)
-4. **Subagent execution in waves.** Fan out as many subagents as possible in parallel. 
+4. **Subagent execution in waves.** Fan out as many subagents as possible in parallel.
 5. **Review with something that did not write it**, then run the gate
    yourself at the end anyway. multi model review fix loops at the end of each wave, and of the whole feature branch against mak at the end.
 
@@ -559,7 +559,7 @@ twice and I wrote the annoyance down.  [VOICE]
 **Callout — The honest caveat:**
 A human picked the eight chapters, ran a design bake-off between two
 competing prototypes of this page, and is red-penning every artifact before
-it ships. **That's the actual division of labor: agents create, but only you can decide what's worth creating and what "good" or "done" look like. 
+it ships. **That's the actual division of labor: agents create, but only you can decide what's worth creating and what "good" or "done" look like.
 
 **Section label:** Start tonight
 
