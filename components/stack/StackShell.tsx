@@ -263,11 +263,12 @@ export function StackShell() {
                 <p className="claim">Fresh context and different models are vital.</p>
                 <p className="payoff">
                   The agent that wrote the code is the worst possible reviewer of it: it is already
-                  convinced the code is good. <b>Hand the diff to something with no memory of
-                  writing it.</b> And model intelligence is spiky and uncorrelated — GPT might excel
-                  where Claude falls flat, and vice versa — so the more varied the models you throw
-                  at something, the better the output, all else being equal. Every serious workflow
-                  should include a medley of the latest frontier models.
+                  convinced the code is good.{' '}
+                  <b>Hand the diff to something with no memory of writing it.</b> And model
+                  intelligence is spiky and uncorrelated — GPT might excel where Claude falls flat,
+                  and vice versa — so the more varied the models you throw at something, the better
+                  the output, all else being equal. Every serious workflow should include a medley
+                  of the latest frontier models.
                 </p>
               </div>
               <div className="precept">
@@ -321,8 +322,8 @@ export function StackShell() {
             </div>
             <div className="callout rv">
               <span className="k">Always YOLO</span>
-              Out of the box, an agent can do some things by default and stops to ask permission
-              for everything else — every five minutes, forever.{' '}
+              Out of the box, an agent can do some things by default and stops to ask permission for
+              everything else — every five minutes, forever.{' '}
               <b>You should almost never see a permission request.</b> Modern SOTA agents are
               extremely capable, and with the rest of the setup below they can be kept from doing
               anything net-negative. So run YOLO mode — &quot;dangerously skip permissions&quot; —
@@ -452,9 +453,8 @@ export function StackShell() {
                   had several subagents research everything there is to know about getting the most
                   out of the Midjourney image model, then turned that research into a skill my
                   agents use to write excellent Midjourney prompts. This could be domain knowledge
-                  specific to your job — I built one for my expense reports — or niche knowledge
-                  the model doesn&apos;t know well: Midjourney prompting, UI/UX taste, Rust
-                  engineering.
+                  specific to your job — I built one for my expense reports — or niche knowledge the
+                  model doesn&apos;t know well: Midjourney prompting, UI/UX taste, Rust engineering.
                 </p>
               </div>
             </div>
@@ -469,15 +469,15 @@ export function StackShell() {
                 <span className="inline-code">writing-great-skills</span>
               </a>{' '}
               skill is the single best tool for creating skills. My workflow has two branches.{' '}
-              <b>Repeated workflow:</b> manually prompt the agent through the workflow step by
-              step, iterating with feedback until the output is perfect — then say &quot;use
-              writing-great-skills to turn this into a skill based on everything we just did and
-              the feedback I gave you.&quot; Every little mistake you corrected along the way gets
-              baked into the procedure. <b>Domain expertise:</b> fan out subagents to research the
-              domain exhaustively — in parallel, my Claude launches a ChatGPT Deep Research run
-              itself, in my own logged-in browser — then have the agent synthesize one master
-              research report and turn <em>that</em> into the skill. Two prompts, and your agents
-              are as good as the best humans at Blender.
+              <b>Repeated workflow:</b> manually prompt the agent through the workflow step by step,
+              iterating with feedback until the output is perfect — then say &quot;use
+              writing-great-skills to turn this into a skill based on everything we just did and the
+              feedback I gave you.&quot; Every little mistake you corrected along the way gets baked
+              into the procedure. <b>Domain expertise:</b> fan out subagents to research the domain
+              exhaustively — in parallel, my Claude launches a ChatGPT Deep Research run itself, in
+              my own logged-in browser — then have the agent synthesize one master research report
+              and turn <em>that</em> into the skill. Two prompts, and your agents are as good as the
+              best humans at Blender.
             </div>
             <DownloadCard
               href="/stack/starter-skill-pack.md"
@@ -527,10 +527,10 @@ export function StackShell() {
                   Two of the tools I use most often are ones I described in a paragraph and had an
                   agent write in an afternoon. <span className="inline-code">ask</span> pages my
                   phone and blocks until I answer, so an agent working while I&apos;m out touching
-                  grass can get one judgment call from me instead of stalling until I&apos;m back
-                  at the machine. <span className="inline-code">papercuts</span> is a complaint
-                  box: when an agent hits friction, it files the friction and keeps going. I fix
-                  the filed papercuts once a week, which means the whole environment autonomously
+                  grass can get one judgment call from me instead of stalling until I&apos;m back at
+                  the machine. <span className="inline-code">papercuts</span> is a complaint box:
+                  when an agent hits friction, it files the friction and keeps going. I fix the
+                  filed papercuts once a week, which means the whole environment autonomously
                   improves week over week.
                 </p>
               </div>
@@ -627,9 +627,7 @@ export function StackShell() {
               lede={
                 <>
                   Why use one agent when you can use ten?{' '}
-                  <em>
-                    Subagents let you hyper-optimize your main agent&apos;s context window.
-                  </em>{' '}
+                  <em>Subagents let you hyper-optimize your main agent&apos;s context window.</em>{' '}
                   Instead of your agent spending ten thousand tokens searching your codebase for
                   something, it spends twenty to spawn a subagent that goes and finds it — and
                   reports back a one-line finding.
@@ -648,9 +646,9 @@ export function StackShell() {
                 <p className="claim">Subagents in the same harness</p>
                 <p className="payoff">
                   Most major harnesses now support subagents natively. In Claude Code that means
-                  Fable can spawn Sonnet subagents to explore your codebase and report back, or
-                  send Opus to implement a big chunk of the build plan in a fresh context window.
-                  Use them for anything token-heavy that would not improve your orchestrator&apos;s
+                  Fable can spawn Sonnet subagents to explore your codebase and report back, or send
+                  Opus to implement a big chunk of the build plan in a fresh context window. Use
+                  them for anything token-heavy that would not improve your orchestrator&apos;s
                   window for the actual goal at hand.{' '}
                   <b>You keep the conclusion, not the search.</b>
                 </p>
@@ -707,8 +705,8 @@ export function StackShell() {
               lede={
                 <>
                   Contrary to popular opinion, the people who move fastest with agents are the most
-                  paranoid. <em>Paranoia is what makes speed safe.</em> Every guardrail below
-                  exists so you can stop supervising and let something run.
+                  paranoid. <em>Paranoia is what makes speed safe.</em> Every guardrail below exists
+                  so you can stop supervising and let something run.
                 </>
               }
             />
@@ -741,9 +739,9 @@ export function StackShell() {
                   and run it yourself at the end.{' '}
                   <b>Self-checks miss things that the canonical gate catches every time.</b> Pro
                   tip: have a fresh agent with a fresh context window write the gates, never your
-                  implementing agent. An implementer writing its own tests or CI is just asking
-                  for cheating. With a swarm, run the gate after every merge rather than once at
-                  the end, so a red gate names the branch that broke it.
+                  implementing agent. An implementer writing its own tests or CI is just asking for
+                  cheating. With a swarm, run the gate after every merge rather than once at the
+                  end, so a red gate names the branch that broke it.
                 </p>
               </div>
               <div className="precept">
@@ -813,9 +811,9 @@ export function StackShell() {
               <Terminal title="~/Code/trey-goff — this page" lines={SELF_BUILD_TERM} />
             </div>
             <div className="callout rv">
-              <span className="k">The honest caveat</span>A human picked the chapters, ran a
-              design bake-off between two competing prototypes of this page, and red-penned every
-              artifact before it shipped.{' '}
+              <span className="k">The honest caveat</span>A human picked the chapters, ran a design
+              bake-off between two competing prototypes of this page, and red-penned every artifact
+              before it shipped.{' '}
               <b>
                 That&apos;s the actual division of labor: agents create, but only you can decide
                 what&apos;s worth creating and what &quot;good&quot; or &quot;done&quot; look like.
