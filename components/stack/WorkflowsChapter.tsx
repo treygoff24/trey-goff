@@ -229,7 +229,7 @@ const DELEGATE_LANES: Lane[] = [
   { t: 'agent(engine="codex")  ·  authors', vendor: 'openai', cls: 'wf-l-codex' },
   { t: 'agent(engine="cursor")  ·  reviews', vendor: 'xai', cls: 'wf-l-grok' },
   { t: 'agent(engine="kimi")  ·  reviews', vendor: 'moonshot', cls: 'wf-l-kimi' },
-  { t: 'judges(engines=["claude", …])', vendor: 'anthropic', cls: 'wf-l-claude' },
+  { t: 'judge(engine="claude")', vendor: 'anthropic', cls: 'wf-l-claude' },
 ]
 
 /* The rule under each panel. Only `token` carries full amber — it is the one

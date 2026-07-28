@@ -172,7 +172,7 @@ export function StackShell() {
 
   return (
     <div id="stack-root" ref={rootRef}>
-      <a className="skip" href="#ch1">
+      <a className="skip" href="#ch1" inert={railOpen || undefined}>
         Skip to chapter one
       </a>
       <div className="scrollmeter" ref={meterRef} aria-hidden="true" />

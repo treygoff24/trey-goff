@@ -101,7 +101,7 @@ function cells(segs: Seg[], total: number): string[] {
 }
 
 const LABELS: Record<SavKey, string> = {
-  solo: 'One 200,000-token context window, more than four-fifths of it filled with repo search, log sweeping and documentation reading, leaving the actual fix a sliver and almost no headroom.',
+  solo: 'One 200,000-token context window, three-quarters of it filled with repo search, log sweeping and documentation reading — 172k of 200k used — leaving the actual fix a sliver and little headroom.',
   fanout:
     'The same 200,000-token window holding only the bug report, three short conclusions and the fix, three-quarters empty, while three small subagent windows beside it absorb the repo search, the log sweep and the documentation reading and pipe one thin conclusion each back up into it.',
 }

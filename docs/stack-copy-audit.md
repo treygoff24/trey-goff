@@ -1,3 +1,5 @@
+> **SUPERSEDED 2026-07-28.** This was the working document for Trey's copy-edit pass; every edit here has been ported to source and then revised further by a six-lane review. The page source (components/stack/) is now canonical — do not edit from this file.
+
 # /stack — full copy audit
 
 Every piece of written content on the page, in reading order, plus the four
