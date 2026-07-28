@@ -110,10 +110,11 @@ export function StackShell() {
     if (!root) return
     const sections = Array.from(root.querySelectorAll<HTMLElement>('.chapter'))
     let ticking = false
+    let frame = 0
     const onScroll = () => {
       if (ticking) return
       ticking = true
-      requestAnimationFrame(() => {
+      frame = requestAnimationFrame(() => {
         ticking = false
         const doc = document.documentElement
         const max = doc.scrollHeight - window.innerHeight
@@ -134,6 +135,7 @@ export function StackShell() {
     return () => {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
+      cancelAnimationFrame(frame)
     }
   }, [])
 

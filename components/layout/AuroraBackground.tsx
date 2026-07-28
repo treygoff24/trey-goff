@@ -155,7 +155,8 @@ export function AuroraBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const reducedMotion = useReducedMotion()
   const pathname = usePathname()
-  const disabled = pathname === '/machine' || pathname?.startsWith('/stack') === true
+  const disabled =
+    pathname === '/machine' || pathname === '/stack' || pathname?.startsWith('/stack/') === true
 
   useEffect(() => {
     if (disabled) return

@@ -44,7 +44,7 @@ export function TopNav() {
   }, [pathname])
 
   // /stack is an immersive field-manual route with its own chapter rail.
-  if (pathname?.startsWith('/stack')) return null
+  if (pathname === '/stack' || pathname?.startsWith('/stack/')) return null
 
   return (
     <header

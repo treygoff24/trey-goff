@@ -94,6 +94,12 @@ export function Terminal({
     if (autoplay && !playedRef.current) play()
   }, [autoplay, play])
 
+  // If the OS reduced-motion preference flips mid-playback, stop typing and
+  // settle to the complete transcript immediately.
+  useEffect(() => {
+    if (reduced && playedRef.current) play()
+  }, [reduced, play])
+
   const visRef = useOnceVisible<HTMLDivElement>(() => {
     if (!playedRef.current) play()
   })
