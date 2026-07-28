@@ -10,6 +10,7 @@ import {
 } from '@/components/stack/data'
 import { useReducedMotion, useReveal } from '@/components/stack/hooks'
 import { Terminal } from '@/components/stack/Terminal'
+import { WorktreesSection } from '@/components/stack/WorktreesSection'
 import {
   ContextFigure,
   CopyPromptBlock,
@@ -680,13 +681,12 @@ export function StackShell() {
               name="fusion-council-skill.md"
               desc="The council, as a skill: propose → critique → defend → synthesize → judge across model vendors. Bring your own multi-model plumbing, or have your agent build it."
             />
+            <WorktreesSection />
             <div className="callout rv">
               <span className="k">Learned the hard way</span>
               Long parallel runs frequently land the meaty edits and then stop just short of the
               trailing cleanup.{' '}
-              <b>Never trust a subagent&apos;s &quot;done&quot; summary — check the disk. </b>And
-              brief every parallel writer never to run a tree-wide git command: one agent&apos;s
-              tidy-up once stashed three siblings&apos; uncommitted work mid-flight.
+              <b>Never trust a subagent&apos;s &quot;done&quot; summary — check the disk.</b>
             </div>
             <Pager
               prev={['#ch4', '04 · Agents need tools']}
@@ -719,7 +719,8 @@ export function StackShell() {
                   A tiny occupancy tool that answers &quot;is anyone working here?&quot; with an
                   exit code — <b>and a rule that a busy repo means stop, not write anyway</b> —
                   removes an entire class of 2am mystery. The blueprint for building your own is in
-                  agent-build.md, back in chapter four.
+                  agent-build.md, back in chapter four. The stronger version is prevention, not
+                  detection: give each writer its own worktree and the collision never happens.
                 </p>
               </div>
               <div className="precept">
@@ -733,7 +734,8 @@ export function StackShell() {
                   <b>Self-checks miss things that the canonical gate catches every time.</b> Pro
                   tip: have a fresh agent with a fresh context window write the gates, never your
                   implementing agent. An implementer writing its own tests or CI is just asking
-                  for cheating.
+                  for cheating. With a swarm, run the gate after every merge rather than once at
+                  the end, so a red gate names the branch that broke it.
                 </p>
               </div>
               <div className="precept">
