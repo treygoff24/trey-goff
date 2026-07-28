@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import '@/components/stack/subagent-savings.css'
 import { useOnceVisible, useReducedMotion, useTimeouts } from '@/components/stack/hooks'
 
@@ -71,9 +71,24 @@ const CAPS: Record<SavKey, { lead: string; body: string; tail?: string }> = {
   },
   fanout: {
     lead: 'Same bug. Same searching.',
-    body: ' The repo search still happened. The log sweep still happened. Ten thousand tokens of it — in three windows you throw away when they are done. What comes back is six lines each. ',
+    body: ' The repo search still happened. The log sweep still happened. Every token of it — spent in three windows you throw away when they are done. What comes back is six lines each. ',
     tail: 'The orchestrator writes the patch with three-quarters of its window still empty.',
   },
+}
+
+/* The legend must name every colour on screen in the current state, and in
+   the fanned state three of them live only in the satellite windows. */
+function legendSegs(key: SavKey): Seg[] {
+  const out = MAIN[key].segs.filter(([cls]) => cls !== 's-free')
+  if (key === 'fanout') {
+    for (const sat of SATELLITES) {
+      for (const seg of sat.segs) {
+        if (seg[0] !== 's-free' && !out.some(([cls]) => cls === seg[0])) out.push(seg)
+      }
+    }
+  }
+  out.push(['s-free', 0, 'Headroom'])
+  return out
 }
 
 function cells(segs: Seg[], total: number): string[] {
@@ -111,6 +126,11 @@ export function SubagentSavings() {
     schedule(() => paint('fanout'), 2600)
   }, 0.4)
 
+  // The nudge can already be in flight when the motion preference flips.
+  useEffect(() => {
+    if (reduced) clearAll()
+  }, [reduced, clearAll])
+
   const main = MAIN[mode]
   const mainCells = cells(main.segs, MAIN_CELLS)
   const fanned = mode === 'fanout'
@@ -119,7 +139,7 @@ export function SubagentSavings() {
     <div className="sfig rv" ref={figRef}>
       <div className="sfig-head">
         <span className="t">
-          Fixing one bug · <b>the same total work</b> · every cell ≈ 500 tokens
+          Fixing one bug · <b>the same total work</b> · one 200,000-token orchestrator
         </span>
         <div className="sfig-toggle" role="group" aria-label="Where the searching happens">
           <button type="button" aria-pressed={!fanned} onClick={() => paint('solo')}>
@@ -181,7 +201,7 @@ export function SubagentSavings() {
       </div>
 
       <div className="sfig-legend">
-        {main.segs.map(([cls, , label]) => (
+        {legendSegs(mode).map(([cls, , label]) => (
           <span key={cls + label}>
             <i className={cls} />
             {label}
