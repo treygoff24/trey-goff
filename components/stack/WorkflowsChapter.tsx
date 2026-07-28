@@ -149,14 +149,7 @@ function SpineSvg({ layout }: { layout: SpineLayout }) {
         const lastChip = stage.y + HEAD_OFFSET + (stage.chips.length - 1) * CHIP_PITCH
         return (
           <g key={stage.label}>
-            <rect
-              className="wf-band"
-              x={bandX}
-              y={stage.y}
-              width={bandW}
-              height={stage.h}
-              rx={6}
-            />
+            <rect className="wf-band" x={bandX} y={stage.y} width={bandW} height={stage.h} rx={6} />
             <circle className="wf-tick" cx={spineX} cy={mid} r={4} />
             {stage.chips.map((chip, j) => {
               const cy = stage.y + HEAD_OFFSET + j * CHIP_PITCH
@@ -212,10 +205,10 @@ function WorkflowSpine() {
       </div>
       <p className="wf-cap">
         <b>Left is the whole harness. </b>The diagram is the same three lines, drawn: one extractor,
-        one verifier per claim, one reporter. The control flow is ordinary JavaScript — the loop, the
-        fan-out and the ordering are deterministic, decided by the script rather than improvised by a
-        model mid-run. Only the boxes on the right are model calls, and each one gets its own clean
-        window.
+        one verifier per claim, one reporter. The control flow is ordinary JavaScript — the loop,
+        the fan-out and the ordering are deterministic, decided by the script rather than improvised
+        by a model mid-run. Only the boxes on the right are model calls, and each one gets its own
+        clean window.
       </p>
     </div>
   )
@@ -359,19 +352,16 @@ function VersusFigure() {
       </div>
       <ul className="wf-badges">
         <li>
-          <span className="k">resume</span>{' '}
-          Kill it, resume it. Finished agents replay from the
+          <span className="k">resume</span> Kill it, resume it. Finished agents replay from the
           journal instead of re-running; children still in flight get adopted.
         </li>
         <li>
-          <span className="k">gate</span>{' '}
-          <span className="inline-code">gate=True</span>{' '}
-          stops the whole tree, drains what&apos;s in flight, and waits for{' '}
+          <span className="k">gate</span> <span className="inline-code">gate=True</span> stops the
+          whole tree, drains what&apos;s in flight, and waits for{' '}
           <span className="inline-code">workflow approve</span>.
         </li>
         <li>
-          <span className="k">detached</span>{' '}
-          A supervisor process owns the run, so closing the
+          <span className="k">detached</span> A supervisor process owns the run, so closing the
           laptop lid is not an interruption. <span className="inline-code">--budget N</span> caps
           how many child runs it may ever spend.
         </li>
