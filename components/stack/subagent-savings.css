@@ -3,7 +3,7 @@
    figure: same cell aesthetic, same toggle, but the point is that
    the noisy segments move OUT of the main window and into three
    throwaway ones. Scoped under #stack-root like the rest of /stack;
-   colour classes carry an s- prefix so they never collide with the
+   color classes carry an s- prefix so they never collide with the
    c- cells in stack.css regardless of stylesheet order.
    ───────────────────────────────────────────────────────────── */
 

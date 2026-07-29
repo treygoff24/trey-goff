@@ -249,7 +249,7 @@
 }
 
 /* Vendor lanes — the visual argument of the second figure. The left panel
-   repeats one colour four times; the right panel is four different ones.
+   repeats one color four times; the right panel is four different ones.
    One convention only: solid strokes carry flow and are coloured by vendor;
    dashes are reserved for rails and gates, which are boundaries, not lanes. */
 #stack-root .wf-l-claude.wf-chip,

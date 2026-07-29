@@ -2,7 +2,7 @@
    /stack — chapter 09, the Foundry explorer.
    Scoped under #stack-root and built only from stack.css's own
    custom properties. Nesting is carried by inset + rail weight
-   rather than by colour, so the depth argument survives both the
+   rather than by color, so the depth argument survives both the
    mobile variant and reduced motion.
    ───────────────────────────────────────────────────────────── */
 
@@ -290,7 +290,7 @@
   color: var(--sk-text-3);
   white-space: nowrap;
 }
-/* Amber is the discipline colour on this page and belongs to caps and
+/* Amber is the discipline color on this page and belongs to caps and
    gates alone — nothing decorative ever borrows it. */
 #stack-root .fx-cap {
   color: var(--sk-amber);

@@ -83,7 +83,7 @@
   fill: var(--sk-text-3);
 }
 
-/* Lane state colouring: live = writing, merging = in the gate,
+/* Lane state coloring: live = writing, merging = in the gate,
    merged = landed, dropped = removed without merging. */
 #stack-root .wt .wt-lane.live .node,
 #stack-root .wt .wt-lane.merging .node {
