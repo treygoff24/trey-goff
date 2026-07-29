@@ -58,7 +58,9 @@
   margin: 1.5rem 0 0;
   border: 1px solid var(--sk-border-1);
   border-radius: 10px;
-  overflow: hidden;
+  /* `clip`, not `hidden`: hidden makes this a scroll container and silently
+     kills position:sticky on the detail card. */
+  overflow: clip;
   background:
     radial-gradient(120% 90% at 4% 0%, rgba(111, 214, 154, 0.09), transparent 58%),
     radial-gradient(90% 70% at 96% 4%, rgba(125, 211, 252, 0.05), transparent 60%),
@@ -303,6 +305,9 @@
 }
 #stack-root .fx-count i {
   font-style: normal;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--sk-text-3);
 }
 #stack-root .fx-fams {
@@ -498,6 +503,8 @@
 #stack-root .fx-d-fam.fx-fam-human {
   background: var(--sk-text-2);
 }
+/* Outline chips rather than solid blocks — a filled swatch outweighs the
+   node it describes and pulls the eye out of the map. */
 #stack-root .fx-d-fam {
   font-family: var(--sk-mono);
   font-size: 9.6px;
@@ -505,7 +512,21 @@
   text-transform: uppercase;
   padding: 0.2rem 0.45rem;
   border-radius: 3px;
-  color: var(--sk-bg-0);
+  border: 1px solid currentColor;
+  background: none;
+}
+#stack-root .fx-d-fam.fx-fam-anthropic {
+  color: var(--sk-accent);
+}
+#stack-root .fx-d-fam.fx-fam-openai {
+  color: var(--sk-sky);
+}
+#stack-root .fx-d-fam.fx-fam-xai {
+  color: var(--sk-violet);
+}
+#stack-root .fx-d-fam.fx-fam-human {
+  color: var(--sk-text-2);
+  background: none;
 }
 #stack-root .fx-rest-k {
   margin: 0 0 0.55rem;
@@ -603,6 +624,17 @@
 @media (max-width: 620px) {
   #stack-root .fx-readout {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  /* Five stats at two-up would otherwise cost most of a phone screen before
+     the map starts. */
+  #stack-root .fx-stat {
+    padding: 0.65rem 0.7rem 0.7rem;
+  }
+  #stack-root .fx-stat-v {
+    font-size: 1.1rem;
+  }
+  #stack-root .fx-stat-n {
+    font-size: 0.7rem;
   }
   #stack-root .fx-stat {
     border-left: 1px solid var(--sk-border-1);

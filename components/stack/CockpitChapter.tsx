@@ -498,6 +498,9 @@ export function CockpitChapter() {
             <p>{it.line}</p>
           </li>
         ))}
+        {/* Completes the final row's rule so the strip closes on a full-width
+            hairline instead of a ragged one. */}
+        <li className="cp-fill" aria-hidden="true" />
       </ul>
 
       <p className="section-label">The loop</p>
@@ -546,6 +549,7 @@ export function CockpitChapter() {
             <p>{h.body}</p>
           </li>
         ))}
+        <li className="cp-fill" aria-hidden="true" />
       </ul>
 
       <div className="callout rv">

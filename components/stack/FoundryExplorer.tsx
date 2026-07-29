@@ -320,6 +320,15 @@ const BY_ID = new Map(FLAT.map((f) => [f.node.id, f]))
 
 const TOTAL_AGENTS = FLAT.reduce((sum, f) => sum + f.node.agents * (f.inWave ? WAVE_REPEAT : 1), 0)
 const MAX_DEPTH = FLAT.reduce((m, f) => Math.max(m, f.depth), 0)
+/** running total of agent runs after each stage, for the dispatch readout */
+const CUMULATIVE = FLAT.reduce<number[]>((acc, f) => {
+  const prev = acc.length > 0 ? (acc[acc.length - 1] ?? 0) : 0
+  acc.push(prev + f.node.agents * (f.inWave ? WAVE_REPEAT : 1))
+  return acc
+}, [])
+
+const STEP_MS = 260
+
 const STAGE_COUNT = FLAT.length
 const LOOP_COUNT = FLAT.filter((f) => f.node.cap).length
 
@@ -478,7 +487,7 @@ function NodeButton({
         {node.agents > 0 ? (
           <span className="fx-count">
             {node.agents}
-            <i aria-hidden="true"> ×</i>
+            <i> {node.agents === 1 ? 'run' : 'runs'}</i>
           </span>
         ) : null}
         <span className="fx-fams" aria-hidden="true">
@@ -620,24 +629,28 @@ function DetailCard({ entry, onDismiss }: { entry: Flat | null; onDismiss: () =>
 export function FoundryExplorer() {
   const reduced = useReducedMotion()
   const [selected, setSelected] = useState<string | null>('waves')
-  const [liveId, setLiveId] = useState<string | null>(null)
-  const [running, setRunning] = useState(false)
-  const [dispatched, setDispatched] = useState(TOTAL_AGENTS)
+  /* One cursor, one timer, advanced by an effect. A fan of 24 queued
+     timeouts is what this used to be, and a dropped tail timeout left the
+     sweep stuck mid-run with no way back to rest. */
+  const [step, setStep] = useState<number | null>(null)
   const mapRef = useRef<HTMLDivElement | null>(null)
   const detailRef = useRef<HTMLDivElement | null>(null)
-  const timers = useRef<ReturnType<typeof setTimeout>[]>([])
 
-  const clearTimers = useCallback(() => {
-    timers.current.forEach(clearTimeout)
-    timers.current = []
-  }, [])
-  useEffect(() => clearTimers, [clearTimers])
+  useEffect(() => {
+    if (step === null) return
+    const t = setTimeout(() => setStep(step + 1 > FLAT.length ? null : step + 1), STEP_MS)
+    return () => clearTimeout(t)
+  }, [step])
+
+  const running = step !== null
+  const liveId = step !== null && step < FLAT.length ? (FLAT[step]?.node.id ?? null) : null
+  const dispatched =
+    step === null ? TOTAL_AGENTS : (CUMULATIVE[Math.min(step, FLAT.length - 1)] ?? 0)
 
   const doneIds = useMemo(() => {
-    if (!running) return new Set(FLAT.map((f) => f.node.id))
-    const idx = FLAT.findIndex((f) => f.node.id === liveId)
-    return new Set(FLAT.slice(0, Math.max(idx, 0)).map((f) => f.node.id))
-  }, [running, liveId])
+    if (step === null) return new Set(FLAT.map((f) => f.node.id))
+    return new Set(FLAT.slice(0, step).map((f) => f.node.id))
+  }, [step])
 
   const onSelect = useCallback((id: string) => {
     setSelected(id)
@@ -655,32 +668,7 @@ export function FoundryExplorer() {
     }
   }, [selected])
 
-  const run = useCallback(() => {
-    clearTimers()
-    setRunning(true)
-    setDispatched(0)
-    let acc = 0
-    FLAT.forEach((f, i) => {
-      acc += f.node.agents * (f.inWave ? WAVE_REPEAT : 1)
-      const total = acc
-      timers.current.push(
-        setTimeout(() => {
-          setLiveId(f.node.id)
-          setDispatched(total)
-        }, i * 260),
-      )
-    })
-    timers.current.push(
-      setTimeout(
-        () => {
-          setLiveId(null)
-          setRunning(false)
-          setDispatched(TOTAL_AGENTS)
-        },
-        FLAT.length * 260 + 500,
-      ),
-    )
-  }, [clearTimers])
+  const run = useCallback(() => setStep(0), [])
 
   /* Scoped to the figure rather than the window: Escape belongs to whoever
      holds focus, and a global listener would close this card from anywhere
