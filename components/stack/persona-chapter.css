@@ -1,0 +1,359 @@
+/* ─────────────────────────────────────────────────────────────
+   Chapter 11 — "The persona". Everything here is psn-* namespaced
+   and scoped under #stack-root; the Why-tho sheet is portalled
+   into #stack-root too, so the panel-side figures inherit both
+   the --sk-* tokens and these rules.
+   ───────────────────────────────────────────────────────────── */
+
+/* ── The brief, quoted ──────────────────────────────────── */
+#stack-root .psn-brief {
+  margin: 1.8rem 0;
+  padding: 1.3rem 1.5rem;
+  border: 1px solid var(--sk-border-1);
+  border-left: 2px solid var(--sk-accent);
+  border-radius: 0 8px 8px 0;
+  background: linear-gradient(100deg, rgba(151, 232, 187, 0.055), transparent 72%);
+}
+#stack-root .psn-brief p {
+  font-family: var(--sk-serif);
+  font-size: 1.02rem;
+  line-height: 1.66;
+  color: var(--sk-text-1);
+  margin: 0 0 0.9em;
+}
+#stack-root .psn-brief footer {
+  font-family: var(--sk-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+}
+
+/* ── Figure shell for the chapter body ──────────────────── */
+#stack-root .psn-fig {
+  margin: 2rem 0 2.2rem;
+}
+/* Running prose, not a label — mono label scale at 375 characters was
+   unreadable next to ch10's 0.9rem captions. */
+#stack-root .psn-fig figcaption {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--sk-border-1);
+  font-size: 0.9rem;
+  line-height: 1.66;
+  max-width: 44rem;
+  color: var(--sk-text-3);
+}
+
+/* ── Figure 1 · two evidence streams ────────────────────── */
+#stack-root .psn-streams {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(0.8rem, 2vw, 1.4rem);
+  align-items: stretch;
+}
+#stack-root .psn-stream {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(0.9rem, 2vw, 1.25rem);
+  border: 1px solid var(--sk-border-1);
+  border-radius: 8px;
+  background: rgba(4, 19, 12, 0.5);
+}
+#stack-root .psn-stream.psn-trusted {
+  border-color: var(--sk-border-2);
+}
+#stack-root .psn-stream-head {
+  margin-bottom: 1rem;
+}
+#stack-root .psn-kind {
+  display: block;
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+  margin-bottom: 0.45rem;
+}
+#stack-root .psn-stream-head h4 {
+  margin: 0;
+  font-family: var(--sk-serif);
+  font-weight: 500;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+  color: var(--sk-text-1);
+}
+#stack-root .psn-cells {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+#stack-root .psn-cell {
+  padding: 0.6rem 0.7rem;
+  border-radius: 5px;
+  border-left: 2px solid var(--sk-border-1);
+  background: var(--sk-surface-1);
+}
+#stack-root .psn-guarded .psn-cell {
+  border-left-color: var(--sk-rose);
+}
+#stack-root .psn-trusted .psn-cell {
+  border-left-color: var(--sk-warm);
+}
+#stack-root .psn-frag {
+  display: block;
+  font-family: var(--sk-mono);
+  font-size: 0.61rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sk-text-2);
+  margin-bottom: 0.3rem;
+}
+#stack-root .psn-implies {
+  display: block;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: var(--sk-text-3);
+}
+#stack-root .psn-reads {
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px dashed var(--sk-border-1);
+}
+#stack-root .psn-reads-k {
+  display: block;
+  font-family: var(--sk-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+  margin-bottom: 0.35rem;
+}
+#stack-root .psn-reads-v {
+  display: block;
+  font-family: var(--sk-serif);
+  font-size: 0.98rem;
+  line-height: 1.4;
+  color: var(--sk-text-1);
+}
+#stack-root .psn-guarded .psn-reads-v {
+  color: var(--sk-rose);
+}
+#stack-root .psn-trusted .psn-reads-v {
+  color: var(--sk-accent);
+}
+
+@media (max-width: 640px) {
+  #stack-root .psn-streams {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ── Figure 2 · hypothesis reweighting (panel side) ─────── */
+#stack-root .psn-episodes {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(0.9rem, 2.4vw, 1.5rem);
+}
+#stack-root .psn-episode {
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--sk-border-1);
+  border-radius: 6px;
+  background: var(--sk-surface-1);
+}
+#stack-root .psn-frame {
+  margin: 0 0 0.9rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--sk-text-1);
+}
+#stack-root .psn-hyps {
+  list-style: none;
+  margin: 0 0 0.9rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+#stack-root .psn-hyps li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 1.1rem;
+  align-items: end;
+  gap: 0.4rem;
+}
+#stack-root .psn-hyp-n {
+  grid-column: 1 / -1;
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  line-height: 1.5;
+  color: var(--sk-text-3);
+}
+#stack-root .psn-hyp-track {
+  position: relative;
+  display: block;
+  height: 14px;
+  border-radius: 3px;
+  background: rgba(232, 243, 236, 0.05);
+  overflow: hidden;
+}
+#stack-root .psn-hyp-after {
+  position: absolute;
+  left: 0;
+  top: 3px;
+  display: block;
+  height: 8px;
+  border-radius: 3px;
+}
+/* The prior weight is a tick drawn over the new bar, not a ghost behind it —
+   when the weight rises the bar would otherwise swallow it entirely. */
+#stack-root .psn-hyp-before {
+  position: absolute;
+  top: 0;
+  display: block;
+  width: 2px;
+  height: 14px;
+  margin-left: -1px;
+  background: var(--sk-text-2);
+}
+#stack-root .psn-hyp-after.up {
+  background: var(--sk-amber);
+}
+#stack-root .psn-hyp-after.down {
+  background: var(--sk-warm);
+}
+#stack-root .psn-hyp-d {
+  font-family: var(--sk-mono);
+  font-size: 0.68rem;
+  line-height: 1;
+  text-align: right;
+}
+#stack-root .psn-hyp-d.up {
+  color: var(--sk-amber);
+}
+#stack-root .psn-hyp-d.down {
+  color: var(--sk-warm);
+}
+#stack-root .psn-outcome {
+  margin: 0;
+  padding-top: 0.7rem;
+  border-top: 1px dashed var(--sk-border-1);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--sk-text-2);
+}
+
+@media (max-width: 620px) {
+  #stack-root .psn-episodes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ── Figure 3 · the conceptual map ──────────────────────── */
+#stack-root .psn-field {
+  fill: rgba(232, 243, 236, 0.03);
+  stroke: var(--sk-border-1);
+  stroke-width: 1;
+  stroke-dasharray: 3 4;
+}
+#stack-root .psn-region {
+  stroke-width: 1;
+}
+#stack-root .psn-good {
+  fill: rgba(151, 232, 187, 0.1);
+  stroke: var(--sk-border-2);
+}
+#stack-root .psn-wary {
+  fill: rgba(248, 113, 113, 0.09);
+  stroke: rgba(248, 113, 113, 0.32);
+}
+#stack-root .psn-region-t,
+#stack-root .psn-region-s,
+#stack-root .psn-arrow-t,
+#stack-root .psn-origin-t,
+#stack-root .psn-map-kick {
+  font-family: var(--sk-mono);
+}
+#stack-root .psn-region-t {
+  font-size: 12px;
+  fill: var(--sk-text-1);
+}
+#stack-root .psn-region-s {
+  font-size: 11px;
+  fill: var(--sk-text-3);
+}
+#stack-root .psn-arrow-t {
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  fill: var(--sk-text-2);
+}
+#stack-root .psn-origin-t,
+#stack-root .psn-map-kick {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  fill: var(--sk-text-3);
+}
+#stack-root .psn-origin {
+  fill: var(--sk-text-1);
+  stroke: var(--sk-bg-1);
+  stroke-width: 2;
+}
+#stack-root .psn-arrow {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
+}
+#stack-root .psn-arrow-good {
+  stroke: var(--sk-accent);
+}
+#stack-root .psn-arrow-wary {
+  stroke: var(--sk-rose);
+}
+#stack-root .psn-head-good {
+  fill: var(--sk-accent);
+}
+#stack-root .psn-head-wary {
+  fill: var(--sk-rose);
+}
+
+/* ── Honesty aside inside the panel ─────────────────────── */
+#stack-root .psn-aside {
+  margin: 1.6rem 0;
+  padding: 1.1rem 1.25rem;
+  border: 1px solid var(--sk-border-1);
+  border-left: 2px solid var(--sk-amber);
+  border-radius: 0 6px 6px 0;
+  background: rgba(251, 191, 36, 0.045);
+}
+#stack-root .psn-aside h4 {
+  margin: 0 0 0.8rem;
+  font-family: var(--sk-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sk-amber);
+}
+#stack-root .psn-aside p {
+  margin: 0 0 0.85em;
+  font-size: 0.9rem;
+  line-height: 1.62;
+  color: var(--sk-text-2);
+}
+#stack-root .psn-aside p:last-child {
+  margin-bottom: 0;
+}
+#stack-root .psn-aside b {
+  color: var(--sk-text-1);
+  font-weight: 500;
+}
+
+/* Same measure discipline as the rest of the page: direct body paragraphs and
+   the prompt blockquote cap at ~66 characters per line. */
+#stack-root #ch11 > p.rv,
+#stack-root #ch11 > blockquote {
+  max-width: 44rem;
+}

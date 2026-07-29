@@ -10,6 +10,7 @@ const navItems = [
   { href: '/projects', label: 'Projects' },
   { href: '/library', label: 'Library' },
   { href: '/machine', label: 'Machine' },
+  { href: '/stack', label: 'The Setup' },
   { href: '/resident', label: 'Resident' },
   { href: '/about', label: 'About' },
 ]
@@ -42,6 +43,9 @@ export function TopNav() {
     window.addEventListener('scroll', update, { passive: true })
     return () => window.removeEventListener('scroll', update)
   }, [pathname])
+
+  // /stack is an immersive field-manual route with its own chapter rail.
+  if (pathname === '/stack' || pathname?.startsWith('/stack/')) return null
 
   return (
     <header

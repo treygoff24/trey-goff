@@ -23,6 +23,7 @@ const quickNav = [
   { href: '/topics', label: 'Topics' },
   { href: '/machine', label: 'Machine' },
   { href: '/resident', label: 'Resident' },
+  { href: '/stack', label: 'The Setup' },
 ]
 
 export function Footer() {

@@ -1,0 +1,433 @@
+/* ─────────────────────────────────────────────────────────────
+   /stack — "The cockpit": standardized repos, hooks, memory.
+   Scoped under #stack-root and built only from stack.css's own
+   custom properties, so the chapter inherits the field manual's
+   palette, type ramp and motion easing without redefining any.
+   ───────────────────────────────────────────────────────────── */
+
+/* ── The instrument set ─────────────────────────────────── */
+#stack-root .cp-instruments {
+  list-style: none;
+  margin: 1.8rem 0 0;
+  padding: 0;
+  display: grid;
+  /* Explicit track counts rather than auto-fit: the filler below has to span
+     exactly the cells the five cards leave empty, and only a known column
+     count makes that span knowable. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--sk-border-1);
+}
+#stack-root .cp-instruments li {
+  padding: 1.05rem 1.3rem 1.2rem 0;
+  border-bottom: 1px solid var(--sk-border-1);
+}
+#stack-root .cp-inst-name {
+  display: block;
+  font-family: var(--sk-mono);
+  font-size: 0.78rem;
+  color: var(--sk-accent);
+}
+#stack-root .cp-inst-kind {
+  display: block;
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+  margin-top: 0.35rem;
+}
+#stack-root .cp-instruments p {
+  margin: 0.6rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.62;
+  color: var(--sk-text-3);
+}
+#stack-root .cp-instruments b {
+  color: var(--sk-text-1);
+  font-weight: 500;
+}
+/* Occupies every empty cell of the last row so the closing hairline runs the
+   full width of the strip. Contributes nothing but its own border, and its
+   span is restated wherever the track count changes. */
+#stack-root .cp-instruments .cp-fill,
+#stack-root .cp-hooks .cp-fill {
+  padding: 0;
+  border-bottom: 1px solid var(--sk-border-1);
+  grid-column: span 1;
+}
+
+/* ── Figure 1 · the loop ────────────────────────────────── */
+#stack-root .cp-loop {
+  margin-top: 1.6rem;
+  border: 1px solid var(--sk-border-1);
+  border-radius: 8px;
+  padding: clamp(1rem, 2.4vw, 1.6rem);
+  background:
+    radial-gradient(110% 130% at 6% 0%, rgba(111, 214, 154, 0.07), transparent 62%),
+    rgba(6, 26, 16, 0.5);
+}
+#stack-root .cp-loop svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+/* Capped so the ring stops scaling once its 12px labels reach roughly the
+   size of body copy — past that the figure starts shouting over the prose. */
+#stack-root .cp-loop-wide svg {
+  max-width: 40rem;
+  margin: 0 auto;
+}
+/* One figure, two geometries: the ring becomes a column on phones rather than
+   a shrunken ring whose labels fall under the type floor. */
+#stack-root .cp-loop-narrow {
+  display: none;
+}
+
+#stack-root .cp-loop .cp-ring {
+  fill: none;
+  stroke: var(--sk-border-1);
+  stroke-width: 1.1;
+  stroke-dasharray: 3 5;
+}
+#stack-root .cp-loop .cp-chev {
+  fill: none;
+  stroke: var(--sk-warm);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.75;
+}
+#stack-root .cp-loop .cp-ring-hub {
+  fill: var(--sk-text-2);
+  font-family: var(--sk-serif);
+  font-size: 16px;
+}
+#stack-root .cp-loop .cp-ring-sub {
+  fill: var(--sk-text-3);
+  font-family: var(--sk-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+#stack-root .cp-loop .cp-node rect {
+  fill: rgba(4, 19, 12, 0.95);
+  stroke: var(--sk-border-1);
+  stroke-width: 1;
+  transition:
+    fill 260ms var(--sk-ease),
+    stroke 260ms var(--sk-ease);
+}
+#stack-root .cp-loop .cp-node text {
+  fill: var(--sk-text-2);
+  font-family: var(--sk-mono);
+  font-size: 12px;
+  transition: fill 260ms var(--sk-ease);
+}
+#stack-root .cp-loop .cp-node.on rect {
+  fill: rgba(151, 232, 187, 0.13);
+  stroke: var(--sk-accent);
+}
+#stack-root .cp-loop .cp-node.on text {
+  fill: var(--sk-text-1);
+}
+
+/* ── Tour control ───────────────────────────────────────── */
+#stack-root .cp-ctl {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+  margin-top: 1.4rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--sk-border-1);
+}
+#stack-root .cp-ctl-btn {
+  min-height: 2.4rem;
+  padding: 0 1rem;
+  font-size: 0.64rem;
+  flex: none;
+}
+#stack-root .cp-ctl-btn:focus-visible {
+  outline: 2px solid var(--sk-accent);
+  outline-offset: 2px;
+}
+#stack-root .cp-ctl-note {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--sk-text-3);
+}
+
+/* Five tabs never fit one row at readable size. A three-track grid gives every
+   tab the same width in both rows and echoes the instrument strip above it;
+   flex sizing made row one and row two disagree about how wide a tab is. */
+#stack-root .cp-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.4rem;
+  margin-top: 0.9rem;
+}
+#stack-root .cp-tab {
+  appearance: none;
+  display: inline-flex;
+  align-items: baseline;
+  min-width: 0;
+  gap: 0.5rem;
+  min-height: 2.4rem;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--sk-border-1);
+  border-radius: 5px;
+  background: var(--sk-surface-1);
+  color: var(--sk-text-3);
+  font-family: var(--sk-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition:
+    background 200ms var(--sk-ease),
+    border-color 200ms var(--sk-ease),
+    color 200ms var(--sk-ease);
+}
+#stack-root .cp-tab:hover {
+  color: var(--sk-text-1);
+  border-color: var(--sk-border-2);
+}
+#stack-root .cp-tab.on {
+  background: rgba(151, 232, 187, 0.13);
+  border-color: var(--sk-accent);
+  color: var(--sk-text-1);
+}
+#stack-root .cp-tab:focus-visible {
+  outline: 2px solid var(--sk-accent);
+  outline-offset: 2px;
+}
+#stack-root .cp-tab-n {
+  color: var(--sk-warm);
+}
+
+/* Every panel occupies the same grid cell, so the tallest one reserves the
+   height and switching stations never shifts the page. */
+#stack-root .cp-stack {
+  display: grid;
+  margin-top: 1rem;
+  border-top: 1px solid var(--sk-border-1);
+  padding-top: 1rem;
+}
+#stack-root .cp-panel {
+  grid-area: 1 / 1;
+}
+#stack-root .cp-panel:not(.on) {
+  visibility: hidden;
+  pointer-events: none;
+}
+#stack-root .cp-panel h4 {
+  font-family: var(--sk-serif);
+  font-weight: 500;
+  font-size: 1.12rem;
+  letter-spacing: -0.012em;
+  color: var(--sk-text-1);
+  margin: 0 0 0.45rem;
+}
+#stack-root .cp-panel p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.68;
+  color: var(--sk-text-2);
+}
+#stack-root .cp-panel b {
+  color: var(--sk-text-1);
+  font-weight: 500;
+}
+#stack-root .cp-cap {
+  margin: 1.2rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--sk-border-1);
+  font-size: 0.92rem;
+  line-height: 1.66;
+  color: var(--sk-text-3);
+}
+#stack-root .cp-cap b {
+  color: var(--sk-text-1);
+  font-weight: 500;
+}
+
+/* ── Figure 2 · the hooks ───────────────────────────────── */
+#stack-root .cp-hooks {
+  list-style: none;
+  margin: 1.7rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--sk-border-1);
+}
+#stack-root .cp-hooks li {
+  padding: 1.1rem 1.4rem 1.25rem 0;
+  border-bottom: 1px solid var(--sk-border-1);
+}
+#stack-root .cp-hook-ev {
+  display: inline-block;
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sk-warm);
+  border: 1px solid var(--sk-border-1);
+  border-radius: 3px;
+  padding: 0.18rem 0.45rem;
+  background: var(--sk-surface-1);
+}
+#stack-root .cp-hooks h4 {
+  font-family: var(--sk-serif);
+  font-weight: 500;
+  font-size: 1.1rem;
+  letter-spacing: -0.012em;
+  color: var(--sk-text-1);
+  margin: 0.6rem 0 0.4rem;
+}
+#stack-root .cp-hooks p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.64;
+  color: var(--sk-text-3);
+}
+#stack-root .cp-hooks b {
+  color: var(--sk-text-1);
+  font-weight: 500;
+}
+
+/* ── Figure 3 · the two memory layers ───────────────────── */
+#stack-root .cp-mem {
+  margin-top: 1.6rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: clamp(1rem, 2.4vw, 1.8rem);
+  /* Each card ends where its argument ends. Stretching them to a shared height
+     bought symmetry at the price of a large dead panel under the shorter one. */
+  align-items: start;
+}
+/* The connector still spans the taller of the two, so the harvest still reads
+   as running between them rather than floating beside the shorter card. */
+#stack-root .cp-mem-arrow {
+  align-self: stretch;
+}
+#stack-root .cp-mem-col {
+  border: 1px solid var(--sk-border-1);
+  border-radius: 8px;
+  padding: clamp(1rem, 2.2vw, 1.4rem);
+  background:
+    radial-gradient(110% 130% at 6% 0%, rgba(111, 214, 154, 0.06), transparent 62%),
+    rgba(6, 26, 16, 0.5);
+}
+#stack-root .cp-mem-tag {
+  display: block;
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+}
+#stack-root .cp-mem-col h4 {
+  font-family: var(--sk-serif);
+  font-weight: 500;
+  font-size: 1.15rem;
+  letter-spacing: -0.012em;
+  color: var(--sk-text-1);
+  margin: 0.55rem 0 0.55rem;
+}
+#stack-root .cp-mem-col p {
+  margin: 0 0 0.7rem;
+  font-size: 0.92rem;
+  line-height: 1.66;
+  color: var(--sk-text-2);
+}
+#stack-root .cp-mem-col p:last-child {
+  margin-bottom: 0;
+}
+#stack-root .cp-mem-col b {
+  color: var(--sk-text-1);
+  font-weight: 500;
+}
+/* The connector is decoration around one label: a dashed rail with an
+   arrowhead built from borders, pointing from repo memory into the store. */
+#stack-root .cp-mem-arrow {
+  position: relative;
+  width: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#stack-root .cp-mem-arrow::before {
+  content: '';
+  position: absolute;
+  inset: 12% auto 12% 50%;
+  width: 0;
+  border-left: 1px dashed var(--sk-border-2);
+}
+#stack-root .cp-mem-arrow-t {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  transform-origin: center;
+  white-space: nowrap;
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+  background: var(--sk-bg-0);
+  padding: 0.25rem 0.4rem;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 1080px) {
+  #stack-root .cp-mem {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  #stack-root .cp-mem-arrow {
+    width: auto;
+    height: 2.6rem;
+  }
+  #stack-root .cp-mem-arrow::before {
+    inset: 0 auto 0 50%;
+  }
+  #stack-root .cp-mem-arrow-t {
+    transform: translate(-50%, -50%);
+  }
+}
+@media (max-width: 760px) {
+  /* Swap in the column geometry rather than panning the ring: the labels keep
+     their size and the whole loop fits a 390px viewport. */
+  #stack-root .cp-loop-wide {
+    display: none;
+  }
+  #stack-root .cp-loop-narrow {
+    display: block;
+  }
+  #stack-root .cp-tabs,
+  #stack-root .cp-instruments,
+  #stack-root .cp-hooks {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  #stack-root .cp-tab {
+    justify-content: flex-start;
+  }
+  #stack-root .cp-instruments li,
+  #stack-root .cp-hooks li {
+    padding-right: 0;
+  }
+  /* One column means every row is already full; the filler would only add a
+     second hairline under the last card. */
+  #stack-root .cp-instruments .cp-fill,
+  #stack-root .cp-hooks .cp-fill {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #stack-root .cp-tab,
+  #stack-root .cp-loop .cp-node rect,
+  #stack-root .cp-loop .cp-node text {
+    transition-duration: 0.001ms !important;
+  }
+}
