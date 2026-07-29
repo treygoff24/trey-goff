@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import '@/components/stack/foundry-explorer.css'
 import { useReducedMotion } from '@/components/stack/hooks'
 
@@ -342,6 +342,29 @@ const READOUT: { k: string; v: string; note: string }[] = [
   { k: 'unbounded loops', v: '0', note: `${LOOP_COUNT} loops, every one capped` },
 ]
 
+const CONTRAST: { k: string; native: string; mine: string }[] = [
+  {
+    k: 'nesting',
+    native: 'one level — a child may not call a workflow',
+    mine: 'three edges below root, inline in one supervisor',
+  },
+  {
+    k: 'routing',
+    native: 'subagents; model and agent type may vary',
+    mine: 'per-stage codex · cursor · grok · droid · kimi · claude',
+  },
+  {
+    k: 'durable state',
+    native: 'not in the local contract',
+    mine: 'pinned script and args, append-only journal, replay',
+  },
+  {
+    k: 'human gate',
+    native: 'no gate primitive',
+    mine: 'tree-wide pause, resumable approval',
+  },
+]
+
 /* ── The intro ────────────────────────────────────────────── */
 
 export function NestedWorkflowsIntro() {
@@ -396,33 +419,33 @@ export function NestedWorkflowsIntro() {
         </div>
       </div>
 
-      <div className="fx-contrast rv">
-        <div className="fx-contrast-row fx-contrast-head" aria-hidden="true">
-          <span />
-          <span>native Workflow</span>
-          <span>what I run</span>
-        </div>
-        <div className="fx-contrast-row">
-          <span className="fx-c-k">nesting</span>
-          <span>one level — a child may not call a workflow</span>
-          <span className="fx-c-mine">three edges below root, inline in one supervisor</span>
-        </div>
-        <div className="fx-contrast-row">
-          <span className="fx-c-k">routing</span>
-          <span>subagents; model and agent type may vary</span>
-          <span className="fx-c-mine">per-stage codex · cursor · grok · droid · kimi · claude</span>
-        </div>
-        <div className="fx-contrast-row">
-          <span className="fx-c-k">durable state</span>
-          <span>not in the local contract</span>
-          <span className="fx-c-mine">pinned script and args, append-only journal, replay</span>
-        </div>
-        <div className="fx-contrast-row">
-          <span className="fx-c-k">human gate</span>
-          <span>no gate primitive</span>
-          <span className="fx-c-mine">tree-wide pause, resumable approval</span>
-        </div>
-      </div>
+      <table className="fx-contrast rv">
+        <caption className="fx-sr">
+          Capability comparison between the native Workflow tool and the workflow system I run
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col" className="fx-c-corner">
+              capability
+            </th>
+            <th scope="col">native Workflow</th>
+            <th scope="col">what I run</th>
+          </tr>
+        </thead>
+        <tbody>
+          {CONTRAST.map((row) => (
+            <tr key={row.k}>
+              <th scope="row" className="fx-c-k">
+                {row.k}
+              </th>
+              <td data-label="native Workflow">{row.native}</td>
+              <td data-label="what I run" className="fx-c-mine">
+                {row.mine}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
       <p className="section-label">The full grandeur</p>
       <p className="lede rv">
@@ -446,18 +469,53 @@ const KIND_TAG: Record<Kind, string> = {
   loop: 'capped loop',
 }
 
+const KIND_ORDER: Kind[] = ['phase', 'workflow', 'gate', 'loop', 'fanout']
+
+/* Rail colour carries kind and the swatches carry model family, so both have to
+   be spoken as well as shown; the visible text is repeated here because an
+   aria-label replaces it rather than adding to it. */
+function nodeAccessibleName(entry: Flat): string {
+  const { node, depth, inWave } = entry
+  const runs = node.agents * (inWave ? WAVE_REPEAT : 1)
+  const parts = [node.label, KIND_TAG[node.kind], node.fanout]
+  if (depth > 0) parts.push(`nested ${depth} ${depth === 1 ? 'level' : 'levels'} deep`)
+  if (node.cap) parts.push(`hard stop: ${node.cap}`)
+  if (node.optional) parts.push('optional stage')
+  if (node.agents > 0) {
+    /* The visible chip shows the per-wave figure, so that number has to be
+       spoken first — the multiplied total follows it rather than replacing it. */
+    parts.push(
+      inWave
+        ? `${node.agents} agent runs per wave, ${runs} across ${WAVE_REPEAT} waves`
+        : `${runs} agent ${runs === 1 ? 'run' : 'runs'}`,
+    )
+  }
+  parts.push(`routes to ${node.families.map((f) => FAMILY_LABEL[f]).join(', ')}`)
+  return parts.join(' — ')
+}
+
 function NodeButton({
   entry,
   selected,
   live,
   done,
+  tabbable,
+  setsize,
+  posinset,
+  treeSemantics,
   onSelect,
+  onFocus,
 }: {
   entry: Flat
   selected: boolean
   live: boolean
   done: boolean
+  tabbable: boolean
+  setsize: number
+  posinset: number
+  treeSemantics: boolean
   onSelect: (id: string) => void
+  onFocus: (id: string) => void
 }) {
   const { node, depth } = entry
   const cls = [
@@ -476,9 +534,21 @@ function NodeButton({
       type="button"
       className={cls}
       data-fx-node={node.id}
-      aria-current={selected ? 'true' : undefined}
+      aria-label={nodeAccessibleName(entry)}
       aria-controls="fx-detail"
+      {...(treeSemantics
+        ? {
+            role: 'treeitem' as const,
+            'aria-level': depth + 1,
+            'aria-setsize': setsize,
+            'aria-posinset': posinset,
+            'aria-selected': selected,
+            ...(node.children ? { 'aria-expanded': true } : {}),
+          }
+        : { 'aria-current': selected ? ('true' as const) : undefined })}
+      tabIndex={tabbable ? 0 : -1}
       onClick={() => onSelect(node.id)}
+      onFocus={() => onFocus(node.id)}
     >
       <span className="fx-node-rail" aria-hidden="true" />
       <span className="fx-node-main">
@@ -504,52 +574,76 @@ function NodeButton({
   )
 }
 
-function Branch({
-  nodes,
-  depth,
-  selected,
-  liveId,
-  doneIds,
-  onSelect,
-}: {
+type BranchProps = {
   nodes: FNode[]
   depth: number
   selected: string | null
   liveId: string | null
   doneIds: Set<string>
+  tabId: string
   onSelect: (id: string) => void
-}) {
+  onFocus: (id: string) => void
+  /** rendered directly under the selected node on narrow viewports */
+  inlineDetail: React.ReactNode
+  /** false where the detail card renders inside the list; see the note below */
+  treeSemantics: boolean
+}
+
+/* The tree role lives on the outer list; each nested block is the `group` owned
+   by its parent treeitem, which is why the role sits on the wrapper div rather
+   than the inner list — the wrapper is the direct child of the li. */
+function Branch(props: BranchProps) {
+  const {
+    nodes,
+    depth,
+    selected,
+    liveId,
+    doneIds,
+    tabId,
+    onSelect,
+    onFocus,
+    inlineDetail,
+    treeSemantics,
+  } = props
   return (
-    <ul className={`fx-branch fx-branch-${depth}`}>
-      {nodes.map((node) => {
+    <ul
+      className={`fx-branch fx-branch-${depth}`}
+      {...(treeSemantics
+        ? depth === 0
+          ? { role: 'tree', 'aria-label': 'Foundry build topology' }
+          : { role: 'none' }
+        : {})}
+    >
+      {nodes.map((node, i) => {
         const entry = BY_ID.get(node.id)
         if (!entry) return null
         return (
-          <li key={node.id} className="fx-item">
+          <li key={node.id} className="fx-item" {...(treeSemantics ? { role: 'none' } : {})}>
             <NodeButton
               entry={entry}
               selected={selected === node.id}
               live={liveId === node.id}
               done={doneIds.has(node.id)}
+              tabbable={tabId === node.id}
+              setsize={nodes.length}
+              posinset={i + 1}
+              treeSemantics={treeSemantics}
               onSelect={onSelect}
+              onFocus={onFocus}
             />
+            {inlineDetail && selected === node.id ? (
+              <div className="fx-inline-detail">{inlineDetail}</div>
+            ) : null}
             {node.children ? (
-              <div className="fx-nest">
+              <div className="fx-nest" {...(treeSemantics ? { role: 'group' } : {})}>
                 <span className="fx-nest-tag" aria-hidden="true">
                   depth {depth + 1}
                 </span>
-                <Branch
-                  nodes={node.children}
-                  depth={depth + 1}
-                  selected={selected}
-                  liveId={liveId}
-                  doneIds={doneIds}
-                  onSelect={onSelect}
-                />
+                <Branch {...props} nodes={node.children} depth={depth + 1} />
               </div>
             ) : null}
             {node.id === 'waves' ? (
-              <p className="fx-repeat">
+              <p className="fx-repeat" aria-hidden="true">
                 the three nodes above run once per wave — foundation, core engine, surface
               </p>
             ) : null}
@@ -643,8 +737,13 @@ export function FoundryExplorer() {
      timeouts is what this used to be, and a dropped tail timeout left the
      sweep stuck mid-run with no way back to rest. */
   const [step, setStep] = useState<number | null>(null)
+  /* Roving tabindex: the tree is one tab stop and the arrow keys move inside
+     it, so 24 nodes cost a keyboard user one Tab rather than twenty-four. */
+  const [tabId, setTabId] = useState<string>(FLAT[0]?.node.id ?? '')
   const mapRef = useRef<HTMLDivElement | null>(null)
-  const detailRef = useRef<HTMLDivElement | null>(null)
+  /* Drives which slot the detail card renders into. It is a state rather than a
+     CSS toggle so only one card ever exists in the DOM. */
+  const [narrow, setNarrow] = useState(false)
 
   useEffect(() => {
     if (step === null) return
@@ -662,12 +761,40 @@ export function FoundryExplorer() {
     return new Set(FLAT.slice(0, step).map((f) => f.node.id))
   }, [step])
 
-  const onSelect = useCallback((id: string) => {
-    setSelected(id)
-    if (typeof window !== 'undefined' && window.matchMedia('(max-width: 900px)').matches) {
-      detailRef.current?.scrollIntoView({ block: 'nearest' })
-    }
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 900px)')
+    setNarrow(mq.matches)
+    const onChange = (e: MediaQueryListEvent) => setNarrow(e.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
   }, [])
+
+  /* Where the tapped node sat before the card moved, so the scroll can be
+     corrected by exactly the amount the card displaced it. */
+  const anchor = useRef<{ id: string; top: number } | null>(null)
+
+  const onSelect = useCallback((id: string) => {
+    const el = mapRef.current?.querySelector<HTMLElement>(`[data-fx-node="${id}"]`)
+    anchor.current = el ? { id, top: el.getBoundingClientRect().top } : null
+    setSelected(id)
+    /* End any sweep in flight: a pulsing rail and a climbing counter compete
+       with the card the reader just opened. */
+    setStep(null)
+  }, [])
+
+  /* Inserting the card under one node removes it from under another, which
+     moves everything between them. Correcting the scroll by that delta before
+     paint keeps the tapped node exactly where the reader tapped it. */
+  useLayoutEffect(() => {
+    const held = anchor.current
+    anchor.current = null
+    if (!held || !narrow) return
+    const el = mapRef.current?.querySelector<HTMLElement>(`[data-fx-node="${held.id}"]`)
+    if (!el) return
+    const delta = el.getBoundingClientRect().top - held.top
+    if (Math.abs(delta) < 1) return
+    window.scrollBy({ top: delta, behavior: 'instant' })
+  }, [selected, narrow])
 
   const dismiss = useCallback(() => {
     const id = selected
@@ -692,13 +819,17 @@ export function FoundryExplorer() {
         }
         return
       }
-      if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return
       const root = mapRef.current
       if (!root) return
       const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-fx-node]'))
       const here = buttons.indexOf(document.activeElement as HTMLButtonElement)
       if (here < 0) return
-      const next = buttons[here + (e.key === 'ArrowDown' ? 1 : -1)]
+      let next: HTMLButtonElement | undefined
+      if (e.key === 'ArrowDown') next = buttons[here + 1]
+      else if (e.key === 'ArrowUp') next = buttons[here - 1]
+      else if (e.key === 'Home') next = buttons[0]
+      else if (e.key === 'End') next = buttons[buttons.length - 1]
+      else return
       if (!next) return
       e.preventDefault()
       next.focus()
@@ -735,38 +866,50 @@ export function FoundryExplorer() {
       </div>
 
       <div className="fx-body">
-        <div
-          className="fx-map"
-          ref={mapRef}
-          role="group"
-          aria-label="Foundry build topology — every stage is a button that opens its detail"
-        >
+        <div className="fx-map" ref={mapRef}>
           <Branch
             nodes={PHASES}
             depth={0}
             selected={selected}
             liveId={liveId}
             doneIds={doneIds}
+            tabId={tabId}
             onSelect={onSelect}
+            onFocus={setTabId}
+            treeSemantics={!narrow}
+            inlineDetail={narrow && entry ? <DetailCard entry={entry} onDismiss={dismiss} /> : null}
           />
         </div>
 
-        <div className="fx-side" ref={detailRef}>
-          <DetailCard entry={entry} onDismiss={dismiss} />
-          <ul className="fx-legend">
-            <li>
-              <i className="fx-fam fx-fam-anthropic" aria-hidden="true" /> anthropic
-            </li>
-            <li>
-              <i className="fx-fam fx-fam-openai" aria-hidden="true" /> openai
-            </li>
-            <li>
-              <i className="fx-fam fx-fam-xai" aria-hidden="true" /> xai
-            </li>
-            <li>
-              <i className="fx-fam fx-fam-human" aria-hidden="true" /> coordinator
-            </li>
-          </ul>
+        <div className="fx-side">
+          <div className="fx-side-inner">
+            {narrow && entry ? null : <DetailCard entry={entry} onDismiss={dismiss} />}
+            <div className="fx-legend">
+              <p className="fx-legend-k">node kind</p>
+              <ul>
+                {KIND_ORDER.map((k) => (
+                  <li key={k}>
+                    <i className={`fx-swatch fx-k-${k}`} aria-hidden="true" /> {KIND_TAG[k]}
+                  </li>
+                ))}
+              </ul>
+              <p className="fx-legend-k">model family</p>
+              <ul>
+                <li>
+                  <i className="fx-fam fx-fam-anthropic" aria-hidden="true" /> anthropic
+                </li>
+                <li>
+                  <i className="fx-fam fx-fam-openai" aria-hidden="true" /> openai
+                </li>
+                <li>
+                  <i className="fx-fam fx-fam-xai" aria-hidden="true" /> xai
+                </li>
+                <li>
+                  <i className="fx-fam fx-fam-human" aria-hidden="true" /> coordinator
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
 

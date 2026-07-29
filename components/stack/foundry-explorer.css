@@ -18,23 +18,27 @@
   border: 0;
 }
 
-/* ── The native-vs-mine contrast strip ──────────────────── */
+/* ── The native-vs-mine contrast strip ────────────────────
+   A real table: the column identity is the whole point of the
+   comparison, so it has to survive being read aloud. */
 #stack-root .fx-contrast {
+  width: 100%;
   margin-top: 1.5rem;
+  border-collapse: collapse;
   border-top: 1px solid var(--sk-border-1);
+  text-align: left;
 }
-#stack-root .fx-contrast-row {
-  display: grid;
-  grid-template-columns: minmax(0, 0.42fr) minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(0.7rem, 2.4vw, 1.8rem);
-  padding-block: 0.85rem;
+#stack-root .fx-contrast th,
+#stack-root .fx-contrast td {
+  padding: 0.85rem clamp(0.7rem, 2.4vw, 1.8rem) 0.85rem 0;
   border-bottom: 1px solid var(--sk-border-1);
   font-size: 0.88rem;
   line-height: 1.55;
+  font-weight: 400;
   color: var(--sk-text-3);
-  align-items: baseline;
+  vertical-align: baseline;
 }
-#stack-root .fx-contrast-head {
+#stack-root .fx-contrast thead th {
   font-family: var(--sk-mono);
   font-size: 0.6rem;
   letter-spacing: 0.22em;
@@ -42,14 +46,17 @@
   color: var(--sk-text-3);
   padding-block: 0.5rem 0.6rem;
 }
-#stack-root .fx-c-k {
+#stack-root .fx-contrast .fx-c-corner {
+  width: 20%;
+}
+#stack-root .fx-contrast .fx-c-k {
   font-family: var(--sk-mono);
   font-size: 0.62rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--sk-warm);
 }
-#stack-root .fx-c-mine {
+#stack-root .fx-contrast .fx-c-mine {
   color: var(--sk-text-1);
 }
 
@@ -76,7 +83,7 @@
   justify-content: space-between;
   padding: 0.85rem clamp(0.9rem, 2.4vw, 1.5rem);
   border-bottom: 1px solid var(--sk-border-1);
-  background: rgba(3, 14, 9, 0.6);
+  background: rgba(4, 19, 12, 0.6);
 }
 #stack-root .fx-bar-id {
   display: flex;
@@ -335,23 +342,27 @@
 
 /* Kind reads off the left rail: a nested workflow is bright, a gate is
    amber, a fan-out is faint, so the tree is legible before any click. */
-#stack-root .fx-k-phase .fx-node-rail {
+#stack-root .fx-k-phase .fx-node-rail,
+#stack-root .fx-k-phase.fx-swatch {
   background: var(--sk-warm);
 }
-#stack-root .fx-k-workflow .fx-node-rail {
+#stack-root .fx-k-workflow .fx-node-rail,
+#stack-root .fx-k-workflow.fx-swatch {
   background: var(--sk-accent);
 }
-#stack-root .fx-k-workflow {
+#stack-root .fx-node.fx-k-workflow {
   border-color: var(--sk-border-2);
 }
-#stack-root .fx-k-gate .fx-node-rail {
+#stack-root .fx-k-gate .fx-node-rail,
+#stack-root .fx-k-gate.fx-swatch {
   background: var(--sk-amber);
 }
-#stack-root .fx-k-gate {
+#stack-root .fx-node.fx-k-gate {
   border-style: dashed;
-  border-color: rgba(251, 191, 36, 0.32);
+  border-color: rgba(251, 191, 36, 0.55);
 }
-#stack-root .fx-k-loop .fx-node-rail {
+#stack-root .fx-k-loop .fx-node-rail,
+#stack-root .fx-k-loop.fx-swatch {
   background: linear-gradient(
     var(--sk-amber) 0 30%,
     transparent 30% 55%,
@@ -359,40 +370,43 @@
     transparent 85%
   );
 }
-#stack-root .fx-k-fanout .fx-node-rail {
-  background: var(--sk-border-2);
+/* border-2 (alpha 0.28) measures ~2:1 on this panel — under the 3:1 a
+   meaning-bearing graphic needs. */
+#stack-root .fx-k-fanout .fx-node-rail,
+#stack-root .fx-k-fanout.fx-swatch {
+  background: rgba(151, 232, 187, 0.62);
 }
 #stack-root .fx-d-1 .fx-node-label,
 #stack-root .fx-d-2 .fx-node-label {
   font-size: 0.74rem;
 }
-#stack-root .fx-d-2 {
+#stack-root .fx-node.fx-d-2 {
   background: rgba(4, 19, 12, 0.45);
 }
 
-/* ── Dispatch sweep ─────────────────────────────────────── */
-/* At rest every node reads as complete, so the figure is fully
-   informative with no animation ever playing. The sweep only
-   re-lights what is already legible. */
-#stack-root .fx-shell.is-running .fx-node {
-  opacity: 0.4;
-}
+/* ── Dispatch sweep ───────────────────────────────────────
+   Nothing dims. Whole-node opacity used to drop the label and the
+   metadata to ~2:1 against the panel, which made the sweep quietly
+   illegible for the seconds it ran. Progress is carried by the live
+   node's emphasis and by the border on what is already done, both of
+   which are non-text and clear 3:1. */
 #stack-root .fx-shell.is-running .fx-node.is-done {
-  opacity: 0.75;
+  border-color: rgba(111, 214, 154, 0.55);
 }
 #stack-root .fx-shell.is-running .fx-node.is-live {
-  opacity: 1;
   border-color: var(--sk-accent);
-  background: rgba(151, 232, 187, 0.12);
-  transform: translateX(2px);
-  box-shadow: 0 0 0 1px rgba(151, 232, 187, 0.18);
+  background: rgba(151, 232, 187, 0.14);
+  transform: translateX(3px);
+  box-shadow: 0 0 0 1px rgba(151, 232, 187, 0.3);
 }
 #stack-root .fx-shell.is-running .fx-node.is-live .fx-node-rail {
   animation: sk-fx-pulse 620ms var(--sk-ease) infinite alternate;
 }
+/* Floored well above zero so the rail never falls under the 3:1 it needs as
+   the kind indicator, even at the bottom of the pulse. */
 @keyframes sk-fx-pulse {
   from {
-    opacity: 0.45;
+    opacity: 0.7;
   }
   to {
     opacity: 1;
@@ -403,13 +417,17 @@
 #stack-root .fx-side {
   position: relative;
 }
-#stack-root .fx-detail {
+/* The card and its legend stick as one block. Sticking the card alone let it
+   travel down over the legend, which sits after it in flow. */
+#stack-root .fx-side-inner {
   position: sticky;
   top: 1.2rem;
+}
+#stack-root .fx-detail {
   border: 1px solid var(--sk-border-2);
   border-radius: 8px;
   padding: clamp(0.9rem, 2vw, 1.15rem);
-  background: rgba(3, 14, 9, 0.8);
+  background: rgba(4, 19, 12, 0.8);
 }
 #stack-root .fx-detail-rest {
   border-color: var(--sk-border-1);
@@ -438,6 +456,9 @@
   border-radius: 4px;
   padding: 0.25rem 0.5rem;
   cursor: pointer;
+  transition:
+    color 200ms var(--sk-ease),
+    border-color 200ms var(--sk-ease);
 }
 #stack-root .fx-d-close:hover {
   color: var(--sk-text-1);
@@ -546,12 +567,36 @@
   margin-bottom: 0;
 }
 
+/* The card renders here on phones, directly under the node that opened it,
+   so a tap never moves the reader away from the map. */
+#stack-root .fx-inline-detail {
+  margin: 0.45rem 0 0.7rem;
+}
+#stack-root .fx-inline-detail .fx-detail {
+  border-color: var(--sk-accent);
+}
+
 /* ── Legend ─────────────────────────────────────────────── */
 #stack-root .fx-legend {
-  list-style: none;
-  margin: 1rem 0 0;
-  padding: 0.85rem 0 0;
+  margin-top: 1rem;
+  padding-top: 0.85rem;
   border-top: 1px solid var(--sk-border-1);
+}
+#stack-root .fx-legend-k {
+  margin: 0 0 0.4rem;
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+}
+#stack-root .fx-legend-k + ul + .fx-legend-k {
+  margin-top: 0.85rem;
+}
+#stack-root .fx-legend ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem 1rem;
@@ -561,10 +606,19 @@
   align-items: center;
   gap: 0.4rem;
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.16em;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
+}
+/* Reuses the .fx-k-* rail rules, so a kind can never be recoloured in the map
+   without the legend following. */
+#stack-root .fx-swatch {
+  display: block;
+  width: 3px;
+  height: 13px;
+  border-radius: 2px;
+  background: var(--sk-border-1);
 }
 
 /* ── Caption ────────────────────────────────────────────── */
@@ -582,7 +636,9 @@
 }
 
 /* ── Responsive ─────────────────────────────────────────── */
-@media (max-width: 1080px) {
+/* Bounded at both ends: these cell rules are specific enough to outrank the
+   two-column ones below, so they must not leak past their own breakpoint. */
+@media (min-width: 621px) and (max-width: 1080px) {
   #stack-root .fx-readout {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -602,22 +658,39 @@
     border-bottom: 1px solid var(--sk-border-1);
   }
   /* Sticky would pin the card off-screen once the map scrolls past it. */
-  #stack-root .fx-detail {
+  #stack-root .fx-side-inner {
     position: static;
   }
-  #stack-root .fx-contrast-row {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0.3rem;
+  /* Stacked cards on a phone: each cell states its own column, since the
+     header row is no longer beside it. */
+  #stack-root .fx-contrast thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
   }
-  #stack-root .fx-contrast-head {
-    display: none;
+  #stack-root .fx-contrast,
+  #stack-root .fx-contrast tbody,
+  #stack-root .fx-contrast tr,
+  #stack-root .fx-contrast td,
+  #stack-root .fx-contrast th {
+    display: block;
   }
-  #stack-root .fx-contrast-row span:nth-child(2)::before {
-    content: 'native — ';
+  #stack-root .fx-contrast tr {
+    padding-block: 0.55rem;
+    border-bottom: 1px solid var(--sk-border-1);
+  }
+  #stack-root .fx-contrast th,
+  #stack-root .fx-contrast td {
+    border-bottom: 0;
+    padding: 0.15rem 0;
+  }
+  #stack-root .fx-contrast td::before {
+    content: attr(data-label) ' — ';
     color: var(--sk-text-3);
   }
-  #stack-root .fx-contrast-row span:nth-child(3)::before {
-    content: 'mine — ';
+  #stack-root .fx-contrast .fx-c-mine::before {
     color: var(--sk-warm);
   }
 }
@@ -625,26 +698,32 @@
   #stack-root .fx-readout {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  /* Five stats at two-up would otherwise cost most of a phone screen before
-     the map starts. */
-  #stack-root .fx-stat {
-    padding: 0.65rem 0.7rem 0.7rem;
-  }
-  #stack-root .fx-stat-v {
-    font-size: 1.1rem;
-  }
-  #stack-root .fx-stat-n {
-    font-size: 0.7rem;
-  }
+  /* Re-mapped from scratch rather than patched: the 3-column rules above key
+     off cell 4, which is a different cell once there are two per row. */
   #stack-root .fx-stat {
     border-left: 1px solid var(--sk-border-1);
     border-top: 1px solid var(--sk-border-1);
+    /* Five stats at two-up would otherwise cost most of a phone screen before
+       the map starts. */
+    padding: 0.65rem 0.7rem 0.7rem;
   }
   #stack-root .fx-stat:nth-child(odd) {
     border-left: 0;
   }
   #stack-root .fx-stat:nth-child(-n + 2) {
     border-top: 0;
+  }
+  /* Five stats into two columns leaves the last one without a partner. It takes
+     the whole row, so its rule runs the full width instead of stopping at the
+     midpoint over empty space. */
+  #stack-root .fx-stat:last-child {
+    grid-column: 1 / -1;
+  }
+  #stack-root .fx-stat-v {
+    font-size: 1.1rem;
+  }
+  #stack-root .fx-stat-n {
+    font-size: 0.7rem;
   }
   /* At 390px the tail metadata would wrap under the label and shove the
      dots off the row; drop it below the text instead of shrinking it. */
@@ -675,10 +754,9 @@
   #stack-root .fx-d-close {
     transition-duration: 0.001ms !important;
   }
-  #stack-root .fx-shell.is-running .fx-node,
-  #stack-root .fx-shell.is-running .fx-node.is-done,
+  /* The live node keeps its border and tint — those carry the information;
+     only the offset and the pulse are motion. */
   #stack-root .fx-shell.is-running .fx-node.is-live {
-    opacity: 1;
     transform: none;
   }
   #stack-root .fx-shell.is-running .fx-node.is-live .fx-node-rail {
