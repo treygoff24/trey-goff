@@ -38,6 +38,13 @@ function buildPaths(essayCount: number, projectCount: number, bookCount: number)
         "A few hundred books, mapped four ways — a constellation of everything I've read.",
     },
     {
+      href: '/stack',
+      meta: '12 chapters',
+      title: 'The Setup',
+      description:
+        'The field manual for how I work with AI — context, agents, workflows, and the partnership underneath it all. Co-authored with Claude.',
+    },
+    {
       href: '/about',
       meta: 'One person',
       title: 'About',
@@ -130,6 +137,9 @@ export default function HomePage() {
           </Link>
           <Link href="/projects" className="tg-action-secondary">
             See the work →
+          </Link>
+          <Link href="/stack" className="tg-action-secondary">
+            How I work with AI →
           </Link>
         </div>
       </header>
