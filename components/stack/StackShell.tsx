@@ -95,6 +95,14 @@ export function StackShell() {
 
   const [active, setActive] = useState(-1)
   const [pct, setPct] = useState(0)
+
+  // Twelve chapters can outgrow a short viewport's rail; keep the active
+  // link visible when the list has to scroll.
+  useEffect(() => {
+    document
+      .querySelector('#stack-rail .rail-link[aria-current="true"]')
+      ?.scrollIntoView({ block: 'nearest' })
+  }, [active])
   const [railOpen, setRailOpen] = useState(false)
   const meterRef = useRef<HTMLDivElement | null>(null)
   const railRef = useRef<HTMLElement | null>(null)
