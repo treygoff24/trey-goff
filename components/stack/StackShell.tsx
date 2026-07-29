@@ -11,6 +11,7 @@ import {
 import { useReducedMotion, useReveal } from '@/components/stack/hooks'
 import { Terminal } from '@/components/stack/Terminal'
 import { SubagentSavings } from '@/components/stack/SubagentSavings'
+import { CockpitChapter } from '@/components/stack/CockpitChapter'
 import { CompactionSection } from '@/components/stack/CompactionSection'
 import { PartnershipChapter } from '@/components/stack/PartnershipChapter'
 import { PersonaChapter } from '@/components/stack/PersonaChapter'
@@ -659,7 +660,7 @@ export function StackShell() {
               title="The cockpit"
               lede="Every repo I own is set up the same way: the same files, the same hooks, the same memory. An agent waking up in any of them is oriented before its first word. This chapter is that standard — and why it has quietly solved most of the context problem."
             />
-            {/* INTEGRATION: <CockpitChapter /> */}
+            <CockpitChapter />
             <Pager
               prev={['#ch4', '04 · Agents need tools']}
               next={['#ch6', '06 · Multiplying it']}
