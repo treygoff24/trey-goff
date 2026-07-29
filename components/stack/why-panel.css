@@ -12,28 +12,57 @@
   gap: 0.55rem;
   margin-top: 1rem;
   padding: 0.45rem 1rem;
-  border: 1px solid var(--sk-border-1, rgba(232, 243, 236, 0.13));
+  border: 1px solid rgba(251, 191, 36, 0.38);
   border-radius: 999px;
-  background: none;
-  color: var(--sk-text-2, rgba(232, 243, 236, 0.74));
+  background: linear-gradient(180deg, rgba(251, 191, 36, 0.09), rgba(251, 191, 36, 0.03));
+  color: var(--sk-amber, #fbbf24);
   font-family: var(--sk-mono, ui-monospace, monospace);
   font-size: 0.63rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   cursor: pointer;
+  /* Luminous gold halo: two soft outer layers + a hairline inner rim.
+     Bright enough to catch a scrolling thumb, low-alpha enough to sit
+     quietly next to body text. */
+  box-shadow:
+    0 0 14px rgba(251, 191, 36, 0.22),
+    0 0 34px rgba(251, 191, 36, 0.1),
+    inset 0 0 6px rgba(251, 191, 36, 0.08);
+  animation: why-breathe 3.6s ease-in-out infinite;
   transition:
     color 220ms var(--sk-ease, ease),
     border-color 220ms var(--sk-ease, ease),
-    background 220ms var(--sk-ease, ease);
+    background 220ms var(--sk-ease, ease),
+    box-shadow 220ms var(--sk-ease, ease);
+}
+@keyframes why-breathe {
+  0%,
+  100% {
+    box-shadow:
+      0 0 14px rgba(251, 191, 36, 0.22),
+      0 0 34px rgba(251, 191, 36, 0.1),
+      inset 0 0 6px rgba(251, 191, 36, 0.08);
+  }
+  50% {
+    box-shadow:
+      0 0 20px rgba(251, 191, 36, 0.34),
+      0 0 44px rgba(251, 191, 36, 0.16),
+      inset 0 0 8px rgba(251, 191, 36, 0.12);
+  }
 }
 .why-trigger span {
   transition: transform 220ms var(--sk-ease, ease);
 }
 .why-trigger:hover,
 .why-trigger:focus-visible {
-  color: var(--sk-accent, #97e8bb);
-  border-color: var(--sk-border-2, rgba(151, 232, 187, 0.28));
-  background: var(--sk-surface-1, rgba(232, 243, 236, 0.055));
+  color: #ffd869;
+  border-color: rgba(251, 191, 36, 0.6);
+  background: linear-gradient(180deg, rgba(251, 191, 36, 0.16), rgba(251, 191, 36, 0.06));
+  animation-play-state: paused;
+  box-shadow:
+    0 0 22px rgba(251, 191, 36, 0.4),
+    0 0 50px rgba(251, 191, 36, 0.18),
+    inset 0 0 8px rgba(251, 191, 36, 0.14);
 }
 .why-trigger:hover span,
 .why-trigger:focus-visible span {
@@ -438,5 +467,6 @@
   .why-trigger,
   .why-trigger span {
     transition-duration: 0s;
+    animation: none;
   }
 }
