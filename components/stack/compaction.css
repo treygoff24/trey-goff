@@ -32,12 +32,20 @@
 #stack-root .cmp-stack {
   display: grid;
 }
+/* Cross-fade between the two window sizes. Visibility flips after the fade so
+   the outgoing state stays untabbable/unreadable but still animates out. */
 #stack-root .cmp-stack .cmp-state {
   grid-area: 1 / 1;
   visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity 340ms var(--sk-ease),
+    visibility 0s linear 340ms;
 }
 #stack-root .cmp-stack .cmp-state.is-on {
   visibility: visible;
+  opacity: 1;
+  transition-delay: 0s;
 }
 
 #stack-root .cmp-scale {
@@ -72,9 +80,6 @@
   aspect-ratio: 1;
   border-radius: 1px;
   background: var(--sk-accent);
-  transition:
-    opacity 520ms var(--sk-ease),
-    background 520ms var(--sk-ease);
 }
 #stack-root i.cmp-free {
   background: rgba(232, 243, 236, 0.05);
@@ -177,8 +182,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #stack-root .cmp-cell {
+  #stack-root .cmp-stack .cmp-state {
     transition-duration: 0.001ms !important;
+    transition-delay: 0s !important;
   }
 }
 

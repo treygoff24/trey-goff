@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import '@/components/stack/compaction.css'
-import { useReducedMotion } from '@/components/stack/hooks'
 import { WhyCompaction } from '@/components/stack/WhyCompaction'
 
 /* ── Ch.1 · compaction / attention-by-position figure ──────── */
@@ -110,7 +109,6 @@ const SCALES: Scale[] = [
 ]
 
 export function CompactionSection() {
-  const reduced = useReducedMotion()
   const [scale, setScale] = useState<ScaleKey>('k200')
 
   return (
@@ -164,16 +162,7 @@ export function CompactionSection() {
                     {Array.from({ length: CELL_COUNT }, (_, i) => {
                       const o = s.cells[i]
                       if (o === undefined) return <i key={i} className="cmp-cell cmp-free" />
-                      return (
-                        <i
-                          key={i}
-                          className="cmp-cell"
-                          style={{
-                            opacity: o,
-                            transitionDelay: reduced ? undefined : `${(i * 1.4).toFixed(1)}ms`,
-                          }}
-                        />
-                      )
+                      return <i key={i} className="cmp-cell" style={{ opacity: o }} />
                     })}
                   </div>
                   {s.mark && (

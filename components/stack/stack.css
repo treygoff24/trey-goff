@@ -763,6 +763,10 @@ html:has(#stack-root) body > footer {
     color 220ms var(--sk-ease),
     background 220ms var(--sk-ease);
 }
+#stack-root .toggle button:hover:not([aria-pressed='true']) {
+  color: var(--sk-text-1);
+  background: rgba(232, 243, 236, 0.07);
+}
 #stack-root .toggle button[aria-pressed='true'] {
   background: var(--sk-warm);
   color: var(--sk-bg-0);

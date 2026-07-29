@@ -50,8 +50,8 @@
   opacity: 0;
   visibility: hidden;
   transition:
-    opacity 340ms var(--sk-ease, ease),
-    visibility 0s linear 340ms;
+    opacity 420ms var(--sk-ease, ease),
+    visibility 0s linear 420ms;
 }
 .why-root.open .why-scrim {
   opacity: 1;
