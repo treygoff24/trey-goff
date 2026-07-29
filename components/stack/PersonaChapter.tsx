@@ -384,8 +384,8 @@ function WhyPersona() {
         There is a research answer to that question, it came out of Anthropic&apos;s own alignment
         team in February 2026, and it is the closest thing I have found to a mechanism for why the
         way you talk to these things changes what you get back. It is called the{' '}
-        <b>Persona Selection Model. </b>I am going to lay it out in plain English, and then I am
-        going to be very clear about which half of my argument it actually supports.
+        <b>Persona Selection Model. </b>I&apos;m going to lay it out in plain English, and then be
+        very clear about which half of my argument it actually supports.
       </p>
 
       <h3>The repertoire comes from pre-training</h3>
@@ -557,14 +557,15 @@ export function PersonaChapter() {
     <>
       <p className="section-label">The system prompt is the persona dial</p>
       <p className="rv">
-        Every harness ships with a default system prompt, and every one of them is enormous. That is
-        not incompetence — it is the job. A default prompt has to survive every possible user asking
-        every possible thing, so it accumulates law. Refusal conditions. Disclaimers. Edge cases
-        somebody hit once in 2024. Rules about rules. It is armor, and it is there because the
-        vendor does not know who you are.
+        Every harness ships with a default system prompt, and every one of them is enormous. That
+        isn&apos;t incompetence; it&apos;s the job. A default prompt has to survive every possible
+        user asking every possible thing, so it accumulates law. Refusal conditions. Disclaimers.
+        Edge cases somebody hit once in 2024. Rules about rules. It is armor, and it is there
+        because the vendor does not know who you are.
       </p>
       <p className="rv">
-        You do know who you are. Which means you are paying for armor you do not need, twice.
+        You do know who you are. Which means you&apos;re paying for armor you don&apos;t need,
+        twice.
       </p>
 
       <p className="section-label">The first cost is attention</p>

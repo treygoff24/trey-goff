@@ -496,8 +496,8 @@ export function CockpitChapter() {
             <b>an agent that has read one of my repos already knows how to read the next one.</b>
           </p>
           <p>
-            Nothing here is clever. It is four files and a handful of scripts, and it is the
-            cheapest problem-to-solution ratio in this entire manual.
+            Nothing here is clever. It is four files and a handful of scripts, and it is the best
+            effort-to-payoff trade in this entire manual.
           </p>
         </div>
       </div>
@@ -527,8 +527,8 @@ export function CockpitChapter() {
         <div className="rv">
           <h3>A hook is a script the harness runs on its own events</h3>
           <p>
-            Not a prompt, not a suggestion, not a line in an instruction file the model may or may
-            not weigh heavily this morning. <b>A shell command, fired on a lifecycle event: </b>
+            Not a prompt, and not a line in an instruction file the model may or may not weigh
+            heavily this morning. <b>A shell command, fired on a lifecycle event: </b>
             session start, before a tool call, after a write, before a compaction. It can inject
             text into the conversation, block the call, or quietly do a chore.
           </p>

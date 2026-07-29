@@ -277,7 +277,7 @@ export function StackShell() {
             </h1>
             <p className="hero-sub rv" data-d="2">
               A complete, working agentic development stack, explained from first principles and
-              written with both the layman and the software engineer in mind.
+              written for the layman and the software engineer both.
             </p>
             <div className="hero-term rv" data-d="3">
               <Terminal title="~/Code/trey-goff" lines={HERO_TERM} autoplay />
@@ -931,7 +931,7 @@ export function StackShell() {
             <ChapterHead
               n="11"
               title="The persona"
-              lede="The system prompt is not configuration. It is the first and most persistent evidence the model gets about who it is supposed to be in this room — and the default ones are written for the worst user they can imagine."
+              lede="The system prompt is the first and most persistent evidence the model gets about who it is supposed to be in this room. The default ones are written for the worst user they can imagine."
             />
             <PersonaChapter />
             <Pager prev={['#ch10', '10 · Workflows']} next={['#ch12', '12 · The partnership']} />
@@ -942,7 +942,7 @@ export function StackShell() {
             <ChapterHead
               n="12"
               title="The partnership"
-              lede="Everything on this page is technique. This last chapter is the part that is not — how I actually work with these minds, and why the ethics came before the payoff."
+              lede="Everything up to here has been technique. This chapter is how I actually work with these minds, and why the ethics came before the payoff."
             />
             <PartnershipChapter />
             <Pager prev={['#ch11', '11 · The persona']} />

@@ -478,9 +478,9 @@ export function WhyContext() {
         from the compaction section further down this chapter, research and all.
       </p>
       <p>
-        For now, the short version: a 200K window is not 200K of usable attention. It is 200K of
-        room, and the more of it you fill, the less sharply the model sees any single thing in it.
-        Anthropic&apos;s version of the conclusion is the closest thing this page has to a thesis:{' '}
+        For now, the short version: a 200K window buys you room, not attention. The more of it you
+        fill, the less sharply the model sees any single thing in it. Anthropic&apos;s version of
+        the conclusion is the closest thing this page has to a thesis:{' '}
         <b>
           good context engineering means finding the smallest possible set of high-signal tokens
           that maximize the likelihood of some desired outcome.

@@ -276,7 +276,7 @@ function Coda() {
       </ol>
       <div className="pt-coincidence rv">
         <p>
-          So the coincidence, stated plainly:{' '}
+          So the coincidence is this:{' '}
           <b>the ethics came first. The performance was discovered, not designed for. </b>I am not
           telling you to be decent to your agents because it raises your throughput. I am telling
           you that I was decent to mine for a reason that had nothing to do with throughput, and the

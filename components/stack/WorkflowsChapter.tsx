@@ -445,7 +445,7 @@ export function WorkflowsChapter() {
       <p className="section-label">The cliffnotes</p>
       <p className="lede rv">
         A dynamic workflow is a JavaScript file with a few special functions that spawn and
-        coordinate subagents. That is the whole trick, and the whole trick is enough.
+        coordinate subagents. That is the whole trick, and it is enough.
       </p>
       <WorkflowSpine />
 
@@ -583,10 +583,10 @@ export function WorkflowsChapter() {
         the shape of the work is &quot;do this thing, well,&quot; just talk to one agent; a single
         bounded task does not need a supervisor and a journal.{' '}
         <b>And be honest about the bill: workflows use significantly more tokens. </b>The article
-        says it plainly and it is right — most coding tasks do not need a panel of five reviewers.
-        The test I use is whether structure would change the answer, not just the confidence. If I
-        would accept the first agent&apos;s output anyway, I saved myself a hundred thousand tokens
-        by asking.
+        says so, and it is right — most coding tasks do not need a panel of five reviewers. The test
+        I use is whether structure would change the answer, not just the confidence. If I would
+        accept the first agent&apos;s output anyway, I saved myself a hundred thousand tokens by
+        asking.
       </div>
 
       <Pager prev={['#ch9', '09 · Build your own']} next={['#ch11', '11 · The persona']} />

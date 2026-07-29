@@ -387,8 +387,8 @@ export function NestedWorkflowsIntro() {
             author on Codex, review on Cursor and Kimi, judge on Claude, and fall back to a fourth
             harness when one is down.{' '}
             <b>
-              That is not a convenience feature. It is the difference between checking work three
-              times and having it checked by three different minds.
+              That is the difference between checking work three times and having it checked by
+              three different minds.
             </b>
           </p>
           <p>
