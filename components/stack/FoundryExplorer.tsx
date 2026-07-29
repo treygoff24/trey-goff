@@ -473,7 +473,8 @@ function NodeButton({
       type="button"
       className={cls}
       data-fx-node={node.id}
-      aria-pressed={selected}
+      aria-current={selected ? 'true' : undefined}
+      aria-controls="fx-detail"
       onClick={() => onSelect(node.id)}
     >
       <span className="fx-node-rail" aria-hidden="true" />
@@ -576,7 +577,13 @@ function DetailCard({ entry, onDismiss }: { entry: Flat | null; onDismiss: () =>
   const runs = node.agents * (inWave ? WAVE_REPEAT : 1)
 
   return (
-    <div className="fx-detail" role="region" aria-live="polite" aria-label="Selected node detail">
+    <div
+      className="fx-detail"
+      id="fx-detail"
+      role="region"
+      aria-live="polite"
+      aria-label="Selected node detail"
+    >
       <div className="fx-d-head">
         <span className="fx-d-kind">{KIND_TAG[node.kind]}</span>
         <button type="button" className="fx-d-close" onClick={onDismiss}>

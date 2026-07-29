@@ -193,7 +193,10 @@ export function CompactionSection() {
                   read an hour ago, the decision you made two hundred messages back. Which is the
                   whole argument for front-loading the durable material.
                 </p>
-                <figcaption className="cmp-cap">{s.caption}</figcaption>
+                {/* Styled as the caption but a <p>: a real <figcaption> may only
+                    be a direct child of <figure>, and the grid-stack means two
+                    of these exist at once. */}
+                <p className="cmp-cap">{s.caption}</p>
               </div>
             )
           })}

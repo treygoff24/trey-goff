@@ -97,11 +97,16 @@ export function StackShell() {
   const [pct, setPct] = useState(0)
 
   // Twelve chapters can outgrow a short viewport's rail; keep the active
-  // link visible when the list has to scroll.
+  // link visible when the list has to scroll. Scroll ONLY the nav scroller —
+  // scrollIntoView walks ancestors and can hijack the page scroll.
   useEffect(() => {
-    document
-      .querySelector('#stack-rail .rail-link[aria-current="true"]')
-      ?.scrollIntoView({ block: 'nearest' })
+    const nav = document.querySelector<HTMLElement>('#stack-rail .rail-nav')
+    const link = nav?.querySelector<HTMLElement>('.rail-link[aria-current="true"]')
+    if (!nav || !link) return
+    const navRect = nav.getBoundingClientRect()
+    const linkRect = link.getBoundingClientRect()
+    if (linkRect.top < navRect.top) nav.scrollTop += linkRect.top - navRect.top
+    else if (linkRect.bottom > navRect.bottom) nav.scrollTop += linkRect.bottom - navRect.bottom
   }, [active])
   const [railOpen, setRailOpen] = useState(false)
   const meterRef = useRef<HTMLDivElement | null>(null)

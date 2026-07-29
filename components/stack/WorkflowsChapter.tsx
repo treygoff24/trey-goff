@@ -239,7 +239,7 @@ const DELEGATE_LANES: Lane[] = [
 type Rule = { token?: string; text: string }
 
 const RESUME_RULE: Rule = { text: 'interrupted? resuming picks the run back up' }
-const GATE_RULE: Rule = { token: 'gate=True', text: ' — the run pauses until I approve' }
+const GATE_RULE: Rule = { token: 'gate=True', text: '— the run pauses until I approve' }
 
 type PanelProps = {
   lanes: Lane[]

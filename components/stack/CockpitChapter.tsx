@@ -340,6 +340,9 @@ function LoopFigure() {
         role="tablist"
         aria-label="Stations of the session loop"
         onKeyDown={onKey}
+        // Focus arriving anywhere in the tablist ends the tour, so autoplay
+        // can never move selection out from under a keyboard user.
+        onFocusCapture={() => setAuto(false)}
       >
         {STATIONS.map((s, i) => (
           <button
@@ -363,7 +366,9 @@ function LoopFigure() {
       </div>
 
       {/* Every panel stays in the grid cell so the tallest one reserves the
-          height; switching stations never moves the page under the reader. */}
+          height; switching stations never moves the page under the reader.
+          Inactive panels are hidden by class rather than the hidden attribute,
+          whose UA display:none would collapse that reservation. */}
       <div className="cp-stack">
         {STATIONS.map((s, i) => (
           <div
@@ -372,7 +377,8 @@ function LoopFigure() {
             id={`cp-panel-${s.key}`}
             role="tabpanel"
             aria-labelledby={`cp-tab-${s.key}`}
-            {...(i === active ? {} : { hidden: true })}
+            aria-hidden={i === active ? undefined : true}
+            inert={i === active ? undefined : true}
           >
             <h4>{s.head}</h4>
             <p>{s.body}</p>

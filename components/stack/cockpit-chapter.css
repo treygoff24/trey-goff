@@ -185,8 +185,7 @@
 #stack-root .cp-panel {
   grid-area: 1 / 1;
 }
-#stack-root .cp-panel[hidden] {
-  display: block;
+#stack-root .cp-panel:not(.on) {
   visibility: hidden;
   pointer-events: none;
 }
@@ -331,7 +330,7 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%) rotate(90deg);
+  transform: translate(-50%, -50%) rotate(-90deg);
   transform-origin: center;
   white-space: nowrap;
   font-family: var(--sk-mono);

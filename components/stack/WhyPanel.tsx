@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import '@/components/stack/why-panel.css'
 import { CTX, CTX_CELL_COUNT, type CtxKey } from '@/components/stack/data'
@@ -26,7 +26,9 @@ export function WhyPanel({ label = 'Why tho?', title, children }: WhyPanelProps)
   const triggerRef = useRef<HTMLButtonElement | null>(null)
   const panelRef = useRef<HTMLDivElement | null>(null)
   const wasOpen = useRef(false)
-  const titleId = useRef(`why-${Math.random().toString(36).slice(2, 9)}`)
+  // useId, not Math.random: the id must match between server and client HTML.
+  const reactId = useId()
+  const titleId = useRef(`why-${reactId.replace(/[^a-zA-Z0-9_-]/g, '')}`)
 
   // Portal into #stack-root so the panel escapes .rv's transform (which would
   // otherwise become the containing block for position: fixed) while still
