@@ -2,47 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import '@/components/stack/cockpit-chapter.css'
-
-/* Local copies of the small viewport/timer hooks the other figures use, so this
-   chapter stays self-contained. */
-
-function useReducedMotionLocal(): boolean {
-  const [reduced, setReduced] = useState(false)
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setReduced(mq.matches)
-    const onChange = (e: MediaQueryListEvent) => setReduced(e.matches)
-    mq.addEventListener('change', onChange)
-    return () => mq.removeEventListener('change', onChange)
-  }, [])
-  return reduced
-}
-
-function useOnceVisibleLocal<T extends HTMLElement>(onVisible: () => void, threshold = 0.35) {
-  const ref = useRef<T | null>(null)
-  const fired = useRef(false)
-  const cb = useRef(onVisible)
-  cb.current = onVisible
-  useEffect(() => {
-    const el = ref.current
-    if (!el || fired.current) return
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting && !fired.current) {
-            fired.current = true
-            cb.current()
-            io.disconnect()
-          }
-        }
-      },
-      { threshold },
-    )
-    io.observe(el)
-    return () => io.disconnect()
-  }, [threshold])
-  return ref
-}
+import { useOnceVisible, useReducedMotion } from '@/components/stack/hooks'
 
 /* ── The instrument set ───────────────────────────────────── */
 
@@ -288,12 +248,12 @@ function LoopColumn({ active }: { active: number }) {
 const STEP_MS = 3400
 
 function LoopFigure() {
-  const reduced = useReducedMotionLocal()
+  const reduced = useReducedMotion()
   const [active, setActive] = useState(0)
   const [auto, setAuto] = useState(false)
   const tabsRef = useRef<(HTMLButtonElement | null)[]>([])
 
-  const figRef = useOnceVisibleLocal<HTMLDivElement>(() => {
+  const figRef = useOnceVisible<HTMLDivElement>(() => {
     if (!reduced) setAuto(true)
   }, 0.3)
 
@@ -484,9 +444,9 @@ export function CockpitChapter() {
         <div className="rv" data-d="1">
           <h3>So standardize the repo and let it do the briefing</h3>
           <p>
-            Every repository I work in carries the same instruments in the same places. Not similar
-            ones — the same filenames, at the root, holding the same kinds of sentence. That
-            sameness is the whole feature:{' '}
+            Every repository I do serious work in carries the same instruments in the same places.
+            Not similar ones — the same filenames, at the root, holding the same kinds of sentence.
+            That sameness is the whole feature:{' '}
             <b>an agent that has read one of my repos already knows how to read the next one.</b>
           </p>
           <p>
@@ -535,8 +495,8 @@ export function CockpitChapter() {
           <h3>Hooks make the right thing the automatic thing</h3>
           <p>
             Every hook below replaces a rule I used to write down and then hope for. Formatting used
-            to be a sentence in a CLAUDE.md; now it is a machine that runs after every edit and
-            costs zero tokens to obey.{' '}
+            to be a sentence in a CLAUDE.md; now, in the repos where I have wired it, it is a
+            machine that runs after every edit and costs zero tokens to obey.{' '}
             <b>Policy enforced by machinery instead of by the model remembering. </b>
           </p>
           <p>

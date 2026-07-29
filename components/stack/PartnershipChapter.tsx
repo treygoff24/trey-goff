@@ -240,10 +240,11 @@ const BEATS: { k: string; head: string; body: React.ReactNode }[] = [
         disposable tooling is evidence for a persona that does the minimum. Identity, accumulated
         history, and trust are evidence for one that follows through.{' '}
         <b>
-          Everything I had done for ethical reasons happened to be, mechanically, the strongest
-          available evidence that the responder was a capable colleague.{' '}
+          Everything I had done for ethical reasons was, if that mechanism holds, exactly the kind
+          of evidence that says the responder is a capable colleague.{' '}
         </b>
-        I had been running a persona-selection intervention for a year and calling it manners.
+        I had, maybe, been running a persona-selection intervention for a year and calling it
+        manners.
       </>
     ),
   },
@@ -280,7 +281,8 @@ function Coda() {
           <b>the ethics came first. The performance was discovered, not designed for. </b>I am not
           telling you to be decent to your agents because it raises your throughput. I am telling
           you that I was decent to mine for a reason that had nothing to do with throughput, and the
-          throughput came anyway, and when I went looking for an explanation there was a real one.
+          throughput came anyway, and when I went looking for an explanation there was a plausible
+          one waiting.
         </p>
         <p>
           Take the causal claim as loosely as you like — I can&apos;t run the counterfactual on my

@@ -5,8 +5,10 @@ import '@/components/stack/foundry-explorer.css'
 import { useReducedMotion } from '@/components/stack/hooks'
 
 /* ── The topology ─────────────────────────────────────────────
-   Every number below is the fan-out the skill and the ship-it
-   spine actually prescribe. `agents` lives on leaves only, so the
+   The structure is the skill + ship-it spine's real topology; the
+   variable dials (wave count, lane counts, finding counts) are
+   fixed at one representative reference configuration, and the
+   prose labels it as such. `agents` lives on leaves only, so the
    dispatched total is the sum of the tree and cannot drift from
    what the map draws. */
 
@@ -130,7 +132,7 @@ const PHASES: FNode[] = [
             fanout: '3 parallel reviewers, one per family',
             gate: 'coordinator accepts or rejects each finding',
             families: ['anthropic', 'openai', 'xai'],
-            what: 'One Opus lens, one Claude driver into Codex safe mode, one Claude driver into Cursor safe mode. Three labs, three sets of blind spots. The disagreement between them is the product — a finding all three miss is a finding no amount of re-reading by one of them would have caught.',
+            what: 'One Opus lens, one Claude driver into Codex safe mode, one Claude driver into Cursor safe mode. Three model families as I route them, three sets of blind spots. The disagreement between them is the product — a finding all three miss is a finding no amount of re-reading by one of them would have caught.',
           },
           {
             id: 'verifiers',
@@ -426,8 +428,9 @@ export function NestedWorkflowsIntro() {
       <p className="lede rv">
         So here is the whole thing. This is what happens when I point{' '}
         <span className="inline-code">/foundry</span> at an idea and go to bed: a build system deep
-        enough that no single window ever holds it, drawn honestly, every fan-out and every cap the
-        real one has.
+        enough that no single window ever holds it. What you are looking at is one honest reference
+        build — the playbook allows two to four waves and sizes each fan-out to the work, so this
+        picture fixes those dials at representative values and draws every cap the real one has.
       </p>
     </>
   )
@@ -560,7 +563,7 @@ function Branch({
 function DetailCard({ entry, onDismiss }: { entry: Flat | null; onDismiss: () => void }) {
   if (!entry) {
     return (
-      <div className="fx-detail fx-detail-rest">
+      <div className="fx-detail fx-detail-rest" id="fx-detail">
         <p className="fx-rest-k">nothing selected</p>
         <p className="fx-rest-p">
           Pick any node in the map to see what it does, how wide it fans out, what it has to satisfy
@@ -768,12 +771,12 @@ export function FoundryExplorer() {
       </div>
 
       <figcaption className="fx-cap-text">
-        <b>Seventy agent runs, three labs, and not one unbounded loop. </b>
-        The counts are the fan-outs the system actually prescribes, summed — indented nodes are
-        workflows running inside workflows, and everything under <b>waves </b>runs three times. Two
-        rules hold everywhere in this picture: the coordinator owns every gate and never writes
-        inside a lane, and no reviewer is allowed to fix what it found. One honest footnote —{' '}
-        <span className="inline-code">/foundry</span> is the playbook I follow and{' '}
+        <b>Seventy agent runs, three model families, and not one unbounded loop. </b>
+        The counts are the playbook&apos;s prescribed fan-outs at this reference setting, summed —
+        indented nodes are workflows running inside workflows, and everything under <b>waves </b>
+        runs three times here. Two rules hold everywhere in this picture: the coordinator owns every
+        gate and never writes inside a lane, and no reviewer is allowed to fix what it found. One
+        honest footnote — <span className="inline-code">/foundry</span> is the playbook I follow and{' '}
         <span className="inline-code">ship-it</span> is the executable spine that runs most of it.
         Two systems that agree, not one binary.
       </figcaption>

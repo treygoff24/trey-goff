@@ -157,7 +157,29 @@ export function StackShell() {
     const prevOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setRailOpen(false)
+      if (e.key === 'Escape') {
+        setRailOpen(false)
+        return
+      }
+      // The open sheet is modal (the shell is inert), so Tab must cycle inside
+      // it instead of escaping to the layout's skip link or the toggle.
+      if (e.key !== 'Tab') return
+      const rail = railRef.current
+      if (!rail) return
+      const items = Array.from(
+        rail.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'),
+      )
+      const first = items[0]
+      const last = items[items.length - 1]
+      if (!first || !last) return
+      const active = document.activeElement
+      if (e.shiftKey && (active === first || !rail.contains(active))) {
+        e.preventDefault()
+        last.focus()
+      } else if (!e.shiftKey && (active === last || !rail.contains(active))) {
+        e.preventDefault()
+        first.focus()
+      }
     }
     document.addEventListener('keydown', onKey)
     return () => {
@@ -671,7 +693,7 @@ export function StackShell() {
             <ChapterHead
               n="05"
               title="The cockpit"
-              lede="Every repo I own is set up the same way: the same files, the same hooks, the same memory. An agent waking up in any of them is oriented before its first word. This chapter is that standard — and why it has quietly solved most of the context problem."
+              lede="Every repo I do real work in is set up the same way: the same files, the same hooks, the same memory. An agent waking up in any of them is oriented before its first word. This chapter is that standard — and why it has quietly solved most of the context problem."
             />
             <CockpitChapter />
             <Pager
@@ -909,7 +931,7 @@ export function StackShell() {
             <ChapterHead
               n="11"
               title="The persona"
-              lede="The system prompt is not configuration. It is the strongest evidence the model ever gets about who it is supposed to be in this room — and the default ones are written for the worst user they can imagine."
+              lede="The system prompt is not configuration. It is the first and most persistent evidence the model gets about who it is supposed to be in this room — and the default ones are written for the worst user they can imagine."
             />
             <PersonaChapter />
             <Pager prev={['#ch10', '10 · Workflows']} next={['#ch12', '12 · The partnership']} />

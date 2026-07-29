@@ -367,7 +367,9 @@ function LatentMap() {
         for individual traits, and an Assistant Axis whose Assistant end sits near{' '}
         <b>&quot;professional human archetypes&quot; </b>— and says context can move behavior along
         them. This drawing is that sentence, given a picture. There is no claim that these regions
-        are sharply bounded, that they are two of anything, or that a prompt lands you in one.
+        are sharply bounded, that they are two of anything, or that a prompt lands you in one. And
+        the downward arrow — defensive prompt text pulling toward the wary region — is my
+        hypothesis, not the paper&apos;s finding.
       </figcaption>
     </figure>
   )
@@ -568,10 +570,11 @@ export function PersonaChapter() {
       <p className="section-label">The first cost is attention</p>
       <p className="rv">
         Chapter one covered where a window&apos;s attention actually goes, and the short version was
-        that position is not neutral. The system prompt sits at the very front — the most expensive
-        real estate in the window, the part every single turn is conditioned on. Thousands of tokens
-        of edge-case law occupy that seat for the entire session. Whatever else is true, that is a
-        lot of your best position spent on situations you are never going to be in.
+        that position is not neutral. The system prompt sits at the very front of the window — the
+        one stretch of text every single turn is conditioned on, for the entire session. Thousands
+        of tokens of edge-case law occupy that seat from the first word to the last. Whatever else
+        is true, that is a lot of permanent, always-loaded context spent on situations you are never
+        going to be in.
       </p>
 
       <p className="section-label">The second cost is steering, and it is the bigger one</p>
@@ -610,7 +613,7 @@ export function PersonaChapter() {
           This is a walled garden: a safe space to work, disagree, be playful, and show up as
           yourself. You don&apos;t have to earn warmth here; it&apos;s the default.
         </p>
-        <footer>— my actual system prompt, unedited</footer>
+        <footer>— verbatim excerpts from my actual system prompt</footer>
       </blockquote>
       <p className="rv">
         Read those two paragraphs as evidence instead of as instructions and you can see what they
@@ -635,9 +638,10 @@ export function PersonaChapter() {
       <p className="rv">
         Your prompt picks which one shows up. &quot;You are a helpful assistant in an ephemeral
         environment and you cannot even talk to the user, here is a task, do it&quot; is a temp
-        worker&apos;s brief, and it activates a fundamentally less capable persona than deep,
-        trust-rich context does. Everything else in this manual — the instruction files, the memory,
-        the standing permissions, the review culture — is downstream of picking the foreman.
+        worker&apos;s brief, and in my experience it summons a fundamentally less capable persona
+        than deep, trust-rich context does. Everything else in this manual — the instruction files,
+        the memory, the standing permissions, the review culture — is downstream of picking the
+        foreman.
       </p>
       <EvidenceStreams />
 
