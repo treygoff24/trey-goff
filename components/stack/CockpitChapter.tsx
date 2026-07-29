@@ -387,7 +387,7 @@ function LoopFigure() {
       </div>
 
       <p className="cp-cap">
-        <b>I never explain where we left off. </b>The repo does it. Note the division of labour:{' '}
+        <b>I never explain where we left off. </b>The repo does it. Note the division of labor:{' '}
         <span className="inline-code">/done</span> writes, the hook only reads. There is no daemon
         maintaining state behind my back — one skill I invoke deliberately produces the file, and
         one dumb, fast, fail-open hook serves it to whoever opens the repo next.

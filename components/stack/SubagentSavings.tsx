@@ -76,7 +76,7 @@ const CAPS: Record<SavKey, { lead: string; body: string; tail?: string }> = {
   },
 }
 
-/* The legend must name every colour on screen in the current state, and in
+/* The legend must name every color on screen in the current state, and in
    the fanned state three of them live only in the satellite windows. */
 function legendSegs(key: SavKey): Seg[] {
   const out = MAIN[key].segs.filter(([cls]) => cls !== 's-free')
