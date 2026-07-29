@@ -155,17 +155,19 @@ const NODE_H = 36
 
 const ringPoint = (i: number) => {
   const t = (-90 + i * 72) * (Math.PI / 180)
-  return { x: CX + RX * Math.cos(t), y: CY + RY * Math.sin(t) }
+  return { x: +(CX + RX * Math.cos(t)).toFixed(2), y: +(CY + RY * Math.sin(t)).toFixed(2) }
 }
 
 /* Chevrons sit between stations and point the way the loop runs. Rotation comes
    from the ellipse tangent so the arrowheads never disagree with the curve. */
+// Rounded to 2dp: server (Node) and client (V8 JIT) trig can differ in the
+// last ulp, which showed up as a hydration mismatch on the transform attr.
 const CHEVRONS = STATIONS.map((_, i) => {
   const t = (-90 + i * 72 + 36) * (Math.PI / 180)
   return {
-    x: CX + RX * Math.cos(t),
-    y: CY + RY * Math.sin(t),
-    a: (Math.atan2(RY * Math.cos(t), -RX * Math.sin(t)) * 180) / Math.PI,
+    x: +(CX + RX * Math.cos(t)).toFixed(2),
+    y: +(CY + RY * Math.sin(t)).toFixed(2),
+    a: +((Math.atan2(RY * Math.cos(t), -RX * Math.sin(t)) * 180) / Math.PI).toFixed(2),
   }
 })
 
