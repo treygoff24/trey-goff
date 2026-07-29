@@ -211,14 +211,29 @@ const RAIL_X = 28
 
 function LoopColumn({ active }: { active: number }) {
   const lastY = N_TOP + (STATIONS.length - 1) * N_PITCH
+  // The return edge carries the entire argument — that this is a loop and not
+  // a checklist — so on phones it gets an arrowhead and the hub caption the
+  // ring states in its middle, rather than a faint unlabeled curve.
+  const returnMidY = 0.125 * lastY + 0.375 * (lastY + 34) + 0.375 * (N_TOP - 26) + 0.125 * N_TOP
   return (
-    <svg viewBox={`0 0 300 ${lastY + 54}`} role="img" aria-label={LOOP_LABEL}>
+    <svg viewBox={`0 0 300 ${lastY + 92}`} role="img" aria-label={LOOP_LABEL}>
       <line className="cp-ring" x1={RAIL_X} y1={N_TOP} x2={RAIL_X} y2={lastY} />
       <path
         className="cp-ring"
         d={`M ${RAIL_X},${lastY} C 2,${lastY + 34} 2,${N_TOP - 26} ${RAIL_X},${N_TOP}`}
         fill="none"
       />
+      <path
+        className="cp-chev"
+        d="M -5 -5 L 5 0 L -5 5"
+        transform={`translate(8.5 ${returnMidY.toFixed(1)}) rotate(-90)`}
+      />
+      <text className="cp-ring-hub" x={150} y={lastY + 54} textAnchor="middle">
+        the session loop
+      </text>
+      <text className="cp-ring-sub" x={150} y={lastY + 76} textAnchor="middle">
+        nothing here is me remembering
+      </text>
       {STATIONS.map((s, i) => {
         const cy = N_TOP + i * N_PITCH
         const on = i === active
@@ -257,11 +272,19 @@ function LoopFigure() {
     if (!reduced) setAuto(true)
   }, 0.3)
 
+  // One timer per step rather than a standing interval, so the tour can retire
+  // itself the moment it closes the loop back onto station one. Autoplay that
+  // never ends is a WCAG 2.2.2 failure; this one ends on its own, and the
+  // control below can stop it sooner.
   useEffect(() => {
     if (!auto || reduced) return
-    const id = setInterval(() => setActive((i) => (i + 1) % STATIONS.length), STEP_MS)
-    return () => clearInterval(id)
-  }, [auto, reduced])
+    const id = setTimeout(() => {
+      const next = (active + 1) % STATIONS.length
+      setActive(next)
+      if (next === 0) setAuto(false)
+    }, STEP_MS)
+    return () => clearTimeout(id)
+  }, [auto, reduced, active])
 
   // Any deliberate pick ends the tour: the reader is driving now.
   const pick = useCallback((i: number) => {
@@ -287,13 +310,34 @@ function LoopFigure() {
   )
 
   return (
-    <div className="cp-loop rv" ref={figRef}>
+    <div
+      className="cp-loop rv"
+      ref={figRef}
+      // A pointer arriving over the figure means someone is reading it, so the
+      // tour yields to them without waiting to be told.
+      onPointerEnter={() => setAuto(false)}
+    >
       <div className="cp-loop-wide">
         <LoopRing active={active} />
       </div>
       <div className="cp-loop-narrow">
         <LoopColumn active={active} />
       </div>
+
+      {/* Under reduced motion there is no tour to stop, so the control would be
+          a dead button; the stations stay reachable through the tabs. */}
+      {reduced ? null : (
+        <div className="cp-ctl">
+          <button className="btn ghost cp-ctl-btn" type="button" onClick={() => setAuto((v) => !v)}>
+            {auto ? 'Pause tour' : 'Play tour'}
+          </button>
+          <span className="cp-ctl-note">
+            {auto
+              ? 'Advancing through the loop — click any station to take over.'
+              : 'Paused. Pick a station, or play the loop through once.'}
+          </span>
+        </div>
+      )}
 
       <div
         className="cp-tabs"
