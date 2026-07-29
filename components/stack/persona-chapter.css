@@ -33,14 +33,15 @@
 #stack-root .psn-fig {
   margin: 2rem 0 2.2rem;
 }
+/* Running prose, not a label — mono label scale at 375 characters was
+   unreadable next to ch10's 0.9rem captions. */
 #stack-root .psn-fig figcaption {
   margin-top: 1rem;
   padding-top: 0.75rem;
   border-top: 1px solid var(--sk-border-1);
-  font-family: var(--sk-mono);
-  font-size: 0.62rem;
-  line-height: 1.7;
-  letter-spacing: 0.03em;
+  font-size: 0.9rem;
+  line-height: 1.66;
+  max-width: 44rem;
   color: var(--sk-text-3);
 }
 
@@ -348,4 +349,11 @@
 #stack-root .psn-aside b {
   color: var(--sk-text-1);
   font-weight: 500;
+}
+
+/* Same measure discipline as the rest of the page: direct body paragraphs and
+   the prompt blockquote cap at ~66 characters per line. */
+#stack-root #ch11 > p.rv,
+#stack-root #ch11 > blockquote {
+  max-width: 44rem;
 }

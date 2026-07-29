@@ -56,9 +56,15 @@
 #stack-root .cmp-plot {
   position: relative;
 }
+/* Column-major flow: cell order runs down each column then rightward, so the
+   brightness gradient reads left-to-right — matching the horizontal axis
+   labels and the half-window marker. (Row-major flow made the gradient run
+   top-to-bottom under labels that claimed a horizontal axis.) */
 #stack-root .cmp-cells {
   display: grid;
-  grid-template-columns: repeat(40, 1fr);
+  grid-auto-flow: column;
+  grid-template-rows: repeat(8, auto);
+  grid-auto-columns: 1fr;
   gap: 2px;
 }
 #stack-root .cmp-cell {
@@ -156,9 +162,9 @@
 }
 
 @media (max-width: 700px) {
-  /* Halve the columns rather than shrinking cells past the point of reading. */
+  /* Twice the rows, so 20 columns of readable cells instead of 40 slivers. */
   #stack-root .cmp-cells {
-    grid-template-columns: repeat(20, 1fr);
+    grid-template-rows: repeat(16, auto);
   }
   #stack-root .cmp-axis {
     /* Wrap rather than shrink: 0.6rem is the type floor. */
@@ -174,4 +180,10 @@
   #stack-root .cmp-cell {
     transition-duration: 0.001ms !important;
   }
+}
+
+/* Cap the section's running body at the page's standard measure — full-column
+   17px prose ran to ~99 characters per line. */
+#stack-root .cmp-p {
+  max-width: 44rem;
 }

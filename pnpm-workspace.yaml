@@ -1,0 +1,12 @@
+# pnpm 11 no longer reads package.json's "pnpm" field; build-script policy
+# lives here now. These four have build scripts that were already not running
+# under the old default-warn behavior — listing them keeps installs
+# deterministic instead of failing ERR_PNPM_IGNORED_BUILDS.
+packages:
+  - '.'
+
+ignoredBuiltDependencies:
+  - onnxruntime-node
+  - protobufjs
+  - sharp
+  - simple-git-hooks

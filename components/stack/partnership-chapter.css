@@ -118,6 +118,9 @@
   font-size: clamp(1.05rem, 1.6vw, 1.25rem);
   letter-spacing: -0.01em;
   color: var(--sk-text-1);
+  /* Reserve two lines so a one-line title ("This page") doesn't lift every
+     label below it out of alignment with its sibling cards. */
+  min-height: 2.6em;
   margin: -0.35rem 0 0;
 }
 

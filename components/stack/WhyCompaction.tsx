@@ -224,15 +224,29 @@ function DegradationChart() {
                 {c.pts.map(([e, s]) => (
                   <circle key={e} cx={px(e)} cy={py(s)} r={3.5} />
                 ))}
+                {/* Curves ending at 512k have clear space to their right; the
+                    one 1M curve ends at the plot edge, so its label sits above
+                    the line end instead of colliding with it. */}
                 {last ? (
-                  <text
-                    className="why-pt"
-                    x={px(last[0]) - 8}
-                    y={py(last[1]) + 16}
-                    textAnchor="end"
-                  >
-                    {last[1]}%
-                  </text>
+                  last[0] < HI_EXP ? (
+                    <text
+                      className="why-pt"
+                      x={px(last[0]) + 9}
+                      y={py(last[1]) + 4}
+                      textAnchor="start"
+                    >
+                      {last[1]}%
+                    </text>
+                  ) : (
+                    <text
+                      className="why-pt"
+                      x={px(last[0]) - 4}
+                      y={py(last[1]) - 10}
+                      textAnchor="end"
+                    >
+                      {last[1]}%
+                    </text>
+                  )
                 ) : null}
               </g>
             )
@@ -319,10 +333,17 @@ function MiddleChart() {
           <line className="why-axis" x1={g.x0} x2={g.x1} y1={g.y1} y2={g.y1} />
           <g className="why-series whyc-mid">
             <polyline points={MID_PTS.map(([pos, , v]) => `${px(pos)},${py(v)}`).join(' ')} />
-            {MID_PTS.map(([pos, lbl, v]) => (
+            {MID_PTS.map(([pos, lbl, v], i) => (
               <g key={lbl}>
                 <circle cx={px(pos)} cy={py(v)} r={4} />
-                <text className="why-pt" x={px(pos)} y={py(v) - 11} textAnchor="middle">
+                {/* The first label starts after its point — centered, it would
+                    sit on the y-axis "80%" tick. */}
+                <text
+                  className="why-pt"
+                  x={i === 0 ? px(pos) + 7 : px(pos)}
+                  y={py(v) - 14}
+                  textAnchor={i === 0 ? 'start' : 'middle'}
+                >
                   {v}%
                 </text>
               </g>

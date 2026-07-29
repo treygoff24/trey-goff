@@ -115,13 +115,13 @@ export function CompactionSection() {
 
   return (
     <>
-      <p>
+      <p className="cmp-p">
         A context window does not fail at the moment it fills up. It gets worse on the way there.
         Anthropic says so in its own documentation:{' '}
         <b>as a conversation grows, response quality degrades. </b>The window is a budget, and the
         last tokens in it are worth much less than the first.
       </p>
-      <p>
+      <p className="cmp-p">
         So I compact early. On million-token models I set auto-compaction somewhere around the
         half-million mark, and in an interactive session I usually compact by hand at 300–400k
         without waiting to be told. That is not superstition. Several frontier models take their
@@ -220,7 +220,7 @@ export function CompactionSection() {
         </p>
       </figure>
 
-      <p>
+      <p className="cmp-p">
         The practical consequence is a packing order. Attention favors the edges, so the durable
         material goes up front — CLAUDE.md, the skills that matter, the standing brief. Put there,
         it sits where recall is strongest, and it is also the part most likely to survive a

@@ -265,9 +265,8 @@ function Coda() {
       <ol className="pt-beats">
         {BEATS.map((b) => (
           <li className="pt-beat rv" key={b.k}>
-            <span className="pt-beat-k" aria-hidden="true">
-              {b.k}
-            </span>
+            {/* Not aria-hidden: first/later/then is the ordering argument itself. */}
+            <span className="pt-beat-k">{b.k}</span>
             <div>
               <p className="pt-beat-head">{b.head}</p>
               <p className="pt-beat-body">{b.body}</p>

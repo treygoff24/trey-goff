@@ -133,6 +133,7 @@ export function WhyPanel({ label = 'Why tho?', title, children }: WhyPanelProps)
         className="why-trigger"
         type="button"
         ref={triggerRef}
+        aria-haspopup="dialog"
         aria-expanded={open}
         onClick={() => setOpen(true)}
       >
