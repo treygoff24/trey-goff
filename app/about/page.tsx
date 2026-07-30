@@ -1,15 +1,11 @@
 import { generatePersonSchema, generateProfilePageSchema } from '@/lib/structured-data'
 import { serializeJsonLd } from '@/lib/safe-json-ld'
-import { siteUrl } from '@/lib/site-config'
+import { pageAlternates } from '@/lib/site-config'
 
 export const metadata = {
   title: 'About',
   description: 'Who I am and what I believe.',
-  alternates: {
-    types: {
-      'text/markdown': `${siteUrl}/about.md`,
-    },
-  },
+  alternates: pageAlternates('/about', { markdownPath: '/about.md' }),
 }
 
 const facts = [

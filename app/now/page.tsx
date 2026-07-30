@@ -1,14 +1,10 @@
 import { Prose } from '@/components/content/Prose'
-import { siteUrl } from '@/lib/site-config'
+import { pageAlternates } from '@/lib/site-config'
 
 export const metadata = {
   title: 'Now',
   description: "What I'm currently focused on.",
-  alternates: {
-    types: {
-      'text/markdown': `${siteUrl}/now.md`,
-    },
-  },
+  alternates: pageAlternates('/now', { markdownPath: '/now.md' }),
 }
 
 export default function NowPage() {

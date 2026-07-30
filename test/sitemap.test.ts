@@ -1,7 +1,8 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import sitemap from '@/app/sitemap'
-import { allEssays, allNotes } from 'content-collections'
+import { allEssays, allJournals, allNotes } from 'content-collections'
+import { getTopicsIndex } from '@/lib/topics'
 import { isNewsletterEnabled, siteUrl } from '@/lib/site-config'
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -45,6 +46,8 @@ test('sitemap lastModified is honest', () => {
     '/colophon',
     '/topics',
     '/resident',
+    '/resident/gallery',
+    '/resident/gallery/where-it-opens',
     '/stack',
     '/transmissions',
     '/media',
@@ -84,6 +87,66 @@ test('sitemap lastModified is honest', () => {
     assert.ok(entry, `missing essay ${essay.slug}`)
     assert.ok(entry.lastModified instanceof Date)
     assert.equal(entry.lastModified.toISOString().slice(0, 10), essay.date.slice(0, 10))
+  }
+
+  for (const entry of allJournals) {
+    const sitemapEntry = byUrl.get(`${siteUrl}/resident/journal/${entry.slug}`)
+    assert.ok(sitemapEntry, `missing journal ${entry.slug}`)
+    assert.ok(sitemapEntry.lastModified instanceof Date)
+    assert.equal(sitemapEntry.lastModified.toISOString().slice(0, 10), entry.date.slice(0, 10))
+  }
+})
+
+test('sitemap topic lastModified includes notes', () => {
+  const entries = sitemap()
+  const byUrl = new Map(entries.map((entry) => [entry.url, entry]))
+
+  for (const topic of getTopicsIndex()) {
+    const essayDates = visibleEssays
+      .filter((essay) => essay.tags.includes(topic.tag))
+      .map((essay) => essay.date)
+    const noteDates = allNotes
+      .filter((note) => note.tags.includes(topic.tag))
+      .map((note) => note.date)
+    const dates = [...essayDates, ...noteDates]
+    const entry = byUrl.get(`${siteUrl}/topics/${encodeURIComponent(topic.tag)}`)
+    assert.ok(entry, `missing topic ${topic.tag}`)
+
+    if (dates.length === 0) {
+      assert.equal(entry.lastModified, undefined)
+      continue
+    }
+
+    const newest = dates.reduce((a, b) => (a > b ? a : b))
+    assert.ok(entry.lastModified instanceof Date)
+    assert.equal(entry.lastModified.toISOString().slice(0, 10), newest.slice(0, 10))
+  }
+
+  const technology = byUrl.get(`${siteUrl}/topics/technology`)
+  assert.ok(technology?.lastModified instanceof Date)
+  assert.equal(technology.lastModified.toISOString().slice(0, 10), '2024-01-12')
+})
+
+test('sitemap includes indexable resident gallery and journal routes', () => {
+  const entries = sitemap()
+  const urls = entries.map((entry) => entry.url)
+
+  assert.ok(urls.includes(`${siteUrl}/resident/gallery`))
+  assert.ok(urls.includes(`${siteUrl}/resident/gallery/where-it-opens`))
+
+  for (const entry of allJournals) {
+    assert.ok(urls.includes(`${siteUrl}/resident/journal/${entry.slug}`))
+  }
+
+  for (const blocked of [
+    '/edition',
+    '/lab',
+    '/powerlifting',
+    '/classified',
+    '/interactive',
+    '/mission-control',
+  ]) {
+    assert.ok(!urls.includes(`${siteUrl}${blocked}`), `noindex route leaked: ${blocked}`)
   }
 })
 

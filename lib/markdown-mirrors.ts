@@ -4,6 +4,53 @@ import { allEssays, allNotes } from 'content-collections'
 import { siteUrl } from '@/lib/site-config'
 
 const mirrorsDirectory = join(process.cwd(), 'content', 'mirrors')
+const instrumentsDirectory = join(process.cwd(), 'content', 'instruments')
+
+/** Capitalized MDX/JSX component tags (e.g. `<Callout>`, `</Callout.Root />`). */
+const CAPITALIZED_JSX_TAG = /<\/?[A-Z][\w]*(?:\.[A-Z][\w]*)?(?:\s[^<>]*?)?\s*\/?>/g
+
+/** Lowercase instrument custom elements (e.g. `<instrument-ledger>`, `</instrument-spine />`). */
+const INSTRUMENT_TAG = /<\/?instrument-[\w-]*(?:\s[^<>]*?)?\s*\/?>/g
+
+interface ClaimsLedgerSource {
+  title?: string
+  episode?: string
+  url?: string
+  date?: string
+}
+
+interface ClaimsLedgerSection {
+  id: string
+  title: string
+}
+
+interface ClaimsLedgerClaim {
+  id: string
+  section: string
+  title: string
+  claim: string
+  speakers?: string[]
+  timestamps?: string[]
+  type?: string
+  status?: string
+  verdict?: string
+  verdictLabel?: string
+  rationale?: string
+  finding?: string | null
+  dossier?: string | null
+}
+
+interface ClaimsLedger {
+  source?: ClaimsLedgerSource
+  canonicalIds?: {
+    first?: string
+    last?: string
+    total?: number
+    unassigned?: string[]
+  }
+  sections?: ClaimsLedgerSection[]
+  claims: ClaimsLedgerClaim[]
+}
 
 function byNewest<T extends { date: string }>(items: readonly T[]): T[] {
   return [...items].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
@@ -13,31 +60,40 @@ export function publishedEssays() {
   return allEssays.filter((essay) => essay.status !== 'draft')
 }
 
-function stripMdxStatements(markdown: string): string {
+function mapOutsideFences(markdown: string, transform: (line: string) => string | null): string {
   let fence: string | undefined
 
   return markdown
     .split('\n')
-    .filter((line) => {
+    .map((line) => {
       const fenceMatch = line.match(/^\s*(`{3,}|~{3,})/)
       if (fenceMatch) {
         const marker = fenceMatch[1]![0]
         if (!fence) fence = marker
         else if (fence === marker) fence = undefined
-        return true
+        return line
       }
 
-      return Boolean(fence) || !/^\s*(?:import|export)\s+/.test(line)
+      if (fence) return line
+      return transform(line)
     })
+    .filter((line): line is string => line !== null)
     .join('\n')
+}
+
+function stripMdxStatements(markdown: string): string {
+  return mapOutsideFences(markdown, (line) => (/^\s*(?:import|export)\s+/.test(line) ? null : line))
+}
+
+function stripTagsOutsideFences(markdown: string): string {
+  return mapOutsideFences(markdown, (line) =>
+    line.replace(CAPITALIZED_JSX_TAG, '').replace(INSTRUMENT_TAG, ''),
+  )
 }
 
 /** Removes MDX-only statements and component wrappers without changing ordinary Markdown. */
 export function cleanMdx(markdown: string): string {
-  return stripMdxStatements(markdown).replace(
-    /<\/?[A-Z][\w]*(?:\.[A-Z][\w]*)?(?:\s[^<>]*?)?\s*\/?>/g,
-    '',
-  )
+  return stripTagsOutsideFences(stripMdxStatements(markdown))
 }
 
 function oneLineSummary(markdown: string): string {
@@ -90,19 +146,76 @@ function markdownResponseBody(body: string): string {
   return `${body.trimEnd()}\n`
 }
 
+function loadClaimsLedger(slug: string): ClaimsLedger | null {
+  if (!/^[\w.-]+$/.test(slug)) return null
+
+  const path = join(instrumentsDirectory, slug, 'claims.json')
+  try {
+    if (!statSync(path).isFile()) return null
+    const parsed = JSON.parse(readFileSync(path, 'utf8')) as ClaimsLedger
+    if (!Array.isArray(parsed.claims)) return null
+    return parsed
+  } catch (error) {
+    if (error instanceof Error && 'code' in error && error.code === 'ENOENT') return null
+    throw error
+  }
+}
+
+function formatClaimsLedger(ledger: ClaimsLedger): string {
+  const claims = ledger.claims
+  const sectionTitles = new Map(
+    (ledger.sections ?? []).map((section) => [section.id, section.title]),
+  )
+  const sourceTitle = ledger.source?.title?.trim() || 'instrument claims'
+  const sourceUrl = ledger.source?.url?.trim()
+  const sourceBit = sourceUrl ? `${sourceTitle} ([source](${sourceUrl}))` : sourceTitle
+
+  const lines: string[] = ['## Claims ledger', '', `${claims.length} claims from ${sourceBit}.`, '']
+
+  let previousSection: string | undefined
+  for (const claim of claims) {
+    if (claim.section !== previousSection) {
+      previousSection = claim.section
+      const sectionTitle = sectionTitles.get(claim.section)
+      if (sectionTitle) {
+        lines.push(`**${sectionTitle}**`, '')
+      }
+    }
+
+    lines.push(`### ${claim.id} — ${claim.title}`, '')
+    if (claim.verdictLabel) {
+      lines.push(`Verdict: ${claim.verdictLabel}`, '')
+    }
+    lines.push(claim.claim, '')
+    if (claim.rationale) {
+      lines.push(claim.rationale, '')
+    }
+    if (claim.timestamps && claim.timestamps.length > 0) {
+      lines.push(`Timestamps: ${claim.timestamps.join(', ')}`, '')
+    }
+  }
+
+  return lines.join('\n').trimEnd()
+}
+
 export function buildEssayMarkdown(slug: string): string | null {
   const essay = publishedEssays().find((candidate) => candidate.slug === slug)
   if (!essay) return null
 
-  return markdownResponseBody(
-    [
-      `# ${essay.title}`,
-      '',
-      `Date: ${essay.date} | Summary: ${essay.summary} | Canonical: ${siteUrl}/writing/${essay.slug}`,
-      '',
-      cleanMdx(essay.content).trim(),
-    ].join('\n'),
-  )
+  const parts = [
+    `# ${essay.title}`,
+    '',
+    `Date: ${essay.date} | Summary: ${essay.summary} | Canonical: ${siteUrl}/writing/${essay.slug}`,
+    '',
+    cleanMdx(essay.content).trim(),
+  ]
+
+  const ledger = loadClaimsLedger(slug)
+  if (ledger) {
+    parts.push('', formatClaimsLedger(ledger))
+  }
+
+  return markdownResponseBody(parts.join('\n'))
 }
 
 export function buildNotesMarkdown(): string {

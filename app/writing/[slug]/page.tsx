@@ -11,7 +11,7 @@ import { loadInstrumentPiece } from '@/lib/instruments/manifest'
 import { InstrumentArticle } from '@/components/instruments/InstrumentArticle'
 import { generateArticleSchema, generateBreadcrumbSchema } from '@/lib/structured-data'
 import { getBacklinksForEssay, getOutgoingLinksForEssay } from '@/lib/backlinks'
-import { isNewsletterEnabled, siteUrl } from '@/lib/site-config'
+import { isNewsletterEnabled, pageAlternates, siteUrl } from '@/lib/site-config'
 import { serializeJsonLd } from '@/lib/safe-json-ld'
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -40,11 +40,9 @@ export async function generateMetadata({ params }: PageProps) {
   return {
     title: essay.title,
     description: essay.summary,
-    alternates: {
-      types: {
-        'text/markdown': `${siteUrl}/writing/${essay.slug}.md`,
-      },
-    },
+    alternates: pageAlternates(`/writing/${essay.slug}`, {
+      markdownPath: `/writing/${essay.slug}.md`,
+    }),
   }
 }
 

@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next'
-import { allEssays, allNotes } from 'content-collections'
+import { allEssays, allJournals, allNotes } from 'content-collections'
 import { getTopicsIndex } from '@/lib/topics'
 import { isNewsletterEnabled, siteUrl } from '@/lib/site-config'
 
@@ -32,6 +32,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/colophon',
     '/topics',
     '/resident',
+    '/resident/gallery',
+    '/resident/gallery/where-it-opens',
     '/stack',
     '/transmissions',
     '/media',
@@ -71,7 +73,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const essayDates = visibleEssays
       .filter((essay) => essay.tags.includes(topic.tag))
       .map((essay) => essay.date)
-    const lastModified = newestDate(essayDates)
+    const noteDates = allNotes
+      .filter((note) => note.tags.includes(topic.tag))
+      .map((note) => note.date)
+    const lastModified = newestDate([...essayDates, ...noteDates])
 
     return {
       url: `${siteUrl}/topics/${encodeURIComponent(topic.tag)}`,
@@ -81,5 +86,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   })
 
-  return [...staticEntries, ...essayEntries, ...topicEntries]
+  const journalEntries: MetadataRoute.Sitemap = allJournals.map((entry) => ({
+    url: `${siteUrl}/resident/journal/${entry.slug}`,
+    lastModified: new Date(entry.date),
+    changeFrequency: 'monthly' as const,
+    priority: 0.5,
+  }))
+
+  return [...staticEntries, ...essayEntries, ...topicEntries, ...journalEntries]
 }

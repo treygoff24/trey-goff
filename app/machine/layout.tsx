@@ -1,16 +1,12 @@
 import type { Metadata } from 'next'
 import { connection } from 'next/server'
 import { satoshi, newsreader, monaspace } from '@/lib/fonts'
-import { siteUrl } from '@/lib/site-config'
+import { pageAlternates } from '@/lib/site-config'
 
 export const metadata: Metadata = {
   title: 'The Compound Machine',
   description: 'Change the rules and watch the same people build two different futures.',
-  alternates: {
-    types: {
-      'text/markdown': `${siteUrl}/machine.md`,
-    },
-  },
+  alternates: pageAlternates('/machine', { markdownPath: '/machine.md' }),
 }
 
 export default async function MachineLayout({ children }: Readonly<{ children: React.ReactNode }>) {

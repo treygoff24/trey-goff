@@ -29,4 +29,4 @@ Every markdown mirror is reachable two ways: append `.md` to the page URL, or re
 - [Markdown sitemap](https://www.treygoff.com/sitemap.md)
 - [XML sitemap](https://www.treygoff.com/sitemap.xml)
 - [RSS feed](https://www.treygoff.com/feed.xml)
-- [Search index](https://www.treygoff.com/search-index.json): full-text JSON index of all site content
+- [Search index](https://www.treygoff.com/search-index.json): JSON search index of essays, notes, library books, projects, and page titles (not full text of every page; the markdown mirrors above are the complete representations)

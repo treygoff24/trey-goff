@@ -40,10 +40,10 @@ export const nextConfig: NextConfig = {
     ]
 
     // Content negotiation: Accept: text/markdown gets the markdown representation.
-    // The slug pattern excludes .md-suffixed paths so an agent sending the header
-    // to an already-.md URL is handled by the suffix rewrites above, not doubled.
+    // The slug pattern rejects dots so already-.md URLs stay with the suffix rewrites
+    // above and dotted siblings (/writing/feed.xml) are never captured.
     const markdownNegotiation = [
-      { source: '/writing/:slug((?!.*\\.md$)[^/]+)', destination: '/md/writing/:slug' },
+      { source: '/writing/:slug([^/.]+)', destination: '/md/writing/:slug' },
       ...['/notes', '/about', '/now', '/stack', '/machine'].map((source) => ({
         source,
         destination: `/md${source}`,

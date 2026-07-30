@@ -1,16 +1,12 @@
 import { allNotes } from 'content-collections'
 import { NoteCard } from '@/components/notes/NoteCard'
 import { renderNotes } from '@/lib/notes'
-import { siteUrl } from '@/lib/site-config'
+import { pageAlternates } from '@/lib/site-config'
 
 export const metadata = {
   title: 'Notes',
   description: 'Quick thoughts, dispatches, and interesting links.',
-  alternates: {
-    types: {
-      'text/markdown': `${siteUrl}/notes.md`,
-    },
-  },
+  alternates: pageAlternates('/notes', { markdownPath: '/notes.md' }),
 }
 
 export default async function NotesPage() {

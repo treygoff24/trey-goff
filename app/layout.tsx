@@ -9,7 +9,7 @@ import { EasterEggs } from '@/components/easter-eggs/EasterEggs'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { generateOrganizationSchema, generateWebSiteSchema } from '@/lib/structured-data'
 import { serializeJsonLd } from '@/lib/safe-json-ld'
-import { siteUrl } from '@/lib/site-config'
+import { rssAlternates, siteUrl } from '@/lib/site-config'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -24,11 +24,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: siteUrl,
     types: {
-      'application/rss+xml': [
-        { url: '/feed.xml', title: 'Trey Goff RSS Feed' },
-        { url: '/writing/feed.xml', title: 'Writing RSS Feed' },
-        { url: '/notes/feed.xml', title: 'Notes RSS Feed' },
-      ],
+      'application/rss+xml': rssAlternates,
     },
   },
   openGraph: {
