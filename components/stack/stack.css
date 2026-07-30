@@ -35,6 +35,13 @@ html:has(#stack-root) body > footer {
   --sk-accent: #97e8bb;
   --sk-amber: #fbbf24;
   --sk-rose: #f87171;
+  /* Edge-light: callout toning as light bleeding in from the left edge —
+     the page's aurora language — instead of a drawn side stripe. */
+  --sk-edge-warm: inset 16px 0 20px -16px rgba(111, 214, 154, 0.55);
+  --sk-edge-accent: inset 16px 0 20px -16px rgba(151, 232, 187, 0.55);
+  --sk-edge-amber: inset 16px 0 20px -16px rgba(251, 191, 36, 0.5);
+  --sk-edge-rose: inset 16px 0 20px -16px rgba(248, 113, 113, 0.5);
+  --sk-edge-dim: inset 16px 0 20px -16px rgba(232, 243, 236, 0.28);
   --sk-violet: #c4b5fd;
   --sk-sky: #7dd3fc;
 
@@ -928,7 +935,7 @@ html:has(#stack-root) body > footer {
 #stack-root .callout {
   margin: 2rem 0;
   padding: 1.15rem 1.3rem;
-  border-left: 2px solid var(--sk-warm);
+  box-shadow: var(--sk-edge-warm);
   background: linear-gradient(90deg, rgba(111, 214, 154, 0.07), transparent 70%);
   font-size: 0.97rem;
   color: var(--sk-text-2);
@@ -1016,7 +1023,7 @@ html:has(#stack-root) body > footer {
 #stack-root .anno button {
   text-align: left;
   border: 1px solid transparent;
-  border-left: 2px solid var(--sk-border-1);
+  box-shadow: var(--sk-edge-dim);
   background: none;
   color: var(--sk-text-3);
   font: inherit;
@@ -1024,7 +1031,7 @@ html:has(#stack-root) body > footer {
   line-height: 1.55;
   padding: 0.6rem 0.85rem;
   cursor: pointer;
-  border-radius: 0 5px 5px 0;
+  border-radius: 5px;
   transition: all 240ms var(--sk-ease);
 }
 #stack-root .anno button .h {
@@ -1041,7 +1048,7 @@ html:has(#stack-root) body > footer {
   color: var(--sk-text-2);
 }
 #stack-root .anno button[aria-pressed='true'] {
-  border-left-color: var(--sk-accent);
+  box-shadow: var(--sk-edge-accent);
   background: rgba(151, 232, 187, 0.06);
   color: var(--sk-text-1);
 }
@@ -1111,7 +1118,6 @@ html:has(#stack-root) body > footer {
   padding: 0.82rem 0.5rem 0.82rem 0.6rem;
   border: 0;
   border-bottom: 1px solid var(--sk-border-1);
-  border-left: 2px solid transparent;
   background: none;
   color: var(--sk-text-3);
   font: inherit;
@@ -1140,7 +1146,7 @@ html:has(#stack-root) body > footer {
 }
 #stack-root .rack-item:hover {
   background: rgba(151, 232, 187, 0.07);
-  border-left-color: var(--sk-border-2);
+  box-shadow: var(--sk-edge-dim);
   transform: translateX(3px);
 }
 #stack-root .rack-item:focus-visible,
@@ -1149,7 +1155,7 @@ html:has(#stack-root) body > footer {
   outline-offset: 3px;
 }
 #stack-root .rack-item[aria-pressed='true'] {
-  border-left-color: var(--sk-accent);
+  box-shadow: var(--sk-edge-accent);
   background: rgba(151, 232, 187, 0.07);
 }
 #stack-root .rack-item[aria-pressed='true'] .nm {
@@ -1543,13 +1549,23 @@ html:has(#stack-root) body > footer {
   font-weight: 500;
 }
 #stack-root .leaf-quote {
+  position: relative;
   font-family: var(--sk-serif);
   font-size: clamp(1.05rem, 1.8vw, 1.25rem);
   line-height: 1.5;
   color: var(--sk-text-2);
-  border-left: 2px solid var(--sk-warm);
-  padding-left: 1.1rem;
+  padding-left: 1.9rem;
   margin: 0 0 1.4rem;
+}
+#stack-root .leaf-quote::before {
+  content: '\201C';
+  position: absolute;
+  left: 0;
+  top: -0.08em;
+  font-size: 2.4em;
+  line-height: 1;
+  color: var(--sk-warm);
+  opacity: 0.8;
 }
 #stack-root .leaf-quote cite {
   display: block;

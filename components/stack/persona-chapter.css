@@ -10,8 +10,8 @@
   margin: 1.8rem 0;
   padding: 1.3rem 1.5rem;
   border: 1px solid var(--sk-border-1);
-  border-left: 2px solid var(--sk-accent);
-  border-radius: 0 8px 8px 0;
+  border-radius: 8px;
+  box-shadow: var(--sk-edge-accent);
   background: linear-gradient(100deg, rgba(151, 232, 187, 0.055), transparent 72%);
 }
 #stack-root .psn-brief p {
@@ -93,16 +93,19 @@
   flex: 1;
 }
 #stack-root .psn-cell {
-  padding: 0.6rem 0.7rem;
+  padding: 0.6rem 0.7rem 0.6rem 0.85rem;
   border-radius: 5px;
-  border-left: 2px solid var(--sk-border-1);
   background: var(--sk-surface-1);
 }
 #stack-root .psn-guarded .psn-cell {
-  border-left-color: var(--sk-rose);
+  box-shadow: var(--sk-edge-rose);
+  background:
+    linear-gradient(90deg, rgba(248, 113, 113, 0.05), transparent 55%), var(--sk-surface-1);
 }
 #stack-root .psn-trusted .psn-cell {
-  border-left-color: var(--sk-warm);
+  box-shadow: var(--sk-edge-warm);
+  background:
+    linear-gradient(90deg, rgba(111, 214, 154, 0.05), transparent 55%), var(--sk-surface-1);
 }
 #stack-root .psn-frag {
   display: block;
@@ -325,8 +328,8 @@
   margin: 1.6rem 0;
   padding: 1.1rem 1.25rem;
   border: 1px solid var(--sk-border-1);
-  border-left: 2px solid var(--sk-amber);
-  border-radius: 0 6px 6px 0;
+  border-radius: 6px;
+  box-shadow: var(--sk-edge-amber);
   background: rgba(251, 191, 36, 0.045);
 }
 #stack-root .psn-aside h4 {

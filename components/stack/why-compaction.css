@@ -89,8 +89,8 @@
   margin: 1.6rem 0;
   padding: 1rem clamp(0.9rem, 2.2vw, 1.3rem);
   border: 1px solid var(--sk-border-1, rgba(232, 243, 236, 0.13));
-  border-left: 2px solid var(--sk-border-2, rgba(151, 232, 187, 0.28));
   border-radius: 6px;
+  box-shadow: inset 16px 0 20px -16px rgba(151, 232, 187, 0.4);
   background: var(--sk-surface-1, rgba(232, 243, 236, 0.055));
   font-size: 0.84rem;
   line-height: 1.62;
