@@ -109,3 +109,39 @@ test('sitemap markdown lists published essay mirrors with summaries', () => {
     assert.match(sitemap, new RegExp(essay.summary.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')))
   }
 })
+
+test('a ``` example inside a ```` fence stays code and JSX after it is preserved', () => {
+  const source = [
+    '````md',
+    '```',
+    'nested fence example',
+    '```',
+    '<Callout>still code</Callout>',
+    '````',
+    'prose after',
+  ].join('\n')
+  const cleaned = cleanMdx(source)
+
+  assert.match(cleaned, /<Callout>still code<\/Callout>/)
+  assert.match(cleaned, /nested fence example/)
+  assert.match(cleaned, /prose after/)
+})
+
+test('multiline JSX opening tags are stripped from prose', () => {
+  const source = ['<Callout', '  tone="warm"', '>', 'Keep this text.', '</Callout>'].join('\n')
+  const cleaned = cleanMdx(source)
+
+  assert.doesNotMatch(cleaned, /<Callout/)
+  assert.doesNotMatch(cleaned, /tone="warm"/)
+  assert.match(cleaned, /Keep this text\./)
+})
+
+test('unverified claims still carry a verdict line', () => {
+  const markdown = buildEssayMarkdown('ufo-claims-ledger')
+  assert.ok(markdown)
+
+  const entries = markdown.split(/^### /m).slice(1)
+  const missingVerdict = entries.filter((entry) => !/^Verdict: \S/m.test(entry))
+  assert.equal(missingVerdict.length, 0)
+  assert.match(markdown, /Verdict: unverified/)
+})

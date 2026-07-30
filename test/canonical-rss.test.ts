@@ -14,7 +14,11 @@ describe('Layout metadata', () => {
   })
 
   test('should have RSS feed discovery links', () => {
-    assert.match(layoutSource, /rssAlternates/, 'layout should use the shared rssAlternates list')
+    assert.match(
+      layoutSource,
+      /['"]application\/rss\+xml['"]:\s*rssAlternates/,
+      'root metadata types should assign the shared rssAlternates list',
+    )
     const urls = rssAlternates.map((feed) => feed.url)
     assert.deepEqual(urls, ['/feed.xml', '/writing/feed.xml', '/notes/feed.xml'])
   })

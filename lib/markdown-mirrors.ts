@@ -60,40 +60,60 @@ export function publishedEssays() {
   return allEssays.filter((essay) => essay.status !== 'draft')
 }
 
-function mapOutsideFences(markdown: string, transform: (line: string) => string | null): string {
-  let fence: string | undefined
+type FenceSegment = { code: boolean; lines: string[] }
 
-  return markdown
-    .split('\n')
-    .map((line) => {
-      const fenceMatch = line.match(/^\s*(`{3,}|~{3,})/)
-      if (fenceMatch) {
-        const marker = fenceMatch[1]![0]
-        if (!fence) fence = marker
-        else if (fence === marker) fence = undefined
-        return line
+/**
+ * Splits by CommonMark fence rules: a fence closes only on a bare marker of the
+ * same character at least as long as the opener, so a ``` example inside a
+ * ```` block stays code.
+ */
+function segmentByFences(markdown: string): FenceSegment[] {
+  const segments: FenceSegment[] = []
+  let current: FenceSegment = { code: false, lines: [] }
+  let fence: { char: string; length: number } | undefined
+
+  for (const line of markdown.split('\n')) {
+    if (!fence) {
+      const open = line.match(/^\s*(`{3,}|~{3,})/)
+      if (open) {
+        if (current.lines.length > 0) segments.push(current)
+        fence = { char: open[1]![0]!, length: open[1]!.length }
+        current = { code: true, lines: [line] }
+        continue
       }
+      current.lines.push(line)
+      continue
+    }
 
-      if (fence) return line
-      return transform(line)
-    })
-    .filter((line): line is string => line !== null)
-    .join('\n')
-}
-
-function stripMdxStatements(markdown: string): string {
-  return mapOutsideFences(markdown, (line) => (/^\s*(?:import|export)\s+/.test(line) ? null : line))
-}
-
-function stripTagsOutsideFences(markdown: string): string {
-  return mapOutsideFences(markdown, (line) =>
-    line.replace(CAPITALIZED_JSX_TAG, '').replace(INSTRUMENT_TAG, ''),
-  )
+    current.lines.push(line)
+    const close = line.match(/^\s*(`{3,}|~{3,})\s*$/)
+    if (close && close[1]![0] === fence.char && close[1]!.length >= fence.length) {
+      fence = undefined
+      segments.push(current)
+      current = { code: false, lines: [] }
+    }
+  }
+  if (current.lines.length > 0) segments.push(current)
+  return segments
 }
 
 /** Removes MDX-only statements and component wrappers without changing ordinary Markdown. */
 export function cleanMdx(markdown: string): string {
-  return stripTagsOutsideFences(stripMdxStatements(markdown))
+  const outLines: string[] = []
+
+  for (const segment of segmentByFences(markdown)) {
+    if (segment.code) {
+      outLines.push(...segment.lines)
+      continue
+    }
+    const kept = segment.lines.filter((line) => !/^\s*(?:import|export)\s+/.test(line))
+    if (kept.length === 0) continue
+    // Whole-segment replace so multiline opening tags (<Callout\n  attr\n>) match.
+    const prose = kept.join('\n').replace(CAPITALIZED_JSX_TAG, '').replace(INSTRUMENT_TAG, '')
+    outLines.push(...prose.split('\n'))
+  }
+
+  return outLines.join('\n')
 }
 
 function oneLineSummary(markdown: string): string {
@@ -183,9 +203,9 @@ function formatClaimsLedger(ledger: ClaimsLedger): string {
     }
 
     lines.push(`### ${claim.id} — ${claim.title}`, '')
-    if (claim.verdictLabel) {
-      lines.push(`Verdict: ${claim.verdictLabel}`, '')
-    }
+    // Unverified claims carry a null verdict; mirror the interactive ledger, which
+    // labels them by status rather than omitting the line.
+    lines.push(`Verdict: ${claim.verdictLabel || claim.status || 'unverified'}`, '')
     lines.push(claim.claim, '')
     if (claim.rationale) {
       lines.push(claim.rationale, '')
