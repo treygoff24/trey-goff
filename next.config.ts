@@ -31,6 +31,30 @@ export const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react'],
   },
+  async rewrites() {
+    // Public .md URLs map onto the /md/* route handlers ([slug].md can't be a
+    // route directory — Next treats a bracket segment with a suffix as literal).
+    const markdownSuffix = [
+      { source: '/writing/:slug.md', destination: '/md/writing/:slug' },
+      { source: '/:name.md', destination: '/md/:name' },
+    ]
+
+    // Content negotiation: Accept: text/markdown gets the markdown representation.
+    // The slug pattern excludes .md-suffixed paths so an agent sending the header
+    // to an already-.md URL is handled by the suffix rewrites above, not doubled.
+    const markdownNegotiation = [
+      { source: '/writing/:slug((?!.*\\.md$)[^/]+)', destination: '/md/writing/:slug' },
+      ...['/notes', '/about', '/now', '/stack', '/machine'].map((source) => ({
+        source,
+        destination: `/md${source}`,
+      })),
+    ].map((rewrite) => ({
+      ...rewrite,
+      has: [{ type: 'header' as const, key: 'accept', value: '(.*)text/markdown(.*)' }],
+    }))
+
+    return { beforeFiles: [...markdownSuffix, ...markdownNegotiation] }
+  },
   async headers() {
     const baseHeaders = [
       { key: 'X-Frame-Options', value: 'DENY' },

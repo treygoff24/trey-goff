@@ -40,6 +40,11 @@ export async function generateMetadata({ params }: PageProps) {
   return {
     title: essay.title,
     description: essay.summary,
+    alternates: {
+      types: {
+        'text/markdown': `${siteUrl}/writing/${essay.slug}.md`,
+      },
+    },
   }
 }
 

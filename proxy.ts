@@ -51,6 +51,15 @@ function tryAnnexSecretBootstrap(request: NextRequest): NextResponse | null {
   return response
 }
 
+// HTML pages with a markdown alternate negotiate on Accept (next.config rewrites),
+// so caches must key on it. Set here because Next overwrites Vary from headers() config.
+function appliesMarkdownNegotiation(pathname: string): boolean {
+  return (
+    /^\/(?:notes|about|now|stack|machine)$/.test(pathname) ||
+    /^\/writing\/[^/]+$/.test(pathname)
+  )
+}
+
 function applyAnnexPrivacyHeaders(pathname: string, response: NextResponse): NextResponse {
   if (/^\/classified(?:\/|$)/.test(pathname)) {
     response.headers.set('Cache-Control', 'no-store, private')
@@ -148,6 +157,9 @@ export function proxy(request: NextRequest) {
   response.headers.set('Content-Security-Policy', csp)
   if (strictRoute) {
     response.headers.set(NONCE_REQUEST_HEADER, nonce)
+  }
+  if (appliesMarkdownNegotiation(pathname)) {
+    response.headers.append('Vary', 'Accept')
   }
 
   return applyAnnexPrivacyHeaders(pathname, response)

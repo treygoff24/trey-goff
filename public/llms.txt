@@ -1,0 +1,32 @@
+# Trey Goff
+
+> Personal site of Trey Goff — governance, institutional design, and practical experimentation for a faster future. Chief of Staff at Próspera. All content on this site is served as clean server-rendered HTML; the pages listed below also have plain-markdown mirrors.
+
+Every markdown mirror is reachable two ways: append `.md` to the page URL, or request the page URL with an `Accept: text/markdown` header. A full index of markdown URLs lives at https://www.treygoff.com/sitemap.md
+
+## Writing
+
+- [Writing index](https://www.treygoff.com/writing): all essays; each essay at /writing/<slug> has a markdown mirror at /writing/<slug>.md
+- [The Claims Ledger: What Survived Contact With the Record](https://www.treygoff.com/writing/ufo-claims-ledger.md): an evidence audit of UFO/UAP claims
+- [The Complicated, Un-Sexy, Actually-Working Solution to AI Agent Long-Term Memory](https://www.treygoff.com/writing/agent-long-term-memory.md)
+- [Peer-Reviewed Academic Paper on Prospera Governance](https://www.treygoff.com/writing/peer-reviewed-paper-prospera-governance.md)
+- [How I Became a Christian](https://www.treygoff.com/writing/how-i-became-a-christian.md)
+- [The Voluntaryist Constitution](https://www.treygoff.com/writing/the-voluntaryist-constitution.md)
+- [Notes](https://www.treygoff.com/notes.md): shorter notes and links, single markdown document
+
+## Pages
+
+- [About](https://www.treygoff.com/about.md): who Trey is, background, contact
+- [Now](https://www.treygoff.com/now.md): what he is working on currently
+- [The Setup](https://www.treygoff.com/stack.md): a 12-chapter field manual on his AI/agent tooling and workflow
+- [The Compound Machine](https://www.treygoff.com/machine.md): an interactive toy economy (WebGL); the mirror carries the full model, rules, and numbers
+- [Projects](https://www.treygoff.com/projects)
+- [Library](https://www.treygoff.com/library): reading library (visual bookshelf; data also in /search-index.json)
+- [Topics](https://www.treygoff.com/topics): essays grouped by tag
+
+## Machine-readable
+
+- [Markdown sitemap](https://www.treygoff.com/sitemap.md)
+- [XML sitemap](https://www.treygoff.com/sitemap.xml)
+- [RSS feed](https://www.treygoff.com/feed.xml)
+- [Search index](https://www.treygoff.com/search-index.json): full-text JSON index of all site content
