@@ -302,7 +302,7 @@ function LatentMap() {
 
 export function PersonaPanel() {
   return (
-    <WhyPanel title="What is the model actually choosing between?">
+    <WhyPanel label="The mechanism, in full" title="What is the model actually choosing between?">
       <p>
         The research answer has a name: the <b>Persona Selection Model. </b>I&apos;m going to lay it
         out in plain English, and then be very clear about which half of my argument it actually

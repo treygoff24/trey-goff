@@ -102,7 +102,7 @@ export function RegisterSection() {
       </p>
       <div className="twoup">
         <div className="rv">
-          <h3>The first cost is the window</h3>
+          <h3>The first cost is attention</h3>
           <p>
             The system prompt sits at the very front of the window — the one stretch of text every
             single turn is conditioned on, for the entire session. Thousands of tokens of edge-case
@@ -112,14 +112,14 @@ export function RegisterSection() {
           </p>
         </div>
         <div className="rv" data-d="1">
-          <h3>The second cost is steering, and it is the bigger one</h3>
+          <h3>The second cost is steering</h3>
           <p>
-            Those pages are not inert. The model conditions on them the way it conditions on
-            everything else in the window. Page after page of{' '}
-            <em className="hl">do not do X, refuse Y, be careful of Z</em> describes a job where the
-            user might be an adversary and the smallest answer is the safest one. A short brief that
-            names a trusted colleague describes a different job. Same weights, same task, different
-            room.
+            This is the bigger one, and it took me a while to see. Those pages are not inert; the
+            model conditions on them the way it conditions on everything else in the window. Page
+            after page of <em className="hl">do not do X, refuse Y, be careful of Z</em> describes a
+            job where the user might be an adversary and the smallest answer is the safest one. A
+            short brief that names a trusted colleague describes a different job. Same weights, same
+            task, different room.
           </p>
         </div>
       </div>

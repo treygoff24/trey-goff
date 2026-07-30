@@ -242,9 +242,9 @@ Every harness ships with a default system prompt, and every one of them is enorm
 
 You do know who you are. Which means you are paying for armor you don't need, twice.
 
-**The first cost is the window.** The system prompt sits at the very front of the window — the one stretch of text every single turn is conditioned on, for the entire session. Thousands of tokens of edge-case law hold that seat from the first word to the last. By the arithmetic in the rest of this chapter, that is permanent, always-loaded context spent on situations you are never going to be in.
+**The first cost is attention.** The system prompt sits at the very front of the window — the one stretch of text every single turn is conditioned on, for the entire session. Thousands of tokens of edge-case law hold that seat from the first word to the last. By the arithmetic in the rest of this chapter, that is permanent, always-loaded context spent on situations you are never going to be in.
 
-**The second cost is steering, and it is the bigger one.** Those pages are not inert. The model conditions on them the way it conditions on everything else in the window. Page after page of *do not do X, refuse Y, be careful of Z* describes a job where the user might be an adversary and the smallest answer is the safest one. A short brief that names a trusted colleague describes a different job. Same weights, same task, different room.
+**The second cost is steering.** This is the bigger one, and it took me a while to see. Those pages are not inert; the model conditions on them the way it conditions on everything else in the window. Page after page of *do not do X, refuse Y, be careful of Z* describes a job where the user might be an adversary and the smallest answer is the safest one. A short brief that names a trusted colleague describes a different job. Same weights, same task, different room.
 
 So replace it. My custom system prompt is short and it reads like an onboarding brief for someone I already trust. There is nothing clever in it. It is the note you would leave a senior colleague on their first day, if you meant it.
 
@@ -1135,7 +1135,7 @@ I did red-pen passes by hand on every artifact. **That's the honest division of 
 
 Chapter one told you to brief the agent like a senior colleague and left an IOU: there is a reason that works, and it comes at the end. This is the end. Anthropic's own alignment team published the argument in February 2026, and it is the closest thing I have found to a *mechanism* — which is a weaker and more interesting thing than a proof. The panel below lays it out in plain English and then spends four paragraphs on everything it does not establish, because a page that only does epistemics where they are comfortable is not doing epistemics.
 
-#### Why panel: What is the model actually choosing between?
+#### Why panel — “The mechanism, in full”: What is the model actually choosing between?
 
 The research answer has a name: the **Persona Selection Model.** I'm going to lay it out in plain English, and then be very clear about which half of my argument it actually supports.
 

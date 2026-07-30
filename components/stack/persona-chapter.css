@@ -363,3 +363,10 @@
 #stack-root .brief-sec > .section-label:first-child {
   margin-top: 3.2rem;
 }
+/* Every other .twoup on the page is followed by a callout or a download card,
+   each of which brings its own top margin. This one is followed by body copy,
+   so the grid has to carry the paragraph gap itself — without it the second
+   column runs straight into the next sentence once the columns stack. */
+#stack-root .brief-sec > .twoup {
+  margin: 0.4rem 0 1.1rem;
+}
