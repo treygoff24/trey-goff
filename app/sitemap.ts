@@ -22,6 +22,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/colophon',
     '/topics',
     '/resident',
+    '/stack',
+    '/transmissions',
+    '/media',
   ]
 
   if (isNewsletterEnabled) {

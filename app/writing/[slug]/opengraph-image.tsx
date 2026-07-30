@@ -71,7 +71,7 @@ export default async function OGImage({ params }: { params: Promise<{ slug: stri
           color: '#F5A25A',
         }}
       >
-        trey.world
+        treygoff.com
       </div>
     </div>,
     { ...size },

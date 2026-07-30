@@ -10,7 +10,7 @@ describe('Layout metadata', () => {
   test('should have alternates with canonical URL', () => {
     assert.match(layoutSource, /alternates:\s*\{/, 'metadata should have alternates configuration')
     assert.match(layoutSource, /canonical:\s*siteUrl/, 'alternates should reference siteUrl')
-    assert.equal(siteUrl, 'https://trey.world')
+    assert.equal(siteUrl, 'https://www.treygoff.com')
   })
 
   test('should have RSS feed discovery links', () => {

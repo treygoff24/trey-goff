@@ -24,8 +24,8 @@ describe('robots.txt', () => {
     const content = readFileSync(robotsPath, 'utf-8')
 
     assert.ok(
-      content.includes('Sitemap: https://trey.world/sitemap.xml'),
-      'Should reference sitemap at https://trey.world/sitemap.xml',
+      content.includes('Sitemap: https://www.treygoff.com/sitemap.xml'),
+      'Should reference sitemap at https://www.treygoff.com/sitemap.xml',
     )
   })
 })

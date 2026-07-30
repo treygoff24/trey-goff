@@ -89,7 +89,7 @@ export default function OGImage() {
               color: 'rgba(232, 243, 236, 0.6)',
             }}
           >
-            trey.world
+            treygoff.com
           </span>
         </div>
         <div

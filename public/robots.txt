@@ -7,4 +7,4 @@ Disallow: /api/
 Disallow: /preview/
 
 # Sitemap
-Sitemap: https://trey.world/sitemap.xml
+Sitemap: https://www.treygoff.com/sitemap.xml

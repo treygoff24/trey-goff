@@ -1,4 +1,4 @@
-const DEFAULT_SITE_URL = 'https://trey.world'
+const DEFAULT_SITE_URL = 'https://www.treygoff.com'
 
 function parseBooleanFlag(value: string | undefined): boolean {
   return value === 'true'

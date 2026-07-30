@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og'
 
 /**
  * The house Open Graph card: aurora gradient, two blurred orbs, a heading, the standing
- * tagline, and the trey.world footer. Every section index that does not art-direct its
+ * tagline, and the treygoff.com footer. Every section index that does not art-direct its
  * own card renders this one and supplies nothing but the heading.
  *
  * Routes that *do* art-direct their card (library, machine, writing/[slug]) build their
@@ -95,7 +95,7 @@ export function renderSiteOGCard(heading: string): ImageResponse {
           zIndex: 1,
         }}
       >
-        <span style={{ letterSpacing: '0.4em', textTransform: 'uppercase' }}>trey.world</span>
+        <span style={{ letterSpacing: '0.4em', textTransform: 'uppercase' }}>treygoff.com</span>
         <span style={{ color: '#F5A25A', fontWeight: 600 }}>Open Channel</span>
       </div>
     </div>,

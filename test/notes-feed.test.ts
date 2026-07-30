@@ -13,7 +13,7 @@ test('notes feed endpoint returns RSS XML with note links', async () => {
   assert.match(body, /<rss/i)
   assert.match(body, /<channel>/i)
   assert.match(body, /Trey Goff — Notes/i)
-  assert.match(body, /https:\/\/trey\.world\/notes#/)
+  assert.match(body, /https:\/\/www\.treygoff\.com\/notes#/)
 })
 
 test('notes feed endpoint does not mutate generated notes collection order', async () => {
