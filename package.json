@@ -10,7 +10,7 @@
     "prebuild": "pnpm content:sync && tsx scripts/validate-instruments.ts && tsx scripts/resolve-book-covers.ts && tsx scripts/resolve-appearance-covers.ts && tsx scripts/extract-book-colors.ts && tsx scripts/generate-search-index.ts && tsx scripts/generate-interactive-manifests.ts && tsx scripts/compress-assets.ts",
     "generate-manifests": "tsx scripts/generate-interactive-manifests.ts",
     "build": "next build",
-    "postbuild": "tsx scripts/validate-asset-budgets.ts && tsx scripts/check-bundle-isolation.ts",
+    "postbuild": "tsx scripts/validate-asset-budgets.ts && tsx scripts/check-bundle-isolation.ts && node scripts/indexnow-ping.mjs",
     "start": "next start",
     "fmt": "oxfmt -c .oxfmtrc.json --write app components lib scripts test e2e next.config.ts playwright.config.ts content-collections.ts eslint.config.mjs tsconfig.json tsconfig.ts7.json",
     "fmt:check": "oxfmt -c .oxfmtrc.json --check app components lib scripts test e2e next.config.ts playwright.config.ts content-collections.ts eslint.config.mjs tsconfig.json tsconfig.ts7.json",

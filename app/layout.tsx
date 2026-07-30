@@ -7,7 +7,7 @@ import { AuroraBackground } from '@/components/layout/AuroraBackground'
 import { CommandPaletteProvider, CommandPalette } from '@/components/command'
 import { EasterEggs } from '@/components/easter-eggs/EasterEggs'
 import { SpeedInsights } from '@vercel/speed-insights/next'
-import { generateOrganizationSchema } from '@/lib/structured-data'
+import { generateOrganizationSchema, generateWebSiteSchema } from '@/lib/structured-data'
 import { serializeJsonLd } from '@/lib/safe-json-ld'
 import { siteUrl } from '@/lib/site-config'
 import './globals.css'
@@ -62,6 +62,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   const organizationSchema = generateOrganizationSchema()
+  const webSiteSchema = generateWebSiteSchema()
 
   return (
     <html lang="en" className={`${satoshi.variable} ${newsreader.variable} ${monaspace.variable}`}>
@@ -70,6 +71,12 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: serializeJsonLd(organizationSchema),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: serializeJsonLd(webSiteSchema),
           }}
         />
         <CommandPaletteProvider>

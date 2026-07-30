@@ -1,4 +1,4 @@
-import { generatePersonSchema } from '@/lib/structured-data'
+import { generatePersonSchema, generateProfilePageSchema } from '@/lib/structured-data'
 import { serializeJsonLd } from '@/lib/safe-json-ld'
 
 export const metadata = {
@@ -19,6 +19,12 @@ export default function AboutPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: serializeJsonLd(generatePersonSchema()),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: serializeJsonLd(generateProfilePageSchema()),
         }}
       />
       <div className="tg-page max-w-5xl">

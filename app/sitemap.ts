@@ -8,6 +8,16 @@ const visibleEssays = isProduction
   ? allEssays.filter((essay) => essay.status !== 'draft')
   : allEssays
 
+function newestDate(dates: string[]): Date | undefined {
+  if (dates.length === 0) return undefined
+  let newest = dates[0]!
+  for (let i = 1; i < dates.length; i++) {
+    const candidate = dates[i]!
+    if (candidate > newest) newest = candidate
+  }
+  return new Date(newest)
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages = [
     '',
@@ -31,33 +41,45 @@ export default function sitemap(): MetadataRoute.Sitemap {
     staticPages.splice(8, 0, '/subscribe')
   }
 
-  const staticEntries = staticPages.map((route) => ({
-    url: `${siteUrl}${route}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: route === '' ? 1 : 0.8,
-  }))
+  const newestEssayDate = newestDate(visibleEssays.map((essay) => essay.date))
+  const newestNoteDate = newestDate(allNotes.map((note) => note.date))
 
-  const essayEntries = visibleEssays.map((essay) => ({
+  const staticEntries: MetadataRoute.Sitemap = staticPages.map((route) => {
+    const entry: MetadataRoute.Sitemap[number] = {
+      url: `${siteUrl}${route}`,
+      changeFrequency: 'weekly',
+      priority: route === '' ? 1 : 0.8,
+    }
+
+    if (route === '/writing' && newestEssayDate) {
+      entry.lastModified = newestEssayDate
+    } else if (route === '/notes' && newestNoteDate) {
+      entry.lastModified = newestNoteDate
+    }
+
+    return entry
+  })
+
+  const essayEntries: MetadataRoute.Sitemap = visibleEssays.map((essay) => ({
     url: `${siteUrl}/writing/${essay.slug}`,
     lastModified: new Date(essay.date),
-    changeFrequency: 'monthly' as const,
+    changeFrequency: 'monthly',
     priority: essay.status === 'evergreen' ? 0.9 : 0.7,
   }))
 
-  const noteEntries = allNotes.map((note) => ({
-    url: `${siteUrl}/notes#${encodeURIComponent(note.slug)}`,
-    lastModified: new Date(note.date),
-    changeFrequency: 'monthly' as const,
-    priority: 0.5,
-  }))
+  const topicEntries: MetadataRoute.Sitemap = getTopicsIndex().map((topic) => {
+    const essayDates = visibleEssays
+      .filter((essay) => essay.tags.includes(topic.tag))
+      .map((essay) => essay.date)
+    const lastModified = newestDate(essayDates)
 
-  const topicEntries = getTopicsIndex().map((topic) => ({
-    url: `${siteUrl}/topics/${encodeURIComponent(topic.tag)}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: 0.4,
-  }))
+    return {
+      url: `${siteUrl}/topics/${encodeURIComponent(topic.tag)}`,
+      ...(lastModified ? { lastModified } : {}),
+      changeFrequency: 'weekly' as const,
+      priority: 0.4,
+    }
+  })
 
-  return [...staticEntries, ...essayEntries, ...noteEntries, ...topicEntries]
+  return [...staticEntries, ...essayEntries, ...topicEntries]
 }

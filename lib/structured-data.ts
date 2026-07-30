@@ -1,5 +1,8 @@
 import { siteUrl } from '@/lib/site-config'
 
+const personId = `${siteUrl}/#person`
+const websiteId = `${siteUrl}/#website`
+
 export function generateOrganizationSchema() {
   return {
     '@context': 'https://schema.org',
@@ -13,12 +16,39 @@ export function generatePersonSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Person',
+    '@id': personId,
     name: 'Trey Goff',
     url: siteUrl,
     sameAs: ['https://x.com/thetreygoff', 'https://github.com/treygoff24'],
     jobTitle: 'Governance Innovation',
     description:
       'Building better governance through institutional design and practical experimentation.',
+  }
+}
+
+export function generateWebSiteSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': websiteId,
+    name: 'Trey Goff',
+    url: siteUrl,
+    publisher: {
+      '@id': personId,
+    },
+  }
+}
+
+export function generateProfilePageSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ProfilePage',
+    '@id': `${siteUrl}/about`,
+    url: `${siteUrl}/about`,
+    name: 'About — Trey Goff',
+    mainEntity: {
+      '@id': personId,
+    },
   }
 }
 
@@ -36,11 +66,13 @@ export function generateArticleSchema(essay: {
     datePublished: essay.date,
     dateModified: essay.date,
     author: {
+      '@id': personId,
       '@type': 'Person',
       name: 'Trey Goff',
       url: siteUrl,
     },
     publisher: {
+      '@id': personId,
       '@type': 'Person',
       name: 'Trey Goff',
     },
