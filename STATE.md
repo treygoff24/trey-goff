@@ -1,15 +1,13 @@
 # STATE — trey-goff site
 
-**Updated:** 2026-07-28 (late night, post-polish)
+**Updated:** 2026-07-30 (post agent-friendliness ship + domain rescue)
 
-- **/stack ("The Setup") live in prod through `b7346c5`** — 12-chapter AI field manual co-authored with Claude. Ship merge `eb327ca`, then four polish pushes: voice edit pass (`c4caa28`, cut the repeated X-is-not-Y template, restored contractions), gold glow on Why-tho triggers (`74b6da6`), Why-panel sticky-bar flush fix (`b7346c5` — sticky top:0 resolves against the scrollport's *padding* edge; scroller must have no padding-top).
-- Surfaced site-wide: top nav + footer "The Setup", homepage hero action "How I work with AI →" + Ways-in row.
-- Merged branch `stack-instrument` still exists locally + on origin — delete when Trey confirms deploy is healthy.
-- Open calls flagged for Trey (from the /stack build review):
-  - `public/stack/starter-skill-pack.md` lists six invented starter skills, not his real six.
-  - ch8 lede "mined from my session logs" is slightly generous phrasing.
-  - ~6 sites use raw `rgba(3,14,9,…)` recessed shade → candidate `--sk-bg-sunk` token (see `components/stack/*.css`).
-  - `package.json` still carries dead `pnpm.neverBuiltDependencies` (superseded by `pnpm-workspace.yaml`); pnpm warns every run.
-  - "full grandeur" never appears in shipped copy (voice-editor flag) — fine unless Trey wants the phrase itself on the page.
-- Research corpus backing /stack claims: `docs/_scratch/longctx-research/`, `docs/_scratch/stack2-research/` (gitignored — ground truth for cited figures).
+- **Agent-friendliness build live in prod through `de2e8eb`** (5 commits pushed + verification file). Markdown mirrors: every essay + /notes/about/now/stack/machine served at `<url>.md` AND via `Accept: text/markdown`; index at /sitemap.md; /llms.txt. Canonical domain fixed (www.treygoff.com everywhere). Architecture + footguns: memory `agent-friendly-site`.
+- **Hand-written mirrors drift**: `content/mirrors/{about,now,stack,machine}.md` are static transcriptions — any content change to those pages must update the mirror. No automation guards this.
+- **Search Console (account lawrencegoffiii@gmail.com)**: URL-prefix property `https://www.treygoff.com/` verified via `public/googleb9d0fb99739b546f.html` (never delete); sitemap.xml submitted 2026-07-30. Domain property `treygoff.com` pending — DNS TXT is live, Google auto-verifies or click VERIFY in GSC.
+- **DNS migrated to Vercel nameservers 2026-07-30** (ns1/ns2.vercel-dns.com), zombie Wix DNS evicted. Registrar: GoDaddy customer #257911591 via trey.goff@gmail.com — full map + Nov 2026 renewal risk: memory `treygoff-com-domain-infrastructure`.
+- **Watch**: claude.treygoff.com resolves but TLS cert wasn't issued yet at close (curl 000) — Vercel mints async; if still down next session check Vercel domain page cert status.
+- Merged branch `stack-instrument` still exists locally + on origin — delete when Trey confirms /stack deploy is healthy.
+- Open /stack calls for Trey (from build review): invented starter skills in `public/stack/starter-skill-pack.md`; ch8 "mined from session logs" phrasing; `--sk-bg-sunk` token candidate; dead `pnpm.neverBuiltDependencies` in package.json.
+- Research corpus backing /stack claims: `docs/_scratch/longctx-research/`, `docs/_scratch/stack2-research/` (gitignored).
 - Gate: `pnpm ci:quality` — green at last push. main == origin/main.
