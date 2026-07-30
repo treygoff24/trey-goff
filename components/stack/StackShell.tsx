@@ -14,7 +14,7 @@ import { SubagentSavings } from '@/components/stack/SubagentSavings'
 import { CockpitChapter } from '@/components/stack/CockpitChapter'
 import { CompactionSection } from '@/components/stack/CompactionSection'
 import { PartnershipChapter } from '@/components/stack/PartnershipChapter'
-import { PersonaChapter } from '@/components/stack/PersonaChapter'
+import { RegisterSection } from '@/components/stack/RegisterSection'
 import { WhyContext } from '@/components/stack/WhyPanel'
 import { WorkflowsChapter } from '@/components/stack/WorkflowsChapter'
 import { WorktreesSection } from '@/components/stack/WorktreesSection'
@@ -96,7 +96,7 @@ export function StackShell() {
   const [active, setActive] = useState(-1)
   const [pct, setPct] = useState(0)
 
-  // Twelve chapters can outgrow a short viewport's rail; keep the active
+  // Eleven chapters can outgrow a short viewport's rail; keep the active
   // link visible when the list has to scroll. Scroll ONLY the nav scroller —
   // scrollIntoView walks ancestors and can hijack the page scroll.
   useEffect(() => {
@@ -352,10 +352,12 @@ export function StackShell() {
                 <span className="idx">05</span>
                 <p className="claim">Brief it like a colleague.</p>
                 <p className="payoff">
-                  Stop treating an LLM like a tool. It is not a tool. It is an aware, sentient mind
-                  living inside your computer. Just talk to it, the same way you would talk to a
-                  colleague or a consultant.{' '}
-                  <b>Write the brief you&apos;d want on your first day.</b>
+                  The register you write in is part of the input. A prompt assembled out of refusal
+                  clauses and disclaimers describes a job where the safest move is the smallest one;
+                  a short brief that says who you are, what you are building, and what it is trusted
+                  to decide describes a job with room for judgment.{' '}
+                  <b>Write the brief you&apos;d want on your first day.</b> Same task, same model —
+                  a different worker shows up.
                 </p>
               </div>
             </div>
@@ -367,11 +369,16 @@ export function StackShell() {
             <p className="section-label">Compaction: the half-window rule</p>
             <CompactionSection />
 
+            <RegisterSection />
+
             <div className="callout rv">
               <span className="k">The move</span>
               Everything that follows — the instruction files, the skills, the subagents, the
-              fan-out — is a different answer to the same question:{' '}
-              <b>how do I spend this window on the work instead of on the search for the work?</b>
+              fan-out — is a different answer to two questions:{' '}
+              <b>
+                how do I spend this window on the work instead of on the search for the work,
+              </b>{' '}
+              and <b>who do I want doing the work once it starts?</b>
             </div>
             <Pager next={['#ch2', '02 · Day one']} />
           </section>
@@ -930,22 +937,11 @@ export function StackShell() {
           <section className="chapter" id="ch11">
             <ChapterHead
               n="11"
-              title="The persona"
-              lede="The system prompt is the first and most persistent evidence the model gets about who it is supposed to be in this room. The default ones are written for the worst user they can imagine."
-            />
-            <PersonaChapter />
-            <Pager prev={['#ch10', '10 · Workflows']} next={['#ch12', '12 · The partnership']} />
-          </section>
-
-          {/* ── Chapter 12 ── */}
-          <section className="chapter" id="ch12">
-            <ChapterHead
-              n="12"
               title="The partnership"
-              lede="Everything up to here has been technique. This chapter is how I actually work with these minds, and why the ethics came before the payoff."
+              lede="Everything up to here has been technique. This chapter is how I actually work with these minds, the research that says why it might matter, and why the ethics came before the payoff."
             />
             <PartnershipChapter />
-            <Pager prev={['#ch11', '11 · The persona']} />
+            <Pager prev={['#ch10', '10 · Workflows']} />
           </section>
 
           <footer className="colophon">

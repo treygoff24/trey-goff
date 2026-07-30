@@ -11,15 +11,14 @@ export const CHAPTERS = [
   { id: 'ch8', n: '08', title: 'A week in the life' },
   { id: 'ch9', n: '09', title: 'Build your own' },
   { id: 'ch10', n: '10', title: 'Workflows' },
-  { id: 'ch11', n: '11', title: 'The persona' },
-  { id: 'ch12', n: '12', title: 'The partnership' },
+  { id: 'ch11', n: '11', title: 'The partnership' },
 ] as const
 
 export const HERO_TERM: TermLine[] = [
   { t: 'cmd', v: 'claude "build the page that explains how you were built"' },
   { t: 'out', v: '', d: 300 },
   { t: 'out', c: 'dim', v: '● Reading AGENTS.md, app/globals.css, app/page.tsx …' },
-  { t: 'out', c: 'dim', v: '● Drafting visual thesis → 12 chapters, one strong idea each' },
+  { t: 'out', c: 'dim', v: '● Drafting visual thesis → 11 chapters, one strong idea each' },
   { t: 'out', c: 'dim', v: '● Writing components/stack/ — rail, terminals, decision tree' },
   { t: 'out', c: 'dim', v: '● Screenshotting at 1440px and 390px, iterating on its own critique' },
   { t: 'out', v: '' },

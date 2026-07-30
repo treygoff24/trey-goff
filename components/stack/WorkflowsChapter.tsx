@@ -589,7 +589,7 @@ export function WorkflowsChapter() {
         asking.
       </div>
 
-      <Pager prev={['#ch9', '09 · Build your own']} next={['#ch11', '11 · The persona']} />
+      <Pager prev={['#ch9', '09 · Build your own']} next={['#ch11', '11 · The partnership']} />
     </section>
   )
 }

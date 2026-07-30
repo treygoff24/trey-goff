@@ -18,7 +18,7 @@ Every markdown mirror is reachable two ways: append `.md` to the page URL, or re
 
 - [About](https://www.treygoff.com/about.md): who Trey is, background, contact
 - [Now](https://www.treygoff.com/now.md): what he is working on currently
-- [The Setup](https://www.treygoff.com/stack.md): a 12-chapter field manual on his AI/agent tooling and workflow
+- [The Setup](https://www.treygoff.com/stack.md): an 11-chapter field manual on his AI/agent tooling and workflow
 - [The Compound Machine](https://www.treygoff.com/machine.md): an interactive toy economy (WebGL); the mirror carries the full model, rules, and numbers
 - [Projects](https://www.treygoff.com/projects)
 - [Library](https://www.treygoff.com/library): reading library (visual bookshelf; data also in /search-index.json)

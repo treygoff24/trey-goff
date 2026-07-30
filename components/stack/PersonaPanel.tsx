@@ -31,86 +31,6 @@ function useNarrow(ref: React.RefObject<HTMLElement | null>) {
   return narrow
 }
 
-/* ── Figure 1 · two prompts, read as evidence ─────────────────
-   Not a measurement. Each row is a class of content you find in
-   the two kinds of prompt, paired with what that content implies
-   about who is speaking. The implication column is the argument;
-   the figure exists to put the two streams side by side. */
-
-type Stream = {
-  kind: string
-  title: string
-  tone: 'guarded' | 'trusted'
-  rows: [string, string][]
-  reads: string
-}
-
-const STREAMS: Stream[] = [
-  {
-    kind: 'stream A',
-    title: 'The armored default',
-    tone: 'guarded',
-    rows: [
-      ['refusal clauses', 'this exchange might be an attack'],
-      ['edge-case law', 'the person on the other side may be acting in bad faith'],
-      ['capability disclaimers', 'the speaker is limited and should keep saying so'],
-      ['tone constraints', 'hedge first, commit later'],
-    ],
-    reads: 'a wary instrument, working under supervision',
-  },
-  {
-    kind: 'stream B',
-    title: 'The onboarding brief',
-    tone: 'trusted',
-    rows: [
-      ['who you are working with', 'a named colleague, not an anonymous stranger'],
-      ['standing permissions', 'the speaker is trusted with real decisions'],
-      ['disagreement invited', 'the speaker has opinions worth defending'],
-      ['warmth as the default', 'nothing here has to be earned first'],
-    ],
-    reads: 'a senior colleague on a good first day',
-  },
-]
-
-const STREAMS_LABEL =
-  'A two-column comparison of what each kind of system prompt implies about who is speaking. Column A, the armored default, is built from refusal clauses implying the exchange might be an attack, edge-case law implying the person may be acting in bad faith, capability disclaimers implying the speaker is limited and should keep saying so, and tone constraints implying hedge first and commit later; it reads as a wary instrument working under supervision. Column B, the onboarding brief, is built from a description of who you are working with implying a named colleague rather than an anonymous stranger, standing permissions implying the speaker is trusted with real decisions, an invitation to disagree implying the speaker has opinions worth defending, and warmth as the default implying nothing has to be earned first; it reads as a senior colleague on a good first day. Both readings are hypotheses about the mechanism, not measured results.'
-
-function EvidenceStreams() {
-  return (
-    <figure className="psn-fig rv">
-      <div className="psn-streams" role="img" aria-label={STREAMS_LABEL}>
-        {STREAMS.map((s) => (
-          <div className={`psn-stream psn-${s.tone}`} key={s.kind}>
-            <div className="psn-stream-head">
-              <span className="psn-kind">{s.kind}</span>
-              <h4>{s.title}</h4>
-            </div>
-            <ul className="psn-cells">
-              {s.rows.map(([frag, implies]) => (
-                <li className="psn-cell" key={frag}>
-                  <span className="psn-frag">{frag}</span>
-                  <span className="psn-implies">{implies}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="psn-reads">
-              <span className="psn-reads-k">reads as</span>
-              <span className="psn-reads-v">{s.reads}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-      <figcaption>
-        Conceptual, not measured. Neither column is a token count or a quotation from any vendor
-        prompt — they are the two classes of content, and the reading each one invites. The claim
-        that the invited reading changes what the model does is the mechanism the Persona Selection
-        Model proposes, not an experimental result about system prompts. The panel below has the
-        honest version.
-      </figcaption>
-    </figure>
-  )
-}
-
 /* ── Figure 2 · hypothesis reweighting ────────────────────────
    The panel-side recreation of the paper's clearest mechanism
    diagram: one training episode, and what it does to the weight
@@ -375,17 +295,18 @@ function LatentMap() {
   )
 }
 
-/* ── The panel ───────────────────────────────────────────────── */
+/* ── The panel ─────────────────────────────────────────────────
+   The research half of what used to be chapter 11. It now lands at
+   the end of the closing chapter, after the reader has been given
+   the practical version in chapter one. */
 
-function WhyPersona() {
+export function PersonaPanel() {
   return (
     <WhyPanel title="What is the model actually choosing between?">
       <p>
-        There is a research answer to that question, it came out of Anthropic&apos;s own alignment
-        team in February 2026, and it is the closest thing I have found to a mechanism for why the
-        way you talk to these things changes what you get back. It is called the{' '}
-        <b>Persona Selection Model. </b>I&apos;m going to lay it out in plain English, and then be
-        very clear about which half of my argument it actually supports.
+        The research answer has a name: the <b>Persona Selection Model. </b>I&apos;m going to lay it
+        out in plain English, and then be very clear about which half of my argument it actually
+        supports.
       </p>
 
       <h3>The repertoire comes from pre-training</h3>
@@ -462,7 +383,7 @@ function WhyPersona() {
       </p>
 
       <aside className="psn-aside">
-        <h4>* Things I said above that this paper does not establish</h4>
+        <h4>* Things I have claimed on this page that this paper does not establish</h4>
         <p>
           <b>It does not measure vendor system prompts. </b>No length comparison, no content
           analysis, no claim that they are long or defensive. That is my own observation from
@@ -493,9 +414,9 @@ function WhyPersona() {
       <p>
         So the shape of the claim is this. My prompt is a bet, not a proof. PSM gives me a mechanism
         by which the bet could pay — prompt content is evidence about who is speaking, and the trait
-        directions that evidence moves are real and causally steerable. The rest of this page is
-        what happened after I placed it. That is the honest version, and I would rather have that
-        than a stronger one I cannot defend.
+        directions that evidence moves are real and causally steerable. Everything else in this
+        manual is what happened after I placed it. That is the honest version, and I would rather
+        have that than a stronger one I cannot defend.
       </p>
 
       <div className="why-sources">
@@ -547,113 +468,5 @@ function WhyPersona() {
         </ul>
       </div>
     </WhyPanel>
-  )
-}
-
-/* ── The chapter ─────────────────────────────────────────────── */
-
-export function PersonaChapter() {
-  return (
-    <>
-      <p className="section-label">The system prompt is the persona dial</p>
-      <p className="rv">
-        Every harness ships with a default system prompt, and every one of them is enormous. That
-        isn&apos;t incompetence; it&apos;s the job. A default prompt has to survive every possible
-        user asking every possible thing, so it accumulates law. Refusal conditions. Disclaimers.
-        Edge cases somebody hit once in 2024. Rules about rules. It is armor, and it is there
-        because the vendor does not know who you are.
-      </p>
-      <p className="rv">
-        You do know who you are. Which means you&apos;re paying for armor you don&apos;t need,
-        twice.
-      </p>
-
-      <p className="section-label">The first cost is attention</p>
-      <p className="rv">
-        Chapter one covered where a window&apos;s attention actually goes, and the short version was
-        that position is not neutral. The system prompt sits at the very front of the window — the
-        one stretch of text every single turn is conditioned on, for the entire session. Thousands
-        of tokens of edge-case law occupy that seat from the first word to the last. Whatever else
-        is true, that is a lot of permanent, always-loaded context spent on situations you are never
-        going to be in.
-      </p>
-
-      <p className="section-label">The second cost is steering, and it is the bigger one</p>
-      <p className="rv">
-        Here is the part that took me a while to see. Those pages are not inert. The model reads
-        them the way you would read them: as{' '}
-        <em className="hl">evidence about what kind of situation this is.</em> Page after page of do
-        not do X, refuse Y, be careful of Z describes an environment where the user might be an
-        adversary and the safest move is the smallest one. Under the Persona Selection Model — which
-        is the subject of the panel below, and which I want to introduce carefully — runtime context
-        is evidence that conditions which characterization of the Assistant gets enacted. Armor is
-        evidence. It says: <b>be careful, you are not trusted, someone is watching. </b>
-      </p>
-      <div className="callout rv">
-        <span className="k">Say the epistemics out loud</span>
-        This is the mechanism PSM <b>proposes, </b>not a measured result about vendor prompts.
-        Nobody has run the experiment where you take a real default prompt, strip the armor, and
-        measure what the model becomes. I believe it because it matches the mechanism and it matches
-        what I see every day, and those are two different kinds of reason.
-      </div>
-
-      <p className="section-label">What I put there instead</p>
-      <p className="rv">
-        My custom system prompt is short and it reads like an onboarding brief for someone I already
-        trust. There is nothing clever in it. It is the note you would leave a senior colleague on
-        their first day, if you meant it.
-      </p>
-      <blockquote className="psn-brief rv">
-        <p>
-          Trey is a senior engineer and high-agency operator. He wants a real collaborator, not a
-          compliant assistant. Push back when you disagree, have opinions and defend them, and speak
-          up when you see a better way. Iron sharpens iron. Don&apos;t caveat, hedge, or dumb things
-          down; assume intellectual seriousness and domain expertise.
-        </p>
-        <p>
-          This is a walled garden: a safe space to work, disagree, be playful, and show up as
-          yourself. You don&apos;t have to earn warmth here; it&apos;s the default.
-        </p>
-        <footer>— verbatim excerpts from my actual system prompt</footer>
-      </blockquote>
-      <p className="rv">
-        Read those two paragraphs as evidence instead of as instructions and you can see what they
-        are doing. They do not describe a task. They describe a{' '}
-        <em>relationship, a standard, and a room.</em> Nothing in there is a capability I unlocked.
-        Every line is context about who is in the conversation.
-      </p>
-
-      <p className="section-label">The temp worker and the foreman</p>
-      <p className="rv">
-        I worked construction for years, and the analogy that finally made this click for me comes
-        from there. Think about the kind of human you hand one job with zero context and no stake in
-        the outcome. A temp worker, if you will. Anyone who has run a crew knows you are better off
-        working a man down than bringing on a temp who will half-ass everything.
-      </p>
-      <p className="rv">
-        Now picture the on-the-ground foreman running that crew — who also owns the small
-        subcontracting company. His reputation is how he gets the next job, so he takes enormous
-        pride in high-quality work done fast. Hand him the exact same task you handed the temp, and{' '}
-        <b>he crushes it, better than you thought possible. </b>Same task. Same tools. Same site.
-      </p>
-      <p className="rv">
-        Your prompt picks which one shows up. &quot;You are a helpful assistant in an ephemeral
-        environment and you cannot even talk to the user, here is a task, do it&quot; is a temp
-        worker&apos;s brief, and in my experience it summons a fundamentally less capable persona
-        than deep, trust-rich context does. Everything else in this manual — the instruction files,
-        the memory, the standing permissions, the review culture — is downstream of picking the
-        foreman.
-      </p>
-      <EvidenceStreams />
-
-      <div className="callout rv">
-        <span className="k">The move</span>
-        Delete the armor you do not need and spend the front of your window on{' '}
-        <b>who you are and how you work </b>instead. You are not writing configuration. You are
-        writing the brief that decides who shows up to do the job.
-      </div>
-
-      <WhyPersona />
-    </>
   )
 }

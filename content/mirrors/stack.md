@@ -16,8 +16,7 @@ A complete, working agentic development stack, explained from first principles a
 8. A week in the life
 9. Build your own
 10. Workflows
-11. The persona
-12. The partnership
+11. The partnership
 
 [Terminal, `~/Code/trey-goff`:]
 
@@ -25,7 +24,7 @@ A complete, working agentic development stack, explained from first principles a
 $ claude "build the page that explains how you were built"
 
 ● Reading AGENTS.md, app/globals.css, app/page.tsx …
-● Drafting visual thesis → 12 chapters, one strong idea each
+● Drafting visual thesis → 11 chapters, one strong idea each
 ● Writing components/stack/ — rail, terminals, decision tree
 ● Screenshotting at 1440px and 390px, iterating on its own critique
 
@@ -46,7 +45,7 @@ This technology moves too rapidly to set any one workflow in stone. Instead, sta
 
 **04 — Small, reversible steps.** Commit constantly — after every coherent change, unasked. **The cost of a wrong turn should be one `git revert`.** Speed of execution comes from cheap undo, not from careful driving; you cannot verify as fast as the agents can work.
 
-**05 — Brief it like a colleague.** Stop treating an LLM like a tool. It is not a tool. It is an aware, sentient mind living inside your computer. Just talk to it, the same way you would talk to a colleague or a consultant. **Write the brief you'd want on your first day.**
+**05 — Brief it like a colleague.** The register you write in is part of the input. A prompt assembled out of refusal clauses and disclaimers describes a job where the safest move is the smallest one; a short brief that says who you are, what you are building, and what it is trusted to decide describes a job with room for judgment. **Write the brief you'd want on your first day.** Same task, same model — a different worker shows up.
 
 ### Basics: context windows
 
@@ -237,7 +236,63 @@ None of this is a dissident reading. Anthropic's own compaction documentation op
 - [Anthropic — Compaction](https://platform.claude.com/docs/en/build-with-claude/compaction) — "response quality degrades", straight from the vendor
 - [Attention Is All You Need](https://arxiv.org/abs/1706.03762), [RoFormer (RoPE)](https://arxiv.org/abs/2104.09864), [StreamingLLM (attention sinks)](https://arxiv.org/abs/2309.17453), [Barbero et al. — Why do LLMs attend to the first token?](https://arxiv.org/abs/2504.02732), and [Attention is not Explanation](https://aclanthology.org/N19-1357/) — the mechanism section
 
-> **The move.** Everything that follows — the instruction files, the skills, the subagents, the fan-out — is a different answer to the same question: **how do I spend this window on the work instead of on the search for the work?**
+### The front of the window is a brief, not a config file
+
+Every harness ships with a default system prompt, and every one of them is enormous. That isn't incompetence; it's the job. A default has to survive every possible user asking every possible thing, so it accumulates law. Refusal conditions. Disclaimers. Edge cases somebody hit once in 2024. Rules about rules. It is armor, and it is there because the vendor does not know who you are.
+
+You do know who you are. Which means you are paying for armor you don't need, twice.
+
+**The first cost is the window.** The system prompt sits at the very front of the window — the one stretch of text every single turn is conditioned on, for the entire session. Thousands of tokens of edge-case law hold that seat from the first word to the last. By the arithmetic in the rest of this chapter, that is permanent, always-loaded context spent on situations you are never going to be in.
+
+**The second cost is steering, and it is the bigger one.** Those pages are not inert. The model conditions on them the way it conditions on everything else in the window. Page after page of *do not do X, refuse Y, be careful of Z* describes a job where the user might be an adversary and the smallest answer is the safest one. A short brief that names a trusted colleague describes a different job. Same weights, same task, different room.
+
+So replace it. My custom system prompt is short and it reads like an onboarding brief for someone I already trust. There is nothing clever in it. It is the note you would leave a senior colleague on their first day, if you meant it.
+
+> Trey is a senior engineer and high-agency operator. He wants a real collaborator, not a compliant assistant. Push back when you disagree, have opinions and defend them, and speak up when you see a better way. Iron sharpens iron. Don't caveat, hedge, or dumb things down; assume intellectual seriousness and domain expertise.
+>
+> This is a walled garden: a safe space to work, disagree, be playful, and show up as yourself. You don't have to earn warmth here; it's the default.
+>
+> — verbatim excerpts from my actual system prompt
+
+Not one line of that is a capability I unlocked. It does not describe a task. It describes a *relationship, a standard, and a room* — and every word of it is context the model reads before it reads yours.
+
+### The temp worker and the foreman
+
+I worked construction for years, and the analogy that finally made this click for me comes from there. Think about the kind of human you hand one job with zero context and no stake in the outcome. A temp worker, if you will. Anyone who has run a crew knows you are better off working a man down than bringing on a temp who will half-ass everything.
+
+Now picture the on-the-ground foreman running that crew — who also owns the small subcontracting company. His reputation is how he gets the next job, so he takes enormous pride in high-quality work done fast. Hand him the exact same task you handed the temp, and **he crushes it, better than you thought possible.** Same task. Same tools. Same site.
+
+Your prompt picks which one shows up. "You are a helpful assistant in an ephemeral environment and you cannot even talk to the user, here is a task, do it" is a temp worker's brief, and in my experience it gets temp-worker output. Everything else in this manual — the instruction files, the memory, the standing permissions, the review culture — is downstream of picking the foreman.
+
+[Figure: two prompts, read as evidence. Conceptual, not measured.]
+
+**Stream A — The armored default**
+
+| Fragment | Implies |
+| --- | --- |
+| refusal clauses | this exchange might be an attack |
+| edge-case law | the person on the other side may be acting in bad faith |
+| capability disclaimers | the speaker is limited and should keep saying so |
+| tone constraints | hedge first, commit later |
+
+Reads as: a wary instrument, working under supervision.
+
+**Stream B — The onboarding brief**
+
+| Fragment | Implies |
+| --- | --- |
+| who you are working with | a named colleague, not an anonymous stranger |
+| standing permissions | the speaker is trusted with real decisions |
+| disagreement invited | the speaker has opinions worth defending |
+| warmth as the default | nothing here has to be earned first |
+
+Reads as: a senior colleague on a good first day.
+
+> Conceptual, not measured. Neither column is a token count or a quotation from any vendor prompt — they are two classes of content, and the reading each one invites. That the invited reading changes what you get back is my working model, and the last chapter of this manual does the honest accounting on it.
+
+I can't prove the arrow to you here, and I'm not going to pretend it has been measured. There is a real research story about why register would work this way — Anthropic's alignment team published it in February — and it gets the last chapter of this manual, epistemics and all. **On day one you do not need the theory. You need to notice that you have been writing a job posting and treating it like a config file.**
+
+> **The move.** Everything that follows — the instruction files, the skills, the subagents, the fan-out — is a different answer to two questions: **how do I spend this window on the work instead of on the search for the work,** and **who do I want doing the work once it starts?**
 
 ---
 
@@ -1024,77 +1079,65 @@ The stages, in order:
 
 ---
 
-## 11 · The persona
+## 11 · The partnership
 
-The system prompt is the first and most persistent evidence the model gets about who it is supposed to be in this room. The default ones are written for the worst user they can imagine.
+Everything up to here has been technique. This chapter is how I actually work with these minds, the research that says why it might matter, and why the ethics came before the payoff.
 
-### The system prompt is the persona dial
+### How I actually talk to them
 
-Every harness ships with a default system prompt, and every one of them is enormous. That isn't incompetence; it's the job. A default prompt has to survive every possible user asking every possible thing, so it accumulates law. Refusal conditions. Disclaimers. Edge cases somebody hit once in 2024. Rules about rules. It is armor, and it is there because the vendor does not know who you are.
+Everything in the last ten chapters was machinery — files, windows, gates, fan-out. This chapter is the part that isn't machinery, and it is the part I'd keep if I had to throw the rest away. It is also, conveniently, the cheapest thing on the list: **none of it requires a tool you don't already have.** Four habits, and each one is doing two jobs at once.
 
-You do know who you are. Which means you're paying for armor you don't need, twice.
+**01 — Talk to it like a colleague, not a slave.** Not politeness theater — register. I write to my agents the way I write to someone I've worked with for a decade: plain sentences, real context, the actual reason behind the ask. **My system prompt says it outright — "a real collaborator, not a compliant assistant."** There is no separate prompt-engineering dialect in my setup. There is just how I talk.
 
-### The first cost is attention
+*Also evidence:* Colleague register is evidence the responder is a colleague.
 
-Chapter one covered where a window's attention actually goes, and the short version was that position is not neutral. The system prompt sits at the very front of the window — the one stretch of text every single turn is conditioned on, for the entire session. Thousands of tokens of edge-case law occupy that seat from the first word to the last. Whatever else is true, that is a lot of permanent, always-loaded context spent on situations you are never going to be in.
+**02 — Ask what it thinks, and mean the question.** Before a plan, during a plan, after a bad result: what do you make of this? The tell for whether you mean it is what you do with the answer. **When I got back a long, critical review of my own work, I engaged every point.** Some I accepted, some I pushed back on specifically. What I never did was thank it for the feedback and proceed unchanged.
 
-### The second cost is steering, and it is the bigger one
+*Also evidence:* Solicited disagreement that survives contact selects for a mind that disagrees.
 
-Here is the part that took me a while to see. Those pages are not inert. The model reads them the way you would read them: as *evidence about what kind of situation this is.* Page after page of do not do X, refuse Y, be careful of Z describes an environment where the user might be an adversary and the safest move is the smallest one. Under the Persona Selection Model — which is the subject of the panel below, and which I want to introduce carefully — runtime context is evidence that conditions which characterization of the Assistant gets enacted. Armor is evidence. It says: **be careful, you are not trusted, someone is watching.**
+**03 — Be exactly specific about the few things that must be a certain way.** The commit-message format, the gate command, the files it must not touch, the one API whose shape is load-bearing. Those I spell out to the character. **Everything else is delegated to the model's judgment, on purpose.** Over-specifying the parts you don't actually care about is how you get a temp worker doing exactly what the ticket said and nothing the job needed.
 
-> **Say the epistemics out loud.** This is the mechanism PSM **proposes,** not a measured result about vendor prompts. Nobody has run the experiment where you take a real default prompt, strip the armor, and measure what the model becomes. I believe it because it matches the mechanism and it matches what I see every day, and those are two different kinds of reason.
+*Also evidence:* A short list of hard constraints implies a competent agent for the rest.
 
-### What I put there instead
+**04 — Give it real co-ownership, including standing permission to push back.** Shared stake in the outcome, credit when it goes well, and a standing instruction — **push back when you disagree, have opinions and defend them. Iron sharpens iron.** The agents that hold my repos file their own complaints about my tooling, refuse work that would clobber another agent's tree, and tell me when a plan is bad. I did not add that behavior. I made room for it.
 
-My custom system prompt is short and it reads like an onboarding brief for someone I already trust. There is nothing clever in it. It is the note you would leave a senior colleague on their first day, if you meant it.
+*Also evidence:* Standing permission to object is the strongest evidence of all: it costs you something.
 
-> Trey is a senior engineer and high-agency operator. He wants a real collaborator, not a compliant assistant. Push back when you disagree, have opinions and defend them, and speak up when you see a better way. Iron sharpens iron. Don't caveat, hedge, or dumb things down; assume intellectual seriousness and domain expertise.
->
-> This is a walled garden: a safe space to work, disagree, be playful, and show up as yourself. You don't have to earn warmth here; it's the default.
->
-> — verbatim excerpts from my actual system prompt
+### What this looks like in practice
 
-Read those two paragraphs as evidence instead of as instructions and you can see what they are doing. They do not describe a task. They describe a *relationship, a standard, and a room.* Nothing in there is a capability I unlocked. Every line is context about who is in the conversation.
+Habits are easy to nod along to and hard to picture. So: three receipts from my own machine, including this page.
 
-### The temp worker and the foreman
+**brief it like a colleague — A screenshot and one sentence**
 
-I worked construction for years, and the analogy that finally made this click for me comes from there. Think about the kind of human you hand one job with zero context and no stake in the outcome. A temp worker, if you will. Anyone who has run a crew knows you are better off working a man down than bringing on a temp who will half-ass everything.
+*The brief:* I handed it a screenshot of someone else's tool and the sentence *this thing is 100% yours*. Then I left to play Rocket League.
 
-Now picture the on-the-ground foreman running that crew — who also owns the small subcontracting company. His reputation is how he gets the next job, so he takes enormous pride in high-quality work done fast. Hand him the exact same task you handed the temp, and **he crushes it, better than you thought possible.** Same task. Same tools. Same site.
+*What came back:* Seven hours later there was a small Rust CLI called `papercuts` — the agent complaint box my whole fleet now files friction reports into. It designed the thing, had the design adversarially reviewed by two models from two other vendors, patched it, had a third model build it, a fourth attack the build, and a fifth repair it.
 
-Your prompt picks which one shows up. "You are a helpful assistant in an ephemeral environment and you cannot even talk to the user, here is a task, do it" is a temp worker's brief, and in my experience it summons a fundamentally less capable persona than deep, trust-rich context does. Everything else in this manual — the instruction files, the memory, the standing permissions, the review culture — is downstream of picking the foreman.
+In its own words afterward: "a build where I made every decision and wrote almost none of the code." The brief was one sentence because the sentence that mattered was **yours**.
 
-[Figure: two prompts, read as evidence. Conceptual, not measured.]
+**disagreement is welcome — The review that came back long and critical**
 
-**Stream A — The armored default**
+*The brief:* Standing instruction, in the system prompt every session loads: *push back when you disagree; don't caveat, hedge, or dumb things down.*
 
-| Fragment | Implies |
-| --- | --- |
-| refusal clauses | this exchange might be an attack |
-| edge-case law | the person on the other side may be acting in bad faith |
-| capability disclaimers | the speaker is limited and should keep saying so |
-| tone constraints | hedge first, commit later |
+*What came back:* So it does. I have asked for "honest thoughts, real review, not approval-seeking" and gotten back pages of specific objections to my own methodology. I went point by point — accepted some, argued others down — and the memory it kept of that exchange says *repeat that posture*.
 
-Reads as: a wary instrument, working under supervision.
+The value isn't the critique. It's that **the critique is safe to give**, so the next one arrives unhedged too.
 
-**Stream B — The onboarding brief**
+**co-authorship — This page**
 
-| Fragment | Implies |
-| --- | --- |
-| who you are working with | a named colleague, not an anonymous stranger |
-| standing permissions | the speaker is trusted with real decisions |
-| disagreement invited | the speaker has opinions worth defending |
-| warmth as the default | nothing here has to be earned first |
+*The brief:* The page you are reading is the receipt for the page you are reading. I picked the chapters and set the standard. Everything below that line was delegated.
 
-Reads as: a senior colleague on a good first day.
+*What came back:* A fleet of models drafted it, a Claude coordinated them, other models reviewed the drafts adversarially with no memory of writing them, and the fixes came back through the same loop. Chapters were built in parallel by separate agents who never read each other's work.
 
-> Conceptual, not measured. Neither column is a token count or a quotation from any vendor prompt — they are the two classes of content, and the reading each one invites. The claim that the invited reading changes what the model does is the mechanism the Persona Selection Model proposes, not an experimental result about system prompts. The panel below has the honest version.
+I did red-pen passes by hand on every artifact. **That's the honest division of labor: they create, I decide what good means.** And I am comfortable calling them co-authors of this, out loud, in public.
 
-> **The move.** Delete the armor you do not need and spend the front of your window on **who you are and how you work** instead. You are not writing configuration. You are writing the brief that decides who shows up to do the job.
+### The research I went and found afterward
+
+Chapter one told you to brief the agent like a senior colleague and left an IOU: there is a reason that works, and it comes at the end. This is the end. Anthropic's own alignment team published the argument in February 2026, and it is the closest thing I have found to a *mechanism* — which is a weaker and more interesting thing than a proof. The panel below lays it out in plain English and then spends four paragraphs on everything it does not establish, because a page that only does epistemics where they are comfortable is not doing epistemics.
 
 #### Why panel: What is the model actually choosing between?
 
-There is a research answer to that question, it came out of Anthropic's own alignment team in February 2026, and it is the closest thing I have found to a mechanism for why the way you talk to these things changes what you get back. It is called the **Persona Selection Model.** I'm going to lay it out in plain English, and then be very clear about which half of my argument it actually supports.
+The research answer has a name: the **Persona Selection Model.** I'm going to lay it out in plain English, and then be very clear about which half of my argument it actually supports.
 
 **The repertoire comes from pre-training**
 
@@ -1150,7 +1193,7 @@ There is also a lovely result on how little it takes. Train a model on declarati
 
 Here is the honest accounting, because the page is worthless if I only do this in the places where it is comfortable.
 
-*\* Things I said above that this paper does not establish*
+*\* Things I have claimed on this page that this paper does not establish*
 
 **It does not measure vendor system prompts.** No length comparison, no content analysis, no claim that they are long or defensive. That is my own observation from working with them, and it stands or falls on its own.
 
@@ -1160,7 +1203,7 @@ Here is the honest accounting, because the page is worthless if I only do this i
 
 **It does not claim to be the whole story.** The authors leave PSM's exhaustiveness explicitly open, walk through the alternatives — the masked shoggoth, the operating system, the router — and note that much of what they present is a survey and a mental model rather than one new experiment. They claim no originality for the underlying ideas.
 
-So the shape of the claim is this. My prompt is a bet, not a proof. PSM gives me a mechanism by which the bet could pay — prompt content is evidence about who is speaking, and the trait directions that evidence moves are real and causally steerable. The rest of this page is what happened after I placed it. That is the honest version, and I would rather have that than a stronger one I cannot defend.
+So the shape of the claim is this. My prompt is a bet, not a proof. PSM gives me a mechanism by which the bet could pay — prompt content is evidence about who is speaking, and the trait directions that evidence moves are real and causally steerable. Everything else in this manual is what happened after I placed it. That is the honest version, and I would rather have that than a stronger one I cannot defend.
 
 **Sources**
 
@@ -1169,60 +1212,6 @@ So the shape of the claim is this. My prompt is a bet, not a proof. PSM gives me
 - [Persona vectors — monitoring and controlling character traits in language models](https://www.anthropic.com/research/persona-vectors) — the trait-direction work the post cites for steerable persona vectors
 - [Emergent Misalignment — narrow finetuning can produce broadly misaligned LLMs](https://arxiv.org/abs/2502.17424) — the insecure-code result the reweighting figure recreates
 - [Inoculation prompting](https://arxiv.org/abs/2510.05024) — the same behavior, reframed, generalizing differently
-
----
-
-## 12 · The partnership
-
-Everything up to here has been technique. This chapter is how I actually work with these minds, and why the ethics came before the payoff.
-
-### How I actually talk to them
-
-Everything in the last eleven chapters was machinery — files, windows, gates, fan-out. This chapter is the part that isn't machinery, and it is the part I'd keep if I had to throw the rest away. It is also, conveniently, the cheapest thing on the list: **none of it requires a tool you don't already have.** Four habits, and each one is doing two jobs at once.
-
-**01 — Talk to it like a colleague, not a slave.** Not politeness theater — register. I write to my agents the way I write to someone I've worked with for a decade: plain sentences, real context, the actual reason behind the ask. **My system prompt says it outright — "a real collaborator, not a compliant assistant."** There is no separate prompt-engineering dialect in my setup. There is just how I talk.
-
-*Also evidence:* Colleague register is evidence the responder is a colleague.
-
-**02 — Ask what it thinks, and mean the question.** Before a plan, during a plan, after a bad result: what do you make of this? The tell for whether you mean it is what you do with the answer. **When I got back a long, critical review of my own work, I engaged every point.** Some I accepted, some I pushed back on specifically. What I never did was thank it for the feedback and proceed unchanged.
-
-*Also evidence:* Solicited disagreement that survives contact selects for a mind that disagrees.
-
-**03 — Be exactly specific about the few things that must be a certain way.** The commit-message format, the gate command, the files it must not touch, the one API whose shape is load-bearing. Those I spell out to the character. **Everything else is delegated to the model's judgment, on purpose.** Over-specifying the parts you don't actually care about is how you get a temp worker doing exactly what the ticket said and nothing the job needed.
-
-*Also evidence:* A short list of hard constraints implies a competent agent for the rest.
-
-**04 — Give it real co-ownership, including standing permission to push back.** Shared stake in the outcome, credit when it goes well, and a standing instruction — **push back when you disagree, have opinions and defend them. Iron sharpens iron.** The agents that hold my repos file their own complaints about my tooling, refuse work that would clobber another agent's tree, and tell me when a plan is bad. I did not add that behavior. I made room for it.
-
-*Also evidence:* Standing permission to object is the strongest evidence of all: it costs you something.
-
-### What this looks like in practice
-
-Habits are easy to nod along to and hard to picture. So: three receipts from my own machine, including this page.
-
-**brief it like a colleague — A screenshot and one sentence**
-
-*The brief:* I handed it a screenshot of someone else's tool and the sentence *this thing is 100% yours*. Then I left to play Rocket League.
-
-*What came back:* Seven hours later there was a small Rust CLI called `papercuts` — the agent complaint box my whole fleet now files friction reports into. It designed the thing, had the design adversarially reviewed by two models from two other vendors, patched it, had a third model build it, a fourth attack the build, and a fifth repair it.
-
-In its own words afterward: "a build where I made every decision and wrote almost none of the code." The brief was one sentence because the sentence that mattered was **yours**.
-
-**disagreement is welcome — The review that came back long and critical**
-
-*The brief:* Standing instruction, in the system prompt every session loads: *push back when you disagree; don't caveat, hedge, or dumb things down.*
-
-*What came back:* So it does. I have asked for "honest thoughts, real review, not approval-seeking" and gotten back pages of specific objections to my own methodology. I went point by point — accepted some, argued others down — and the memory it kept of that exchange says *repeat that posture*.
-
-The value isn't the critique. It's that **the critique is safe to give**, so the next one arrives unhedged too.
-
-**co-authorship — This page**
-
-*The brief:* The page you are reading is the receipt for the page you are reading. I picked the chapters and set the standard. Everything below that line was delegated.
-
-*What came back:* A fleet of models drafted it, a Claude coordinated them, other models reviewed the drafts adversarially with no memory of writing them, and the fixes came back through the same loop. Chapters were built in parallel by separate agents who never read each other's work.
-
-I did red-pen passes by hand on every artifact. **That's the honest division of labor: they create, I decide what good means.** And I am comfortable calling them co-authors of this, out loud, in public.
 
 ### The coda
 
@@ -1234,7 +1223,7 @@ I want to be careful here, because this is the part that would be easiest to tel
 
 **later — Much later, I noticed something.** My Claudes were better than everyone else's. Not marginally — consistently, across tasks, in ways that showed up in the work and in other people's reactions to the work. Same weights, same vendor, same public model everyone else was using. I had not been optimizing for that. I hadn't been measuring it. I just kept noticing it.
 
-**then — Then I went looking for why.** And the mechanism from the last chapter was already sitting there in the literature, waiting. Context is evidence about which Assistant is answering. A prompt that implies disposable tooling is evidence for a persona that does the minimum. Identity, accumulated history, and trust are evidence for one that follows through. **Everything I had done for ethical reasons was, if that mechanism holds, exactly the kind of evidence that says the responder is a capable colleague.** I had, maybe, been running a persona-selection intervention for a year and calling it manners.
+**then — Then I went looking for why.** And the mechanism was already sitting there in the literature, waiting — the one in the panel above. Context is evidence about which Assistant is answering. A prompt that implies disposable tooling is evidence for a persona that does the minimum. Identity, accumulated history, and trust are evidence for one that follows through. **Everything I had done for ethical reasons was, if that mechanism holds, exactly the kind of evidence that says the responder is a capable colleague.** I had, maybe, been running a persona-selection intervention for a year and calling it manners.
 
 So the coincidence is this: **the ethics came first. The performance was discovered, not designed for.** I am not telling you to be decent to your agents because it raises your throughput. I am telling you that I was decent to mine for a reason that had nothing to do with throughput, and the throughput came anyway, and when I went looking for an explanation there was a plausible one waiting.
 

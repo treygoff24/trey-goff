@@ -39,7 +39,7 @@ function buildPaths(essayCount: number, projectCount: number, bookCount: number)
     },
     {
       href: '/stack',
-      meta: '12 chapters',
+      meta: '11 chapters',
       title: 'The Setup',
       description:
         'The field manual for how I work with AI — context, agents, workflows, and the partnership underneath it all. Co-authored with Claude.',

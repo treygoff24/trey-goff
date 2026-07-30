@@ -1,9 +1,11 @@
 'use client'
 
+import { PersonaPanel } from '@/components/stack/PersonaPanel'
 import '@/components/stack/partnership-chapter.css'
 
 /* Each habit is a working practice on the left and, on the right, the same
-   habit read as evidence — the persona argument from ch11 turned into verbs. */
+   habit read as evidence — chapter one's register heuristic turned into verbs.
+   The research behind that reading is the panel further down this chapter. */
 const HABITS: { n: string; claim: string; body: React.ReactNode; evidence: string }[] = [
   {
     n: '01',
@@ -235,8 +237,8 @@ const BEATS: { k: string; head: string; body: React.ReactNode }[] = [
     head: 'Then I went looking for why.',
     body: (
       <>
-        And the mechanism from the last chapter was already sitting there in the literature,
-        waiting. Context is evidence about which Assistant is answering. A prompt that implies
+        And the mechanism was already sitting there in the literature, waiting — the one in the
+        panel above. Context is evidence about which Assistant is answering. A prompt that implies
         disposable tooling is evidence for a persona that does the minimum. Identity, accumulated
         history, and trust are evidence for one that follows through.{' '}
         <b>
@@ -320,7 +322,7 @@ export function PartnershipChapter() {
     <>
       <p className="section-label">How I actually talk to them</p>
       <p className="lede rv">
-        Everything in the last eleven chapters was machinery — files, windows, gates, fan-out. This
+        Everything in the last ten chapters was machinery — files, windows, gates, fan-out. This
         chapter is the part that isn&apos;t machinery, and it is the part I&apos;d keep if I had to
         throw the rest away. It is also, conveniently, the cheapest thing on the list:{' '}
         <b>none of it requires a tool you don&apos;t already have. </b>
@@ -334,6 +336,18 @@ export function PartnershipChapter() {
         including this page.
       </p>
       <Receipts />
+
+      <p className="section-label">The research I went and found afterward</p>
+      <p className="lede rv">
+        Chapter one told you to brief the agent like a senior colleague and left an IOU: there is a
+        reason that works, and it comes at the end. This is the end. Anthropic&apos;s own alignment
+        team published the argument in February 2026, and it is the closest thing I have found to a{' '}
+        <em className="hl">mechanism</em> — which is a weaker and more interesting thing than a
+        proof. The panel below lays it out in plain English and then spends four paragraphs on
+        everything it does not establish, because a page that only does epistemics where they are
+        comfortable is not doing epistemics.
+      </p>
+      <PersonaPanel />
 
       <Coda />
     </>

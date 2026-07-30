@@ -352,8 +352,14 @@
 }
 
 /* Same measure discipline as the rest of the page: direct body paragraphs and
-   the prompt blockquote cap at ~66 characters per line. */
-#stack-root #ch11 > p.rv,
-#stack-root #ch11 > blockquote {
+   the prompt blockquote cap at ~66 characters per line. Scoped to the register
+   section rather than to a chapter id so it travels with the markup. */
+#stack-root .brief-sec > p.rv,
+#stack-root .brief-sec > blockquote {
   max-width: 44rem;
+}
+/* The section is a plain wrapper inside the chapter — it must not introduce a
+   second vertical rhythm on top of the section-label margins it contains. */
+#stack-root .brief-sec > .section-label:first-child {
+  margin-top: 3.2rem;
 }
