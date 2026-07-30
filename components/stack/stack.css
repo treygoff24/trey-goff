@@ -1773,8 +1773,8 @@ html:has(#stack-root) body > footer {
   margin-bottom: 0.5rem;
 }
 
-/* Twelve chapters on a short viewport: tighten the rail rows so the whole
-   list stays visible instead of silently scrolling ch11 out of reach. */
+/* Eleven chapters on a short viewport: tighten the rail rows so the whole
+   list stays visible instead of silently scrolling the last one out of reach. */
 @media (max-height: 860px) {
   #stack-root .rail-link {
     padding: 0.3rem 0.3rem 0.3rem 0;
