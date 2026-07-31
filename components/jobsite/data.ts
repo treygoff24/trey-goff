@@ -6,6 +6,8 @@ export type JobSiteBeat = {
   scene: string
   image: string
   focalPoint: string
+  /** object-position for the wide crop when the subject is off-center; default center. */
+  crop?: string
   alt: string
   body: string[]
   realSite: { title: string; body: string }[]
@@ -129,6 +131,7 @@ export const jobSiteBeats: JobSiteBeat[] = [
       'night falls over the site. A worker writes in a logbook, walks off the lot, and vanishes. Dawn: a new worker picks up the same logbook and starts moving immediately.',
     image: 'beat-04-logbook',
     focalPoint: 'open logbook in the lantern light',
+    crop: '50% 74%',
     alt: 'At night, an open logbook and lantern glow on the workbench while the foreman walks beyond the light; faint dawn warms the far horizon.',
     body: [
       'Now the hard problem. Real work takes weeks. Your craftsman evaporates every night. How does a crew of amnesiacs build anything that takes longer than a day?',

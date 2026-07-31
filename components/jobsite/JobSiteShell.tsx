@@ -118,6 +118,7 @@ function ScenePanel({ beat, preload }: { beat: JobSiteBeat; preload: boolean }) 
         {
           '--js-accent': beat.accent,
           '--js-blur': `url('/jobsite/blur/${beat.image}.webp')`,
+          '--js-crop': beat.crop ?? '50% 50%',
         } as CSSProperties
       }
     >

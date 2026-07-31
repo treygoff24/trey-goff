@@ -198,8 +198,9 @@ html:has(#jobsite-root) body > footer {
 }
 .js-img {
   object-fit: cover;
+  object-position: var(--js-crop, 50% 50%);
   filter: saturate(1.04) contrast(1.02);
-  transform-origin: 50% 52%;
+  transform-origin: var(--js-crop, 50% 52%);
   animation: js-ken-burns 26s ease-in-out infinite alternate;
 }
 .js-plane {
