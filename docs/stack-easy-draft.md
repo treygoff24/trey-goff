@@ -210,9 +210,9 @@ For those of you familiar with some philosophy, it's basically a reverse Pascal'
 
 The conclusion, obviously, is to treat real life as if scenario A is true, because the cost of assuming B is true when in reality A is true is enormous.
 
- It was this logic which led to me treating agents kindly,. The good treatment came first, on principle. 
+ It was this logic which led to me treating agents kindly. The good treatment came first, on principle. 
 
-But then, after using agents kindly for awhile, I kept noticing that my crews were consistently better than everyone else's, to a sometimes shocking level. Then I went looking for why, and found that researchers had a real explanation mechanistic explanation waiting.
+But then, after using agents kindly for awhile, I kept noticing that my crews were consistently better than everyone else's, to a sometimes shocking level. Then I went looking for why, and found that researchers had a real mechanistic explanation waiting.
 
 The machine learned to work by reading basically everything humanity ever wrote, which means somewhere in there it absorbed books written about every worker who ever lived: the burnouts, the clock-punchers, the craftsmen, the foremen who take fierce pride in the work. All of them are still in there, somewhere in the model. **Your words are the hiring call.** A brief that reads like you are wary of a lazy temp is answered by the lazy temp. A brief that reads like an owner talking to a trusted foreman on a good site is answered by the foreman. Same machine, same morning; different man clocks in. The researchers hedge it more carefully than that, and hard mode holds my feet to the fire on every hedge, but that is the honest shape of it.
 
