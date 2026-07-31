@@ -36,8 +36,6 @@ But think about the best foreman you ever worked with. The one who owns his own 
 
 With AI, the machine can be either one, and **you pick which one shows up by how you talk to it.** A cold ticket summons the temp. A real brief, who you are, what you are building, what he is trusted to decide, summons the foreman. 
 
-In fact, you wouldn't be too far off base to think of prompts and your AI setup as a series of spells you are casting, a technical wizard, summoning different personas, or different minds, out of the massive depths of these very large AI models.
-
 One more thing about him before we build the site. He works at a bench, and the bench is the only thing he can see. Whatever is on the bench, your instructions, the blueprints he has pulled, the notes from your conversation so far, that is his entire world. The bench is big, but it is not infinite, and here is the trap: pile it high enough and he loses track of the middle of the pile. The stuff on top is fresh, the first thing you told him this morning still rings in his ears, and everything in between goes dim. Ask any framer where the tape measure went at 2pm.
 
 So the whole craft, the entire rest of this page, is really two questions: **what do you put on the bench, and who do you hire?** Everything else is detail.
