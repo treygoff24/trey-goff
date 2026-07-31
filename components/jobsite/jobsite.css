@@ -102,7 +102,7 @@ html:has(#jobsite-root) body > footer {
   max-width: 58rem;
   font-family: var(--js-serif);
   font-weight: 500;
-  font-size: clamp(2.75rem, 7.4vw, 6.6rem);
+  font-size: clamp(2.75rem, 6.5vw, 5.4rem);
   line-height: 0.94;
   letter-spacing: -0.055em;
   text-wrap: balance;
@@ -354,6 +354,20 @@ html:has(#jobsite-root) body > footer {
   color: var(--js-text-3) !important;
   font-style: italic;
 }
+.js-deeper-link {
+  color: var(--js-accent);
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--js-accent) 40%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  padding-inline: 0.1em;
+  transition: text-decoration-color 200ms var(--js-ease);
+}
+.js-deeper-link:hover {
+  text-decoration-color: var(--js-accent);
+}
 .js-prompt {
   position: relative;
   --js-accent: var(--js-warm);
@@ -504,6 +518,19 @@ html:has(#jobsite-root) body > footer {
     animation-timeline: view();
     animation-range: entry 0% entry 38%;
   }
+  /* Retime the ambient drift onto the scroll position: panels move only while
+     being scrolled through, and nothing composites off screen. Engines without
+     scroll timelines keep the slow infinite loops above. */
+  .js-img,
+  .js-plane-light,
+  .js-plane-grain {
+    animation-timeline: view();
+    animation-range: cover 0% cover 100%;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+  }
 }
 @media (max-width: 720px) {
   .js-scene {
@@ -532,6 +559,7 @@ html:has(#jobsite-root) body > footer {
   .js-cue i,
   .js-progress i {
     animation: none;
+    animation-timeline: auto;
     transform: none;
   }
   .js-plane-light {

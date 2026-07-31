@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { getImageProps } from 'next/image'
-import type { CSSProperties } from 'react'
+import { Fragment, type CSSProperties, type ReactNode } from 'react'
 import { jobSiteBeats, type JobSiteBeat } from '@/components/jobsite/data'
 import { CopyPrompt } from '@/components/jobsite/CopyPrompt'
 import { ModeToggle } from '@/components/jobsite/ModeToggle'
@@ -35,6 +35,51 @@ function InlineText({ text }: { text: string }) {
         return <span key={`${index}-${part}`}>{part}</span>
       })}
     </>
+  )
+}
+
+const CHAPTER_PHRASE = /(chapters?\s+\d+(?:\s+and\s+\d+)*)/gi
+
+/**
+ * Every beat closes by pointing at a numbered chapter of hard mode. Left as prose
+ * those pointers are a dead end — the reader is told where to go and given no way
+ * to get there — so the chapter numbers themselves become the links to /stack.
+ */
+function DeeperNote({ text }: { text: string }) {
+  const segments = text.split(CHAPTER_PHRASE)
+  return (
+    <p className="js-deeper">
+      {segments.map((segment, index) => {
+        if (index % 2 === 0) return <span key={`${index}-t`}>{segment}</span>
+        const numbers = segment.match(/\d+/g) ?? []
+        // "chapter 5" links as a phrase; "chapters 6 and 10" links each number.
+        if (numbers.length === 1) {
+          return (
+            <Link className="js-deeper-link" href={`/stack#ch${numbers[0]}`} key={`${index}-c`}>
+              {segment}
+            </Link>
+          )
+        }
+        const pieces = segment.split(/(\d+)/)
+        return (
+          <span key={`${index}-c`}>
+            {pieces.map((piece, pieceIndex) =>
+              /^\d+$/.test(piece) ? (
+                <Link
+                  className="js-deeper-link"
+                  href={`/stack#ch${piece}`}
+                  key={`${index}-${pieceIndex}`}
+                >
+                  {piece}
+                </Link>
+              ) : (
+                <span key={`${index}-${pieceIndex}`}>{piece}</span>
+              ),
+            )}
+          </span>
+        )
+      })}
+    </p>
   )
 }
 
@@ -90,6 +135,23 @@ function ScenePanel({ beat, preload }: { beat: JobSiteBeat; preload: boolean }) 
 function Beat({ beat, preload }: { beat: JobSiteBeat; preload: boolean }) {
   const label = beat.n === '08' ? 'Start here' : `Beat ${Number(beat.n)}`
 
+  // The brief belongs directly under the sentence that introduces it ("Then paste
+  // this, word for word:"), not after the paragraphs that follow it.
+  const cueIndex = beat.prompt
+    ? beat.body.findIndex((line) => line.replace(/[*`]/g, '').trimEnd().endsWith(':'))
+    : -1
+  const promptBlock: ReactNode = beat.prompt ? (
+    <blockquote className="js-prompt">
+      <div className="js-prompt-head">
+        <p className="js-prompt-k">The brief</p>
+        <CopyPrompt text={plainText(beat.prompt)} />
+      </div>
+      <p>
+        <InlineText text={beat.prompt} />
+      </p>
+    </blockquote>
+  ) : null
+
   return (
     <section
       className="js-beat"
@@ -107,22 +169,15 @@ function Beat({ beat, preload }: { beat: JobSiteBeat; preload: boolean }) {
         </header>
         <div className="js-prose">
           {beat.body.map((paragraph, index) => (
-            <p key={`${index}-${paragraph}`}>
-              <InlineText text={paragraph} />
-            </p>
+            <Fragment key={`${index}-${paragraph}`}>
+              <p>
+                <InlineText text={paragraph} />
+              </p>
+              {index === cueIndex && promptBlock}
+            </Fragment>
           ))}
+          {cueIndex === -1 && promptBlock}
         </div>
-        {beat.prompt && (
-          <blockquote className="js-prompt">
-            <div className="js-prompt-head">
-              <p className="js-prompt-k">The brief</p>
-              <CopyPrompt text={plainText(beat.prompt)} />
-            </div>
-            <p>
-              <InlineText text={beat.prompt} />
-            </p>
-          </blockquote>
-        )}
         {beat.realSite.length > 0 && (
           <aside className="js-real" aria-label={`On the real site: ${beat.title}`}>
             <p className="js-real-k">On the real site</p>
@@ -135,7 +190,7 @@ function Beat({ beat, preload }: { beat: JobSiteBeat; preload: boolean }) {
                 <InlineText text={item.body} />
               </p>
             ))}
-            {beat.deeper && <p className="js-deeper">{beat.deeper}</p>}
+            {beat.deeper && <DeeperNote text={beat.deeper} />}
           </aside>
         )}
       </div>
