@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
+import { SetupLink } from '@/components/layout/SetupLink'
 
 interface EditorialIndexRowProps {
   href?: string
@@ -55,12 +56,14 @@ export function EditorialIndexRow({
     return <div className={cn('tg-rule-row', className)}>{content}</div>
   }
 
+  const LinkComponent = href === '/stack' ? SetupLink : Link
+
   return (
-    <Link
+    <LinkComponent
       href={href}
       className={cn('tg-rule-row group transition-colors hover:bg-surface-1/50', className)}
     >
       {content}
-    </Link>
+    </LinkComponent>
   )
 }

@@ -32,6 +32,8 @@ const PROTECTED_ROUTES = [
   '/edition',
   '/mission-control',
   '/resident',
+  '/stack',
+  '/jobsite',
 ]
 
 const HEAVY_3D_PATTERNS = [

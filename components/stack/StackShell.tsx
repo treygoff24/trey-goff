@@ -18,6 +18,7 @@ import { RegisterSection } from '@/components/stack/RegisterSection'
 import { WhyContext } from '@/components/stack/WhyPanel'
 import { WorkflowsChapter } from '@/components/stack/WorkflowsChapter'
 import { WorktreesSection } from '@/components/stack/WorktreesSection'
+import { ModeToggle } from '@/components/jobsite/ModeToggle'
 import {
   ContextFigure,
   CopyPromptBlock,
@@ -279,6 +280,9 @@ export function StackShell() {
               A complete, working agentic development stack, explained from first principles and
               written for the layman and the software engineer both.
             </p>
+            <div className="rv" data-d="2">
+              <ModeToggle mode="hard" />
+            </div>
             <div className="hero-term rv" data-d="3">
               <Terminal title="~/Code/trey-goff" lines={HERO_TERM} autoplay />
             </div>

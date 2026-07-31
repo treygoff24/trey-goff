@@ -2,6 +2,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import { allEssays, allProjects } from 'content-collections'
 import { EditorialIndexRow } from '@/components/site/EditorialIndexRow'
+import { SetupLink } from '@/components/layout/SetupLink'
 import { getAllBooks } from '@/lib/books'
 import { formatDateShort } from '@/lib/utils'
 
@@ -138,9 +139,9 @@ export default function HomePage() {
           <Link href="/projects" className="tg-action-secondary">
             See the work →
           </Link>
-          <Link href="/stack" className="tg-action-secondary">
+          <SetupLink href="/stack" className="tg-action-secondary">
             How I work with AI →
-          </Link>
+          </SetupLink>
         </div>
       </header>
 

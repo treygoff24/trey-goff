@@ -61,7 +61,11 @@ export default function RootLayout({
   const webSiteSchema = generateWebSiteSchema()
 
   return (
-    <html lang="en" className={`${satoshi.variable} ${newsreader.variable} ${monaspace.variable}`}>
+    <html
+      lang="en"
+      data-scroll-behavior="smooth"
+      className={`${satoshi.variable} ${newsreader.variable} ${monaspace.variable}`}
+    >
       <body className="flex min-h-screen flex-col overflow-x-hidden">
         <script
           type="application/ld+json"

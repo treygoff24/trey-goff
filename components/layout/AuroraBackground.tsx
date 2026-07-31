@@ -156,7 +156,10 @@ export function AuroraBackground() {
   const reducedMotion = useReducedMotion()
   const pathname = usePathname()
   const disabled =
-    pathname === '/machine' || pathname === '/stack' || pathname?.startsWith('/stack/') === true
+    pathname === '/machine' ||
+    pathname === '/stack' ||
+    pathname?.startsWith('/stack/') === true ||
+    pathname === '/jobsite'
 
   useEffect(() => {
     if (disabled) return

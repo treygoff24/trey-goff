@@ -1,0 +1,156 @@
+import Link from 'next/link'
+import { getImageProps } from 'next/image'
+import type { CSSProperties } from 'react'
+import { jobSiteBeats, type JobSiteBeat } from '@/components/jobsite/data'
+import { ModeToggle } from '@/components/jobsite/ModeToggle'
+import '@/components/jobsite/jobsite.css'
+
+function InlineText({ text }: { text: string }) {
+  const parts = text.split(/(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*)/g)
+  return (
+    <>
+      {parts.map((part, index) => {
+        if (part.startsWith('**') && part.endsWith('**')) {
+          return <strong key={`${index}-${part}`}>{part.slice(2, -2)}</strong>
+        }
+        if (part.startsWith('*') && part.endsWith('*')) {
+          return <em key={`${index}-${part}`}>{part.slice(1, -1)}</em>
+        }
+        if (part.startsWith('`') && part.endsWith('`')) {
+          return (
+            <code className="js-inline-code" key={`${index}-${part}`}>
+              {part.slice(1, -1)}
+            </code>
+          )
+        }
+        return <span key={`${index}-${part}`}>{part}</span>
+      })}
+    </>
+  )
+}
+
+function ScenePanel({ beat, preload }: { beat: JobSiteBeat; preload: boolean }) {
+  const common = {
+    alt: beat.alt,
+    sizes: '100vw',
+    quality: 82,
+    loading: preload ? ('eager' as const) : ('lazy' as const),
+    fetchPriority: preload ? ('high' as const) : ('auto' as const),
+    className: 'js-img',
+  }
+  const {
+    props: { srcSet: desktopSrcSet, ...desktopProps },
+  } = getImageProps({
+    ...common,
+    src: `/jobsite/${beat.image}-wide.webp`,
+    width: 3840,
+    height: 2560,
+  })
+  const {
+    props: { srcSet: mobileSrcSet },
+  } = getImageProps({
+    ...common,
+    src: `/jobsite/${beat.image}-mobile.webp`,
+    width: 1600,
+    height: 2000,
+  })
+
+  return (
+    <figure
+      className="js-scene"
+      data-focal-point={beat.focalPoint}
+      style={
+        {
+          '--js-accent': beat.accent,
+          '--js-blur': `url('/jobsite/blur/${beat.image}.webp')`,
+        } as CSSProperties
+      }
+    >
+      <div className="js-frame">
+        <picture className="js-picture">
+          <source media="(max-width: 720px)" srcSet={mobileSrcSet} />
+          <img {...desktopProps} srcSet={desktopSrcSet} alt={beat.alt} />
+        </picture>
+        <span className="js-plane js-plane-light" aria-hidden="true" />
+        <span className="js-plane js-plane-grain" aria-hidden="true" />
+      </div>
+    </figure>
+  )
+}
+
+function Beat({ beat, preload }: { beat: JobSiteBeat; preload: boolean }) {
+  const label = beat.n === '08' ? 'Start here' : `Beat ${Number(beat.n)}`
+
+  return (
+    <section
+      className="js-beat"
+      id={beat.id}
+      style={{ '--js-accent': beat.accent } as CSSProperties}
+    >
+      <ScenePanel beat={beat} preload={preload} />
+      <div className="js-copy">
+        <p className="js-kicker">{label}</p>
+        <h2>{beat.title}</h2>
+        <div className="js-prose">
+          {beat.body.map((paragraph, index) => (
+            <p key={`${index}-${paragraph}`}>
+              <InlineText text={paragraph} />
+            </p>
+          ))}
+        </div>
+        {beat.prompt && (
+          <blockquote className="js-prompt">
+            <p>
+              <InlineText text={beat.prompt} />
+            </p>
+          </blockquote>
+        )}
+        {beat.realSite.length > 0 && (
+          <aside className="js-real" aria-label={`On the real site: ${beat.title}`}>
+            <p className="js-real-k">On the real site</p>
+            {beat.realSite.map((item) => (
+              <p key={item.title}>
+                <strong>
+                  {item.title}
+                  {/[,:;.!?]$/.test(item.title) ? '' : ':'}
+                </strong>{' '}
+                <InlineText text={item.body} />
+              </p>
+            ))}
+            {beat.deeper && <p className="js-deeper">{beat.deeper}</p>}
+          </aside>
+        )}
+      </div>
+    </section>
+  )
+}
+
+export function JobSiteShell() {
+  return (
+    <div id="jobsite-root">
+      <a className="js-skip" href="#the-new-hire">
+        Skip to the first beat
+      </a>
+      <header className="js-hero">
+        <div className="js-hero-copy">
+          <p className="js-eyebrow">The Job Site</p>
+          <h1>How I get real work out of AI, with no jargon and one construction site.</h1>
+          <p>
+            The other version of this page is written for software engineers. This one is written
+            for everyone else. It&apos;s the same system, told the way I actually understand it.
+          </p>
+          <ModeToggle mode="easy" />
+        </div>
+      </header>
+      {jobSiteBeats.map((beat, index) => (
+        <Beat key={beat.id} beat={beat} preload={index === 0} />
+      ))}
+      <footer className="js-end">
+        <Link href="/stack#ch1">
+          {jobSiteBeats.at(-1)?.footer ?? 'Ready for the deep end? → Hard mode, chapter 1.'}
+        </Link>
+        <p>Built by the crew it describes.</p>
+      </footer>
+    </div>
+  )
+}

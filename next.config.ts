@@ -22,6 +22,8 @@ export const nextConfig: NextConfig = {
 
   // Static security headers (CSP is set dynamically in root `proxy.ts` with a per-request nonce on strict routes)
   images: {
+    formats: ['image/avif', 'image/webp'],
+    qualities: [75, 82],
     remotePatterns: [
       { protocol: 'https', hostname: 'img.youtube.com', pathname: '/**' },
       { protocol: 'https', hostname: 'i.ytimg.com', pathname: '/**' },
@@ -44,7 +46,7 @@ export const nextConfig: NextConfig = {
     // above and dotted siblings (/writing/feed.xml) are never captured.
     const markdownNegotiation = [
       { source: '/writing/:slug([^/.]+)', destination: '/md/writing/:slug' },
-      ...['/notes', '/about', '/now', '/stack', '/machine'].map((source) => ({
+      ...['/notes', '/about', '/now', '/stack', '/jobsite', '/machine'].map((source) => ({
         source,
         destination: `/md${source}`,
       })),

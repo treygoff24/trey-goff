@@ -2,6 +2,8 @@
 
 > Markdown mirror of https://www.treygoff.com/stack — the canonical page.
 
+Prefer the no-jargon construction-site version? Read [The Job Site](/jobsite).
+
 A complete, working agentic development stack, explained from first principles and written for the layman and the software engineer both.
 
 ## Chapters

@@ -49,6 +49,7 @@ test('sitemap lastModified is honest', () => {
     '/resident/gallery',
     '/resident/gallery/where-it-opens',
     '/stack',
+    '/jobsite',
     '/transmissions',
     '/media',
   ]
