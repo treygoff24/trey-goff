@@ -11,17 +11,30 @@ html:has(#jobsite-root) body > footer {
   --js-border-1: rgba(232, 243, 236, 0.13);
   --js-border-2: rgba(151, 232, 187, 0.28);
   --js-active: #97e8bb;
+  --js-warm: var(--color-warning, #fbbf24);
   --js-serif: var(--font-newsreader, ui-serif, Georgia, serif);
   --js-sans: var(--font-satoshi, system-ui, sans-serif);
   --js-mono: var(--font-mono, ui-monospace, monospace);
+  /* Reading measure. 40rem lands body copy at ~68 characters per line, the
+     documented comfortable range for long-form prose; the callouts inherit it. */
+  --js-measure: 40rem;
+  /* Feather depths for the painted panels. Applied as a mask, not as a pair of
+     painted gradient bands, so a panel dissolves into whatever is actually
+     behind it instead of into a hardcoded guess at the page colour. */
+  --js-feather-top: clamp(4.5rem, 11svh, 9rem);
+  --js-feather-bottom: clamp(6rem, 16svh, 13rem);
   min-height: 100svh;
   overflow-x: clip;
+  /* The hero glow is sized to the first viewport rather than the whole document,
+     so everything below the fold sits on true --js-bg and the paintings read
+     against black instead of against a page-length green wash. */
   background:
     radial-gradient(
-      90% 70% at 50% -10%,
-      color-mix(in oklab, var(--js-active) 18%, transparent),
-      transparent 62%
-    ),
+        90% 70% at 50% -10%,
+        color-mix(in oklab, var(--js-active) 18%, transparent),
+        transparent 62%
+      )
+      top center / 100% 130svh no-repeat,
     var(--js-bg);
   color: var(--js-text-1);
   font-family: var(--js-sans);
@@ -69,7 +82,7 @@ html:has(#jobsite-root) body > footer {
   min-height: 92svh;
   display: grid;
   place-items: center;
-  padding: clamp(6rem, 12vw, 10rem) clamp(1.25rem, 5vw, 4rem) 4rem;
+  padding: clamp(4.5rem, 9vw, 7.5rem) clamp(1.25rem, 5vw, 4rem) 3rem;
   text-align: center;
 }
 .js-hero-copy {
@@ -86,23 +99,63 @@ html:has(#jobsite-root) body > footer {
 }
 .js-hero h1 {
   margin: 1.25rem auto 0;
-  max-width: 62rem;
+  max-width: 58rem;
   font-family: var(--js-serif);
   font-weight: 500;
-  font-size: clamp(3.2rem, 8vw, 7.2rem);
+  font-size: clamp(2.75rem, 7.4vw, 6.6rem);
   line-height: 0.94;
   letter-spacing: -0.055em;
+  text-wrap: balance;
 }
 .js-hero p:not(.js-eyebrow) {
-  max-width: 42rem;
+  max-width: 40rem;
   margin: 1.6rem auto 0;
   color: var(--js-text-2);
   font-size: clamp(1.05rem, 1.6vw, 1.28rem);
   line-height: 1.65;
+  text-wrap: pretty;
 }
+/* Invitation to scroll — the same device hard mode opens with. */
+.js-cue {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 2.4rem;
+  font-family: var(--js-mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--js-text-3);
+  text-decoration: none;
+  transition: color 220ms ease;
+}
+.js-cue:hover {
+  color: var(--js-text-1);
+}
+.js-cue i {
+  display: block;
+  width: 1px;
+  height: 2.6rem;
+  background: linear-gradient(180deg, var(--js-active), transparent);
+  animation: js-cue 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+@keyframes js-cue {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scaleY(0.6);
+    transform-origin: top;
+  }
+  50% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+/* No hairline between beats: the panels now dissolve into the page, so a rule
+   here would draw the seam the feather exists to hide. */
 .js-beat {
   --js-accent: var(--js-active);
-  border-top: 1px solid rgba(232, 243, 236, 0.08);
 }
 .js-scene {
   position: relative;
@@ -110,32 +163,30 @@ html:has(#jobsite-root) body > footer {
   min-height: 30rem;
   margin: 0;
   overflow: hidden;
-  background: var(--js-bg) var(--js-blur) center / cover no-repeat;
   isolation: isolate;
-}
-.js-scene::before,
-.js-scene::after {
-  content: '';
-  position: absolute;
-  inset-inline: 0;
-  z-index: 3;
-  pointer-events: none;
-}
-.js-scene::before {
-  top: 0;
-  height: 11rem;
-  background: linear-gradient(var(--js-bg), transparent);
-}
-.js-scene::after {
-  bottom: 0;
-  height: 16rem;
-  background: linear-gradient(transparent, var(--js-bg));
+  /* A true alpha feather. The panel's own pixels fade out at top and bottom, so
+     the seam matches the page background by construction at any scroll position
+     and under any per-beat accent wash — no painted band to keep in sync. */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 var(--js-feather-top),
+    #000 calc(100% - var(--js-feather-bottom)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 var(--js-feather-top),
+    #000 calc(100% - var(--js-feather-bottom)),
+    transparent 100%
+  );
 }
 .js-frame {
   position: absolute;
   inset: -2%;
   overflow: hidden;
-  background: var(--js-bg) var(--js-blur) center / cover no-repeat;
+  background: var(--js-blur) center / cover no-repeat;
 }
 .js-picture,
 .js-picture img {
@@ -173,17 +224,58 @@ html:has(#jobsite-root) body > footer {
   animation: js-grain-plane 31s linear infinite alternate;
 }
 .js-copy {
-  width: min(100% - 2rem, 48rem);
+  width: min(100% - 2.75rem, var(--js-measure));
   margin-inline: auto;
   padding: clamp(3rem, 8vw, 6rem) 0 clamp(5rem, 10vw, 8rem);
 }
+/* Each beat's accent bleeds down out of its painting and dies away over the
+   opening of the prose — the panel's light spilling onto the page it explains.
+   Full-bleed via inset-inline so it reads as ambience, not as a card. */
+.js-copy::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset-inline: -50vw;
+  top: -18rem;
+  height: 52rem;
+  pointer-events: none;
+  /* Ramps in behind the panel's own fade-out, so there is no edge where the
+     wash begins — only the panel's light continuing past the picture. */
+  background: linear-gradient(
+    180deg,
+    transparent 0,
+    color-mix(in oklab, var(--js-accent) 8%, transparent) 40%,
+    transparent 100%
+  );
+}
 .js-copy h2 {
+  position: relative;
   margin: 0.55rem 0 0;
   font-family: var(--js-serif);
-  font-size: clamp(2.35rem, 6vw, 4.8rem);
+  font-size: clamp(2.35rem, 6vw, 4.4rem);
   line-height: 0.98;
   letter-spacing: -0.045em;
   font-weight: 500;
+  text-wrap: balance;
+}
+/* Oversized beat numeral, the same orientation device hard mode uses for its
+   chapters. Decorative only; the accessible label is the .js-kicker above it. */
+.js-head {
+  position: relative;
+}
+.js-num {
+  position: absolute;
+  z-index: -1;
+  right: -0.4rem;
+  top: -3.4rem;
+  font-family: var(--js-serif);
+  font-weight: 500;
+  font-size: clamp(5.5rem, 14vw, 11rem);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: color-mix(in oklab, var(--js-accent) 7%, transparent);
+  pointer-events: none;
+  user-select: none;
 }
 .js-prose {
   margin-top: 2rem;
@@ -204,6 +296,12 @@ html:has(#jobsite-root) body > footer {
   color: var(--js-text-2);
   font-size: clamp(1.03rem, 1.35vw, 1.17rem);
   line-height: 1.78;
+  text-wrap: pretty;
+}
+.js-prose p:last-child,
+.js-real p:last-child,
+.js-prompt p:last-child {
+  margin-bottom: 0;
 }
 .js-prose p:first-child {
   color: var(--js-text-1);
@@ -212,10 +310,10 @@ html:has(#jobsite-root) body > footer {
 }
 .js-real,
 .js-prompt {
-  margin-top: 2.4rem;
+  margin-top: 2.6rem;
   border: 1px solid var(--js-border-1);
   border-radius: 0.7rem;
-  padding: clamp(1.15rem, 3vw, 1.65rem);
+  padding: clamp(1.25rem, 3vw, 1.75rem);
   background:
     radial-gradient(
       100% 130% at 0% 0%,
@@ -225,16 +323,92 @@ html:has(#jobsite-root) body > footer {
     rgba(6, 26, 16, 0.62);
   box-shadow: inset 16px 0 20px -16px color-mix(in oklab, var(--js-accent) 58%, transparent);
 }
+/* The annotation layer. It runs longer than the story it annotates, so it is set
+   a step down and hairline-ruled between entries: skimmable, and unmistakably
+   subordinate to the beat's prose rather than competing with it. */
+.js-real p {
+  font-size: clamp(0.97rem, 1.25vw, 1.08rem);
+  line-height: 1.74;
+}
+.js-real p + p {
+  margin-top: 1.2em;
+  padding-top: 1.2em;
+  border-top: 1px solid rgba(232, 243, 236, 0.07);
+}
+.js-real-k {
+  margin: 0 0 1.15rem;
+}
+.js-real-k + p {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
 .js-real strong {
   color: var(--js-text-1);
   font-weight: 600;
+}
+.js-real strong:first-child {
+  color: color-mix(in oklab, var(--js-accent) 76%, var(--js-text-1));
 }
 .js-deeper {
   color: var(--js-text-3) !important;
   font-style: italic;
 }
+.js-prompt {
+  position: relative;
+  --js-accent: var(--js-warm);
+  border-color: color-mix(in oklab, var(--js-warm) 22%, transparent);
+}
 .js-prompt p {
   color: var(--js-text-1);
+  font-size: clamp(1.03rem, 1.35vw, 1.14rem);
+}
+.js-prompt-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.js-prompt-k {
+  margin: 0;
+  font-family: var(--js-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--js-warm);
+}
+.js-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  /* Reserved so the label swap to "Copied" does not shift the button. */
+  min-width: 8.5rem;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.95rem;
+  border: 1px solid var(--js-border-1);
+  border-radius: 999px;
+  background: rgba(232, 243, 236, 0.05);
+  color: var(--js-text-2);
+  font-family: var(--js-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    color 200ms ease,
+    border-color 200ms ease,
+    background 200ms ease;
+}
+.js-copy-btn:hover {
+  color: var(--js-text-1);
+  border-color: color-mix(in oklab, var(--js-warm) 45%, transparent);
+  background: rgba(232, 243, 236, 0.09);
+}
+.js-copy-btn[data-state='copied'] {
+  color: var(--js-active);
+  border-color: var(--js-border-2);
 }
 .js-end {
   display: grid;
@@ -248,10 +422,47 @@ html:has(#jobsite-root) body > footer {
   color: var(--js-active);
   font-family: var(--js-serif);
   font-size: clamp(1.5rem, 3vw, 2.4rem);
+  line-height: 1.15;
+  text-wrap: balance;
   text-decoration: none;
+  background-image: linear-gradient(var(--js-active), var(--js-active));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0 1px;
+  transition: background-size 340ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.js-end a:hover {
+  background-size: 100% 1px;
 }
 .js-end p {
   color: var(--js-text-3);
+}
+/* Reading position. Scroll-driven, so it costs nothing when the page is idle,
+   and it simply stays at zero width on engines without scroll timelines. */
+.js-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 15;
+  height: 2px;
+  pointer-events: none;
+}
+.js-progress i {
+  display: block;
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, var(--js-active), var(--js-warm));
+}
+@supports (animation-timeline: scroll()) {
+  .js-progress i {
+    animation: js-progress linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+@keyframes js-progress {
+  to {
+    transform: scaleX(1);
+  }
 }
 @keyframes js-ken-burns {
   from {
@@ -303,18 +514,35 @@ html:has(#jobsite-root) body > footer {
     inset: -2%;
   }
   .js-copy {
-    width: min(100% - 1.5rem, 48rem);
+    width: min(100% - 2.5rem, var(--js-measure));
+  }
+  .js-num {
+    top: -2.2rem;
+    right: -0.2rem;
+  }
+  .js-prompt-head {
+    flex-wrap: wrap;
   }
 }
 @media (prefers-reduced-motion: reduce) {
   .js-frame,
   .js-img,
   .js-plane-light,
-  .js-plane-grain {
+  .js-plane-grain,
+  .js-cue i,
+  .js-progress i {
     animation: none;
     transform: none;
   }
   .js-plane-light {
     opacity: 0.45;
+  }
+  /* Without the scroll timeline the bar would sit permanently full-width, which
+     misreports position; drop it rather than lie. */
+  .js-progress {
+    display: none;
+  }
+  .js-end a {
+    transition: none;
   }
 }

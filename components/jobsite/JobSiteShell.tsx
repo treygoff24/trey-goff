@@ -2,8 +2,17 @@ import Link from 'next/link'
 import { getImageProps } from 'next/image'
 import type { CSSProperties } from 'react'
 import { jobSiteBeats, type JobSiteBeat } from '@/components/jobsite/data'
+import { CopyPrompt } from '@/components/jobsite/CopyPrompt'
 import { ModeToggle } from '@/components/jobsite/ModeToggle'
 import '@/components/jobsite/jobsite.css'
+
+/** Strips the inline emphasis markers so what lands on the clipboard is what you paste. */
+function plainText(text: string) {
+  return text
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/\*([^*]+)\*/g, '$1')
+    .replace(/`([^`]+)`/g, '$1')
+}
 
 function InlineText({ text }: { text: string }) {
   const parts = text.split(/(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*)/g)
@@ -89,8 +98,13 @@ function Beat({ beat, preload }: { beat: JobSiteBeat; preload: boolean }) {
     >
       <ScenePanel beat={beat} preload={preload} />
       <div className="js-copy">
-        <p className="js-kicker">{label}</p>
-        <h2>{beat.title}</h2>
+        <header className="js-head">
+          <span className="js-num" aria-hidden="true">
+            {beat.n}
+          </span>
+          <p className="js-kicker">{label}</p>
+          <h2>{beat.title}</h2>
+        </header>
         <div className="js-prose">
           {beat.body.map((paragraph, index) => (
             <p key={`${index}-${paragraph}`}>
@@ -100,6 +114,10 @@ function Beat({ beat, preload }: { beat: JobSiteBeat; preload: boolean }) {
         </div>
         {beat.prompt && (
           <blockquote className="js-prompt">
+            <div className="js-prompt-head">
+              <p className="js-prompt-k">The brief</p>
+              <CopyPrompt text={plainText(beat.prompt)} />
+            </div>
             <p>
               <InlineText text={beat.prompt} />
             </p>
@@ -131,6 +149,9 @@ export function JobSiteShell() {
       <a className="js-skip" href="#the-new-hire">
         Skip to the first beat
       </a>
+      <div className="js-progress" aria-hidden="true">
+        <i />
+      </div>
       <header className="js-hero">
         <div className="js-hero-copy">
           <p className="js-eyebrow">The Job Site</p>
@@ -140,6 +161,12 @@ export function JobSiteShell() {
             for everyone else. It&apos;s the same system, told the way I actually understand it.
           </p>
           <ModeToggle mode="easy" />
+          <div>
+            <a className="js-cue" href="#the-new-hire">
+              Walk the site
+              <i aria-hidden="true" />
+            </a>
+          </div>
         </div>
       </header>
       {jobSiteBeats.map((beat, index) => (
