@@ -33,6 +33,13 @@ test.describe('The Job Site', () => {
       expect(alt.trim().length).toBeGreaterThan(24)
       expect(alt).toMatch(sceneAltPattern)
     }
+
+    const chapterLinks = page.locator('.js-deeper-link')
+    await expect(chapterLinks).toHaveCount(10)
+    const labels = await chapterLinks.evaluateAll((links) =>
+      links.map((link) => link.getAttribute('aria-label') ?? link.textContent ?? ''),
+    )
+    expect(labels.every((label) => /chapter \d+/i.test(label))).toBe(true)
   })
 
   test('keeps hard/easy mode direct routes deep-linkable while remembering neutral links', async ({
@@ -91,5 +98,26 @@ test.describe('The Job Site', () => {
       .locator('.js-img, .js-plane-light')
       .evaluateAll((elements) => elements.map((element) => getComputedStyle(element).animationName))
     expect(animationNames.every((name) => name === 'none')).toBe(true)
+  })
+
+  test('reports a clipboard failure without losing button focus', async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, 'clipboard', {
+        configurable: true,
+        value: { writeText: async () => Promise.reject(new Error('clipboard blocked')) },
+      })
+      Object.defineProperty(document, 'execCommand', {
+        configurable: true,
+        value: () => false,
+      })
+    })
+    await page.goto('/jobsite')
+
+    const copy = page.locator('.js-copy-btn')
+    await expect(copy).toHaveText('Copy brief')
+    await copy.click()
+
+    await expect(copy).toHaveText('Copy failed')
+    await expect(copy).toBeFocused()
   })
 })

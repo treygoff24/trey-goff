@@ -66,6 +66,7 @@ function DeeperNote({ text }: { text: string }) {
             {pieces.map((piece, pieceIndex) =>
               /^\d+$/.test(piece) ? (
                 <Link
+                  aria-label={`Hard mode chapter ${piece}`}
                   className="js-deeper-link"
                   href={`/stack#ch${piece}`}
                   key={`${index}-${pieceIndex}`}

@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react'
 
+type CopyState = 'idle' | 'copied' | 'failed'
+
 /**
  * The starter brief is the one thing on this page a reader is meant to take with
  * them, so it gets a real affordance instead of a manual triple-click selection.
@@ -18,6 +20,8 @@ async function writeClipboard(text: string) {
   } catch {
     // fall through to the selection-based path
   }
+  const activeElement =
+    document.activeElement instanceof HTMLElement ? document.activeElement : null
   const field = document.createElement('textarea')
   field.value = text
   field.setAttribute('readonly', '')
@@ -31,11 +35,12 @@ async function writeClipboard(text: string) {
     ok = false
   }
   field.remove()
+  activeElement?.focus()
   return ok
 }
 
 export function CopyPrompt({ text }: { text: string }) {
-  const [copied, setCopied] = useState(false)
+  const [state, setState] = useState<CopyState>('idle')
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(
@@ -46,20 +51,21 @@ export function CopyPrompt({ text }: { text: string }) {
   )
 
   const copy = async () => {
-    if (!(await writeClipboard(text))) return
-    setCopied(true)
+    setState((await writeClipboard(text)) ? 'copied' : 'failed')
     if (timer.current) clearTimeout(timer.current)
-    timer.current = setTimeout(() => setCopied(false), 2200)
+    timer.current = setTimeout(() => setState('idle'), 2200)
   }
 
   return (
     <button
       type="button"
       className="js-copy-btn"
-      data-state={copied ? 'copied' : undefined}
+      data-state={state === 'idle' ? undefined : state}
       onClick={copy}
     >
-      <span aria-live="polite">{copied ? 'Copied' : 'Copy brief'}</span>
+      <span aria-live="polite">
+        {state === 'copied' ? 'Copied' : state === 'failed' ? 'Copy failed' : 'Copy brief'}
+      </span>
     </button>
   )
 }
