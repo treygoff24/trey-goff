@@ -8,7 +8,7 @@
 - **Search Console (account lawrencegoffiii@gmail.com)**: URL-prefix property `https://www.treygoff.com/` verified via `public/googleb9d0fb99739b546f.html` (never delete); sitemap.xml submitted 2026-07-30. Domain property `treygoff.com` pending — DNS TXT is live, Google auto-verifies or click VERIFY in GSC.
 - **DNS on Vercel nameservers since 2026-07-30**; registrar GoDaddy #257911591 via trey.goff@gmail.com — map + Nov 2026 renewal risk: memory `treygoff-com-domain-infrastructure`.
 - **Watch**: claude.treygoff.com TLS cert was still pending at 2026-07-30 close — if down, check Vercel domain page cert status.
-- Merged branch `stack-instrument`: local copy deleted at closeout (deploy confirmed healthy); `origin/stack-instrument` still exists — remote deletion is push-gated, ask Trey.
+- Merged branch `stack-instrument`: fully cleaned up 2026-07-30 — local deleted at closeout, remote was already gone.
 - Open /stack calls for Trey (from build review): invented starter skills in `public/stack/starter-skill-pack.md`; ch8 "mined from session logs" phrasing; `--sk-bg-sunk` token candidate; dead `pnpm.neverBuiltDependencies` in package.json.
 - Research corpus backing /stack claims: `docs/_scratch/longctx-research/`, `docs/_scratch/stack2-research/` (gitignored).
 - Gate: `pnpm ci:quality` — green at last push. main == origin/main.
