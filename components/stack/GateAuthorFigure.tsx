@@ -183,8 +183,11 @@ export function GateAuthorFigure() {
               <span className="v">what it was asked for</span>
             </div>
             <p>
-              A page holds <b>exactly `size` items</b>. Page 0 of a ten-item list at size 4 holds
-              items 0 through 3.
+              A page holds{' '}
+              <b>
+                exactly <code>size</code> items
+              </b>
+              . Page 0 of a ten-item list at size 4 holds items 0 through 3.
             </p>
           </div>
 

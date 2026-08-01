@@ -238,6 +238,11 @@
   color: var(--sk-text-1);
   font-weight: 500;
 }
+#stack-root .tlf-cap code {
+  font-family: var(--sk-mono);
+  font-size: 0.84rem;
+  color: var(--sk-accent);
+}
 
 @media (max-width: 760px) {
   #stack-root .tlf-grid {

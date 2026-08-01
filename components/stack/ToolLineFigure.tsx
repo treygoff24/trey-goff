@@ -69,7 +69,14 @@ function toolCalls(lines: TermLine[]) {
 const CAPS = {
   without: {
     lead: 'The tool is installed. The agent has no idea.',
-    body: ' It searches, it writes a throwaway fetcher, it trusts a mirror because the mirror looked clean, and it hands back a sentence you now have to go verify. Every one of those moves is reasonable for an agent that does not know `receipts` exists.',
+    body: (
+      <>
+        {' '}
+        It searches, it writes a throwaway fetcher, it trusts a mirror because the mirror looked
+        clean, and it hands back a sentence you now have to go verify. Every one of those moves is
+        reasonable for an agent that does not know <code>receipts</code> exists.
+      </>
+    ),
   },
   with: {
     lead: 'Same task, same machine, one line of prose different.',

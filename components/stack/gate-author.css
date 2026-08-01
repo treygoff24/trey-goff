@@ -193,6 +193,11 @@
   color: var(--sk-text-1);
   font-weight: 500;
 }
+#stack-root .ga-brief p code {
+  font-family: var(--sk-mono);
+  font-size: 0.8rem;
+  color: var(--sk-accent);
+}
 
 /* ── Gate row (gauntlet pills, three wide) ──────────────── */
 #stack-root .ga-gates.gates {
