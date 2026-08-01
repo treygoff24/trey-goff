@@ -11,6 +11,8 @@ import {
 import { useReducedMotion, useReveal } from '@/components/stack/hooks'
 import DecisionCardsFigure from '@/components/stack/DecisionCardsFigure'
 import { CollisionFigure } from '@/components/stack/CollisionFigure'
+import { FreshEyesFigure } from '@/components/stack/FreshEyesFigure'
+import { GateAuthorFigure } from '@/components/stack/GateAuthorFigure'
 import { RatchetFigure } from '@/components/stack/RatchetFigure'
 import { RecoveryFigure } from '@/components/stack/RecoveryFigure'
 import { ReviewLoopFigure } from '@/components/stack/ReviewLoopFigure'
@@ -818,6 +820,7 @@ export function StackShell() {
                   end, so a red gate names the branch that broke it.
                 </p>
               </div>
+              <GateAuthorFigure />
               <div className="precept">
                 <span className="idx">03</span>
                 <p className="claim">Commits ungated, pushes gated.</p>
@@ -842,6 +845,7 @@ export function StackShell() {
                   <b>It finds the thing the author is constitutionally unable to see.</b>
                 </p>
               </div>
+              <FreshEyesFigure />
               <div className="precept">
                 <span className="idx">05</span>
                 <p className="claim">Stop the loop with a deletion.</p>
