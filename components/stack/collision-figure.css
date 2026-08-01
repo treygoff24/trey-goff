@@ -1,0 +1,333 @@
+/* ─────────────────────────────────────────────────────────────
+   /stack — ch.7 precept 01, the collision figure. Scoped under
+   #stack-root and built from the same custom properties as
+   stack.css; keyframes carry the sk- prefix for the same reason.
+   ───────────────────────────────────────────────────────────── */
+
+#stack-root .cf {
+  margin-top: 1.4rem;
+  border: 1px solid var(--sk-border-1);
+  border-radius: 8px;
+  padding: clamp(1rem, 2.4vw, 1.6rem);
+  background:
+    radial-gradient(110% 130% at 6% 0%, rgba(111, 214, 154, 0.07), transparent 62%),
+    rgba(6, 26, 16, 0.5);
+}
+
+#stack-root .cf-head {
+  margin-bottom: 1.1rem;
+}
+#stack-root .cf-head .toggle {
+  flex-wrap: wrap;
+}
+#stack-root .cf-head .toggle button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  line-height: 1.25;
+  text-align: left;
+}
+#stack-root .cf-hint {
+  font-family: var(--sk-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  color: var(--sk-text-3);
+}
+#stack-root .cf-head .toggle button[aria-pressed='true'] .cf-hint {
+  color: inherit;
+  opacity: 0.72;
+}
+
+#stack-root .cf svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+/* The stacked variant only exists below the narrow breakpoint. */
+#stack-root .cf .cf-narrow {
+  display: none;
+}
+
+/* ── lanes ──────────────────────────────────────────────────── */
+
+#stack-root .cf .cf-lane {
+  stroke: var(--sk-border-1);
+  stroke-width: 1.1;
+  fill: none;
+}
+#stack-root .cf .cf-lane.live {
+  stroke: var(--sk-accent);
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  animation: sk-cf-draw 700ms var(--sk-ease) forwards;
+}
+#stack-root .cf .cf-lane.lost {
+  stroke: var(--sk-rose);
+}
+#stack-root .cf .cf-lane.back {
+  stroke: var(--sk-warm);
+  opacity: 0.62;
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  animation: sk-cf-draw 700ms var(--sk-ease) forwards;
+}
+#stack-root .cf .cf-lane.stopped {
+  stroke: var(--sk-amber);
+  stroke-dasharray: 4 4;
+  opacity: 0.75;
+}
+#stack-root .cf .cf-stopbar {
+  stroke: var(--sk-amber);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+@keyframes sk-cf-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ── nodes and text ─────────────────────────────────────────── */
+
+#stack-root .cf .cf-node {
+  fill: rgba(4, 19, 12, 0.95);
+  stroke: var(--sk-border-1);
+  transition:
+    fill 260ms var(--sk-ease),
+    stroke 260ms var(--sk-ease);
+}
+#stack-root .cf .cf-node.on {
+  stroke: var(--sk-border-2);
+  fill: rgba(151, 232, 187, 0.09);
+}
+#stack-root .cf .cf-gate {
+  stroke-dasharray: 3 3;
+}
+#stack-root .cf .cf-gate.on {
+  stroke-dasharray: none;
+  stroke: var(--sk-warm);
+  fill: rgba(111, 214, 154, 0.14);
+}
+
+#stack-root .cf text {
+  font-family: var(--sk-mono);
+  font-size: 9px;
+  letter-spacing: 0.05em;
+  fill: var(--sk-text-2);
+}
+#stack-root .cf text.cf-hub {
+  fill: var(--sk-text-1);
+  font-size: 9.5px;
+}
+/* Solid fills only — stacked opacity on an already-dim token drops under 4.5:1. */
+#stack-root .cf text.cf-st {
+  fill: var(--sk-text-3);
+  font-size: 7.8px;
+}
+
+#stack-root .cf .cf-agent.live .cf-node,
+#stack-root .cf .cf-copy .cf-node {
+  stroke: var(--sk-accent);
+  fill: rgba(151, 232, 187, 0.1);
+}
+#stack-root .cf .cf-agent.live text,
+#stack-root .cf .cf-copy text {
+  fill: var(--sk-text-1);
+}
+#stack-root .cf .cf-agent.live text.cf-st,
+#stack-root .cf .cf-copy text.cf-st {
+  fill: var(--sk-accent);
+}
+#stack-root .cf .cf-agent.blocked .cf-node {
+  stroke: var(--sk-amber);
+  fill: rgba(251, 191, 36, 0.07);
+}
+#stack-root .cf .cf-agent.blocked text.cf-st {
+  fill: var(--sk-amber);
+}
+#stack-root .cf .cf-agent.lost .cf-node {
+  stroke: var(--sk-rose);
+  fill: rgba(248, 113, 113, 0.09);
+}
+#stack-root .cf .cf-agent.lost text.cf-st {
+  fill: var(--sk-rose);
+}
+
+/* The uncommitted-edit blocks. Their disappearance is the whole point of
+   mode one, so they leave one at a time rather than blinking out together. */
+#stack-root .cf .cf-blk {
+  fill: rgba(151, 232, 187, 0.5);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    opacity 320ms var(--sk-ease),
+    transform 320ms var(--sk-ease),
+    fill 320ms var(--sk-ease);
+}
+#stack-root .cf .cf-agent.blocked .cf-blk {
+  fill: rgba(251, 191, 36, 0.42);
+}
+#stack-root .cf .cf-blk.gone {
+  opacity: 0;
+  transform: scale(0.3);
+}
+
+#stack-root .cf .cf-file.clash .cf-node {
+  stroke: var(--sk-rose);
+  fill: rgba(248, 113, 113, 0.12);
+  animation: sk-cf-flash 620ms var(--sk-ease) 2;
+}
+#stack-root .cf .cf-file.clash text.cf-st {
+  fill: var(--sk-rose);
+}
+@keyframes sk-cf-flash {
+  50% {
+    fill: rgba(248, 113, 113, 0.3);
+  }
+}
+
+#stack-root .cf .cf-badge {
+  fill: rgba(151, 232, 187, 0.14);
+  stroke: var(--sk-border-2);
+}
+#stack-root .cf text.cf-badge-t {
+  fill: var(--sk-accent);
+  font-size: 8px;
+  letter-spacing: 0.07em;
+}
+
+/* ── controls, log, caption ─────────────────────────────────── */
+
+#stack-root .cf-ctl {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+  margin-top: 1.2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--sk-border-1);
+}
+#stack-root .cf-chip {
+  font-family: var(--sk-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--sk-border-1);
+  background: var(--sk-surface-1);
+  color: var(--sk-text-2);
+}
+#stack-root .cf-chip.bad {
+  color: var(--sk-rose);
+  border-color: rgba(248, 113, 113, 0.4);
+}
+#stack-root .cf-chip.warn {
+  color: var(--sk-amber);
+  border-color: rgba(251, 191, 36, 0.4);
+}
+#stack-root .cf-chip.ok {
+  color: var(--sk-accent);
+  border-color: var(--sk-border-2);
+}
+
+/* The log fills in line by line, so its box has to already be the height of
+   the longest script or replaying shoves the page down. A hidden copy of the
+   longest one reserves exactly that height, which a min-height cannot once
+   the lines wrap. */
+#stack-root .cf-logwrap {
+  display: grid;
+  margin-top: 0.9rem;
+}
+#stack-root .cf-logwrap > * {
+  grid-area: 1 / 1;
+}
+#stack-root .cf-log-reserve {
+  visibility: hidden;
+  pointer-events: none;
+}
+#stack-root .cf-log {
+  font-family: var(--sk-mono);
+  font-size: 0.72rem;
+  line-height: 1.75;
+  color: var(--sk-text-2);
+}
+#stack-root .cf-line {
+  display: grid;
+  grid-template-columns: 1.1rem 1fr;
+  gap: 0.2rem;
+}
+#stack-root .cf-mk {
+  color: var(--sk-text-3);
+}
+#stack-root .cf-line.ok .cf-mk,
+#stack-root .cf-line.go .cf-mk,
+#stack-root .cf-line.sum .cf-mk {
+  color: var(--sk-accent);
+}
+#stack-root .cf-line.warn .cf-mk {
+  color: var(--sk-amber);
+}
+#stack-root .cf-line.bad {
+  color: var(--sk-text-1);
+}
+#stack-root .cf-line.bad .cf-mk {
+  color: var(--sk-rose);
+}
+
+#stack-root .cf-cap {
+  margin: 1rem 0 0;
+  padding-left: 0.9rem;
+  box-shadow: var(--sk-edge-warm);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--sk-text-2);
+}
+#stack-root .cf-cap b {
+  color: var(--sk-text-1);
+  font-weight: 500;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Killing the draw without zeroing the offset would leave every lane dashed
+     out of sight, so the settled frame has to be spelled out. */
+  #stack-root .cf .cf-lane,
+  #stack-root .cf .cf-lane.live,
+  #stack-root .cf .cf-lane.back {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  #stack-root .cf .cf-file.clash .cf-node {
+    animation: none;
+  }
+  #stack-root .cf .cf-node,
+  #stack-root .cf .cf-blk {
+    transition: none;
+  }
+}
+
+@media (max-width: 820px) {
+  /* The landscape stage needs 660 units of width; scaled to a phone its labels
+     land under 6px and the argument goes with them. */
+  #stack-root .cf .cf-wide {
+    display: none;
+  }
+  #stack-root .cf .cf-narrow {
+    display: block;
+    max-width: 27rem;
+    margin-inline: auto;
+  }
+  #stack-root .cf .cf-narrow text {
+    font-size: 10.5px;
+  }
+  #stack-root .cf .cf-narrow text.cf-hub {
+    font-size: 11px;
+  }
+  #stack-root .cf .cf-narrow text.cf-st {
+    font-size: 9px;
+  }
+  #stack-root .cf .cf-narrow text.cf-badge-t {
+    font-size: 9px;
+  }
+}
