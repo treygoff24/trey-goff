@@ -9,7 +9,10 @@ import {
   START_TONIGHT,
 } from '@/components/stack/data'
 import { useReducedMotion, useReveal } from '@/components/stack/hooks'
+import { CollisionFigure } from '@/components/stack/CollisionFigure'
+import { RatchetFigure } from '@/components/stack/RatchetFigure'
 import { RecoveryFigure } from '@/components/stack/RecoveryFigure'
+import { ReviewLoopFigure } from '@/components/stack/ReviewLoopFigure'
 import { Terminal } from '@/components/stack/Terminal'
 import { ToolLineFigure } from '@/components/stack/ToolLineFigure'
 import { SubagentSavings } from '@/components/stack/SubagentSavings'
@@ -794,6 +797,7 @@ export function StackShell() {
                   worktree and the collision never happens.
                 </p>
               </div>
+              <CollisionFigure />
               <div className="precept">
                 <span className="idx">02</span>
                 <p className="claim">One gate command, run by you.</p>
@@ -823,6 +827,7 @@ export function StackShell() {
                   ask your agent to implement them for you.
                 </p>
               </div>
+              <RatchetFigure />
               <div className="precept">
                 <span className="idx">04</span>
                 <p className="claim">Review with something that didn&apos;t write it.</p>
@@ -844,6 +849,7 @@ export function StackShell() {
                   reasonably.
                 </p>
               </div>
+              <ReviewLoopFigure />
             </div>
             <Pager
               prev={['#ch6', '06 · Multiplying it']}
