@@ -9,6 +9,7 @@ import {
   START_TONIGHT,
 } from '@/components/stack/data'
 import { useReducedMotion, useReveal } from '@/components/stack/hooks'
+import DecisionCardsFigure from '@/components/stack/DecisionCardsFigure'
 import { CollisionFigure } from '@/components/stack/CollisionFigure'
 import { RatchetFigure } from '@/components/stack/RatchetFigure'
 import { RecoveryFigure } from '@/components/stack/RecoveryFigure'
@@ -894,6 +895,7 @@ export function StackShell() {
                 what&apos;s worth creating and what &quot;good&quot; or &quot;done&quot; look like.
               </b>
             </div>
+            <DecisionCardsFigure />
             <p className="section-label">Start tonight</p>
             <p className="lede rv" style={{ marginBottom: '1.6rem' }}>
               Open a repo you care about, start a session, and paste this. It will interview you
