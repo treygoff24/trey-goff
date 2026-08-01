@@ -330,4 +330,17 @@
   #stack-root .cf .cf-narrow text.cf-badge-t {
     font-size: 9px;
   }
+
+  /* Wrapped into three rows, the shared pill radius reads as a blob behind the
+     unselected tabs. Stack them deliberately instead. */
+  #stack-root .cf-head .toggle {
+    display: grid;
+    width: 100%;
+    gap: 2px;
+    border-radius: 10px;
+  }
+  #stack-root .cf-head .toggle button {
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+  }
 }

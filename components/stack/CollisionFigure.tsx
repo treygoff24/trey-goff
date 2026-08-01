@@ -82,7 +82,10 @@ type Box = { x: number; y: number; w: number; h: number }
 
 type Geom = {
   cls: string
+  /** Frame without the merge gate; the stacked variant is much shorter without it. */
   vb: string
+  /** Frame with the merge gate — prevention mode only. */
+  vbGate: string
   rows: [number, number, number]
   agentX: number
   agentW: number
@@ -99,6 +102,8 @@ type Geom = {
   badge: Box
   badgeTx: number
   badgeTy: number
+  /** Worktree path shown on a copy box — abbreviated where the box is narrow. */
+  copyLabel: (i: number) => string
   gate: Box
   gateTx: number
   gateTy: [number, number]
@@ -114,6 +119,7 @@ type Geom = {
 const WIDE: Geom = {
   cls: 'cf-wide',
   vb: '0 0 660 250',
+  vbGate: '0 0 660 250',
   rows: [42, 125, 208],
   agentX: 10,
   agentW: 112,
@@ -127,9 +133,10 @@ const WIDE: Geom = {
   singleY: 97,
   singleH: 56,
   copyH: 46,
-  badge: { x: 280, y: 78, w: 124, h: 20 },
-  badgeTx: 288,
+  badge: { x: 276, y: 78, w: 148, h: 20 },
+  badgeTx: 285,
   badgeTy: 92,
+  copyLabel: (i) => `${WT_DIRS[i]}/${FILE}`,
   gate: { x: 548, y: 99, w: 104, h: 52 },
   gateTx: 600,
   gateTy: [119, 135],
@@ -144,33 +151,37 @@ const WIDE: Geom = {
 
 const NARROW: Geom = {
   cls: 'cf-narrow',
-  vb: '0 0 340 392',
+  vb: '0 0 340 276',
+  vbGate: '0 0 340 392',
   rows: [46, 140, 234],
   agentX: 4,
-  agentW: 88,
+  agentW: 112,
   boxH: 52,
   pad: 8,
   blockW: 9,
   blockPitch: 11,
   fileX: 150,
-  fileW: 174,
+  fileW: 182,
   centerY: 140,
   singleY: 112,
   singleH: 56,
   copyH: 48,
-  badge: { x: 158, y: 92, w: 118, h: 20 },
-  badgeTx: 166,
+  badge: { x: 152, y: 92, w: 154, h: 20 },
+  badgeTx: 161,
   badgeTy: 106,
+  /* The full worktree path runs 26 characters; at this width the middle segment
+     is the one a reader can infer, so it is the one that goes. */
+  copyLabel: (i) => `${WT_DIRS[i]}/…/auth.ts`,
   gate: { x: 96, y: 330, w: 148, h: 46 },
   gateTx: 170,
   gateTy: [348, 362],
   stopY: (i) => (i === 1 ? 126 : 154),
-  stopX: 138,
-  outLive: (row) => `M92,${row} C 112,${row} 126,140 146,140`,
+  stopX: 130,
+  outLive: (row) => `M116,${row} C 130,${row} 134,140 146,140`,
   outBlocked: (row, i) =>
-    `M92,${row} C 110,${row} 120,${i === 1 ? 126 : 154} 138,${i === 1 ? 126 : 154}`,
-  outStraight: (row) => `M92,${row} L 146,${row}`,
-  back: (row) => `M324,${row} C 338,${row} 338,300 170,326`,
+    `M116,${row} C 124,${row} 126,${i === 1 ? 126 : 154} 130,${i === 1 ? 126 : 154}`,
+  outStraight: (row) => `M116,${row} L 146,${row}`,
+  back: (row) => `M332,${row} C 338,${row} 336,300 176,328`,
 }
 
 type LaneState = 'idle' | 'live' | 'lost' | 'blocked'
@@ -201,7 +212,12 @@ function Stage({ geom, mode, phase }: { geom: Geom; mode: ModeKey; phase: number
   const gateOn = mode === 'worktrees' && phase >= 3
 
   return (
-    <svg className={geom.cls} viewBox={geom.vb} role="img" aria-label={FIG_LABEL[mode]}>
+    <svg
+      className={geom.cls}
+      viewBox={mode === 'worktrees' ? geom.vbGate : geom.vb}
+      role="img"
+      aria-label={FIG_LABEL[mode]}
+    >
       <g>
         {geom.rows.map((row, i) => {
           const s = laneState(mode, phase, i)
@@ -288,7 +304,7 @@ function Stage({ geom, mode, phase }: { geom: Geom; mode: ModeKey; phase: number
                 className="cf-node on"
               />
               <text x={geom.fileX + geom.pad + 2} y={row - 3}>
-                {WT_DIRS[i]}/{FILE}
+                {geom.copyLabel(i)}
               </text>
               <text x={geom.fileX + geom.pad + 2} y={row + 12} className="cf-st">
                 writable · nobody else here
