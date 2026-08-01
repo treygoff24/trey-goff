@@ -243,13 +243,13 @@
 #stack-root .cnc-stage {
   container-type: inline-size;
   position: relative;
-  height: 26.6rem;
+  height: 25.3rem;
 }
 
 #stack-root .cnc-wires {
   position: absolute;
   inset: 0 0 auto;
-  height: 4.4rem;
+  height: 3.5rem;
   width: 100%;
   display: block;
   overflow: visible;
@@ -415,15 +415,23 @@
 #stack-root .cnc-ghost {
   position: absolute;
   left: 0;
-  top: 15.3rem;
+  top: 14.4rem;
   width: 100cqw;
-  height: 11rem;
+  height: 10.2rem;
   display: grid;
-  place-items: center;
+  /* Anchored left, not centred: on a phone the board is wider than the window
+     and a centred label sits off-screen until the reader swipes to it. */
+  place-items: center start;
+  padding-left: 1.1rem;
   border: 1px dashed rgba(232, 243, 236, 0.14);
   border-radius: 7px;
   opacity: 1;
   transition: opacity 380ms var(--sk-ease);
+}
+/* The critique band, reserved from the first frame in the same way. */
+#stack-root .cnc-ghost-band {
+  top: 0.4rem;
+  height: 13.3rem;
 }
 #stack-root .cnc-ghost.is-off {
   opacity: 0;
@@ -456,8 +464,8 @@
 #stack-root .cnc-syn {
   left: 0;
   width: 65.5cqw;
-  top: 15.3rem;
-  height: 11rem;
+  top: 14.4rem;
+  height: 10.6rem;
   border-color: rgba(151, 232, 187, 0.34);
   background:
     radial-gradient(120% 140% at 4% 0%, rgba(151, 232, 187, 0.1), transparent 62%),
@@ -466,7 +474,7 @@
 #stack-root .cnc-human {
   left: 68.5cqw;
   width: 31.5cqw;
-  top: 15.3rem;
+  top: 14.4rem;
   transition-delay: 220ms;
 }
 #stack-root .cnc-panel-head {
@@ -560,9 +568,14 @@
 #stack-root .cnc-still-fig {
   overflow-x: auto;
 }
+/* Measured floor, not a guess: below about 47rem of board the chip text takes
+   an extra line, rows in the same column start overlapping, and the band
+   overruns the verdict panel — the authored geometry stops being true. The
+   figure already scrolls horizontally at this size, so the floor buys that
+   geometry back rather than trying to make eight absolute addresses fluid. */
 #stack-root .cnc-still-fig .cnc-board,
 #stack-root .cnc-scroll-in .cnc-board {
-  min-width: 33rem;
+  min-width: 48rem;
 }
 #stack-root .cnc-still .cnc-cap {
   margin-top: 0.8rem;

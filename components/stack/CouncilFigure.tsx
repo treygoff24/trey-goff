@@ -29,14 +29,18 @@ const COL_W = 23.2
 const COL_X = [0, 25.6, 51.2, 76.8]
 
 /* Row pitch clears the tallest chip in the band — the hazard, which carries
-   three lines of text plus its "found by 1 of 4" tag. */
-const ROW_Y = 4.7
+   three lines of text plus its "found by 1 of 4" tag. Measured against the
+   board's own min-width, below which the chip text wraps an extra line and
+   the rows would collide; see .cnc-board in the stylesheet. */
+const ROW_Y = 3.8
 const ROW_PITCH = 3.6
 
 const SYN_X = [2.4, 34.2]
 const SYN_W = 29.5
-const SYN_ROW_Y = 20.5
-const SYN_ROW_PITCH = 2.9
+const SYN_ROW_Y = 19.6
+/* The hazard leads this panel and is still three lines plus its tag once it has
+   migrated, so the pitch in here has to clear it the same way the band's does. */
+const SYN_ROW_PITCH = 3.4
 
 /* ── Cast ───────────────────────────────────────────────── */
 
@@ -264,9 +268,14 @@ function CouncilBoard({ stage, focus, onFocus, reduced }: BoardProps) {
           })}
         </svg>
 
-        {/* The verdict band is reserved from the first stage so scrubbing never
-            moves the page; the ghost turns that reservation into anticipation
-            instead of a hole. */}
+        {/* Both bands are reserved from the first stage so scrubbing never moves
+            the page. Left bare, that reservation reads as two holes — a third of
+            a phone screen of nothing before a single objection has been filed —
+            so each one says what is going to land in it. */}
+        <div className={`cnc-ghost cnc-ghost-band${critiqued ? ' is-off' : ''}`} aria-hidden="true">
+          <span>objections · none filed yet</span>
+        </div>
+
         <div className={`cnc-ghost${synthesized ? ' is-off' : ''}`} aria-hidden="true">
           <span>synthesis · not written yet</span>
         </div>
