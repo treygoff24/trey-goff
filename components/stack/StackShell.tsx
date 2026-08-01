@@ -479,7 +479,7 @@ export function StackShell() {
                 <>
                   Repeated workflows should always be skills. Skills cover what&apos;s true{' '}
                   <em>sometimes</em> — loaded only when the moment calls for them, so your context
-                  stays spent on the work. There are 317 of them on my machine. Any given session
+                  stays spent on the work. There are 307 of them on my machine. Any given session
                   touches a handful.
                 </>
               }
