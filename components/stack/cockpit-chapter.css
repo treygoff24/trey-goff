@@ -67,68 +67,394 @@
     radial-gradient(110% 130% at 6% 0%, rgba(111, 214, 154, 0.07), transparent 62%),
     rgba(6, 26, 16, 0.5);
 }
-#stack-root .cp-loop svg {
+/* ── Figure 1 · the stage ────────────────────────────────
+   Two windows and a disk rail between them. One card — STATE.md — is the
+   only element that moves between the three anchors, because it is the only
+   thing that survives a session boundary; everything else is scenery that
+   lights up or dies in place. The card's position is three `--dx/--dy` pairs
+   the phase attribute selects, so the horizontal desktop reading and the
+   vertical phone reading are one figure with two coordinate sets. */
+#stack-root .cs-stage {
+  position: relative;
+  container-type: size;
   width: 100%;
-  height: auto;
-  display: block;
-}
-/* Capped so the ring stops scaling once its 12px labels reach roughly the
-   size of body copy — past that the figure starts shouting over the prose. */
-#stack-root .cp-loop-wide svg {
-  max-width: 40rem;
+  max-width: 44rem;
   margin: 0 auto;
-}
-/* One figure, two geometries: the ring becomes a column on phones rather than
-   a shrunken ring whose labels fall under the type floor. */
-#stack-root .cp-loop-narrow {
-  display: none;
+  aspect-ratio: 16 / 9.5;
+  --dx: 0cqw;
+  --dy: 0cqh;
 }
 
-#stack-root .cp-loop .cp-ring {
-  fill: none;
-  stroke: var(--sk-border-1);
-  stroke-width: 1.1;
-  stroke-dasharray: 3 5;
-}
-#stack-root .cp-loop .cp-chev {
-  fill: none;
-  stroke: var(--sk-warm);
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  opacity: 0.75;
-}
-#stack-root .cp-loop .cp-ring-hub {
-  fill: var(--sk-text-2);
-  font-family: var(--sk-serif);
-  font-size: 16px;
-}
-#stack-root .cp-loop .cp-ring-sub {
-  fill: var(--sk-text-3);
-  font-family: var(--sk-mono);
-  font-size: 11px;
-  letter-spacing: 0.04em;
-}
-#stack-root .cp-loop .cp-node rect {
-  fill: rgba(4, 19, 12, 0.95);
-  stroke: var(--sk-border-1);
-  stroke-width: 1;
+/* Both windows keep their content in the top band; the card overlays the
+   lower one. Overflow is clipped so a long chip never escapes its session. */
+#stack-root .cs-win {
+  position: absolute;
+  top: 0;
+  height: 86%;
+  width: 42%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--sk-border-1);
+  border-radius: 7px;
+  background: rgba(4, 19, 12, 0.55);
   transition:
-    fill 260ms var(--sk-ease),
-    stroke 260ms var(--sk-ease);
+    opacity 620ms var(--sk-ease),
+    border-color 620ms var(--sk-ease),
+    background 620ms var(--sk-ease);
 }
-#stack-root .cp-loop .cp-node text {
-  fill: var(--sk-text-2);
+#stack-root .cs-a {
+  left: 0;
+}
+#stack-root .cs-b {
+  right: 0;
+}
+#stack-root .cs-win-t {
+  transition: opacity 620ms var(--sk-ease);
   font-family: var(--sk-mono);
-  font-size: 12px;
-  transition: fill 260ms var(--sk-ease);
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
 }
-#stack-root .cp-loop .cp-node.on rect {
-  fill: rgba(151, 232, 187, 0.13);
-  stroke: var(--sk-accent);
+
+/* The residue: what a session actually accumulates. Four of these seven lines
+   are the ones that will still matter tomorrow, and the figure's second
+   station is the moment that becomes visible. */
+#stack-root .cs-chips {
+  list-style: none;
+  transition: opacity 620ms var(--sk-ease);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+  min-height: 0;
 }
-#stack-root .cp-loop .cp-node.on text {
-  fill: var(--sk-text-1);
+#stack-root .cs-chips li {
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  line-height: 1.5;
+  color: var(--sk-text-3);
+  padding: 0.1rem 0.4rem;
+  border-left: 2px solid transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition:
+    opacity 520ms var(--sk-ease),
+    color 520ms var(--sk-ease),
+    border-color 520ms var(--sk-ease);
+}
+/* The stamp that lands when the window dies. */
+#stack-root .cs-stamp {
+  position: absolute;
+  left: 0.8rem;
+  bottom: 0.7rem;
+  font-family: var(--sk-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sk-rose);
+  opacity: 0;
+  transition: opacity 520ms var(--sk-ease);
+}
+
+/* The fresh window's two states: empty, then briefed. */
+#stack-root .cs-empty {
+  margin: 0;
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  color: var(--sk-text-3);
+  opacity: 0.55;
+  transition: opacity 520ms var(--sk-ease);
+}
+#stack-root .cs-brief {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+}
+#stack-root .cs-brief li {
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  color: var(--sk-text-2);
+  padding: 0.12rem 0.45rem;
+  border-left: 2px solid var(--sk-warm);
+  background: rgba(151, 232, 187, 0.07);
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 460ms var(--sk-ease),
+    transform 460ms var(--sk-ease);
+}
+#stack-root .cs-prompt {
+  font-family: var(--sk-mono);
+  font-size: 0.58rem;
+  color: var(--sk-accent);
+  opacity: 0;
+  transition: opacity 520ms var(--sk-ease);
+}
+
+/* The disk: the one surface that outlives the window above it. */
+#stack-root .cs-rail {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  height: 86%;
+  width: 0;
+  border-left: 1px dashed var(--sk-border-1);
+  transition: border-color 620ms var(--sk-ease);
+}
+#stack-root .cs-rail-t {
+  position: absolute;
+  left: 50%;
+  top: 0.2rem;
+  transform: translateX(-50%);
+  font-family: var(--sk-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+  background: var(--sk-bg-1);
+  padding: 0 0.35rem;
+}
+
+/* The traveller. */
+#stack-root .cs-file {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 34cqw;
+  min-height: 12cqh;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--sk-border-2);
+  border-radius: 6px;
+  background: rgba(4, 19, 12, 0.97);
+  box-shadow: 0 10px 30px -18px rgba(0, 0, 0, 0.9);
+  transform: translate(-50%, -50%) translate(var(--dx), var(--dy));
+  transition:
+    transform 760ms var(--sk-ease),
+    border-color 520ms var(--sk-ease),
+    box-shadow 520ms var(--sk-ease);
+}
+#stack-root .cs-file-h {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.4rem;
+  font-family: var(--sk-mono);
+  font-size: 0.66rem;
+  color: var(--sk-accent);
+}
+#stack-root .cs-file-tag {
+  font-size: 0.53rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sk-warm);
+  white-space: nowrap;
+}
+/* Collapses rather than merely fading, so the written file does not carry a
+   blank line where the staleness notice used to be. */
+#stack-root .cs-file-stale {
+  font-family: var(--sk-mono);
+  font-size: 0.58rem;
+  color: var(--sk-text-3);
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition:
+    opacity 400ms var(--sk-ease),
+    max-height 400ms var(--sk-ease);
+}
+/* The card is only as tall as the file is written. Collapsing the body to a
+   zero fraction at station one means the stale file is a stub, and /done
+   visibly grows it — the height change is the writing. */
+#stack-root .cs-file-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition: grid-template-rows 620ms var(--sk-ease);
+}
+#stack-root .cs-stage:not([data-phase='work']) .cs-file-body {
+  grid-template-rows: 1fr;
+}
+#stack-root .cs-file-lines {
+  min-height: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+}
+#stack-root .cs-file-lines li {
+  --i: 0;
+  font-family: var(--sk-mono);
+  font-size: 0.58rem;
+  line-height: 1.45;
+  color: var(--sk-text-2);
+  padding-left: 0.5rem;
+  border-left: 2px solid var(--sk-border-2);
+  opacity: 0;
+  transform: translateX(-5px);
+  /* Staggered so the file reads as being written a line at a time, which is
+     what /done is actually doing. */
+  transition:
+    opacity 420ms var(--sk-ease) calc(var(--i) * 130ms + 240ms),
+    transform 420ms var(--sk-ease) calc(var(--i) * 130ms + 240ms);
+}
+
+/* The loop close: the fresh window is the next session's working window. */
+#stack-root .cs-return {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  top: 90%;
+  height: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--sk-border-1);
+  border-top: 0;
+  border-radius: 0 0 8px 8px;
+  transition: border-color 620ms var(--sk-ease);
+}
+/* The arrowhead is the whole argument of the return leg: the fresh window
+   feeds back into the working one. */
+#stack-root .cs-return::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: -1px;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 6px solid var(--sk-warm);
+  opacity: 0.7;
+}
+#stack-root .cs-return span {
+  font-family: var(--sk-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+  background: var(--sk-bg-1);
+  padding: 0 0.5rem;
+  transform: translateY(-0.55rem);
+  transition: color 620ms var(--sk-ease);
+}
+
+/* ── The five stations ──────────────────────────────────── */
+
+/* 01 · work — the old file is stale and the residue is undifferentiated. */
+#stack-root .cs-stage[data-phase='work'] {
+  --dx: -29cqw;
+  --dy: 14cqh;
+}
+#stack-root .cs-stage[data-phase='work'] .cs-file-stale {
+  opacity: 1;
+  max-height: 3rem;
+}
+#stack-root .cs-stage[data-phase='work'] .cs-file {
+  border-color: var(--sk-border-1);
+}
+
+/* 02 · /done — the sort, then the rewrite. */
+#stack-root .cs-stage[data-phase='done'] {
+  --dx: -29cqw;
+  --dy: 14cqh;
+}
+#stack-root .cs-stage[data-phase='done'] .cs-chips li[data-keep='0'] {
+  opacity: 0.18;
+  text-decoration: line-through;
+}
+#stack-root .cs-stage[data-phase='done'] .cs-chips li[data-keep='1'] {
+  color: var(--sk-text-1);
+  border-left-color: var(--sk-accent);
+}
+#stack-root .cs-stage[data-phase='done'] .cs-file {
+  box-shadow: 0 0 0 1px var(--sk-accent);
+}
+
+/* 03 · close — the window dies; the file is the only thing still lit. */
+#stack-root .cs-stage[data-phase='close'] {
+  --dx: 0cqw;
+  --dy: 0cqh;
+}
+#stack-root .cs-stage[data-phase='close'] .cs-rail {
+  border-left-color: var(--sk-accent);
+}
+
+/* 04 · hydrate and 05 · brief — the same card, in the next window. */
+#stack-root .cs-stage[data-phase='hydrate'],
+#stack-root .cs-stage[data-phase='brief'] {
+  --dx: 29cqw;
+  --dy: 14cqh;
+}
+
+#stack-root .cs-stage[data-phase='brief'] .cs-brief li {
+  opacity: 1;
+  transform: none;
+}
+#stack-root .cs-stage[data-phase='brief'] .cs-prompt {
+  opacity: 1;
+}
+#stack-root .cs-stage[data-phase='brief'] .cs-return {
+  border-color: var(--sk-border-2);
+}
+#stack-root .cs-stage[data-phase='brief'] .cs-return span {
+  color: var(--sk-accent);
+}
+
+/* Shared state across ranges of stations, kept here rather than repeated
+   inside each station block above. */
+#stack-root .cs-stage:not([data-phase='work']) .cs-file-lines li {
+  opacity: 1;
+  transform: none;
+}
+/* The dead window fades its contents, not itself: dimming the whole element
+   would take the stamp — the one thing that has to stay readable — with it. */
+#stack-root .cs-stage[data-phase='close'] .cs-a,
+#stack-root .cs-stage[data-phase='hydrate'] .cs-a,
+#stack-root .cs-stage[data-phase='brief'] .cs-a {
+  border-style: dashed;
+  background: transparent;
+}
+#stack-root .cs-stage[data-phase='close'] .cs-a .cs-win-t,
+#stack-root .cs-stage[data-phase='hydrate'] .cs-a .cs-win-t,
+#stack-root .cs-stage[data-phase='brief'] .cs-a .cs-win-t,
+#stack-root .cs-stage[data-phase='close'] .cs-a .cs-chips,
+#stack-root .cs-stage[data-phase='hydrate'] .cs-a .cs-chips,
+#stack-root .cs-stage[data-phase='brief'] .cs-a .cs-chips {
+  opacity: 0.16;
+}
+#stack-root .cs-stage[data-phase='close'] .cs-stamp,
+#stack-root .cs-stage[data-phase='hydrate'] .cs-stamp,
+#stack-root .cs-stage[data-phase='brief'] .cs-stamp {
+  opacity: 1;
+}
+#stack-root .cs-stage[data-phase='hydrate'] .cs-b,
+#stack-root .cs-stage[data-phase='brief'] .cs-b {
+  border-color: var(--sk-border-2);
+  background: rgba(6, 26, 16, 0.9);
+}
+#stack-root .cs-stage[data-phase='hydrate'] .cs-empty,
+#stack-root .cs-stage[data-phase='brief'] .cs-empty {
+  opacity: 0;
+}
+#stack-root .cs-stage[data-phase='work'] .cs-b,
+#stack-root .cs-stage[data-phase='done'] .cs-b,
+#stack-root .cs-stage[data-phase='close'] .cs-b {
+  opacity: 0.4;
 }
 
 /* ── Tour control ───────────────────────────────────────── */
@@ -396,13 +722,76 @@
   }
 }
 @media (max-width: 760px) {
-  /* Swap in the column geometry rather than panning the ring: the labels keep
-     their size and the whole loop fits a 390px viewport. */
-  #stack-root .cp-loop-wide {
+  /* The same figure turned ninety degrees: sessions stack, the disk rail runs
+     across, and the card travels down instead of right. Scaling the wide
+     geometry instead would push the 0.58rem labels under the type floor. */
+  #stack-root .cs-stage {
+    max-width: 26rem;
+    aspect-ratio: 5 / 12;
+  }
+  #stack-root .cs-win {
+    width: 100%;
+    height: 44%;
+  }
+  #stack-root .cs-b {
+    top: 52%;
+    height: 40%;
+  }
+  /* Two of the three discarded lines go: stacked, the window is a third as
+     wide and the sort still reads with one survivor of the cut on screen. */
+  #stack-root .cs-chips li:nth-child(1),
+  #stack-root .cs-chips li:nth-child(5) {
     display: none;
   }
-  #stack-root .cp-loop-narrow {
-    display: block;
+  /* Turned ninety degrees, the bottom of the old window is where the card
+     parks, so the stamp moves out from under it. */
+  #stack-root .cs-stamp {
+    top: 0.7rem;
+    bottom: auto;
+    left: auto;
+    right: 0.8rem;
+  }
+  #stack-root .cs-rail {
+    left: 0;
+    right: 0;
+    top: 48%;
+    width: auto;
+    height: 0;
+    border-left: 0;
+    border-top: 1px dashed var(--sk-border-1);
+  }
+  #stack-root .cs-stage[data-phase='close'] .cs-rail {
+    border-left-color: transparent;
+    border-top-color: var(--sk-accent);
+  }
+  #stack-root .cs-rail-t {
+    top: -0.55rem;
+    left: 1.2rem;
+    transform: none;
+  }
+  #stack-root .cs-file {
+    width: 86cqw;
+    min-height: 12cqh;
+  }
+  #stack-root .cs-stage[data-phase='work'],
+  #stack-root .cs-stage[data-phase='done'] {
+    --dx: 0cqw;
+    --dy: -18cqh;
+  }
+  #stack-root .cs-stage[data-phase='hydrate'],
+  #stack-root .cs-stage[data-phase='brief'] {
+    --dx: 0cqw;
+    --dy: 31cqh;
+  }
+  #stack-root .cs-return {
+    top: 94%;
+    height: 6%;
+  }
+  /* Two lines of label will not sit astride a hairline; on phones it sits
+     inside the band instead of on its edge. */
+  #stack-root .cs-return span {
+    transform: none;
+    text-align: center;
   }
   #stack-root .cp-tabs,
   #stack-root .cp-instruments,
@@ -425,9 +814,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* No tween, no stagger — each station becomes an instant, labelled state
+     that the tabs below still step through in order. */
   #stack-root .cp-tab,
-  #stack-root .cp-loop .cp-node rect,
-  #stack-root .cp-loop .cp-node text {
+  #stack-root .cs-stage *,
+  #stack-root .cs-stage {
     transition-duration: 0.001ms !important;
+    transition-delay: 0ms !important;
   }
 }
