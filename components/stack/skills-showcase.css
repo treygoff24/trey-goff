@@ -1,0 +1,437 @@
+/* ─────────────────────────────────────────────────────────────
+   /stack — chapter 03, the always-on skills board.
+   Scoped under #stack-root and built only from stack.css's own
+   custom properties. Each group carries one hue on its left edge
+   using the page's existing edge-light grammar; the tiles stay
+   monochrome so the board reads as one list with four lanes
+   rather than four competing color blocks.
+   ───────────────────────────────────────────────────────────── */
+
+#stack-root .sx-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+#stack-root .sx-shell {
+  margin: 1.8rem 0 0;
+  border: 1px solid var(--sk-border-1);
+  background: linear-gradient(180deg, var(--sk-surface-1), transparent 55%);
+}
+
+/* ── Header bar ─────────────────────────────────────────── */
+#stack-root .sx-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.9rem 1.6rem;
+  padding: 1rem clamp(0.9rem, 2.4vw, 1.5rem);
+  border-bottom: 1px solid var(--sk-border-1);
+}
+#stack-root .sx-bar-cmd {
+  display: block;
+  font-family: var(--sk-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  color: var(--sk-accent);
+}
+#stack-root .sx-bar-sub {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--sk-text-3);
+}
+#stack-root .sx-bar-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.1rem;
+}
+#stack-root .sx-stat {
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+}
+#stack-root .sx-stat b {
+  font-size: 0.98rem;
+  letter-spacing: 0;
+  color: var(--sk-text-2);
+  margin-right: 0.35rem;
+}
+#stack-root .sx-stat-take b {
+  color: var(--sk-accent);
+}
+#stack-root .sx-stat-local b {
+  color: var(--sk-text-3);
+}
+
+/* ── Controls ───────────────────────────────────────────── */
+#stack-root .sx-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem 1.4rem;
+  padding: 0.75rem clamp(0.9rem, 2.4vw, 1.5rem);
+  border-bottom: 1px solid var(--sk-border-1);
+}
+#stack-root .sx-filter {
+  appearance: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.42rem 0.8rem;
+  background: transparent;
+  border: 1px solid var(--sk-border-1);
+  color: var(--sk-text-3);
+  font-family: var(--sk-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition:
+    color 180ms var(--sk-ease),
+    border-color 180ms var(--sk-ease),
+    background-color 180ms var(--sk-ease);
+}
+#stack-root .sx-filter::before {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+#stack-root .sx-filter:hover {
+  color: var(--sk-text-1);
+  border-color: var(--sk-border-2);
+}
+#stack-root .sx-filter.is-on {
+  color: var(--sk-bg-0);
+  background: var(--sk-accent);
+  border-color: var(--sk-accent);
+}
+#stack-root .sx-filter.is-on::before {
+  background: var(--sk-bg-0);
+}
+#stack-root .sx-hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--sk-text-3);
+}
+
+/* ── The board ──────────────────────────────────────────── */
+#stack-root .sx-board {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+#stack-root .sx-group {
+  padding: 1.2rem clamp(0.9rem, 2.4vw, 1.5rem) 1.5rem;
+  border-bottom: 1px solid var(--sk-border-1);
+  box-shadow: var(--sx-edge, var(--sk-edge-dim));
+}
+#stack-root .sx-group:nth-child(odd) {
+  border-right: 1px solid var(--sk-border-1);
+}
+#stack-root .sx-board .sx-group:nth-last-child(-n + 2) {
+  border-bottom: 0;
+}
+
+#stack-root .sx-lane-harness {
+  --sx-hue: var(--sk-warm);
+  --sx-edge: var(--sk-edge-warm);
+}
+#stack-root .sx-lane-discipline {
+  --sx-hue: var(--sk-accent);
+  --sx-edge: var(--sk-edge-accent);
+}
+#stack-root .sx-lane-research {
+  --sx-hue: var(--sk-sky);
+  --sx-edge: inset 16px 0 20px -16px rgba(125, 211, 252, 0.5);
+}
+#stack-root .sx-lane-tools {
+  --sx-hue: var(--sk-violet);
+  --sx-edge: inset 16px 0 20px -16px rgba(196, 181, 253, 0.5);
+}
+
+#stack-root .sx-group-head {
+  margin-bottom: 0.9rem;
+}
+#stack-root .sx-group-label {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  font-family: var(--sk-mono);
+  font-weight: 400;
+  font-size: 0.63rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sx-hue);
+}
+#stack-root .sx-group-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.35rem;
+  padding: 0.1rem 0.3rem;
+  border: 1px solid var(--sk-border-1);
+  background: var(--sk-surface-1);
+  color: var(--sk-text-2);
+  font-size: 0.62rem;
+  letter-spacing: 0;
+}
+#stack-root .sx-group-blurb {
+  margin: 0.55rem 0 0;
+  font-size: 0.83rem;
+  line-height: 1.55;
+  color: var(--sk-text-3);
+}
+
+#stack-root .sx-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--sk-border-1);
+}
+#stack-root .sx-item {
+  border-bottom: 1px solid var(--sk-border-1);
+}
+
+/* ── A tile ─────────────────────────────────────────────── */
+#stack-root .sx-tile {
+  appearance: none;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 0.62rem 0.2rem 0.62rem 0.1rem;
+  background: transparent;
+  border: 0;
+  text-align: left;
+  color: var(--sk-text-2);
+  transition:
+    color 180ms var(--sk-ease),
+    padding-left 220ms var(--sk-ease);
+}
+#stack-root .sx-tile:hover,
+#stack-root .sx-tile:focus-visible {
+  color: var(--sk-text-1);
+  padding-left: 0.45rem;
+}
+#stack-root .sx-tile-name {
+  font-family: var(--sk-mono);
+  font-size: 0.86rem;
+  letter-spacing: -0.005em;
+}
+#stack-root .sx-tile:hover .sx-tile-name,
+#stack-root .sx-item.is-open .sx-tile-name {
+  color: var(--sx-hue);
+}
+#stack-root .sx-tile.is-local .sx-tile-name {
+  color: var(--sk-text-3);
+}
+#stack-root .sx-tile.is-local:hover .sx-tile-name,
+#stack-root .sx-item.is-open .sx-tile.is-local .sx-tile-name {
+  color: var(--sk-text-2);
+}
+#stack-root .sx-tile-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: none;
+}
+#stack-root .sx-badge {
+  font-family: var(--sk-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.4rem;
+  border: 1px solid transparent;
+}
+/* Twenty-three of these sit on the board at once, so the common case stays
+   quiet and lights up on approach; the seven exceptions carry the weight. */
+#stack-root .sx-badge-take {
+  color: var(--sk-text-3);
+  border-color: transparent;
+  transition:
+    color 180ms var(--sk-ease),
+    border-color 180ms var(--sk-ease);
+}
+#stack-root .sx-tile:hover .sx-badge-take,
+#stack-root .sx-tile:focus-visible .sx-badge-take,
+#stack-root .sx-item.is-open .sx-badge-take {
+  color: var(--sk-accent);
+  border-color: var(--sk-border-2);
+}
+#stack-root .sx-badge-local {
+  color: var(--sk-text-3);
+  border-color: var(--sk-border-1);
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 3px,
+    rgba(232, 243, 236, 0.06) 3px,
+    rgba(232, 243, 236, 0.06) 6px
+  );
+}
+#stack-root .sx-chev {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: translateY(-0.12rem) rotate(45deg);
+  transition: transform 240ms var(--sk-ease);
+}
+#stack-root .sx-item.is-open .sx-chev {
+  transform: translateY(0.06rem) rotate(-135deg);
+}
+
+/* ── The expanding panel ────────────────────────────────────
+   Collapsed rows keep their content in the DOM so aria-controls
+   points at something real, but `visibility: hidden` takes the
+   download link out of the tab order until the row is open. */
+#stack-root .sx-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 280ms var(--sk-ease);
+}
+#stack-root .sx-item.is-open .sx-panel {
+  grid-template-rows: 1fr;
+}
+#stack-root .sx-panel-inner {
+  overflow: hidden;
+  visibility: hidden;
+  min-height: 0;
+  transition: visibility 280ms;
+}
+#stack-root .sx-item.is-open .sx-panel-inner {
+  visibility: visible;
+}
+#stack-root .sx-what {
+  margin: 0 0 0.55rem;
+  padding-top: 0.15rem;
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: var(--sk-text-2);
+  max-width: 58ch;
+}
+#stack-root .sx-when,
+#stack-root .sx-local {
+  margin: 0 0 0.7rem;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--sk-text-3);
+  max-width: 58ch;
+}
+#stack-root .sx-when-k,
+#stack-root .sx-local-k {
+  display: block;
+  font-family: var(--sk-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sx-hue);
+  margin-bottom: 0.25rem;
+}
+#stack-root .sx-local-k {
+  color: var(--sk-text-3);
+}
+#stack-root .sx-local {
+  padding-bottom: 0.5rem;
+}
+
+#stack-root .sx-take {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.9rem;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--sk-border-1);
+  background: var(--sk-surface-1);
+  text-decoration: none;
+  transition:
+    border-color 180ms var(--sk-ease),
+    background-color 180ms var(--sk-ease);
+}
+#stack-root .sx-take:hover {
+  border-color: var(--sk-border-2);
+  background: var(--sk-surface-2);
+}
+#stack-root .sx-take-ext {
+  font-family: var(--sk-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  color: var(--sk-bg-0);
+  background: var(--sk-warm);
+  padding: 0.15rem 0.32rem;
+}
+#stack-root .sx-take-nm {
+  font-family: var(--sk-mono);
+  font-size: 0.76rem;
+  color: var(--sk-text-1);
+}
+#stack-root .sx-take-go {
+  font-family: var(--sk-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sk-accent);
+}
+
+#stack-root .sx-cap {
+  padding: 1.1rem clamp(0.9rem, 2.4vw, 1.5rem) 1.3rem;
+  border-top: 1px solid var(--sk-border-1);
+  font-size: 0.84rem;
+  line-height: 1.65;
+  color: var(--sk-text-3);
+  max-width: 78ch;
+}
+#stack-root .sx-cap b {
+  color: var(--sk-text-2);
+  font-weight: 500;
+}
+
+@media (max-width: 760px) {
+  #stack-root .sx-board {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  #stack-root .sx-group:nth-child(odd) {
+    border-right: 0;
+  }
+  #stack-root .sx-board .sx-group:nth-last-child(-n + 2) {
+    border-bottom: 1px solid var(--sk-border-1);
+  }
+  #stack-root .sx-board .sx-group:last-child {
+    border-bottom: 0;
+  }
+  #stack-root .sx-take {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #stack-root .sx-panel,
+  #stack-root .sx-panel-inner,
+  #stack-root .sx-chev,
+  #stack-root .sx-tile,
+  #stack-root .sx-filter,
+  #stack-root .sx-badge-take,
+  #stack-root .sx-take {
+    transition: none;
+  }
+  #stack-root .sx-tile:hover,
+  #stack-root .sx-tile:focus-visible {
+    padding-left: 0.1rem;
+  }
+}
