@@ -1,0 +1,221 @@
+/* ─────────────────────────────────────────────────────────────
+   /stack — ch.7 precept 03, the ratchet. Scoped under #stack-root
+   and built from the same custom properties as stack.css.
+   ───────────────────────────────────────────────────────────── */
+
+#stack-root .rt {
+  margin-top: 1.4rem;
+  border: 1px solid var(--sk-border-1);
+  border-radius: 8px;
+  padding: clamp(1rem, 2.4vw, 1.6rem);
+  background:
+    radial-gradient(110% 130% at 6% 0%, rgba(111, 214, 154, 0.07), transparent 62%),
+    rgba(6, 26, 16, 0.5);
+}
+
+#stack-root .rt-rail-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  font-family: var(--sk-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+#stack-root .rt-rail-name {
+  color: var(--sk-text-2);
+}
+#stack-root .rt-rail-meta {
+  color: var(--sk-text-3);
+  text-transform: none;
+  letter-spacing: 0.05em;
+}
+
+/* ── the local rail ─────────────────────────────────────────── */
+
+#stack-root .rt-rail {
+  list-style: none;
+  margin: 0.7rem 0 0;
+  padding: 0.75rem 0.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  min-height: 4.6rem;
+  align-items: flex-start;
+  border-top: 1px solid var(--sk-border-1);
+  border-bottom: 1px solid var(--sk-border-1);
+}
+#stack-root .rt-empty {
+  font-family: var(--sk-mono);
+  font-size: 0.72rem;
+  color: var(--sk-text-3);
+  align-self: center;
+  padding-left: 0.2rem;
+}
+
+#stack-root .rt-bead button {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 5.6rem;
+  padding: 0.4rem 0.55rem 0.5rem;
+  border-radius: 5px;
+  border: 1px solid var(--sk-border-2);
+  background: rgba(151, 232, 187, 0.1);
+  text-align: left;
+  cursor: pointer;
+  color: var(--sk-text-1);
+  transition:
+    background 200ms var(--sk-ease),
+    border-color 200ms var(--sk-ease),
+    transform 200ms var(--sk-ease);
+  animation: sk-rt-land 260ms var(--sk-ease);
+}
+#stack-root .rt-bead.pushed button {
+  border-color: rgba(111, 214, 154, 0.5);
+  background: rgba(111, 214, 154, 0.18);
+}
+#stack-root .rt-bead button:hover:not(:disabled),
+#stack-root .rt-bead button:focus-visible {
+  border-color: var(--sk-rose);
+  background: rgba(248, 113, 113, 0.14);
+  transform: translateY(-2px);
+}
+#stack-root .rt-bead button:disabled {
+  cursor: default;
+}
+#stack-root .rt-sha {
+  font-family: var(--sk-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  color: var(--sk-accent);
+}
+#stack-root .rt-bead.pushed .rt-sha {
+  color: var(--sk-warm);
+}
+#stack-root .rt-msg {
+  font-size: 0.68rem;
+  line-height: 1.3;
+  color: var(--sk-text-2);
+}
+/* The rewind affordance only appears on the bead you are pointing at, so the
+   rail reads as a timeline first and a control second. */
+#stack-root .rt-tip {
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  color: var(--sk-text-3);
+  opacity: 0;
+  transition: opacity 160ms var(--sk-ease);
+}
+#stack-root .rt-bead button:hover .rt-tip,
+#stack-root .rt-bead button:focus-visible .rt-tip {
+  opacity: 1;
+  color: var(--sk-rose);
+}
+#stack-root .rt-bead button:disabled .rt-tip {
+  opacity: 1;
+  color: var(--sk-text-3);
+}
+@keyframes sk-rt-land {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* ── actions and the push lane ──────────────────────────────── */
+
+#stack-root .rt-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-top: 0.9rem;
+}
+#stack-root .rt-hint {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--sk-text-3);
+}
+
+#stack-root .rt-push {
+  margin-top: 1.4rem;
+  padding: 0.9rem 1rem 1rem;
+  border: 1px dashed var(--sk-border-1);
+  border-radius: 6px;
+  background: rgba(4, 19, 12, 0.5);
+  transition: border-color 240ms var(--sk-ease);
+}
+#stack-root .rt-push.armed {
+  border-style: solid;
+  border-color: var(--sk-border-2);
+  box-shadow: var(--sk-edge-accent);
+}
+#stack-root .rt-lock {
+  font-family: var(--sk-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  padding: 0.16rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--sk-border-1);
+  color: var(--sk-text-3);
+  text-transform: none;
+}
+#stack-root .rt-lock.open {
+  color: var(--sk-accent);
+  border-color: var(--sk-border-2);
+  background: rgba(151, 232, 187, 0.1);
+}
+
+#stack-root .rt-note {
+  margin: 1rem 0 0;
+  font-family: var(--sk-mono);
+  font-size: 0.74rem;
+  line-height: 1.7;
+  color: var(--sk-text-2);
+  min-height: 1.7em;
+}
+#stack-root .rt-note.refused {
+  color: var(--sk-rose);
+}
+#stack-root .rt-note.reset {
+  color: var(--sk-amber);
+}
+#stack-root .rt-note.armed,
+#stack-root .rt-note.pushed {
+  color: var(--sk-accent);
+}
+
+#stack-root .rt-cap {
+  margin: 1rem 0 0;
+  padding-left: 0.9rem;
+  box-shadow: var(--sk-edge-warm);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--sk-text-2);
+}
+#stack-root .rt-cap b {
+  color: var(--sk-text-1);
+  font-weight: 500;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #stack-root .rt-bead button {
+    animation: none;
+    transition: none;
+  }
+  #stack-root .rt-bead button:hover:not(:disabled),
+  #stack-root .rt-bead button:focus-visible {
+    transform: none;
+  }
+  /* No hover-only reveal for a reader who may never hover: the affordance
+     stays visible instead of animating in. */
+  #stack-root .rt-tip {
+    opacity: 1;
+    transition: none;
+  }
+}
