@@ -1,0 +1,460 @@
+/* ─────────────────────────────────────────────────────────────
+   Ch.7 · precept 04 — fresh, cross-family review.
+   Scoped under #stack-root; every class carries an fe- prefix and
+   the context cells an f- prefix, so they never collide with the
+   c- cells (stack.css) or the s- cells (subagent-savings.css)
+   whatever order the stylesheets land in.
+
+   The load-bearing effect is the peel: .fe-sheet is ONE element
+   holding all four justifications, so switching reviewer lifts a
+   single sheet off the diff instead of fading four notes out.
+   ───────────────────────────────────────────────────────────── */
+
+#stack-root .fe {
+  --fe-lh: 1.5rem;
+  margin-top: 1.6rem;
+  border: 1px solid var(--sk-border-1);
+  border-radius: 8px;
+  padding: clamp(1rem, 2.4vw, 1.6rem);
+  background:
+    radial-gradient(110% 130% at 8% 0%, rgba(111, 214, 154, 0.08), transparent 60%),
+    rgba(6, 26, 16, 0.5);
+}
+
+#stack-root .fe-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.1rem;
+}
+#stack-root .fe-head .t {
+  font-family: var(--sk-mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+}
+#stack-root .fe-head .t b {
+  color: var(--sk-text-1);
+  font-weight: 400;
+}
+
+#stack-root .fe-toggle {
+  display: inline-flex;
+  border: 1px solid var(--sk-border-1);
+  border-radius: 999px;
+  padding: 2px;
+  background: rgba(0, 0, 0, 0.25);
+  flex-wrap: wrap;
+}
+#stack-root .fe-toggle button {
+  background: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.42rem 0.85rem;
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+  cursor: pointer;
+  transition:
+    color 220ms var(--sk-ease),
+    background 220ms var(--sk-ease);
+}
+#stack-root .fe-toggle button:hover:not([aria-pressed='true']) {
+  color: var(--sk-text-1);
+  background: rgba(232, 243, 236, 0.07);
+}
+#stack-root .fe-toggle button[aria-pressed='true'] {
+  background: var(--sk-warm);
+  color: var(--sk-bg-0);
+}
+
+/* ── Panel layout ───────────────────────────────────────── */
+#stack-root .fe-panel {
+  display: grid;
+  grid-template-columns: 12rem minmax(0, 1fr) 15rem;
+  gap: 0.9rem;
+  align-items: start;
+}
+
+#stack-root .fe-win,
+#stack-root .fe-diffwrap {
+  border: 1px solid var(--sk-border-1);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.24);
+  overflow: hidden;
+}
+#stack-root .fe-win-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.5rem 0.7rem;
+  border-bottom: 1px solid var(--sk-border-1);
+  font-family: var(--sk-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+#stack-root .fe-win-head .n {
+  color: var(--sk-text-1);
+}
+#stack-root .fe-win-head .v {
+  color: var(--sk-text-3);
+}
+
+/* ── Context cells — the page's familiar grid ───────────── */
+#stack-root .fe-cells {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 2px;
+  padding: 0.6rem 0.7rem;
+}
+#stack-root .fe-cells i {
+  display: block;
+  aspect-ratio: 1;
+  border-radius: 1px;
+  background: rgba(232, 243, 236, 0.05);
+  transition: background 480ms var(--sk-ease);
+}
+#stack-root i.f-sys {
+  background: rgba(232, 243, 236, 0.3);
+}
+#stack-root i.f-plan {
+  background: rgba(196, 181, 253, 0.45);
+}
+#stack-root i.f-fail {
+  background: rgba(248, 113, 113, 0.45);
+}
+#stack-root i.f-tool {
+  background: rgba(251, 191, 36, 0.42);
+}
+#stack-root i.f-diff {
+  background: var(--sk-accent);
+}
+#stack-root i.f-free {
+  background: rgba(232, 243, 236, 0.05);
+}
+#stack-root .fe-win-cap {
+  margin: 0;
+  padding: 0 0.7rem 0.7rem;
+  font-family: var(--sk-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  color: var(--sk-text-3);
+}
+
+/* ── The diff, and the sheet pinned over it ─────────────── */
+#stack-root .fe-diff {
+  position: relative;
+  padding: 0.6rem 0;
+  font-family: var(--sk-mono);
+  font-size: 0.75rem;
+  line-height: var(--fe-lh);
+  color: var(--sk-text-2);
+  overflow: hidden;
+}
+#stack-root .fe-l {
+  display: block;
+  white-space: pre;
+  padding-right: 0.7rem;
+  transition:
+    background 380ms var(--sk-ease),
+    box-shadow 380ms var(--sk-ease),
+    color 380ms var(--sk-ease);
+}
+#stack-root .fe-ln {
+  display: inline-block;
+  width: 2rem;
+  text-align: right;
+  padding-right: 0.6rem;
+  font-style: normal;
+  color: var(--sk-text-3);
+  opacity: 0.5;
+  user-select: none;
+}
+#stack-root .fe-sg {
+  display: inline-block;
+  width: 1ch;
+  font-style: normal;
+  margin-right: 0.5ch;
+}
+#stack-root .fe-sadd {
+  background: rgba(111, 214, 154, 0.07);
+}
+#stack-root .fe-sadd .fe-sg {
+  color: var(--sk-warm);
+}
+#stack-root .fe-sdel {
+  background: rgba(248, 113, 113, 0.06);
+  color: var(--sk-text-3);
+}
+#stack-root .fe-sdel .fe-sg {
+  color: var(--sk-rose);
+}
+
+/* Everything reads green while the author is vouching for it. */
+#stack-root .fe-vouched {
+  color: var(--sk-text-1);
+}
+#stack-root .fe-vouched.fe-sadd {
+  background: rgba(111, 214, 154, 0.11);
+}
+
+/* The one line nobody explained, once the sheet is off. */
+#stack-root .fe-unexplained {
+  background: rgba(248, 113, 113, 0.14);
+  box-shadow: var(--sk-edge-rose);
+  color: var(--sk-text-1);
+}
+
+#stack-root .fe-sheet {
+  position: absolute;
+  inset: 0.6rem 0 0;
+  pointer-events: none;
+  transform-origin: 0% 40%;
+  /* Detached: the sheet has swung off the page and away from the reader. */
+  transform: perspective(1000px) rotateY(-62deg) translateX(-4%);
+  opacity: 0;
+  transition:
+    transform 760ms var(--sk-ease),
+    opacity 520ms var(--sk-ease);
+}
+#stack-root .fe-sheet.is-on {
+  transform: none;
+  opacity: 1;
+}
+#stack-root .fe-note {
+  position: absolute;
+  right: 0.6rem;
+  height: var(--fe-lh);
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.5rem;
+  border-radius: 3px;
+  border: 1px solid rgba(151, 232, 187, 0.3);
+  /* Translucent on purpose: the code stays faintly legible under the note, so
+     the justifications read as a sheet laid over the diff rather than as part
+     of it. That is the whole reason the peel means anything. */
+  background: rgba(8, 33, 22, 0.72);
+  backdrop-filter: blur(3px);
+  font-family: var(--sk-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.02em;
+  color: var(--sk-accent);
+  white-space: nowrap;
+  max-width: calc(100% - 1.2rem);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#stack-root .fe-note-bug {
+  border-color: rgba(251, 191, 36, 0.45);
+  color: var(--sk-amber);
+}
+
+#stack-root .fe-diff-cap {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  border-top: 1px solid var(--sk-border-1);
+  font-size: 0.84rem;
+  color: var(--sk-text-3);
+  /* Reserve the taller of the two captions so switching never nudges the page. */
+  min-height: 3.6rem;
+}
+#stack-root .fe-diff-cap b {
+  color: var(--sk-text-1);
+  font-weight: 500;
+}
+
+/* ── Findings ───────────────────────────────────────────── */
+#stack-root .fe-findings {
+  display: grid;
+  gap: 0.6rem;
+  align-content: start;
+}
+/* Reserve the three-finding column so moving between reviewers never
+   changes the figure's height mid-argument. */
+#stack-root .fe-panel:not(.fe-compact) .fe-findings {
+  min-height: 22rem;
+}
+#stack-root .fe-find {
+  border: 1px solid var(--sk-border-1);
+  border-radius: 6px;
+  padding: 0.6rem 0.7rem;
+  background: rgba(0, 0, 0, 0.24);
+}
+#stack-root .fe-find .h {
+  display: flex;
+  gap: 0.45rem;
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sk-text-1);
+}
+#stack-root .fe-find .h i {
+  font-style: normal;
+}
+#stack-root .fe-find p {
+  margin: 0.45rem 0 0;
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--sk-text-3);
+}
+#stack-root .fe-tone-ok {
+  box-shadow: var(--sk-edge-accent);
+}
+#stack-root .fe-tone-ok .h i {
+  color: var(--sk-accent);
+}
+#stack-root .fe-tone-flag {
+  box-shadow: var(--sk-edge-rose);
+}
+#stack-root .fe-tone-flag .h i {
+  color: var(--sk-rose);
+}
+#stack-root .fe-tone-note {
+  box-shadow: var(--sk-edge-dim);
+}
+#stack-root .fe-tone-note .h i {
+  color: var(--sk-text-3);
+}
+
+/* ── Reduced-motion: three settled states, side by side ─── */
+#stack-root .fe-static {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+#stack-root .fe-compact {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.6rem;
+  align-content: start;
+  border: 1px solid var(--sk-border-1);
+  border-radius: 7px;
+  padding: 0.7rem;
+  background: rgba(0, 0, 0, 0.18);
+}
+#stack-root .fe-compact-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+#stack-root .fe-compact-head .n {
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sk-text-1);
+}
+#stack-root .fe-chip {
+  font-family: var(--sk-mono);
+  font-size: 0.54rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid var(--sk-border-1);
+  color: var(--sk-text-3);
+}
+#stack-root .fe-chip-on {
+  border-color: rgba(151, 232, 187, 0.4);
+  color: var(--sk-accent);
+}
+/* Three diffs across the same width the interactive figure gives one, so the
+   type comes down a step and long lines scroll rather than clip. */
+#stack-root .fe-compact .fe-diff {
+  font-size: 0.6rem;
+  overflow-x: auto;
+}
+#stack-root .fe-compact .fe-cells {
+  grid-template-columns: repeat(20, 1fr);
+}
+/* The compact diff scrolls, so a right-anchored note would hang off the
+   scrollable width. Pin the sheet to the left edge instead. */
+#stack-root .fe-compact .fe-sheet {
+  width: 100%;
+}
+#stack-root .fe-compact .fe-note {
+  right: auto;
+  left: 2.6rem;
+  max-width: calc(100% - 3.2rem);
+}
+#stack-root .fe-compact .fe-diff-cap {
+  min-height: 4.6rem;
+}
+#stack-root .fe-compact .fe-sheet {
+  /* No peel to perform: the state is simply attached or it is not. */
+  transition: none;
+}
+
+#stack-root .fe-cap {
+  margin: 1.2rem 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--sk-border-1);
+  font-size: 0.92rem;
+  color: var(--sk-text-2);
+}
+#stack-root .fe-cap b {
+  color: var(--sk-text-1);
+  font-weight: 500;
+}
+
+@media (max-width: 1000px) {
+  #stack-root .fe-panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  #stack-root .fe-cells {
+    grid-template-columns: repeat(24, 1fr);
+  }
+  #stack-root .fe-static {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  /* Stacked, the findings sit last: nothing below them to hold still, so the
+     three-finding reservation would just be a hole. */
+  #stack-root .fe-panel:not(.fe-compact) .fe-findings {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 620px) {
+  /* Three labels will not sit on one line here, and a pill wrapped around a
+     stack reads as a mistake — so it becomes an honest segmented list. */
+  #stack-root .fe-toggle {
+    display: grid;
+    width: 100%;
+    border-radius: 7px;
+  }
+  #stack-root .fe-toggle button {
+    border-radius: 5px;
+    text-align: left;
+  }
+  /* The diff clips rather than scrolls — the peel needs a hidden overflow to
+     fly out of — so the type comes down until the longest line fits a phone. */
+  #stack-root .fe-diff {
+    font-size: 0.57rem;
+  }
+  #stack-root .fe-ln {
+    width: 1.4rem;
+    padding-right: 0.4rem;
+  }
+  #stack-root .fe-note {
+    font-size: 0.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #stack-root .fe-sheet,
+  #stack-root .fe-l,
+  #stack-root .fe-cells i,
+  #stack-root .fe-toggle button {
+    transition: none;
+  }
+}
