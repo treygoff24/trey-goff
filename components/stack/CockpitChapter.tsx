@@ -165,7 +165,6 @@ const RESIDUE: { t: string; keep: boolean }[] = [
   { t: 'the mirrors drift — nothing guards it', keep: true },
   { t: 'a long argument about naming', keep: false },
   { t: 'gate green, one commit unpushed', keep: true },
-  { t: 'three screenshots, two dead ends', keep: false },
   { t: 'cert still pending at close', keep: true },
 ]
 
@@ -233,13 +232,15 @@ function LoopStage({ phase }: { phase: PhaseKey }) {
           <span className="cs-file-tag">{FILE_TAG[phase]}</span>
         </span>
         <span className="cs-file-stale">…as of last week. Nobody has rewritten it.</span>
-        <ul className="cs-file-lines">
-          {FILE_LINES.map((l, i) => (
-            <li key={l} style={{ '--i': i } as React.CSSProperties}>
-              {l}
-            </li>
-          ))}
-        </ul>
+        <div className="cs-file-body">
+          <ul className="cs-file-lines">
+            {FILE_LINES.map((l, i) => (
+              <li key={l} style={{ '--i': i } as React.CSSProperties}>
+                {l}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
 
       <div className="cs-return">

@@ -90,7 +90,7 @@
 #stack-root .cs-win {
   position: absolute;
   top: 0;
-  height: 80%;
+  height: 86%;
   width: 42%;
   overflow: hidden;
   display: flex;
@@ -112,6 +112,7 @@
   right: 0;
 }
 #stack-root .cs-win-t {
+  transition: opacity 620ms var(--sk-ease);
   font-family: var(--sk-mono);
   font-size: 0.58rem;
   letter-spacing: 0.16em;
@@ -119,11 +120,12 @@
   color: var(--sk-text-3);
 }
 
-/* The residue: what a session actually accumulates. Four of these eight lines
+/* The residue: what a session actually accumulates. Four of these seven lines
    are the ones that will still matter tomorrow, and the figure's second
    station is the moment that becomes visible. */
 #stack-root .cs-chips {
   list-style: none;
+  transition: opacity 620ms var(--sk-ease);
   margin: 0;
   padding: 0;
   display: flex;
@@ -203,7 +205,7 @@
   position: absolute;
   left: 50%;
   top: 0;
-  height: 80%;
+  height: 86%;
   width: 0;
   border-left: 1px dashed var(--sk-border-1);
   transition: border-color 620ms var(--sk-ease);
@@ -228,7 +230,7 @@
   left: 50%;
   top: 50%;
   width: 34cqw;
-  min-height: 34cqh;
+  min-height: 12cqh;
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
@@ -259,14 +261,33 @@
   color: var(--sk-warm);
   white-space: nowrap;
 }
+/* Collapses rather than merely fading, so the written file does not carry a
+   blank line where the staleness notice used to be. */
 #stack-root .cs-file-stale {
   font-family: var(--sk-mono);
   font-size: 0.58rem;
   color: var(--sk-text-3);
   opacity: 0;
-  transition: opacity 400ms var(--sk-ease);
+  max-height: 0;
+  overflow: hidden;
+  transition:
+    opacity 400ms var(--sk-ease),
+    max-height 400ms var(--sk-ease);
+}
+/* The card is only as tall as the file is written. Collapsing the body to a
+   zero fraction at station one means the stale file is a stub, and /done
+   visibly grows it — the height change is the writing. */
+#stack-root .cs-file-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition: grid-template-rows 620ms var(--sk-ease);
+}
+#stack-root .cs-stage:not([data-phase='work']) .cs-file-body {
+  grid-template-rows: 1fr;
 }
 #stack-root .cs-file-lines {
+  min-height: 0;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -296,8 +317,8 @@
   position: absolute;
   left: 6%;
   right: 6%;
-  top: 84%;
-  height: 16%;
+  top: 90%;
+  height: 10%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -305,6 +326,20 @@
   border-top: 0;
   border-radius: 0 0 8px 8px;
   transition: border-color 620ms var(--sk-ease);
+}
+/* The arrowhead is the whole argument of the return leg: the fresh window
+   feeds back into the working one. */
+#stack-root .cs-return::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: -1px;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 6px solid var(--sk-warm);
+  opacity: 0.7;
 }
 #stack-root .cs-return span {
   font-family: var(--sk-mono);
@@ -323,10 +358,11 @@
 /* 01 · work — the old file is stale and the residue is undifferentiated. */
 #stack-root .cs-stage[data-phase='work'] {
   --dx: -29cqw;
-  --dy: 12cqh;
+  --dy: 14cqh;
 }
 #stack-root .cs-stage[data-phase='work'] .cs-file-stale {
   opacity: 1;
+  max-height: 3rem;
 }
 #stack-root .cs-stage[data-phase='work'] .cs-file {
   border-color: var(--sk-border-1);
@@ -335,7 +371,7 @@
 /* 02 · /done — the sort, then the rewrite. */
 #stack-root .cs-stage[data-phase='done'] {
   --dx: -29cqw;
-  --dy: 12cqh;
+  --dy: 14cqh;
 }
 #stack-root .cs-stage[data-phase='done'] .cs-chips li[data-keep='0'] {
   opacity: 0.18;
@@ -362,7 +398,7 @@
 #stack-root .cs-stage[data-phase='hydrate'],
 #stack-root .cs-stage[data-phase='brief'] {
   --dx: 29cqw;
-  --dy: 12cqh;
+  --dy: 14cqh;
 }
 
 #stack-root .cs-stage[data-phase='brief'] .cs-brief li {
@@ -385,12 +421,21 @@
   opacity: 1;
   transform: none;
 }
+/* The dead window fades its contents, not itself: dimming the whole element
+   would take the stamp — the one thing that has to stay readable — with it. */
 #stack-root .cs-stage[data-phase='close'] .cs-a,
 #stack-root .cs-stage[data-phase='hydrate'] .cs-a,
 #stack-root .cs-stage[data-phase='brief'] .cs-a {
-  opacity: 0.24;
   border-style: dashed;
   background: transparent;
+}
+#stack-root .cs-stage[data-phase='close'] .cs-a .cs-win-t,
+#stack-root .cs-stage[data-phase='hydrate'] .cs-a .cs-win-t,
+#stack-root .cs-stage[data-phase='brief'] .cs-a .cs-win-t,
+#stack-root .cs-stage[data-phase='close'] .cs-a .cs-chips,
+#stack-root .cs-stage[data-phase='hydrate'] .cs-a .cs-chips,
+#stack-root .cs-stage[data-phase='brief'] .cs-a .cs-chips {
+  opacity: 0.16;
 }
 #stack-root .cs-stage[data-phase='close'] .cs-stamp,
 #stack-root .cs-stage[data-phase='hydrate'] .cs-stamp,
@@ -682,15 +727,21 @@
      geometry instead would push the 0.58rem labels under the type floor. */
   #stack-root .cs-stage {
     max-width: 26rem;
-    aspect-ratio: 5 / 7.6;
+    aspect-ratio: 5 / 12;
   }
   #stack-root .cs-win {
     width: 100%;
-    height: 40%;
+    height: 44%;
   }
   #stack-root .cs-b {
     top: 52%;
-    height: 36%;
+    height: 40%;
+  }
+  /* Two of the three discarded lines go: stacked, the window is a third as
+     wide and the sort still reads with one survivor of the cut on screen. */
+  #stack-root .cs-chips li:nth-child(1),
+  #stack-root .cs-chips li:nth-child(5) {
+    display: none;
   }
   /* Turned ninety degrees, the bottom of the old window is where the card
      parks, so the stamp moves out from under it. */
@@ -700,15 +751,10 @@
     left: auto;
     right: 0.8rem;
   }
-  /* Eight residue lines do not fit half a phone-width window; the four that
-     survive plus two that do not still make the sort legible. */
-  #stack-root .cs-chips li:nth-child(n + 7) {
-    display: none;
-  }
   #stack-root .cs-rail {
     left: 0;
     right: 0;
-    top: 46%;
+    top: 48%;
     width: auto;
     height: 0;
     border-left: 0;
@@ -725,21 +771,27 @@
   }
   #stack-root .cs-file {
     width: 86cqw;
-    min-height: 20cqh;
+    min-height: 12cqh;
   }
   #stack-root .cs-stage[data-phase='work'],
   #stack-root .cs-stage[data-phase='done'] {
     --dx: 0cqw;
-    --dy: -20cqh;
+    --dy: -18cqh;
   }
   #stack-root .cs-stage[data-phase='hydrate'],
   #stack-root .cs-stage[data-phase='brief'] {
     --dx: 0cqw;
-    --dy: 26cqh;
+    --dy: 31cqh;
   }
   #stack-root .cs-return {
-    top: 86%;
-    height: 14%;
+    top: 94%;
+    height: 6%;
+  }
+  /* Two lines of label will not sit astride a hairline; on phones it sits
+     inside the band instead of on its edge. */
+  #stack-root .cs-return span {
+    transform: none;
+    text-align: center;
   }
   #stack-root .cp-tabs,
   #stack-root .cp-instruments,
