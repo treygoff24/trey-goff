@@ -423,7 +423,7 @@ export function CouncilFigure() {
 
   if (reduced) {
     return (
-      <div className="cf rv">
+      <div className="cnc rv">
         <p className="cnc-head">
           One brief · four vendors · <b>blind-scored</b>
         </p>
@@ -448,7 +448,7 @@ export function CouncilFigure() {
   }
 
   return (
-    <div className="cf rv" ref={figRef} onPointerEnter={() => setAuto(false)}>
+    <div className="cnc rv" ref={figRef} onPointerEnter={() => setAuto(false)}>
       <div className="cnc-top">
         <p className="cnc-head">
           One brief · four vendors · <b>blind-scored</b>

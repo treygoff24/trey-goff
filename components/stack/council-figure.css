@@ -1,15 +1,18 @@
 /* ─────────────────────────────────────────────────────────────
    Ch.6 — the fusion council, drawn. Scoped under #stack-root like
-   the rest of /stack; every class carries a cnc- prefix and the one
-   keyframe is cnc-draw, so nothing collides with the c- / s- cells
-   in stack.css and subagent-savings.css regardless of load order.
+   the rest of /stack; the root is .cnc, every other class carries a
+   cnc- prefix and the one keyframe is cnc-draw, so nothing collides
+   with the c- / s- cells in stack.css and subagent-savings.css
+   regardless of load order. The root used to be .cf, which is
+   CollisionFigure's root — its `.cf svg` rule outranked this file's
+   .cnc-wires and was resetting the wire band's height.
 
    The stage is an inline-size container: 1cqw is one percent of the
    board's own width, which lets a chip's horizontal address be a
    pure number in the component while its type stays sized in rem.
    ───────────────────────────────────────────────────────────── */
 
-#stack-root .cf {
+#stack-root .cnc {
   margin-top: 1.6rem;
   border: 1px solid var(--sk-border-1);
   border-radius: 8px;
