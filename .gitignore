@@ -4,7 +4,9 @@ node_modules
 
 # Next.js
 .next
-.next-e2e
+# Any per-lane NEXT_DIST_DIR. Left untracked, Tailwind's auto-source detection
+# scans the compiled chunks inside and generates broken utilities from them.
+.next-*
 out
 
 # Production

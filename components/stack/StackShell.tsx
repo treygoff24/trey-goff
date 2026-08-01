@@ -21,6 +21,7 @@ import { CockpitChapter } from '@/components/stack/CockpitChapter'
 import { CompactionSection } from '@/components/stack/CompactionSection'
 import { PartnershipChapter } from '@/components/stack/PartnershipChapter'
 import { RegisterSection } from '@/components/stack/RegisterSection'
+import { SkillsShowcase } from '@/components/stack/SkillsShowcase'
 import { WhyContext } from '@/components/stack/WhyPanel'
 import { WorkflowsChapter } from '@/components/stack/WorkflowsChapter'
 import { WorktreesSection } from '@/components/stack/WorktreesSection'
@@ -518,9 +519,10 @@ export function StackShell() {
               <b>
                 a rule the agent reads every session but never needs is just a tax on the window
               </b>
-              . As this page ships, the list has quietly regrown to seventy-nine. Context budget is
-              not a problem you solve once — it re-bloats, you re-cut, and the durable fix is that
-              skills stay discoverable while unloaded.
+              . Three weeks later it had quietly regrown to eighty-four, and I cut it back to thirty
+              — the list you can see below. Context budget is not a problem you solve once — it
+              re-bloats, you re-cut, and the durable fix is that skills stay discoverable while
+              unloaded.
             </div>
             <p className="section-label">The two types of skills</p>
             <div className="twoup">
@@ -579,6 +581,8 @@ export function StackShell() {
               name="midjourney-skill.md"
               desc="The domain-expertise example from above, real and ready to use: my Midjourney prompting skill, distilled from a subagent research fan-out."
             />
+            <p className="section-label">What I actually load, every session</p>
+            <SkillsShowcase />
             <Pager prev={['#ch2', '02 · Day one']} next={['#ch4', '04 · Agents need tools']} />
           </section>
 
