@@ -11,6 +11,8 @@ import {
 import { useReducedMotion, useReveal } from '@/components/stack/hooks'
 import DecisionCardsFigure from '@/components/stack/DecisionCardsFigure'
 import { CollisionFigure } from '@/components/stack/CollisionFigure'
+import { CouncilFigure } from '@/components/stack/CouncilFigure'
+import { DoneSummaryFigure } from '@/components/stack/DoneSummaryFigure'
 import { FreshEyesFigure } from '@/components/stack/FreshEyesFigure'
 import { GateAuthorFigure } from '@/components/stack/GateAuthorFigure'
 import { RatchetFigure } from '@/components/stack/RatchetFigure'
@@ -752,6 +754,7 @@ export function StackShell() {
                   choice, or just hand it to your Claude and ask it to implement a version for you.
                 </p>
               </div>
+              <CouncilFigure />
             </div>
             <DownloadCard
               href="/stack/fusion-council-skill.md"
@@ -766,6 +769,7 @@ export function StackShell() {
               trailing cleanup.{' '}
               <b>Never trust a subagent&apos;s &quot;done&quot; summary — check the disk.</b>
             </div>
+            <DoneSummaryFigure />
             <Pager
               prev={['#ch5', '05 · The cockpit']}
               next={['#ch7', '07 · Trusting it at scale']}
