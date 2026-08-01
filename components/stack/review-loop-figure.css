@@ -60,9 +60,12 @@
 
 /* Each bar carries its own number, so the figure reads without colour and
    without a legend. */
+/* The label gets its own column, so a full-width round-01 bar scales inside the
+   track that is left over rather than pushing its number off the card. */
 #stack-root .rl-bar {
   position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.5rem;
   height: 0.86rem;
@@ -71,8 +74,9 @@
   display: block;
   height: 0.42rem;
   min-width: 2px;
+  max-width: 100%;
   border-radius: 2px;
-  flex: 0 0 auto;
+  justify-self: start;
 }
 #stack-root .rl-bar.find i {
   background: linear-gradient(90deg, var(--sk-warm), var(--sk-accent));
@@ -170,13 +174,9 @@
      rather than shrinking below reading size. */
   #stack-root .rl-bar {
     height: auto;
-    flex-direction: column;
-    align-items: flex-start;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: start;
     gap: 0.12rem;
-  }
-  #stack-root .rl-bar i {
-    align-self: stretch;
-    flex: none;
   }
 }
 

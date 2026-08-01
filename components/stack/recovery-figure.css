@@ -10,7 +10,14 @@
   /* One step warmer than --sk-rose so a dead-end branch stays legible
      against the panel without shouting louder than the trap itself. */
   --rcv-dead: rgba(248, 113, 113, 0.68);
-  --rcv-rail: rgba(232, 243, 236, 0.14);
+  --rcv-rail: rgba(232, 243, 236, 0.22);
+  /* The step row is three reserved columns: elapsed clock, the trunk gutter the
+     rail and its nodes live in, then the body. Nothing is positioned by negative
+     margin, so the clock cannot ride up onto the headline at any width. */
+  --rcv-clock-w: 2.6rem;
+  --rcv-gutter: 0.6rem;
+  --rcv-text-in: 0.95rem;
+  --rcv-branch: 1.1rem;
   margin-top: 1.6rem;
   border: 1px solid var(--sk-border-1);
   border-radius: 8px;
@@ -160,13 +167,14 @@
   flex: 1;
   list-style: none;
   margin: 0;
-  padding: 0 0 0 3.3rem;
+  padding: 0;
 }
-/* The trunk the session runs down. */
+/* The trunk the session runs down, sitting on the boundary between the clock
+   column and the body. */
 #stack-root .rcv-steps::before {
   content: '';
   position: absolute;
-  left: 3rem;
+  left: calc(var(--rcv-clock-w) + var(--rcv-gutter));
   top: 0.45rem;
   bottom: 0.45rem;
   width: 1px;
@@ -176,8 +184,8 @@
 #stack-root .rcv-step {
   position: relative;
   display: flex;
-  gap: 0.55rem;
-  padding: 0 0 0.85rem 0.75rem;
+  gap: var(--rcv-gutter);
+  padding: 0 0 0.85rem;
   transition:
     opacity 380ms var(--sk-ease),
     transform 380ms var(--sk-ease);
@@ -199,7 +207,7 @@
 #stack-root .rcv-step::before {
   content: '';
   position: absolute;
-  left: -0.34rem;
+  left: calc(var(--rcv-clock-w) + var(--rcv-gutter) - 3px);
   top: 0.42rem;
   width: 7px;
   height: 7px;
@@ -223,23 +231,24 @@
   background: var(--sk-warm);
 }
 
-/* A branch is a step that leaves the trunk and comes back with nothing. */
-#stack-root .rcv-step.k-branch {
-  margin-left: 1.1rem;
+/* A branch leaves the trunk and comes back with nothing: its node hangs out to
+   the right of the rail on a visible connector, and only its body is indented —
+   the clock stays in its column. */
+#stack-root .rcv-step.k-branch::before {
+  left: calc(var(--rcv-clock-w) + var(--rcv-gutter) + var(--rcv-branch) - 3px);
 }
 #stack-root .rcv-step.k-branch::after {
   content: '';
   position: absolute;
-  left: -1.45rem;
+  left: calc(var(--rcv-clock-w) + var(--rcv-gutter));
   top: 0.45rem;
-  width: 1.1rem;
+  width: var(--rcv-branch);
   height: 1px;
   background: var(--rcv-dead);
 }
 
 #stack-root .rcv-clock {
-  flex: 0 0 2.6rem;
-  margin-left: -3.35rem;
+  flex: 0 0 var(--rcv-clock-w);
   font-family: var(--sk-mono);
   font-size: 0.58rem;
   line-height: 1.5;
@@ -248,12 +257,14 @@
   color: var(--sk-text-3);
   font-variant-numeric: tabular-nums;
 }
-#stack-root .rcv-step.k-branch .rcv-clock {
-  margin-left: -4.45rem;
-}
 #stack-root .rcv-body {
   display: block;
   min-width: 0;
+  flex: 1 1 auto;
+  padding-left: var(--rcv-text-in);
+}
+#stack-root .rcv-step.k-branch .rcv-body {
+  padding-left: calc(var(--rcv-text-in) + var(--rcv-branch));
 }
 #stack-root .rcv-headline {
   display: block;
@@ -349,25 +360,12 @@
   #stack-root .rcv-lanes {
     grid-template-columns: minmax(0, 1fr);
   }
-  #stack-root .rcv-steps {
-    padding-left: 2.9rem;
-  }
-  #stack-root .rcv-steps::before {
-    left: 2.6rem;
-  }
-  #stack-root .rcv-clock {
-    margin-left: -2.95rem;
-    flex-basis: 2.3rem;
-  }
-  #stack-root .rcv-step.k-branch {
-    margin-left: 0.7rem;
-  }
-  #stack-root .rcv-step.k-branch .rcv-clock {
-    margin-left: -3.65rem;
-  }
-  #stack-root .rcv-step.k-branch::after {
-    left: -1.05rem;
-    width: 0.7rem;
+  /* Every offset derives from these, so the narrow layout is one override. */
+  #stack-root .rcv {
+    --rcv-clock-w: 2.3rem;
+    --rcv-gutter: 0.5rem;
+    --rcv-text-in: 0.7rem;
+    --rcv-branch: 0.7rem;
   }
 }
 
