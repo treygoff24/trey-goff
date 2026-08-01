@@ -7,7 +7,11 @@
 
    The load-bearing effect is the peel: .fe-sheet is ONE element
    holding all four justifications, so switching reviewer lifts a
-   single sheet off the diff instead of fading four notes out.
+   single sheet off the diff instead of fading four notes out. It
+   spans the diff grid as a subgrid and its notes sit in rows of
+   their own between the code lines, so a justification never covers
+   the line it defends — and the empty slots it leaves behind are
+   the argument made literal.
    ───────────────────────────────────────────────────────────── */
 
 #stack-root .fe {
@@ -76,7 +80,7 @@
 /* ── Panel layout ───────────────────────────────────────── */
 #stack-root .fe-panel {
   display: grid;
-  grid-template-columns: 12rem minmax(0, 1fr) 15rem;
+  grid-template-columns: 10.5rem minmax(0, 1fr) 13rem;
   gap: 0.9rem;
   align-items: start;
 }
@@ -148,20 +152,29 @@
   color: var(--sk-text-3);
 }
 
-/* ── The diff, and the sheet pinned over it ─────────────── */
+/* ── The diff, and the sheet pinned beside its lines ────── */
 #stack-root .fe-diff {
   position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: repeat(var(--fe-rows, 13), min-content);
   padding: 0.6rem 0;
   font-family: var(--sk-mono);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   line-height: var(--fe-lh);
   color: var(--sk-text-2);
   overflow: hidden;
 }
+/* Wraps under a hanging indent at every width. The peel needs the diff's
+   overflow hidden, so it cannot scroll — a line that does not fit has to wrap
+   or it disappears. */
 #stack-root .fe-l {
-  display: block;
-  white-space: pre;
+  grid-column: 1;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
   padding-right: 0.7rem;
+  padding-left: 3.3rem;
+  text-indent: -3.3rem;
   transition:
     background 380ms var(--sk-ease),
     box-shadow 380ms var(--sk-ease),
@@ -212,13 +225,18 @@
   color: var(--sk-text-1);
 }
 
+/* The sheet takes the diff's own rows so its notes land in the gaps between
+   code lines rather than over them. It stays one element, so it still leaves
+   as one object. */
 #stack-root .fe-sheet {
-  position: absolute;
-  inset: 0.6rem 0 0;
+  grid-column: 1;
+  grid-row: 1 / -1;
+  display: grid;
+  grid-template-rows: subgrid;
   pointer-events: none;
-  transform-origin: 0% 40%;
+  transform-origin: 100% 50%;
   /* Detached: the sheet has swung off the page and away from the reader. */
-  transform: perspective(1000px) rotateY(-62deg) translateX(-4%);
+  transform: perspective(1000px) rotateY(58deg) translateX(5%);
   opacity: 0;
   transition:
     transform 760ms var(--sk-ease),
@@ -229,31 +247,48 @@
   opacity: 1;
 }
 #stack-root .fe-note {
-  position: absolute;
-  right: 0.6rem;
-  height: var(--fe-lh);
-  display: inline-flex;
-  align-items: center;
-  padding: 0 0.5rem;
+  position: relative;
+  align-self: center;
+  justify-self: start;
+  margin: 0.1rem 0.7rem 0.25rem 3.2rem;
+  padding: 0.16rem 0.5rem;
   border-radius: 3px;
   border: 1px solid rgba(151, 232, 187, 0.3);
-  /* Translucent on purpose: the code stays faintly legible under the note, so
-     the justifications read as a sheet laid over the diff rather than as part
-     of it. That is the whole reason the peel means anything. */
-  background: rgba(8, 33, 22, 0.72);
-  backdrop-filter: blur(3px);
+  background: rgba(8, 33, 22, 0.85);
   font-family: var(--sk-mono);
   font-size: 0.58rem;
+  line-height: 1.4;
   letter-spacing: 0.02em;
   color: var(--sk-accent);
-  white-space: nowrap;
-  max-width: calc(100% - 1.2rem);
-  overflow: hidden;
-  text-overflow: ellipsis;
+  max-width: calc(100% - 3.9rem);
+}
+/* A short elbow back to the line above: the note is beside the code, but the
+   pinning still has to be visible. */
+#stack-root .fe-note::before {
+  content: '';
+  position: absolute;
+  left: -0.85rem;
+  top: -0.35rem;
+  bottom: 50%;
+  width: 0.6rem;
+  border-left: 1px solid rgba(151, 232, 187, 0.32);
+  border-bottom: 1px solid rgba(151, 232, 187, 0.32);
+  border-bottom-left-radius: 3px;
+}
+#stack-root .fe-note code {
+  font-family: inherit;
+  font-size: 1em;
+  padding: 0 0.2em;
+  border-radius: 2px;
+  background: rgba(151, 232, 187, 0.14);
+  color: var(--sk-text-1);
 }
 #stack-root .fe-note-bug {
   border-color: rgba(251, 191, 36, 0.45);
   color: var(--sk-amber);
+}
+#stack-root .fe-note-bug::before {
+  border-color: rgba(251, 191, 36, 0.45);
 }
 
 #stack-root .fe-diff-cap {
@@ -288,15 +323,17 @@
   background: rgba(0, 0, 0, 0.24);
 }
 #stack-root .fe-find .h {
-  display: flex;
-  gap: 0.45rem;
+  display: block;
   font-family: var(--sk-mono);
   font-size: 0.6rem;
+  line-height: 1.5;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--sk-text-1);
 }
 #stack-root .fe-find .h i {
+  display: inline-block;
+  margin-right: 0.45rem;
   font-style: normal;
 }
 #stack-root .fe-find p {
@@ -304,6 +341,18 @@
   font-size: 0.8rem;
   line-height: 1.55;
   color: var(--sk-text-3);
+}
+#stack-root .fe-find code {
+  font-family: var(--sk-mono);
+  font-size: 0.92em;
+  padding: 0 0.25em;
+  border-radius: 3px;
+  background: rgba(232, 243, 236, 0.08);
+  color: var(--sk-text-1);
+  overflow-wrap: anywhere;
+}
+#stack-root .fe-find .h code {
+  font-size: 1em;
 }
 #stack-root .fe-tone-ok {
   box-shadow: var(--sk-edge-accent);
@@ -368,24 +417,22 @@
   border-color: rgba(151, 232, 187, 0.4);
   color: var(--sk-accent);
 }
-/* Three diffs across the same width the interactive figure gives one, so the
-   type comes down a step and long lines scroll rather than clip. */
+/* Three diffs across the same width the interactive figure gives one: the type
+   comes down a step and long lines wrap under a hanging indent rather than
+   clipping at the panel edge. */
 #stack-root .fe-compact .fe-diff {
   font-size: 0.6rem;
-  overflow-x: auto;
+}
+#stack-root .fe-compact .fe-l {
+  padding-left: 2.9rem;
+  text-indent: -2.9rem;
+}
+#stack-root .fe-compact .fe-note {
+  margin-left: 2.9rem;
+  max-width: calc(100% - 3.6rem);
 }
 #stack-root .fe-compact .fe-cells {
   grid-template-columns: repeat(20, 1fr);
-}
-/* The compact diff scrolls, so a right-anchored note would hang off the
-   scrollable width. Pin the sheet to the left edge instead. */
-#stack-root .fe-compact .fe-sheet {
-  width: 100%;
-}
-#stack-root .fe-compact .fe-note {
-  right: auto;
-  left: 2.6rem;
-  max-width: calc(100% - 3.2rem);
 }
 #stack-root .fe-compact .fe-diff-cap {
   min-height: 4.6rem;
@@ -436,17 +483,24 @@
     border-radius: 5px;
     text-align: left;
   }
-  /* The diff clips rather than scrolls — the peel needs a hidden overflow to
-     fly out of — so the type comes down until the longest line fits a phone. */
+  /* The peel needs a hidden overflow to fly out of, so the diff cannot scroll:
+     the type comes down and the two longest lines wrap under a hanging indent
+     instead of running off the panel. */
   #stack-root .fe-diff {
-    font-size: 0.57rem;
+    font-size: 0.6rem;
+  }
+  #stack-root .fe-l {
+    padding-left: 2.3rem;
+    text-indent: -2.3rem;
   }
   #stack-root .fe-ln {
     width: 1.4rem;
     padding-right: 0.4rem;
   }
   #stack-root .fe-note {
-    font-size: 0.5rem;
+    font-size: 0.53rem;
+    margin-left: 2.3rem;
+    max-width: calc(100% - 3rem);
   }
 }
 

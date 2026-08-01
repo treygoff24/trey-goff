@@ -1,5 +1,6 @@
 'use client'
 
+import type React from 'react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import '@/components/stack/fresh-eyes.css'
 import { useOnceVisible, useReducedMotion, useTimeouts } from '@/components/stack/hooks'
@@ -10,6 +11,11 @@ import { useOnceVisible, useReducedMotion, useTimeouts } from '@/components/stac
    translucent sheet, and moving to a fresh window lifts that sheet
    off in one piece. Same diff, explanations gone — and the defective
    line becomes the only line nobody has explained.
+
+   The sheet occupies its own interleaved rows under the lines it
+   defends — never on top of them — and holds those rows through
+   CSS subgrid, so it stays a single transformable element. Detached,
+   it leaves the slots it used to fill visibly empty.
 
    The context window at left reuses the page's cell-grid idiom
    (Ch.1 ContextFigure, Ch.5 SubagentSavings) so "full" and "nearly
@@ -65,9 +71,16 @@ const DIFF: DiffLine[] = [
   { sign: '-', text: '  return { ...base, ...override }' },
   { sign: '+', text: '  const out = { ...base }' },
   { sign: '+', text: '  for (const k of Object.keys(override)) {' },
-  { sign: '+', text: '    if (override[k] !== undefined) out[k] = override[k]' },
+  {
+    sign: '+',
+    text: '    if (override[k] !== undefined) out[k] = override[k]',
+  },
   { sign: '+', text: '  }' },
-  { sign: '+', text: '  out.headers = override.headers ?? base.headers', bug: true },
+  {
+    sign: '+',
+    text: '  out.headers = override.headers ?? base.headers',
+    bug: true,
+  },
   { sign: '+', text: '  return out' },
   { sign: ' ', text: '}' },
 ]
@@ -79,6 +92,36 @@ const NOTES: { row: number; text: string; onBug?: boolean }[] = [
   { row: 6, text: 'intentional, matches the helper above', onBug: true },
   { row: 7, text: 'no clone needed, `out` is already fresh' },
 ]
+
+/** Row map: every diff line gets a row, and an annotated line gets a second one
+    under it for its note. Both halves address the same grid. */
+const ROWS = (() => {
+  const line: number[] = []
+  const note: Record<number, number> = {}
+  let r = 1
+  DIFF.forEach((_, i) => {
+    line[i] = r
+    r += 1
+    if (NOTES.some((n) => n.row === i)) {
+      note[i] = r
+      r += 1
+    }
+  })
+  return { line, note, total: r - 1 }
+})()
+
+/** Backticked spans in the prose are real inline code, not literal backticks. */
+function Rich({ text }: { text: string }) {
+  return (
+    <>
+      {text
+        .split(/`([^`]+)`/)
+        .map((part, i) =>
+          i % 2 === 1 ? <code key={i}>{part}</code> : <span key={i}>{part}</span>,
+        )}
+    </>
+  )
+}
 
 type Finding = { tone: 'ok' | 'flag' | 'note'; head: string; body: string }
 
@@ -122,7 +165,7 @@ const ARIA: Record<Who, string> = {
   fresh:
     'A fresh window of the same model. The justification sheet has peeled away from the diff; the diff is unchanged. The window holds 9 of 200 thousand tokens. Line seven is now the only line with no explanation attached and is flagged: headers are replaced rather than merged.',
   other:
-    'A fresh window of a different model family. The justification sheet is gone, the diff is unchanged, and two findings are raised: the replaced headers on line seven, and a class of bug the same-family reviewer missed entirely — `Object.keys` carrying `__proto__` through onto the result.',
+    'A fresh window of a different model family. The justification sheet is gone, the diff is unchanged, and two findings are raised: the replaced headers on line seven, and a class of bug the same-family reviewer missed entirely — Object.keys carrying a prototype key through onto the result.',
 }
 
 function cellClasses(who: Who): string[] {
@@ -185,7 +228,8 @@ function ReviewerPanel({
           <span className="n">config.ts</span>
           <span className="v">+7 −1</span>
         </div>
-        <div className="fe-diff">
+        {/* The sheet spans 1 / -1, which only resolves against explicit tracks. */}
+        <div className="fe-diff" style={{ '--fe-rows': ROWS.total } as React.CSSProperties}>
           {DIFF.map((l, i) => {
             const unexplained = l.bug && !attached
             return (
@@ -194,6 +238,7 @@ function ReviewerPanel({
                 className={`fe-l fe-s${l.sign === '+' ? 'add' : l.sign === '-' ? 'del' : 'ctx'}${
                   unexplained ? ' fe-unexplained' : ''
                 }${attached ? ' fe-vouched' : ''}`}
+                style={{ gridRow: ROWS.line[i] }}
               >
                 <i className="fe-ln" aria-hidden="true">
                   {i + 1}
@@ -207,15 +252,16 @@ function ReviewerPanel({
           })}
 
           {/* One sheet, one element: the peel has to read as a single object
-              lifting off, not four notes fading independently. */}
+              lifting off, not four notes fading independently. Subgrid lets it
+              hold interleaved rows without ever covering a line of code. */}
           <div className={attached ? 'fe-sheet is-on' : 'fe-sheet'} aria-hidden="true">
             {NOTES.map((n) => (
               <span
                 key={n.row}
                 className={n.onBug ? 'fe-note fe-note-bug' : 'fe-note'}
-                style={{ top: `calc(${n.row} * var(--fe-lh) + 0.1rem)` }}
+                style={{ gridRow: ROWS.note[n.row] }}
               >
-                {n.text}
+                <Rich text={n.text} />
               </span>
             ))}
           </div>
@@ -240,9 +286,11 @@ function ReviewerPanel({
           <div key={f.head} className={`fe-find fe-tone-${f.tone}`}>
             <span className="h">
               <i aria-hidden="true">{f.tone === 'ok' ? '✔' : f.tone === 'flag' ? '✗' : '·'}</i>
-              {f.head}
+              <Rich text={f.head} />
             </span>
-            <p>{f.body}</p>
+            <p>
+              <Rich text={f.body} />
+            </p>
           </div>
         ))}
       </div>
