@@ -13,6 +13,7 @@ import { RecoveryFigure } from '@/components/stack/RecoveryFigure'
 import { Terminal } from '@/components/stack/Terminal'
 import { ToolLineFigure } from '@/components/stack/ToolLineFigure'
 import { SubagentSavings } from '@/components/stack/SubagentSavings'
+import { ToolsShowcase } from '@/components/stack/ToolsShowcase'
 import { CockpitChapter } from '@/components/stack/CockpitChapter'
 import { CompactionSection } from '@/components/stack/CompactionSection'
 import { PartnershipChapter } from '@/components/stack/PartnershipChapter'
@@ -642,51 +643,15 @@ export function StackShell() {
             </div>
             <p className="section-label">What the line is worth</p>
             <ToolLineFigure />
-            <p className="section-label">Built here, open sourced — take them</p>
-            <div className="rv">
-              {[
-                {
-                  name: 'delegate-agent',
-                  desc: 'One CLI, ten agent runtimes, three trust modes.',
-                  href: 'https://github.com/treygoff24/delegate-agent',
-                },
-                {
-                  name: 'papercuts',
-                  desc: 'Where agents file complaints so friction becomes a backlog.',
-                  href: 'https://github.com/treygoff24/papercuts',
-                },
-                {
-                  name: 'elv',
-                  desc: 'The entire ElevenLabs API as 338 agent-callable operations.',
-                  href: 'https://github.com/treygoff24/elv',
-                },
-                {
-                  name: 'exa-agent-cli',
-                  desc: 'Web research as structured data — 68 commands, stable exit codes.',
-                  href: 'https://github.com/treygoff24/exa-agent-cli',
-                },
-                {
-                  name: 'receipts',
-                  desc: 'Answers that arrive with a URL, a quote, and a verdict.',
-                  href: 'https://github.com/treygoff24/receipts',
-                },
-              ].map((repo) => (
-                <a
-                  key={repo.name}
-                  className="dl"
-                  href={repo.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span className="ext">OSS</span>
-                  <span className="nm">
-                    {repo.name}
-                    <span className="ds">{repo.desc}</span>
-                  </span>
-                  <span className="go">GitHub ↗</span>
-                </a>
-              ))}
-            </div>
+            <p className="section-label">Everything on this machine</p>
+            <p className="rv">
+              The whole armory, honestly labelled. Eight of these I wrote and open sourced, so you
+              can install them this afternoon. Seven exist only here, because they are wired to my
+              machine and not ready to be anyone else&apos;s dependency. The rest are other
+              people&apos;s work that this stack would not run without. Filter it, open a row, take
+              the install line.
+            </p>
+            <ToolsShowcase />
             <DownloadCard
               href="/stack/agent-build.md"
               ext="MD"

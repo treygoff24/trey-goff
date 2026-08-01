@@ -1,0 +1,324 @@
+/* ── Ch.4 · the armory ───────────────────────────────────────
+   A ruled ledger of every CLI on this machine, filtered live.
+   Provenance is carried by one green at three intensities plus a
+   drawn mark in the gutter — no second accent, no card grid.
+   ──────────────────────────────────────────────────────────── */
+
+#stack-root .armory {
+  --arm-tone: var(--sk-text-2);
+  --arm-edge: var(--sk-edge-dim);
+}
+
+/* ── Filters ─────────────────────────────────────────────── */
+
+#stack-root .arm-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--sk-border-1);
+}
+#stack-root .arm-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+#stack-root .arm-group-label {
+  font-family: var(--sk-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+  width: 3.6rem;
+  flex: 0 0 auto;
+}
+#stack-root .arm-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  padding: 0.34rem 0.7rem;
+  border: 1px solid var(--sk-border-1);
+  border-radius: 999px;
+  background: none;
+  color: var(--sk-text-3);
+  font-family: var(--sk-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition:
+    color 200ms var(--sk-ease),
+    border-color 200ms var(--sk-ease),
+    background-color 200ms var(--sk-ease);
+}
+#stack-root .arm-chip .arm-mark {
+  color: var(--sk-text-3);
+  transition: color 200ms var(--sk-ease);
+}
+#stack-root .arm-chip:hover:not(:disabled) {
+  color: var(--sk-text-1);
+  border-color: var(--sk-border-2);
+}
+#stack-root .arm-chip:focus-visible {
+  outline: 1.5px solid var(--sk-accent);
+  outline-offset: 3px;
+}
+#stack-root .arm-chip[aria-pressed='true'] {
+  color: var(--sk-bg-0);
+  background: var(--sk-accent);
+  border-color: var(--sk-accent);
+  font-weight: 600;
+}
+#stack-root .arm-chip[aria-pressed='true'] .arm-mark {
+  color: var(--sk-bg-0);
+}
+#stack-root .arm-chip:disabled {
+  opacity: 0.32;
+  cursor: not-allowed;
+}
+#stack-root .arm-n {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.62rem;
+  opacity: 0.7;
+}
+#stack-root .arm-chip[aria-pressed='true'] .arm-n {
+  opacity: 0.85;
+}
+
+#stack-root .arm-tally {
+  margin: 0.9rem 0 0;
+  font-family: var(--sk-mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.09em;
+  color: var(--sk-text-3);
+}
+#stack-root .arm-tally-n {
+  color: var(--sk-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── The ledger ──────────────────────────────────────────── */
+
+#stack-root .arm-list {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  border-top: 1px solid var(--sk-border-1);
+}
+#stack-root .arm-row {
+  border-bottom: 1px solid var(--sk-border-1);
+  animation: arm-in 420ms var(--sk-ease) both;
+  animation-delay: calc(var(--i, 0) * 26ms);
+}
+@keyframes arm-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+}
+
+/* Provenance: one green, three intensities. */
+#stack-root .arm-row[data-origin='mine'] {
+  --arm-tone: var(--sk-accent);
+  --arm-edge: var(--sk-edge-accent);
+}
+#stack-root .arm-row[data-origin='unreleased'] {
+  --arm-tone: var(--sk-warm);
+  --arm-edge: var(--sk-edge-warm);
+}
+
+#stack-root .arm-head {
+  display: grid;
+  grid-template-columns: 1.4rem minmax(7.5rem, auto) minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 0.55rem 0.9rem;
+  width: 100%;
+  padding: 0.9rem 0.5rem 0.9rem 0.35rem;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color 220ms var(--sk-ease),
+    box-shadow 220ms var(--sk-ease),
+    transform 220ms var(--sk-ease);
+}
+#stack-root .arm-head:hover {
+  background: rgba(151, 232, 187, 0.06);
+  box-shadow: var(--arm-edge);
+  transform: translateX(3px);
+}
+/* Open rows tint as one block so the head and its detail stay joined. */
+#stack-root .arm-row[data-open] {
+  background: rgba(151, 232, 187, 0.06);
+  box-shadow: var(--arm-edge);
+}
+#stack-root .arm-row[data-open] .arm-head:hover {
+  background: none;
+  box-shadow: none;
+  transform: none;
+}
+#stack-root .arm-head:focus-visible {
+  outline: 1.5px solid var(--sk-accent);
+  outline-offset: -2px;
+}
+#stack-root .arm-gutter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--arm-tone);
+  align-self: center;
+  opacity: 0.85;
+}
+#stack-root .arm-name {
+  font-family: var(--sk-mono);
+  font-size: 0.86rem;
+  color: var(--arm-tone);
+  letter-spacing: -0.01em;
+}
+#stack-root .arm-row[data-origin='unreleased'] .arm-name,
+#stack-root .arm-row[data-origin='ecosystem'] .arm-name {
+  font-weight: 400;
+}
+#stack-root .arm-row[data-origin='mine'] .arm-name {
+  font-weight: 600;
+}
+#stack-root .arm-role {
+  font-family: var(--sk-sans);
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: var(--sk-text-3);
+  max-width: 62ch;
+  transition: color 220ms var(--sk-ease);
+}
+#stack-root .arm-head:hover .arm-role,
+#stack-root .arm-row[data-open] .arm-role {
+  color: var(--sk-text-2);
+}
+#stack-root .arm-job {
+  font-family: var(--sk-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+/* ── Expanded detail ─────────────────────────────────────── */
+
+#stack-root .arm-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem 1.2rem;
+  padding: 0 0.5rem 1rem 1.95rem;
+}
+#stack-root .arm-panel[hidden] {
+  display: none;
+}
+#stack-root .arm-install {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+  padding: 0.42rem 0.42rem 0.42rem 0.7rem;
+  border: 1px solid var(--sk-border-1);
+  border-radius: 8px;
+  background: rgba(4, 19, 12, 0.55);
+}
+#stack-root .arm-install code {
+  font-family: var(--sk-mono);
+  font-size: 0.72rem;
+  color: var(--sk-text-1);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+#stack-root .arm-copy {
+  flex: 0 0 auto;
+  padding: 0.22rem 0.55rem;
+  border: 1px solid var(--sk-border-1);
+  border-radius: 6px;
+  background: none;
+  color: var(--sk-text-3);
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition:
+    color 180ms var(--sk-ease),
+    border-color 180ms var(--sk-ease);
+}
+#stack-root .arm-copy:hover {
+  color: var(--sk-accent);
+  border-color: var(--sk-border-2);
+}
+#stack-root .arm-copy:focus-visible {
+  outline: 1.5px solid var(--sk-accent);
+  outline-offset: 2px;
+}
+#stack-root .arm-note {
+  margin: 0;
+  font-family: var(--sk-sans);
+  font-size: 0.8rem;
+  color: var(--sk-text-3);
+  max-width: 54ch;
+}
+#stack-root .arm-link {
+  font-family: var(--sk-mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.08em;
+  color: var(--sk-accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(151, 232, 187, 0.3);
+}
+#stack-root a.arm-link:hover {
+  border-bottom-color: var(--sk-accent);
+}
+#stack-root .arm-link:focus-visible {
+  outline: 1.5px solid var(--sk-accent);
+  outline-offset: 3px;
+}
+#stack-root .arm-link-none {
+  color: var(--sk-text-3);
+  border-bottom: 0;
+  opacity: 0.7;
+}
+
+/* ── Narrow ──────────────────────────────────────────────── */
+
+@media (max-width: 720px) {
+  #stack-root .arm-group-label {
+    width: 100%;
+  }
+  #stack-root .arm-head {
+    grid-template-columns: 1.4rem minmax(0, 1fr) auto;
+  }
+  #stack-root .arm-role {
+    grid-column: 2 / -1;
+    font-size: 0.82rem;
+  }
+  #stack-root .arm-panel {
+    padding-left: 0.5rem;
+  }
+  #stack-root .arm-install {
+    max-width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #stack-root .arm-row {
+    animation: none;
+  }
+  #stack-root .arm-head,
+  #stack-root .arm-chip,
+  #stack-root .arm-copy,
+  #stack-root .arm-role {
+    transition: none;
+  }
+  #stack-root .arm-head:hover {
+    transform: none;
+  }
+}
