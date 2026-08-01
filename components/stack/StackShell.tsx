@@ -9,7 +9,9 @@ import {
   START_TONIGHT,
 } from '@/components/stack/data'
 import { useReducedMotion, useReveal } from '@/components/stack/hooks'
+import { RecoveryFigure } from '@/components/stack/RecoveryFigure'
 import { Terminal } from '@/components/stack/Terminal'
+import { ToolLineFigure } from '@/components/stack/ToolLineFigure'
 import { SubagentSavings } from '@/components/stack/SubagentSavings'
 import { CockpitChapter } from '@/components/stack/CockpitChapter'
 import { CompactionSection } from '@/components/stack/CompactionSection'
@@ -448,6 +450,8 @@ export function StackShell() {
                 </p>
               </div>
             </div>
+            <p className="section-label">What the file actually buys you</p>
+            <RecoveryFigure />
             <DownloadCard
               href="/stack/global-CLAUDE.md"
               ext="MD"
@@ -636,6 +640,8 @@ export function StackShell() {
               </b>{' '}
               so the model is always aware of what it can reach for.
             </div>
+            <p className="section-label">What the line is worth</p>
+            <ToolLineFigure />
             <p className="section-label">Built here, open sourced — take them</p>
             <div className="rv">
               {[
