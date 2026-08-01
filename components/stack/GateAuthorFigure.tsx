@@ -267,7 +267,10 @@ export function GateAuthorFigure() {
           code.
         </b>{' '}
         Ask for the gate in a window that has never seen the implementation, and give it the brief
-        instead.
+        instead. Field note: an agent on my machine once &quot;cleared&quot; a mail backlog with a
+        parser that guessed the wrong key, then verified the clear with the same parser — empty
+        list in, empty list out, green check on nothing. The verifier shared a failure mode with
+        the thing it verified. A second check with a different instrument caught it in a minute.
       </p>
     </div>
   )

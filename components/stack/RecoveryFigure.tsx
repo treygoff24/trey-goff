@@ -286,6 +286,14 @@ export function RecoveryFigure() {
         was the second beat: the error gets a <em>name</em> instead of a hypothesis.{' '}
         <b>It collapses the recovery tree — which is most of what memory is for, for humans too.</b>
       </p>
+      <p className="rcv-cap rcv-cap-field">
+        Field note, one evening on my machine: two agents who had just co-written a warning about
+        this exact rake each stepped on it within the hour — one mid-review of the very system the
+        rule protects, one thirty seconds after shipping the warning to the public README. Both
+        recovered in a single beat, because the pattern had a name. Science fiction promised an AGI
+        that never errs; what we got can coin Greek and fumble a shell ampersand in the same hour.
+        The rule file exists for the second part.
+      </p>
     </div>
   )
 }
