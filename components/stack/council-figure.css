@@ -1,0 +1,606 @@
+/* ─────────────────────────────────────────────────────────────
+   Ch.6 — the fusion council, drawn. Scoped under #stack-root like
+   the rest of /stack; every class carries a cf- prefix and the one
+   keyframe is cf-draw, so nothing collides with the c- / s- cells
+   in stack.css and subagent-savings.css regardless of load order.
+
+   The stage is an inline-size container: 1cqw is one percent of the
+   board's own width, which lets a chip's horizontal address be a
+   pure number in the component while its type stays sized in rem.
+   ───────────────────────────────────────────────────────────── */
+
+#stack-root .cf {
+  margin-top: 1.6rem;
+  border: 1px solid var(--sk-border-1);
+  border-radius: 8px;
+  padding: clamp(1rem, 2.4vw, 1.6rem);
+  background:
+    radial-gradient(110% 130% at 8% 0%, rgba(111, 214, 154, 0.08), transparent 60%),
+    rgba(6, 26, 16, 0.5);
+
+  /* Per-author hues. Kimi is deliberately the only colourless one — the
+     quietest model in the room is the one that finds the hazard. */
+  --cf-sky: var(--sk-sky);
+  --cf-violet: var(--sk-violet);
+  --cf-amber: var(--sk-amber);
+  --cf-plain: rgba(232, 243, 236, 0.66);
+  --cf-accent: var(--sk-accent);
+}
+
+#stack-root .cf-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+#stack-root .cf-head {
+  margin: 0;
+  font-family: var(--sk-mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+}
+#stack-root .cf-head b {
+  color: var(--sk-text-1);
+  font-weight: 400;
+}
+
+#stack-root .cf-play {
+  background: none;
+  border: 1px solid var(--sk-border-1);
+  border-radius: 999px;
+  padding: 0.34rem 0.9rem;
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+  cursor: pointer;
+  transition:
+    color 200ms var(--sk-ease),
+    border-color 200ms var(--sk-ease);
+}
+#stack-root .cf-play:hover {
+  color: var(--sk-text-1);
+  border-color: var(--sk-border-2);
+}
+
+/* ── Stage rail ─────────────────────────────────────────── */
+#stack-root .cf-rail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 1rem 0 1.2rem;
+}
+#stack-root .cf-step {
+  flex: 1 1 7rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.42rem;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid var(--sk-border-1);
+  border-radius: 6px;
+  padding: 0.46rem 0.6rem;
+  font-family: var(--sk-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+  cursor: pointer;
+  transition:
+    color 220ms var(--sk-ease),
+    border-color 220ms var(--sk-ease),
+    background 220ms var(--sk-ease);
+}
+#stack-root .cf-step-n {
+  font-size: 0.54rem;
+  opacity: 0.6;
+}
+#stack-root .cf-step.is-past {
+  color: var(--sk-text-2);
+  border-color: rgba(151, 232, 187, 0.18);
+}
+#stack-root .cf-step.is-on {
+  color: var(--sk-bg-0);
+  background: var(--sk-warm);
+  border-color: var(--sk-warm);
+}
+#stack-root .cf-step.is-on .cf-step-n {
+  opacity: 0.75;
+}
+
+/* ── Proposal row ───────────────────────────────────────── */
+#stack-root .cf-props {
+  display: grid;
+  grid-template-columns: repeat(4, 23.2%);
+  justify-content: space-between;
+  margin-bottom: 0.35rem;
+}
+#stack-root .cf-prop {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: rgba(0, 0, 0, 0.24);
+  border: 1px solid var(--sk-border-1);
+  border-radius: 7px;
+  padding: 0.5rem 0.55rem 0.55rem;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    opacity 260ms var(--sk-ease),
+    border-color 260ms var(--sk-ease),
+    box-shadow 260ms var(--sk-ease);
+}
+#stack-root .cf-prop.is-on {
+  border-color: var(--sk-border-2);
+  box-shadow: 0 18px 40px -34px rgba(0, 0, 0, 0.9);
+}
+#stack-root .cf-prop.is-dim {
+  opacity: 0.3;
+}
+#stack-root .cf-prop-name {
+  display: block;
+  font-family: var(--sk-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  color: var(--sk-text-1);
+}
+#stack-root .cf-prop-name i {
+  display: block;
+  font-style: normal;
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+  margin-top: 0.12rem;
+}
+#stack-root .cf-prop-score {
+  display: block;
+  margin-top: 0.3rem;
+  font-family: var(--sk-mono);
+  font-size: 0.68rem;
+  color: var(--sk-text-2);
+}
+
+/* ── Score bars ─────────────────────────────────────────── */
+#stack-root .cf-bar {
+  position: relative;
+  display: block;
+  height: 5px;
+  margin-top: 0.5rem;
+  border-radius: 3px;
+  background: rgba(232, 243, 236, 0.08);
+  overflow: visible;
+}
+/* Width, not scaleX: these bars carry rounded caps and sit inside a track, so
+   scaling would smear the cap and the fill would read as a different shape at
+   every score. Six bars, absolutely contained, one transition each. */
+#stack-root .cf-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--cf-plain);
+  transition: width 900ms var(--sk-ease);
+}
+#stack-root .cf-bar[data-hue='sky'] .cf-bar-fill {
+  background: var(--cf-sky);
+}
+#stack-root .cf-bar[data-hue='violet'] .cf-bar-fill {
+  background: var(--cf-violet);
+}
+#stack-root .cf-bar[data-hue='amber'] .cf-bar-fill {
+  background: var(--cf-amber);
+}
+#stack-root .cf-bar[data-hue='accent'] .cf-bar-fill {
+  background: linear-gradient(90deg, var(--sk-warm), var(--cf-accent));
+}
+#stack-root .cf-bar-wide {
+  height: 8px;
+  margin-top: 0.6rem;
+}
+
+#stack-root .cf-mark {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 0;
+  border-left: 1px dashed rgba(232, 243, 236, 0.55);
+  opacity: 1;
+  transition: opacity 400ms var(--sk-ease);
+}
+#stack-root .cf-mark i {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.28rem;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: var(--sk-mono);
+  font-style: normal;
+  font-size: 0.5rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+}
+/* Two markers six points apart would collide side by side, so the late one
+   labels itself above the track instead of below. */
+#stack-root .cf-mark-late i {
+  top: auto;
+  bottom: 100%;
+  margin: 0 0 0.3rem;
+}
+#stack-root .cf-mark-late {
+  opacity: 0;
+}
+#stack-root .cf-mark-late.is-on {
+  opacity: 1;
+}
+
+/* ── The stage ──────────────────────────────────────────── */
+#stack-root .cf-stage {
+  container-type: inline-size;
+  position: relative;
+  height: 26.6rem;
+}
+
+#stack-root .cf-wires {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4.4rem;
+  width: 100%;
+  display: block;
+  overflow: visible;
+}
+#stack-root .cf-wire {
+  fill: none;
+  stroke: var(--cf-plain);
+  stroke-width: 1.1;
+  vector-effect: non-scaling-stroke;
+  opacity: 0;
+  stroke-dasharray: 170;
+  stroke-dashoffset: 170;
+  transition: opacity 260ms var(--sk-ease);
+}
+#stack-root .cf-wire[data-hue='sky'] {
+  stroke: var(--cf-sky);
+}
+#stack-root .cf-wire[data-hue='violet'] {
+  stroke: var(--cf-violet);
+}
+#stack-root .cf-wire[data-hue='amber'] {
+  stroke: var(--cf-amber);
+}
+#stack-root .cf-wire.is-sole {
+  stroke: var(--cf-accent);
+  stroke-width: 1.8;
+}
+#stack-root .cf-wires.is-on .cf-wire {
+  opacity: 0.75;
+  animation: cf-draw 640ms var(--sk-ease) var(--cf-d, 0ms) forwards;
+}
+#stack-root .cf-wires.is-on .cf-wire.is-sole {
+  opacity: 1;
+}
+#stack-root .cf-wires.is-on .cf-wire.is-dim {
+  opacity: 0.14;
+}
+
+@keyframes cf-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ── Flaw chips ─────────────────────────────────────────── */
+#stack-root .cf-chips {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+/* The chips animate transform AND width. A scale() would take the type with it
+   and the text has to stay legible at both addresses, so the width is real. The
+   eight chips live in an absolutely-positioned overlay, so the reflow is scoped
+   to each chip's own subtree and never reaches the page. */
+#stack-root .cf-chip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--cf-w);
+  transform: translate(var(--cf-x), var(--cf-y)) scale(0.94);
+  transform-origin: 0 0;
+  display: block;
+  padding: 0.32rem 0.42rem 0.34rem 0.62rem;
+  border: 1px solid var(--sk-border-1);
+  border-radius: 5px;
+  background: rgba(4, 19, 12, 0.92);
+  opacity: 0;
+  transition:
+    transform 700ms var(--sk-ease) var(--cf-d, 0ms),
+    width 700ms var(--sk-ease) var(--cf-d, 0ms),
+    opacity 420ms var(--sk-ease) var(--cf-d, 0ms),
+    border-color 400ms var(--sk-ease),
+    background 400ms var(--sk-ease);
+}
+#stack-root .cf-chip.is-in {
+  opacity: 1;
+  transform: translate(var(--cf-x), var(--cf-y)) scale(1);
+}
+#stack-root .cf-chip-text {
+  display: block;
+  font-size: 0.6rem;
+  line-height: 1.32;
+  color: var(--sk-text-2);
+}
+#stack-root .cf-chip-dot {
+  position: absolute;
+  left: 0.26rem;
+  top: 0.52rem;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--cf-plain);
+}
+#stack-root .cf-chip[data-hue='sky'] .cf-chip-dot {
+  background: var(--cf-sky);
+}
+#stack-root .cf-chip[data-hue='violet'] .cf-chip-dot {
+  background: var(--cf-violet);
+}
+#stack-root .cf-chip[data-hue='amber'] .cf-chip-dot {
+  background: var(--cf-amber);
+}
+#stack-root .cf-chip-tag {
+  display: block;
+  margin-top: 0.18rem;
+  font-family: var(--sk-mono);
+  font-size: 0.48rem;
+  font-weight: 400;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+}
+
+/* The strike is drawn, not a text-decoration, so it can sweep left to right
+   on a delay and read as an argument being answered one at a time. */
+#stack-root .cf-chip-strike {
+  position: absolute;
+  left: 0.5rem;
+  right: 0.42rem;
+  top: 0.86rem;
+  height: 1px;
+  background: var(--sk-rose);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 420ms var(--sk-ease) var(--cf-d, 0ms);
+}
+#stack-root .cf-chip.is-struck {
+  opacity: 0.42;
+  border-color: rgba(248, 113, 113, 0.22);
+}
+#stack-root .cf-chip.is-struck .cf-chip-strike {
+  transform: scaleX(1);
+}
+#stack-root .cf-chip.is-struck .cf-chip-tag {
+  color: rgba(248, 113, 113, 0.72);
+}
+
+/* The protagonist: lit at the moment it lands and never dimmed again. */
+#stack-root .cf-chip.is-sole {
+  border-color: rgba(151, 232, 187, 0.5);
+  background:
+    linear-gradient(180deg, rgba(151, 232, 187, 0.1), rgba(151, 232, 187, 0.03)),
+    rgba(4, 19, 12, 0.96);
+  box-shadow: 0 14px 34px -22px rgba(151, 232, 187, 0.55);
+}
+#stack-root .cf-chip.is-sole .cf-chip-dot {
+  background: var(--cf-accent);
+  box-shadow: 0 0 0 3px rgba(151, 232, 187, 0.16);
+}
+#stack-root .cf-chip.is-sole .cf-chip-text {
+  color: var(--sk-text-1);
+}
+#stack-root .cf-chip.is-sole .cf-chip-tag {
+  color: var(--cf-accent);
+}
+#stack-root .cf-chip.is-in.is-dim {
+  opacity: 0.16;
+}
+#stack-root .cf-chip.is-moved .cf-chip-text {
+  font-size: 0.56rem;
+}
+
+#stack-root .cf-ghost {
+  position: absolute;
+  left: 0;
+  top: 15.3rem;
+  width: 100cqw;
+  height: 11rem;
+  display: grid;
+  place-items: center;
+  border: 1px dashed rgba(232, 243, 236, 0.14);
+  border-radius: 7px;
+  opacity: 1;
+  transition: opacity 380ms var(--sk-ease);
+}
+#stack-root .cf-ghost.is-off {
+  opacity: 0;
+}
+#stack-root .cf-ghost span {
+  font-family: var(--sk-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+}
+
+/* ── Verdict panels ─────────────────────────────────────── */
+#stack-root .cf-panel {
+  position: absolute;
+  border: 1px solid var(--sk-border-1);
+  border-radius: 7px;
+  padding: 0.6rem 0.7rem 0.7rem;
+  background: rgba(0, 0, 0, 0.26);
+  opacity: 0;
+  transform: translateY(0.7rem);
+  transition:
+    opacity 520ms var(--sk-ease),
+    transform 520ms var(--sk-ease);
+}
+#stack-root .cf-panel.is-on {
+  opacity: 1;
+  transform: none;
+}
+#stack-root .cf-syn {
+  left: 0;
+  width: 65.5cqw;
+  top: 15.3rem;
+  height: 11rem;
+  border-color: rgba(151, 232, 187, 0.34);
+  background:
+    radial-gradient(120% 140% at 4% 0%, rgba(151, 232, 187, 0.1), transparent 62%),
+    rgba(0, 0, 0, 0.3);
+}
+#stack-root .cf-human {
+  left: 68.5cqw;
+  width: 31.5cqw;
+  top: 15.3rem;
+  transition-delay: 220ms;
+}
+#stack-root .cf-panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+#stack-root .cf-panel-name {
+  font-family: var(--sk-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  color: var(--sk-text-1);
+}
+#stack-root .cf-panel-name i {
+  display: block;
+  font-style: normal;
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  color: var(--sk-text-3);
+  margin-top: 0.14rem;
+  text-transform: none;
+}
+#stack-root .cf-panel-score {
+  font-family: var(--sk-mono);
+  font-size: 0.9rem;
+  color: var(--sk-text-1);
+}
+#stack-root .cf-syn .cf-panel-score {
+  color: var(--cf-accent);
+}
+
+/* ── Hint + captions ────────────────────────────────────── */
+#stack-root .cf-hint {
+  margin: 0.9rem 0 0;
+  font-family: var(--sk-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+}
+#stack-root .cf-caps {
+  display: grid;
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--sk-border-1);
+}
+#stack-root .cf-cap {
+  grid-area: 1 / 1;
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--sk-text-2);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 260ms var(--sk-ease);
+}
+#stack-root .cf-cap.is-on {
+  visibility: visible;
+  opacity: 1;
+}
+#stack-root .cf-cap b {
+  color: var(--sk-text-1);
+  font-weight: 500;
+}
+
+/* ── Reduced motion: five labelled stills ───────────────── */
+#stack-root .cf-stills {
+  display: grid;
+  gap: 1.6rem;
+  margin-top: 1.2rem;
+}
+#stack-root .cf-still {
+  border-top: 1px solid var(--sk-border-1);
+  padding-top: 0.9rem;
+}
+#stack-root .cf-still-h {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0 0 0.8rem;
+  font-family: var(--sk-mono);
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sk-text-1);
+}
+#stack-root .cf-still-n {
+  color: var(--sk-warm);
+}
+#stack-root .cf-still-fig {
+  overflow-x: auto;
+}
+#stack-root .cf-still-fig .cf-board,
+#stack-root .cf-scroll-in .cf-board {
+  min-width: 33rem;
+}
+#stack-root .cf-still .cf-cap {
+  margin-top: 0.8rem;
+}
+
+/* ── Narrow screens ─────────────────────────────────────── */
+#stack-root .cf-scroll {
+  position: relative;
+}
+@media (max-width: 720px) {
+  #stack-root .cf-scroll {
+    overflow-x: auto;
+  }
+  #stack-root .cf-scroll .figscroll-hint {
+    display: block;
+  }
+  #stack-root .cf-step {
+    flex: 1 1 5.4rem;
+    font-size: 0.56rem;
+    letter-spacing: 0.08em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #stack-root .cf-chip,
+  #stack-root .cf-chip-strike,
+  #stack-root .cf-panel,
+  #stack-root .cf-ghost,
+  #stack-root .cf-bar-fill,
+  #stack-root .cf-mark,
+  #stack-root .cf-prop,
+  #stack-root .cf-step,
+  #stack-root .cf-cap,
+  #stack-root .cf-wire {
+    transition: none;
+  }
+  #stack-root .cf-wires.is-on .cf-wire {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}

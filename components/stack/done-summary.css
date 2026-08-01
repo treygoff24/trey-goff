@@ -1,0 +1,413 @@
+/* ─────────────────────────────────────────────────────────────
+   Ch.6 — "never trust a done summary", as a decision the reader
+   actually makes. Scoped under #stack-root; ds- prefix throughout.
+   ───────────────────────────────────────────────────────────── */
+
+#stack-root .ds {
+  margin-top: 1.6rem;
+  border: 1px solid var(--sk-border-1);
+  border-radius: 8px;
+  padding: clamp(1rem, 2.4vw, 1.6rem);
+  background:
+    radial-gradient(110% 130% at 92% 0%, rgba(251, 191, 36, 0.055), transparent 60%),
+    rgba(6, 26, 16, 0.5);
+}
+
+#stack-root .ds-head {
+  margin: 0 0 1.1rem;
+  font-family: var(--sk-mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+}
+#stack-root .ds-head b {
+  color: var(--sk-text-1);
+  font-weight: 400;
+}
+
+#stack-root .ds-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.9rem;
+  align-items: start;
+}
+
+#stack-root .ds-card {
+  border: 1px solid var(--sk-border-1);
+  border-radius: 7px;
+  background: rgba(0, 0, 0, 0.26);
+  padding: 0.8rem 0.9rem 0.9rem;
+}
+#stack-root .ds-card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding-bottom: 0.6rem;
+  margin-bottom: 0.7rem;
+  border-bottom: 1px solid var(--sk-border-1);
+  font-family: var(--sk-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+#stack-root .ds-card-head .n {
+  color: var(--sk-text-1);
+}
+#stack-root .ds-card-head .v {
+  color: var(--sk-text-3);
+}
+
+/* ── The report ─────────────────────────────────────────── */
+#stack-root .ds-report {
+  transition: box-shadow 400ms var(--sk-ease);
+}
+#stack-root .ds-report.is-believed {
+  box-shadow: var(--sk-edge-warm);
+}
+#stack-root .ds-status {
+  color: var(--sk-text-3);
+  transition: color 300ms var(--sk-ease);
+}
+#stack-root .ds-status.is-ok {
+  color: var(--sk-warm);
+}
+#stack-root .ds-status.is-bad {
+  color: var(--sk-rose);
+}
+
+#stack-root .ds-report-lede {
+  margin: 0 0 0.8rem;
+  font-size: 0.9rem;
+  color: var(--sk-text-2);
+}
+
+#stack-root .ds-claims {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: grid;
+  gap: 0.44rem;
+}
+#stack-root .ds-claim {
+  display: grid;
+  grid-template-columns: 1.1rem minmax(0, 1fr);
+  gap: 0.45rem;
+  align-items: start;
+  font-size: 0.84rem;
+  line-height: 1.42;
+  color: var(--sk-text-2);
+  transition: color 300ms var(--sk-ease) var(--ds-d, 0ms);
+}
+#stack-root .ds-claim.is-failed {
+  color: var(--sk-text-3);
+}
+#stack-root .ds-claim-text {
+  position: relative;
+}
+
+/* Drawn rather than text-decoration, so the two false claims strike one
+   after the other and the reader watches the gap arrive. */
+#stack-root .ds-strike {
+  position: absolute;
+  left: -0.06em;
+  right: -0.06em;
+  top: 0.62em;
+  height: 1px;
+  background: var(--sk-rose);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 480ms var(--sk-ease) var(--ds-d, 0ms);
+}
+#stack-root .ds-claim.is-failed .ds-strike {
+  transform: scaleX(1);
+}
+
+#stack-root .ds-tick {
+  display: grid;
+  place-items: center;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  margin-top: 0.06rem;
+  background: rgba(111, 214, 154, 0.14);
+  transition:
+    background 300ms var(--sk-ease) var(--ds-d, 0ms),
+    color 300ms var(--sk-ease) var(--ds-d, 0ms);
+  color: var(--sk-warm);
+}
+#stack-root .ds-tick.is-bad {
+  background: rgba(248, 113, 113, 0.16);
+  color: var(--sk-rose);
+}
+#stack-root .ds-mark {
+  width: 0.72rem;
+  height: 0.72rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+#stack-root .ds-acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+#stack-root .ds-btn {
+  background: none;
+  border: 1px solid var(--sk-border-1);
+  border-radius: 999px;
+  padding: 0.44rem 1rem;
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sk-text-2);
+  cursor: pointer;
+  transition:
+    color 200ms var(--sk-ease),
+    border-color 200ms var(--sk-ease),
+    background 200ms var(--sk-ease);
+}
+#stack-root .ds-btn:hover {
+  color: var(--sk-text-1);
+  border-color: var(--sk-border-2);
+}
+#stack-root .ds-btn.is-primary {
+  background: var(--sk-warm);
+  border-color: var(--sk-warm);
+  color: var(--sk-bg-0);
+}
+#stack-root .ds-btn.is-primary:hover {
+  background: var(--sk-accent);
+  border-color: var(--sk-accent);
+  color: var(--sk-bg-0);
+}
+
+/* ── The disk ───────────────────────────────────────────── */
+#stack-root .ds-disk {
+  background: rgba(0, 0, 0, 0.36);
+}
+#stack-root .ds-empty {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--sk-text-3);
+}
+
+#stack-root .ds-files {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.7rem;
+}
+#stack-root .ds-file {
+  border-radius: 5px;
+  padding: 0.5rem 0.6rem 0.55rem;
+  background: rgba(232, 243, 236, 0.03);
+  opacity: 0;
+  transform: translateY(0.4rem);
+  transition:
+    opacity 420ms var(--sk-ease) var(--ds-d, 0ms),
+    transform 420ms var(--sk-ease) var(--ds-d, 0ms);
+}
+#stack-root .ds-disk.is-on .ds-file {
+  opacity: 1;
+  transform: none;
+}
+#stack-root .ds-file.is-ok {
+  box-shadow: var(--sk-edge-warm);
+}
+#stack-root .ds-file.is-bad {
+  box-shadow: var(--sk-edge-rose);
+}
+#stack-root .ds-file-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+#stack-root .ds-file-head code {
+  font-family: var(--sk-mono);
+  font-size: 0.66rem;
+  color: var(--sk-text-1);
+  overflow-wrap: anywhere;
+}
+#stack-root .ds-verdict {
+  flex: none;
+  font-family: var(--sk-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+#stack-root .ds-file.is-ok .ds-verdict {
+  color: var(--sk-warm);
+}
+#stack-root .ds-file.is-bad .ds-verdict {
+  color: var(--sk-rose);
+}
+
+#stack-root .ds-hunk {
+  margin: 0 0 0.35rem;
+  font-family: var(--sk-mono);
+  font-size: 0.6rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+#stack-root .ds-hunk .a {
+  color: var(--sk-warm);
+}
+#stack-root .ds-hunk .r {
+  color: var(--sk-rose);
+}
+#stack-root .ds-hunk .u {
+  color: var(--sk-text-3);
+}
+#stack-root .ds-file-note {
+  margin: 0;
+  font-size: 0.74rem;
+  line-height: 1.4;
+  color: var(--sk-text-3);
+}
+#stack-root .ds-file.is-bad .ds-file-note {
+  color: rgba(248, 113, 113, 0.82);
+}
+
+/* ── The runway ─────────────────────────────────────────── */
+#stack-root .ds-runway {
+  margin-top: 1.3rem;
+}
+#stack-root .ds-runway-h {
+  margin: 0 0 2.6rem;
+  font-family: var(--sk-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+}
+#stack-root .ds-track {
+  position: relative;
+  display: flex;
+  gap: 2px;
+  height: 12px;
+}
+#stack-root .ds-seg {
+  position: relative;
+  border-radius: 2px;
+  background: rgba(111, 214, 154, 0.34);
+  transition: background 300ms var(--sk-ease) var(--ds-d, 0ms);
+}
+#stack-root .ds-seg i {
+  position: absolute;
+  top: -1.15rem;
+  left: 0;
+  font-family: var(--sk-mono);
+  font-style: normal;
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sk-text-3);
+  white-space: nowrap;
+}
+#stack-root .ds-seg.is-never {
+  background: none;
+  border: 1px dashed rgba(248, 113, 113, 0.42);
+  border-radius: 2px;
+}
+#stack-root .ds-runway.is-on .ds-seg.is-never i {
+  color: var(--sk-rose);
+}
+#stack-root .ds-seg.is-never i {
+  left: auto;
+  right: 0;
+  top: 1.05rem;
+}
+
+#stack-root .ds-end {
+  position: absolute;
+  top: -0.5rem;
+  bottom: -0.5rem;
+  width: 0;
+  border-left: 1px solid rgba(232, 243, 236, 0.5);
+  opacity: 0;
+  transition: opacity 400ms var(--sk-ease) 700ms;
+}
+#stack-root .ds-runway.is-on .ds-end {
+  opacity: 1;
+  border-left-color: var(--sk-rose);
+}
+#stack-root .ds-end i {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  /* Clears the segment labels, which already sit one line above the track. */
+  margin-bottom: 1.35rem;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: var(--sk-mono);
+  font-style: normal;
+  font-size: 0.5rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sk-rose);
+}
+
+/* ── Captions ───────────────────────────────────────────── */
+#stack-root .ds-caps {
+  display: grid;
+  margin-top: 2.2rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--sk-border-1);
+}
+#stack-root .ds-cap {
+  grid-area: 1 / 1;
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--sk-text-2);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 260ms var(--sk-ease);
+}
+#stack-root .ds-cap.is-on {
+  visibility: visible;
+  opacity: 1;
+}
+#stack-root .ds-cap b {
+  color: var(--sk-text-1);
+  font-weight: 500;
+}
+
+@media (max-width: 720px) {
+  #stack-root .ds-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  #stack-root .ds-seg i {
+    display: none;
+  }
+  #stack-root .ds-seg.is-never i {
+    display: block;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #stack-root .ds-file,
+  #stack-root .ds-strike,
+  #stack-root .ds-tick,
+  #stack-root .ds-claim,
+  #stack-root .ds-seg,
+  #stack-root .ds-end,
+  #stack-root .ds-cap,
+  #stack-root .ds-report,
+  #stack-root .ds-btn {
+    transition: none;
+  }
+  #stack-root .ds-file {
+    opacity: 1;
+    transform: none;
+  }
+}
