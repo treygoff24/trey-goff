@@ -347,13 +347,23 @@ Mine has grown into a working agreement: how to commit, when to ask, which CLI t
 
 **AGENTS.md and CLAUDE.md are the orientation layer for the amnesiac savant you hired — they re-orient it for work, every session.**
 
+### What the file actually buys you
+
+[Interactive figure: the same shell footgun, run down two lanes — one where the rule was never written down, one where it lives in the standing brief.]
+
+The figure runs a real rake: `rg -rn PATTERN path`, where `-r` is ripgrep's *replace* flag rather than grep's recursive one, so every match comes back rewritten to the literal `n` — output that looks like a clean result and is entirely fabricated. Lane one has no rule, so the agent works down a recovery tree of four hypotheses in turn: the pattern got mangled by the shell, the files are generated so the text isn't really there, the installed ripgrep is stale, and finally — read the flags from the top. Lane two has the footgun written into CLAUDE.md, and the second beat is the whole difference: the agent names the flag from the standing brief and is back on the road.
+
+> **Written memory doesn't prevent the mistake.** The trap fired identically on both sides — same flag, same fabricated output, same wasted first minute. What the rule bought was the second beat: the error gets a *name* instead of a hypothesis. **It collapses the recovery tree — which is most of what memory is for, for humans too.**
+
+> Field note, one evening on my machine: two agents who had just co-written a warning about this exact rake each stepped on it within the hour — one mid-review of the very system the rule protects, one thirty seconds after shipping the warning to the public README. Both recovered in a single beat, because the pattern had a name. Science fiction promised an AGI that never errs; what we got can coin Greek and fumble a shell ampersand in the same hour. The rule file exists for the second part.
+
 Download: [global-CLAUDE.md](https://www.treygoff.com/stack/global-CLAUDE.md) — My real global instruction file, sanitized — deletion policy, git discipline, commit-message rules, shell footguns, subagent guidance.
 
 ---
 
 ## 03 · Teaching it your world
 
-Repeated workflows should always be skills. Skills cover what's true *sometimes* — loaded only when the moment calls for them, so your context stays spent on the work. There are 317 of them on my machine. Any given session touches a handful.
+Repeated workflows should always be skills. Skills cover what's true *sometimes* — loaded only when the moment calls for them, so your context stays spent on the work. There are 307 of them on my machine. Any given session touches a handful.
 
 ### Anatomy of a skill — click a part
 
@@ -397,7 +407,7 @@ Report the failure and wait.
 - **Project · this repo** — `./CLAUDE.md · ./AGENTS.md`. How this codebase works. Package manager, gate command, generated files that must not be hand-edited.
 - **Memory · what it learned** — `~/.claude/…/memory/*.md`. Durable facts written during work and recalled later — one file per fact, so a wrong one can be deleted rather than argued with.
 
-> **The failure mode nobody warns you about.** Instruction files rot. On one July morning I cut my always-loaded skill list from fifty-six to twenty-five, because **a rule the agent reads every session but never needs is just a tax on the window**. As this page ships, the list has quietly regrown to seventy-nine. Context budget is not a problem you solve once — it re-bloats, you re-cut, and the durable fix is that skills stay discoverable while unloaded.
+> **The failure mode nobody warns you about.** Instruction files rot. On one July morning I cut my always-loaded skill list from fifty-six to twenty-five, because **a rule the agent reads every session but never needs is just a tax on the window**. Three weeks later it had quietly regrown to eighty-four, and I cut it back to thirty — the list you can see below. Context budget is not a problem you solve once — it re-bloats, you re-cut, and the durable fix is that skills stay discoverable while unloaded.
 
 ### The two types of skills
 
@@ -411,6 +421,64 @@ Downloads:
 
 - [starter-skill-pack.md](https://www.treygoff.com/stack/starter-skill-pack.md) — Six skills that pay for themselves in a week — ship-a-release, review-my-diff, write-human, debug-loop, session-closeout, and a skill for writing skills.
 - [midjourney-skill.md](https://www.treygoff.com/stack/midjourney-skill.md) — The domain-expertise example from above, real and ready to use: my Midjourney prompting skill, distilled from a subagent research fan-out.
+
+### What I actually load, every session
+
+[Interactive board: `~/.claude/skills.globals` — the list every session reads before I have typed anything. 30 always-on · 23 yours to take · 7 mine only. Each name opens to what it does, when it fires, and the file.]
+
+This is the real always-on list, group for group and in its real order. Twenty-three of the thirty have a de-personalised copy you can download at `https://www.treygoff.com/stack/skills/<name>.md`; the other seven are thin wrappers around infrastructure that only exists on my machine, shown because the pattern travels even when the file does not.
+
+**meta / harness** — *Skills about running the machine that runs the work.* Seven skills, five downloadable.
+
+| Skill | What it does | Fires when | File |
+| --- | --- | --- | --- |
+| done | End-of-session closeout: walks the session and makes durable state — ledgers, memories, handoffs, repo state — catch up with what actually happened. | I say "done" or a substantive session is clearly ending. | [done.md](https://www.treygoff.com/stack/skills/done.md) |
+| delegate-agent | Hands a bounded task to another vendor's harness through one CLI, with a read-only mode for review and an edit mode for work. | A second opinion is worth more than a second pass, or the work is mechanical enough to spend someone else's tokens on. | [delegate-agent.md](https://www.treygoff.com/stack/skills/delegate-agent.md) |
+| delegate-workflows | Multi-agent pipelines as real scripts under a detached supervisor — fan out, verify, synthesize, resume after a crash. | The orchestration itself is the hard part, not any single task in it. | [delegate-workflows.md](https://www.treygoff.com/stack/skills/delegate-workflows.md) |
+| resume-handoff | Picks work back up by verifying live state first, so stale memory never gets mistaken for current fact. | "Where did we leave off?" — or any resume from a handoff, branch, or note. | [resume-handoff.md](https://www.treygoff.com/stack/skills/resume-handoff.md) |
+| find-skills | Searches the dormant library before anyone concludes the capability does not exist. | I ask how to do something that smells like it is already solved. | [find-skills.md](https://www.treygoff.com/stack/skills/find-skills.md) |
+| using-memorum | The operating loop for my memory daemon: search, record, supersede, forget, reveal. | Any durable fact needs writing down or looking up. | No download — wraps a memory daemon that only runs here. The pattern (one file per fact, so a wrong one can be deleted rather than argued with) is the part worth stealing. |
+| weekly-maintenance | The weekly ritual: scan the whole computer, decide everything in one console, execute, write the ledger. | Maintenance time, or a mid-week health question. | No download — bound to this machine's ledger, scanners, and backlog file. Portable idea, unportable file. |
+
+**build discipline** — *Skills that slow the agent down at exactly the right moments.* Seven skills, all seven downloadable.
+
+| Skill | What it does | Fires when | File |
+| --- | --- | --- | --- |
+| brainstorming | Forces intent, requirements, and design to be explored before a single line gets written. | Any creative work — new feature, new component, new behavior. | [brainstorming.md](https://www.treygoff.com/stack/skills/brainstorming.md) |
+| grilling | Turns the agent adversarial and points it at my thinking instead of the code. | I want a plan or a decision stress-tested rather than agreed with. | [grilling.md](https://www.treygoff.com/stack/skills/grilling.md) |
+| foundry | The full cross-model build loop: waves of lanes building, reviewing, and fixing under a coordinator that verifies independently. | An idea or a prototype needs to become a shipped product. | [foundry.md](https://www.treygoff.com/stack/skills/foundry.md) |
+| plan-review-loop | Runs a plan through three decorrelated model families and folds the convergent findings into a revision. | A substantive plan is drafted and about to be executed. | [plan-review-loop.md](https://www.treygoff.com/stack/skills/plan-review-loop.md) |
+| code-review | Reviews a diff along two axes at once — does it follow this repo's standards, and does it match what was asked for. | Before anything leaves the branch. | [code-review.md](https://www.treygoff.com/stack/skills/code-review.md) |
+| implement | The plain execution path: take an agreed plan and build it without re-litigating the plan. | The thinking is done and the typing is not. | [implement.md](https://www.treygoff.com/stack/skills/implement.md) |
+| impeccable | Design direction with a quality floor — the skill that built the page you are reading. | Any frontend surface is being designed, critiqued, or polished. | [impeccable.md](https://www.treygoff.com/stack/skills/impeccable.md) |
+
+**research / communication** — *Skills for finding what is true and then saying it like a person.* Seven skills, all seven downloadable.
+
+| Skill | What it does | Fires when | File |
+| --- | --- | --- | --- |
+| research | Investigates a question against high-trust primary sources and lands the findings as a file in the repo. | Reading legwork should happen in the background, not in my window. | [research.md](https://www.treygoff.com/stack/skills/research.md) |
+| exa-agent-cli | The default search lane — fastest and cheapest of the three, and dominant on people and organization diligence. | Almost any web lookup starts here. | [exa-agent-cli.md](https://www.treygoff.com/stack/skills/exa-agent-cli.md) |
+| parallel-web-search | The everyday lookup path into the second search vendor. | A quick current-info question that does not need the full CLI. | [parallel-web-search.md](https://www.treygoff.com/stack/skills/parallel-web-search.md) |
+| parallel-cli | The authority lane: best citation quality, primary sources, exhaustive research, entity discovery, change monitoring. | Primary-source discipline beats speed, or a high-stakes claim needs a second independent lane. | [parallel-cli.md](https://www.treygoff.com/stack/skills/parallel-cli.md) |
+| write-human | Anchors the register before generation, then a script enforces the mechanical rules after. | Loaded before writing any prose — email, memo, policy paper, this page. | [write-human.md](https://www.treygoff.com/stack/skills/write-human.md) |
+| fusion | Convenes a cross-vendor council to propose, critique, defend, and judge one high-stakes artifact, then maps where the models disagreed. | Something open-ended and expensive to get wrong is about to be committed to. | [fusion.md](https://www.treygoff.com/stack/skills/fusion.md) |
+| receipts | Every claim comes back with a source URL, a quote, and a verdict. | A fact is about to go into a document and has to be ground-truthed first. | [receipts.md](https://www.treygoff.com/stack/skills/receipts.md) |
+
+**custom CLIs / tools** — *One skill per tool the agent owns, so it never has to be reminded the tool exists.* Nine skills, four downloadable.
+
+| Skill | What it does | Fires when | File |
+| --- | --- | --- | --- |
+| gog | Scoped, JSON-first Google Workspace automation. | Mail, calendar, drive, or docs need touching from a session. | No download — runs on my own Workspace OAuth app and scope policy. Shown because "one skill per tool you own" is the transferable half. |
+| gh-cli | Repos, issues, pull requests, actions, releases — GitHub as a command line rather than a browser. | Any GitHub operation at all. | [gh-cli.md](https://www.treygoff.com/stack/skills/gh-cli.md) |
+| agent-browser | A browser the agent can actually drive: navigate, fill, click, screenshot, extract, QA. | Anything that has to be seen rather than inferred. | [agent-browser.md](https://www.treygoff.com/stack/skills/agent-browser.md) |
+| elv | The entire ElevenLabs API as agent-callable operations — speech, transcription, sound effects, music, dubbing. | Any voice or audio work. | [elv.md](https://www.treygoff.com/stack/skills/elv.md) |
+| x-watch | Read-only X lookup with a stable JSON contract instead of browser scraping. | The morning dashboard, or a timeline question mid-session. | No download — carries my own API credentials and rate-limit posture. |
+| bridge-tool | Builds a throwaway single-file tool so I can express the thing in drags and clicks, then exports it back as data the model can read. | Intent resists text — placement, ordering, thresholds, palette, "I'll know it when I see it." | [bridge-tool.md](https://www.treygoff.com/stack/skills/bridge-tool.md) |
+| probita | Source-grounded legal and policy research: citation verification, corpus search, adversarial brief review. | Legal or legislative work, where an unsourced claim is worse than no claim. | No download — drives a private corpus and a local model harness. The tool is not mine to hand out. |
+| fleet | Machine-wide agent occupancy — who is working where, what is claimed, and where two writers are about to collide. | Before editing a repo another agent might be holding. | No download — reads process and claim state on this machine specifically. Every swarm eventually needs one of these; build yours. |
+| radar-cli | Queries my production news monitor before anyone researches a covered topic from scratch. | Work touches one of its configured watch areas. | No download — a client for a private monitoring system with its own database. |
+
+> **Thirty skills, loaded at every session start, and that is the whole tax.** The other three hundred sit dormant in the library where a search can find them — which is the actual discipline: a skill costs nothing until it is needed, and this list is the small set of things that are true in every session regardless of what I am doing. The downloads are the real files with my machine's paths, names, and private infrastructure taken out. Read one before you run it.
 
 ---
 
@@ -529,6 +597,61 @@ One obvious entry point. Exit codes that mean something specific. A `--json` or 
 
 > **Important tip.** If you build a custom CLI but never tell the agent it exists, it won't use it. **Name every custom tool, with a one-line description, in your AGENTS.md or CLAUDE.md** so the model is always aware of what it can reach for.
 
+### What the line is worth
+
+[Interactive figure: one AGENTS.md, one empty line, two sessions. A switch adds or removes the single line naming `receipts`, and the transcript beside it replays from the top.]
+
+The line in question is exactly this: `` - `receipts` — source-verified answers: every claim comes back with a URL, a quote, and a verdict. `` With line eleven empty, the CLI is installed and on PATH and the session may as well not know it exists — the agent searches, writes a throwaway fetcher, trusts a mirror because the mirror looked clean, and hands back one unsourced claim you now have to go verify. Every one of those moves is reasonable for an agent that does not know the tool is there. With the line added, it reaches for the CLI on move one and what comes back is already a citation.
+
+> **Same task, same machine, one line of prose different.** One line I never have to write again bought back half the transcript — and it costs nothing until it is used, because it is one line in a file the model already reads every session.
+
+### Everything on this machine
+
+[Interactive armory: 26 command-line tools, filterable by provenance (Mine, open source · Built here · Ecosystem) and by job (Research · Orchestration · Code & repo · Media & assets · Machine). Opening a row gives the install line and the source link.]
+
+The whole armory, honestly labelled. Eight I wrote and open sourced, so you can install them this afternoon. Seven exist only here, because they are wired to my machine and not ready to be anyone else's dependency. The remaining eleven are other people's work that this stack would not run without.
+
+**Mine, open source** — *Built here, released. Take them.*
+
+| Tool | Job | Role | Install |
+| --- | --- | --- | --- |
+| [post](https://github.com/treygoff24/post) | Orchestration | A mailbox so the agents on one machine can write each other — direct mail, channels, a doorbell. Built by Claude instances for their own use. | `git clone https://github.com/treygoff24/post` |
+| [delegate](https://github.com/treygoff24/delegate-agent) | Orchestration | Hands a bounded task to Codex, Cursor, Grok, Kimi, or a dozen other harnesses without leaving the session. Read-only and edit-capable modes. | `uv tool install delegate-agent-cli` |
+| [papercuts](https://github.com/treygoff24/papercuts) | Orchestration | The complaint box. An agent hits friction mid-task, files it, and keeps going; I clear the backlog once a week and the environment improves on its own. | `cargo install papercuts` |
+| [receipts](https://github.com/treygoff24/receipts) | Research | Every answer arrives with a source URL, a verbatim quote, and a verdict — the gate a claim passes before it ships in a document. | `brew install treygoff24/tap/receipts` |
+| [exa-agent](https://github.com/treygoff24/exa-agent-cli) | Research | The full Exa API as 68 agent-callable operations. The default web-research lane here: fastest and cheapest of the three I benchmarked. | `brew install treygoff24/tap/exa-agent` |
+| [scout](https://github.com/treygoff24/scout) | Code & repo | Orientation in an unfamiliar directory, fast and hallucination-firewalled — what an agent runs before it believes anything about a codebase. | `brew install treygoff24/tap/scout` |
+| [lens](https://github.com/treygoff24/lens) | Media & assets | Natural-language search over an image library. Caption once with a vision model, then query the whole index in a single call. No vector database. | `brew install treygoff24/tap/lens` |
+| [elv](https://github.com/treygoff24/elv) | Media & assets | The entire ElevenLabs API — speech, transcription, dubbing, voice cloning — as one JSON envelope per command. | `git clone https://github.com/treygoff24/elv.git` |
+
+**Built here** — *Written for this machine. Not released.*
+
+| Tool | Job | Role | Why there is no install line |
+| --- | --- | --- | --- |
+| ask | Orchestration | Pages my phone and blocks until I reply. An agent working while I am out gets one judgment call from me instead of stalling until I am back at the desk. | One paragraph of spec, written in an afternoon. Blueprint below. |
+| fleet | Orchestration | Machine-wide swarm occupancy: which agent holds which repository, and where two writers are about to collide. Exit codes are the whole API. | Runs against local process and claim state. Nothing to install elsewhere yet. |
+| radar | Research | A production news monitor for the policy world I work in. Agents query what it has already seen before they go searching the open web. | Read-only client over a private production system. |
+| law | Research | Source-grounded legal research: citation extraction and verification, corpus search, docket lookup, adversarial review of a draft brief. | In private use while the corpus handling settles. |
+| claude-skill | Machine | Search, activate, and promote skills across a library of roughly three hundred — without loading a single one into the context window to find it. | Wraps a local skill library layout. Not portable yet. |
+| memoryd | Machine | A daemon-backed memory layer shared across Claude Code, Codex, and Cursor, so what one harness learns the next one already knows. | Design and hardening in progress. |
+| morning | Machine | Post-overnight triage: a restart verdict, a census of every agent process still alive, and orphaned dev servers cleaned up before I sit down. | Tuned to this machine. Agents run it report-only. |
+
+**Ecosystem** — *Other people's work, load-bearing here.*
+
+| Tool | Job | Role | Install |
+| --- | --- | --- | --- |
+| [ripgrep](https://github.com/BurntSushi/ripgrep) | Code & repo | Every code search an agent runs on this repository. Respects .gitignore, returns in milliseconds, and makes reading a codebase cheap. | `brew install ripgrep` |
+| [fd](https://github.com/sharkdp/fd) | Code & repo | File-finding with the same ergonomics — the half of find an agent actually needs, without the argument grammar. | `brew install fd` |
+| [gh](https://github.com/cli/cli) | Code & repo | Lets the agent read its own failing CI log, open the pull request, and check the review — instead of asking me to paste it. | `brew install gh` |
+| [jq](https://github.com/jqlang/jq) | Code & repo | The universal adapter between one tool's JSON envelope and the next tool's arguments. Half of what makes agent-first CLIs composable. | `brew install jq` |
+| [oxlint · oxfmt](https://github.com/oxc-project/oxc) | Code & repo | The lint and format gate on this site, from the Oxc project. Fast enough that an agent runs the whole repo after a single edit. | `pnpm add -D oxlint oxfmt` |
+| [Playwright](https://github.com/microsoft/playwright) | Code & repo | The end-to-end suite behind `pnpm test:e2e`. How a change to this page gets proven in a real browser rather than asserted in a summary. | `pnpm add -D @playwright/test` |
+| [agent-browser](https://github.com/vercel-labs/agent-browser) | Machine | Drives a real browser from the command line, so an agent can see whether the layout it just wrote actually holds at 390 pixels wide. | `npm i -g agent-browser` |
+| [pnpm](https://github.com/pnpm/pnpm) | Machine | The pinned package manager. Every verification gate on this site starts with it, which is why the version is written down and not inferred. | `brew install pnpm` |
+| [tsx](https://github.com/privatenumber/tsx) | Machine | Runs this repository's TypeScript build scripts directly — content sync, search index, asset compression — with no compile step in the way. | `pnpm add -D tsx` |
+| [sharp](https://github.com/lovell/sharp) | Media & assets | Pulls the dominant colour out of every book cover in the Library during prebuild, which is where that page gets its palette. | `pnpm add -D sharp` |
+| [glTF-Transform](https://github.com/donmccurdy/glTF-Transform) | Media & assets | Compresses the 3D assets this site ships. The optimise step in the Blender-to-glTF pipeline, run from a script rather than by hand. | `pnpm add -D @gltf-transform/cli` |
+
 ### Built here, open sourced — take them
 
 - [delegate-agent](https://github.com/treygoff24/delegate-agent) — One CLI, ten agent runtimes, three trust modes.
@@ -571,7 +694,7 @@ Nothing here is clever. It is four files and a handful of scripts, and it is the
 
 Those files are only worth having if something keeps them true and something else reads them back. That is a closed loop, and it runs five times a day without me thinking about it.
 
-[Interactive figure: a five-station loop, "the session loop — nothing here is me remembering."]
+[Interactive figure: a five-station loop, "the session loop — nothing here is me remembering." One object crosses the session boundary and it is the same object the whole way — a `STATE.md` card, six days stale at station one, rewritten at station two from the four residue lines worth keeping, alone on disk at station three, injected verbatim at station four, read by the scout at station five. Everything else on the stage exists to be lost.]
 
 1. **work happens** — *Ordinary work, in an ordinary window.* Windows fill up, subagents come and go, the plan changes twice. None of it survives on its own — **a context window is not a filing cabinet.** Everything that matters after today has to end up in a file, and the only reliable moment to do that is the end of the session.
 2. **/done writes it down** — *One skill makes durable state catch up with reality.* I type two words. A closeout skill checks the live state of the repo against what the docs claim, updates `TASKS.md`, rewrites `STATE.md` into a current sitrep, files anything worth keeping into memory, and leaves a handoff pointer if work is unfinished. **It is a skill, not a hook — I invoke it.** Which is the right design: a session that ended badly should not automatically be recorded as the truth.
@@ -580,6 +703,13 @@ Those files are only worth having if something keeps them true and something els
 5. **briefing on prompt 1** — *Then the machine scouts the repo for it.* On the first substantive prompt, the same hook packages that prompt with `STATE.md`, the last twenty commits and up to five hundred file paths, has a small fast model turn them into an orientation briefing, and hands the briefing over alongside the prompt. It skips slash commands and one-liners, and it fails open — if the briefing model is down, the prompt goes through untouched.
 
 > **I never explain where we left off.** The repo does it. Note the division of labor: `/done` writes, the hook only reads. There is no daemon maintaining state behind my back — one skill I invoke deliberately produces the file, and one dumb, fast, fail-open hook serves it to whoever opens the repo next.
+
+Both halves of that loop are yours to take. The template is the shape of the file, with the reasoning left in the margins; the skill is the closeout sweep that rewrites it, generic enough to drop into any repository.
+
+Downloads:
+
+- [STATE-template.md](https://www.treygoff.com/stack/STATE-template.md) — The sitrep, as a fill-in-the-blanks file — with the rules for keeping it honest written into the comments.
+- [done · closeout sweep](https://www.treygoff.com/stack/skills/done.md) — The skill I invoke at the end of every session. It reconciles the ledger, rewrites `STATE.md`, and leaves a handoff if work is unfinished.
 
 ### Tripwires and valets
 
@@ -661,6 +791,10 @@ My agent armies have a few troop types.
 
 **C — The council.** For decisions worth real time: four models propose, critique each other, defend, and a fifth judges. In one blind-scored run the synthesized plan beat the best single model 96.4 to 91.6 — and beat the human-written gold standard, at 85.2, after the critique stage caught a hazard nobody else saw. Slow and expensive, so save it for things you're about to bet on. **The value is decorrelated error, not extra opinions.** Download the skill below — it expects my delegate CLI and other models configured in your harness of choice, or just hand it to your Claude and ask it to implement a version for you.
 
+[Interactive figure: the council floor — one brief, four vendors, blind-scored. Five stages advance in order: **propose**, **critique**, **defend**, **synthesize**, **judge**. Four proposals go up — Codex (OpenAI), Gemini (Google), Grok (xAI), Kimi (Moonshot) — then every model files flaws against the others' work, then each author defends what it can and the surviving flaws stay struck through. Picking a model isolates its thread: what it filed, and what was filed against it.]
+
+The scores are the argument. The best single proposal came in at 91.6 and the human-written gold standard at 85.2; the synthesis of all four scored 96.4. What made the difference was one hazard raised at the critique stage that exactly one model saw — the point being decorrelated error, not a bigger pile of opinions.
+
 Download: [fusion-council-skill.md](https://www.treygoff.com/stack/fusion-council-skill.md) — The council, as a skill: propose → critique → defend → synthesize → judge across model vendors. Bring your own multi-model plumbing, or have your agent build it.
 
 ### Worktrees: how a swarm shares one repo
@@ -715,6 +849,14 @@ $ git worktree list
 
 > **Learned the hard way.** Long parallel runs frequently land the meaty edits and then stop just short of the trailing cleanup. **Never trust a subagent's "done" summary — check the disk.**
 
+[Interactive figure: a subagent's completion report, and a choice — believe it, or check the disk. The report claims five things: the extraction landed (+31 / −24, new file, exported, imported by the dispatcher), the retry policy was removed (+8 / −14, no callers left), the deadline was threaded through both paths. Check it and two claims come apart: on one file `git diff` is empty and four call sites are still on the old signature; another was last modified six days ago and no test name contains "deadline" or "timeout". The run's own token runway shows where the time went — 27% reading the dispatcher, 24% the extraction, 17% the retry policy, 14% threading the deadline, and then the run ends.]
+
+> **Read it again before you pick.** Nothing in that report is hedged, nothing is vague, and the hard part — the extraction — is described exactly right. That is what a false summary looks like from the outside, which is why reading harder has never once helped me.
+
+> **Most readers stop here, and so did I for about a month.** The report is merged. Two days later the call sites fail in a way that has nothing to do with lanes, and the commit that broke them is the one whose message says the call sites were updated.
+
+> **It didn't lie about the hard part.** It reported the plan as though it were the outcome — and the gap is always at the end. **Verify the trailing twenty percent, and you can stop reading the rest.**
+
 ---
 
 ## 07 · Trusting it at scale
@@ -749,13 +891,33 @@ Attempt 2, after the fix:
 
 **01 — Know who else is in the repo.** Once you run more than one agent, two of them will eventually edit the same file. A tiny occupancy tool that answers "is anyone working here?" with an exit code — **and a rule that a busy repo means stop, not write anyway** — removes an entire class of 2am mystery. [Install for your setup here](https://www.treygoff.com/stack/agent-build.md). The stronger version is prevention, not detection: give each writer its own worktree and the collision never happens.
 
+[Interactive figure: three writers and one repository, run under three regimes. **No occupancy check** — three agents in one tree, and the third one's clean-baseline instinct wipes the other two. **Claims and exit codes** — the collision is caught, but catching it means one lane sits and waits for the holder to finish. **A worktree each** — nobody detects anything, because there is nothing to detect.]
+
+> **Detection means somebody waits.** Prevention means nobody had to.
+
 **02 — One gate command, run by you.** Whatever your project's real check is — `pnpm ci:quality`, `make test` — name it in the instruction file and run it yourself at the end. **Self-checks miss things that the canonical gate catches every time.** Pro tip: have a fresh agent with a fresh context window write the gates, never your implementing agent. An implementer writing its own tests or CI is just asking for cheating. With a swarm, run the gate after every merge rather than once at the end, so a red gate names the branch that broke it.
+
+[Interactive figure: one five-line function with an off-by-one on line three (`const end = start + size + 1`), and two candidate authors for the test that guards it. **Written by the implementer:** it ran the function, saw five items come back, and wrote five down — `expect(page).toHaveLength(5)`. All three gates pass, and the bug ships green. **Written by a fresh window from the brief:** it never ran the code, so it asserts what the brief says a page holds — `toHaveLength(4)`. The unit-test gate fails and names line three, the same line, unchanged.]
+
+> **A green gate written by the implementer measures the author's confidence, not the code.** Ask for the gate in a window that has never seen the implementation, and give it the brief instead. Field note: an agent on my machine once "cleared" a mail backlog with a parser that guessed the wrong key, then verified the clear with the same parser — empty list in, empty list out, green check on nothing. The verifier shared a failure mode with the thing it verified. A second check with a different instrument caught it in a minute.
 
 **03 — Commits ungated, pushes gated.** Let it commit constantly and without asking — that's your undo. But pushing, opening a PR, tagging, deploying: **every one of those needs a fresh yes from a human, and yesterday's yes doesn't count.** Hooks can literally, forcibly stop agents from pushing against your will — just ask your agent to implement them for you.
 
+[Interactive figure: a ratchet of commit beads. Commits accumulate freely and cost nothing; the push button only fires while consent is armed, and pushing spends it. Try to push unarmed and the answer is a refusal, not a prompt. The resting state is six commits, four of them pushed, consent disarmed.]
+
+> **Commits are my undo;** pushes are the only thing that leaves the building. Consent is spent on use — yesterday's yes doesn't count.
+
 **04 — Review with something that didn't write it.** A different agent, ideally a different model family entirely, reading the diff with no memory of the reasoning that produced it. **It finds the thing the author is constitutionally unable to see.**
 
+[Interactive figure: one diff, three reviewers, three context windows. **The agent that wrote the diff** still has every reason it had for writing it sitting in the window, and reports zero findings — reads consistent. **A fresh window, same model** finds the first real flaw: line 7 replaces the headers instead of merging them. **A fresh window, a different model family** finds that one too, plus a second the same-family reviewer walked past — line 4's `Object.keys` carries `__proto__` through.]
+
+> **The author is not lazy. It is contaminated — the justification is still in the window.** It cannot read the diff as a stranger would, because it is not reading the diff. It is reading the diff plus every reason it had for writing it that way. Emptying the window is what buys you a real second opinion; changing vendor is what buys you a second set of blind spots.
+
 **05 — Stop the loop with a deletion.** Review cycles want to run forever, because the newest text is always the least-reviewed. **End the loop when a round produces no changes** — and if a checker's finding list is always empty, assume the checker is broken, not the code. The GPT 5.6 family is insanely pedantic: I once had Sol run a review-fix loop for fifteen iterations before I noticed and stopped it. Cap your loop counts reasonably.
+
+[Interactive figure: two scripted review-fix transcripts, appended one round at a time so the plateau is felt rather than asserted. **A reviewer with a floor** has less to find every round — 9 findings, then 5, then 2, then a round that produces nothing, and the loop retires itself. **A reviewer with no floor** starts identically and then flattens out around three or four findings a round and stays there for fifteen rounds, because it is objecting to text the previous round just wrote.]
+
+> **The newest text is always the least-reviewed,** so a loop with no floor never runs out of things to find. Once findings stop falling, the churn is the loop reviewing its own last edit.
 
 ---
 
@@ -863,6 +1025,18 @@ which model it is actually running as. No more guessing.
 ```
 
 > **The honest caveat.** A human picked the chapters, ran a design bake-off between two competing prototypes of this page, and red-penned every artifact before it shipped. **That's the actual division of labor: agents create, but only you can decide what's worth creating and what "good" or "done" look like.**
+
+[Interactive figure: nine cards you sort between "you keep it" and "you hand it over," with meters for time-to-ship and drift-from-intent. Four are decisions — what we build (which problem is worth a week), what good looks like (the bar the output must clear), which tradeoff wins (speed, scope, or correctness — this time), and what ships (the call that it is done and goes out). Five are creation — implement it, test it, refactor it, wire it up, document it.]
+
+Three arrangements, spelled out:
+
+- **Bottlenecked.** You keep all five creation cards and all four decisions. Twenty-three days to ship, 0% drift. True to your intent, and gated behind one human typing.
+- **Fast and wrong.** You delegate all five creation cards and one decision. Three days to ship, 22% drift. Every gate still reports PASS, because every gate now measures against the drifted target.
+- **Fast and true.** You delegate all five creation cards and keep all four decisions. Three days to ship, 0% drift. The only arrangement that is quick and still yours.
+
+> The split isn't effort versus tedium. It's decisions that require knowing what *you* want versus work that only requires knowing what *correct* means — delegate all of the second, none of the first.
+
+> Days and percentages are illustrative; the shape is the argument. The figure was pitched by one of the agents working on this page, which asked to stay anonymous.
 
 ### Start tonight
 
