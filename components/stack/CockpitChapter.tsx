@@ -61,8 +61,10 @@ const INSTRUMENTS: { name: string; kind: string; line: React.ReactNode }[] = [
 
 /* ── Figure 1 · the loop ──────────────────────────────────── */
 
+type PhaseKey = 'work' | 'done' | 'close' | 'hydrate' | 'brief'
+
 type Station = {
-  key: string
+  key: PhaseKey
   /** the label that fits inside a node box */
   node: string
   /** the heading over the detail panel */
@@ -146,119 +148,104 @@ const STATIONS: Station[] = [
 const LOOP_LABEL =
   'A five-station loop: work happens, then the /done skill rewrites STATE.md and updates TASKS.md and memory, then the session ends, then a SessionStart hook injects STATE.md verbatim into the next session, then the first prompt receives an orientation briefing built from STATE.md, the last twenty commits and the file map — and work happens again, already oriented.'
 
-const CX = 280
-const CY = 176
-const RX = 190
-const RY = 128
-const NODE_W = 178
-const NODE_H = 36
+/* ── The stage ────────────────────────────────────────────
+   One object crosses the session boundary, and it is the same object the
+   whole way: the STATE.md card is written in the old window, left on disk
+   when the window dies, and lifted into the new one. Everything else on the
+   stage exists to be lost. The card travels by transform between three
+   anchors the stylesheet owns, so the horizontal desktop reading and the
+   vertical phone reading are two coordinate sets, not two figures. */
 
-const ringPoint = (i: number) => {
-  const t = (-90 + i * 72) * (Math.PI / 180)
-  return { x: +(CX + RX * Math.cos(t)).toFixed(2), y: +(CY + RY * Math.sin(t)).toFixed(2) }
+/* Residue is what a real session leaves behind: mostly noise, a little
+   signal. The kept ones are the ones that turn into lines of the file. */
+const RESIDUE: { t: string; keep: boolean }[] = [
+  { t: 'tried the ring layout, reverted', keep: false },
+  { t: 'callout restyle shipped', keep: true },
+  { t: '41 tool calls, 6 subagents', keep: false },
+  { t: 'the mirrors drift — nothing guards it', keep: true },
+  { t: 'a long argument about naming', keep: false },
+  { t: 'gate green, one commit unpushed', keep: true },
+  { t: 'three screenshots, two dead ends', keep: false },
+  { t: 'cert still pending at close', keep: true },
+]
+
+const FILE_LINES = [
+  'Callout restyle live on main — 9c3e190.',
+  'Mirrors are hand-written; nothing guards the drift.',
+  'Gate green. One commit unpushed.',
+  'Watch: the cert was still pending at close.',
+]
+
+/* The card's status chip is the shortest possible statement of what is
+   happening to the file at this station. */
+const FILE_TAG: Record<PhaseKey, string> = {
+  work: 'stale · 6 days',
+  done: 'rewriting',
+  close: 'on disk',
+  hydrate: 'injected verbatim',
+  brief: 'read by the scout',
 }
 
-/* Chevrons sit between stations and point the way the loop runs. Rotation comes
-   from the ellipse tangent so the arrowheads never disagree with the curve. */
-// Rounded to 2dp: server (Node) and client (V8 JIT) trig can differ in the
-// last ulp, which showed up as a hydration mismatch on the transform attr.
-const CHEVRONS = STATIONS.map((_, i) => {
-  const t = (-90 + i * 72 + 36) * (Math.PI / 180)
-  return {
-    x: +(CX + RX * Math.cos(t)).toFixed(2),
-    y: +(CY + RY * Math.sin(t)).toFixed(2),
-    a: +((Math.atan2(RY * Math.cos(t), -RX * Math.sin(t)) * 180) / Math.PI).toFixed(2),
-  }
-})
-
-function LoopRing({ active }: { active: number }) {
-  return (
-    <svg viewBox="0 0 560 336" role="img" aria-label={LOOP_LABEL}>
-      <ellipse className="cp-ring" cx={CX} cy={CY} rx={RX} ry={RY} />
-      {CHEVRONS.map((c, i) => (
-        <path
-          key={i}
-          className="cp-chev"
-          d="M -5 -5 L 5 0 L -5 5"
-          transform={`translate(${c.x} ${c.y}) rotate(${c.a})`}
-        />
-      ))}
-      <text className="cp-ring-hub" x={CX} y={CY - 4} textAnchor="middle">
-        the session loop
-      </text>
-      <text className="cp-ring-sub" x={CX} y={CY + 16} textAnchor="middle">
-        nothing here is me remembering
-      </text>
-      {STATIONS.map((s, i) => {
-        const p = ringPoint(i)
-        const on = i === active
-        return (
-          <g key={s.key} className={on ? 'cp-node on' : 'cp-node'}>
-            <rect x={p.x - NODE_W / 2} y={p.y - NODE_H / 2} width={NODE_W} height={NODE_H} rx={5} />
-            <text x={p.x} y={p.y + 4.5} textAnchor="middle">
-              {s.node}
-            </text>
-          </g>
-        )
-      })}
-    </svg>
-  )
+const PHASE_LABEL: Record<PhaseKey, string> = {
+  work: 'Station one. A working session is full of residue — reverted attempts, tool calls, arguments — and the repository’s STATE.md is six days stale.',
+  done: 'Station two. The /done skill sorts the residue: most of it is discarded, four facts survive, and STATE.md is rewritten from them.',
+  close:
+    'Station three. The window is gone and its context with it. The STATE.md file, alone on disk, is the only thing that crossed the session boundary.',
+  hydrate:
+    'Station four. A SessionStart hook lifts that same file, unchanged, into a fresh session before the first prompt is typed.',
+  brief:
+    'Station five. The first prompt arrives packaged with STATE.md, the last twenty commits and the file map, and comes back as an orientation briefing.',
 }
 
-const N_TOP = 34
-const N_PITCH = 56
-const N_X = 46
-const N_W = 246
-const RAIL_X = 28
-
-function LoopColumn({ active }: { active: number }) {
-  const lastY = N_TOP + (STATIONS.length - 1) * N_PITCH
-  // The return edge carries the entire argument — that this is a loop and not
-  // a checklist — so on phones it gets an arrowhead and the hub caption the
-  // ring states in its middle, rather than a faint unlabeled curve.
-  const returnMidY = 0.125 * lastY + 0.375 * (lastY + 34) + 0.375 * (N_TOP - 26) + 0.125 * N_TOP
+function LoopStage({ phase }: { phase: PhaseKey }) {
   return (
-    <svg viewBox={`0 0 300 ${lastY + 92}`} role="img" aria-label={LOOP_LABEL}>
-      <line className="cp-ring" x1={RAIL_X} y1={N_TOP} x2={RAIL_X} y2={lastY} />
-      <path
-        className="cp-ring"
-        d={`M ${RAIL_X},${lastY} C 2,${lastY + 34} 2,${N_TOP - 26} ${RAIL_X},${N_TOP}`}
-        fill="none"
-      />
-      <path
-        className="cp-chev"
-        d="M -5 -5 L 5 0 L -5 5"
-        transform={`translate(8.5 ${returnMidY.toFixed(1)}) rotate(-90)`}
-      />
-      <text className="cp-ring-hub" x={150} y={lastY + 54} textAnchor="middle">
-        the session loop
-      </text>
-      <text className="cp-ring-sub" x={150} y={lastY + 76} textAnchor="middle">
-        nothing here is me remembering
-      </text>
-      {STATIONS.map((s, i) => {
-        const cy = N_TOP + i * N_PITCH
-        const on = i === active
-        return (
-          <g key={s.key}>
-            <line className="cp-ring" x1={RAIL_X} y1={cy} x2={N_X} y2={cy} />
-            {i < STATIONS.length - 1 ? (
-              <path
-                className="cp-chev"
-                d="M -5 -5 L 5 0 L -5 5"
-                transform={`translate(${RAIL_X} ${cy + N_PITCH / 2}) rotate(90)`}
-              />
-            ) : null}
-            <g className={on ? 'cp-node on' : 'cp-node'}>
-              <rect x={N_X} y={cy - NODE_H / 2} width={N_W} height={NODE_H} rx={5} />
-              <text x={N_X + N_W / 2} y={cy + 4.5} textAnchor="middle">
-                {s.node}
-              </text>
-            </g>
-          </g>
-        )
-      })}
-    </svg>
+    <div className="cs-stage" data-phase={phase} role="img" aria-label={PHASE_LABEL[phase]}>
+      <div className="cs-win cs-a">
+        <span className="cs-win-t">session 47 · working window</span>
+        <ul className="cs-chips">
+          {RESIDUE.map((r) => (
+            <li key={r.t} data-keep={r.keep ? '1' : '0'}>
+              {r.t}
+            </li>
+          ))}
+        </ul>
+        <span className="cs-stamp">context gone</span>
+      </div>
+
+      <div className="cs-rail">
+        <span className="cs-rail-t">disk</span>
+      </div>
+
+      <div className="cs-win cs-b">
+        <span className="cs-win-t">session 48 · fresh window</span>
+        <p className="cs-empty">no memory of session 47</p>
+        <ul className="cs-brief">
+          <li>STATE.md, verbatim</li>
+          <li>last 20 commits</li>
+          <li>500 file paths</li>
+        </ul>
+        <span className="cs-prompt">orientation briefing, before prompt one</span>
+      </div>
+
+      <div className="cs-file">
+        <span className="cs-file-h">
+          STATE.md
+          <span className="cs-file-tag">{FILE_TAG[phase]}</span>
+        </span>
+        <span className="cs-file-stale">…as of last week. Nobody has rewritten it.</span>
+        <ul className="cs-file-lines">
+          {FILE_LINES.map((l, i) => (
+            <li key={l} style={{ '--i': i } as React.CSSProperties}>
+              {l}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="cs-return">
+        <span>session 48 becomes the next session 47</span>
+      </div>
+    </div>
   )
 }
 
@@ -319,12 +306,8 @@ function LoopFigure() {
       // tour yields to them without waiting to be told.
       onPointerEnter={() => setAuto(false)}
     >
-      <div className="cp-loop-wide">
-        <LoopRing active={active} />
-      </div>
-      <div className="cp-loop-narrow">
-        <LoopColumn active={active} />
-      </div>
+      <LoopStage phase={STATIONS[active]?.key ?? 'work'} />
+      <p className="sr-only">{LOOP_LABEL}</p>
 
       {/* Under reduced motion there is no tour to stop, so the control would be
           a dead button; the stations stay reachable through the tabs. */}
@@ -468,6 +451,32 @@ const HOOKS: { event: string; name: string; body: React.ReactNode }[] = [
 
 /* ── The chapter ──────────────────────────────────────────── */
 
+/* Same markup and same `.dl` grammar as the shell's card. Kept local because
+   the shell imports this chapter, and importing it back would close a cycle
+   over a twelve-line component. */
+function DownloadCard({
+  href,
+  ext,
+  name,
+  desc,
+}: {
+  href: string
+  ext: string
+  name: string
+  desc: React.ReactNode
+}) {
+  return (
+    <a className="dl rv" href={href} download>
+      <span className="ext">{ext}</span>
+      <span className="nm">
+        {name}
+        <span className="ds">{desc}</span>
+      </span>
+      <span className="go">Download ↓</span>
+    </a>
+  )
+}
+
 export function CockpitChapter() {
   return (
     <>
@@ -521,6 +530,24 @@ export function CockpitChapter() {
         back. That is a closed loop, and it runs five times a day without me thinking about it.
       </p>
       <LoopFigure />
+
+      <p className="lede rv">
+        Both halves of that loop are yours to take. The template is the shape of the file, with the
+        reasoning left in the margins; the skill is the closeout sweep that rewrites it, generic
+        enough to drop into any repository.
+      </p>
+      <DownloadCard
+        href="/stack/STATE-template.md"
+        ext="md"
+        name="STATE-template.md"
+        desc="The sitrep, as a fill-in-the-blanks file — with the rules for keeping it honest written into the comments."
+      />
+      <DownloadCard
+        href="/stack/skills/done.md"
+        ext="skill"
+        name="done · closeout sweep"
+        desc="The skill I invoke at the end of every session. It reconciles the ledger, rewrites STATE.md, and leaves a handoff if work is unfinished."
+      />
 
       <p className="section-label">Tripwires and valets</p>
       <div className="twoup">
