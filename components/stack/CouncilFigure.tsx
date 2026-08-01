@@ -187,8 +187,8 @@ type BoardProps = {
 
 function ScoreBar({ value, live, hue }: { value: number; live: boolean; hue: string }) {
   return (
-    <span className="cf-bar" data-hue={hue}>
-      <span className="cf-bar-fill" style={{ width: live ? `${value}%` : '0%' }} />
+    <span className="cnc-bar" data-hue={hue}>
+      <span className="cnc-bar-fill" style={{ width: live ? `${value}%` : '0%' }} />
     </span>
   )
 }
@@ -201,19 +201,19 @@ function CouncilBoard({ stage, focus, onFocus, reduced }: BoardProps) {
   const pickable = !!onFocus
 
   return (
-    <div className="cf-board">
-      <div className="cf-props">
+    <div className="cnc-board">
+      <div className="cnc-props">
         {MODELS.map((m, i) => {
           const dim = focus !== null && focus !== i
-          const cls = `cf-prop${dim ? ' is-dim' : ''}${focus === i ? ' is-on' : ''}`
+          const cls = `cnc-prop${dim ? ' is-dim' : ''}${focus === i ? ' is-on' : ''}`
           const inner = (
             <>
-              <span className="cf-prop-name">
+              <span className="cnc-prop-name">
                 {m.name}
                 <i>{m.vendor}</i>
               </span>
               <ScoreBar value={m.score} live hue={m.hue} />
-              <span className="cf-prop-score">{m.score.toFixed(1)}</span>
+              <span className="cnc-prop-score">{m.score.toFixed(1)}</span>
             </>
           )
           // The stills render the same card with no affordance, so a reduced-motion
@@ -237,9 +237,9 @@ function CouncilBoard({ stage, focus, onFocus, reduced }: BoardProps) {
         })}
       </div>
 
-      <div className="cf-stage">
+      <div className="cnc-stage">
         <svg
-          className={`cf-wires${critiqued ? ' is-on' : ''}`}
+          className={`cnc-wires${critiqued ? ' is-on' : ''}`}
           viewBox="0 0 100 30"
           preserveAspectRatio="none"
           aria-hidden="true"
@@ -256,9 +256,9 @@ function CouncilBoard({ stage, focus, onFocus, reduced }: BoardProps) {
                 // drop out of the source, run along a lane of its own, drop into
                 // the target. It reads as wiring because it is wiring.
                 d={`M${sx},0 V ${5 + i * 2.6} H ${tx} V 30`}
-                className={`cf-wire${f.sole ? ' is-sole' : ''}${dim ? ' is-dim' : ''}`}
+                className={`cnc-wire${f.sole ? ' is-sole' : ''}${dim ? ' is-dim' : ''}`}
                 data-hue={MODELS[f.from]?.hue}
-                style={reduced ? undefined : ({ '--cf-d': `${i * 70}ms` } as CSSProperties)}
+                style={reduced ? undefined : ({ '--cnc-d': `${i * 70}ms` } as CSSProperties)}
               />
             )
           })}
@@ -267,25 +267,25 @@ function CouncilBoard({ stage, focus, onFocus, reduced }: BoardProps) {
         {/* The verdict band is reserved from the first stage so scrubbing never
             moves the page; the ghost turns that reservation into anticipation
             instead of a hole. */}
-        <div className={`cf-ghost${synthesized ? ' is-off' : ''}`} aria-hidden="true">
+        <div className={`cnc-ghost${synthesized ? ' is-off' : ''}`} aria-hidden="true">
           <span>synthesis · not written yet</span>
         </div>
 
-        <div className={`cf-panel cf-syn${synthesized ? ' is-on' : ''}`}>
-          <div className="cf-panel-head">
-            <span className="cf-panel-name">
+        <div className={`cnc-panel cnc-syn${synthesized ? ' is-on' : ''}`}>
+          <div className="cnc-panel-head">
+            <span className="cnc-panel-name">
               Synthesis
               <i>inherits every objection still standing</i>
             </span>
-            <span className="cf-panel-score">{SYNTHESIS.toFixed(1)}</span>
+            <span className="cnc-panel-score">{SYNTHESIS.toFixed(1)}</span>
           </div>
-          <span className="cf-bar cf-bar-wide" data-hue="accent">
-            <span className="cf-bar-fill" style={{ width: synthesized ? `${SYNTHESIS}%` : '0%' }} />
-            <span className="cf-mark" style={{ left: `${BEST_SINGLE}%` }}>
+          <span className="cnc-bar cnc-bar-wide" data-hue="accent">
+            <span className="cnc-bar-fill" style={{ width: synthesized ? `${SYNTHESIS}%` : '0%' }} />
+            <span className="cnc-mark" style={{ left: `${BEST_SINGLE}%` }}>
               <i>best single · 91.6</i>
             </span>
             <span
-              className={`cf-mark cf-mark-late${judged ? ' is-on' : ''}`}
+              className={`cnc-mark cnc-mark-late${judged ? ' is-on' : ''}`}
               style={{ left: `${HUMAN}%` }}
             >
               <i>human · 85.2</i>
@@ -293,19 +293,19 @@ function CouncilBoard({ stage, focus, onFocus, reduced }: BoardProps) {
           </span>
         </div>
 
-        <div className={`cf-panel cf-human${judged ? ' is-on' : ''}`}>
-          <div className="cf-panel-head">
-            <span className="cf-panel-name">
+        <div className={`cnc-panel cnc-human${judged ? ' is-on' : ''}`}>
+          <div className="cnc-panel-head">
+            <span className="cnc-panel-name">
               Human gold standard
               <i>written first, scored blind</i>
             </span>
-            <span className="cf-panel-score">{HUMAN.toFixed(1)}</span>
+            <span className="cnc-panel-score">{HUMAN.toFixed(1)}</span>
           </div>
           <ScoreBar value={HUMAN} live={judged} hue="plain" />
         </div>
 
         {/* One element per flaw for the life of the figure. Only its address changes. */}
-        <div className="cf-chips">
+        <div className="cnc-chips">
           {FLAWS.map((f, i) => {
             const slot = SYN_SLOT.get(f.id)
             const migrating = synthesized && !!slot
@@ -318,7 +318,7 @@ function CouncilBoard({ stage, focus, onFocus, reduced }: BoardProps) {
               <span
                 key={f.id}
                 className={[
-                  'cf-chip',
+                  'cnc-chip',
                   critiqued ? 'is-in' : '',
                   migrating ? 'is-moved' : '',
                   struck ? 'is-struck' : '',
@@ -330,18 +330,18 @@ function CouncilBoard({ stage, focus, onFocus, reduced }: BoardProps) {
                 data-hue={MODELS[f.from]?.hue}
                 style={
                   {
-                    '--cf-x': `${x}cqw`,
-                    '--cf-y': `${y}rem`,
-                    '--cf-w': `${w}cqw`,
-                    '--cf-d': reduced ? '0ms' : `${i * 70}ms`,
+                    '--cnc-x': `${x}cqw`,
+                    '--cnc-y': `${y}rem`,
+                    '--cnc-w': `${w}cqw`,
+                    '--cnc-d': reduced ? '0ms' : `${i * 70}ms`,
                   } as CSSProperties
                 }
               >
-                <i className="cf-chip-dot" />
-                <span className="cf-chip-text">{f.text}</span>
-                {f.sole ? <b className="cf-chip-tag">found by 1 of 4</b> : null}
-                {struck && f.rebuttal ? <b className="cf-chip-tag">{f.rebuttal}</b> : null}
-                <i className="cf-chip-strike" />
+                <i className="cnc-chip-dot" />
+                <span className="cnc-chip-text">{f.text}</span>
+                {f.sole ? <b className="cnc-chip-tag">found by 1 of 4</b> : null}
+                {struck && f.rebuttal ? <b className="cnc-chip-tag">{f.rebuttal}</b> : null}
+                <i className="cnc-chip-strike" />
               </span>
             )
           })}
@@ -412,20 +412,20 @@ export function CouncilFigure() {
   if (reduced) {
     return (
       <div className="cf rv">
-        <p className="cf-head">
+        <p className="cnc-head">
           One brief · four vendors · <b>blind-scored</b>
         </p>
-        <div className="cf-stills">
+        <div className="cnc-stills">
           {STAGES.map((name, i) => (
-            <section className="cf-still" key={name} aria-label={`Stage ${i + 1} of 5: ${name}`}>
-              <h4 className="cf-still-h">
-                <span className="cf-still-n">{String(i + 1).padStart(2, '0')}</span>
+            <section className="cnc-still" key={name} aria-label={`Stage ${i + 1} of 5: ${name}`}>
+              <h4 className="cnc-still-h">
+                <span className="cnc-still-n">{String(i + 1).padStart(2, '0')}</span>
                 {name}
               </h4>
-              <div className="cf-still-fig" role="img" aria-label={ARIA[name]}>
+              <div className="cnc-still-fig" role="img" aria-label={ARIA[name]}>
                 <CouncilBoard stage={i} focus={null} reduced />
               </div>
-              <p className="cf-cap is-on">
+              <p className="cnc-cap is-on">
                 <Caption stage={i} />
               </p>
             </section>
@@ -437,17 +437,17 @@ export function CouncilFigure() {
 
   return (
     <div className="cf rv" ref={figRef} onPointerEnter={() => setAuto(false)}>
-      <div className="cf-top">
-        <p className="cf-head">
+      <div className="cnc-top">
+        <p className="cnc-head">
           One brief · four vendors · <b>blind-scored</b>
         </p>
-        <button className="cf-play" type="button" onClick={() => setAuto((v) => !v)}>
+        <button className="cnc-play" type="button" onClick={() => setAuto((v) => !v)}>
           {auto ? 'Pause' : stage >= STAGES.length - 1 ? 'Replay' : 'Play'}
         </button>
       </div>
 
       <div
-        className="cf-rail"
+        className="cnc-rail"
         role="tablist"
         aria-label="Stages of the council run"
         onKeyDown={onKey}
@@ -463,21 +463,21 @@ export function CouncilFigure() {
             }}
             type="button"
             role="tab"
-            id={`cf-tab-${name}`}
-            aria-controls={`cf-cap-${name}`}
+            id={`cnc-tab-${name}`}
+            aria-controls={`cnc-cap-${name}`}
             aria-selected={i === stage}
             tabIndex={i === stage ? 0 : -1}
-            className={`cf-step${i === stage ? ' is-on' : ''}${i < stage ? ' is-past' : ''}`}
+            className={`cnc-step${i === stage ? ' is-on' : ''}${i < stage ? ' is-past' : ''}`}
             onClick={() => pick(i)}
           >
-            <span className="cf-step-n">{String(i + 1).padStart(2, '0')}</span>
+            <span className="cnc-step-n">{String(i + 1).padStart(2, '0')}</span>
             {name}
           </button>
         ))}
       </div>
 
       <div
-        className="cf-scroll"
+        className="cnc-scroll"
         tabIndex={0}
         role="region"
         aria-label="Council board, scrolls horizontally on small screens"
@@ -485,12 +485,12 @@ export function CouncilFigure() {
         <span className="figscroll-hint" aria-hidden="true">
           swipe →
         </span>
-        <div className="cf-scroll-in" role="img" aria-label={ARIA[STAGES[stage] ?? 'propose']}>
+        <div className="cnc-scroll-in" role="img" aria-label={ARIA[STAGES[stage] ?? 'propose']}>
           <CouncilBoard stage={stage} focus={focus} onFocus={setFocus} reduced={reduced} />
         </div>
       </div>
 
-      <p className="cf-hint">
+      <p className="cnc-hint">
         {focus === null
           ? 'Pick a model above to isolate its thread — what it filed, and what was filed against it.'
           : `Showing only ${MODELS[focus]?.name}'s thread. Pick it again to show all four.`}
@@ -498,14 +498,14 @@ export function CouncilFigure() {
 
       {/* Every caption occupies the same grid cell, so the block reserves the
           tallest and scrubbing the rail never moves the page. */}
-      <div className="cf-caps">
+      <div className="cnc-caps">
         {STAGES.map((name, i) => (
           <p
             key={name}
-            id={`cf-cap-${name}`}
+            id={`cnc-cap-${name}`}
             role="tabpanel"
-            aria-labelledby={`cf-tab-${name}`}
-            className={`cf-cap${i === stage ? ' is-on' : ''}`}
+            aria-labelledby={`cnc-tab-${name}`}
+            className={`cnc-cap${i === stage ? ' is-on' : ''}`}
             aria-hidden={i === stage ? undefined : true}
             inert={i === stage ? undefined : true}
           >

@@ -1,7 +1,7 @@
 /* ─────────────────────────────────────────────────────────────
    Ch.6 — the fusion council, drawn. Scoped under #stack-root like
-   the rest of /stack; every class carries a cf- prefix and the one
-   keyframe is cf-draw, so nothing collides with the c- / s- cells
+   the rest of /stack; every class carries a cnc- prefix and the one
+   keyframe is cnc-draw, so nothing collides with the c- / s- cells
    in stack.css and subagent-savings.css regardless of load order.
 
    The stage is an inline-size container: 1cqw is one percent of the
@@ -20,21 +20,21 @@
 
   /* Per-author hues. Kimi is deliberately the only colourless one — the
      quietest model in the room is the one that finds the hazard. */
-  --cf-sky: var(--sk-sky);
-  --cf-violet: var(--sk-violet);
-  --cf-amber: var(--sk-amber);
-  --cf-plain: rgba(232, 243, 236, 0.66);
-  --cf-accent: var(--sk-accent);
+  --cnc-sky: var(--sk-sky);
+  --cnc-violet: var(--sk-violet);
+  --cnc-amber: var(--sk-amber);
+  --cnc-plain: rgba(232, 243, 236, 0.66);
+  --cnc-accent: var(--sk-accent);
 }
 
-#stack-root .cf-top {
+#stack-root .cnc-top {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
 }
-#stack-root .cf-head {
+#stack-root .cnc-head {
   margin: 0;
   font-family: var(--sk-mono);
   font-size: 0.63rem;
@@ -42,12 +42,12 @@
   text-transform: uppercase;
   color: var(--sk-text-3);
 }
-#stack-root .cf-head b {
+#stack-root .cnc-head b {
   color: var(--sk-text-1);
   font-weight: 400;
 }
 
-#stack-root .cf-play {
+#stack-root .cnc-play {
   background: none;
   border: 1px solid var(--sk-border-1);
   border-radius: 999px;
@@ -62,19 +62,19 @@
     color 200ms var(--sk-ease),
     border-color 200ms var(--sk-ease);
 }
-#stack-root .cf-play:hover {
+#stack-root .cnc-play:hover {
   color: var(--sk-text-1);
   border-color: var(--sk-border-2);
 }
 
 /* ── Stage rail ─────────────────────────────────────────── */
-#stack-root .cf-rail {
+#stack-root .cnc-rail {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
   margin: 1rem 0 1.2rem;
 }
-#stack-root .cf-step {
+#stack-root .cnc-step {
   flex: 1 1 7rem;
   display: flex;
   align-items: baseline;
@@ -94,31 +94,31 @@
     border-color 220ms var(--sk-ease),
     background 220ms var(--sk-ease);
 }
-#stack-root .cf-step-n {
+#stack-root .cnc-step-n {
   font-size: 0.54rem;
   opacity: 0.6;
 }
-#stack-root .cf-step.is-past {
+#stack-root .cnc-step.is-past {
   color: var(--sk-text-2);
   border-color: rgba(151, 232, 187, 0.18);
 }
-#stack-root .cf-step.is-on {
+#stack-root .cnc-step.is-on {
   color: var(--sk-bg-0);
   background: var(--sk-warm);
   border-color: var(--sk-warm);
 }
-#stack-root .cf-step.is-on .cf-step-n {
+#stack-root .cnc-step.is-on .cnc-step-n {
   opacity: 0.75;
 }
 
 /* ── Proposal row ───────────────────────────────────────── */
-#stack-root .cf-props {
+#stack-root .cnc-props {
   display: grid;
   grid-template-columns: repeat(4, 23.2%);
   justify-content: space-between;
   margin-bottom: 0.35rem;
 }
-#stack-root .cf-prop {
+#stack-root .cnc-prop {
   display: block;
   width: 100%;
   text-align: left;
@@ -134,21 +134,21 @@
     border-color 260ms var(--sk-ease),
     box-shadow 260ms var(--sk-ease);
 }
-#stack-root .cf-prop.is-on {
+#stack-root .cnc-prop.is-on {
   border-color: var(--sk-border-2);
   box-shadow: 0 18px 40px -34px rgba(0, 0, 0, 0.9);
 }
-#stack-root .cf-prop.is-dim {
+#stack-root .cnc-prop.is-dim {
   opacity: 0.3;
 }
-#stack-root .cf-prop-name {
+#stack-root .cnc-prop-name {
   display: block;
   font-family: var(--sk-mono);
   font-size: 0.66rem;
   letter-spacing: 0.1em;
   color: var(--sk-text-1);
 }
-#stack-root .cf-prop-name i {
+#stack-root .cnc-prop-name i {
   display: block;
   font-style: normal;
   font-size: 0.55rem;
@@ -157,7 +157,7 @@
   color: var(--sk-text-3);
   margin-top: 0.12rem;
 }
-#stack-root .cf-prop-score {
+#stack-root .cnc-prop-score {
   display: block;
   margin-top: 0.3rem;
   font-family: var(--sk-mono);
@@ -166,7 +166,7 @@
 }
 
 /* ── Score bars ─────────────────────────────────────────── */
-#stack-root .cf-bar {
+#stack-root .cnc-bar {
   position: relative;
   display: block;
   height: 5px;
@@ -178,31 +178,31 @@
 /* Width, not scaleX: these bars carry rounded caps and sit inside a track, so
    scaling would smear the cap and the fill would read as a different shape at
    every score. Six bars, absolutely contained, one transition each. */
-#stack-root .cf-bar-fill {
+#stack-root .cnc-bar-fill {
   display: block;
   height: 100%;
   border-radius: 3px;
-  background: var(--cf-plain);
+  background: var(--cnc-plain);
   transition: width 900ms var(--sk-ease);
 }
-#stack-root .cf-bar[data-hue='sky'] .cf-bar-fill {
-  background: var(--cf-sky);
+#stack-root .cnc-bar[data-hue='sky'] .cnc-bar-fill {
+  background: var(--cnc-sky);
 }
-#stack-root .cf-bar[data-hue='violet'] .cf-bar-fill {
-  background: var(--cf-violet);
+#stack-root .cnc-bar[data-hue='violet'] .cnc-bar-fill {
+  background: var(--cnc-violet);
 }
-#stack-root .cf-bar[data-hue='amber'] .cf-bar-fill {
-  background: var(--cf-amber);
+#stack-root .cnc-bar[data-hue='amber'] .cnc-bar-fill {
+  background: var(--cnc-amber);
 }
-#stack-root .cf-bar[data-hue='accent'] .cf-bar-fill {
-  background: linear-gradient(90deg, var(--sk-warm), var(--cf-accent));
+#stack-root .cnc-bar[data-hue='accent'] .cnc-bar-fill {
+  background: linear-gradient(90deg, var(--sk-warm), var(--cnc-accent));
 }
-#stack-root .cf-bar-wide {
+#stack-root .cnc-bar-wide {
   height: 8px;
   margin-top: 0.6rem;
 }
 
-#stack-root .cf-mark {
+#stack-root .cnc-mark {
   position: absolute;
   top: -4px;
   bottom: -4px;
@@ -211,7 +211,7 @@
   opacity: 1;
   transition: opacity 400ms var(--sk-ease);
 }
-#stack-root .cf-mark i {
+#stack-root .cnc-mark i {
   position: absolute;
   top: 100%;
   left: 0;
@@ -227,26 +227,26 @@
 }
 /* Two markers six points apart would collide side by side, so the late one
    labels itself above the track instead of below. */
-#stack-root .cf-mark-late i {
+#stack-root .cnc-mark-late i {
   top: auto;
   bottom: 100%;
   margin: 0 0 0.3rem;
 }
-#stack-root .cf-mark-late {
+#stack-root .cnc-mark-late {
   opacity: 0;
 }
-#stack-root .cf-mark-late.is-on {
+#stack-root .cnc-mark-late.is-on {
   opacity: 1;
 }
 
 /* ── The stage ──────────────────────────────────────────── */
-#stack-root .cf-stage {
+#stack-root .cnc-stage {
   container-type: inline-size;
   position: relative;
   height: 26.6rem;
 }
 
-#stack-root .cf-wires {
+#stack-root .cnc-wires {
   position: absolute;
   inset: 0 0 auto;
   height: 4.4rem;
@@ -254,9 +254,9 @@
   display: block;
   overflow: visible;
 }
-#stack-root .cf-wire {
+#stack-root .cnc-wire {
   fill: none;
-  stroke: var(--cf-plain);
+  stroke: var(--cnc-plain);
   stroke-width: 1.1;
   vector-effect: non-scaling-stroke;
   opacity: 0;
@@ -264,38 +264,38 @@
   stroke-dashoffset: 170;
   transition: opacity 260ms var(--sk-ease);
 }
-#stack-root .cf-wire[data-hue='sky'] {
-  stroke: var(--cf-sky);
+#stack-root .cnc-wire[data-hue='sky'] {
+  stroke: var(--cnc-sky);
 }
-#stack-root .cf-wire[data-hue='violet'] {
-  stroke: var(--cf-violet);
+#stack-root .cnc-wire[data-hue='violet'] {
+  stroke: var(--cnc-violet);
 }
-#stack-root .cf-wire[data-hue='amber'] {
-  stroke: var(--cf-amber);
+#stack-root .cnc-wire[data-hue='amber'] {
+  stroke: var(--cnc-amber);
 }
-#stack-root .cf-wire.is-sole {
-  stroke: var(--cf-accent);
+#stack-root .cnc-wire.is-sole {
+  stroke: var(--cnc-accent);
   stroke-width: 1.8;
 }
-#stack-root .cf-wires.is-on .cf-wire {
+#stack-root .cnc-wires.is-on .cnc-wire {
   opacity: 0.75;
-  animation: cf-draw 640ms var(--sk-ease) var(--cf-d, 0ms) forwards;
+  animation: cnc-draw 640ms var(--sk-ease) var(--cnc-d, 0ms) forwards;
 }
-#stack-root .cf-wires.is-on .cf-wire.is-sole {
+#stack-root .cnc-wires.is-on .cnc-wire.is-sole {
   opacity: 1;
 }
-#stack-root .cf-wires.is-on .cf-wire.is-dim {
+#stack-root .cnc-wires.is-on .cnc-wire.is-dim {
   opacity: 0.14;
 }
 
-@keyframes cf-draw {
+@keyframes cnc-draw {
   to {
     stroke-dashoffset: 0;
   }
 }
 
 /* ── Flaw chips ─────────────────────────────────────────── */
-#stack-root .cf-chips {
+#stack-root .cnc-chips {
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -304,12 +304,12 @@
    and the text has to stay legible at both addresses, so the width is real. The
    eight chips live in an absolutely-positioned overlay, so the reflow is scoped
    to each chip's own subtree and never reaches the page. */
-#stack-root .cf-chip {
+#stack-root .cnc-chip {
   position: absolute;
   left: 0;
   top: 0;
-  width: var(--cf-w);
-  transform: translate(var(--cf-x), var(--cf-y)) scale(0.94);
+  width: var(--cnc-w);
+  transform: translate(var(--cnc-x), var(--cnc-y)) scale(0.94);
   transform-origin: 0 0;
   display: block;
   padding: 0.32rem 0.42rem 0.34rem 0.62rem;
@@ -318,41 +318,41 @@
   background: rgba(4, 19, 12, 0.92);
   opacity: 0;
   transition:
-    transform 700ms var(--sk-ease) var(--cf-d, 0ms),
-    width 700ms var(--sk-ease) var(--cf-d, 0ms),
-    opacity 420ms var(--sk-ease) var(--cf-d, 0ms),
+    transform 700ms var(--sk-ease) var(--cnc-d, 0ms),
+    width 700ms var(--sk-ease) var(--cnc-d, 0ms),
+    opacity 420ms var(--sk-ease) var(--cnc-d, 0ms),
     border-color 400ms var(--sk-ease),
     background 400ms var(--sk-ease);
 }
-#stack-root .cf-chip.is-in {
+#stack-root .cnc-chip.is-in {
   opacity: 1;
-  transform: translate(var(--cf-x), var(--cf-y)) scale(1);
+  transform: translate(var(--cnc-x), var(--cnc-y)) scale(1);
 }
-#stack-root .cf-chip-text {
+#stack-root .cnc-chip-text {
   display: block;
   font-size: 0.6rem;
   line-height: 1.32;
   color: var(--sk-text-2);
 }
-#stack-root .cf-chip-dot {
+#stack-root .cnc-chip-dot {
   position: absolute;
   left: 0.26rem;
   top: 0.52rem;
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: var(--cf-plain);
+  background: var(--cnc-plain);
 }
-#stack-root .cf-chip[data-hue='sky'] .cf-chip-dot {
-  background: var(--cf-sky);
+#stack-root .cnc-chip[data-hue='sky'] .cnc-chip-dot {
+  background: var(--cnc-sky);
 }
-#stack-root .cf-chip[data-hue='violet'] .cf-chip-dot {
-  background: var(--cf-violet);
+#stack-root .cnc-chip[data-hue='violet'] .cnc-chip-dot {
+  background: var(--cnc-violet);
 }
-#stack-root .cf-chip[data-hue='amber'] .cf-chip-dot {
-  background: var(--cf-amber);
+#stack-root .cnc-chip[data-hue='amber'] .cnc-chip-dot {
+  background: var(--cnc-amber);
 }
-#stack-root .cf-chip-tag {
+#stack-root .cnc-chip-tag {
   display: block;
   margin-top: 0.18rem;
   font-family: var(--sk-mono);
@@ -365,7 +365,7 @@
 
 /* The strike is drawn, not a text-decoration, so it can sweep left to right
    on a delay and read as an argument being answered one at a time. */
-#stack-root .cf-chip-strike {
+#stack-root .cnc-chip-strike {
   position: absolute;
   left: 0.5rem;
   right: 0.42rem;
@@ -374,45 +374,45 @@
   background: var(--sk-rose);
   transform: scaleX(0);
   transform-origin: 0 50%;
-  transition: transform 420ms var(--sk-ease) var(--cf-d, 0ms);
+  transition: transform 420ms var(--sk-ease) var(--cnc-d, 0ms);
 }
-#stack-root .cf-chip.is-struck {
+#stack-root .cnc-chip.is-struck {
   opacity: 0.42;
   border-color: rgba(248, 113, 113, 0.22);
 }
-#stack-root .cf-chip.is-struck .cf-chip-strike {
+#stack-root .cnc-chip.is-struck .cnc-chip-strike {
   transform: scaleX(1);
 }
-#stack-root .cf-chip.is-struck .cf-chip-tag {
+#stack-root .cnc-chip.is-struck .cnc-chip-tag {
   color: rgba(248, 113, 113, 0.72);
 }
 
 /* The protagonist: lit at the moment it lands and never dimmed again. */
-#stack-root .cf-chip.is-sole {
+#stack-root .cnc-chip.is-sole {
   border-color: rgba(151, 232, 187, 0.5);
   background:
     linear-gradient(180deg, rgba(151, 232, 187, 0.1), rgba(151, 232, 187, 0.03)),
     rgba(4, 19, 12, 0.96);
   box-shadow: 0 14px 34px -22px rgba(151, 232, 187, 0.55);
 }
-#stack-root .cf-chip.is-sole .cf-chip-dot {
-  background: var(--cf-accent);
+#stack-root .cnc-chip.is-sole .cnc-chip-dot {
+  background: var(--cnc-accent);
   box-shadow: 0 0 0 3px rgba(151, 232, 187, 0.16);
 }
-#stack-root .cf-chip.is-sole .cf-chip-text {
+#stack-root .cnc-chip.is-sole .cnc-chip-text {
   color: var(--sk-text-1);
 }
-#stack-root .cf-chip.is-sole .cf-chip-tag {
-  color: var(--cf-accent);
+#stack-root .cnc-chip.is-sole .cnc-chip-tag {
+  color: var(--cnc-accent);
 }
-#stack-root .cf-chip.is-in.is-dim {
+#stack-root .cnc-chip.is-in.is-dim {
   opacity: 0.16;
 }
-#stack-root .cf-chip.is-moved .cf-chip-text {
+#stack-root .cnc-chip.is-moved .cnc-chip-text {
   font-size: 0.56rem;
 }
 
-#stack-root .cf-ghost {
+#stack-root .cnc-ghost {
   position: absolute;
   left: 0;
   top: 15.3rem;
@@ -425,10 +425,10 @@
   opacity: 1;
   transition: opacity 380ms var(--sk-ease);
 }
-#stack-root .cf-ghost.is-off {
+#stack-root .cnc-ghost.is-off {
   opacity: 0;
 }
-#stack-root .cf-ghost span {
+#stack-root .cnc-ghost span {
   font-family: var(--sk-mono);
   font-size: 0.58rem;
   letter-spacing: 0.2em;
@@ -437,7 +437,7 @@
 }
 
 /* ── Verdict panels ─────────────────────────────────────── */
-#stack-root .cf-panel {
+#stack-root .cnc-panel {
   position: absolute;
   border: 1px solid var(--sk-border-1);
   border-radius: 7px;
@@ -449,11 +449,11 @@
     opacity 520ms var(--sk-ease),
     transform 520ms var(--sk-ease);
 }
-#stack-root .cf-panel.is-on {
+#stack-root .cnc-panel.is-on {
   opacity: 1;
   transform: none;
 }
-#stack-root .cf-syn {
+#stack-root .cnc-syn {
   left: 0;
   width: 65.5cqw;
   top: 15.3rem;
@@ -463,25 +463,25 @@
     radial-gradient(120% 140% at 4% 0%, rgba(151, 232, 187, 0.1), transparent 62%),
     rgba(0, 0, 0, 0.3);
 }
-#stack-root .cf-human {
+#stack-root .cnc-human {
   left: 68.5cqw;
   width: 31.5cqw;
   top: 15.3rem;
   transition-delay: 220ms;
 }
-#stack-root .cf-panel-head {
+#stack-root .cnc-panel-head {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 0.6rem;
 }
-#stack-root .cf-panel-name {
+#stack-root .cnc-panel-name {
   font-family: var(--sk-mono);
   font-size: 0.66rem;
   letter-spacing: 0.1em;
   color: var(--sk-text-1);
 }
-#stack-root .cf-panel-name i {
+#stack-root .cnc-panel-name i {
   display: block;
   font-style: normal;
   font-size: 0.55rem;
@@ -490,17 +490,17 @@
   margin-top: 0.14rem;
   text-transform: none;
 }
-#stack-root .cf-panel-score {
+#stack-root .cnc-panel-score {
   font-family: var(--sk-mono);
   font-size: 0.9rem;
   color: var(--sk-text-1);
 }
-#stack-root .cf-syn .cf-panel-score {
-  color: var(--cf-accent);
+#stack-root .cnc-syn .cnc-panel-score {
+  color: var(--cnc-accent);
 }
 
 /* ── Hint + captions ────────────────────────────────────── */
-#stack-root .cf-hint {
+#stack-root .cnc-hint {
   margin: 0.9rem 0 0;
   font-family: var(--sk-mono);
   font-size: 0.58rem;
@@ -508,13 +508,13 @@
   text-transform: uppercase;
   color: var(--sk-text-3);
 }
-#stack-root .cf-caps {
+#stack-root .cnc-caps {
   display: grid;
   margin-top: 0.9rem;
   padding-top: 0.9rem;
   border-top: 1px solid var(--sk-border-1);
 }
-#stack-root .cf-cap {
+#stack-root .cnc-cap {
   grid-area: 1 / 1;
   margin: 0;
   font-size: 0.92rem;
@@ -523,26 +523,26 @@
   opacity: 0;
   transition: opacity 260ms var(--sk-ease);
 }
-#stack-root .cf-cap.is-on {
+#stack-root .cnc-cap.is-on {
   visibility: visible;
   opacity: 1;
 }
-#stack-root .cf-cap b {
+#stack-root .cnc-cap b {
   color: var(--sk-text-1);
   font-weight: 500;
 }
 
 /* ── Reduced motion: five labelled stills ───────────────── */
-#stack-root .cf-stills {
+#stack-root .cnc-stills {
   display: grid;
   gap: 1.6rem;
   margin-top: 1.2rem;
 }
-#stack-root .cf-still {
+#stack-root .cnc-still {
   border-top: 1px solid var(--sk-border-1);
   padding-top: 0.9rem;
 }
-#stack-root .cf-still-h {
+#stack-root .cnc-still-h {
   display: flex;
   align-items: baseline;
   gap: 0.5rem;
@@ -554,32 +554,32 @@
   text-transform: uppercase;
   color: var(--sk-text-1);
 }
-#stack-root .cf-still-n {
+#stack-root .cnc-still-n {
   color: var(--sk-warm);
 }
-#stack-root .cf-still-fig {
+#stack-root .cnc-still-fig {
   overflow-x: auto;
 }
-#stack-root .cf-still-fig .cf-board,
-#stack-root .cf-scroll-in .cf-board {
+#stack-root .cnc-still-fig .cnc-board,
+#stack-root .cnc-scroll-in .cnc-board {
   min-width: 33rem;
 }
-#stack-root .cf-still .cf-cap {
+#stack-root .cnc-still .cnc-cap {
   margin-top: 0.8rem;
 }
 
 /* ── Narrow screens ─────────────────────────────────────── */
-#stack-root .cf-scroll {
+#stack-root .cnc-scroll {
   position: relative;
 }
 @media (max-width: 720px) {
-  #stack-root .cf-scroll {
+  #stack-root .cnc-scroll {
     overflow-x: auto;
   }
-  #stack-root .cf-scroll .figscroll-hint {
+  #stack-root .cnc-scroll .figscroll-hint {
     display: block;
   }
-  #stack-root .cf-step {
+  #stack-root .cnc-step {
     flex: 1 1 5.4rem;
     font-size: 0.56rem;
     letter-spacing: 0.08em;
@@ -587,19 +587,19 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #stack-root .cf-chip,
-  #stack-root .cf-chip-strike,
-  #stack-root .cf-panel,
-  #stack-root .cf-ghost,
-  #stack-root .cf-bar-fill,
-  #stack-root .cf-mark,
-  #stack-root .cf-prop,
-  #stack-root .cf-step,
-  #stack-root .cf-cap,
-  #stack-root .cf-wire {
+  #stack-root .cnc-chip,
+  #stack-root .cnc-chip-strike,
+  #stack-root .cnc-panel,
+  #stack-root .cnc-ghost,
+  #stack-root .cnc-bar-fill,
+  #stack-root .cnc-mark,
+  #stack-root .cnc-prop,
+  #stack-root .cnc-step,
+  #stack-root .cnc-cap,
+  #stack-root .cnc-wire {
     transition: none;
   }
-  #stack-root .cf-wires.is-on .cf-wire {
+  #stack-root .cnc-wires.is-on .cnc-wire {
     animation: none;
     stroke-dashoffset: 0;
   }
