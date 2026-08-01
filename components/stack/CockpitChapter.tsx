@@ -467,7 +467,7 @@ function DownloadCard({
   desc: React.ReactNode
 }) {
   return (
-    <a className="dl rv" href={href} download>
+    <a className="dl cp-dl rv" href={href} download>
       <span className="ext">{ext}</span>
       <span className="nm">
         {name}

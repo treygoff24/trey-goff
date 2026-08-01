@@ -813,6 +813,13 @@
   }
 }
 
+/* The two cards here carry different extensions — "md" and "skill" — and the
+   shared badge only reserves enough width for the short one, so the titles
+   beside them would start ten pixels apart. Reserve the longer badge for both. */
+#stack-root .dl.cp-dl .ext {
+  min-width: 3.4rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   /* No tween, no stagger — each station becomes an instant, labelled state
      that the tabs below still step through in order. */

@@ -283,7 +283,8 @@
   margin-top: 1.3rem;
 }
 #stack-root .ds-runway-h {
-  margin: 0 0 2.6rem;
+  /* Reserves the label line that sits above the 12px track. */
+  margin: 0 0 1.8rem;
   font-family: var(--sk-mono);
   font-size: 0.58rem;
   letter-spacing: 0.18em;
@@ -322,10 +323,15 @@
 #stack-root .ds-runway.is-on .ds-seg.is-never i {
   color: var(--sk-rose);
 }
+/* Right-anchored so it stays inside the track's last segment, but on the same
+   line as the other four — a label that dropped below the bar read as a
+   different kind of thing than the ones above it. */
 #stack-root .ds-seg.is-never i {
   left: auto;
   right: 0;
-  top: 1.05rem;
+  /* This segment is a dashed outline rather than a fill, so its box is a pixel
+     taller than its siblings and the label would sit a pixel low. */
+  top: calc(-1.15rem - 1px);
 }
 
 #stack-root .ds-end {
@@ -341,13 +347,14 @@
   opacity: 1;
   border-left-color: var(--sk-rose);
 }
+/* The row above the track is now full, so this one labels itself below and to
+   the left of its own line — which also keeps it inside the track's width
+   instead of hanging off the right edge on a narrow viewport. */
 #stack-root .ds-end i {
   position: absolute;
-  bottom: 100%;
-  left: 0;
-  /* Clears the segment labels, which already sit one line above the track. */
-  margin-bottom: 1.35rem;
-  transform: translateX(-50%);
+  top: 100%;
+  right: 0.35rem;
+  margin-top: 0.5rem;
   white-space: nowrap;
   font-family: var(--sk-mono);
   font-style: normal;
@@ -360,7 +367,8 @@
 /* ── Captions ───────────────────────────────────────────── */
 #stack-root .ds-caps {
   display: grid;
-  margin-top: 2.2rem;
+  /* Clears the run-ends marker's label, which hangs below the track. */
+  margin-top: 2.8rem;
   padding-top: 0.9rem;
   border-top: 1px solid var(--sk-border-1);
 }
