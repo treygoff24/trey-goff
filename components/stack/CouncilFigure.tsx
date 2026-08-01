@@ -280,7 +280,10 @@ function CouncilBoard({ stage, focus, onFocus, reduced }: BoardProps) {
             <span className="cnc-panel-score">{SYNTHESIS.toFixed(1)}</span>
           </div>
           <span className="cnc-bar cnc-bar-wide" data-hue="accent">
-            <span className="cnc-bar-fill" style={{ width: synthesized ? `${SYNTHESIS}%` : '0%' }} />
+            <span
+              className="cnc-bar-fill"
+              style={{ width: synthesized ? `${SYNTHESIS}%` : '0%' }}
+            />
             <span className="cnc-mark" style={{ left: `${BEST_SINGLE}%` }}>
               <i>best single · 91.6</i>
             </span>
