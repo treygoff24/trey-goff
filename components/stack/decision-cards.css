@@ -61,18 +61,33 @@
 }
 
 /* ── The board ──
-   Two columns; DOM order never changes, so a card keeps focus when it
-   moves sides. Each card takes its own auto row, giving a ledger read. */
+   Two independently packed columns, so a card that changes sides closes the
+   hole behind it. Re-parenting drops DOM focus; the component hands it back. */
 #stack-root .dcf-board {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  column-gap: clamp(0.5rem, 1.6vw, 1rem);
-  row-gap: 0.5rem;
+  gap: clamp(0.5rem, 1.6vw, 1rem);
   align-items: start;
 }
+#stack-root .dcf-stack {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+#stack-root .dcf-empty {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--sk-text-3);
+}
+#stack-root .dcf-card {
+  width: 100%;
+}
 #stack-root .dcf-col {
-  margin: 0 0 0.3rem;
-  grid-row: 1;
+  margin: 0 0 0.6rem;
+  font-weight: 400;
   font-family: var(--sk-mono);
   font-size: 0.6rem;
   letter-spacing: 0.22em;
@@ -81,13 +96,6 @@
   padding-bottom: 0.4rem;
   border-bottom: 1px solid var(--sk-border-1);
 }
-#stack-root .dcf-col-a {
-  grid-column: 1;
-}
-#stack-root .dcf-col-b {
-  grid-column: 2;
-}
-
 #stack-root .dcf-card {
   display: grid;
   gap: 0.16rem;
@@ -102,12 +110,6 @@
     background 220ms var(--sk-ease),
     border-color 220ms var(--sk-ease),
     box-shadow 220ms var(--sk-ease);
-}
-#stack-root .dcf-card.in {
-  grid-column: 1;
-}
-#stack-root .dcf-card.out {
-  grid-column: 2;
 }
 #stack-root .dcf-card.decision {
   box-shadow: var(--sk-edge-amber);
@@ -392,19 +394,10 @@
   }
 }
 @media (max-width: 560px) {
-  /* Two narrow columns stop being legible; the state chip on each card
-     carries the assignment instead. */
+  /* Two narrow columns stop being legible; the sides become stacked sections
+     and each card's state chip still names its assignment. */
   #stack-root .dcf-board {
     grid-template-columns: minmax(0, 1fr);
-  }
-  #stack-root .dcf-card.in,
-  #stack-root .dcf-card.out {
-    grid-column: 1;
-  }
-  #stack-root .dcf-col {
-    display: none;
-  }
-  #stack-root .dcf-card.out {
-    margin-left: 1.4rem;
+    gap: 1.5rem;
   }
 }

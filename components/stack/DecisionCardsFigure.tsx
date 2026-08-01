@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import '@/components/stack/decision-cards.css'
 
 type Kind = 'decision' | 'creation'
@@ -105,6 +105,15 @@ function applyPreset(delegated: string[]): Record<string, boolean> {
 export default function DecisionCardsFigure() {
   const [assigned, setAssigned] = useState<Record<string, boolean>>(initialState)
   const [thesisOpen, setThesisOpen] = useState(false)
+  // A card that changes sides re-parents into the other column's list, so React
+  // unmounts it and focus would land back on <body>. Hand it back deliberately.
+  const [refocus, setRefocus] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!refocus) return
+    document.getElementById(`dcf-${refocus}`)?.focus()
+    setRefocus(null)
+  }, [refocus])
 
   const keptCreation = CARDS.filter((c) => c.kind === 'creation' && !assigned[c.id]).length
   const handedDecisions = CARDS.filter((c) => c.kind === 'decision' && assigned[c.id]).length
@@ -148,31 +157,48 @@ export default function DecisionCardsFigure() {
       </div>
 
       <div className="dcf-board">
-        <p className="dcf-col dcf-col-a" aria-hidden="true">
-          Your hand
-        </p>
-        <p className="dcf-col dcf-col-b" aria-hidden="true">
-          Delegated
-        </p>
-        {CARDS.map((c) => {
-          const on = assigned[c.id]
+        {(
+          [
+            ['in', 'Your hand', 'You are doing all nine yourself.'],
+            ['out', 'Delegated', 'Nothing handed over yet.'],
+          ] as const
+        ).map(([side, heading, empty]) => {
+          const cards = CARDS.filter((c) => (side === 'out' ? assigned[c.id] : !assigned[c.id]))
           return (
-            <button
-              key={c.id}
-              type="button"
-              role="switch"
-              aria-checked={on}
-              aria-label={`Delegate the ${c.kind} card: ${c.title}`}
-              className={`dcf-card ${c.kind} ${on ? 'out' : 'in'}`}
-              onClick={() => setAssigned((prev) => ({ ...prev, [c.id]: !prev[c.id] }))}
-            >
-              <span className="dcf-card-kind">
-                {c.kind}
-                <span className="dcf-card-state">{on ? 'delegated' : 'kept'}</span>
-              </span>
-              <span className="dcf-card-title">{c.title}</span>
-              <span className="dcf-card-note">{c.note}</span>
-            </button>
+            <section key={side} className={`dcf-side ${side}`} aria-label={heading}>
+              <h4 className="dcf-col">{heading}</h4>
+              {cards.length === 0 ? (
+                <p className="dcf-empty">{empty}</p>
+              ) : (
+                <ul className="dcf-stack">
+                  {cards.map((c) => (
+                    <li key={c.id}>
+                      <button
+                        id={`dcf-${c.id}`}
+                        type="button"
+                        role="switch"
+                        aria-checked={side === 'out'}
+                        aria-label={`Delegate the ${c.kind} card: ${c.title}`}
+                        className={`dcf-card ${c.kind} ${side}`}
+                        onClick={() => {
+                          setAssigned((prev) => ({ ...prev, [c.id]: !prev[c.id] }))
+                          setRefocus(c.id)
+                        }}
+                      >
+                        <span className="dcf-card-kind">
+                          {c.kind}
+                          <span className="dcf-card-state">
+                            {side === 'out' ? 'delegated' : 'kept'}
+                          </span>
+                        </span>
+                        <span className="dcf-card-title">{c.title}</span>
+                        <span className="dcf-card-note">{c.note}</span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
           )
         })}
       </div>
