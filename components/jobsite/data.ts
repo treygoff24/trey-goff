@@ -10,7 +10,8 @@ export type JobSiteBeat = {
   crop?: string
   alt: string
   body: string[]
-  realSite: { title: string; body: string }[]
+  /** `viz` hangs a teaching figure off the entry it illustrates. */
+  realSite: { title: string; body: string; viz?: 'bench' | 'runners' }[]
   deeper?: string
   prompt?: string
   footer?: string
@@ -44,6 +45,7 @@ export const jobSiteBeats: JobSiteBeat[] = [
       },
       {
         title: 'The bench is the context window',
+        viz: 'bench',
         body: 'Concretely, it is the running transcript of everything the model can currently see: your instructions, the conversation so far, every file it has opened. It has a hard size limit, a few hundred thousand words\' worth, and the dimming middle is not a metaphor I invented; it is a measured, documented behavior of these systems. When people complain the AI "got dumber" an hour in, this is almost always what happened: the bench got buried.',
       },
       {
@@ -176,6 +178,7 @@ export const jobSiteBeats: JobSiteBeat[] = [
     realSite: [
       {
         title: 'The runners are called subagents,',
+        viz: 'runners',
         body: 'and using them takes no setup at all, just a habit of phrasing. Instead of "find every mention of the Henderson contract in my documents," say "send a subagent to find every mention of the Henderson contract and report back just the list." The main agent spawns a copy of itself with its own fresh bench, the copy does the digging and gets thrown away, and only the one-line answer lands on the bench you care about. Any time a task starts with the words "go through all of," that sentence should probably contain the word subagent. For bigger asks, pluralize it: "send three subagents to research this from three different angles and compare what they bring back."',
       },
       {

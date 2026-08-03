@@ -2,9 +2,18 @@ import Link from 'next/link'
 import { getImageProps } from 'next/image'
 import { Fragment, type CSSProperties, type ReactNode } from 'react'
 import { jobSiteBeats, type JobSiteBeat } from '@/components/jobsite/data'
+import { BenchViz } from '@/components/jobsite/BenchViz'
 import { CopyPrompt } from '@/components/jobsite/CopyPrompt'
 import { ModeToggle } from '@/components/jobsite/ModeToggle'
+import { RunnersViz } from '@/components/jobsite/RunnersViz'
 import '@/components/jobsite/jobsite.css'
+
+/**
+ * The two teaching figures, hung off the annotation entry each one illustrates.
+ * Small client islands inside an otherwise server-rendered page; the prose
+ * teaches on its own, and the figures only amplify it.
+ */
+const VIZ = { bench: BenchViz, runners: RunnersViz } as const
 
 /** Strips the inline emphasis markers so what lands on the clipboard is what you paste. */
 function plainText(text: string) {
@@ -183,15 +192,21 @@ function Beat({ beat, preload }: { beat: JobSiteBeat; preload: boolean }) {
         {beat.realSite.length > 0 && (
           <aside className="js-real" aria-label={`On the real site: ${beat.title}`}>
             <p className="js-real-k">On the real site</p>
-            {beat.realSite.map((item) => (
-              <p key={item.title}>
-                <strong>
-                  {item.title}
-                  {/[,:;.!?]$/.test(item.title) ? '' : ':'}
-                </strong>{' '}
-                <InlineText text={item.body} />
-              </p>
-            ))}
+            {beat.realSite.map((item) => {
+              const Viz = item.viz ? VIZ[item.viz] : null
+              return (
+                <Fragment key={item.title}>
+                  <p>
+                    <strong>
+                      {item.title}
+                      {/[,:;.!?]$/.test(item.title) ? '' : ':'}
+                    </strong>{' '}
+                    <InlineText text={item.body} />
+                  </p>
+                  {Viz && <Viz />}
+                </Fragment>
+              )
+            })}
             {beat.deeper && <DeeperNote text={beat.deeper} />}
           </aside>
         )}

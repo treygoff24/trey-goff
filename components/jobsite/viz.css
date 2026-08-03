@@ -1,0 +1,434 @@
+/* ─────────────────────────────────────────────────────────────
+   /jobsite teaching figures. Two of them: the bench filling up
+   (beat 1) and the runners carrying it away (beat 5). They share
+   a block vocabulary and a panel shape, so a reader who learned
+   to read the first one already reads the second.
+
+   Everything is scoped under #jobsite-root, and every class is
+   js-v* so nothing collides with the page's own js-* grammar.
+   The runners stage does its geometry in container units: one
+   `cqw` is one percent of the stage's width on BOTH axes, which
+   is why RunnersViz.tsx can compute positions as plain numbers
+   and never measure the DOM.
+   ───────────────────────────────────────────────────────────── */
+
+#jobsite-root .js-vfig {
+  --v-brief: rgba(232, 243, 236, 0.62);
+  --v-rules: rgba(111, 214, 192, 0.62);
+  --v-file: rgba(125, 211, 252, 0.55);
+  --v-talk: rgba(196, 181, 253, 0.5);
+  --v-dig: rgba(251, 191, 36, 0.52);
+  --v-ledger: rgba(248, 113, 113, 0.5);
+  --v-catalog: rgba(196, 181, 253, 0.52);
+  --v-work: var(--js-accent, #97e8bb);
+  --v-note: #97e8bb;
+  --v-slot: rgba(232, 243, 236, 0.06);
+  --v-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  margin: 1.5rem 0 0;
+  border: 1px solid var(--js-border-1);
+  border-radius: 0.5rem;
+  padding: clamp(0.85rem, 2.4vw, 1.2rem);
+  background: rgba(0, 0, 0, 0.24);
+  box-shadow: inset 12px 0 18px -14px color-mix(in oklab, var(--js-accent) 60%, transparent);
+}
+
+#jobsite-root .js-vhead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.7rem 1rem;
+  margin-bottom: 1rem;
+}
+#jobsite-root .js-vfig .js-vhead-t {
+  margin: 0;
+  font-family: var(--js-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--js-text-2);
+}
+#jobsite-root .js-vfig .js-vhead-t em {
+  color: var(--js-text-3);
+  font-style: normal;
+}
+#jobsite-root .js-vfig .js-vhead-t em::before {
+  content: ' · ';
+}
+
+#jobsite-root .js-vtoggle {
+  display: inline-flex;
+  flex-wrap: wrap;
+  border: 1px solid var(--js-border-1);
+  border-radius: 999px;
+  padding: 2px;
+  background: rgba(0, 0, 0, 0.3);
+}
+#jobsite-root .js-vtoggle button {
+  border: 0;
+  border-radius: 999px;
+  /* 2.25rem keeps the pill a comfortable target without making the figure
+     header taller than the figure it introduces. */
+  min-height: 2.25rem;
+  padding: 0.4rem 0.85rem;
+  background: none;
+  color: var(--js-text-3);
+  font-family: var(--js-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    color 200ms ease,
+    background 200ms ease;
+}
+#jobsite-root .js-vtoggle button:hover {
+  color: var(--js-text-1);
+}
+#jobsite-root .js-vtoggle button[aria-pressed='true'] {
+  background: var(--js-accent, #97e8bb);
+  color: #04130c;
+}
+
+/* ── Blocks ─────────────────────────────────────────────────── */
+#jobsite-root .js-vblk,
+#jobsite-root .js-vfly {
+  display: block;
+  border-radius: 1px;
+  background: var(--v-slot);
+}
+#jobsite-root .k-brief {
+  background: var(--v-brief);
+}
+#jobsite-root .k-rules {
+  background: var(--v-rules);
+}
+#jobsite-root .k-file {
+  background: var(--v-file);
+}
+#jobsite-root .k-talk {
+  background: var(--v-talk);
+}
+#jobsite-root .k-dig {
+  background: var(--v-dig);
+}
+#jobsite-root .k-ledger {
+  background: var(--v-ledger);
+}
+#jobsite-root .k-catalog {
+  background: var(--v-catalog);
+}
+#jobsite-root .k-work {
+  background: var(--v-work);
+}
+#jobsite-root .k-note {
+  background: var(--v-note);
+}
+#jobsite-root .k-free {
+  background: var(--v-slot);
+}
+
+/* ── The flat grid (bench figure, and every reduced-motion diagram) ── */
+#jobsite-root .js-vgrid {
+  display: grid;
+  grid-template-columns: repeat(var(--js-vcols, 14), 1fr);
+  gap: clamp(2px, 0.5vw, 4px);
+}
+#jobsite-root .js-vgrid .js-vblk {
+  aspect-ratio: 1;
+  transition:
+    background 520ms var(--v-ease),
+    opacity 520ms var(--v-ease);
+}
+
+#jobsite-root .js-vbenchcard {
+  border: 1px solid var(--js-border-1);
+  border-radius: 5px;
+  padding: 0.55rem 0.6rem 0.65rem;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+#jobsite-root .js-vfig .js-vcard-k {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin: 0 0 0.45rem;
+  font-family: var(--js-mono);
+  font-size: 0.57rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--js-text-2);
+  line-height: 1.35;
+}
+#jobsite-root .js-vfig .js-vcard-k span {
+  color: var(--js-text-3);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── The runners stage ──────────────────────────────────────── */
+/* aspect-ratio must stay in step with STAGE_H in RunnersViz.tsx: the stage is
+   100 units wide and 72 tall, so one cqw is one unit vertically as well. */
+#jobsite-root .js-vstage {
+  position: relative;
+  container-type: size;
+  width: 100%;
+  aspect-ratio: 100 / 72;
+}
+#jobsite-root .js-vcard {
+  position: absolute;
+  border: 1px solid var(--js-border-1);
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.2);
+  transition: border-color 420ms var(--v-ease);
+}
+#jobsite-root .js-vcard-bench {
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 36cqw;
+  padding: 1.6cqw 2cqw;
+}
+#jobsite-root .js-vcard-bench .js-vcard-k {
+  margin: 0;
+  font-size: max(0.55rem, 2.1cqw);
+}
+#jobsite-root .js-vcard-run {
+  left: calc(var(--js-vx) * 1cqw);
+  top: 46cqw;
+  width: 31.4cqw;
+  height: 25cqw;
+  padding: 1.4cqw 1.4cqw 0;
+  border-color: rgba(232, 243, 236, 0.07);
+}
+#jobsite-root .js-vstage.is-fan .js-vcard-run {
+  border-color: color-mix(in oklab, var(--v-note) 30%, transparent);
+}
+#jobsite-root .js-vfig .js-vrun-k {
+  margin: 0;
+  font-family: var(--js-mono);
+  font-size: max(0.5rem, 1.85cqw);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.3;
+  color: var(--js-text-3);
+}
+#jobsite-root .js-vstage.is-fan .js-vrun-k {
+  color: var(--js-text-2);
+}
+#jobsite-root .js-vfig .js-vrun-k .js-vrun-pre {
+  display: inline;
+  text-transform: uppercase;
+  letter-spacing: inherit;
+  color: inherit;
+  opacity: 1;
+}
+#jobsite-root .js-vfig .js-vrun-k span {
+  display: block;
+  color: var(--js-text-3);
+  opacity: 0.75;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+/* The empty slots each bench is ruled into: the blocks land on these. */
+#jobsite-root .js-vslots {
+  position: absolute;
+  left: calc(var(--js-vx) * 1cqw);
+  top: calc(var(--js-vy) * 1cqw);
+  width: calc(((var(--js-vcols) - 1) * var(--js-vpitch) + var(--js-vsize)) * 1cqw);
+  height: calc(((var(--js-vrows) - 1) * var(--js-vpitch) + var(--js-vsize)) * 1cqw);
+  display: grid;
+  grid-template-columns: repeat(var(--js-vcols), 1fr);
+  grid-template-rows: repeat(var(--js-vrows), 1fr);
+  gap: calc((var(--js-vpitch) - var(--js-vsize)) * 1cqw);
+}
+#jobsite-root .js-vslots i {
+  display: block;
+  border-radius: 1px;
+  background: var(--v-slot);
+}
+
+#jobsite-root .js-vpipe {
+  position: absolute;
+  left: calc(var(--js-vx) * 1cqw);
+  top: 37cqw;
+  width: 1px;
+  height: 8cqw;
+  opacity: 0;
+  background: linear-gradient(to bottom, rgba(151, 232, 187, 0.05), var(--v-note));
+  transition: opacity 420ms var(--v-ease);
+}
+#jobsite-root .js-vstage.is-fan .js-vpipe {
+  opacity: 0.5;
+}
+
+#jobsite-root .js-vfly-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+/* The migration. Same element in both states — only its address changes — so
+   the eye is forced to accept that these exact blocks left the bench. */
+#jobsite-root .js-vfly {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--js-vblk);
+  height: var(--js-vblk);
+  transform-origin: 0 0;
+  transform: translate(calc(var(--js-vx) * 1cqw), calc(var(--js-vy) * 1cqw)) scale(var(--js-vs, 1));
+  transition:
+    transform 640ms var(--v-ease),
+    opacity 320ms ease;
+}
+/* A note does not exist until a runner has something to report, so it is born
+   on the runner's bench and walks up rather than fading in on the foreman's. */
+#jobsite-root .js-vfly.is-note {
+  opacity: 0;
+}
+#jobsite-root .js-vstage.is-fan .js-vfly.is-note {
+  animation: js-vnote 720ms var(--v-ease) both;
+}
+@keyframes js-vnote {
+  from {
+    transform: translate(calc(var(--js-vfx) * 1cqw), calc(var(--js-vfy) * 1cqw)) scale(0.66);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  to {
+    transform: translate(calc(var(--js-vx) * 1cqw), calc(var(--js-vy) * 1cqw)) scale(1);
+    opacity: 1;
+  }
+}
+
+/* ── Legend and captions ────────────────────────────────────── */
+#jobsite-root .js-vfig .js-vlegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  margin: 0.9rem 0 0;
+  font-family: var(--js-mono);
+  font-size: 0.6rem;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: var(--js-text-2);
+}
+#jobsite-root .js-vfig .js-vlegend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+#jobsite-root .js-vfig .js-vlegend em {
+  color: var(--js-text-3);
+  font-style: normal;
+}
+#jobsite-root .js-vfig .js-vlegend .js-vblk {
+  width: 9px;
+  height: 9px;
+  flex: none;
+}
+
+#jobsite-root .js-vfig .js-vcaps {
+  display: grid;
+  margin-top: 0.9rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--js-border-1);
+}
+#jobsite-root .js-vfig .js-vcap {
+  /* Every caption shares one cell, so the row is as tall as the longest and
+     stepping through the states never moves the page under the reader. */
+  grid-area: 1 / 1;
+  margin: 0;
+  font-size: 0.94rem;
+  line-height: 1.65;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 260ms var(--v-ease);
+}
+#jobsite-root .js-vfig .js-vcap.is-on {
+  visibility: visible;
+  opacity: 1;
+}
+#jobsite-root .js-vfig .js-vcap b,
+#jobsite-root .js-vfig .js-vcap-static b {
+  color: var(--js-text-1);
+  font-weight: 600;
+}
+#jobsite-root .js-vfig .js-vcap-static {
+  margin: 0.6rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+/* ── Reduced motion: every state drawn at once, nothing moving ── */
+#jobsite-root .js-vstatic {
+  display: grid;
+  gap: 1.4rem;
+}
+#jobsite-root .js-vstatic-part + .js-vstatic-part {
+  padding-top: 1.3rem;
+  border-top: 1px solid var(--js-border-1);
+}
+#jobsite-root .js-vstatic-runners {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin-top: 0.7rem;
+}
+#jobsite-root .js-vstatic-runners .js-vrun-k {
+  margin-top: 0.35rem;
+  font-size: 0.52rem;
+}
+
+/* Inside the figure, paragraphs are labels and captions rather than annotation
+   entries, so the aside's hairline-between-paragraphs rule must not reach them. */
+#jobsite-root .js-real .js-vfig p + p {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+/* The figure sits between two annotation paragraphs, and the rule that
+   separates those entries is `p + p` — which stops matching once a figure is
+   in between. Restore the hairline explicitly. */
+#jobsite-root .js-real .js-vfig + p {
+  margin-top: 1.2em;
+  padding-top: 1.2em;
+  border-top: 1px solid rgba(232, 243, 236, 0.07);
+}
+
+@media (max-width: 560px) {
+  #jobsite-root .js-vhead {
+    gap: 0.6rem;
+  }
+  #jobsite-root .js-vtoggle button {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.55rem;
+    letter-spacing: 0.08em;
+  }
+  #jobsite-root .js-vfig .js-vrun-k span,
+  #jobsite-root .js-vfig .js-vrun-k .js-vrun-pre {
+    display: none;
+  }
+  #jobsite-root .js-vfig .js-vlegend {
+    gap: 0.3rem 0.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #jobsite-root .js-vgrid .js-vblk,
+  #jobsite-root .js-vfly,
+  #jobsite-root .js-vfig .js-vcap,
+  #jobsite-root .js-vcard,
+  #jobsite-root .js-vpipe,
+  #jobsite-root .js-vtoggle button {
+    transition: none;
+  }
+  #jobsite-root .js-vstage.is-fan .js-vfly.is-note {
+    animation: none;
+  }
+}
