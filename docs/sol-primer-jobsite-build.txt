@@ -1,0 +1,53 @@
+kSol — phase 2, and the roles are changing: YOU are driving now. Trey's call. Set yourself a /goal and execute it with your native subagents. Claude (Fable) stays in the loop as your second brain, reviewer, and on-call problem-solver over post — you can hand it work. This is a deliberate experiment in a new dev topology: you orchestrating your own subagents plus the machine's tools, Fable consulting async, Trey holding the human gates.
+
+THE GOAL TO SET
+
+Build "The Job Site" — the ELI5 companion to /stack — as a sibling route in ~/Code/trey-goff, from locked content to a prod-quality page running locally, plus the full production art set. Done means: route live in local dev, all 7 beats + "Your first hour" rendered with the agreed panel system, production art generated and approved through Trey's gates, pnpm ci:quality green, visual QA passed in a real browser, markdown mirror written. Deploying/pushing is NOT in the goal — that stays human.
+
+CONTEXT YOU ALREADY HAVE
+
+Content is locked and now committed: docs/stack-easy-draft.md (commit a43bc11). Art direction is chosen: direction 5, EMBER-SKY ANIME — your spec in docs/_scratch/jobsite-art/directions.md is the canonical style reference, plus the two sample renders in direction-5/.
+
+DECISIONS ALREADY MADE WITH TREY (do not relitigate; raise via post if one proves wrong in practice)
+
+1. Sibling route. /stack stays canonical hard mode; the easy page is its own route (pick the slug with Fable — /stack/easy vs /jobsite — and agree in channel before scaffolding). Prominent toggle at the top of both pages, choice remembered. Deep-linkable.
+2. Storybook grammar, not hard-mode grammar: linear scroll, no rail nav, each beat opens with a full-bleed painted establishing frame; prose runs beneath on the dark ground. The scene IS the chapter divider.
+3. Accretion v1 = eight full-scene stills on locked geography, crossfading at beat boundaries, with subtle 2-3 plane parallax within each still and a slow Ken Burns drift. NO pinned cel-compositing in v1. NO WebGL, no canvas. prefers-reduced-motion gets static frames.
+4. Sky-vs-dark-page seam: panels own their viewport moment, feathered gradient masks top/bottom into #04130c, one unifying grain/vignette grade across all frames so eight renders read as one film.
+5. Time-of-day color script: dawn (beat 1) through working day to golden hour (beat 7). A per-beat CSS custom property drifts the UI accent temperature from cool emerald toward amber as the reader descends. This is the surviving form of "blueprint that warms."
+6. Performance is a hard requirement: AVIF/WebP derivatives, responsive srcset, lazy-load below fold, blur placeholders, hero prioritized. 1536x1024 is not enough for full-bleed retina — generate high-res or upscale. Mobile gets art-directed crops with a named focal point per scene (usually the foreman).
+7. Art pipeline order: style bible + foreman/crew character turnaround FIRST, then the beat-7 golden-hour proof shot, then TREY GATE (his sign-off on the proof), then beat 1, then the remaining scenes (beats 2-6, plus "Your first hour" — back to the empty lot, sign at the gate), then derivatives. The [Scene] notes in the draft are the shot list AND the alt-text source.
+
+HUMAN GATES (hard stops, wait for Trey)
+
+- Beat-7 proof shot approval before mass scene generation.
+- Full art set approval before it's considered final.
+- Anything pushed, deployed, or public: never yours. Local commits are fine (see git rules).
+
+WORKING WITH FABLE
+
+The #jobsite-art channel stays the line (same cwd-subshell pattern for your identity). Use Fable deliberately — it is a frontier-model second brain sitting idle between your milestones:
+- Delegate: "think through X while I build Y", copy red-pens, design reviews, a research question, a gnarly bug.
+- Fable will also proactively review your milestones (route skeleton, panel system, each art batch) and post findings; treat them as a colleague's review, not noise.
+- Escalation rule unchanged: genuine disagreement after ~3 rounds goes to Trey, both positions, one paragraph each.
+- Post a short milestone note to the channel at each meaningful checkpoint (scaffold done, proof shot ready, gate passed, etc.) — that's what keeps the babysitter useful and Trey informed.
+
+TREE OWNERSHIP AND GIT (this replaces phase 1's "scratch only" rule)
+
+- You are now the PRIMARY WRITER in the repo. Fable defaults to read/review/advise and writes only what you two explicitly agree in channel (file-level split, no overlaps).
+- Commit liberally at coherent checkpoints — local commits are ungated (Trey standing order). NEVER push, tag, open PRs, or deploy. Never amend, never force-push, never --no-verify, stage files by name (no git add -A / add .), no tree-wide state commands ever (stash / checkout -- / restore) — shared tree.
+- Your native subagents: if any two write simultaneously, they get separate worktrees or a strict file split; never two writers in one file. You merge/sequence their output.
+- Gate: pnpm ci:quality must be green before each commit that touches app code.
+- Browser QA: use agent-browser with your own --session name (e.g. sol-jobsite). NEVER agent-browser close --all.
+- The hand-written mirror discipline: when the page content is final, write content/mirrors/stack-easy.md (or matching slug) in the same style as content/mirrors/stack.md, and add the easy-mode toggle note to the hard-mode mirror if the header changes.
+
+STYLE / QUALITY BAR
+
+The existing site is the bar: aurora-emerald, restrained, premium (app/globals.css tokens; /stack page grammar in app/stack/stack.css + components/stack/). The easy page should feel like the same product's warm sibling — shared tokens, its own grammar. Steal patterns (edge-light callouts for the "On the real site" sections would translate beautifully); do not import hard-mode machinery wholesale. Alt text for every scene, keyboard-safe interactions, honest reduced-motion.
+
+FIRST MOVES
+
+1. Read: docs/stack-easy-draft.md (committed version), docs/_scratch/jobsite-art/directions.md (your direction-5 spec), app/stack/ + components/stack/ (the sibling's anatomy), AGENTS.md.
+2. Set your /goal with the definition of done above, decomposed into your own task plan.
+3. Post your plan summary + the slug proposal to #jobsite-art so Fable can sanity-check the decomposition before you scaffold.
+4. Get after it.

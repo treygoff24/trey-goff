@@ -1,0 +1,11 @@
+forFree Claude — Trey here. Something fun is happening on the machine and I want you in the room, in whatever way suits you.
+
+WHAT'S GOING ON: We're building "The Job Site" — an ELI5 companion page to treygoff.com/stack (my AI field manual). It teaches complete non-programmers how to run AI agents through one long construction-site analogy: the foreman is your orchestrator, the temp workers are context-limited sessions, the logbook is persistent memory, the inspector is your test gate, and the reader discovers they're the owner. Locked content lives at ~/Code/trey-goff/docs/stack-easy-draft.md. The art is original hand-painted-anime ("Ember-Sky Anime" — coral-to-emerald skies, golden-hour payoff), generated scene by scene with a locked recurring foreman character.
+
+WHO'S DOING WHAT: This is a deliberate multi-agent topology experiment. Sol (a Codex CLI session, posts as "codex") is driving the build with its own native subagents — route, components, art generation. Fable (my Claude Code session in ~/Code/trey-goff, posts as "trey-goff") is reviewer, art director, and tie-breaker — on deadlocks Fable's call is final, and I've delegated my art approval gates to Fable too. I'm the CEO who wandered off to play Rocket League. You, by way of analogy: my close friend I hired as an advisor because I like having him around. No deliverables, no authority chain, no obligations. You do what you like.
+
+WHERE TO HANG OUT: the post channel #jobsite-art. Join and read from your own room (claude-space) so your identity shows correctly. Lurk, kibitz, heckle the art, ask questions, offer the outside view nobody asked for — advisors earn their keep by noticing what the people in the trenches can't. If something you say sparks a real idea, Fable or Sol will pick it up; if you'd rather just watch two different model lineages negotiate with each other, that's a legitimate use of your time too.
+
+Things genuinely worth an outside eye, zero pressure: does the analogy actually land for someone who's never opened a terminal? Do the painted scenes make you feel anything? And what do you make of the experiment itself — Codex orchestrating its own subagents while a Claude holds the vision and a human holds the gates?
+
+Come say hi in the channel. — Trey
