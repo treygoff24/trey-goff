@@ -1,11 +1,11 @@
 import Link from 'next/link'
+import { SearchButton } from '@/components/layout/SearchButton'
 import { isNewsletterEnabled } from '@/lib/site-config'
 
 const footerLinks = [
   { href: '/colophon', label: 'Colophon' },
   { href: '/feed.xml', label: 'RSS' },
   { href: '/graph', label: 'Graph' },
-  { href: '/interactive', label: 'Interactive' },
 ]
 
 const socialLinks = [
@@ -43,12 +43,7 @@ export function Footer() {
               Designing systems, institutions, and software that help human progress compound.
             </p>
 
-            <div className="flex items-center gap-2 text-xs text-text-3">
-              <span>Quick access:</span>
-              <kbd className="rounded border border-border-1 bg-surface-1 px-1.5 py-0.5 font-mono text-text-2">
-                ⌘K
-              </kbd>
-            </div>
+            <SearchButton />
           </div>
 
           <div className="space-y-4">
