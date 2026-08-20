@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { LANES, MAX_BEAT, tally } from '@/components/stack/RecoveryFigure'
+import { LANES, MAX_BEAT, tally } from '@/components/stack/recovery-data'
 
 const without = LANES.find((l) => l.id === 'without')
 const withRule = LANES.find((l) => l.id === 'with')
