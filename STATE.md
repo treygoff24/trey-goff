@@ -1,14 +1,24 @@
 # STATE — trey-goff site
 
-**Updated:** 2026-07-31 late (the /stack visual build night)
+**Updated:** 2026-08-20 (review sweep before the push)
 
 ## Hooks (one line each; these must survive any truncation — detail below the fold)
 
-- **/stack visual build LANDED on local main (43 commits past `b872aeb`), gate green, UNPUSHED — awaiting Trey's cold scroll + push word.** Detail: "Tonight's build" below.
-- **Jobsite viz branch `baf14ea` (BenchViz + RunnersViz) still unmerged — Trey never said "land it."**
+- **main is 71 commits ahead of origin/main, gate green, UNPUSHED — awaiting Trey's cold scroll + push word.** Contents: /stack figure build (2026-07-31) + /jobsite page + the 2026-08-20 review sweep (2 opus reviewers × 3 rounds, Luna fix lanes, opus visual-QA lane: 14 fix commits `42d3ac1..75548ab`). Detail: "Review sweep" below.
+- **Jobsite viz (BenchViz + RunnersViz) IS merged (`8347b1e`).** Branch cleanup done 2026-08-20: 21 merged branches + 3 stale Cursor worktrees removed (diffs archived at `~/.cursor/worktrees/trey-goff-archive-2025-12.tgz`). Two branches deliberately kept, Trey's call: `worktree-agent-aa5bef5926a8d5e6b` (unlanded parallel jobsite polish, adds JobSiteProgress) and `feat/the-workshop` (July 17 desloppify, −27k lines, unmerged).
+- **`ci:quality` does NOT run Playwright** — a dead e2e test slipped past it once; run `pnpm test:e2e --project=chromium` after any jobsite/nav change (WebKit binaries don't install here). Adding it to the gate is an open call for Trey.
+- **`.beads/issues.jsonl` diff here is claude-space's `cs-*` ledger bleeding in — don't commit it from this repo.**
 - **Doorbell doctrine: persistent Monitor on `post watch --room trey-goff --text`, NEVER a once-watch re-arm loop or any cleanup verb near a watch.** Doc: `~/.claude-shared/rules/post-mail-doorbell.md`.
 - **Mirrors are hand-written and drift: any /stack or /jobsite content change must update `content/mirrors/*` in the same session.**
 - **Pushes gated per-act, commits ungated; one "push it" = exactly one push.**
+
+## Review sweep (2026-08-20)
+
+- Perf: scroll-driven state moved out of StackShell into `StackRail.tsx` (was re-rendering the whole ~5k-element tree per tick); section offsets cached + ResizeObserver; chapter-3+ figures via `next/dynamic` (ssr kept); `useOnceVisible` fires at ratio ≥ threshold OR half-viewport coverage (fixes tall-mobile stall without off-screen autoplay); aria-live only after user interaction; jobsite `content-visibility: auto` to bound Firefox animations.
+- Product call (Fable, reversible): **SetupLink deleted, `stack-mode` localStorage preference gone** — both pages already carry the Easy/Hard ModeToggle; the silent nav redirect mislabeled "The Setup · 11 chapters" as a link to /jobsite.
+- Typography: all new-figure micro-labels floored at 0.68rem; captions unified at 0.92rem/text-2/warm left rule.
+- Footgun: JSX drops the space after `{expr}` when the following text wraps lines, and oxfmt rewrites `{' '}` back — use `&#32;` (SkillsShowcase caption). Papercut filed.
+- VQA caught: done-summary class leaking onto every /stack download row; gate-author "three green / 1 passed" contradiction; jobsite progress bar sliding backwards (content-visibility placeholder).
 
 ## Tonight's build (2026-07-31 evening, multi-agent: Fable coordinating 15+ opus lanes + #commons crew)
 
