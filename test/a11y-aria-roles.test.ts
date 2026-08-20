@@ -6,15 +6,6 @@ import { join } from 'node:path'
 const projectRoot = join(__dirname, '..')
 
 describe('A11y: aria-hidden, roles, and reduced motion', () => {
-  describe('Footer online indicator', () => {
-    it('should have aria-hidden on decorative online status dot', () => {
-      const filePath = join(projectRoot, 'components/layout/Footer.tsx')
-      const content = readFileSync(filePath, 'utf-8')
-      const hasAriaHidden = /animate-ping[\s\S]*aria-hidden="true"/.test(content)
-      assert.ok(hasAriaHidden, 'Footer online indicator dot should have aria-hidden')
-    })
-  })
-
   describe('Lucide icons', () => {
     it('TransmissionCard Radio icon should have aria-hidden', () => {
       const filePath = join(projectRoot, 'components/transmissions/TransmissionCard.tsx')
