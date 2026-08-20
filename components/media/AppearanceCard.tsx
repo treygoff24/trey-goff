@@ -120,7 +120,7 @@ export function AppearanceCard({ appearance, variant = 'list' }: AppearanceCardP
         </h3>
 
         {appearance.summary && (
-          <p className="mb-4 flex-1 text-sm text-text-2 line-clamp-3">{appearance.summary}</p>
+          <p className="mb-4 text-sm text-text-2 line-clamp-3">{appearance.summary}</p>
         )}
 
         <div className="mt-auto flex items-center gap-1.5 pt-2 text-xs font-medium text-text-3 transition-colors group-hover:text-warm">
