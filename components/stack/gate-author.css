@@ -127,9 +127,6 @@
   overflow-x: auto;
   mask-image: linear-gradient(to right, #000 calc(100% - 1.2rem), transparent);
 }
-#stack-root .ga-panel .figscroll-hint {
-  display: block;
-}
 #stack-root .ga-line {
   display: block;
   padding: 0 0.75rem 0 0;

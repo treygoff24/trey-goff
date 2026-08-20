@@ -231,7 +231,7 @@ export function GateAuthorFigure() {
                   {line}
                   {i === t.hi ? (
                     <i className="ga-mark ga-mark-soft">
-                      {author === 'impl' ? 'copied from the run' : 'copied from the brief'}
+                      {author === 'impl' ? 'from the run' : 'from the brief'}
                     </i>
                   ) : null}
                 </span>
@@ -286,7 +286,7 @@ export function GateAuthorFigure() {
             </>
           ) : (
             <>
-              <span className="g">✔ Three gates green.</span> 1 passed, 0 failed — and the 5 in the
+              <span className="g">✔ Three gates green.</span> The one test passed, none failed — and the 5 in the
               assertion is the 5 the bug produced.{' '}
               <b>The test was derived from the behaviour, so it can never disagree with it.</b>
             </>
