@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import Graph from 'graphology'
 import Sigma from 'sigma'
 import forceAtlas2 from 'graphology-layout-forceatlas2'
+import { NodePointProgram } from 'sigma/rendering'
 import type { GraphData, GraphNode } from '@/lib/graph/types'
 
 interface GraphCanvasProps {
@@ -76,6 +77,7 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
         x: Math.random() * 100,
         y: Math.random() * 100,
         nodeType: node.type,
+        type: node.type === 'transmission' ? 'point' : 'circle',
         url: node.url,
         meta: node.meta,
       })
@@ -110,11 +112,12 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
 
     try {
       sigma = new Sigma(graph, containerRef.current, {
+        nodeProgramClasses: { point: NodePointProgram },
         renderLabels: true,
         labelFont: 'Satoshi, system-ui, sans-serif',
         labelSize: isMobile ? 10 : 12,
         labelColor: { color: 'rgba(255, 255, 255, 0.92)' },
-        labelRenderedSizeThreshold: isMobile ? 14 : 8,
+        labelRenderedSizeThreshold: Number.POSITIVE_INFINITY,
         defaultEdgeColor: 'rgba(255, 255, 255, 0.15)',
         defaultNodeColor: '#7C5CFF',
         minCameraRatio: 0.1,
@@ -155,9 +158,9 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
 
       sigma.setSetting('nodeReducer', (n, attrs) => {
         if (neighbors.has(n)) {
-          return { ...attrs, zIndex: 1 }
+          return { ...attrs, label: n === node ? attrs.label : '', zIndex: 1 }
         }
-        return { ...attrs, color: 'rgba(255, 255, 255, 0.1)', zIndex: 0 }
+        return { ...attrs, label: '', zIndex: 0 }
       })
 
       sigma.setSetting('edgeReducer', (e, attrs) => {
@@ -173,7 +176,7 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
     })
 
     sigma.on('leaveNode', () => {
-      sigma.setSetting('labelRenderedSizeThreshold', 8)
+      sigma.setSetting('labelRenderedSizeThreshold', Number.POSITIVE_INFINITY)
       sigma.setSetting('nodeReducer', null)
       sigma.setSetting('edgeReducer', null)
       sigma.refresh()
