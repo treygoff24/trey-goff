@@ -903,7 +903,7 @@ Attempt 2, after the fix:
 
 **03 — Commits ungated, pushes gated.** Let it commit constantly and without asking — that's your undo. But pushing, opening a PR, tagging, deploying: **every one of those needs a fresh yes from a human, and yesterday's yes doesn't count.** Hooks can literally, forcibly stop agents from pushing against your will — just ask your agent to implement them for you.
 
-[Interactive figure: a ratchet of commit beads. Commits accumulate freely and cost nothing; the push button only fires while consent is armed, and pushing spends it. Try to push unarmed and the answer is a refusal, not a prompt. The resting state is six commits, four of them pushed, consent disarmed.]
+[Interactive figure: a ratchet of commit beads. Commits accumulate freely and cost nothing; the push button only fires while consent is armed, and pushing spends it. Try to push unarmed and the answer is a refusal, not a prompt. It starts empty — no commits, nothing pushed, consent disarmed — and every bead on the rail is one you added.]
 
 > **Commits are my undo;** pushes are the only thing that leaves the building. Consent is spent on use — yesterday's yes doesn't count.
 
