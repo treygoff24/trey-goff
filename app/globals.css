@@ -275,12 +275,20 @@ body {
 }
 
 .tg-rule-row {
-  display: grid;
-  grid-template-columns: minmax(2.5rem, 0.18fr) minmax(0, 1fr) auto;
-  gap: clamp(1rem, 3vw, 2.5rem);
-  align-items: baseline;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   padding-block: clamp(1rem, 2.5vw, 1.55rem);
   border-top: 1px solid var(--color-border-1);
+}
+
+@media (min-width: 640px) {
+  .tg-rule-row {
+    display: grid;
+    grid-template-columns: minmax(8.5rem, 0.18fr) minmax(0, 1fr) auto;
+    gap: clamp(1rem, 3vw, 2.5rem);
+    align-items: baseline;
+  }
 }
 
 .tg-rule-row:last-child {
