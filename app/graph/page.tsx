@@ -17,9 +17,13 @@ export default function GraphPage() {
         <p className="eyebrow text-text-3">Knowledge map</p>
         <h1 className="mb-4 font-satoshi text-4xl font-medium text-text-1">Knowledge Graph</h1>
         <p className="max-w-3xl text-lg text-text-2">
-          An interactive visualization of how ideas connect across essays, books, and notes. Click
-          on nodes to explore, hover to see connections, and use the mobile lenses to simplify the
-          map on smaller screens.
+          An interactive visualization of how ideas connect across essays, books, and notes.{' '}
+          <span className="inline [@media(pointer:coarse)]:hidden">
+            Click nodes to explore and hover to reveal connections.
+          </span>
+          <span className="hidden [@media(pointer:coarse)]:inline">
+            Tap nodes to explore; drag to pan and pinch to zoom.
+          </span>
         </p>
       </header>
 

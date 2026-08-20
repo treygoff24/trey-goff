@@ -39,10 +39,16 @@ const MOBILE_LENSES = {
 
 export function GraphClient({ data }: GraphClientProps) {
   const isMobile = useMediaQuery('(max-width: 767px)')
+  const isCoarsePointer = useMediaQuery('(pointer: coarse)')
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null)
   const [visibleTypes, setVisibleTypes] = useState<Set<NodeType>>(new Set(ALL_TYPES))
   const [mobileLens, setMobileLens] = useState<keyof typeof MOBILE_LENSES>('everything')
   const hasAppliedMobileDefaultRef = useRef(false)
+  const inspectorRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (isMobile && selectedNode) inspectorRef.current?.scrollIntoView({ block: 'nearest' })
+  }, [isMobile, selectedNode])
 
   useEffect(() => {
     if (!isMobile || hasAppliedMobileDefaultRef.current) return
@@ -206,29 +212,31 @@ export function GraphClient({ data }: GraphClientProps) {
             role="group"
             aria-label="Visible graph node types"
           >
-            {(Object.keys(TYPE_LABELS) as NodeType[]).map((type) => (
-              <button
-                key={type}
-                onClick={() => toggleType(type)}
-                aria-pressed={visibleTypes.has(type) ? 'true' : 'false'}
-                className={`inline-flex min-h-11 items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all ${
-                  visibleTypes.has(type)
-                    ? 'bg-surface-2 text-text-1'
-                    : 'bg-surface-1 text-text-3 opacity-50'
-                }`}
-              >
-                <span
-                  className="h-2 w-2 rounded-full"
-                  style={{
-                    backgroundColor: visibleTypes.has(type)
-                      ? NODE_COLORS[type]
-                      : 'rgba(255, 255, 255, 0.3)',
-                  }}
-                />
-                {TYPE_LABELS[type]}
-                <span className="text-text-3">({typeCounts[type]})</span>
-              </button>
-            ))}
+            {(Object.keys(TYPE_LABELS) as NodeType[])
+              .filter((type) => typeCounts[type] > 0)
+              .map((type) => (
+                <button
+                  key={type}
+                  onClick={() => toggleType(type)}
+                  aria-pressed={visibleTypes.has(type) ? 'true' : 'false'}
+                  className={`inline-flex min-h-11 items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all ${
+                    visibleTypes.has(type)
+                      ? 'bg-surface-2 text-text-1'
+                      : 'bg-surface-1 text-text-3 opacity-50'
+                  }`}
+                >
+                  <span
+                    className="h-2 w-2 rounded-full"
+                    style={{
+                      backgroundColor: visibleTypes.has(type)
+                        ? NODE_COLORS[type]
+                        : 'rgba(255, 255, 255, 0.3)',
+                    }}
+                  />
+                  {TYPE_LABELS[type]}
+                  <span className="text-text-3">({typeCounts[type]})</span>
+                </button>
+              ))}
           </div>
 
           {/* Graph canvas */}
@@ -252,7 +260,9 @@ export function GraphClient({ data }: GraphClientProps) {
 
         {/* Sidebar */}
         <div className="order-1 space-y-4 lg:order-2 lg:space-y-6">
-          <NodeInspector node={selectedNode} isMobile={isMobile} />
+          <div ref={inspectorRef}>
+            <NodeInspector node={selectedNode} isMobile={isMobile} />
+          </div>
 
           {/* Legend */}
           <div className="rounded-2xl border border-border-1 bg-surface-1 p-5 sm:p-6">
@@ -260,15 +270,17 @@ export function GraphClient({ data }: GraphClientProps) {
               Legend
             </h3>
             <div className="space-y-3">
-              {(Object.keys(TYPE_LABELS) as NodeType[]).map((type) => (
-                <div key={type} className="flex items-center gap-2 text-sm">
-                  <span
-                    className="h-3 w-3 rounded-full"
-                    style={{ backgroundColor: NODE_COLORS[type] }}
-                  />
-                  <span className="text-text-2">{TYPE_LABELS[type]}</span>
-                </div>
-              ))}
+              {(Object.keys(TYPE_LABELS) as NodeType[])
+                .filter((type) => typeCounts[type] > 0)
+                .map((type) => (
+                  <div key={type} className="flex items-center gap-2 text-sm">
+                    <span
+                      className="h-3 w-3 rounded-full"
+                      style={{ backgroundColor: NODE_COLORS[type] }}
+                    />
+                    <span className="text-text-2">{TYPE_LABELS[type]}</span>
+                  </div>
+                ))}
             </div>
           </div>
 
@@ -279,16 +291,21 @@ export function GraphClient({ data }: GraphClientProps) {
             </h3>
             <ul className="space-y-2 text-sm text-text-2">
               <li>
-                <span className="text-text-3">Click:</span> Select node
+                <span className="text-text-3">{isCoarsePointer ? 'Tap:' : 'Click:'}</span> Select
+                node
+              </li>
+              {!isCoarsePointer && (
+                <li>
+                  <span className="text-text-3">Drag:</span> Pan view
+                </li>
+              )}
+              <li>
+                <span className="text-text-3">{isCoarsePointer ? 'Pinch:' : 'Scroll:'}</span> Zoom
+                in/out
               </li>
               <li>
-                <span className="text-text-3">Drag:</span> Pan view
-              </li>
-              <li>
-                <span className="text-text-3">Scroll:</span> Zoom in/out
-              </li>
-              <li>
-                <span className="text-text-3">Hover:</span> Highlight connections
+                <span className="text-text-3">{isCoarsePointer ? 'Drag:' : 'Hover:'}</span>{' '}
+                {isCoarsePointer ? 'Pan the map' : 'Highlight connections'}
               </li>
             </ul>
           </div>

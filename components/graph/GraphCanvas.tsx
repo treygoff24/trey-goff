@@ -4,7 +4,68 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import Graph from 'graphology'
 import Sigma from 'sigma'
 import forceAtlas2 from 'graphology-layout-forceatlas2'
+import type { NodeHoverDrawingFunction, NodeLabelDrawingFunction } from 'sigma/rendering'
+import { createNodeCompoundProgram, NodePointProgram } from 'sigma/rendering'
 import type { GraphData, GraphNode } from '@/lib/graph/types'
+
+const GRAPH_BG = '#04130c'
+const GRAPH_TEXT = '#e8f3ec'
+
+function seededPosition(id: string) {
+  let hash = 2166136261
+  for (let index = 0; index < id.length; index += 1) {
+    hash ^= id.charCodeAt(index)
+    hash = Math.imul(hash, 16777619)
+  }
+  const random = () => {
+    hash += 0x6d2b79f5
+    let value = hash
+    value = Math.imul(value ^ (value >>> 15), value | 1)
+    value ^= value + Math.imul(value ^ (value >>> 7), value | 61)
+    return ((value ^ (value >>> 14)) >>> 0) / 4294967296
+  }
+  return { x: random() * 100, y: random() * 100 }
+}
+
+function drawLabel(
+  context: CanvasRenderingContext2D,
+  data: Parameters<NodeLabelDrawingFunction>[1],
+  expanded: boolean,
+) {
+  if (!data.label || (!expanded && !data.forceLabel)) return
+  const fontSize = data.size || 12
+  const padding = 5
+  context.font = `500 ${fontSize}px Satoshi, system-ui, sans-serif`
+  const width = context.measureText(data.label).width
+  const left = Math.max(2, Math.min(data.x + data.size + 4, context.canvas.width - width - padding))
+  const top = Math.max(fontSize + 2, Math.min(data.y + fontSize / 2, context.canvas.height - 2))
+  context.fillStyle = GRAPH_TEXT
+  context.textAlign = left === data.x + data.size + 4 ? 'left' : 'right'
+  context.textBaseline = 'bottom'
+  context.fillText(data.label, left, top)
+}
+
+const drawHover: NodeHoverDrawingFunction = (context, data) => {
+  const label = data.label || ''
+  const paddingX = 10
+  const paddingY = 7
+  const fontSize = Math.max(12, data.size || 12)
+  context.font = `600 ${fontSize}px Satoshi, system-ui, sans-serif`
+  const width = context.measureText(label).width + paddingX * 2
+  const height = fontSize + paddingY * 2
+  const rightX = data.x + (data.size || 0) + 10
+  const x =
+    rightX + width <= context.canvas.width - 2 ? rightX : data.x - (data.size || 0) - width - 10
+  const y = Math.max(2, Math.min(data.y - height / 2, context.canvas.height - height - 2))
+  context.fillStyle = GRAPH_BG
+  context.beginPath()
+  context.roundRect(x, y, width, height, 5)
+  context.fill()
+  context.fillStyle = GRAPH_TEXT
+  context.textAlign = x === rightX ? 'left' : 'right'
+  context.textBaseline = 'middle'
+  context.fillText(label, x === rightX ? x + paddingX : x + width - paddingX, y + height / 2)
+}
 
 interface GraphCanvasProps {
   data: GraphData
@@ -68,14 +129,33 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
 
     const graph = new Graph()
 
+    const degree = new Map(data.nodes.map((node) => [node.id, 0]))
+    for (const edge of data.edges) {
+      degree.set(edge.source, (degree.get(edge.source) || 0) + 1)
+      degree.set(edge.target, (degree.get(edge.target) || 0) + 1)
+    }
+    const forcedLabels = new Set(
+      [...degree.entries()]
+        .sort(
+          ([leftId, leftDegree], [rightId, rightDegree]) =>
+            rightDegree - leftDegree || leftId.localeCompare(rightId),
+        )
+        .slice(0, 10)
+        .map(([id]) => id),
+    )
+
     for (const node of data.nodes) {
+      const position = seededPosition(node.id)
       graph.addNode(node.id, {
-        label: node.label,
+        label: forcedLabels.has(node.id) ? node.label : '',
+        originalLabel: node.label,
         size: node.size,
         color: node.color,
-        x: Math.random() * 100,
-        y: Math.random() * 100,
+        x: position.x,
+        y: position.y,
+        forceLabel: forcedLabels.has(node.id),
         nodeType: node.type,
+        type: 'point',
         url: node.url,
         meta: node.meta,
       })
@@ -107,14 +187,24 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
     setIsLayoutRunning(false)
 
     let sigma: Sigma
+    let expandedLabels = false
 
     try {
       sigma = new Sigma(graph, containerRef.current, {
+        nodeProgramClasses: {
+          point: createNodeCompoundProgram(
+            [NodePointProgram],
+            (context, data) => drawLabel(context, data, expandedLabels),
+            drawHover,
+          ),
+        },
         renderLabels: true,
         labelFont: 'Satoshi, system-ui, sans-serif',
         labelSize: isMobile ? 10 : 12,
-        labelColor: { color: 'rgba(255, 255, 255, 0.92)' },
-        labelRenderedSizeThreshold: isMobile ? 14 : 8,
+        labelColor: { color: GRAPH_TEXT },
+        labelRenderedSizeThreshold: 0,
+        defaultDrawNodeLabel: (context, data) => drawLabel(context, data, expandedLabels),
+        defaultDrawNodeHover: drawHover,
         defaultEdgeColor: 'rgba(255, 255, 255, 0.15)',
         defaultNodeColor: '#7C5CFF',
         minCameraRatio: 0.1,
@@ -126,6 +216,21 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
     }
 
     sigmaRef.current = sigma
+
+    sigma.getCamera().on('updated', () => {
+      const shouldExpandLabels = sigma.getCamera().getState().ratio < 0.25
+      if (shouldExpandLabels === expandedLabels) return
+      expandedLabels = shouldExpandLabels
+      sigma.setSetting(
+        'labelRenderedSizeThreshold',
+        shouldExpandLabels ? 0 : Number.POSITIVE_INFINITY,
+      )
+      sigma.setSetting(
+        'nodeReducer',
+        shouldExpandLabels ? (_node, attrs) => ({ ...attrs, label: attrs.originalLabel }) : null,
+      )
+    })
+    sigma.refresh()
 
     sigma.on('clickNode', ({ node }) => {
       const nodeData = graph.getNodeAttributes(node)
@@ -155,9 +260,9 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
 
       sigma.setSetting('nodeReducer', (n, attrs) => {
         if (neighbors.has(n)) {
-          return { ...attrs, zIndex: 1 }
+          return { ...attrs, label: n === node ? attrs.originalLabel : '', zIndex: 1 }
         }
-        return { ...attrs, color: 'rgba(255, 255, 255, 0.1)', zIndex: 0 }
+        return { ...attrs, label: '', zIndex: 0 }
       })
 
       sigma.setSetting('edgeReducer', (e, attrs) => {
@@ -173,7 +278,7 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
     })
 
     sigma.on('leaveNode', () => {
-      sigma.setSetting('labelRenderedSizeThreshold', 8)
+      sigma.setSetting('labelRenderedSizeThreshold', Number.POSITIVE_INFINITY)
       sigma.setSetting('nodeReducer', null)
       sigma.setSetting('edgeReducer', null)
       sigma.refresh()
