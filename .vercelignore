@@ -1,0 +1,7 @@
+.delegate
+.git
+node_modules
+.next
+.next-e2e
+test-results
+playwright-report
