@@ -94,6 +94,8 @@ type Geom = {
   blockW: number
   blockPitch: number
   fileX: number
+  /* x of the single-copy caption; the narrow box has no room for the usual inset. */
+  centerTx: number
   fileW: number
   centerY: number
   singleY: number
@@ -128,6 +130,7 @@ const WIDE: Geom = {
   blockW: 10,
   blockPitch: 13,
   fileX: 270,
+  centerTx: 280,
   fileW: 200,
   centerY: 125,
   singleY: 97,
@@ -161,6 +164,7 @@ const NARROW: Geom = {
   blockW: 9,
   blockPitch: 11,
   fileX: 148,
+  centerTx: 150,
   fileW: 204,
   centerY: 140,
   singleY: 112,
@@ -324,7 +328,7 @@ function Stage({ geom, mode, phase }: { geom: Geom; mode: ModeKey; phase: number
             <text x={geom.fileX + geom.pad + 2} y={geom.centerY - 4} className="cf-hub">
               {FILE}
             </text>
-            <text x={geom.fileX + geom.pad + 2} y={geom.centerY + 13} className="cf-st">
+            <text x={geom.centerTx} y={geom.centerY + 13} className="cf-st">
               {clash ? 'last writer won — silently' : 'one working tree, one copy'}
             </text>
             {claimed && (

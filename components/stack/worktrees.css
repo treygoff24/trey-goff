@@ -195,10 +195,11 @@
     max-width: 28rem;
     margin-inline: auto;
   }
+  /* The narrow svg renders at ~0.93 of its viewBox at 390px; sized to clear 10.5px. */
   #stack-root .wt .wt-narrow text {
-    font-size: 10.5px;
+    font-size: 12px;
   }
   #stack-root .wt .wt-narrow text.hub {
-    font-size: 11.5px;
+    font-size: 12.5px;
   }
 }

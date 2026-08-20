@@ -121,17 +121,17 @@
   letter-spacing: 0.05em;
 }
 #stack-root .wf-chip-t {
-  font-size: 10.5px;
+  font-size: 10.7px;
   fill: var(--sk-text-2);
 }
 #stack-root .wf-band-t {
-  font-size: 10.5px;
+  font-size: 10.7px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   fill: var(--sk-accent);
 }
 #stack-root .wf-note {
-  font-size: 10.5px;
+  font-size: 10.7px;
   letter-spacing: 0.02em;
   fill: var(--sk-text-2);
 }
@@ -141,7 +141,7 @@
 }
 #stack-root .wf-vendor {
   font-family: var(--sk-mono);
-  font-size: 10.5px;
+  font-size: 10.7px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   opacity: 0.9;
@@ -344,7 +344,7 @@
   }
   #stack-root .wf-code pre {
     /* Sized so the longest line still clears the right padding at 390px. */
-    font-size: 0.68rem;
+    font-size: 0.61rem;
     padding: 0.9rem 1.15rem 1rem 0.9rem;
   }
   /* RESUME / GATE / DETACHED stack into caps kickers at this width; inline

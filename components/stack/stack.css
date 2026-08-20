@@ -338,6 +338,11 @@ html:has(#stack-root) {
 #stack-root .rail-toggle:active {
   transform: scale(0.96);
 }
+#stack-root .rail-toggle[data-idle]:not(:focus-visible) {
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+}
 #stack-root .rail-toggle::before {
   content: '';
   display: inline-block;
@@ -1709,8 +1714,8 @@ html:has(#stack-root) {
   #stack-root .shell {
     margin-left: 0;
     padding-left: clamp(1.2rem, 4vw, 1.4rem);
-    /* Reserves the bottom-right chapter pill's column (44px + gap + safe area) so no line passes under it. */
-    padding-right: calc(4.2rem + env(safe-area-inset-right));
+    /* No right gutter for the chapter pill: it fades out while the reader is still, and a gutter shrinks every narrow figure below the label floor. */
+    padding-right: clamp(1.2rem, 4vw, 1.4rem);
     padding-bottom: 4.5rem;
   }
   #stack-root .hero {

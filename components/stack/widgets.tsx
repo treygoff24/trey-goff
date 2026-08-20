@@ -311,6 +311,7 @@ export function FanOut() {
   const OUT = { x: 598, y: 130 }
   return (
     <div
+      ref={fanRef}
       className="fan rv"
       tabIndex={0}
       role="region"

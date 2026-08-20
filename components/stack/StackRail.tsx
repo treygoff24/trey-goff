@@ -21,6 +21,29 @@ export function StackRail({
 }) {
   const [active, setActive] = useState(-1)
   const [pct, setPct] = useState(0)
+  const [idle, setIdle] = useState(false)
+
+  // The phone pill hides while the reader is still so it never sits on a line
+  // of text; any scroll, touch, or key brings it back.
+  useEffect(() => {
+    if (railOpen) {
+      setIdle(false)
+      return
+    }
+    let timer = 0
+    const wake = () => {
+      setIdle(false)
+      window.clearTimeout(timer)
+      timer = window.setTimeout(() => setIdle(true), 1600)
+    }
+    wake()
+    const events: (keyof WindowEventMap)[] = ['scroll', 'touchstart', 'pointerdown', 'keydown']
+    events.forEach((name) => window.addEventListener(name, wake, { passive: true }))
+    return () => {
+      window.clearTimeout(timer)
+      events.forEach((name) => window.removeEventListener(name, wake))
+    }
+  }, [railOpen])
 
   useEffect(() => {
     const nav = document.querySelector<HTMLElement>('#stack-rail .rail-nav')
@@ -117,6 +140,7 @@ export function StackRail({
         type="button"
         aria-expanded={railOpen}
         aria-controls="stack-rail"
+        data-idle={idle || undefined}
         onClick={() => setRailOpen(!railOpen)}
         ref={toggleRef}
       >
