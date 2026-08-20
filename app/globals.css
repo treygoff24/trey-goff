@@ -99,7 +99,6 @@
 html {
   background-color: var(--color-bg-0);
   color: var(--color-text-1);
-  scroll-padding-top: var(--nav-h);
 }
 
 @media (min-width: 768px) {
@@ -108,7 +107,8 @@ html {
   }
 }
 
-:root[data-top-nav-hidden='true'] {
+html:has(#stack-root),
+html:has(#jobsite-root) {
   --nav-h: 0px;
 }
 
@@ -116,7 +116,7 @@ html {
    Lives in the base layer so per-element scroll-mt-* utilities still win. */
 @layer base {
   [id] {
-    scroll-margin-top: var(--nav-h);
+    scroll-margin-top: calc(var(--nav-h) + 1rem);
   }
 }
 
@@ -247,13 +247,13 @@ body {
 .tg-page {
   width: min(100% - 6rem, 72rem);
   margin-inline: auto;
-  padding-block: clamp(9.25rem, 16vw, 9.75rem) clamp(4rem, 8vw, 7rem);
+  padding-block: 2rem clamp(4rem, 8vw, 7rem);
 }
 
 @media (max-width: 639px) {
   .tg-page {
     width: min(calc(100% - 6rem), 72rem);
-    padding-top: 11rem;
+    padding-top: 2rem;
   }
 }
 

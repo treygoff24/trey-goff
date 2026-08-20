@@ -1040,7 +1040,7 @@ export function AuroraLibrary({ books, nodes, edges, topicCount }: AuroraLibrary
       data-testid="aurora-library"
       data-aurora-library-ready={hydrated ? 'true' : 'false'}
     >
-      <header className="mx-12 max-w-[72rem] pb-5 pt-[10.5rem] max-[520px]:mx-auto max-[520px]:max-w-[402px] max-[520px]:px-12 sm:pt-[8.5rem] xl:mx-auto">
+      <header className="mx-12 max-w-[72rem] pb-5 pt-8 max-[520px]:mx-auto max-[520px]:max-w-[402px] max-[520px]:px-12 xl:mx-auto">
         <div className="tg-rise">
           <div className="tg-eyebrow">Library</div>
           <h1 className="tg-display mt-5 max-w-[620px] max-[520px]:max-w-[17rem]">

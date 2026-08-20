@@ -114,7 +114,7 @@ export default function HomePage() {
   ]
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-12 pb-24 pt-44 sm:px-6 sm:pt-32">
+    <div className="mx-auto w-full max-w-6xl px-12 pb-24 pt-8 sm:px-6">
       <header className="tg-rise mx-auto flex min-h-[64vh] max-w-4xl flex-col items-center justify-center py-8 text-center sm:py-12">
         <p className="tg-eyebrow whitespace-nowrap text-[0.62rem] tracking-[0.22em] text-warm sm:text-[0.68rem] sm:tracking-[0.28em]">
           Próspera · Public Policy · Software

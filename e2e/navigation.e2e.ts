@@ -101,24 +101,33 @@ test.describe('Navigation - Mobile', () => {
       const header = page.getByRole('banner')
       expect(await header.boundingBox()).not.toBeNull()
       expect((await header.boundingBox())?.height).toBeLessThanOrEqual(64)
-      await expect(page.getByRole('button', { name: 'Menu' })).toHaveAttribute(
+      await expect(page.getByRole('button', { name: 'Open menu' })).toHaveAttribute(
         'aria-expanded',
         'false',
       )
-      await page.getByRole('button', { name: 'Menu' }).click()
-      await expect(page.getByRole('button', { name: 'Close menu' })).toBeFocused()
-      await expect(page.getByRole('link', { name: 'Writing', exact: true })).toBeVisible()
+      await page.getByRole('button', { name: 'Open menu' }).click()
+      await expect(
+        page.locator('#mobile-navigation-sheet').getByRole('button', { name: 'Close menu' }),
+      ).toBeFocused()
+      await expect(
+        page
+          .locator('#mobile-navigation-sheet')
+          .getByRole('link', { name: 'Writing', exact: true }),
+      ).toBeVisible()
       expect(await page.locator('#mobile-navigation-sheet a').first().boundingBox()).not.toBeNull()
       expect(
         (await page.locator('#mobile-navigation-sheet a').first().boundingBox())?.height,
       ).toBeGreaterThanOrEqual(44)
       await page.keyboard.press('Escape')
-      await expect(page.getByRole('button', { name: 'Menu' })).toBeFocused()
+      await expect(page.getByRole('button', { name: 'Open menu' })).toBeFocused()
     })
 
     test('should navigate from the mobile menu', async ({ page }) => {
-      await page.getByRole('button', { name: 'Menu' }).click()
-      await page.locator('#mobile-navigation-sheet').getByRole('link', { name: 'Writing' }).click()
+      await page.getByRole('button', { name: 'Open menu' }).click()
+      await page
+        .locator('#mobile-navigation-sheet')
+        .getByRole('link', { name: 'Writing', exact: true })
+        .click()
       await expect(page).toHaveURL('/writing')
     })
 

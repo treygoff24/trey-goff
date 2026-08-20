@@ -24,6 +24,7 @@ export function TopNav() {
   const [menuOpen, setMenuOpen] = useState(false)
   const menuButtonRef = useRef<HTMLButtonElement>(null)
   const closeButtonRef = useRef<HTMLButtonElement>(null)
+  const lastMenuLinkRef = useRef<HTMLAnchorElement>(null)
   const wasMenuOpen = useRef(false)
   const hideNav =
     pathname === '/stack' || pathname?.startsWith('/stack/') || pathname === '/jobsite'
@@ -33,11 +34,6 @@ export function TopNav() {
   }, [])
 
   useEffect(() => {
-    document.documentElement.dataset.topNavHidden = hideNav ? 'true' : 'false'
-    return () => document.documentElement.removeAttribute('data-top-nav-hidden')
-  }, [hideNav])
-
-  useEffect(() => {
     setMenuOpen(false)
   }, [pathname])
 
@@ -45,9 +41,20 @@ export function TopNav() {
     if (menuOpen) {
       wasMenuOpen.current = true
       document.body.style.overflow = 'hidden'
+      const inertTargets = [
+        document.getElementById('main-content'),
+        document.querySelector('footer'),
+      ].filter((element): element is HTMLElement => element instanceof HTMLElement)
+      const previousInert = inertTargets.map((element) => element.inert)
+      inertTargets.forEach((element) => {
+        element.inert = true
+      })
       closeButtonRef.current?.focus()
       return () => {
         document.body.style.overflow = ''
+        inertTargets.forEach((element, index) => {
+          element.inert = previousInert[index] ?? false
+        })
       }
     }
 
@@ -62,6 +69,14 @@ export function TopNav() {
     if (!menuOpen) return
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setMenuOpen(false)
+      if (event.key !== 'Tab') return
+      if (event.shiftKey && document.activeElement === closeButtonRef.current) {
+        event.preventDefault()
+        lastMenuLinkRef.current?.focus()
+      } else if (!event.shiftKey && document.activeElement === lastMenuLinkRef.current) {
+        event.preventDefault()
+        closeButtonRef.current?.focus()
+      }
     }
     document.addEventListener('keydown', closeOnEscape)
     return () => document.removeEventListener('keydown', closeOnEscape)
@@ -92,7 +107,7 @@ export function TopNav() {
   return (
     <header
       className={cn(
-        'pointer-events-none fixed inset-x-0 top-0 z-50 transition duration-300 ease-out max-md:bg-bg-0',
+        'pointer-events-none fixed inset-x-0 top-0 z-40 transition duration-300 ease-out max-md:bg-bg-0',
         scrolled &&
           !hideForLibraryLens &&
           'border-b border-border-1 bg-bg-0/85 shadow-[0_12px_40px_color-mix(in_oklab,var(--color-bg-0)_45%,transparent)] backdrop-blur-md',
@@ -136,12 +151,11 @@ export function TopNav() {
           ref={menuButtonRef}
           type="button"
           className="inline-flex h-11 w-11 items-center justify-center border border-border-1 font-mono text-[0.68rem] uppercase tracking-[0.12em] text-text-1 transition-colors hover:border-border-2 hover:text-warm md:hidden"
-          aria-label="Menu"
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={menuOpen}
           aria-controls="mobile-navigation-sheet"
-          onClick={() => setMenuOpen(true)}
+          onClick={() => setMenuOpen((open) => !open)}
         >
-          <span className="sr-only">Menu</span>
           <span aria-hidden="true" className="flex flex-col gap-1">
             <span className="h-px w-4 bg-current" />
             <span className="h-px w-4 bg-current" />
@@ -151,9 +165,12 @@ export function TopNav() {
       <div
         id="mobile-navigation-sheet"
         className={cn(
-          'fixed inset-x-0 top-16 bottom-0 z-50 bg-bg-0 px-6 py-4 md:hidden',
+          'pointer-events-auto fixed inset-x-0 top-16 bottom-0 z-40 bg-bg-0 px-6 py-4 md:hidden',
           menuOpen ? 'block' : 'hidden',
         )}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation"
         aria-hidden={!menuOpen}
       >
         <div className="flex items-center justify-between border-b border-border-1 pb-4">
@@ -171,7 +188,7 @@ export function TopNav() {
           </button>
         </div>
         <div className="flex flex-col pt-2">
-          {navItems.map((item) => {
+          {navItems.map((item, index) => {
             const isActive = pathname === item.href || pathname?.startsWith(item.href + '/')
             return (
               <Link
@@ -183,6 +200,7 @@ export function TopNav() {
                 )}
                 aria-current={isActive ? 'page' : undefined}
                 onClick={() => setMenuOpen(false)}
+                ref={index === navItems.length - 1 ? lastMenuLinkRef : undefined}
               >
                 {item.label}
               </Link>

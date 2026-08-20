@@ -17,14 +17,13 @@ describe('A11y Attributes', () => {
     })
   })
 
-  describe('A7: Handoff masthead avoids orphaned mobile drawer controls', () => {
-    it('should not render the retired hamburger trigger', () => {
+  describe('A7: Mobile navigation trigger is connected to its sheet', () => {
+    it('should expose expanded state and an existing controlled sheet', () => {
       const filePath = join(projectRoot, 'components/layout/TopNav.tsx')
       const content = readFileSync(filePath, 'utf-8')
-      assert.ok(
-        !content.includes('Open menu'),
-        'Retired hamburger button should stay out of TopNav',
-      )
+      assert.match(content, /aria-expanded=\{menuOpen\}/)
+      assert.match(content, /aria-controls="mobile-navigation-sheet"/)
+      assert.match(content, /id="mobile-navigation-sheet"/)
     })
   })
 
