@@ -1696,7 +1696,8 @@ html:has(#stack-root) {
   #stack-root .shell {
     margin-left: 0;
     padding-left: clamp(1.2rem, 4vw, 1.4rem);
-    padding-right: max(4.2rem, calc(1.4rem + env(safe-area-inset-right)));
+    /* Reserves the bottom-right chapter pill's column (44px + gap + safe area) so no line passes under it. */
+    padding-right: calc(4.2rem + env(safe-area-inset-right));
     padding-bottom: 4.5rem;
   }
   #stack-root .hero {
@@ -1792,9 +1793,6 @@ html:has(#stack-root) {
     display: block;
   }
   #stack-root .shell {
-    /* Right padding reserves margin for the bottom-right chapter pill so text never passes under it. */
-    padding-left: clamp(1.2rem, 4vw, 1.4rem);
-    padding-right: max(4.2rem, calc(1.4rem + env(safe-area-inset-right)));
     padding-bottom: 6rem;
   }
   #stack-root .dl {

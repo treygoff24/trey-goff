@@ -121,7 +121,9 @@ export function StackRail({
         ref={toggleRef}
       >
         <span>Chapters</span>
-        <span className="pct">{CHAPTERS[active]?.n ?? '—'}</span>
+        <span className="pct" aria-hidden="true">
+          {CHAPTERS[active]?.n ?? '—'}
+        </span>
       </button>
     </>
   )
