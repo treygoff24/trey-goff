@@ -26,7 +26,7 @@
 }
 #stack-root .arm-group-label {
   font-family: var(--sk-mono);
-  font-size: 0.58rem;
+  font-size: 0.68rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--sk-text-3);
@@ -78,7 +78,7 @@
 }
 #stack-root .arm-n {
   font-variant-numeric: tabular-nums;
-  font-size: 0.62rem;
+  font-size: 0.68rem;
   opacity: 0.7;
 }
 #stack-root .arm-chip[aria-pressed='true'] .arm-n {
@@ -88,7 +88,7 @@
 #stack-root .arm-tally {
   margin: 0.9rem 0 0;
   font-family: var(--sk-mono);
-  font-size: 0.63rem;
+  font-size: 0.68rem;
   letter-spacing: 0.09em;
   color: var(--sk-text-3);
 }
@@ -198,7 +198,7 @@
 }
 #stack-root .arm-job {
   font-family: var(--sk-mono);
-  font-size: 0.56rem;
+  font-size: 0.68rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--sk-text-3);
@@ -227,7 +227,7 @@
   padding: 0.42rem 0.42rem 0.42rem 0.7rem;
   border: 1px solid var(--sk-border-1);
   border-radius: 8px;
-  background: rgba(4, 19, 12, 0.55);
+  background: color-mix(in oklab, var(--color-bg-0) 55%, transparent);
 }
 #stack-root .arm-install code {
   font-family: var(--sk-mono);
@@ -235,6 +235,7 @@
   color: var(--sk-text-1);
   overflow-x: auto;
   white-space: nowrap;
+  mask-image: linear-gradient(to right, #000 calc(100% - 1.2rem), transparent);
 }
 #stack-root .arm-copy {
   flex: 0 0 auto;
@@ -268,7 +269,7 @@
 }
 #stack-root .arm-link {
   font-family: var(--sk-mono);
-  font-size: 0.63rem;
+  font-size: 0.68rem;
   letter-spacing: 0.08em;
   color: var(--sk-accent);
   text-decoration: none;
@@ -299,6 +300,9 @@
   #stack-root .arm-role {
     grid-column: 2 / -1;
     font-size: 0.82rem;
+  }
+  #stack-root .arm-job {
+    grid-column: 2 / -1;
   }
   #stack-root .arm-panel {
     padding-left: 0.5rem;

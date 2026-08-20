@@ -30,7 +30,7 @@
 }
 #stack-root .cf-hint {
   font-family: var(--sk-mono);
-  font-size: 0.62rem;
+  font-size: 0.68rem;
   letter-spacing: 0.08em;
   text-transform: lowercase;
   color: var(--sk-text-3);
@@ -280,7 +280,7 @@
   margin: 1rem 0 0;
   padding-left: 0.9rem;
   box-shadow: var(--sk-edge-warm);
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   line-height: 1.6;
   color: var(--sk-text-2);
 }

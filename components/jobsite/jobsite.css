@@ -156,6 +156,8 @@ html:has(#jobsite-root) body > footer {
    here would draw the seam the feather exists to hide. */
 .js-beat {
   --js-accent: var(--js-active);
+  content-visibility: auto;
+  contain-intrinsic-size: 1200px;
 }
 .js-scene {
   position: relative;
@@ -352,7 +354,7 @@ html:has(#jobsite-root) body > footer {
   color: color-mix(in oklab, var(--js-accent) 76%, var(--js-text-1));
 }
 .js-deeper {
-  color: var(--js-text-3) !important;
+  color: var(--js-text-3);
   font-style: italic;
 }
 .js-deeper-link {
@@ -363,7 +365,8 @@ html:has(#jobsite-root) body > footer {
   text-decoration-color: color-mix(in oklab, var(--js-accent) 40%, transparent);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
-  padding-inline: 0.1em;
+  padding-inline: 0.35em;
+  margin-inline: -0.1em;
   transition: text-decoration-color 200ms var(--js-ease);
 }
 .js-deeper-link:hover {

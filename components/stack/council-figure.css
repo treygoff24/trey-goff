@@ -40,7 +40,7 @@
 #stack-root .cnc-head {
   margin: 0;
   font-family: var(--sk-mono);
-  font-size: 0.63rem;
+  font-size: 0.68rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--sk-text-3);
@@ -87,7 +87,7 @@
   border-radius: 6px;
   padding: 0.46rem 0.6rem;
   font-family: var(--sk-mono);
-  font-size: 0.62rem;
+  font-size: 0.68rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--sk-text-3);
@@ -98,7 +98,7 @@
     background 220ms var(--sk-ease);
 }
 #stack-root .cnc-step-n {
-  font-size: 0.54rem;
+  font-size: 0.68rem;
   opacity: 0.6;
 }
 #stack-root .cnc-step.is-past {
@@ -147,14 +147,14 @@
 #stack-root .cnc-prop-name {
   display: block;
   font-family: var(--sk-mono);
-  font-size: 0.66rem;
+  font-size: 0.68rem;
   letter-spacing: 0.1em;
   color: var(--sk-text-1);
 }
 #stack-root .cnc-prop-name i {
   display: block;
   font-style: normal;
-  font-size: 0.55rem;
+  font-size: 0.68rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--sk-text-3);
@@ -210,7 +210,7 @@
   top: -4px;
   bottom: -4px;
   width: 0;
-  border-left: 1px dashed rgba(232, 243, 236, 0.55);
+  border-left: 1px dashed color-mix(in oklab, var(--sk-text-1) 55%, transparent);
   opacity: 1;
   transition: opacity 400ms var(--sk-ease);
 }
@@ -223,7 +223,7 @@
   white-space: nowrap;
   font-family: var(--sk-mono);
   font-style: normal;
-  font-size: 0.5rem;
+  font-size: 0.68rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--sk-text-3);
@@ -359,7 +359,7 @@
   display: block;
   margin-top: 0.18rem;
   font-family: var(--sk-mono);
-  font-size: 0.48rem;
+  font-size: 0.68rem;
   font-weight: 400;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -412,7 +412,7 @@
   opacity: 0.16;
 }
 #stack-root .cnc-chip.is-moved .cnc-chip-text {
-  font-size: 0.56rem;
+  font-size: 0.68rem;
 }
 
 #stack-root .cnc-ghost {
@@ -441,7 +441,7 @@
 }
 #stack-root .cnc-ghost span {
   font-family: var(--sk-mono);
-  font-size: 0.58rem;
+  font-size: 0.68rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--sk-text-3);
@@ -488,14 +488,14 @@
 }
 #stack-root .cnc-panel-name {
   font-family: var(--sk-mono);
-  font-size: 0.66rem;
+  font-size: 0.68rem;
   letter-spacing: 0.1em;
   color: var(--sk-text-1);
 }
 #stack-root .cnc-panel-name i {
   display: block;
   font-style: normal;
-  font-size: 0.55rem;
+  font-size: 0.68rem;
   letter-spacing: 0.1em;
   color: var(--sk-text-3);
   margin-top: 0.14rem;
@@ -514,7 +514,7 @@
 #stack-root .cnc-hint {
   margin: 0.9rem 0 0;
   font-family: var(--sk-mono);
-  font-size: 0.58rem;
+  font-size: 0.68rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--sk-text-3);
@@ -559,7 +559,7 @@
   gap: 0.5rem;
   margin: 0 0 0.8rem;
   font-family: var(--sk-mono);
-  font-size: 0.66rem;
+  font-size: 0.68rem;
   font-weight: 400;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -597,7 +597,7 @@
   }
   #stack-root .cnc-step {
     flex: 1 1 5.4rem;
-    font-size: 0.56rem;
+    font-size: 0.68rem;
     letter-spacing: 0.08em;
   }
 }

@@ -16,7 +16,7 @@
 #stack-root .ds-head {
   margin: 0 0 1.1rem;
   font-family: var(--sk-mono);
-  font-size: 0.63rem;
+  font-size: 0.68rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--sk-text-3);
@@ -48,7 +48,7 @@
   margin-bottom: 0.7rem;
   border-bottom: 1px solid var(--sk-border-1);
   font-family: var(--sk-mono);
-  font-size: 0.58rem;
+  font-size: 0.68rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
@@ -233,14 +233,14 @@
 }
 #stack-root .ds-file-head code {
   font-family: var(--sk-mono);
-  font-size: 0.66rem;
+  font-size: 0.68rem;
   color: var(--sk-text-1);
   overflow-wrap: anywhere;
 }
 #stack-root .ds-verdict {
   flex: none;
   font-family: var(--sk-mono);
-  font-size: 0.52rem;
+  font-size: 0.68rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
@@ -286,7 +286,7 @@
   /* Reserves the label line that sits above the 12px track. */
   margin: 0 0 1.8rem;
   font-family: var(--sk-mono);
-  font-size: 0.58rem;
+  font-size: 0.68rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--sk-text-3);
@@ -309,7 +309,7 @@
   left: 0;
   font-family: var(--sk-mono);
   font-style: normal;
-  font-size: 0.5rem;
+  font-size: 0.68rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--sk-text-3);
@@ -358,7 +358,7 @@
   white-space: nowrap;
   font-family: var(--sk-mono);
   font-style: normal;
-  font-size: 0.5rem;
+  font-size: 0.68rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--sk-rose);

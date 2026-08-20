@@ -35,7 +35,7 @@
 }
 #stack-root .fe-head .t {
   font-family: var(--sk-mono);
-  font-size: 0.63rem;
+  font-size: 0.68rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--sk-text-3);
@@ -100,7 +100,7 @@
   padding: 0.5rem 0.7rem;
   border-bottom: 1px solid var(--sk-border-1);
   font-family: var(--sk-mono);
-  font-size: 0.56rem;
+  font-size: 0.68rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
 }
@@ -147,7 +147,7 @@
   margin: 0;
   padding: 0 0.7rem 0.7rem;
   font-family: var(--sk-mono);
-  font-size: 0.58rem;
+  font-size: 0.68rem;
   letter-spacing: 0.08em;
   color: var(--sk-text-3);
 }
@@ -256,7 +256,7 @@
   border: 1px solid rgba(151, 232, 187, 0.3);
   background: rgba(8, 33, 22, 0.85);
   font-family: var(--sk-mono);
-  font-size: 0.58rem;
+  font-size: 0.68rem;
   line-height: 1.4;
   letter-spacing: 0.02em;
   color: var(--sk-accent);
@@ -405,7 +405,7 @@
 }
 #stack-root .fe-chip {
   font-family: var(--sk-mono);
-  font-size: 0.54rem;
+  font-size: 0.68rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 0.15rem 0.45rem;
@@ -440,6 +440,13 @@
 #stack-root .fe-compact .fe-sheet {
   /* No peel to perform: the state is simply attached or it is not. */
   transition: none;
+}
+
+@media (max-width: 380px) {
+  #stack-root .fe-sheet {
+    max-width: calc(100% - 0.7rem);
+    margin-inline: 0.35rem;
+  }
 }
 
 #stack-root .fe-cap {
@@ -498,7 +505,7 @@
     padding-right: 0.4rem;
   }
   #stack-root .fe-note {
-    font-size: 0.53rem;
+    font-size: 0.68rem;
     margin-left: 2.3rem;
     max-width: calc(100% - 3rem);
   }

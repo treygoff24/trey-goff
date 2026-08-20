@@ -87,7 +87,7 @@
 #stack-root .rl-bar em {
   font-family: var(--sk-mono);
   font-style: normal;
-  font-size: 0.66rem;
+  font-size: 0.68rem;
   letter-spacing: 0.05em;
   color: var(--sk-text-3);
   white-space: nowrap;
@@ -160,7 +160,7 @@
   margin: 1rem 0 0;
   padding-left: 0.9rem;
   box-shadow: var(--sk-edge-warm);
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   line-height: 1.6;
   color: var(--sk-text-2);
 }

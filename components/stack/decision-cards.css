@@ -34,7 +34,7 @@
 #stack-root .dcf-regime {
   margin: 0;
   font-family: var(--sk-mono);
-  font-size: 0.62rem;
+  font-size: 0.68rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -140,7 +140,7 @@
   justify-content: space-between;
   gap: 0.6rem;
   font-family: var(--sk-mono);
-  font-size: 0.55rem;
+  font-size: 0.68rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--sk-text-3);
