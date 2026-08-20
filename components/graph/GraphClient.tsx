@@ -44,6 +44,11 @@ export function GraphClient({ data }: GraphClientProps) {
   const [visibleTypes, setVisibleTypes] = useState<Set<NodeType>>(new Set(ALL_TYPES))
   const [mobileLens, setMobileLens] = useState<keyof typeof MOBILE_LENSES>('everything')
   const hasAppliedMobileDefaultRef = useRef(false)
+  const inspectorRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (isMobile && selectedNode) inspectorRef.current?.scrollIntoView({ block: 'nearest' })
+  }, [isMobile, selectedNode])
 
   useEffect(() => {
     if (!isMobile || hasAppliedMobileDefaultRef.current) return
@@ -255,7 +260,9 @@ export function GraphClient({ data }: GraphClientProps) {
 
         {/* Sidebar */}
         <div className="order-1 space-y-4 lg:order-2 lg:space-y-6">
-          <NodeInspector node={selectedNode} isMobile={isMobile} />
+          <div ref={inspectorRef}>
+            <NodeInspector node={selectedNode} isMobile={isMobile} />
+          </div>
 
           {/* Legend */}
           <div className="rounded-2xl border border-border-1 bg-surface-1 p-5 sm:p-6">
@@ -287,9 +294,11 @@ export function GraphClient({ data }: GraphClientProps) {
                 <span className="text-text-3">{isCoarsePointer ? 'Tap:' : 'Click:'}</span> Select
                 node
               </li>
-              <li>
-                <span className="text-text-3">Drag:</span> Pan view
-              </li>
+              {!isCoarsePointer && (
+                <li>
+                  <span className="text-text-3">Drag:</span> Pan view
+                </li>
+              )}
               <li>
                 <span className="text-text-3">{isCoarsePointer ? 'Pinch:' : 'Scroll:'}</span> Zoom
                 in/out
