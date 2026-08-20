@@ -58,6 +58,15 @@ export function featuredByStation(stationId: string): Tool[] {
   return featuredTools.filter((t) => t.station === stationId)
 }
 
+export function sourceLabel(url: string, fallback: string): string {
+  const host = new URL(url).hostname.replace(/^www\./, '')
+  if (host === 'github.com') return fallback.toLowerCase() === 'homebrew' ? 'Homebrew' : 'github'
+  if (host === 'npmjs.com') return 'npm'
+  if (host === 'crates.io') return 'crates.io'
+  if (host === 'pypi.org') return 'PyPI'
+  return fallback
+}
+
 export function readCapture(capture: ToolCapture): string {
   return readFileSync(
     join(process.cwd(), 'content', 'software', 'captures', capture.file),

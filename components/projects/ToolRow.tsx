@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import type { Tool } from '@/lib/software/tools'
-import { readCapture, toolById } from '@/lib/software/tools'
+import { readCapture, sourceLabel, toolById } from '@/lib/software/tools'
+import { SourceLink } from './SourceLink'
 import { TerminalSpecimen } from './TerminalSpecimen'
 
 const statusWords: Record<Tool['status'], string> = {
@@ -46,9 +47,17 @@ export function ToolRow({ tool, open }: ToolRowProps) {
             →
           </span>
         </span>
-        <span className="col-start-1 row-start-2 mt-0 block max-w-3xl text-sm leading-6 text-text-2">
+        <span className="col-span-2 col-start-1 row-start-2 mt-0 block max-w-3xl text-sm leading-6 text-text-2 md:col-span-1">
           {tool.oneLiner}
         </span>
+        {tool.links[0] && (
+          <SourceLink
+            href={tool.links[0].url}
+            className="col-start-2 row-start-3 justify-self-end text-sm text-warm underline decoration-warm/50 underline-offset-2 transition-colors hover:text-accent md:row-start-2"
+          >
+            {sourceLabel(tool.links[0].url, tool.links[0].label)}
+          </SourceLink>
+        )}
       </summary>
 
       <div className="px-1 pb-8">

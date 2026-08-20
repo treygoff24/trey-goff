@@ -75,7 +75,7 @@ const fallbackWork = [
     meta: 'Public policy',
     status: 'Initiative',
     title: 'Governance experiments',
-    href: '/writing?topic=governance',
+    href: '/writing?tag=governance',
     description:
       'Turning institutional experiments into legible, repeatable models others can adopt.',
   },

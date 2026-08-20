@@ -3,7 +3,13 @@ import { HashDossierOpener } from '@/components/projects/HashDossierOpener'
 import { WorkshopStation } from '@/components/projects/WorkshopStation'
 import { EditorialHeader } from '@/components/site/EditorialHeader'
 import { EditorialIndexRow } from '@/components/site/EditorialIndexRow'
-import { featuredByStation, ledgerTools, stations, toolById } from '@/lib/software/tools'
+import {
+  featuredByStation,
+  ledgerTools,
+  sourceLabel,
+  stations,
+  toolById,
+} from '@/lib/software/tools'
 
 export const metadata = {
   title: 'Projects',
@@ -42,7 +48,7 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
   const siteProject = [...allProjects].sort((a, b) => a.featuredRank - b.featuredRank)[0]
 
   return (
-    <div className="tg-page max-w-6xl">
+    <div className="tg-page max-w-6xl" style={{ width: 'calc(100% - 4rem)' }}>
       <HashDossierOpener />
       <EditorialHeader
         eyebrow="The Workshop"
@@ -107,19 +113,23 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
           {ledgerTools.map((tool) => (
             <li
               key={tool.id}
-              className="grid grid-cols-[auto_1fr] items-baseline gap-x-4 gap-y-1 border-t border-border-1 px-1 py-3 sm:grid-cols-[10rem_1fr_auto]"
+              className="grid grid-cols-1 items-baseline gap-x-4 gap-y-1 border-t border-border-1 px-1 py-3 sm:grid-cols-[10rem_1fr_auto]"
             >
               <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-text-3">
                 {tool.name}
               </span>
               <span className="text-sm leading-6 text-text-2">{tool.oneLiner}</span>
-              {/* One semantic per slot: the right column is always the stack;
-                  experiment status is a separate, warm-tinted marker so the
-                  column doesn't silently switch between language and lifecycle.
-                  On mobile the tag drops to its own line under the description
-                  (col 2) instead of disappearing — phone readers still get the
-                  language/status classification. */}
-              <span className="col-start-2 flex items-baseline gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-text-3 sm:col-start-3 sm:row-start-1">
+              <span className="flex flex-wrap items-baseline gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-text-3 sm:col-start-3 sm:row-start-1">
+                {tool.links[0] && (
+                  <a
+                    href={tool.links[0].url}
+                    className="text-warm underline decoration-warm/50 underline-offset-2 transition-colors hover:text-accent"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {sourceLabel(tool.links[0].url, tool.links[0].label)}
+                  </a>
+                )}
                 {tool.status === 'experiment' && <span className="text-warm">experiment</span>}
                 <span>{tool.stack}</span>
               </span>
