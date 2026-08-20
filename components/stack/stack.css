@@ -1699,6 +1699,7 @@ html:has(#stack-root) {
 }
 
 @media (min-width: 1081px) {
+  /* Mirrors --sk-rail-w, which is scoped to #stack-root and can't resolve here. */
   html:has(#stack-root) body > footer {
     padding-left: 16.5rem;
   }
