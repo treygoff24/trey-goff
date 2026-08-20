@@ -309,26 +309,62 @@ html:has(#stack-root) {
   display: none;
   position: fixed;
   z-index: 55;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 1.1rem;
+  right: max(0.9rem, env(safe-area-inset-right));
+  bottom: max(0.9rem, env(safe-area-inset-bottom));
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.62rem 1.05rem;
+  justify-content: center;
+  gap: 0.32rem;
+  min-width: 44px;
+  min-height: 44px;
+  max-width: 52px;
+  height: 44px;
+  padding: 0 0.55rem;
   border-radius: 999px;
   border: 1px solid var(--sk-border-2);
-  background: rgba(6, 26, 16, 0.93);
+  background: color-mix(in srgb, var(--sk-bg-1) 93%, transparent);
   backdrop-filter: blur(14px);
   color: var(--sk-text-1);
   font-family: var(--sk-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.14em;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   cursor: pointer;
-  box-shadow: 0 14px 40px -18px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 10px 30px -10px color-mix(in srgb, var(--sk-bg-0) 90%, black);
+  transition-property: transform, opacity, background-color, border-color;
+  transition-duration: 180ms;
+  transition-timing-function: var(--sk-ease);
+}
+#stack-root .rail-toggle:active {
+  transform: scale(0.96);
+}
+#stack-root .rail-toggle::before {
+  content: '';
+  display: inline-block;
+  width: 11px;
+  height: 9px;
+  background:
+    linear-gradient(var(--sk-accent), var(--sk-accent)) 0 0 / 100% 1.5px no-repeat,
+    linear-gradient(var(--sk-accent), var(--sk-accent)) 0 50% / 100% 1.5px no-repeat,
+    linear-gradient(var(--sk-accent), var(--sk-accent)) 0 100% / 100% 1.5px no-repeat;
+  flex-shrink: 0;
+}
+#stack-root .rail-toggle > span:not(.pct) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 #stack-root .rail-toggle .pct {
   color: var(--sk-accent);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  font-size: 0.65rem;
+  line-height: 1;
 }
 #stack-root .rail-scrim {
   display: none;
@@ -1644,6 +1680,10 @@ html:has(#stack-root) {
 
 /* ── Responsive ─────────────────────────────────────────── */
 @media (max-width: 1080px) {
+  html:has(#stack-root) body > main {
+    position: relative;
+    z-index: 15;
+  }
   html:has(#stack-root) body > footer {
     padding-bottom: 4.5rem;
   }
@@ -1655,6 +1695,8 @@ html:has(#stack-root) {
   }
   #stack-root .shell {
     margin-left: 0;
+    padding-left: clamp(1.2rem, 4vw, 1.4rem);
+    padding-right: max(4.2rem, calc(1.4rem + env(safe-area-inset-right)));
     padding-bottom: 4.5rem;
   }
   #stack-root .hero {
@@ -1680,7 +1722,7 @@ html:has(#stack-root) {
     position: fixed;
     inset: 0;
     z-index: 49;
-    background: rgba(2, 10, 6, 0.6);
+    background: color-mix(in srgb, var(--sk-bg-0) 60%, transparent);
     backdrop-filter: blur(2px);
   }
   #stack-root .rack,
@@ -1750,7 +1792,9 @@ html:has(#stack-root) {
     display: block;
   }
   #stack-root .shell {
-    /* The fixed chapter pill floats over the bottom edge; keep the last content clear of it. */
+    /* Right padding reserves margin for the bottom-right chapter pill so text never passes under it. */
+    padding-left: clamp(1.2rem, 4vw, 1.4rem);
+    padding-right: max(4.2rem, calc(1.4rem + env(safe-area-inset-right)));
     padding-bottom: 6rem;
   }
   #stack-root .dl {
