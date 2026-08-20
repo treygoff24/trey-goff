@@ -1046,6 +1046,25 @@ html[data-konami='true'] a {
   outline-offset: 6px;
 }
 
+.tg-claim-ledger > :not(.tg-claim-ledger-controls) {
+  width: min(60rem, calc(100% - 5.5rem));
+  margin-right: 0;
+  margin-left: 5.5rem;
+}
+
+@media (min-width: 1400px) {
+  .tg-claim-ledger > :not(.tg-claim-ledger-controls) {
+    margin-left: 8rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .tg-claim-ledger > :not(.tg-claim-ledger-controls) {
+    width: 100%;
+    margin-inline: 0;
+  }
+}
+
 .tg-instrument-label {
   font-family: var(--font-mono);
   font-size: 0.68rem;

@@ -254,7 +254,8 @@ export function MachineShell() {
       element.setAttribute('aria-hidden', 'true')
     })
     return () => {
-      if (!narrow) document.body.style.overflow = previousOverflow
+      if (!window.matchMedia('(max-width: 767px)').matches)
+        document.body.style.overflow = previousOverflow
       chrome.forEach((element) => {
         element.inert = false
         element.removeAttribute('aria-hidden')

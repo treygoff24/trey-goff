@@ -400,7 +400,7 @@
 
 .returnLink {
   position: fixed;
-  z-index: 5;
+  z-index: 70;
   bottom: 1rem;
   left: 1rem;
   min-height: 2.75rem;
@@ -514,10 +514,6 @@
     border-top: 1px solid var(--color-border-1);
     border-left: 0;
     padding: 1rem 1.1rem calc(1rem + env(safe-area-inset-bottom));
-  }
-
-  .console[data-expanded] {
-    max-height: min(76dvh, 42rem);
   }
 
   .console {

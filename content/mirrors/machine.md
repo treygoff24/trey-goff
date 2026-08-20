@@ -18,12 +18,12 @@ Status indicator, top right of the console: **Running**, **Paused**, or **Still 
 
 Each is a slider from 0 to 100. The baseline values the page opens with are listed below.
 
-| Lever | Baseline | What it does |
-| --- | --- | --- |
-| Property security | 68 | Chance each year that someone's unfinished investment is seized. |
-| Permitting | 66 | How long committed investment waits before it becomes productive capital. |
-| Open exchange | 62 | How much of the gain from different skills meeting each other is captured. |
-| Tax drag | 28 | The share removed from output that would otherwise be reinvested. |
+| Lever             | Baseline | What it does                                                               |
+| ----------------- | -------- | -------------------------------------------------------------------------- |
+| Property security | 68       | Chance each year that someone's unfinished investment is seized.           |
+| Permitting        | 66       | How long committed investment waits before it becomes productive capital.  |
+| Open exchange     | 62       | How much of the gain from different skills meeting each other is captured. |
+| Tax drag          | 28       | The share removed from output that would otherwise be reinvested.          |
 
 ## Run controls
 
@@ -34,11 +34,11 @@ Each is a slider from 0 to 100. The baseline values the page opens with are list
 
 When the split view is active, a **Left rules** / **Right rules** tab group selects which world the sliders edit, and this note appears:
 
-> Both worlds begin with the same seed and the same distribution of skill and capital. Only the rules differ. Re-run them whenever you want the comparison cleared of history.
+> Both worlds begin with the same seed and the same distribution of skill and capital. Change RIGHT RULES first to make the comparison meaningful, then re-run to clear its history.
 
 ## The ledger
 
-One ledger per world, headed "Left ledger" or "Right ledger", each with a sparkline of total output over the last 120 published samples and a toggle between **Log scale** and **Linear scale** (log is the default). Three readouts, all formatted compactly:
+One ledger per world, headed "Left world ledger" or "Right world ledger", each with a sparkline of total output over the last 120 published samples and a toggle between **Log scale** and **Linear scale** (log is the default). Three readouts, all formatted compactly:
 
 - **Output** — total output this quarter
 - **Structures** — cumulative completed structures
@@ -50,12 +50,12 @@ A screen-reader live region announces the active world's three figures every ten
 
 Four presets, revealed in the lab section once you move any slider. Each applies to whichever panel is active.
 
-| Ruleset | Description | Property security | Permitting | Open exchange | Tax drag |
-| --- | --- | --- | --- | --- | --- |
-| Baseline | Workable rules, ordinary friction, room to compound. | 68 | 66 | 62 | 28 |
-| Secure Titles | What people build is overwhelmingly likely to remain theirs. | 98 | 72 | 70 | 20 |
-| Permit Maze | Investment waits while approvals work through the stack. | 72 | 8 | 58 | 30 |
-| Predator State | Weak claims, narrow exchange, and little left to reinvest. | 2 | 24 | 20 | 76 |
+| Ruleset        | Description                                                  | Property security | Permitting | Open exchange | Tax drag |
+| -------------- | ------------------------------------------------------------ | ----------------- | ---------- | ------------- | -------- |
+| Baseline       | Workable rules, ordinary friction, room to compound.         | 68                | 66         | 62            | 28       |
+| Secure Titles  | What people build is overwhelmingly likely to remain theirs. | 98                | 72         | 70            | 20       |
+| Permit Maze    | Investment waits while approvals work through the stack.     | 72                | 8          | 58            | 30       |
+| Predator State | Weak claims, narrow exchange, and little left to reinvest.   | 2                 | 24         | 20            | 76       |
 
 > This is not a forecast. It is the logic of compounding under risk, made visible. [Read the arguments behind the toy model.](https://www.treygoff.com/writing)
 
@@ -76,7 +76,7 @@ Page links: "Skip the city and reach the controls" (skip link to the console) an
 Three states, drawn from the site's existing semantic palette — no new hues.
 
 - **Green** — compounding. Brightness scales with the agent's accumulated capital.
-- **Amber** — capital committed but not yet realised. An agent yellows in proportion to its *exposure*: the share of its total worth that is committed but not yet built. Drop permitting and the field yellows, because investment sits exposed for longer.
+- **Amber** — capital committed but not yet realised. An agent yellows in proportion to its _exposure_: the share of its total worth that is committed but not yet built. Drop permitting and the field yellows, because investment sits exposed for longer.
 - **Red** — capital taken. A seizure reads at fixed brightness rather than scaling with wealth, because a rich agent losing everything and a poor one losing everything are the same event. Drop property security and the field starts flashing red.
 
 ## How the simulation actually works
@@ -94,32 +94,32 @@ Then pairs numbering 5% of the population — so up to 10% of everyone — are d
 
 **How the levers map onto the model**
 
-| Lever at 0 | Lever at 100 |
-| --- | --- |
-| Property security: 2% annual expropriation risk | 0.01% annual risk |
-| Permitting: 40-quarter construction delay | 2-quarter delay |
-| Open exchange: none of the trade gain captured | all of it captured |
-| Tax drag: nothing removed from output | 72% removed |
+| Lever at 0                                      | Lever at 100       |
+| ----------------------------------------------- | ------------------ |
+| Property security: 2% annual expropriation risk | 0.01% annual risk  |
+| Permitting: 40-quarter construction delay       | 2-quarter delay    |
+| Open exchange: none of the trade gain captured  | all of it captured |
+| Tax drag: nothing removed from output           | 72% removed        |
 
 Changing a slider does not snap the world — the live institution values ease toward their targets at 25% of the remaining gap per tick, so the city transitions rather than jumps.
 
 **Fixed parameters**
 
-| Parameter | Value |
-| --- | --- |
-| Capital share (alpha) | 0.3 |
-| Depreciation | 0.005 per quarter |
-| Initial capital | lognormal, mu 0, sigma 0.5 |
-| Skill | lognormal, mu 0, sigma 0.4 |
-| Investment logistic beta | 6 |
-| Risk penalty | 42 |
-| Trade pairs per tick | 5% of the population count |
-| Trade gain scale | 0.08 |
-| Maximum tax drag | 72% |
-| Institution easing per tick | 0.25 |
-| Seizure flash duration | 8 ticks |
-| Ticks per year | 4 |
-| Ticks per second | 8 |
+| Parameter                   | Value                      |
+| --------------------------- | -------------------------- |
+| Capital share (alpha)       | 0.3                        |
+| Depreciation                | 0.005 per quarter          |
+| Initial capital             | lognormal, mu 0, sigma 0.5 |
+| Skill                       | lognormal, mu 0, sigma 0.4 |
+| Investment logistic beta    | 6                          |
+| Risk penalty                | 42                         |
+| Trade pairs per tick        | 5% of the population count |
+| Trade gain scale            | 0.08                       |
+| Maximum tax drag            | 72%                        |
+| Institution easing per tick | 0.25                       |
+| Seizure flash duration      | 8 ticks                    |
+| Ticks per year              | 4                          |
+| Ticks per second            | 8                          |
 
 Those tuned values produce a 4.497× output ratio between the secure and predatory rulesets at tick 1000 across the project's fixed test seeds.
 
@@ -134,10 +134,10 @@ Two undocumented experiment toggles exist: `?buildings=1` swaps the plain struct
 The simulation population scales to what the device can draw, and a frame monitor downgrades the tier live if frame times slip.
 
 | Quality tier | Agents (single world) | Agents (split) | Antialiasing | Bloom |
-| --- | --- | --- | --- | --- |
-| Low | 1,500 | 750 | no | no |
-| Medium | 6,000 | 3,000 | yes | no |
-| High | 15,000 | 15,000 | yes | yes |
+| ------------ | --------------------- | -------------- | ------------ | ----- |
+| Low          | 1,500                 | 750            | no           | no    |
+| Medium       | 6,000                 | 3,000          | yes          | no    |
+| High         | 15,000                | 15,000         | yes          | yes   |
 
 Mobile devices start at low. Every world is warmed by 200 quarters — fifty years — before the first frame is shown, which is what the loading messages refer to: "Reading this device…", "Giving everyone the same starting point…", "Lighting the first districts…", and "Pre-warming two hundred quarters…".
 

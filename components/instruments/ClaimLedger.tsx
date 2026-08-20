@@ -224,10 +224,16 @@ export default function ClaimLedger() {
   const [activeClaim, setActiveClaim] = useState<string | null>(null)
   const dossierSet = useMemo(() => new Set(dossiers), [dossiers])
 
-  const visible = useMemo(
-    () => new Set(model.rows.filter((row) => matchesFilters(row, filters)).map((r) => r.claim.id)),
+  const visibleIds = useMemo(
+    () => model.rows.filter((row) => matchesFilters(row, filters)).map((row) => row.claim.id),
     [model.rows, filters],
   )
+  const visible = useMemo(() => new Set(visibleIds), [visibleIds])
+  const rowIndex = useMemo(
+    () => new Map(model.rows.map((row, index) => [row.claim.id, index] as const)),
+    [model.rows],
+  )
+  const visibleKey = visibleIds.join('|')
   const filtered = isFiltered(filters)
 
   // Send the reader to whichever claim the URL or a cross-reference named, then let the
@@ -301,17 +307,16 @@ export default function ClaimLedger() {
     )
     rows.forEach((row) => observer.observe(row))
     return () => observer.disconnect()
-  }, [visible])
+  }, [visibleKey])
 
   useEffect(() => {
-    if (!filtered) return
     sectionRef.current?.scrollIntoView({ block: 'start' })
   }, [filtered, filters.verdicts, filters.sections, filters.query, filters.range])
 
   return (
     <section
       ref={sectionRef}
-      className="instrument-block not-prose"
+      className="instrument-block not-prose tg-claim-ledger"
       aria-labelledby="claim-ledger-heading"
       data-instrument={INSTRUMENT_SENTINEL}
     >
@@ -325,7 +330,7 @@ export default function ClaimLedger() {
 
       <div
         ref={stickyRef}
-        className="z-10 -mx-4 mb-6 border-y border-border-1 bg-bg-0/95 px-4 py-3 backdrop-blur lg:sticky lg:top-24"
+        className="tg-claim-ledger-controls z-10 -mx-4 mb-6 border-y border-border-1 bg-bg-0/95 px-4 py-3 backdrop-blur lg:sticky lg:top-24"
       >
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
           <h2 id="claim-ledger-heading" className="tg-instrument-label">
@@ -345,7 +350,7 @@ export default function ClaimLedger() {
           <p className="font-mono text-xs text-text-2" role="status" aria-live="polite">
             {filtered
               ? `${visible.size} of ${model.rows.length} claims`
-              : `Where you are: ${activeClaim ? `${model.rows.findIndex((row) => row.claim.id === activeClaim) + 1} of ` : ''}${model.rows.length} claims · ${model.worked} worked · ${model.rows.length - model.worked} still open`}
+              : `Claim ${activeClaim ? `${(rowIndex.get(activeClaim) ?? 0) + 1} of ` : ''}${model.rows.length} · ${model.worked} worked · ${model.rows.length - model.worked} still open`}
           </p>
         </div>
       </div>

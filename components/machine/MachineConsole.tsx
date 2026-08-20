@@ -145,7 +145,6 @@ export function MachineConsole({
   onRerun,
   onAdvance,
 }: MachineConsoleProps) {
-  const [expanded, setExpanded] = useState(false)
   const liveId = useId()
   const [announcement, setAnnouncement] = useState('')
   const activeRules = activePanel === 'left' ? leftRules : rightRules
@@ -167,16 +166,11 @@ export function MachineConsole({
   }, [activePanel])
 
   const updateLever = (key: keyof InstitutionValues, value: number) => {
-    setExpanded(true)
     onRulesChange(activePanel, { ...activeRules, [key]: value })
   }
 
   return (
-    <aside
-      className={styles.console}
-      data-expanded={expanded || undefined}
-      aria-label="Institution console"
-    >
+    <aside className={styles.console} aria-label="Institution console">
       <div className={styles.consoleTopline}>
         <div>
           <p className={styles.kicker}>The Compound Machine</p>
@@ -209,6 +203,14 @@ export function MachineConsole({
             Right rules
           </button>
         </div>
+      )}
+
+      {split && (
+        <p className={styles.explainer}>
+          Both worlds begin with the same seed and the same distribution of skill and capital.
+          Change RIGHT RULES first to make the comparison meaningful, then re-run to clear its
+          history.
+        </p>
       )}
 
       <div className={styles.levers}>
@@ -279,13 +281,6 @@ export function MachineConsole({
             </button>
           ))}
         </section>
-        {split && (
-          <p className={styles.explainer}>
-            Both worlds begin with the same seed and the same distribution of skill and capital.
-            Change RIGHT RULES first to make the comparison meaningful, then re-run to clear its
-            history.
-          </p>
-        )}
         <p className={styles.footnote}>
           This is not a forecast. It is the logic of compounding under risk, made visible.{' '}
           <Link href="/writing">Read the arguments behind the toy model.</Link>
