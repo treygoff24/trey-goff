@@ -22,9 +22,11 @@ export function EditorialIndexRow({
   tags = [],
   className,
 }: EditorialIndexRowProps) {
+  const trailing = detail ?? (href ? '→' : null)
+
   const content = (
     <>
-      <div className="font-mono text-xs uppercase tracking-[0.16em] text-warm sm:pt-1">
+      <div className="font-mono text-xs uppercase tracking-[0.16em] text-warm [overflow-wrap:anywhere] sm:pt-1">
         {number ?? meta}
       </div>
       <div className="min-w-0">
@@ -33,9 +35,16 @@ export function EditorialIndexRow({
             {meta}
           </div>
         )}
-        <h2 className="font-newsreader text-2xl font-medium leading-tight text-text-1 transition-colors group-hover:text-warm">
-          {title}
-        </h2>
+        <div className="flex items-baseline justify-between gap-4">
+          <h2 className="font-newsreader text-2xl font-medium leading-tight text-text-1 transition-colors group-hover:text-warm">
+            {title}
+          </h2>
+          {trailing && (
+            <span className="shrink-0 font-mono text-xs uppercase tracking-[0.14em] text-warm sm:hidden">
+              {trailing}
+            </span>
+          )}
+        </div>
         {description && (
           <p className="mt-2 max-w-3xl text-sm leading-6 text-text-2">{description}</p>
         )}
@@ -45,8 +54,8 @@ export function EditorialIndexRow({
           </p>
         )}
       </div>
-      <div className="justify-self-end font-mono text-xs uppercase tracking-[0.14em] text-warm">
-        {detail ?? (href ? '→' : null)}
+      <div className="hidden justify-self-end font-mono text-xs uppercase tracking-[0.14em] text-warm sm:block">
+        {trailing}
       </div>
     </>
   )
