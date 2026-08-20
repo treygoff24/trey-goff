@@ -411,9 +411,6 @@
 #stack-root .cnc-chip.is-in.is-dim {
   opacity: 0.16;
 }
-#stack-root .cnc-chip.is-moved .cnc-chip-text {
-  font-size: 0.68rem;
-}
 
 #stack-root .cnc-ghost {
   position: absolute;

@@ -251,7 +251,7 @@
   justify-content: space-between;
   gap: 0.4rem;
   font-family: var(--sk-mono);
-  font-size: 0.66rem;
+  font-size: 0.68rem;
   color: var(--sk-accent);
 }
 #stack-root .cs-file-tag {

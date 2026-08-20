@@ -445,7 +445,7 @@
   transition: none;
 }
 
-@media (max-width: 380px) {
+@media (max-width: 620px) {
   #stack-root .fe-sheet {
     max-width: calc(100% - 0.7rem);
     margin-inline: 0.35rem;

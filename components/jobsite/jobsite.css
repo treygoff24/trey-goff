@@ -359,6 +359,8 @@ html:has(#jobsite-root) body > footer {
 }
 .js-deeper-link {
   display: inline-block;
+  min-width: 1.5rem;
+  text-align: center;
   color: var(--js-accent);
   font-style: normal;
   font-variant-numeric: tabular-nums;
