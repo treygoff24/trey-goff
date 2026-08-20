@@ -83,7 +83,12 @@ export default function RootLayout({
           <AuroraBackground />
           <SkipLink />
           <TopNav />
-          <main id="main-content" className="relative z-10 flex-1 outline-none" tabIndex={-1}>
+          <main
+            id="main-content"
+            className="relative z-10 flex-1 outline-none"
+            style={{ paddingTop: 'var(--nav-h)' }}
+            tabIndex={-1}
+          >
             {children}
           </main>
           <Footer />

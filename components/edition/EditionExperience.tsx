@@ -190,7 +190,7 @@ export function EditionExperience({ catalog }: EditionExperienceProps) {
     return (
       <>
         <LiveStatus status={status} retryAfter={retryAfter} />
-        <div className="mx-auto flex min-h-[78svh] w-full max-w-4xl flex-col items-center justify-center px-6 pb-24 pt-40 text-center sm:pt-36">
+        <div className="mx-auto flex min-h-[78svh] w-full max-w-4xl flex-col items-center justify-center px-6 pb-24 pt-8 text-center">
           <header className="tg-rise w-full">
             <p className="tg-eyebrow text-warm">The Edition</p>
             <h1 className="mt-7 font-newsreader text-[clamp(3rem,7vw,5.4rem)] font-medium leading-[0.98] tracking-[-0.035em] text-text-1 text-balance">

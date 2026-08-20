@@ -57,6 +57,7 @@
 }
 
 :root {
+  --nav-h: 4rem;
   /* Verdict palette — the data colors an instrumented piece adjudicates with. Declared
      here rather than in `@theme` because nothing references them through a Tailwind
      utility: Tailwind emits only the theme variables its generated utilities use, so a
@@ -100,11 +101,22 @@ html {
   color: var(--color-text-1);
 }
 
+@media (min-width: 768px) {
+  :root {
+    --nav-h: 6rem;
+  }
+}
+
+html:has(#stack-root),
+html:has(#jobsite-root) {
+  --nav-h: 0px;
+}
+
 /* Keep in-page anchor targets clear of the fixed header (h-24 + breathing room).
    Lives in the base layer so per-element scroll-mt-* utilities still win. */
 @layer base {
   [id] {
-    scroll-margin-top: 7rem;
+    scroll-margin-top: calc(var(--nav-h) + 1rem);
   }
 }
 
@@ -235,13 +247,13 @@ body {
 .tg-page {
   width: min(100% - 6rem, 72rem);
   margin-inline: auto;
-  padding-block: clamp(9.25rem, 16vw, 9.75rem) clamp(4rem, 8vw, 7rem);
+  padding-block: 2rem clamp(4rem, 8vw, 7rem);
 }
 
 @media (max-width: 639px) {
   .tg-page {
     width: min(calc(100% - 6rem), 72rem);
-    padding-top: 11rem;
+    padding-top: 2rem;
   }
 }
 
