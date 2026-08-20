@@ -47,3 +47,21 @@ Merge order: W1-4 → W1-1 (both touch Footer.tsx; resolve by hand if needed) �
 3. Coordinator: merge in order onto `feat/stack-figures-and-jobsite`, `pnpm ci:quality` + `pnpm test:e2e --project=chromium`.
 4. Preview deploy → two stranger personas + one code-aware VQA lane. Their top-10 must not contain this wave's beads.
 5. Cold scroll → one push.
+
+## Run ledger
+
+Wave 1 merged at b64b786 (W1-4 f0b2633 → W1-1 22ab342 → W1-2 3e445a1 → W1-3 eff662b). Perf + layout Opus pairs gave MERGE on every branch; W1-2 and W1-3 each took two fix rounds plus coordinator hand commits.
+
+Rulings:
+- Ruling: beads is broken in this repo, this file is the work graph — `bd` 1.1.2 can't open the January db — cost if wrong: no ledger for `bd ready`, tracked here instead.
+- Ruling: nav label for /jobsite is "AI, explained" — plain-language name per the stranger report — cost if wrong: a rename across nav, footer, palette, and the search index.
+- Ruling: restore the real site footer on /stack and /jobsite rather than a custom one — one footer to maintain — cost if wrong: the footer's token system differs from the page roots (a visual seam, flagged for VQA).
+- Ruling: removed the /interactive footer link instead of flipping the feature flag — the route is gated off on purpose — cost if wrong: the link comes back with the flag.
+- Ruling: W2-1 and W2-2 merged into one Luna bead — both are the phone header — cost if wrong: a larger diff to review.
+- Ruling: committed Gemini's uncommitted W1-4 diff on its behalf after the OMP output cap killed the lane — diff was complete and intact in the worktree — cost if wrong: none beyond authorship.
+- Ruling: hand-fixed W1-4 (SearchButton extraction), W1-2 closing-link hierarchy/tap target, and W1-3 round 3 (`shouldFilter={false}`, icons, live region) at the coordinator instead of another lane round — the fixes were fully specified by the reviewers — cost if wrong: coordinator edits carry less review; the browser verifier and the gate cover them.
+- Ruling: W1-3 round 3 skipped a second perf re-read — the diff was exactly the reviewer's prescription and the browser lane measured the behavior — cost if wrong: a regression in cmdk keyboard selection (spot-checked manually).
+- Ruling: /jobsite search-index title changed to "AI, explained" to match nav — one name per page — cost if wrong: searches for "The Job Site" still hit via keywords.
+- Ruling: Wave 2 lanes launched off b64b786 before the coordinator gate finished — each lane runs the gate itself — cost if wrong: rebase churn if the merged gate fails.
+- Ruling: Gemini lanes must redirect gate output to a file — the 16MB delegate stdout cap killed W1-4 — cost if wrong: none.
+- Ruling: jargon glosses and the /now freshness copy are Trey's calls (Wave 3 blockers), not lane work.
