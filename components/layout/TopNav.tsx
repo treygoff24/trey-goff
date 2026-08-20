@@ -181,7 +181,6 @@ export function TopNav() {
             ref={closeButtonRef}
             type="button"
             className="inline-flex min-h-11 items-center border border-border-1 px-3 font-mono text-[0.68rem] uppercase tracking-[0.12em] text-text-1 transition-colors hover:border-border-2 hover:text-warm"
-            aria-label="Close menu"
             onClick={() => setMenuOpen(false)}
           >
             Close

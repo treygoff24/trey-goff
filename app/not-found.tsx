@@ -40,7 +40,7 @@ export default function NotFound() {
   }, [])
 
   return (
-    <div className="relative flex min-h-[80vh] flex-col items-center justify-center overflow-hidden px-4">
+    <div className="relative flex min-h-[80vh] flex-col items-center justify-center overflow-hidden px-4 pt-8">
       {/* Grid background */}
       <div
         className="pointer-events-none absolute inset-0 opacity-20"

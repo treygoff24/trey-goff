@@ -106,8 +106,12 @@ test.describe('Navigation - Mobile', () => {
         'false',
       )
       await page.getByRole('button', { name: 'Open menu' }).click()
+      await expect(page.getByRole('button', { name: 'Close menu' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
       await expect(
-        page.locator('#mobile-navigation-sheet').getByRole('button', { name: 'Close menu' }),
+        page.locator('#mobile-navigation-sheet').getByRole('button', { name: 'Close' }),
       ).toBeFocused()
       await expect(
         page
