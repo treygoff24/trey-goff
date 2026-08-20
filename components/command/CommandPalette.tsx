@@ -30,6 +30,8 @@ import {
   Video,
   Mail,
   ExternalLink,
+  HardHat,
+  Layers,
 } from 'lucide-react'
 
 export function CommandPalette() {
@@ -94,14 +96,15 @@ export function CommandPalette() {
         )}
       </CommandList>
 
-      {!isLoading && query && results.length === 0 && !error && (
-        <div className="py-6 text-center text-sm text-text-3" role="status">
-          <div className="flex flex-col items-center gap-2">
+      {/* Always mounted so the live region exists before its text changes. */}
+      <div className="text-center text-sm text-text-3 empty:hidden" role="status">
+        {!isLoading && query && results.length === 0 && !error && (
+          <div className="flex flex-col items-center gap-2 py-6">
             <span className="text-text-3">No results found</span>
             <span className="text-xs text-text-3/70">Try a different search term</span>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Footer hint */}
       <div className="flex items-center justify-between border-t border-border-1 px-3 py-2 text-xs text-text-3 [@media(pointer:coarse)]:hidden">
@@ -177,6 +180,7 @@ function QuickActions({ onSelect }: { onSelect: (url: string) => void }) {
           <span>About</span>
         </CommandItem>
         <CommandItem onSelect={() => onSelect('/jobsite')}>
+          <HardHat className="mr-2 h-4 w-4 text-text-3" />
           <span>AI, explained</span>
         </CommandItem>
         <CommandItem onSelect={() => onSelect('/now')}>
@@ -184,6 +188,7 @@ function QuickActions({ onSelect }: { onSelect: (url: string) => void }) {
           <span>Now</span>
         </CommandItem>
         <CommandItem onSelect={() => onSelect('/stack')}>
+          <Layers className="mr-2 h-4 w-4 text-text-3" />
           <span>The Setup</span>
         </CommandItem>
         {isNewsletterEnabled && (

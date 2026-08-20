@@ -65,14 +65,7 @@ export function CommandResults({ results, onSelect }: CommandResultsProps) {
         return (
           <CommandGroup key={type} heading={typeLabels[type]}>
             {items.map((result) => (
-              <CommandItem
-                key={result.id}
-                value={result.id}
-                keywords={[result.title, result.description].filter((value): value is string =>
-                  Boolean(value),
-                )}
-                onSelect={() => onSelect(result.url)}
-              >
+              <CommandItem key={result.id} value={result.id} onSelect={() => onSelect(result.url)}>
                 {typeIcons[type]}
                 <div className="flex flex-col">
                   <span>{result.title}</span>

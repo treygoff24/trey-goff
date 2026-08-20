@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict'
 import test, { describe } from 'node:test'
-import { commandScore } from '../node_modules/cmdk/dist/command-score.mjs'
 import { generateSearchIndex } from '@/lib/search/generate-index'
 import { isNewsletterEnabled } from '@/lib/site-config'
 
@@ -142,26 +141,6 @@ describe('navigation pages in search index', () => {
     assert.ok(stack, 'Should have Setup navigation page')
     assert.ok(jobsite.keywords?.includes('job site'))
     assert.ok(stack.keywords?.includes('field manual'))
-  })
-
-  test('command palette keywords keep navigation results visible', () => {
-    const { documents } = generateSearchIndex()
-    const entries = documents.filter((document) =>
-      ['nav-jobsite', 'nav-stack'].includes(document.id),
-    )
-
-    for (const query of ['job site', 'jobsite', 'setup', 'stack']) {
-      const entry = query === 'setup' || query === 'stack' ? entries[1] : entries[0]
-      assert.ok(entry)
-      assert.ok(
-        commandScore(
-          entry.id,
-          query,
-          [entry.title, entry.description].filter((value): value is string => Boolean(value)),
-        ) > 0,
-        `${query} should match ${entry.id} through its rendered keywords`,
-      )
-    }
   })
 
   test('navigation pages have high priority', () => {

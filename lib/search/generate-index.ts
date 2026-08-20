@@ -63,8 +63,8 @@ const navigationPages: SearchDocument[] = [
   {
     id: 'nav-jobsite',
     type: 'page',
-    title: 'The Job Site',
-    description: 'AI agents explained with no jargon',
+    title: 'AI, explained',
+    description: 'The Job Site: how AI agents work, with no jargon',
     keywords: ['job site', 'jobsite', 'AI explained', 'easy mode', 'foreman', 'context window'],
     url: '/jobsite',
     priority: 10,
