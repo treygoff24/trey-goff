@@ -178,7 +178,7 @@ body {
   padding: 0.55rem 1.05rem;
   color: var(--color-text-2);
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   text-decoration: none;
@@ -194,6 +194,7 @@ body {
 .setup-mode-toggle a[aria-current='page'] {
   background: var(--js-active, var(--sk-accent, var(--color-accent)));
   color: var(--color-bg-0);
+  font-weight: 500;
 }
 
 /* Prose styles */

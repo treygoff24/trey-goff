@@ -130,20 +130,6 @@ html:has(#stack-root) {
   text-decoration-color: var(--sk-accent);
 }
 
-/* ── Mode toggle (hard / easy) ──────────────────────────── */
-#stack-root .setup-mode-toggle a {
-  font-size: 0.75rem;
-  color: var(--sk-text-2);
-}
-#stack-root .setup-mode-toggle a:hover {
-  color: var(--sk-text-1);
-}
-#stack-root .setup-mode-toggle a[aria-current='page'] {
-  background: var(--sk-accent);
-  color: var(--sk-bg-0);
-  font-weight: 500;
-}
-
 /* ── Skip link ──────────────────────────────────────────── */
 #stack-root .skip {
   position: absolute;

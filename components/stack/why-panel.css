@@ -240,7 +240,6 @@
 .why-scroll {
   overflow-x: auto;
   overscroll-behavior-x: contain;
-  position: relative;
 }
 /* No min-width: the chart swaps to a phone geometry in a narrow container
    instead of panning, so no series is ever off-screen. */

@@ -19,11 +19,11 @@ export function PublicationNav({ slug, pieces }: PublicationNavProps) {
 
   return (
     <nav
-      aria-label="Instrumented pieces"
+      aria-label="Interactive essays"
       className="mt-20 border-t border-border-1 pt-8 lg:max-w-[calc(100%-17rem)]"
     >
       <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-text-3">
-        An instrumented piece
+        An interactive essay
       </p>
       <p className="mt-3 max-w-xl text-sm leading-6 text-text-2">
         Every claim this piece makes is on the record with the instrument that adjudicates it.
