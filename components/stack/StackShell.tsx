@@ -1,27 +1,12 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import { useEffect, useRef, useState } from 'react'
-import {
-  CHAPTERS,
-  DAY_ONE_TERM,
-  HERO_TERM,
-  SELF_BUILD_TERM,
-  START_TONIGHT,
-} from '@/components/stack/data'
+import { DAY_ONE_TERM, HERO_TERM, SELF_BUILD_TERM, START_TONIGHT } from '@/components/stack/data'
 import { useReducedMotion, useReveal } from '@/components/stack/hooks'
-import DecisionCardsFigure from '@/components/stack/DecisionCardsFigure'
-import { CollisionFigure } from '@/components/stack/CollisionFigure'
-import { CouncilFigure } from '@/components/stack/CouncilFigure'
-import { DoneSummaryFigure } from '@/components/stack/DoneSummaryFigure'
-import { FreshEyesFigure } from '@/components/stack/FreshEyesFigure'
-import { GateAuthorFigure } from '@/components/stack/GateAuthorFigure'
-import { RatchetFigure } from '@/components/stack/RatchetFigure'
 import { RecoveryFigure } from '@/components/stack/RecoveryFigure'
-import { ReviewLoopFigure } from '@/components/stack/ReviewLoopFigure'
 import { Terminal } from '@/components/stack/Terminal'
-import { ToolLineFigure } from '@/components/stack/ToolLineFigure'
 import { SubagentSavings } from '@/components/stack/SubagentSavings'
-import { ToolsShowcase } from '@/components/stack/ToolsShowcase'
 import { CockpitChapter } from '@/components/stack/CockpitChapter'
 import { CompactionSection } from '@/components/stack/CompactionSection'
 import { PartnershipChapter } from '@/components/stack/PartnershipChapter'
@@ -31,6 +16,7 @@ import { WhyContext } from '@/components/stack/WhyPanel'
 import { WorkflowsChapter } from '@/components/stack/WorkflowsChapter'
 import { WorktreesSection } from '@/components/stack/WorktreesSection'
 import { ModeToggle } from '@/components/jobsite/ModeToggle'
+import { StackRail } from '@/components/stack/StackRail'
 import {
   ContextFigure,
   CopyPromptBlock,
@@ -40,6 +26,49 @@ import {
   SkillAnatomy,
   ToolRack,
 } from '@/components/stack/widgets'
+
+const ToolLineFigure = dynamic(
+  () => import('@/components/stack/ToolLineFigure').then((m) => ({ default: m.ToolLineFigure })),
+  { ssr: true },
+)
+const ToolsShowcase = dynamic(
+  () => import('@/components/stack/ToolsShowcase').then((m) => ({ default: m.ToolsShowcase })),
+  { ssr: true },
+)
+const CouncilFigure = dynamic(
+  () => import('@/components/stack/CouncilFigure').then((m) => ({ default: m.CouncilFigure })),
+  { ssr: true },
+)
+const DoneSummaryFigure = dynamic(
+  () =>
+    import('@/components/stack/DoneSummaryFigure').then((m) => ({ default: m.DoneSummaryFigure })),
+  { ssr: true },
+)
+const CollisionFigure = dynamic(
+  () => import('@/components/stack/CollisionFigure').then((m) => ({ default: m.CollisionFigure })),
+  { ssr: true },
+)
+const GateAuthorFigure = dynamic(
+  () =>
+    import('@/components/stack/GateAuthorFigure').then((m) => ({ default: m.GateAuthorFigure })),
+  { ssr: true },
+)
+const RatchetFigure = dynamic(
+  () => import('@/components/stack/RatchetFigure').then((m) => ({ default: m.RatchetFigure })),
+  { ssr: true },
+)
+const FreshEyesFigure = dynamic(
+  () => import('@/components/stack/FreshEyesFigure').then((m) => ({ default: m.FreshEyesFigure })),
+  { ssr: true },
+)
+const ReviewLoopFigure = dynamic(
+  () =>
+    import('@/components/stack/ReviewLoopFigure').then((m) => ({ default: m.ReviewLoopFigure })),
+  { ssr: true },
+)
+const DecisionCardsFigure = dynamic(() => import('@/components/stack/DecisionCardsFigure'), {
+  ssr: true,
+})
 
 function DownloadCard({
   href,
@@ -106,59 +135,10 @@ export function StackShell() {
   const reduced = useReducedMotion()
   useReveal(rootRef, reduced)
 
-  const [active, setActive] = useState(-1)
-  const [pct, setPct] = useState(0)
-
-  // Eleven chapters can outgrow a short viewport's rail; keep the active
-  // link visible when the list has to scroll. Scroll ONLY the nav scroller —
-  // scrollIntoView walks ancestors and can hijack the page scroll.
-  useEffect(() => {
-    const nav = document.querySelector<HTMLElement>('#stack-rail .rail-nav')
-    const link = nav?.querySelector<HTMLElement>('.rail-link[aria-current="true"]')
-    if (!nav || !link) return
-    const navRect = nav.getBoundingClientRect()
-    const linkRect = link.getBoundingClientRect()
-    if (linkRect.top < navRect.top) nav.scrollTop += linkRect.top - navRect.top
-    else if (linkRect.bottom > navRect.bottom) nav.scrollTop += linkRect.bottom - navRect.bottom
-  }, [active])
   const [railOpen, setRailOpen] = useState(false)
   const meterRef = useRef<HTMLDivElement | null>(null)
   const railRef = useRef<HTMLElement | null>(null)
   const toggleRef = useRef<HTMLButtonElement | null>(null)
-
-  useEffect(() => {
-    const root = rootRef.current
-    if (!root) return
-    const sections = Array.from(root.querySelectorAll<HTMLElement>('.chapter'))
-    let ticking = false
-    let frame = 0
-    const onScroll = () => {
-      if (ticking) return
-      ticking = true
-      frame = requestAnimationFrame(() => {
-        ticking = false
-        const doc = document.documentElement
-        const max = doc.scrollHeight - window.innerHeight
-        const p = max > 0 ? window.scrollY / max : 0
-        if (meterRef.current) meterRef.current.style.transform = `scaleX(${p.toFixed(4)})`
-        setPct(Math.round(p * 100))
-        const mid = window.scrollY + window.innerHeight * 0.35
-        let idx = -1
-        sections.forEach((section, i) => {
-          if (section.offsetTop <= mid) idx = i
-        })
-        setActive(idx)
-      })
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll)
-    onScroll()
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
-      cancelAnimationFrame(frame)
-    }
-  }, [])
 
   useEffect(() => {
     if (!railOpen) {
@@ -220,8 +200,6 @@ export function StackShell() {
     }
   }, [])
 
-  const spinePct = CHAPTERS.length > 1 ? (Math.max(0, active) / (CHAPTERS.length - 1)) * 100 : 0
-
   return (
     <div id="stack-root" ref={rootRef}>
       <a className="skip" href="#ch1" inert={railOpen || undefined}>
@@ -232,52 +210,14 @@ export function StackShell() {
       {railOpen && (
         <div className="rail-scrim open" onClick={() => setRailOpen(false)} aria-hidden="true" />
       )}
-      <nav
-        className={railOpen ? 'rail open' : 'rail'}
-        id="stack-rail"
-        aria-label="Chapters"
-        ref={railRef}
-      >
-        <a className="rail-mark" href="#top">
-          Trey Goff / treygoff.com
-          <strong>The Setup</strong>
-        </a>
-        <div className="rail-nav">
-          <div className="rail-spine" aria-hidden="true">
-            <i style={{ height: `${spinePct}%` }} />
-          </div>
-          {CHAPTERS.map((c, i) => (
-            <a
-              key={c.id}
-              className={i < active ? 'rail-link done' : 'rail-link'}
-              href={`#${c.id}`}
-              aria-current={i === active ? 'true' : 'false'}
-              onClick={() => setRailOpen(false)}
-            >
-              <span className="n">{c.n}</span>
-              <span>{c.title}</span>
-            </a>
-          ))}
-        </div>
-        <div className="rail-foot">
-          <span>Progress</span>
-          <span>
-            <b>{pct}%</b>
-          </span>
-        </div>
-      </nav>
-
-      <button
-        className="rail-toggle"
-        type="button"
-        aria-expanded={railOpen}
-        aria-controls="stack-rail"
-        onClick={() => setRailOpen((v) => !v)}
-        ref={toggleRef}
-      >
-        <span>Chapters</span>
-        <span className="pct">{CHAPTERS[active]?.n ?? '—'}</span>
-      </button>
+      <StackRail
+        rootRef={rootRef}
+        meterRef={meterRef}
+        railOpen={railOpen}
+        setRailOpen={setRailOpen}
+        railRef={railRef}
+        toggleRef={toggleRef}
+      />
 
       {/* The root layout already provides the <main> landmark; this is styling only.
           inert keeps the page content out of the tab order while the mobile sheet is open. */}

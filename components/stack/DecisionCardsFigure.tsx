@@ -287,7 +287,9 @@ export default function DecisionCardsFigure() {
         <button
           type="button"
           className="dcf-preset"
-          aria-expanded={showThesis}
+          aria-expanded={thesisOpen}
+          aria-controls="dcf-thesis"
+          disabled={healthy}
           onClick={() => setThesisOpen((v) => !v)}
         >
           Say it plainly
@@ -295,7 +297,7 @@ export default function DecisionCardsFigure() {
       </div>
 
       {showThesis && (
-        <p className="dcf-thesis">
+        <p className="dcf-thesis" id="dcf-thesis">
           The split isn&apos;t effort versus tedium. It&apos;s decisions that require knowing what{' '}
           <em className="hl">you</em> want versus work that only requires knowing what{' '}
           <em className="hl">correct</em> means — delegate all of the second, none of the first.

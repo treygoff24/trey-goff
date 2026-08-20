@@ -61,6 +61,7 @@ export function GateAuthorFigure() {
   const { schedule, clearAll } = useTimeouts()
   const [author, setAuthor] = useState<Author>('impl')
   const [states, setStates] = useState<GateState[]>(() => GATES.map(() => 'idle'))
+  const [userRun, setUserRun] = useState(false)
   const [phase, setPhase] = useState<'idle' | 'running' | 'done'>('idle')
   const nudged = useRef(false)
 
@@ -144,10 +145,24 @@ export function GateAuthorFigure() {
           Same file · <b>same bug on line 3</b> · only the author of the test changes
         </span>
         <div className="ga-toggle" role="group" aria-label="Who writes the gate">
-          <button type="button" aria-pressed={author === 'impl'} onClick={() => pick('impl')}>
+          <button
+            type="button"
+            aria-pressed={author === 'impl'}
+            onClick={() => {
+              setUserRun(true)
+              pick('impl')
+            }}
+          >
             Implementer writes it
           </button>
-          <button type="button" aria-pressed={author === 'fresh'} onClick={() => pick('fresh')}>
+          <button
+            type="button"
+            aria-pressed={author === 'fresh'}
+            onClick={() => {
+              setUserRun(true)
+              pick('fresh')
+            }}
+          >
             Fresh window writes it
           </button>
         </div>
@@ -159,6 +174,9 @@ export function GateAuthorFigure() {
             <span className="n">pagination.ts</span>
             <span className="v">shipped by the implementer</span>
           </div>
+          <span className="figscroll-hint" aria-hidden="true">
+            swipe →
+          </span>
           <pre className="ga-code">
             {IMPL.map((l) => (
               <span key={l.n} className={l.flaw ? 'ga-line ga-flaw' : 'ga-line'}>
@@ -198,6 +216,9 @@ export function GateAuthorFigure() {
                 {author === 'impl' ? 'author: implementer' : 'author: fresh'}
               </span>
             </div>
+            <span className="figscroll-hint" aria-hidden="true">
+              swipe →
+            </span>
             <pre className="ga-code">
               {t.lines.map((line, i) => (
                 <span key={line} className={i === t.hi ? 'ga-line ga-assert' : 'ga-line'}>
@@ -239,10 +260,17 @@ export function GateAuthorFigure() {
       </div>
 
       <div className="ga-out">
-        <button className="btn" type="button" onClick={() => run(author)}>
+        <button
+          className="btn"
+          type="button"
+          onClick={() => {
+            setUserRun(true)
+            run(author)
+          }}
+        >
           {phase === 'idle' ? 'Run the gate' : 'Run it again'}
         </button>
-        <div className="ga-log" aria-live="polite">
+        <div className="ga-log" aria-live={userRun ? 'polite' : 'off'}>
           {phase === 'idle' ? (
             <>
               The bug is already on the screen. Pick an author, then run the gate and watch it

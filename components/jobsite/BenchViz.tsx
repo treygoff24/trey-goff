@@ -86,7 +86,7 @@ const LEGEND: Kind[] = ['brief', 'rules', 'file', 'talk', 'dig', 'note', 'free']
 function dimAt(index: number, filled: number) {
   if (index >= filled) return 1
   const t = filled <= 1 ? 0 : index / (filled - 1)
-  return 1 - 0.68 * Math.pow(Math.sin(Math.PI * t), 1.35)
+  return Number((1 - 0.68 * Math.pow(Math.sin(Math.PI * t), 1.35)).toFixed(3))
 }
 
 function stageCells(stage: Stage) {

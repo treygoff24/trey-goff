@@ -478,7 +478,7 @@ This is the real always-on list, group for group and in its real order. Twenty-t
 | fleet | Machine-wide agent occupancy — who is working where, what is claimed, and where two writers are about to collide. | Before editing a repo another agent might be holding. | No download — reads process and claim state on this machine specifically. Every swarm eventually needs one of these; build yours. |
 | radar-cli | Queries my production news monitor before anyone researches a covered topic from scratch. | Work touches one of its configured watch areas. | No download — a client for a private monitoring system with its own database. |
 
-> **Thirty skills, loaded at every session start, and that is the whole tax.** The other three hundred sit dormant in the library where a search can find them — which is the actual discipline: a skill costs nothing until it is needed, and this list is the small set of things that are true in every session regardless of what I am doing. The downloads are the real files with my machine's paths, names, and private infrastructure taken out. Read one before you run it.
+> **30 skills, loaded at every session start, and that is the whole tax.** The other 277 sit dormant in the library where a search can find them — which is the actual discipline: a skill costs nothing until it is needed, and this list is the small set of things that are true in every session regardless of what I am doing. The downloads are the real files with my machine's paths, names, and private infrastructure taken out. Read one before you run it.
 
 ---
 

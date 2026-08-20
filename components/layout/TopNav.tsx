@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
-import { SetupLink } from '@/components/layout/SetupLink'
 
 const navItems = [
   { href: '/writing', label: 'Writing' },
@@ -79,9 +78,8 @@ export function TopNav() {
         <div className="flex flex-wrap items-center gap-x-5 gap-y-1 max-[360px]:gap-x-3 md:gap-8">
           {navItems.map((item) => {
             const isActive = pathname === item.href || pathname?.startsWith(item.href + '/')
-            const LinkComponent = item.href === '/stack' ? SetupLink : Link
             return (
-              <LinkComponent
+              <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
@@ -91,7 +89,7 @@ export function TopNav() {
                 aria-current={isActive ? 'page' : undefined}
               >
                 {item.label}
-              </LinkComponent>
+              </Link>
             )
           })}
         </div>

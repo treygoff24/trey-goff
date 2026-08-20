@@ -9,7 +9,9 @@ export function useOnceVisible<T extends HTMLElement>(onVisible: () => void, thr
   const ref = useRef<T | null>(null)
   const fired = useRef(false)
   const cb = useRef(onVisible)
-  cb.current = onVisible
+  useEffect(() => {
+    cb.current = onVisible
+  })
   useEffect(() => {
     const el = ref.current
     if (!el || fired.current) return
@@ -23,7 +25,7 @@ export function useOnceVisible<T extends HTMLElement>(onVisible: () => void, thr
           }
         }
       },
-      { threshold },
+      { threshold: [0, threshold] },
     )
     io.observe(el)
     return () => io.disconnect()
@@ -73,7 +75,11 @@ export function useTimeouts() {
     timers.current = []
   }, [])
   const schedule = useCallback((fn: () => void, ms: number) => {
-    timers.current.push(setTimeout(fn, ms))
+    const handle = setTimeout(() => {
+      timers.current = timers.current.filter((timer) => timer !== handle)
+      fn()
+    }, ms)
+    timers.current.push(handle)
   }, [])
   useEffect(() => clearAll, [clearAll])
   return { schedule, clearAll }

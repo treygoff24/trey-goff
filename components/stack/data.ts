@@ -1,5 +1,7 @@
 import type { TermLine } from '@/components/stack/Terminal'
 
+export const TOTAL_SKILLS = 307
+
 export const CHAPTERS = [
   { id: 'ch1', n: '01', title: 'Key heuristics' },
   { id: 'ch2', n: '02', title: 'Day one' },

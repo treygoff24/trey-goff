@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useId, useState } from 'react'
+import { TOTAL_SKILLS } from '@/components/stack/data'
 import '@/components/stack/skills-showcase.css'
 
 /* ── The always-on list ────────────────────────────────────────
@@ -407,12 +408,12 @@ export function SkillsShowcase() {
       </div>
 
       <figcaption className="sx-cap">
-        <b>Thirty skills, loaded at every session start, and that is the whole tax. </b>
-        The other three hundred sit dormant in the library where a search can find them — which is
-        the actual discipline: a skill costs nothing until it is needed, and this list is the small
-        set of things that are true in every session regardless of what I am doing. The downloads
-        are the real files with my machine&apos;s paths, names, and private infrastructure taken
-        out. Read one before you run it.
+        <b>{ALL.length} skills, loaded at every session start, and that is the whole tax. </b>
+        The other {TOTAL_SKILLS - ALL.length} sit dormant in the library where a search can find
+        them — which is the actual discipline: a skill costs nothing until it is needed, and this
+        list is the small set of things that are true in every session regardless of what I am
+        doing. The downloads are the real files with my machine&apos;s paths, names, and private
+        infrastructure taken out. Read one before you run it.
       </figcaption>
     </figure>
   )

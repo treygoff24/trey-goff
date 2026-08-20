@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { isNewsletterEnabled } from '@/lib/site-config'
-import { SetupLink } from '@/components/layout/SetupLink'
 
 const footerLinks = [
   { href: '/colophon', label: 'Colophon' },
@@ -58,15 +57,14 @@ export function Footer() {
             </h3>
             <nav className="grid grid-cols-2 gap-2" aria-label="Footer navigation">
               {quickNav.map((link) => {
-                const LinkComponent = link.href === '/stack' ? SetupLink : Link
                 return (
-                  <LinkComponent
+                  <Link
                     key={link.href}
                     href={link.href}
                     className="text-sm text-text-2 transition-colors hover:text-warm"
                   >
                     {link.label}
-                  </LinkComponent>
+                  </Link>
                 )
               })}
             </nav>

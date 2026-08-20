@@ -42,16 +42,20 @@ async function writeClipboard(text: string) {
 export function CopyPrompt({ text }: { text: string }) {
   const [state, setState] = useState<CopyState>('idle')
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const mounted = useRef(true)
 
   useEffect(
     () => () => {
+      mounted.current = false
       if (timer.current) clearTimeout(timer.current)
     },
     [],
   )
 
   const copy = async () => {
-    setState((await writeClipboard(text)) ? 'copied' : 'failed')
+    const copied = await writeClipboard(text)
+    if (!mounted.current) return
+    setState(copied ? 'copied' : 'failed')
     if (timer.current) clearTimeout(timer.current)
     timer.current = setTimeout(() => setState('idle'), 2200)
   }

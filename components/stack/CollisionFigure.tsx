@@ -374,6 +374,7 @@ export function CollisionFigure() {
   const [mode, setMode] = useState<ModeKey>('none')
   const [phase, setPhase] = useState(0)
   const [running, setRunning] = useState(false)
+  const [userRun, setUserRun] = useState(false)
 
   const play = useCallback(
     (key: ModeKey) => {
@@ -423,7 +424,10 @@ export function CollisionFigure() {
               key={m.key}
               type="button"
               aria-pressed={mode === m.key}
-              onClick={() => pick(m.key)}
+              onClick={() => {
+                setUserRun(true)
+                pick(m.key)
+              }}
             >
               {m.label}
               <span className="cf-hint">{m.hint}</span>
@@ -436,7 +440,15 @@ export function CollisionFigure() {
       <Stage geom={NARROW} mode={mode} phase={phase} />
 
       <div className="cf-ctl">
-        <button className="btn" type="button" onClick={() => play(mode)} disabled={running}>
+        <button
+          className="btn"
+          type="button"
+          onClick={() => {
+            setUserRun(true)
+            play(mode)
+          }}
+          disabled={running}
+        >
           {running ? 'Running…' : 'Run it'}
         </button>
         {chip && phase >= chip.at && <span className={`cf-chip ${chip.tone}`}>{chip.text}</span>}
@@ -445,7 +457,7 @@ export function CollisionFigure() {
       {/* Both log copies share one grid cell: the hidden longest script sets the
           height so replaying or switching modes never shoves the page down. */}
       <div className="cf-logwrap">
-        <div className="cf-log" aria-live="polite">
+        <div className="cf-log" aria-live={userRun ? 'polite' : 'off'}>
           {lines.map((l, i) => (
             <div key={i} className={`cf-line ${l.mark}`}>
               <span aria-hidden="true" className="cf-mk">
