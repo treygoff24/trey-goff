@@ -6,5 +6,5 @@ interface ProseProps {
 }
 
 export function Prose({ children, className }: ProseProps) {
-  return <div className={cn('prose', className)}>{children}</div>
+  return <div className={cn('prose min-w-0', className)}>{children}</div>
 }
