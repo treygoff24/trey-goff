@@ -31,16 +31,22 @@ function drawLabel(
   context: CanvasRenderingContext2D,
   data: Parameters<NodeLabelDrawingFunction>[1],
   expanded: boolean,
+  fontSize: number,
 ) {
   if (!data.label || (!expanded && !data.forceLabel)) return
-  const fontSize = data.size || 12
   const padding = 5
   context.font = `500 ${fontSize}px Satoshi, system-ui, sans-serif`
   const width = context.measureText(data.label).width
-  const left = Math.max(2, Math.min(data.x + data.size + 4, context.canvas.width - width - padding))
-  const top = Math.max(fontSize + 2, Math.min(data.y + fontSize / 2, context.canvas.height - 2))
+  // Sigma scales the context by devicePixelRatio, so clamp against CSS pixels, not the
+  // backing store. A label that will not fit to the right is drawn to the left of the node.
+  const maxX = context.canvas.clientWidth || context.canvas.width
+  const maxY = context.canvas.clientHeight || context.canvas.height
+  const rightX = data.x + data.size + 4
+  const left =
+    rightX + width + padding <= maxX ? rightX : Math.max(2, data.x - data.size - 4 - width)
+  const top = Math.max(fontSize + 2, Math.min(data.y + fontSize / 2, maxY - 2))
   context.fillStyle = GRAPH_TEXT
-  context.textAlign = left === data.x + data.size + 4 ? 'left' : 'right'
+  context.textAlign = 'left'
   context.textBaseline = 'bottom'
   context.fillText(data.label, left, top)
 }
@@ -53,10 +59,11 @@ const drawHover: NodeHoverDrawingFunction = (context, data) => {
   context.font = `600 ${fontSize}px Satoshi, system-ui, sans-serif`
   const width = context.measureText(label).width + paddingX * 2
   const height = fontSize + paddingY * 2
+  const maxX = context.canvas.clientWidth || context.canvas.width
+  const maxY = context.canvas.clientHeight || context.canvas.height
   const rightX = data.x + (data.size || 0) + 10
-  const x =
-    rightX + width <= context.canvas.width - 2 ? rightX : data.x - (data.size || 0) - width - 10
-  const y = Math.max(2, Math.min(data.y - height / 2, context.canvas.height - height - 2))
+  const x = rightX + width <= maxX - 2 ? rightX : data.x - (data.size || 0) - width - 10
+  const y = Math.max(2, Math.min(data.y - height / 2, maxY - height - 2))
   context.fillStyle = GRAPH_BG
   context.beginPath()
   context.roundRect(x, y, width, height, 5)
@@ -188,22 +195,24 @@ export function GraphCanvas({ data, onNodeClick, className, isMobile = false }: 
 
     let sigma: Sigma
     let expandedLabels = false
+    const labelSize = isMobile ? 10.5 : 12
 
     try {
       sigma = new Sigma(graph, containerRef.current, {
         nodeProgramClasses: {
           point: createNodeCompoundProgram(
             [NodePointProgram],
-            (context, data) => drawLabel(context, data, expandedLabels),
+            (context, data) => drawLabel(context, data, expandedLabels, labelSize),
             drawHover,
           ),
         },
         renderLabels: true,
         labelFont: 'Satoshi, system-ui, sans-serif',
-        labelSize: isMobile ? 10 : 12,
+        labelSize,
         labelColor: { color: GRAPH_TEXT },
         labelRenderedSizeThreshold: 0,
-        defaultDrawNodeLabel: (context, data) => drawLabel(context, data, expandedLabels),
+        defaultDrawNodeLabel: (context, data) =>
+          drawLabel(context, data, expandedLabels, labelSize),
         defaultDrawNodeHover: drawHover,
         defaultEdgeColor: 'rgba(255, 255, 255, 0.15)',
         defaultNodeColor: '#7C5CFF',

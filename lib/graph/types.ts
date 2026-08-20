@@ -44,7 +44,7 @@ export const NODE_COLORS: Record<NodeType, string> = {
   book: '#4ECDC4', // teal
   tag: 'rgba(255, 255, 255, 0.52)', // text-3
   idea: '#FF6B6B', // coral
-  transmission: 'oklch(0.8 0.11 305)', // chart-context violet - broadcast signal
+  transmission: '#CEACF7', // chart-context violet as sRGB; Sigma parses only hex/rgb()
 }
 
 /** Base sizes for each node type */
