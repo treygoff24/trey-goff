@@ -84,7 +84,7 @@ export function StackRail({
         aria-label="Chapters"
         ref={railRef}
       >
-        <Link aria-label="Back to treygoff.com" className="rail-mark" href="/">
+        <Link className="rail-mark" href="/">
           Trey Goff / treygoff.com
           <strong>The Setup</strong>
         </Link>

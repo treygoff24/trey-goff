@@ -1644,6 +1644,9 @@ html:has(#stack-root) {
 
 /* ── Responsive ─────────────────────────────────────────── */
 @media (max-width: 1080px) {
+  html:has(#stack-root) body > footer {
+    padding-bottom: 4.5rem;
+  }
   #stack-root .rail {
     display: none;
   }
@@ -1694,6 +1697,13 @@ html:has(#stack-root) {
     right: -0.2rem;
   }
 }
+
+@media (min-width: 1081px) {
+  html:has(#stack-root) body > footer {
+    padding-left: 16.5rem;
+  }
+}
+
 @keyframes sk-sheet {
   from {
     transform: translateY(18px);
