@@ -483,9 +483,13 @@
 }
 .js-end-links {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 1rem;
+}
+.js-end a.js-end-home {
+  font-size: 1rem;
+  color: var(--js-text-3);
 }
 .js-end p {
   color: var(--js-text-3);
@@ -590,7 +594,6 @@
     flex-wrap: wrap;
   }
   .js-end-links {
-    flex-direction: column;
     gap: 0.75rem;
   }
 }

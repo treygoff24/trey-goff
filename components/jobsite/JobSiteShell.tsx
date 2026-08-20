@@ -252,8 +252,9 @@ export function JobSiteShell() {
           <Link href="/stack#ch1">
             {jobSiteBeats.at(-1)?.footer ?? 'Ready for the deep end? → Hard mode, chapter 1.'}
           </Link>
-          <span aria-hidden="true">·</span>
-          <Link href="/">Back to treygoff.com →</Link>
+          <Link className="js-end-home" href="/">
+            Back to treygoff.com →
+          </Link>
         </div>
         <p>Built by the crew it describes.</p>
       </footer>
