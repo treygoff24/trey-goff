@@ -65,3 +65,14 @@ Rulings:
 - Ruling: Wave 2 lanes launched off b64b786 before the coordinator gate finished — each lane runs the gate itself — cost if wrong: rebase churn if the merged gate fails.
 - Ruling: Gemini lanes must redirect gate output to a file — the 16MB delegate stdout cap killed W1-4 — cost if wrong: none.
 - Ruling: jargon glosses and the /now freshness copy are Trey's calls (Wave 3 blockers), not lane work.
+
+Wave 2 (in progress): W2-6 413a301 → W2-4 c687e3e → W2-3 7703c52 merged; coordinator carry-overs from the Wave 1 preview VQA at e68153f. W2-1 on round 2 (1a182b7) awaiting re-review; W2-5 sent back for round 2 after a FIX-FIRST review.
+
+Wave 2 rulings:
+- Ruling: W2-4 changed the desktop meta track to `minmax(8.5rem, 0.18fr)` as well as the phone stack — the overflow root cause was the fixed column — cost if wrong: a slightly wider tag column on desktop.
+- Ruling: W2-3 reserves a ~67px right gutter on /stack ≤1080px so the pill never sits on text — the stranger called the overlap the single most constant irritation — cost if wrong: 17% narrower text column at 390 and a shoved-left read at 1024; alternative (fade the pill on scroll-idle) flagged for Trey.
+- Ruling: W2-6 dims un-played steps to opacity 0.06 instead of hiding them — the timeline shape stays visible while the counters play — cost if wrong: a faint ghost row on high-brightness phones.
+- Ruling: accepted W2-6's lane gate without its build step — the concurrent `next build` lock across worktrees blocked it — the merged coordinator gate covers it — cost if wrong: none once the merged gate is green.
+- Ruling: hand-fixed three preview-VQA nits (colophon flex row, CommandShortcut hidden on coarse pointers, SearchButton magnifier) at the coordinator (e68153f) instead of a lane round — cost if wrong: less review on small CSS.
+- Ruling: the W2-5 round-1 brief wrongly listed recovery-figure, fresh-eyes, tool-line, done-summary, collision-figure as already floored; round 2 expands the lane's ownership to those files — the reviewer found 28 of the 30 remaining offenders there — cost if wrong: a bigger diff to merge against W2-6's recovery-figure.css change.
+- Ruling: W2-5's base-rule (desktop) size bumps are accepted rather than scoped to ≤1080px; only the named desktop regressions (rail-mark wrap, `.why-axtitle` overflow, FanOut OUT node, `.wf-note` clip) and the SVG mis-measurements get fixed — slightly larger desktop labels are fine, 106 media-query wraps are not — cost if wrong: desktop figures read a touch looser than designed.
