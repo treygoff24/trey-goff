@@ -151,7 +151,9 @@ export default function NotFound() {
             className="flex items-center gap-2 rounded-lg border border-border-1 bg-surface-1 px-6 py-3 text-text-2 transition-all hover:border-border-2 hover:bg-surface-2 hover:text-text-1"
           >
             <span>Search</span>
-            <kbd className="hidden rounded bg-bg-0 px-2 py-0.5 font-mono text-xs text-text-3 [@media(pointer:fine)]:inline">⌘K</kbd>
+            <kbd className="hidden rounded bg-bg-0 px-2 py-0.5 font-mono text-xs text-text-3 [@media(pointer:fine)]:inline">
+              ⌘K
+            </kbd>
           </button>
         </div>
 
