@@ -179,8 +179,7 @@ export function RecoveryFigure() {
     [clearAll],
   )
 
-  /* Arm on mount rather than on intersection, so the figure is already dim by the
-     time it scrolls in and the reader never sees the finished state flash first. */
+  /* Arm after mount so the animated state starts dim before its first reveal. */
   useEffect(() => {
     if (reduced) return
     setArmed(true)
