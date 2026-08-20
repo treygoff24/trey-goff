@@ -200,7 +200,7 @@ export function RecoveryFigure() {
     }
   }, [reduced, clearAll])
 
-  const shown = armed ? beat : MAX_BEAT
+  const activeBeat = armed ? beat : MAX_BEAT
 
   return (
     <div className={`rcv rv${armed ? ' is-armed' : ''}`} ref={figRef}>
@@ -214,8 +214,8 @@ export function RecoveryFigure() {
               <button
                 key={b}
                 type="button"
-                className={shown >= b ? 'is-lit' : ''}
-                aria-pressed={armed && beat === b}
+                className={activeBeat >= b ? 'is-lit' : ''}
+                aria-pressed={armed && activeBeat === b}
                 aria-label={`Beat ${b} of ${MAX_BEAT}`}
                 onClick={() => goto(b)}
               >
@@ -233,7 +233,7 @@ export function RecoveryFigure() {
 
       <div className="rcv-lanes">
         {LANES.map((lane) => {
-          const t = tally(lane, shown)
+          const t = tally(lane, activeBeat)
           return (
             <section className={`rcv-lane rcv-${lane.id}`} key={lane.id} aria-hidden="true">
               <header className="rcv-lane-head">
@@ -245,7 +245,7 @@ export function RecoveryFigure() {
                 {lane.steps.map((s) => (
                   <li
                     key={s.beat}
-                    className={`rcv-step k-${s.kind}${shown >= s.beat ? ' is-on' : ''}`}
+                    className={`rcv-step k-${s.kind}${activeBeat >= s.beat ? ' is-on' : ''}`}
                   >
                     <span className="rcv-clock">{s.at}</span>
                     <span className="rcv-body">
