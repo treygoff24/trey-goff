@@ -32,7 +32,7 @@ const CommandDialog = ({ children, ...props }: DialogProps) => {
   return (
     <Dialog {...props}>
       <DialogContent
-        className="m-2 w-[calc(100%-1rem)] overflow-hidden p-0 sm:m-0 sm:w-full"
+        className="w-[calc(100%-1rem)] overflow-hidden p-0 sm:w-full"
         showCloseButton={false}
       >
         <DialogTitle className="sr-only">Search</DialogTitle>
@@ -58,7 +58,7 @@ const CommandInput = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
 >(({ className, ...props }, ref) => (
   <div
-    className="flex items-center border-b border-border-1 px-3 rounded-t-none focus-within:ring-1 focus-within:ring-warm focus-within:ring-inset sm:rounded-t-lg"
+    className="flex items-center rounded-t-none border-b border-border-1 px-3 pr-14 focus-within:ring-1 focus-within:ring-warm focus-within:ring-inset sm:rounded-t-lg sm:pr-3"
     cmdk-input-wrapper=""
   >
     <Search className="mr-2 h-4 w-4 shrink-0 text-text-3" />

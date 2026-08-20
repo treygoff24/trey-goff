@@ -95,7 +95,7 @@ export function CommandPalette() {
       </CommandList>
 
       {!isLoading && query && results.length === 0 && !error && (
-        <div className="py-6 text-center text-sm text-text-3">
+        <div className="py-6 text-center text-sm text-text-3" role="status">
           <div className="flex flex-col items-center gap-2">
             <span className="text-text-3">No results found</span>
             <span className="text-xs text-text-3/70">Try a different search term</span>
@@ -176,9 +176,15 @@ function QuickActions({ onSelect }: { onSelect: (url: string) => void }) {
           <User className="mr-2 h-4 w-4 text-text-3" />
           <span>About</span>
         </CommandItem>
+        <CommandItem onSelect={() => onSelect('/jobsite')}>
+          <span>AI, explained</span>
+        </CommandItem>
         <CommandItem onSelect={() => onSelect('/now')}>
           <Clock className="mr-2 h-4 w-4 text-text-3" />
           <span>Now</span>
+        </CommandItem>
+        <CommandItem onSelect={() => onSelect('/stack')}>
+          <span>The Setup</span>
         </CommandItem>
         {isNewsletterEnabled && (
           <CommandItem onSelect={() => onSelect('/subscribe')}>
