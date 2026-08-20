@@ -138,7 +138,7 @@ export default function HomePage() {
           <Link href="/projects" className="tg-action-secondary">
             See the work →
           </Link>
-          <Link href="/stack" className="tg-action-secondary">
+          <Link href="/jobsite" className="tg-action-secondary">
             How I work with AI →
           </Link>
         </div>

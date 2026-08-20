@@ -23,6 +23,7 @@ const quickNav = [
   { href: '/topics', label: 'Topics' },
   { href: '/machine', label: 'Machine' },
   { href: '/resident', label: 'Resident' },
+  { href: '/jobsite', label: 'AI, explained' },
   { href: '/stack', label: 'The Setup' },
 ]
 
