@@ -408,9 +408,10 @@ export function SkillsShowcase() {
           })}
         </div>
       </div>
+      {/* &#32; after the count: the JSX compiler drops a plain space when the text after an expression wraps lines, and oxfmt rewrites {' '} back into one. */}
       <figcaption className="sx-cap">
         <b>{ALL.length} skills, loaded at every session start, and that is the whole tax. </b>
-        The other {TOTAL_SKILLS - ALL.length} sit dormant in the library where a search can find
+        The other {TOTAL_SKILLS - ALL.length}&#32;sit dormant in the library where a search can find
         them — which is the actual discipline: a skill costs nothing until it is needed, and this
         list is the small set of things that are true in every session regardless of what I am
         doing. The downloads are the real files with my machine&apos;s paths, names, and private
