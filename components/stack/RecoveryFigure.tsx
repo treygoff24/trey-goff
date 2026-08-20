@@ -135,7 +135,7 @@ export function RecoveryFigure() {
 
               <div className={`rcv-tally${t.done ? ' is-done' : ''}`}>
                 <span>
-                  <b>{t.commands}</b> commands
+                  <b>{t.commands}</b> {t.commands === 1 ? 'command' : 'commands'}
                 </span>
                 <span>
                   <b>{t.dead}</b> dead ends
