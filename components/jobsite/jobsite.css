@@ -318,6 +318,10 @@ html:has(#jobsite-root) body > footer {
 .js-prompt p:last-child {
   margin-bottom: 0;
 }
+.js-real:last-child,
+.js-prompt:last-child {
+  margin-bottom: 0;
+}
 .js-prose p:first-child {
   color: var(--js-text-1);
   font-size: clamp(1.14rem, 1.8vw, 1.35rem);
@@ -326,6 +330,10 @@ html:has(#jobsite-root) body > footer {
 .js-real,
 .js-prompt {
   margin-top: 2.6rem;
+  /* Symmetric, because prose can follow one of these cards as well as precede
+     it — the take-the-brief card does exactly that, and without this the
+     paragraph after it sat flush against the card's bottom border. */
+  margin-bottom: 2.6rem;
   border: 1px solid var(--js-border-1);
   border-radius: 0.7rem;
   padding: clamp(1.25rem, 3vw, 1.75rem);

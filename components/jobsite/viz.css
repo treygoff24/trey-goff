@@ -377,7 +377,12 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.6rem;
-  margin-top: 0.7rem;
+  /* Ruled off, not merely spaced: the animated figure separates the foreman's
+     bench from the runners' by moving blocks between them, and the still has
+     to say the same thing with a line, or the two read as one tall grid. */
+  margin-top: 1.1rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--js-border-1);
 }
 #jobsite-root .js-vstatic-runners .js-vrun-k {
   margin-top: 0.35rem;
