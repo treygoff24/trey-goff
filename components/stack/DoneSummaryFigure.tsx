@@ -95,7 +95,7 @@ const RUNWAY: { label: string; pct: number }[] = [
   { label: 'reading the dispatcher', pct: 27 },
   { label: 'the extraction', pct: 24 },
   { label: 'the retry policy', pct: 17 },
-  { label: 'threading deadline', pct: 14 },
+  { label: 'the deadline', pct: 14 },
 ]
 const SPENT = RUNWAY.reduce((n, s) => n + s.pct, 0)
 

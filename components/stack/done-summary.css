@@ -281,6 +281,10 @@
 /* ── The runway ─────────────────────────────────────────── */
 #stack-root .ds-runway {
   margin-top: 1.3rem;
+  /* The segment labels are sized against the track, not the viewport: the rail
+     collapses at 1024px and hands the figure ~100px back, so viewport width
+     alone predicts the wrong label budget. */
+  container-type: inline-size;
 }
 #stack-root .ds-runway-h {
   /* Reserves the label line that sits above the 12px track. */
@@ -394,6 +398,15 @@
   #stack-root .ds-grid {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+@container (max-width: 880px) {
+  #stack-root .ds-seg i {
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+  }
+}
+@container (max-width: 680px) {
   #stack-root .ds-seg i {
     display: none;
   }
