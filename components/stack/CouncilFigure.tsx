@@ -37,10 +37,10 @@ const ROW_PITCH = 3.6
 
 const SYN_X = [2.4, 34.2]
 const SYN_W = 29.5
-const SYN_ROW_Y = 19.6
+const SYN_ROW_Y = 20.65
 /* The hazard leads this panel and is still three lines plus its tag once it has
    migrated, so the pitch in here has to clear it the same way the band's does. */
-const SYN_ROW_PITCH = 3.4
+const SYN_ROW_PITCH = 4.15
 
 /* ── Cast ───────────────────────────────────────────────── */
 

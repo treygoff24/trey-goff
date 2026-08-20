@@ -246,7 +246,7 @@
 #stack-root .cnc-stage {
   container-type: inline-size;
   position: relative;
-  height: 25.3rem;
+  height: 27.2rem;
 }
 
 #stack-root .cnc-wires {
@@ -465,7 +465,9 @@
   left: 0;
   width: 65.5cqw;
   top: 14.4rem;
-  height: 10.6rem;
+  /* Tall enough for the score bar's own "best single" label plus two chip rows
+     whose first row is the three-line hazard; see SYN_ROW_* in the component. */
+  height: 12.5rem;
   border-color: rgba(151, 232, 187, 0.34);
   background:
     radial-gradient(120% 140% at 4% 0%, rgba(151, 232, 187, 0.1), transparent 62%),
