@@ -894,8 +894,11 @@ export function StackShell() {
             <div>
               This page was designed, written, built, and reviewed by the setup it describes.
             </div>
-            <div>
-              <a href="#top">Return to the top</a> · <a href="#ch1">Start over at chapter one</a> ·{' '}
+            <div className="colophon-links">
+              <a href="#top">Return to the top</a>
+              <span aria-hidden="true">·</span>
+              <a href="#ch1">Start over at chapter one</a>
+              <span aria-hidden="true">·</span>
               <Link href="/">Back to treygoff.com</Link>
             </div>
           </footer>
