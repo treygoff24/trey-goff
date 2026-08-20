@@ -6,7 +6,6 @@ import {
   CommandDialog,
   CommandInput,
   CommandList,
-  CommandEmpty,
   CommandGroup,
   CommandItem,
   CommandSeparator,
@@ -31,6 +30,8 @@ import {
   Video,
   Mail,
   ExternalLink,
+  HardHat,
+  Layers,
 } from 'lucide-react'
 
 export function CommandPalette() {
@@ -88,15 +89,6 @@ export function CommandPalette() {
 
         {error && <div className="py-6 text-center text-sm text-error">{error}</div>}
 
-        {!isLoading && query && results.length === 0 && !error && (
-          <CommandEmpty>
-            <div className="flex flex-col items-center gap-2">
-              <span className="text-text-3">No results found</span>
-              <span className="text-xs text-text-3/70">Try a different search term</span>
-            </div>
-          </CommandEmpty>
-        )}
-
         {!isLoading && !query && <QuickActions onSelect={handleSelect} />}
 
         {!isLoading && query && results.length > 0 && !error && (
@@ -104,8 +96,18 @@ export function CommandPalette() {
         )}
       </CommandList>
 
+      {/* Always mounted so the live region exists before its text changes. */}
+      <div className="text-center text-sm text-text-3 empty:hidden" role="status">
+        {!isLoading && query && results.length === 0 && !error && (
+          <div className="flex flex-col items-center gap-2 py-6">
+            <span className="text-text-3">No results found</span>
+            <span className="text-xs text-text-3/70">Try a different search term</span>
+          </div>
+        )}
+      </div>
+
       {/* Footer hint */}
-      <div className="flex items-center justify-between border-t border-border-1 px-3 py-2 text-xs text-text-3">
+      <div className="flex items-center justify-between border-t border-border-1 px-3 py-2 text-xs text-text-3 [@media(pointer:coarse)]:hidden">
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1">
             <kbd className="rounded bg-surface-1 px-1.5 py-0.5 font-mono text-[10px]">↑↓</kbd>
@@ -177,9 +179,17 @@ function QuickActions({ onSelect }: { onSelect: (url: string) => void }) {
           <User className="mr-2 h-4 w-4 text-text-3" />
           <span>About</span>
         </CommandItem>
+        <CommandItem onSelect={() => onSelect('/jobsite')}>
+          <HardHat className="mr-2 h-4 w-4 text-text-3" />
+          <span>AI, explained</span>
+        </CommandItem>
         <CommandItem onSelect={() => onSelect('/now')}>
           <Clock className="mr-2 h-4 w-4 text-text-3" />
           <span>Now</span>
+        </CommandItem>
+        <CommandItem onSelect={() => onSelect('/stack')}>
+          <Layers className="mr-2 h-4 w-4 text-text-3" />
+          <span>The Setup</span>
         </CommandItem>
         {isNewsletterEnabled && (
           <CommandItem onSelect={() => onSelect('/subscribe')}>

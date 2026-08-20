@@ -3,9 +3,15 @@
 import * as React from 'react'
 import { type DialogProps } from '@radix-ui/react-dialog'
 import { Command as CommandPrimitive } from 'cmdk'
-import { Search } from 'lucide-react'
+import { Search, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -25,12 +31,22 @@ Command.displayName = CommandPrimitive.displayName
 const CommandDialog = ({ children, ...props }: DialogProps) => {
   return (
     <Dialog {...props}>
-      <DialogContent className="overflow-hidden p-0" showCloseButton={false}>
+      <DialogContent
+        className="w-[calc(100%-1rem)] overflow-hidden p-0 sm:w-full"
+        showCloseButton={false}
+      >
         <DialogTitle className="sr-only">Search</DialogTitle>
         <DialogDescription className="sr-only">
           Search site navigation, writing, notes, books, projects, and quick actions.
         </DialogDescription>
-        <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-text-3 [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
+        <DialogClose className="absolute right-1 top-1 z-10 flex h-11 w-11 items-center justify-center rounded-sm text-text-3 opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-warm focus:ring-offset-2 focus:ring-offset-bg-1 sm:hidden">
+          <X className="h-5 w-5" aria-hidden="true" />
+          <span className="sr-only">Close search</span>
+        </DialogClose>
+        <Command
+          shouldFilter={false}
+          className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-text-3 [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5"
+        >
           {children}
         </Command>
       </DialogContent>
@@ -43,7 +59,7 @@ const CommandInput = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
 >(({ className, ...props }, ref) => (
   <div
-    className="flex items-center border-b border-border-1 px-3 rounded-t-none focus-within:ring-1 focus-within:ring-warm focus-within:ring-inset sm:rounded-t-lg"
+    className="flex items-center rounded-t-none border-b border-border-1 px-3 pr-14 focus-within:ring-1 focus-within:ring-warm focus-within:ring-inset sm:rounded-t-lg sm:pr-3"
     cmdk-input-wrapper=""
   >
     <Search className="mr-2 h-4 w-4 shrink-0 text-text-3" />
