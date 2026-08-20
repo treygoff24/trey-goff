@@ -3,7 +3,7 @@
    actually makes. Scoped under #stack-root; ds- prefix throughout.
    ───────────────────────────────────────────────────────────── */
 
-#stack-root .ds {
+#stack-root .dsf {
   margin-top: 1.6rem;
   border: 1px solid var(--sk-border-1);
   border-radius: 8px;

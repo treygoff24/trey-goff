@@ -123,7 +123,7 @@ export function DoneSummaryFigure() {
   const delay = (i: number) => (reduced ? '0ms' : `${i * 170}ms`)
 
   return (
-    <div className="ds rv">
+    <div className="dsf rv">
       <p className="ds-head">
         Wave 3 · <b>lane refactor</b> · one Opus subagent, 41 minutes
       </p>
