@@ -132,6 +132,17 @@ describe('navigation pages in search index', () => {
     assert.equal(graph.url, '/graph')
   })
 
+  test('includes Job Site and Setup pages', () => {
+    const { documents } = generateSearchIndex()
+    const jobsite = documents.find((d) => d.url === '/jobsite')
+    const stack = documents.find((d) => d.url === '/stack')
+
+    assert.ok(jobsite, 'Should have Job Site navigation page')
+    assert.ok(stack, 'Should have Setup navigation page')
+    assert.ok(jobsite.keywords?.includes('job site'))
+    assert.ok(stack.keywords?.includes('field manual'))
+  })
+
   test('navigation pages have high priority', () => {
     const { documents } = generateSearchIndex()
     const navPages = documents.filter((d) => d.id.startsWith('nav-'))

@@ -6,7 +6,6 @@ import {
   CommandDialog,
   CommandInput,
   CommandList,
-  CommandEmpty,
   CommandGroup,
   CommandItem,
   CommandSeparator,
@@ -88,15 +87,6 @@ export function CommandPalette() {
 
         {error && <div className="py-6 text-center text-sm text-error">{error}</div>}
 
-        {!isLoading && query && results.length === 0 && !error && (
-          <CommandEmpty>
-            <div className="flex flex-col items-center gap-2">
-              <span className="text-text-3">No results found</span>
-              <span className="text-xs text-text-3/70">Try a different search term</span>
-            </div>
-          </CommandEmpty>
-        )}
-
         {!isLoading && !query && <QuickActions onSelect={handleSelect} />}
 
         {!isLoading && query && results.length > 0 && !error && (
@@ -104,8 +94,17 @@ export function CommandPalette() {
         )}
       </CommandList>
 
+      {!isLoading && query && results.length === 0 && !error && (
+        <div className="py-6 text-center text-sm text-text-3">
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-text-3">No results found</span>
+            <span className="text-xs text-text-3/70">Try a different search term</span>
+          </div>
+        </div>
+      )}
+
       {/* Footer hint */}
-      <div className="flex items-center justify-between border-t border-border-1 px-3 py-2 text-xs text-text-3">
+      <div className="flex items-center justify-between border-t border-border-1 px-3 py-2 text-xs text-text-3 [@media(pointer:coarse)]:hidden">
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1">
             <kbd className="rounded bg-surface-1 px-1.5 py-0.5 font-mono text-[10px]">↑↓</kbd>
