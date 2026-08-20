@@ -182,12 +182,13 @@ html:has(#stack-root) {
 }
 #stack-root .rail-mark {
   font-family: var(--sk-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.22em;
+  font-size: 0.6rem;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--sk-text-2);
   text-decoration: none;
   display: block;
+  white-space: nowrap;
 }
 #stack-root .rail-mark strong {
   display: block;
@@ -735,7 +736,7 @@ html:has(#stack-root) {
 }
 #stack-root .ctxfig-head .t {
   font-family: var(--sk-mono);
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--sk-text-2);
@@ -757,10 +758,10 @@ html:has(#stack-root) {
   border-radius: 999px;
   padding: 0.42rem 0.9rem;
   font-family: var(--sk-mono);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   cursor: pointer;
   transition:
     color 220ms var(--sk-ease),
@@ -1336,7 +1337,7 @@ html:has(#stack-root) {
 }
 #stack-root .gate .g-t {
   font-family: var(--sk-mono);
-  font-size: 0.74rem;
+  font-size: 0.82rem;
   color: var(--sk-text-2);
   margin-top: 0.4rem;
   display: block;
@@ -1629,7 +1630,7 @@ html:has(#stack-root) {
   font-family: var(--sk-mono);
   font-size: 0.68rem;
   letter-spacing: 0.1em;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   line-height: 2;
 }
 #stack-root .colophon a {
@@ -1785,7 +1786,7 @@ html:has(#stack-root) {
     opacity: 1;
   }
 }
-
+/* Swipe hint for figures that pan horizontally on small screens. */
 #stack-root .figscroll-hint {
   display: none;
   font-family: var(--sk-mono);

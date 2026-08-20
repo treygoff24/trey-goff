@@ -161,7 +161,7 @@
   opacity: 0;
   transition: opacity 520ms var(--sk-ease);
 }
-
+/* The fresh window's two states: empty, then briefed. */
 #stack-root .cs-empty {
   margin: 0;
   font-family: var(--sk-mono);

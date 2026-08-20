@@ -121,17 +121,18 @@
   letter-spacing: 0.05em;
 }
 #stack-root .wf-chip-t {
-  font-size: 11px;
+  font-size: 10.5px;
   fill: var(--sk-text-2);
 }
 #stack-root .wf-band-t {
-  font-size: 11px;
+  font-size: 10.5px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   fill: var(--sk-accent);
 }
 #stack-root .wf-note {
-  font-size: 11px;
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
   fill: var(--sk-text-2);
 }
 /* The one literal a reader types is the only full-strength amber on the page. */

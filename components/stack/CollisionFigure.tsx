@@ -151,8 +151,8 @@ const WIDE: Geom = {
 
 const NARROW: Geom = {
   cls: 'cf-narrow',
-  vb: '0 0 340 276',
-  vbGate: '0 0 340 392',
+  vb: '0 0 360 276',
+  vbGate: '0 0 360 392',
   rows: [46, 140, 234],
   agentX: 4,
   agentW: 112,
@@ -160,8 +160,8 @@ const NARROW: Geom = {
   pad: 8,
   blockW: 9,
   blockPitch: 11,
-  fileX: 150,
-  fileW: 182,
+  fileX: 148,
+  fileW: 204,
   centerY: 140,
   singleY: 112,
   singleH: 56,
@@ -172,16 +172,16 @@ const NARROW: Geom = {
   /* The full worktree path runs 26 characters; at this width the middle segment
      is the one a reader can infer, so it is the one that goes. */
   copyLabel: (i) => `${WT_DIRS[i]}/…/auth.ts`,
-  gate: { x: 96, y: 330, w: 148, h: 46 },
-  gateTx: 170,
+  gate: { x: 106, y: 330, w: 148, h: 46 },
+  gateTx: 180,
   gateTy: [348, 362],
   stopY: (i) => (i === 1 ? 126 : 154),
   stopX: 130,
-  outLive: (row) => `M116,${row} C 130,${row} 134,140 146,140`,
+  outLive: (row) => `M116,${row} C 130,${row} 134,140 144,140`,
   outBlocked: (row, i) =>
     `M116,${row} C 124,${row} 126,${i === 1 ? 126 : 154} 130,${i === 1 ? 126 : 154}`,
-  outStraight: (row) => `M116,${row} L 146,${row}`,
-  back: (row) => `M332,${row} C 338,${row} 336,300 176,328`,
+  outStraight: (row) => `M116,${row} L 144,${row}`,
+  back: (row) => `M352,${row} C 356,${row} 340,300 186,328`,
 }
 
 type LaneState = 'idle' | 'live' | 'lost' | 'blocked'

@@ -307,12 +307,11 @@ export function FanOut() {
   }, [reduced, clearAll])
 
   const HUB = { x: 96, y: 130 }
-  // Lanes must terminate at the result box's left edge (x=610), not inside it.
-  const OUT = { x: 610, y: 130 }
+  // Lanes must terminate at the result box's left edge (x=598), not inside it.
+  const OUT = { x: 598, y: 130 }
   return (
     <div
       className="fan rv"
-      ref={fanRef}
       tabIndex={0}
       role="region"
       aria-label="Fan-out figure, scrolls horizontally on small screens"
@@ -366,14 +365,14 @@ export function FanOut() {
             you
           </text>
           <rect
-            x={610}
+            x={OUT.x}
             y={OUT.y - 17}
-            width={96}
+            width={110}
             height={34}
             rx={5}
             className={outOn ? 'node on' : 'node'}
           />
-          <text x={658} y={OUT.y + 4} className="hub" textAnchor="middle">
+          <text x={OUT.x + 55} y={OUT.y + 4} className="hub" textAnchor="middle">
             one answer
           </text>
         </g>

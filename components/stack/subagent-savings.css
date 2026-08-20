@@ -30,7 +30,7 @@
 }
 #stack-root .sfig-head .t {
   font-family: var(--sk-mono);
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--sk-text-2);
@@ -53,10 +53,10 @@
   border-radius: 999px;
   padding: 0.42rem 0.9rem;
   font-family: var(--sk-mono);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   cursor: pointer;
   transition:
     color 220ms var(--sk-ease),
