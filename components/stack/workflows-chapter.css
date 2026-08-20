@@ -75,6 +75,7 @@
 }
 #stack-root .wf-diagram {
   overflow-x: auto;
+  position: relative;
 }
 
 /* One figure, two geometries. The narrow variant keeps its label sizes and

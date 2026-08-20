@@ -435,6 +435,9 @@ export function CouncilFigure() {
                 {name}
               </h4>
               <div className="cnc-still-fig" role="img" aria-label={ARIA[name]}>
+                <span className="figscroll-hint" aria-hidden="true">
+                  swipe →
+                </span>
                 <CouncilBoard stage={i} focus={null} reduced />
               </div>
               <p className="cnc-cap is-on">

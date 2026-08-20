@@ -130,6 +130,20 @@ html:has(#stack-root) {
   text-decoration-color: var(--sk-accent);
 }
 
+/* ── Mode toggle (hard / easy) ──────────────────────────── */
+#stack-root .setup-mode-toggle a {
+  font-size: 0.75rem;
+  color: var(--sk-text-2);
+}
+#stack-root .setup-mode-toggle a:hover {
+  color: var(--sk-text-1);
+}
+#stack-root .setup-mode-toggle a[aria-current='page'] {
+  background: var(--sk-accent);
+  color: var(--sk-bg-0);
+  font-weight: 500;
+}
+
 /* ── Skip link ──────────────────────────────────────────── */
 #stack-root .skip {
   position: absolute;
@@ -559,8 +573,8 @@ html:has(#stack-root) {
    animates them back when they intersect. */
 #stack-root .rv {
   transition:
-    opacity 700ms var(--sk-ease),
-    transform 700ms var(--sk-ease);
+    opacity 300ms var(--sk-ease),
+    transform 300ms var(--sk-ease);
 }
 #stack-root .rv.rv-armed {
   opacity: 0;
@@ -571,16 +585,16 @@ html:has(#stack-root) {
   transform: none;
 }
 #stack-root .rv[data-d='1'] {
-  transition-delay: 90ms;
+  transition-delay: 30ms;
 }
 #stack-root .rv[data-d='2'] {
-  transition-delay: 180ms;
+  transition-delay: 60ms;
 }
 #stack-root .rv[data-d='3'] {
-  transition-delay: 270ms;
+  transition-delay: 90ms;
 }
 #stack-root .rv[data-d='4'] {
-  transition-delay: 360ms;
+  transition-delay: 120ms;
 }
 
 /* ── Terminal ───────────────────────────────────────────── */
@@ -1837,9 +1851,12 @@ html:has(#stack-root) {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
-  #stack-root .rv {
-    opacity: 1;
-    transform: none;
+  #stack-root .rv,
+  #stack-root .rv.rv-armed,
+  #stack-root .rv.in {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
   #stack-root .caret {
     opacity: 1;

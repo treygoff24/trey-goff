@@ -47,7 +47,10 @@ export function useReveal(rootRef: React.RefObject<HTMLElement | null>, reduced:
     if (!root) return
     const els = root.querySelectorAll<HTMLElement>('.rv')
     if (reduced) {
-      els.forEach((el) => el.classList.add('in'))
+      els.forEach((el) => {
+        el.classList.remove('rv-armed')
+        el.classList.add('in')
+      })
       return
     }
     const io = new IntersectionObserver(
@@ -56,13 +59,14 @@ export function useReveal(rootRef: React.RefObject<HTMLElement | null>, reduced:
           const el = e.target as HTMLElement
           if (e.isIntersecting) {
             el.classList.add('in')
+            el.classList.remove('rv-armed')
             io.unobserve(el)
-          } else {
+          } else if (!el.classList.contains('in')) {
             el.classList.add('rv-armed')
           }
         }
       },
-      { rootMargin: '0px 0px -12% 0px', threshold: 0.08 },
+      { rootMargin: '0px 0px 60% 0px', threshold: 0 },
     )
     els.forEach((el) => io.observe(el))
     return () => io.disconnect()
