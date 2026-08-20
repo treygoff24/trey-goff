@@ -229,10 +229,6 @@ export default function ClaimLedger() {
     [model.rows, filters],
   )
   const visible = useMemo(() => new Set(visibleIds), [visibleIds])
-  const rowIndex = useMemo(
-    () => new Map(model.rows.map((row, index) => [row.claim.id, index] as const)),
-    [model.rows],
-  )
   const visibleKey = visibleIds.join('|')
   const filtered = isFiltered(filters)
 
@@ -301,7 +297,7 @@ export default function ClaimLedger() {
         const visible = entries
           .filter((entry) => entry.isIntersecting)
           .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
-        if (visible[0]) setActiveClaim(visible[0].target.id)
+        setActiveClaim(visible[0]?.target.id ?? null)
       },
       { rootMargin: '-20% 0px -65% 0px' },
     )
@@ -309,7 +305,14 @@ export default function ClaimLedger() {
     return () => observer.disconnect()
   }, [visibleKey])
 
+  // Filter changes re-anchor the reader at the top of the ledger, including a clear back to
+  // the unfiltered state; the first run is the page load, which must not jump past the essay.
+  const mounted = useRef(false)
   useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true
+      return
+    }
     sectionRef.current?.scrollIntoView({ block: 'start' })
   }, [filtered, filters.verdicts, filters.sections, filters.query, filters.range])
 
@@ -350,7 +353,7 @@ export default function ClaimLedger() {
           <p className="font-mono text-xs text-text-2" role="status" aria-live="polite">
             {filtered
               ? `${visible.size} of ${model.rows.length} claims`
-              : `Claim ${activeClaim ? `${(rowIndex.get(activeClaim) ?? 0) + 1} of ` : ''}${model.rows.length} · ${model.worked} worked · ${model.rows.length - model.worked} still open`}
+              : `${activeClaim ? `At ${activeClaim} · ` : ''}${model.rows.length} claims · ${model.worked} worked · ${model.rows.length - model.worked} still open`}
           </p>
         </div>
       </div>
