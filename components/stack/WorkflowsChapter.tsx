@@ -122,12 +122,12 @@ const SPINE_WIDE: SpineLayout = {
 }
 
 const SPINE_NARROW: SpineLayout = {
-  w: 300,
+  w: 316,
   spineX: 16,
   chipX: 44,
-  chipW: 250,
+  chipW: 264,
   bandX: 2,
-  bandW: 294,
+  bandW: 310,
   textX: 8,
 }
 
@@ -257,11 +257,11 @@ function LanePanel({ lanes, hub, rule, ruleTone, merge, label }: PanelProps) {
   const ROW_TOP = 40
   const ROW_PITCH = 54
   const CHIP_X = 24
-  const CHIP_W = 272
+  const CHIP_W = 286
   const RAIL_X = 10
   const lastTop = ROW_TOP + (lanes.length - 1) * ROW_PITCH
   return (
-    <svg viewBox="0 0 300 312" role="img" aria-label={label}>
+    <svg viewBox="0 0 316 312" role="img" aria-label={label}>
       <rect className="wf-hub" x={2} y={0} width={58} height={26} rx={5} />
       <text className="wf-hub-t" x={31} y={17} textAnchor="middle">
         {hub}
@@ -301,7 +301,7 @@ function LanePanel({ lanes, hub, rule, ruleTone, merge, label }: PanelProps) {
         className={ruleTone === 'gate' ? 'wf-gate' : 'wf-rail'}
         x1={2}
         y1={266}
-        x2={298}
+        x2={314}
         y2={266}
         strokeDasharray="5 5"
       />
@@ -309,8 +309,8 @@ function LanePanel({ lanes, hub, rule, ruleTone, merge, label }: PanelProps) {
         {rule.token ? <tspan className="wf-gate-tok">{rule.token}</tspan> : null}
         {rule.text}
       </text>
-      <rect className="wf-merge" x={2} y={278} width={296} height={28} rx={5} />
-      <text className="wf-merge-t" x={150} y={296} textAnchor="middle">
+      <rect className="wf-merge" x={2} y={278} width={312} height={28} rx={5} />
+      <text className="wf-merge-t" x={158} y={296} textAnchor="middle">
         {merge}
       </text>
     </svg>

@@ -23,10 +23,10 @@
 }
 #stack-root .psn-brief footer {
   font-family: var(--sk-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.16em;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
 }
 
 /* ── Figure shell for the chapter body ──────────────────── */
@@ -69,10 +69,10 @@
 #stack-root .psn-kind {
   display: block;
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   margin-bottom: 0.45rem;
 }
 #stack-root .psn-stream-head h4 {
@@ -110,8 +110,8 @@
 #stack-root .psn-frag {
   display: block;
   font-family: var(--sk-mono);
-  font-size: 0.61rem;
-  letter-spacing: 0.14em;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--sk-text-2);
   margin-bottom: 0.3rem;
@@ -130,10 +130,10 @@
 #stack-root .psn-reads-k {
   display: block;
   font-family: var(--sk-mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.2em;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   margin-bottom: 0.35rem;
 }
 #stack-root .psn-reads-v {
@@ -191,10 +191,10 @@
 #stack-root .psn-hyp-n {
   grid-column: 1 / -1;
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
+  font-size: 0.68rem;
   letter-spacing: 0.06em;
   line-height: 1.5;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
 }
 #stack-root .psn-hyp-track {
   position: relative;
@@ -231,7 +231,7 @@
 }
 #stack-root .psn-hyp-d {
   font-family: var(--sk-mono);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   line-height: 1;
   text-align: right;
 }
@@ -282,23 +282,23 @@
   font-family: var(--sk-mono);
 }
 #stack-root .psn-region-t {
-  font-size: 12px;
+  font-size: 13px;
   fill: var(--sk-text-1);
 }
 #stack-root .psn-region-s {
-  font-size: 11px;
-  fill: var(--sk-text-3);
+  font-size: 11.5px;
+  fill: var(--sk-text-2);
 }
 #stack-root .psn-arrow-t {
-  font-size: 11px;
-  letter-spacing: 0.05em;
+  font-size: 12px;
+  letter-spacing: 0.04em;
   fill: var(--sk-text-2);
 }
 #stack-root .psn-origin-t,
 #stack-root .psn-map-kick {
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  fill: var(--sk-text-3);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  fill: var(--sk-text-2);
 }
 #stack-root .psn-origin {
   fill: var(--sk-text-1);
@@ -335,8 +335,8 @@
 #stack-root .psn-aside h4 {
   margin: 0 0 0.8rem;
   font-family: var(--sk-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.18em;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--sk-amber);
 }

@@ -69,7 +69,7 @@
   font-family: var(--sk-mono);
   font-size: 8.5px;
   letter-spacing: 0.06em;
-  fill: var(--sk-text-3);
+  fill: var(--sk-text-2);
 }
 #stack-root .wt text.hub {
   fill: var(--sk-text-1);
@@ -80,7 +80,7 @@
   fill: var(--sk-text-2);
 }
 #stack-root .wt text.cnt {
-  fill: var(--sk-text-3);
+  fill: var(--sk-text-2);
 }
 
 /* Lane state coloring: live = writing, merging = in the gate,
@@ -157,7 +157,7 @@
 #stack-root .wt-log {
   font-family: var(--sk-mono);
   font-size: 0.72rem;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   line-height: 1.7;
 }
 #stack-root .wt-log b {

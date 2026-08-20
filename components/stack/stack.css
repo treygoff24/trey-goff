@@ -183,11 +183,12 @@ html:has(#stack-root) {
 #stack-root .rail-mark {
   font-family: var(--sk-mono);
   font-size: 0.6rem;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   text-decoration: none;
   display: block;
+  white-space: nowrap;
 }
 #stack-root .rail-mark strong {
   display: block;
@@ -248,10 +249,10 @@ html:has(#stack-root) {
 }
 #stack-root .rail-link .n {
   font-family: var(--sk-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.1em;
-  color: var(--sk-text-3);
-  opacity: 0.7;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--sk-text-2);
+  opacity: 0.8;
   transition: color 200ms var(--sk-ease);
 }
 #stack-root .rail-link::before {
@@ -289,10 +290,10 @@ html:has(#stack-root) {
 }
 #stack-root .rail-foot {
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.16em;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   border-top: 1px solid var(--sk-border-1);
   padding-top: 0.9rem;
   display: flex;
@@ -413,10 +414,10 @@ html:has(#stack-root) {
   flex-wrap: wrap;
   gap: 0 2.2rem;
   font-family: var(--sk-mono);
-  font-size: 0.66rem;
-  letter-spacing: 0.2em;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   border-top: 1px solid var(--sk-border-1);
   padding-top: 1rem;
 }
@@ -434,10 +435,10 @@ html:has(#stack-root) {
   align-items: center;
   gap: 0.7rem;
   font-family: var(--sk-mono);
-  font-size: 0.63rem;
-  letter-spacing: 0.24em;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   text-decoration: none;
 }
 #stack-root .scroll-cue i {
@@ -525,10 +526,10 @@ html:has(#stack-root) {
 }
 #stack-root .pager {
   font-family: var(--sk-mono);
-  font-size: 0.66rem;
-  letter-spacing: 0.16em;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   text-decoration: none;
   transition: color 200ms var(--sk-ease);
   display: inline-flex;
@@ -613,19 +614,19 @@ html:has(#stack-root) {
 #stack-root .term-title {
   margin-left: 0.55rem;
   font-family: var(--sk-mono);
-  font-size: 0.66rem;
+  font-size: 0.68rem;
   letter-spacing: 0.08em;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
 }
 #stack-root .term-replay {
   margin-left: auto;
   background: none;
   border: 1px solid var(--sk-border-1);
   border-radius: 4px;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.14em;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   padding: 0.25rem 0.55rem;
   cursor: pointer;
@@ -729,10 +730,10 @@ html:has(#stack-root) {
 }
 #stack-root .precept .idx {
   font-family: var(--sk-mono);
-  font-size: 0.66rem;
+  font-size: 0.68rem;
   letter-spacing: 0.14em;
   color: var(--sk-accent);
-  opacity: 0.75;
+  opacity: 0.85;
 }
 #stack-root .precept .claim {
   font-family: var(--sk-serif);
@@ -771,10 +772,10 @@ html:has(#stack-root) {
 }
 #stack-root .ctxfig-head .t {
   font-family: var(--sk-mono);
-  font-size: 0.63rem;
-  letter-spacing: 0.22em;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
 }
 #stack-root .ctxfig-head .t b {
   color: var(--sk-text-1);
@@ -793,10 +794,10 @@ html:has(#stack-root) {
   border-radius: 999px;
   padding: 0.42rem 0.9rem;
   font-family: var(--sk-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.14em;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   cursor: pointer;
   transition:
     color 220ms var(--sk-ease),
@@ -857,9 +858,9 @@ html:has(#stack-root) {
   min-height: 2.5rem;
   align-content: flex-start;
   font-family: var(--sk-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.06em;
-  color: var(--sk-text-3);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  color: var(--sk-text-2);
 }
 #stack-root .legend span {
   display: inline-flex;
@@ -925,8 +926,8 @@ html:has(#stack-root) {
 }
 #stack-root .dl .ext {
   font-family: var(--sk-mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.16em;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--sk-bg-0);
   background: var(--sk-warm);
@@ -949,10 +950,10 @@ html:has(#stack-root) {
 }
 #stack-root .dl .go {
   font-family: var(--sk-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.16em;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   white-space: nowrap;
   transition:
     color 220ms var(--sk-ease),
@@ -979,8 +980,8 @@ html:has(#stack-root) {
 #stack-root .callout .k {
   display: block;
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.22em;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--sk-warm);
   margin-bottom: 0.5rem;
@@ -1009,9 +1010,9 @@ html:has(#stack-root) {
 }
 #stack-root .anatomy-file .fname {
   font-family: var(--sk-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.14em;
-  color: var(--sk-text-3);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: var(--sk-text-2);
   padding: 0.6rem 0.9rem;
   border-bottom: 1px solid var(--sk-border-1);
   background: rgba(232, 243, 236, 0.028);
@@ -1069,10 +1070,10 @@ html:has(#stack-root) {
 #stack-root .anno button .h {
   display: block;
   font-family: var(--sk-mono);
-  font-size: 0.61rem;
-  letter-spacing: 0.18em;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   margin-bottom: 0.3rem;
   transition: color 240ms var(--sk-ease);
 }
@@ -1105,8 +1106,8 @@ html:has(#stack-root) {
 }
 #stack-root .scope .lbl {
   font-family: var(--sk-mono);
-  font-size: 0.61rem;
-  letter-spacing: 0.2em;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--sk-accent);
 }
@@ -1163,11 +1164,11 @@ html:has(#stack-root) {
 }
 #stack-root .rack-item .tag {
   font-family: var(--sk-mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.14em;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
-  opacity: 0.75;
+  color: var(--sk-text-2);
+  opacity: 0.85;
 }
 #stack-root .rack-item .bl {
   display: block;
@@ -1204,9 +1205,9 @@ html:has(#stack-root) {
   gap: 1rem;
   flex-wrap: wrap;
   font-family: var(--sk-mono);
-  font-size: 0.63rem;
-  letter-spacing: 0.1em;
-  color: var(--sk-text-3);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--sk-text-2);
 }
 #stack-root .rack-meta a {
   color: var(--sk-accent);
@@ -1262,16 +1263,16 @@ html:has(#stack-root) {
 }
 #stack-root .fan text {
   font-family: var(--sk-mono);
-  font-size: 8.5px;
+  font-size: 11.5px;
   letter-spacing: 0.06em;
-  fill: var(--sk-text-3);
+  fill: var(--sk-text-2);
 }
 #stack-root .fan text.on {
   fill: var(--sk-accent);
 }
 #stack-root .fan text.hub {
   fill: var(--sk-text-1);
-  font-size: 9.5px;
+  font-size: 13px;
 }
 #stack-root .fan-ctl {
   display: flex;
@@ -1365,27 +1366,27 @@ html:has(#stack-root) {
 }
 #stack-root .gate .g-n {
   font-family: var(--sk-mono);
-  font-size: 0.56rem;
-  letter-spacing: 0.18em;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
 }
 #stack-root .gate .g-t {
   font-family: var(--sk-mono);
-  font-size: 0.74rem;
+  font-size: 0.82rem;
   color: var(--sk-text-2);
   margin-top: 0.4rem;
   display: block;
 }
 #stack-root .gate .g-s {
   font-family: var(--sk-mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.14em;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   margin-top: 0.55rem;
   display: block;
-  color: var(--sk-text-3);
-  opacity: 0.5;
+  color: var(--sk-text-2);
+  opacity: 0.75;
 }
 #stack-root .gate.active {
   border-color: var(--sk-border-2);
@@ -1459,10 +1460,10 @@ html:has(#stack-root) {
   gap: 0.4rem;
   align-items: center;
   font-family: var(--sk-mono);
-  font-size: 0.61rem;
-  letter-spacing: 0.14em;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   margin-bottom: 1.5rem;
   min-height: 1.2rem;
 }
@@ -1513,8 +1514,8 @@ html:has(#stack-root) {
 }
 #stack-root .tree-opt .k {
   font-family: var(--sk-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.16em;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
   color: var(--sk-accent);
 }
 #stack-root .tree-opt .t {
@@ -1571,8 +1572,8 @@ html:has(#stack-root) {
   left: 0;
   top: 0.85rem;
   font-family: var(--sk-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.1em;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
   color: var(--sk-accent);
   opacity: 0.8;
 }
@@ -1603,11 +1604,11 @@ html:has(#stack-root) {
   display: block;
   margin-top: 0.7rem;
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   font-style: normal;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
 }
 
 /* ── Closing ────────────────────────────────────────────── */
@@ -1626,8 +1627,8 @@ html:has(#stack-root) {
   border-bottom: 1px solid var(--sk-border-1);
   background: rgba(151, 232, 187, 0.05);
   font-family: var(--sk-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.18em;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--sk-accent);
 }
@@ -1644,10 +1645,10 @@ html:has(#stack-root) {
   border: 1px solid var(--sk-border-1);
   border-radius: 4px;
   background: none;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.14em;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   padding: 0.3rem 0.6rem;
   cursor: pointer;
@@ -1663,9 +1664,9 @@ html:has(#stack-root) {
   border-top: 1px solid var(--sk-border-1);
   padding: 3rem 0 5rem;
   font-family: var(--sk-mono);
-  font-size: 0.66rem;
-  letter-spacing: 0.12em;
-  color: var(--sk-text-3);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: var(--sk-text-2);
   line-height: 2;
 }
 #stack-root .colophon a {
@@ -1798,7 +1799,7 @@ html:has(#stack-root) {
     position: relative;
   }
   #stack-root .fan svg {
-    min-width: 34rem;
+    min-width: 45rem;
   }
   #stack-root .fan .figscroll-hint,
   #stack-root [class] > .figscroll-hint {
@@ -1839,14 +1840,13 @@ html:has(#stack-root) {
     opacity: 1;
   }
 }
-
 /* Swipe hint for figures that pan horizontally on small screens. */
 #stack-root .figscroll-hint {
   display: none;
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.12em;
-  color: var(--sk-text-3);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: var(--sk-text-2);
   margin-bottom: 0.5rem;
 }
 

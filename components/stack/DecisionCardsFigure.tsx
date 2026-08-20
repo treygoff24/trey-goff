@@ -140,9 +140,8 @@ export default function DecisionCardsFigure() {
         : `You are holding ${keptCreation} creation ${keptCreation === 1 ? 'card' : 'cards'} and you handed over ${handedDecisions} decision ${handedDecisions === 1 ? 'card' : 'cards'}: ${days} days to ship and ${drift} percent off your mark. Slow and wrong is the worst of the four.`
 
   // Drift track geometry. Fixed viewBox, uniform scaling, integer inputs only.
-  const MARK_X = 58
+  const MARK_X = 64
   const BUILT_X = MARK_X + drift * 2.1
-
   const showThesis = thesisOpen || healthy
 
   return (
@@ -247,7 +246,7 @@ export default function DecisionCardsFigure() {
               className={`dcf-gateref ${drift > 0 ? 'off' : ''}`}
             />
             <circle cx={BUILT_X} cy="56" r="6" className={`dcf-built ${drift > 0 ? 'off' : ''}`} />
-            <text x={BUILT_X} y="93" className="dcf-tlabel built">
+            <text x={BUILT_X} y="90" className="dcf-tlabel built">
               built · gate ref
             </text>
           </svg>

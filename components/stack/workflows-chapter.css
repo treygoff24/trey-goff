@@ -53,9 +53,9 @@
 }
 #stack-root .wf-code-name {
   font-family: var(--sk-mono);
-  font-size: 0.63rem;
-  letter-spacing: 0.14em;
-  color: var(--sk-text-3);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: var(--sk-text-2);
   padding: 0.55rem 0.85rem;
   border-bottom: 1px solid var(--sk-border-1);
   background: rgba(232, 243, 236, 0.028);
@@ -121,18 +121,19 @@
   letter-spacing: 0.05em;
 }
 #stack-root .wf-chip-t {
-  font-size: 9.6px;
+  font-size: 10.5px;
   fill: var(--sk-text-2);
 }
 #stack-root .wf-band-t {
-  font-size: 9.6px;
-  letter-spacing: 0.18em;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   fill: var(--sk-accent);
 }
 #stack-root .wf-note {
-  font-size: 9.6px;
-  fill: var(--sk-text-3);
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+  fill: var(--sk-text-2);
 }
 /* The one literal a reader types is the only full-strength amber on the page. */
 #stack-root .wf-gate-tok {
@@ -140,7 +141,7 @@
 }
 #stack-root .wf-vendor {
   font-family: var(--sk-mono);
-  font-size: 9.6px;
+  font-size: 10.5px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   opacity: 0.9;
@@ -229,7 +230,7 @@
   stroke-width: 1;
 }
 #stack-root .wf-hub-t {
-  font-size: 9.6px;
+  font-size: 11px;
   fill: var(--sk-text-1);
 }
 /* Same visual weight as the .wf-rail the left panel uses, so the A/B reads
@@ -244,7 +245,7 @@
   stroke-width: 1;
 }
 #stack-root .wf-merge-t {
-  font-size: 9.6px;
+  font-size: 11px;
   fill: var(--sk-text-2);
 }
 
@@ -311,8 +312,8 @@
 #stack-root .wf-badges .k {
   display: block;
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.22em;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--sk-warm);
   margin-bottom: 0.45rem;
@@ -343,7 +344,7 @@
   }
   #stack-root .wf-code pre {
     /* Sized so the longest line still clears the right padding at 390px. */
-    font-size: 0.6rem;
+    font-size: 0.68rem;
     padding: 0.9rem 1.15rem 1rem 0.9rem;
   }
   /* RESUME / GATE / DETACHED stack into caps kickers at this width; inline

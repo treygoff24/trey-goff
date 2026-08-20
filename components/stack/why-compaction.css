@@ -59,10 +59,10 @@
 }
 .whyc-bandlabel {
   font-family: var(--sk-mono, ui-monospace, monospace);
-  font-size: 11px;
-  letter-spacing: 0.1em;
+  font-size: 12px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  fill: var(--sk-text-3, rgba(232, 243, 236, 0.55));
+  fill: var(--sk-text-2, rgba(232, 243, 236, 0.74));
 }
 
 /* Lost-in-the-Middle chart: one series plus the closed-book rule */
@@ -80,8 +80,8 @@
 }
 .whyc-baselabel {
   font-family: var(--sk-mono, ui-monospace, monospace);
-  font-size: 11px;
-  fill: var(--sk-text-3, rgba(232, 243, 236, 0.55));
+  font-size: 12px;
+  fill: var(--sk-text-2, rgba(232, 243, 236, 0.74));
 }
 
 /* Mechanism aside — small type, quieter than body copy */
@@ -99,8 +99,8 @@
   margin: 0 0 0.6rem;
   font-family: var(--sk-mono, ui-monospace, monospace);
   font-weight: 400;
-  font-size: 0.66rem;
-  letter-spacing: 0.16em;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--sk-text-2, rgba(232, 243, 236, 0.74));
 }

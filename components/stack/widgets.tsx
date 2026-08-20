@@ -307,12 +307,11 @@ export function FanOut() {
   }, [reduced, clearAll])
 
   const HUB = { x: 96, y: 130 }
-  // Lanes must terminate at the result box's left edge (x=610), not inside it.
-  const OUT = { x: 610, y: 130 }
+  // Lanes must terminate at the result box's left edge (x=598), not inside it.
+  const OUT = { x: 598, y: 130 }
   return (
     <div
       className="fan rv"
-      ref={fanRef}
       tabIndex={0}
       role="region"
       aria-label="Fan-out figure, scrolls horizontally on small screens"
@@ -331,11 +330,11 @@ export function FanOut() {
             return (
               <g key={w.n}>
                 <path
-                  d={`M${HUB.x},${HUB.y} C 200,${HUB.y} 230,${y} 296,${y}`}
+                  d={`M${HUB.x},${HUB.y} C 160,${HUB.y} 190,${y} 240,${y}`}
                   className={liveOut[i] ? 'lane live' : 'lane'}
                 />
                 <path
-                  d={`M476,${y} C 540,${y} 566,${OUT.y} ${OUT.x},${OUT.y}`}
+                  d={`M480,${y} C 530,${y} 560,${OUT.y} ${OUT.x},${OUT.y}`}
                   className={liveBack[i] ? 'lane back' : 'lane'}
                 />
               </g>
@@ -348,14 +347,14 @@ export function FanOut() {
             return (
               <g key={w.n}>
                 <rect
-                  x={296}
+                  x={240}
                   y={y - 12}
-                  width={180}
+                  width={240}
                   height={24}
                   rx={4}
                   className={liveOut[i] ? 'node on' : 'node'}
                 />
-                <text x={307} y={y + 4} className={liveOut[i] ? 'on' : undefined}>
+                <text x={252} y={y + 4} className={liveOut[i] ? 'on' : undefined}>
                   {w.n} · {w.job}
                 </text>
               </g>
@@ -366,14 +365,14 @@ export function FanOut() {
             you
           </text>
           <rect
-            x={610}
+            x={OUT.x}
             y={OUT.y - 17}
-            width={96}
+            width={110}
             height={34}
             rx={5}
             className={outOn ? 'node on' : 'node'}
           />
-          <text x={658} y={OUT.y + 4} className="hub" textAnchor="middle">
+          <text x={OUT.x + 55} y={OUT.y + 4} className="hub" textAnchor="middle">
             one answer
           </text>
         </g>

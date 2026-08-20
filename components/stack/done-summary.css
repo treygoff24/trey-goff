@@ -16,10 +16,10 @@
 #stack-root .ds-head {
   margin: 0 0 1.1rem;
   font-family: var(--sk-mono);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
 }
 #stack-root .ds-head b {
   color: var(--sk-text-1);
@@ -56,7 +56,7 @@
   color: var(--sk-text-1);
 }
 #stack-root .ds-card-head .v {
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
 }
 
 /* ── The report ─────────────────────────────────────────── */
@@ -316,7 +316,7 @@
   font-size: 0.68rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   white-space: nowrap;
 }
 #stack-root .ds-seg.is-never {
@@ -402,7 +402,7 @@
 
 @container (max-width: 880px) {
   #stack-root .ds-seg i {
-    font-size: 0.6rem;
+    font-size: 0.68rem;
     letter-spacing: 0.06em;
   }
 }

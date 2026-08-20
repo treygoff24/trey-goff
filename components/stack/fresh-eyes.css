@@ -35,10 +35,10 @@
 }
 #stack-root .fe-head .t {
   font-family: var(--sk-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.22em;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
 }
 #stack-root .fe-head .t b {
   color: var(--sk-text-1);
@@ -59,10 +59,10 @@
   border-radius: 999px;
   padding: 0.42rem 0.85rem;
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
+  font-size: 0.72rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   cursor: pointer;
   transition:
     color 220ms var(--sk-ease),
@@ -108,7 +108,7 @@
   color: var(--sk-text-1);
 }
 #stack-root .fe-win-head .v {
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
 }
 
 /* ── Context cells — the page's familiar grid ───────────── */
@@ -328,7 +328,7 @@
 #stack-root .fe-find .h {
   display: block;
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
+  font-size: 0.68rem;
   line-height: 1.5;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -343,7 +343,7 @@
   margin: 0.45rem 0 0;
   font-size: 0.8rem;
   line-height: 1.55;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
 }
 #stack-root .fe-find code {
   font-family: var(--sk-mono);
@@ -520,5 +520,12 @@
   #stack-root .fe-cells i,
   #stack-root .fe-toggle button {
     transition: none;
+  }
+}
+@media (pointer: coarse) {
+  #stack-root .fe-toggle button {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
   }
 }
