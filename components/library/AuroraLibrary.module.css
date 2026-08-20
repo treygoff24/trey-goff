@@ -1,0 +1,49 @@
+.indexHeader {
+  min-height: 44px;
+}
+
+.lensSwitcher {
+  position: fixed;
+  bottom: 4rem;
+  right: 1rem;
+  left: 1rem;
+  width: auto;
+  max-width: none;
+  justify-content: center;
+  background: var(--color-bg-0);
+}
+
+@media (min-width: 640px) {
+  .lensSwitcher {
+    position: relative;
+    bottom: auto;
+    right: auto;
+    left: auto;
+    width: max-content;
+    max-width: none;
+  }
+}
+
+.indexRow {
+  min-height: 72px;
+}
+
+@media (max-width: 767px) {
+  .indexHeader {
+    display: none;
+  }
+
+  .indexRow {
+    display: block;
+    min-height: 0;
+    padding-block: 1rem;
+  }
+
+  .indexMeta {
+    display: inline-flex;
+    margin-top: 0.65rem;
+    margin-right: 0.75rem;
+    min-height: 24px;
+    vertical-align: middle;
+  }
+}
