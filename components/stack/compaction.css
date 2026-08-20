@@ -21,10 +21,10 @@
 }
 #stack-root .cmp-head .t {
   font-family: var(--sk-mono);
-  font-size: 0.63rem;
-  letter-spacing: 0.22em;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
 }
 
 /* Both window sizes occupy one grid cell, so the taller wins the reservation
@@ -51,10 +51,10 @@
 #stack-root .cmp-scale {
   margin: 0 0 0.75rem;
   font-family: var(--sk-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.1em;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
 }
 #stack-root .cmp-scale b {
   color: var(--sk-text-1);
@@ -102,8 +102,8 @@
   transform: translateY(-50%);
   white-space: nowrap;
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.12em;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--sk-bg-0);
   background: var(--sk-amber);
@@ -117,9 +117,9 @@
   gap: 0.6rem;
   margin-top: 0.7rem;
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.08em;
-  color: var(--sk-text-3);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--sk-text-2);
 }
 #stack-root .cmp-axis-mid {
   color: var(--sk-amber);
@@ -136,8 +136,8 @@
 #stack-root .cmp-note .k {
   display: block;
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.22em;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--sk-amber);
   margin-bottom: 0.45rem;

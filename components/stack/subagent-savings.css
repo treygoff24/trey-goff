@@ -30,10 +30,10 @@
 }
 #stack-root .sfig-head .t {
   font-family: var(--sk-mono);
-  font-size: 0.63rem;
-  letter-spacing: 0.22em;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
 }
 #stack-root .sfig-head .t b {
   color: var(--sk-text-1);
@@ -53,8 +53,8 @@
   border-radius: 999px;
   padding: 0.42rem 0.9rem;
   font-family: var(--sk-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.14em;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--sk-text-3);
   cursor: pointer;
@@ -75,10 +75,10 @@
   gap: 0.6rem;
   margin-bottom: 0.42rem;
   font-family: var(--sk-mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.14em;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
 }
 #stack-root .sfig-win-head .n {
   color: var(--sk-text-2);
@@ -249,9 +249,9 @@
   min-height: 2.5rem;
   align-content: flex-start;
   font-family: var(--sk-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.06em;
-  color: var(--sk-text-3);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  color: var(--sk-text-2);
 }
 #stack-root .sfig-legend span {
   display: inline-flex;
@@ -316,8 +316,8 @@
 
 @media (max-width: 640px) {
   #stack-root .sfig-win-head {
-    font-size: 0.54rem;
-    letter-spacing: 0.1em;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
   }
   #stack-root .sfig-win-head .v {
     display: none;

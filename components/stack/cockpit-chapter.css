@@ -34,7 +34,7 @@
   font-size: 0.68rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   margin-top: 0.35rem;
 }
 #stack-root .cp-instruments p {
@@ -114,10 +114,10 @@
 #stack-root .cs-win-t {
   transition: opacity 620ms var(--sk-ease);
   font-family: var(--sk-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
 }
 
 /* The residue: what a session actually accumulates. Four of these seven lines
@@ -135,9 +135,9 @@
 }
 #stack-root .cs-chips li {
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
+  font-size: 0.68rem;
   line-height: 1.5;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   padding: 0.1rem 0.4rem;
   border-left: 2px solid transparent;
   white-space: nowrap;
@@ -162,13 +162,12 @@
   transition: opacity 520ms var(--sk-ease);
 }
 
-/* The fresh window's two states: empty, then briefed. */
 #stack-root .cs-empty {
   margin: 0;
   font-family: var(--sk-mono);
   font-size: 0.68rem;
-  color: var(--sk-text-3);
-  opacity: 0.55;
+  color: var(--sk-text-2);
+  opacity: 0.75;
   transition: opacity 520ms var(--sk-ease);
 }
 #stack-root .cs-brief {
@@ -181,7 +180,7 @@
 }
 #stack-root .cs-brief li {
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
+  font-size: 0.68rem;
   color: var(--sk-text-2);
   padding: 0.12rem 0.45rem;
   border-left: 2px solid var(--sk-warm);
@@ -216,10 +215,10 @@
   top: 0.2rem;
   transform: translateX(-50%);
   font-family: var(--sk-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.2em;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   background: var(--sk-bg-1);
   padding: 0 0.35rem;
 }
@@ -251,7 +250,7 @@
   justify-content: space-between;
   gap: 0.4rem;
   font-family: var(--sk-mono);
-  font-size: 0.68rem;
+  font-size: 0.74rem;
   color: var(--sk-accent);
 }
 #stack-root .cs-file-tag {
@@ -298,7 +297,7 @@
 #stack-root .cs-file-lines li {
   --i: 0;
   font-family: var(--sk-mono);
-  font-size: 0.58rem;
+  font-size: 0.68rem;
   line-height: 1.45;
   color: var(--sk-text-2);
   padding-left: 0.5rem;
@@ -343,10 +342,10 @@
 }
 #stack-root .cs-return span {
   font-family: var(--sk-mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.16em;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   background: var(--sk-bg-1);
   padding: 0 0.5rem;
   transform: translateY(-0.55rem);
@@ -470,7 +469,7 @@
 #stack-root .cp-ctl-btn {
   min-height: 2.4rem;
   padding: 0 1rem;
-  font-size: 0.64rem;
+  font-size: 0.68rem;
   flex: none;
 }
 #stack-root .cp-ctl-btn:focus-visible {

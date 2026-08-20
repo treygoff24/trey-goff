@@ -40,10 +40,10 @@
 }
 #stack-root .fx-contrast thead th {
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.22em;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   padding-block: 0.5rem 0.6rem;
 }
 #stack-root .fx-contrast .fx-c-corner {
@@ -51,8 +51,8 @@
 }
 #stack-root .fx-contrast .fx-c-k {
   font-family: var(--sk-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.2em;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--sk-warm);
 }
@@ -100,15 +100,15 @@
 }
 #stack-root .fx-bar-sub {
   font-family: var(--sk-mono);
-  font-size: 0.63rem;
-  letter-spacing: 0.16em;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
 }
 #stack-root .fx-run {
   font-family: var(--sk-mono);
-  font-size: 0.63rem;
-  letter-spacing: 0.18em;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--sk-text-1);
   background: var(--sk-surface-1);
@@ -126,10 +126,10 @@
 }
 #stack-root .fx-bar-static {
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.16em;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
 }
 #stack-root .fx-run:disabled {
   cursor: default;
@@ -163,8 +163,8 @@
 }
 #stack-root .fx-stat-k {
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--sk-text-2);
 }
@@ -216,16 +216,16 @@
   top: 0.15rem;
   left: 0.85rem;
   font-family: var(--sk-mono);
-  font-size: 9.6px;
-  letter-spacing: 0.22em;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
 }
 #stack-root .fx-repeat {
   margin: 0.35rem 0 0.7rem 2rem;
   font-family: var(--sk-mono);
-  font-size: 9.6px;
-  letter-spacing: 0.12em;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
   color: var(--sk-warm);
 }
 
@@ -288,13 +288,13 @@
 #stack-root .fx-cap,
 #stack-root .fx-opt {
   font-family: var(--sk-mono);
-  font-size: 9.6px;
-  letter-spacing: 0.12em;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 0.14rem 0.36rem;
   border-radius: 3px;
   border: 1px solid var(--sk-border-1);
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   white-space: nowrap;
 }
 /* Amber is the discipline color on this page and belongs to caps and
@@ -312,10 +312,10 @@
 }
 #stack-root .fx-count i {
   font-style: normal;
-  font-size: 0.62rem;
-  letter-spacing: 0.12em;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
 }
 #stack-root .fx-fams {
   display: flex;
@@ -440,17 +440,17 @@
 }
 #stack-root .fx-d-kind {
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.22em;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--sk-warm);
 }
 #stack-root .fx-d-close {
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.18em;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   background: none;
   border: 1px solid var(--sk-border-1);
   border-radius: 4px;
@@ -475,9 +475,9 @@
 #stack-root .fx-d-path {
   margin: 0 0 0.85rem;
   font-family: var(--sk-mono);
-  font-size: 9.6px;
-  letter-spacing: 0.1em;
-  color: var(--sk-text-3);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--sk-text-2);
   word-break: break-word;
 }
 #stack-root .fx-d-what {
@@ -499,10 +499,10 @@
 }
 #stack-root .fx-d-facts dt {
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.18em;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
   padding-top: 0.15rem;
 }
 #stack-root .fx-d-facts dd {
@@ -528,8 +528,8 @@
    node it describes and pulls the eye out of the map. */
 #stack-root .fx-d-fam {
   font-family: var(--sk-mono);
-  font-size: 9.6px;
-  letter-spacing: 0.16em;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 0.2rem 0.45rem;
   border-radius: 3px;
@@ -552,10 +552,10 @@
 #stack-root .fx-rest-k {
   margin: 0 0 0.55rem;
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.22em;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
 }
 #stack-root .fx-rest-p {
   margin: 0 0 0.7rem;
@@ -585,10 +585,10 @@
 #stack-root .fx-legend-k {
   margin: 0 0 0.4rem;
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.22em;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--sk-text-3);
+  color: var(--sk-text-2);
 }
 #stack-root .fx-legend-k + ul + .fx-legend-k {
   margin-top: 0.85rem;
@@ -606,8 +606,8 @@
   align-items: center;
   gap: 0.4rem;
   font-family: var(--sk-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.12em;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--sk-text-2);
 }
