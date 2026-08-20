@@ -1,7 +1,3 @@
-html:has(#jobsite-root) body > footer {
-  display: none;
-}
-
 #jobsite-root {
   --js-bg: #04130c;
   --js-bg-1: #061a10;

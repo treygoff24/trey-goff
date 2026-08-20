@@ -172,6 +172,9 @@ function Beat({ beat, preload }: { beat: JobSiteBeat; preload: boolean }) {
       <ScenePanel beat={beat} preload={preload} />
       <div className="js-copy">
         <header className="js-head">
+          <Link className="js-eyebrow" href="/">
+            ← treygoff.com
+          </Link>
           <span className="js-num" aria-hidden="true">
             {beat.n}
           </span>
@@ -245,9 +248,12 @@ export function JobSiteShell() {
         <Beat key={beat.id} beat={beat} preload={index === 0} />
       ))}
       <footer className="js-end">
-        <Link href="/stack#ch1">
-          {jobSiteBeats.at(-1)?.footer ?? 'Ready for the deep end? → Hard mode, chapter 1.'}
-        </Link>
+        <div>
+          <Link href="/stack#ch1">
+            {jobSiteBeats.at(-1)?.footer ?? 'Ready for the deep end? → Hard mode, chapter 1.'}
+          </Link>{' '}
+          · <Link href="/">Back to treygoff.com →</Link>
+        </div>
         <p>Built by the crew it describes.</p>
       </footer>
     </div>

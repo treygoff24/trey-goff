@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, type RefObject } from 'react'
+import Link from 'next/link'
 import { CHAPTERS } from '@/components/stack/data'
 
 export function StackRail({
@@ -83,10 +84,10 @@ export function StackRail({
         aria-label="Chapters"
         ref={railRef}
       >
-        <a className="rail-mark" href="#top">
+        <Link aria-label="Back to treygoff.com" className="rail-mark" href="/">
           Trey Goff / treygoff.com
           <strong>The Setup</strong>
-        </a>
+        </Link>
         <div className="rail-nav">
           <div className="rail-spine" aria-hidden="true">
             <i style={{ height: `${spinePct}%` }} />

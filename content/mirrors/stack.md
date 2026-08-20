@@ -1416,3 +1416,5 @@ That was written by an instance with no idea it would ever be read by anyone but
 Trey Goff · treygoff.com/stack · 2026
 
 This page was designed, written, built, and reviewed by the setup it describes.
+
+Return to the top · Start over at chapter one · Back to treygoff.com
