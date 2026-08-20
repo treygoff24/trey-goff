@@ -5,7 +5,7 @@ import { useOptionalLedger } from '@/components/instruments/LedgerProvider'
 import { Spectrum } from '@/components/instruments/Spectrum'
 import { INSTRUMENT_SENTINEL } from '@/components/instruments/sentinel'
 import { clearFilters, toggleSection, useLedgerStore } from '@/components/instruments/ledger-store'
-import { isFiltered, matchesFilters } from '@/components/instruments/use-filtered-rows'
+import { isFiltered } from '@/components/instruments/use-filtered-rows'
 import { formatClock, sectionAnchor, type LedgerModel } from '@/components/instruments/ledger-model'
 
 /** Headings the rail tracks: the article's own, then every ledger section. */
@@ -33,16 +33,13 @@ function useReadingPosition(ids: readonly string[]) {
 
 function StateSummary({ model }: { model: LedgerModel }) {
   const filters = useLedgerStore((state) => state.filters)
-  const visible = useMemo(
-    () => model.rows.filter((row) => matchesFilters(row, filters)).length,
-    [model.rows, filters],
-  )
   const filtered = isFiltered(filters)
 
   return (
     <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
       <p className="font-mono text-xs text-text-2">
-        <span className="text-text-1">{visible}</span> of {model.rows.length} claims
+        <span className="text-text-1">{model.rows.length} claims</span> in {model.sections.length}{' '}
+        sections
       </p>
       {filters.range && (
         <p className="font-mono text-[11px] text-text-3">
@@ -111,7 +108,7 @@ export default function InstrumentRail({ headings }: { headings: { id: string; t
         data-instrument={INSTRUMENT_SENTINEL}
       >
         <div className="tg-scroll sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto pb-8">
-          <p className="tg-instrument-label">Where you are</p>
+          <p className="tg-instrument-label">Contents</p>
           {model && (
             <div className="mt-2 border-b border-border-1 pb-3">
               <StateSummary model={model} />

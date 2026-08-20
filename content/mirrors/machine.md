@@ -34,11 +34,11 @@ Each is a slider from 0 to 100. The baseline values the page opens with are list
 
 When the split view is active, a **Left rules** / **Right rules** tab group selects which world the sliders edit, and this note appears:
 
-> Both worlds begin with the same seed and the same distribution of skill and capital. Only the rules differ. Re-run them whenever you want the comparison cleared of history.
+> Both worlds begin with the same seed and the same distribution of skill and capital. Change RIGHT RULES first to make the comparison meaningful, then re-run to clear its history.
 
 ## The ledger
 
-One ledger per world, headed "Left ledger" or "Right ledger", each with a sparkline of total output over the last 120 published samples and a toggle between **Log scale** and **Linear scale** (log is the default). Three readouts, all formatted compactly:
+One ledger per world, headed "Left world ledger" or "Right world ledger", each with a sparkline of total output over the last 120 published samples and a toggle between **Log scale** and **Linear scale** (log is the default). Three readouts, all formatted compactly:
 
 - **Output** — total output this quarter
 - **Structures** — cumulative completed structures

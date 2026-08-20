@@ -247,13 +247,15 @@ export function MachineShell() {
   useEffect(() => {
     const chrome = document.querySelectorAll<HTMLElement>('header, footer')
     const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
+    const narrow = window.matchMedia('(max-width: 767px)').matches
+    if (!narrow) document.body.style.overflow = 'hidden'
     chrome.forEach((element) => {
       element.inert = true
       element.setAttribute('aria-hidden', 'true')
     })
     return () => {
-      document.body.style.overflow = previousOverflow
+      if (!window.matchMedia('(max-width: 767px)').matches)
+        document.body.style.overflow = previousOverflow
       chrome.forEach((element) => {
         element.inert = false
         element.removeAttribute('aria-hidden')
