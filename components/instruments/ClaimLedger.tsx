@@ -111,7 +111,10 @@ const ClaimRow = memo(function ClaimRow({ row, hidden, flashed, hasDossier, span
           </button>
         ) : (
           claim.finding && (
-            <span title="Working file cited by this verdict; not published with the ledger">
+            <span
+              className="font-mono"
+              title="Working file cited by this verdict; not published with the ledger"
+            >
               {claim.finding.replace(/^findings\//, '')}
             </span>
           )
@@ -156,6 +159,33 @@ function VerdictChips() {
   )
 }
 
+function LedgerLegend() {
+  const verdicts = LEDGER_STATES.map((state) => (
+    <span key={state} className="inline-flex items-center gap-1.5">
+      <span
+        aria-hidden="true"
+        className="inline-block size-2 rounded-full"
+        style={{ backgroundColor: verdictColor(state) }}
+      />
+      {stateLabel(state)}
+    </span>
+  ))
+
+  return (
+    <aside className="mb-8 border-y border-border-1 py-4 text-xs leading-relaxed text-text-2">
+      <p className="font-mono text-[11px] tracking-[0.12em] text-text-3 uppercase">
+        How to read it
+      </p>
+      <p className="mt-2 flex flex-wrap gap-x-4 gap-y-2">{verdicts}</p>
+      <p className="mt-2">
+        <span title={TYPE_LABELS.A}>Type A: someone says Y.</span>{' '}
+        <span title={TYPE_LABELS.B}>Type B: document or event Z exists.</span>{' '}
+        <span title={TYPE_LABELS.C}>Type C: direct claim about the world.</span>
+      </p>
+    </aside>
+  )
+}
+
 function SearchBox() {
   const query = useLedgerStore((state) => state.filters.query)
   const [draft, setDraft] = useState(query)
@@ -191,12 +221,14 @@ export default function ClaimLedger() {
   const routed = useRef<string | null>(null)
   const stickyRef = useRef<HTMLDivElement>(null)
   const sectionRef = useRef<HTMLElement>(null)
+  const [activeClaim, setActiveClaim] = useState<string | null>(null)
   const dossierSet = useMemo(() => new Set(dossiers), [dossiers])
 
   const visible = useMemo(
     () => new Set(model.rows.filter((row) => matchesFilters(row, filters)).map((r) => r.claim.id)),
     [model.rows, filters],
   )
+  const filtered = isFiltered(filters)
 
   // Send the reader to whichever claim the URL or a cross-reference named, then let the
   // marking lapse so it does not follow them down the page.
@@ -255,7 +287,26 @@ export default function ClaimLedger() {
     }
   }, [])
 
-  const filtered = isFiltered(filters)
+  useEffect(() => {
+    const rows = Array.from(sectionRef.current?.querySelectorAll<HTMLElement>('.tg-claim') ?? [])
+    if (rows.length === 0) return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
+        if (visible[0]) setActiveClaim(visible[0].target.id)
+      },
+      { rootMargin: '-20% 0px -65% 0px' },
+    )
+    rows.forEach((row) => observer.observe(row))
+    return () => observer.disconnect()
+  }, [visible])
+
+  useEffect(() => {
+    if (!filtered) return
+    sectionRef.current?.scrollIntoView({ block: 'start' })
+  }, [filtered, filters.verdicts, filters.sections, filters.query, filters.range])
 
   return (
     <section
@@ -270,6 +321,7 @@ export default function ClaimLedger() {
           label={`The whole ledger: ${LEDGER_STATES.map((state) => `${model.counts[state]} ${stateLabel(state)}`).join(', ')}`}
         />
       </div>
+      <LedgerLegend />
 
       <div
         ref={stickyRef}
@@ -293,7 +345,7 @@ export default function ClaimLedger() {
           <p className="font-mono text-xs text-text-2" role="status" aria-live="polite">
             {filtered
               ? `${visible.size} of ${model.rows.length} claims`
-              : `${model.rows.length} claims · ${model.worked} worked · ${model.rows.length - model.worked} still open`}
+              : `Where you are: ${activeClaim ? `${model.rows.findIndex((row) => row.claim.id === activeClaim) + 1} of ` : ''}${model.rows.length} claims · ${model.worked} worked · ${model.rows.length - model.worked} still open`}
           </p>
         </div>
       </div>

@@ -103,7 +103,7 @@ function Ledger({ state, side }: { state: LedgerState; side: string }) {
   return (
     <section className={styles.ledger} aria-labelledby={headingId}>
       <div className={styles.sectionHeading}>
-        <h2 id={headingId}>{side} ledger</h2>
+        <h2 id={headingId}>{side} world ledger</h2>
         <button type="button" onClick={() => setLogarithmic((value) => !value)}>
           {logarithmic ? 'Log scale' : 'Linear scale'}
         </button>
@@ -262,7 +262,7 @@ export function MachineConsole({
         <Ledger state={activeLedger} side={activePanel === 'left' ? 'Left' : 'Right'} />
       )}
 
-      <div className={styles.lab} hidden={!expanded}>
+      <div className={styles.lab}>
         <section className={styles.presets} aria-labelledby="preset-heading">
           <div className={styles.sectionHeading}>
             <h2 id="preset-heading">Rulesets</h2>
@@ -282,7 +282,8 @@ export function MachineConsole({
         {split && (
           <p className={styles.explainer}>
             Both worlds begin with the same seed and the same distribution of skill and capital.
-            Only the rules differ. Re-run them whenever you want the comparison cleared of history.
+            Change RIGHT RULES first to make the comparison meaningful, then re-run to clear its
+            history.
           </p>
         )}
         <p className={styles.footnote}>
