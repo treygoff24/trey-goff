@@ -157,7 +157,19 @@ html:has(#jobsite-root) body > footer {
 .js-beat {
   --js-accent: var(--js-active);
   content-visibility: auto;
-  contain-intrinsic-block-size: auto 1800px;
+  /* The placeholder has to be close to the real thing, not merely cheap: the
+     top progress bar is a scroll-timeline animation, so its denominator is the
+     document height, and every beat that renders taller than its estimate
+     grows that denominator and slides the bar backwards mid-scroll. Measured
+     on the rendered page, beats run about 3.3k tall on a desktop column and
+     about 4k on a phone, where the same prose reflows into more lines while
+     the scene shrinks. */
+  contain-intrinsic-block-size: auto 4000px;
+}
+@media (min-width: 900px) {
+  .js-beat {
+    contain-intrinsic-block-size: auto 3300px;
+  }
 }
 .js-scene {
   position: relative;
