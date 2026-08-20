@@ -1,7 +1,5 @@
-'use client'
-
 import Link from 'next/link'
-import { useCommandPalette } from '@/components/command/CommandProvider'
+import { SearchButton } from '@/components/layout/SearchButton'
 import { isNewsletterEnabled } from '@/lib/site-config'
 
 const footerLinks = [
@@ -30,7 +28,6 @@ const quickNav = [
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
-  const { toggle } = useCommandPalette()
 
   return (
     <footer className="relative z-10 border-t border-border-1 bg-bg-0/72 backdrop-blur-md">
@@ -46,16 +43,7 @@ export function Footer() {
               Designing systems, institutions, and software that help human progress compound.
             </p>
 
-            <button
-              type="button"
-              onClick={toggle}
-              className="inline-flex items-center gap-2 text-xs text-text-3 transition-colors hover:text-text-2 [@media(pointer:coarse)]:min-h-[44px]"
-            >
-              <span>Search</span>
-              <kbd className="hidden rounded border border-border-1 bg-surface-1 px-1.5 py-0.5 font-mono text-text-2 [@media(pointer:fine)]:inline">
-                ⌘K
-              </kbd>
-            </button>
+            <SearchButton />
           </div>
 
           <div className="space-y-4">
