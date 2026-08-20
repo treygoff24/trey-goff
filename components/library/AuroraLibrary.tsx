@@ -22,6 +22,7 @@ import {
   sortAuroraIndex,
 } from '@/lib/library/aurora'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
+import styles from './AuroraLibrary.module.css'
 
 type Lens = 'constellation' | 'shelf' | 'river' | 'index'
 
@@ -314,8 +315,7 @@ function ConstellationLens({
     cameraRef.current = {
       scale,
       x: rect.width / 2 - ((minX + maxX) / 2) * scale,
-      // nudge down so the floating lens switcher doesn't sit on the top cluster
-      y: rect.height / 2 - ((minY + maxY) / 2) * scale + 14,
+      y: rect.height / 2 - ((minY + maxY) / 2) * scale,
     }
     requestRender()
   }, [nodes, requestRender])
@@ -423,7 +423,7 @@ function ConstellationLens({
 
   return (
     <section className="mx-auto max-w-[1240px] px-4 pb-10 sm:px-8 lg:px-12">
-      <div className="relative h-[min(72vh,590px)] min-h-[440px] overflow-hidden rounded border border-accent/20 bg-[radial-gradient(70%_90%_at_22%_52%,rgba(126,40,122,0.22),transparent_68%),radial-gradient(72%_78%_at_82%_52%,rgba(7,48,31,0.34),transparent_72%),rgba(3,14,9,0.82)] shadow-[0_28px_90px_-55px_rgba(0,0,0,0.95)]">
+      <div className="relative h-[min(72vh,590px)] min-h-[440px] overflow-hidden rounded border border-accent/20 bg-[radial-gradient(70%_90%_at_22%_52%,rgba(126,40,122,0.22),transparent_68%),radial-gradient(72%_78%_at_82%_52%,rgba(7,48,31,0.34),transparent_72%),rgba(3,14,9,0.82)] shadow-[0_28px_90px_-55px_rgba(0,0,0,0.95)] max-sm:h-[420px] max-sm:min-h-0">
         <canvas
           ref={canvasRef}
           aria-label="Constellation of books linked by shared topics"
@@ -476,7 +476,10 @@ function ConstellationLens({
           The Constellation
         </div>
         <div className="pointer-events-none absolute bottom-4 left-5 max-w-[calc(100%-2.5rem)] font-mono text-[10.5px] tracking-[0.05em] text-text-2/55">
-          scroll to zoom · drag to pan · bright threads link a shared topic · click a star
+          <span className="max-sm:hidden">
+            scroll to zoom · drag to pan · bright threads link a shared topic · click a star
+          </span>
+          <span className="hidden max-sm:inline">pinch to zoom · drag to pan · tap a star</span>
         </div>
       </div>
     </section>
@@ -526,7 +529,7 @@ function ShelfLens({
         {shelves.map((shelf, shelfIndex) => (
           <div
             key={`shelf-${shelfIndex}-${shelf[0]?.id ?? 'empty'}`}
-            className="flex min-h-[206px] flex-wrap items-end gap-[7px] border-b-2 border-accent/20 px-0.5"
+            className="flex min-h-[206px] w-fit flex-wrap items-end gap-[7px] border-b-2 border-accent/20 px-0.5"
           >
             {shelf.map((book) => {
               const dim = bookIsDimmed(book, activeCategory)
@@ -552,7 +555,7 @@ function ShelfLens({
                   <span className="min-h-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap font-newsreader text-[13px] font-medium leading-none tracking-[0.01em] text-text-1 [text-orientation:mixed] [writing-mode:vertical-rl]">
                     {book.title}
                   </span>
-                  <span className="mt-2 max-h-[76px] max-w-full shrink-0 overflow-hidden text-ellipsis whitespace-nowrap font-mono text-[8.5px] uppercase tracking-[0.08em] text-text-2/65 [writing-mode:vertical-rl]">
+                  <span className="mt-2 max-h-[76px] max-w-full shrink-0 overflow-hidden text-ellipsis whitespace-nowrap font-mono text-[11px] uppercase tracking-[0.08em] text-text-2/70 [writing-mode:vertical-rl]">
                     {book.author}
                   </span>
                 </button>
@@ -591,8 +594,16 @@ function RiverLens({
 
   return (
     <section className="mx-auto max-w-[1240px] pb-12">
+      <div className="flex items-center justify-between px-4 pb-3 sm:px-8 lg:px-12">
+        <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-text-2/75">
+          River · books by year
+        </h2>
+        <span className="font-mono text-[10.5px] text-text-2/60 max-sm:inline sm:hidden">
+          swipe to explore
+        </span>
+      </div>
       <div className="tg-scroll overflow-x-auto bg-[radial-gradient(60%_92%_at_18%_26%,rgba(126,40,122,0.32),transparent_72%),radial-gradient(70%_80%_at_86%_28%,rgba(18,83,50,0.24),transparent_76%)] px-4 py-10 sm:px-8 lg:px-12">
-        <div className="flex min-h-[320px] -translate-y-14 items-end gap-3">
+        <div className="flex min-h-[320px] items-end gap-3">
           {years.map(({ year, books: yearBooks }) => (
             <div key={year} className="flex flex-col items-center">
               <div className="flex w-[62px] flex-col-reverse gap-[3px]">
@@ -650,7 +661,9 @@ function IndexLens({
 
   return (
     <section className="mx-auto max-w-[1060px] px-4 pb-16 sm:px-8 lg:px-12">
-      <div className="grid grid-cols-[42px_minmax(0,1fr)_120px_84px_56px] items-center gap-3 border-b border-text-1/20 px-2 pb-3 font-mono text-[10.5px] uppercase tracking-[0.1em] text-text-2/65 sm:grid-cols-[42px_minmax(0,1fr)_150px_96px_56px] sm:gap-5">
+      <div
+        className={`${styles.indexHeader} grid grid-cols-[42px_minmax(0,1fr)_120px_84px_56px] items-center gap-3 border-b border-text-1/20 px-2 pb-3 font-mono text-[10.5px] uppercase tracking-[0.1em] text-text-2/65 sm:grid-cols-[42px_minmax(0,1fr)_150px_96px_56px] sm:gap-5`}
+      >
         <span>№</span>
         {indexSorts.map((sort) => (
           <button
@@ -682,6 +695,7 @@ function IndexLens({
               data-testid={`library-index-book-${book.id}`}
               onClick={() => onSelect(book.id)}
               className={clsx(
+                styles.indexRow,
                 'grid w-full grid-cols-[42px_minmax(0,1fr)_120px_84px_56px] items-baseline gap-3 border-b border-text-1/10 px-2 py-4 text-left transition hover:bg-accent/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent sm:grid-cols-[42px_minmax(0,1fr)_150px_96px_56px] sm:gap-5',
                 dim && 'opacity-30',
               )}
@@ -693,7 +707,9 @@ function IndexLens({
                 </span>
                 <span className="mt-0.5 block text-sm text-text-2/70">{book.author}</span>
               </span>
-              <span className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.04em] text-text-2/70">
+              <span
+                className={`${styles.indexMeta} inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.04em] text-text-2/70`}
+              >
                 <span
                   aria-hidden="true"
                   className="h-1.5 w-1.5 shrink-0 rounded-full"
@@ -701,10 +717,14 @@ function IndexLens({
                 />
                 <span className="truncate">{book.categoryLabel}</span>
               </span>
-              <span className="truncate font-mono text-[11px] capitalize tracking-[0.03em] text-text-2/60">
+              <span
+                className={`${styles.indexMeta} truncate font-mono text-[11px] capitalize tracking-[0.03em] text-text-2/60`}
+              >
                 {formatAuroraTopic(book.topics[0] ?? '—')}
               </span>
-              <span className="text-right font-mono text-xs text-text-2/60">{book.year}</span>
+              <span className={`${styles.indexMeta} text-right font-mono text-xs text-text-2/60`}>
+                {book.year}
+              </span>
             </button>
           )
         })}
@@ -964,12 +984,7 @@ function DetailDrawer({
               <p className="mb-8 text-pretty font-display text-xl italic leading-relaxed text-text-1/90">
                 {book.whyILoveIt}
               </p>
-            ) : (
-              <p className="mb-8 text-sm leading-6 text-text-2/70">
-                This book has a place in the map because of the topics and neighboring ideas it
-                touches.
-              </p>
-            )}
+            ) : null}
             <button
               type="button"
               onClick={() => onSeeShelf(book.categoryCode)}
@@ -992,7 +1007,6 @@ export function AuroraLibrary({ books, nodes, edges, topicCount }: AuroraLibrary
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [shelfSort, setShelfSort] = useState<AuroraShelfSort>('shelf')
   const [indexSort, setIndexSort] = useState<IndexState>({ key: 'year', asc: false })
-  const [lensFocused, setLensFocused] = useState(false)
   const lensViewportRef = useRef<HTMLDivElement | null>(null)
   const lensContentRef = useRef<HTMLDivElement | null>(null)
 
@@ -1004,7 +1018,6 @@ export function AuroraLibrary({ books, nodes, edges, topicCount }: AuroraLibrary
   const closeDetail = useCallback(() => setSelectedId(null), [])
   const handleLensChange = useCallback((nextLens: Lens) => {
     setLens(nextLens)
-    setLensFocused(true)
     requestAnimationFrame(() => {
       const isMobile = window.matchMedia('(max-width: 639px)').matches
       const target =
@@ -1023,15 +1036,6 @@ export function AuroraLibrary({ books, nodes, edges, topicCount }: AuroraLibrary
 
   useEffect(() => {
     setHydrated(true)
-  }, [])
-
-  useEffect(() => {
-    const update = () => {
-      if (window.scrollY < 120) setLensFocused(false)
-    }
-    update()
-    window.addEventListener('scroll', update, { passive: true })
-    return () => window.removeEventListener('scroll', update)
   }, [])
 
   return (
@@ -1072,16 +1076,19 @@ export function AuroraLibrary({ books, nodes, edges, topicCount }: AuroraLibrary
 
       <div
         ref={lensViewportRef}
-        className="mx-auto max-w-[1240px] px-12 pb-4 max-sm:hidden sm:px-8 lg:px-12"
+        className="mx-auto w-full min-w-0 max-w-[1240px] overflow-x-auto px-12 pb-4 sm:px-8 lg:px-12"
       >
-        <div className="flex flex-wrap gap-2" data-testid="library-category-strip">
+        <div
+          className="flex w-max min-w-full flex-wrap gap-2 max-sm:flex-nowrap"
+          data-testid="library-category-strip"
+        >
           <button
             type="button"
             data-testid="library-category-all"
             aria-pressed={!activeCategory}
             onClick={() => setActiveCategory(null)}
             className={clsx(
-              'shrink-0 rounded-full border px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.08em] transition-colors',
+              'min-h-11 shrink-0 rounded-full border px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.08em] transition-colors',
               !activeCategory
                 ? 'border-accent bg-accent text-bg-0'
                 : 'border-text-1/10 bg-bg-1/45 text-text-2 hover:border-accent/50 hover:text-accent',
@@ -1099,7 +1106,7 @@ export function AuroraLibrary({ books, nodes, edges, topicCount }: AuroraLibrary
                 setActiveCategory((current) => (current === category.code ? null : category.code))
               }
               className={clsx(
-                'inline-flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.08em] transition-colors',
+                'inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.08em] transition-colors',
                 activeCategory === category.code
                   ? 'border-accent bg-accent text-bg-0'
                   : 'border-text-1/10 bg-bg-1/45 text-text-2 hover:border-accent/50 hover:text-accent',
@@ -1118,8 +1125,8 @@ export function AuroraLibrary({ books, nodes, edges, topicCount }: AuroraLibrary
 
       <div
         className={clsx(
-          'z-50 flex items-center gap-1 rounded-full border border-accent/20 bg-bg-0/80 p-1.5 font-mono shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-xl transition duration-200 ease-out max-sm:fixed max-sm:bottom-4 max-sm:left-1/2 max-sm:w-[calc(100vw-2rem)] max-sm:-translate-x-1/2 max-sm:justify-center sm:relative sm:mx-auto sm:-mb-10 sm:w-fit',
-          lensFocused && 'sm:pointer-events-none sm:translate-y-2 sm:opacity-0',
+          styles.lensSwitcher,
+          'z-50 flex items-center gap-1 rounded-full border border-accent/50 bg-bg-0 p-1.5 font-mono shadow-[0_12px_40px_-8px_var(--color-bg-0)] transition duration-200 ease-out sm:relative sm:mx-auto sm:mb-6 sm:w-fit',
         )}
         data-testid="library-lens-switcher"
       >
