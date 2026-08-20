@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { allNotes } from 'content-collections'
 import { NoteCard } from '@/components/notes/NoteCard'
 import { renderNotes } from '@/lib/notes'
@@ -28,7 +29,7 @@ export default async function NotesPage() {
         </h1>
         <p className="text-lg text-text-2">
           Short-form thoughts, occasional dispatches, and reference links. An archive of early
-          notes; longer-form thinking is published in Essays.
+          notes; longer-form thinking is published in <Link href="/writing">Writing</Link>.
         </p>
       </header>
 

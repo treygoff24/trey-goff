@@ -139,18 +139,6 @@ export function Footer() {
           </nav>
 
           <div className="flex items-center gap-4">
-            <div
-              className="flex items-center gap-2 text-xs text-text-3"
-              role="status"
-              aria-label="Site status: online"
-            >
-              <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-success" />
-              </span>
-              <span className="font-mono">Site status: online</span>
-            </div>
-            <span className="text-border-1">|</span>
             <p className="text-xs text-text-3">&copy; {currentYear} Trey Goff</p>
           </div>
         </div>

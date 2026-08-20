@@ -50,7 +50,7 @@ export function NoteCard({ note }: { note: NoteCardNote }) {
         </p>
         <a
           href={`#${slug}`}
-          className="font-mono text-xs text-text-3 opacity-0 transition-opacity hover:text-warm group-hover:opacity-100 focus-visible:opacity-100"
+          className="inline-flex items-center justify-center font-mono text-xs text-text-3 opacity-0 transition-opacity hover:text-warm group-hover:opacity-100 focus-visible:opacity-100 [@media(hover:none)]:opacity-60 [@media(pointer:coarse)]:min-h-[44px] [@media(pointer:coarse)]:min-w-[44px]"
           aria-label="Link to this note"
         >
           #

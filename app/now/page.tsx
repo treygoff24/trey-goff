@@ -1,21 +1,25 @@
 import { Prose } from '@/components/content/Prose'
 import { pageAlternates } from '@/lib/site-config'
 
+const lastUpdated = '2026-03-16'
+const asOf = new Date(`${lastUpdated}T00:00:00`).toLocaleDateString('en-US', {
+  month: 'long',
+  year: 'numeric',
+})
+
 export const metadata = {
   title: 'Now',
-  description: 'What I was focused on as of March 2026.',
+  description: `What I was focused on as of ${asOf}.`,
   alternates: pageAlternates('/now', { markdownPath: '/now.md' }),
 }
 
 export default function NowPage() {
-  const lastUpdated = '2026-03-16'
-
   return (
     <div className="tg-page max-w-3xl">
       <header className="tg-rise mb-10">
         <p className="tg-eyebrow text-warm">Now</p>
         <h1 className="mt-6 font-newsreader text-[clamp(2.4rem,4.5vw,3.2rem)] font-medium leading-[1.06] tracking-[-0.02em] text-text-1">
-          What I was focused on as of March 2026.
+          What I was focused on as of {asOf}.
         </h1>
         <p className="mt-4 text-lg text-text-2">A snapshot of what had my focus and attention.</p>
         <p className="mt-4 font-mono text-xs uppercase tracking-[0.2em] text-text-3">

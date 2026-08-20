@@ -105,9 +105,15 @@ export default async function EssayPage({ params }: PageProps) {
           <div className="flex flex-wrap items-center gap-3 font-mono text-xs uppercase tracking-[0.14em] text-text-3">
             <time dateTime={essay.date}>{formatDate(essay.date)}</time>
             <span aria-hidden="true">·</span>
-            <span>{essay.readingTime} min read</span>
-            <span aria-hidden="true">·</span>
-            <span>{essay.wordCount.toLocaleString()} words</span>
+            {piece?.ledger ? (
+              <span>{piece.ledger.claims.length} claims · browse, don&apos;t read</span>
+            ) : (
+              <>
+                <span>{essay.readingTime} min read</span>
+                <span aria-hidden="true">·</span>
+                <span>{essay.wordCount.toLocaleString()} words</span>
+              </>
+            )}
           </div>
 
           {essay.tags.length > 0 && (
