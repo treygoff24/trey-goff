@@ -2,9 +2,9 @@
 
 > Markdown mirror of https://www.treygoff.com/now — the canonical page.
 
-## What has my attention right now.
+## What I was focused on as of March 2026.
 
-A living snapshot of what I am focused on right now.
+A snapshot of what had my focus and attention.
 
 Last updated: 2026-03-16
 

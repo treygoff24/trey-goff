@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { allNotes } from 'content-collections'
 import { SearchButton } from '@/components/layout/SearchButton'
 import { isNewsletterEnabled } from '@/lib/site-config'
 
@@ -13,12 +14,26 @@ const socialLinks = [
   { href: 'https://github.com/treygoff24', label: 'GitHub', icon: GitHubIcon },
 ]
 
+const newestNoteDate =
+  allNotes.length > 0
+    ? new Date(
+        allNotes
+          .map((n) => n.date)
+          .reduce((latest, current) => (current > latest ? current : latest)),
+      )
+    : null
+
+const twelveMonthsAgo = new Date()
+twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12)
+const isNotesActive = newestNoteDate ? newestNoteDate.getTime() >= twelveMonthsAgo.getTime() : false
+
 const quickNav = [
   { href: '/writing', label: 'Writing' },
   { href: '/projects', label: 'Projects' },
   { href: '/library', label: 'Library' },
   { href: '/about', label: 'About' },
-  { href: '/notes', label: 'Notes' },
+  { href: '/now', label: 'Now' },
+  ...(isNotesActive ? [{ href: '/notes', label: 'Notes' }] : []),
   { href: '/media', label: 'Media' },
   { href: '/topics', label: 'Topics' },
   { href: '/machine', label: 'Machine' },
@@ -35,10 +50,11 @@ export function Footer() {
       <div className="relative mx-auto max-w-6xl px-4 py-12 sm:px-6">
         <div className="grid gap-8 md:grid-cols-[1.3fr_1fr_1fr]">
           <div className="space-y-4">
-            <Link href="/" className="inline-block">
-              <span className="font-newsreader text-xl font-medium text-text-1 transition-colors hover:text-warm">
-                Trey Goff
-              </span>
+            <Link
+              href="/"
+              className="inline-flex items-center font-newsreader text-xl font-medium text-text-1 transition-colors hover:text-warm [@media(pointer:coarse)]:min-h-[44px]"
+            >
+              Trey Goff
             </Link>
             <p className="text-sm leading-relaxed text-text-3">
               Designing systems, institutions, and software that help human progress compound.
@@ -57,7 +73,7 @@ export function Footer() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="text-sm text-text-2 transition-colors hover:text-warm"
+                    className="inline-flex items-center text-sm text-text-2 transition-colors hover:text-warm [@media(pointer:coarse)]:min-h-[44px] [@media(pointer:coarse)]:py-2"
                   >
                     {link.label}
                   </Link>
@@ -77,7 +93,7 @@ export function Footer() {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm text-text-2 transition-colors hover:text-warm"
+                  className="inline-flex items-center gap-2 text-sm text-text-2 transition-colors hover:text-warm [@media(pointer:coarse)]:min-h-[44px] [@media(pointer:coarse)]:py-2"
                 >
                   <link.icon className="h-4 w-4" />
                   {link.label}
@@ -86,7 +102,7 @@ export function Footer() {
               {isNewsletterEnabled && (
                 <Link
                   href="/subscribe"
-                  className="inline-flex items-center gap-2 text-sm text-text-2 transition-colors hover:text-warm"
+                  className="inline-flex items-center gap-2 text-sm text-text-2 transition-colors hover:text-warm [@media(pointer:coarse)]:min-h-[44px] [@media(pointer:coarse)]:py-2"
                 >
                   <MailIcon className="h-4 w-4" />
                   Newsletter
@@ -100,8 +116,9 @@ export function Footer() {
           <div className="h-px flex-1 bg-gradient-to-r from-transparent via-warm/20 to-accent/25" />
           <Link
             href="/colophon"
-            title="How this site is made — and who made it"
-            className="font-mono text-[10px] uppercase tracking-[0.34em] text-text-3 transition-colors hover:text-warm"
+            title="Aurora — the design system, see colophon"
+            aria-label="Aurora — the design system, see colophon"
+            className="inline-flex items-center font-mono text-xs uppercase tracking-[0.34em] text-text-3 transition-colors hover:text-warm [@media(pointer:coarse)]:min-h-[44px] [@media(pointer:coarse)]:px-3"
           >
             Aurora
           </Link>
@@ -114,7 +131,7 @@ export function Footer() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-xs text-text-3 transition-colors hover:text-text-2"
+                className="inline-flex items-center text-xs text-text-3 transition-colors hover:text-text-2 [@media(pointer:coarse)]:min-h-[44px] [@media(pointer:coarse)]:py-2.5"
               >
                 {link.label}
               </Link>
@@ -122,12 +139,16 @@ export function Footer() {
           </nav>
 
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-xs text-text-3">
-              <span className="relative flex h-1.5 w-1.5">
+            <div
+              className="flex items-center gap-2 text-xs text-text-3"
+              role="status"
+              aria-label="Site status: online"
+            >
+              <span className="relative flex h-1.5 w-1.5" aria-hidden="true">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-success" />
               </span>
-              <span className="font-mono">Online</span>
+              <span className="font-mono">Site status: online</span>
             </div>
             <span className="text-border-1">|</span>
             <p className="text-xs text-text-3">&copy; {currentYear} Trey Goff</p>
