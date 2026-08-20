@@ -95,26 +95,30 @@ test.describe('Navigation - Mobile', () => {
     await basePage.goto('/')
   })
 
-  test.describe('Mobile inline navigation', () => {
-    test('should display the handoff inline nav links instead of a drawer trigger', async ({
-      page,
-    }) => {
+  test.describe('Mobile menu navigation', () => {
+    test('should display a compact bar and accessible menu sheet', async ({ page }) => {
       await expect(basePage.topNav.getByRole('link', { name: 'Trey Goff' })).toBeVisible()
-      await expect(
-        basePage.topNav.getByRole('link', { name: 'Writing', exact: true }),
-      ).toBeVisible()
-      await expect(
-        basePage.topNav.getByRole('link', { name: 'Library', exact: true }),
-      ).toBeVisible()
-      await expect(
-        basePage.topNav.getByRole('link', { name: 'Projects', exact: true }),
-      ).toBeVisible()
-      await expect(basePage.topNav.getByRole('link', { name: 'About', exact: true })).toBeVisible()
-      await expect(page.getByRole('button', { name: /open menu|close menu/i })).toHaveCount(0)
+      const header = page.getByRole('banner')
+      expect(await header.boundingBox()).not.toBeNull()
+      expect((await header.boundingBox())?.height).toBeLessThanOrEqual(64)
+      await expect(page.getByRole('button', { name: 'Menu' })).toHaveAttribute(
+        'aria-expanded',
+        'false',
+      )
+      await page.getByRole('button', { name: 'Menu' }).click()
+      await expect(page.getByRole('button', { name: 'Close menu' })).toBeFocused()
+      await expect(page.getByRole('link', { name: 'Writing', exact: true })).toBeVisible()
+      expect(await page.locator('#mobile-navigation-sheet a').first().boundingBox()).not.toBeNull()
+      expect(
+        (await page.locator('#mobile-navigation-sheet a').first().boundingBox())?.height,
+      ).toBeGreaterThanOrEqual(44)
+      await page.keyboard.press('Escape')
+      await expect(page.getByRole('button', { name: 'Menu' })).toBeFocused()
     })
 
-    test('should navigate from the mobile inline nav', async ({ page }) => {
-      await basePage.navigateViaTopNav('Writing')
+    test('should navigate from the mobile menu', async ({ page }) => {
+      await page.getByRole('button', { name: 'Menu' }).click()
+      await page.locator('#mobile-navigation-sheet').getByRole('link', { name: 'Writing' }).click()
       await expect(page).toHaveURL('/writing')
     })
 

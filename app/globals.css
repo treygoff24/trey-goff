@@ -57,6 +57,7 @@
 }
 
 :root {
+  --nav-h: 4rem;
   /* Verdict palette — the data colors an instrumented piece adjudicates with. Declared
      here rather than in `@theme` because nothing references them through a Tailwind
      utility: Tailwind emits only the theme variables its generated utilities use, so a
@@ -98,13 +99,24 @@
 html {
   background-color: var(--color-bg-0);
   color: var(--color-text-1);
+  scroll-padding-top: var(--nav-h);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --nav-h: 6rem;
+  }
+}
+
+:root[data-top-nav-hidden='true'] {
+  --nav-h: 0px;
 }
 
 /* Keep in-page anchor targets clear of the fixed header (h-24 + breathing room).
    Lives in the base layer so per-element scroll-mt-* utilities still win. */
 @layer base {
   [id] {
-    scroll-margin-top: 7rem;
+    scroll-margin-top: var(--nav-h);
   }
 }
 
