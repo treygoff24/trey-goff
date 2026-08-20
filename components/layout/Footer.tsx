@@ -1,11 +1,13 @@
+'use client'
+
 import Link from 'next/link'
+import { useCommandPalette } from '@/components/command/CommandProvider'
 import { isNewsletterEnabled } from '@/lib/site-config'
 
 const footerLinks = [
   { href: '/colophon', label: 'Colophon' },
   { href: '/feed.xml', label: 'RSS' },
   { href: '/graph', label: 'Graph' },
-  { href: '/interactive', label: 'Interactive' },
 ]
 
 const socialLinks = [
@@ -28,6 +30,7 @@ const quickNav = [
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
+  const { toggle } = useCommandPalette()
 
   return (
     <footer className="relative z-10 border-t border-border-1 bg-bg-0/72 backdrop-blur-md">
@@ -43,12 +46,16 @@ export function Footer() {
               Designing systems, institutions, and software that help human progress compound.
             </p>
 
-            <div className="flex items-center gap-2 text-xs text-text-3">
-              <span>Quick access:</span>
-              <kbd className="rounded border border-border-1 bg-surface-1 px-1.5 py-0.5 font-mono text-text-2">
+            <button
+              type="button"
+              onClick={toggle}
+              className="inline-flex items-center gap-2 text-xs text-text-3 transition-colors hover:text-text-2 [@media(pointer:coarse)]:min-h-[44px]"
+            >
+              <span>Search</span>
+              <kbd className="hidden rounded border border-border-1 bg-surface-1 px-1.5 py-0.5 font-mono text-text-2 [@media(pointer:fine)]:inline">
                 ⌘K
               </kbd>
-            </div>
+            </button>
           </div>
 
           <div className="space-y-4">
