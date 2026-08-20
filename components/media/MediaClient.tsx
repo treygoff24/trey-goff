@@ -19,6 +19,11 @@ export function MediaClient({
 }: MediaClientProps) {
   const [typeFilter, setTypeFilter] = useState<AppearanceType | null>(null)
 
+  const visibleFeatured = useMemo(() => {
+    if (!typeFilter) return featuredAppearances
+    return featuredAppearances.filter((appearance) => appearance.type === typeFilter)
+  }, [featuredAppearances, typeFilter])
+
   const filteredAppearances = useMemo(() => {
     const featuredIds = new Set(featuredAppearances.map((appearance) => appearance.id))
     let filtered = appearances.filter((appearance) => !featuredIds.has(appearance.id))
@@ -32,11 +37,11 @@ export function MediaClient({
 
   return (
     <>
-      {featuredAppearances.length > 0 && (
+      {visibleFeatured.length > 0 && (
         <section className="mb-12">
           <h2 className="mb-6 font-satoshi text-xl font-medium text-text-1">Featured</h2>
-          <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
-            {featuredAppearances.map((appearance) => (
+          <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2 items-stretch">
+            {visibleFeatured.map((appearance) => (
               <AppearanceCard key={appearance.id} appearance={appearance} variant="featured" />
             ))}
           </div>
@@ -53,7 +58,7 @@ export function MediaClient({
 
       <section>
         {filteredAppearances.length > 0 ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 items-stretch">
             {filteredAppearances.map((appearance) => (
               <AppearanceCard key={appearance.id} appearance={appearance} />
             ))}
