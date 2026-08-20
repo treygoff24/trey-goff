@@ -44,6 +44,8 @@ const data = toolsData as { stations: Station[]; tools: Tool[] }
 export const stations: Station[] = data.stations
 const tools: Tool[] = data.tools
 
+export const toolCount = tools.length
+
 const featuredTools = tools.filter((t) => t.featured).sort((a, b) => a.order - b.order)
 
 export const ledgerTools = tools
@@ -54,6 +56,15 @@ export const toolById = new Map(tools.map((t) => [t.id, t]))
 
 export function featuredByStation(stationId: string): Tool[] {
   return featuredTools.filter((t) => t.station === stationId)
+}
+
+export function sourceLabel(url: string, fallback: string): string {
+  const host = new URL(url).hostname.replace(/^www\./, '')
+  if (host === 'github.com') return fallback.toLowerCase() === 'homebrew' ? 'Homebrew' : 'github'
+  if (host === 'npmjs.com') return 'npm'
+  if (host === 'crates.io') return 'crates.io'
+  if (host === 'pypi.org') return 'PyPI'
+  return fallback
 }
 
 export function readCapture(capture: ToolCapture): string {

@@ -83,6 +83,7 @@ const navigationPages: SearchDocument[] = [
     type: 'page',
     title: 'About',
     description: 'Who I am and what I believe',
+    keywords: ['prospera', 'próspera'],
     url: '/about',
     priority: 10,
   },
@@ -160,6 +161,16 @@ export function generateSearchIndex(): SearchIndex {
   const documents: SearchDocument[] = []
 
   documents.push(...navigationPages)
+
+  documents.push({
+    id: 'about-prospera',
+    type: 'page',
+    title: 'Próspera',
+    description: "Trey Goff's work in public affairs and governance at Próspera.",
+    keywords: ['prospera', 'próspera', 'governance', 'charter city'],
+    url: '/about#prospera',
+    priority: 8,
+  })
 
   documents.push(...quickActions)
 

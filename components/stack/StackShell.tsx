@@ -607,11 +607,13 @@ export function StackShell() {
             <ToolLineFigure />
             <p className="section-label">Everything on this machine</p>
             <p className="rv">
-              The whole armory, honestly labelled. Eight of these I wrote and open sourced, so you
-              can install them this afternoon. Seven exist only here, because they are wired to my
-              machine and not ready to be anyone else&apos;s dependency. The rest are other
-              people&apos;s work that this stack would not run without. Filter it, open a row, take
-              the install line.
+              The whole armory, honestly labelled.{' '}
+              <Link className="inline-link" href="/projects#tools">
+                Eight of these I wrote and open sourced, so you can install them this afternoon.
+              </Link>{' '}
+              Seven exist only here, because they are wired to my machine and not ready to be anyone
+              else&apos;s dependency. The rest are other people&apos;s work that this stack would
+              not run without. Filter it, open a row, take the install line.
             </p>
             <ToolsShowcase />
             <DownloadCard
