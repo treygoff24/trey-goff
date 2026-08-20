@@ -334,79 +334,80 @@ export function SkillsShowcase() {
   }, [])
 
   return (
-    <figure className={`sx-shell rv${takeOnly ? ' is-filtered' : ''}`}>
-      <div className="sx-bar">
-        <div className="sx-bar-id">
-          <span className="sx-bar-cmd">~/.claude/skills.globals</span>
-          <span className="sx-bar-sub">
-            the list every session reads before I have typed anything
-          </span>
+    <figure>
+      <div className={`sx-shell rv${takeOnly ? ' is-filtered' : ''}`}>
+        <div className="sx-bar">
+          <div className="sx-bar-id">
+            <span className="sx-bar-cmd">~/.claude/skills.globals</span>
+            <span className="sx-bar-sub">
+              the list every session reads before I have typed anything
+            </span>
+          </div>
+          <div className="sx-bar-stats">
+            <span className="sx-stat">
+              <b>{ALL.length}</b> always-on
+            </span>
+            <span className="sx-stat sx-stat-take">
+              <b>{TAKEABLE}</b> yours to take
+            </span>
+            <span className="sx-stat sx-stat-local">
+              <b>{LOCAL}</b> mine only
+            </span>
+          </div>
         </div>
-        <div className="sx-bar-stats">
-          <span className="sx-stat">
-            <b>{ALL.length}</b> always-on
-          </span>
-          <span className="sx-stat sx-stat-take">
-            <b>{TAKEABLE}</b> yours to take
-          </span>
-          <span className="sx-stat sx-stat-local">
-            <b>{LOCAL}</b> mine only
-          </span>
+
+        <div className="sx-controls">
+          <button
+            type="button"
+            className={`sx-filter${takeOnly ? ' is-on' : ''}`}
+            aria-pressed={takeOnly}
+            onClick={() => setTakeOnly((v) => !v)}
+          >
+            Hide the ones you can&apos;t download
+          </button>
+          <p className="sx-hint">
+            Every name is a button — open one for what it does, when it fires, and the file.
+          </p>
         </div>
-      </div>
 
-      <div className="sx-controls">
-        <button
-          type="button"
-          className={`sx-filter${takeOnly ? ' is-on' : ''}`}
-          aria-pressed={takeOnly}
-          onClick={() => setTakeOnly((v) => !v)}
-        >
-          Hide the ones you can&apos;t download
-        </button>
-        <p className="sx-hint">
-          Every name is a button — open one for what it does, when it fires, and the file.
-        </p>
-      </div>
-
-      <div className="sx-board">
-        {GROUPS.map((group) => {
-          const shown = takeOnly ? group.skills.filter((s) => s.take !== null) : group.skills
-          const takes = group.skills.filter((s) => s.take !== null).length
-          return (
-            <section key={group.id} className={`sx-group sx-lane-${group.id}`}>
-              <header className="sx-group-head">
-                <h4 className="sx-group-label">
-                  {group.label}
-                  {/* Counts what is on screen, so the badge never contradicts
+        <div className="sx-board">
+          {GROUPS.map((group) => {
+            const shown = takeOnly ? group.skills.filter((s) => s.take !== null) : group.skills
+            const takes = group.skills.filter((s) => s.take !== null).length
+            return (
+              <section key={group.id} className={`sx-group sx-lane-${group.id}`}>
+                <header className="sx-group-head">
+                  <h4 className="sx-group-label">
+                    {group.label}
+                    {/* Counts what is on screen, so the badge never contradicts
                       the rows under it while the filter is on. */}
-                  <span className="sx-group-count" aria-hidden="true">
-                    {shown.length}
-                  </span>
-                  <span className="sx-sr">
-                    — {group.skills.length} skills, {takes} downloadable
-                    {takeOnly ? `, ${shown.length} shown` : ''}
-                  </span>
-                </h4>
-                <p className="sx-group-blurb">{group.blurb}</p>
-              </header>
-              <ul className="sx-list">
-                {shown.map((skill) => (
-                  <SkillTile
-                    key={skill.name}
-                    skill={skill}
-                    lane={group.id}
-                    open={open === skill.name}
-                    panelId={`${uid}-${skill.name}`}
-                    onToggle={onToggle}
-                  />
-                ))}
-              </ul>
-            </section>
-          )
-        })}
+                    <span className="sx-group-count" aria-hidden="true">
+                      {shown.length}
+                    </span>
+                    <span className="sx-sr">
+                      — {group.skills.length} skills, {takes} downloadable
+                      {takeOnly ? `, ${shown.length} shown` : ''}
+                    </span>
+                  </h4>
+                  <p className="sx-group-blurb">{group.blurb}</p>
+                </header>
+                <ul className="sx-list">
+                  {shown.map((skill) => (
+                    <SkillTile
+                      key={skill.name}
+                      skill={skill}
+                      lane={group.id}
+                      open={open === skill.name}
+                      panelId={`${uid}-${skill.name}`}
+                      onToggle={onToggle}
+                    />
+                  ))}
+                </ul>
+              </section>
+            )
+          })}
+        </div>
       </div>
-
       <figcaption className="sx-cap">
         <b>{ALL.length} skills, loaded at every session start, and that is the whole tax. </b>
         The other {TOTAL_SKILLS - ALL.length} sit dormant in the library where a search can find

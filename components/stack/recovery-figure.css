@@ -103,7 +103,7 @@
   padding: 0.4rem 0.85rem;
   background: none;
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
+  font-size: 0.68rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--sk-text-3);
@@ -250,7 +250,7 @@
 #stack-root .rcv-clock {
   flex: 0 0 var(--rcv-clock-w);
   font-family: var(--sk-mono);
-  font-size: 0.58rem;
+  font-size: 0.68rem;
   line-height: 1.5;
   padding-top: 0.15rem;
   text-align: right;

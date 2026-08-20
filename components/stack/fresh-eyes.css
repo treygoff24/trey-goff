@@ -170,6 +170,7 @@
    or it disappears. */
 #stack-root .fe-l {
   grid-column: 1;
+  font-size: inherit;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
   padding-right: 0.7rem;
@@ -182,6 +183,7 @@
 }
 #stack-root .fe-ln {
   display: inline-block;
+  font-size: inherit;
   width: 2rem;
   text-align: right;
   padding-right: 0.6rem;
@@ -192,6 +194,7 @@
 }
 #stack-root .fe-sg {
   display: inline-block;
+  font-size: inherit;
   width: 1ch;
   font-style: normal;
   margin-right: 0.5ch;
@@ -494,7 +497,7 @@
      the type comes down and the two longest lines wrap under a hanging indent
      instead of running off the panel. */
   #stack-root .fe-diff {
-    font-size: 0.6rem;
+    font-size: 0.68rem;
   }
   #stack-root .fe-l {
     padding-left: 2.3rem;

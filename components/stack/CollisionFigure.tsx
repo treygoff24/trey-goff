@@ -416,7 +416,12 @@ export function CollisionFigure() {
   const chip = CHIP[mode]
 
   return (
-    <div className="cf rv" ref={figRef}>
+    <div
+      className="cf rv"
+      ref={figRef}
+      onPointerDown={() => setUserRun(true)}
+      onFocusCapture={() => setUserRun(true)}
+    >
       <div className="cf-head">
         <div className="toggle" role="group" aria-label="Collision handling">
           {MODES.map((m) => (
@@ -425,7 +430,6 @@ export function CollisionFigure() {
               type="button"
               aria-pressed={mode === m.key}
               onClick={() => {
-                setUserRun(true)
                 pick(m.key)
               }}
             >
@@ -444,7 +448,6 @@ export function CollisionFigure() {
           className="btn"
           type="button"
           onClick={() => {
-            setUserRun(true)
             play(mode)
           }}
           disabled={running}

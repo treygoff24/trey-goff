@@ -18,14 +18,16 @@ export function useOnceVisible<T extends HTMLElement>(onVisible: () => void, thr
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
-          if (e.isIntersecting && !fired.current) {
+          const rootH = e.rootBounds?.height ?? window.innerHeight
+          const covers = e.intersectionRect.height >= rootH * 0.5
+          if (e.isIntersecting && (e.intersectionRatio >= threshold || covers) && !fired.current) {
             fired.current = true
             cb.current()
             io.disconnect()
           }
         }
       },
-      { threshold: [0, threshold] },
+      { threshold: [0, 0.1, 0.2, threshold] },
     )
     io.observe(el)
     return () => io.disconnect()

@@ -89,7 +89,7 @@
   margin: 0 0 0.6rem;
   font-weight: 400;
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
+  font-size: 0.68rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--sk-text-3);
@@ -176,7 +176,7 @@
 #stack-root .dcf-meter-label {
   margin: 0 0 0.55rem;
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
+  font-size: 0.68rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--sk-text-3);
@@ -255,7 +255,7 @@
 }
 #stack-root .dcf-track .dcf-tlabel {
   font-family: var(--sk-mono);
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 0.08em;
   text-anchor: middle;
   transition: x 420ms var(--sk-ease);
@@ -289,10 +289,12 @@
   color: var(--sk-text-3);
 }
 #stack-root .dcf-gates li .g-name {
+  font-size: 0.68rem;
   color: var(--sk-text-1);
   letter-spacing: 0.2em;
 }
 #stack-root .dcf-gates li .g-verdict {
+  font-size: 0.68rem;
   color: var(--sk-accent);
 }
 #stack-root .dcf-gates li.drifted {
@@ -300,6 +302,10 @@
 }
 #stack-root .dcf-gates li.drifted .g-ref {
   color: var(--sk-rose);
+}
+#stack-root .dcf-gates li .g-ref,
+#stack-root .dcf-gates li .g-s {
+  font-size: 0.68rem;
 }
 
 #stack-root .dcf-live {
@@ -322,7 +328,7 @@
   background: rgba(0, 0, 0, 0.25);
   color: var(--sk-text-2);
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
+  font-size: 0.68rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   padding: 0.45rem 0.9rem;

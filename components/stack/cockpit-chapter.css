@@ -31,7 +31,7 @@
 #stack-root .cp-inst-kind {
   display: block;
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
+  font-size: 0.68rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--sk-text-3);
@@ -114,7 +114,7 @@
 #stack-root .cs-win-t {
   transition: opacity 620ms var(--sk-ease);
   font-family: var(--sk-mono);
-  font-size: 0.58rem;
+  font-size: 0.68rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--sk-text-3);
@@ -154,7 +154,7 @@
   left: 0.8rem;
   bottom: 0.7rem;
   font-family: var(--sk-mono);
-  font-size: 0.58rem;
+  font-size: 0.68rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--sk-rose);
@@ -166,7 +166,7 @@
 #stack-root .cs-empty {
   margin: 0;
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
+  font-size: 0.68rem;
   color: var(--sk-text-3);
   opacity: 0.55;
   transition: opacity 520ms var(--sk-ease);
@@ -194,7 +194,7 @@
 }
 #stack-root .cs-prompt {
   font-family: var(--sk-mono);
-  font-size: 0.58rem;
+  font-size: 0.68rem;
   color: var(--sk-accent);
   opacity: 0;
   transition: opacity 520ms var(--sk-ease);
@@ -216,7 +216,7 @@
   top: 0.2rem;
   transform: translateX(-50%);
   font-family: var(--sk-mono);
-  font-size: 0.55rem;
+  font-size: 0.68rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--sk-text-3);
@@ -255,7 +255,7 @@
   color: var(--sk-accent);
 }
 #stack-root .cs-file-tag {
-  font-size: 0.53rem;
+  font-size: 0.68rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--sk-warm);
@@ -265,7 +265,7 @@
    blank line where the staleness notice used to be. */
 #stack-root .cs-file-stale {
   font-family: var(--sk-mono);
-  font-size: 0.58rem;
+  font-size: 0.68rem;
   color: var(--sk-text-3);
   opacity: 0;
   max-height: 0;
@@ -593,7 +593,7 @@
 #stack-root .cp-hook-ev {
   display: inline-block;
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
+  font-size: 0.68rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--sk-warm);
@@ -647,7 +647,7 @@
 #stack-root .cp-mem-tag {
   display: block;
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
+  font-size: 0.68rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--sk-text-3);
@@ -697,7 +697,7 @@
   transform-origin: center;
   white-space: nowrap;
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
+  font-size: 0.68rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--sk-text-3);

@@ -62,10 +62,13 @@ export function StackRail({
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', refreshOffsets)
+    const resizeObserver = new ResizeObserver(refreshOffsets)
+    resizeObserver.observe(root)
     onScroll()
     return () => {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', refreshOffsets)
+      resizeObserver.disconnect()
       cancelAnimationFrame(frame)
     }
   }, [meterRef, rootRef])

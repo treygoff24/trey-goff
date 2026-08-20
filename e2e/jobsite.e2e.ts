@@ -42,17 +42,13 @@ test.describe('The Job Site', () => {
     expect(labels.every((label) => /chapter \d+/i.test(label))).toBe(true)
   })
 
-  test('keeps hard/easy mode direct routes deep-linkable while remembering neutral links', async ({
-    page,
-  }) => {
+  test('keeps hard/easy mode direct routes deep-linkable', async ({ page }) => {
     await page.goto('/jobsite')
     const toggle = page.getByRole('navigation', { name: 'Choose version' })
     await expect(toggle.getByRole('link', { name: 'Easy mode', exact: true })).toHaveAttribute(
       'aria-current',
       'page',
     )
-    await expect.poll(() => page.evaluate(() => localStorage.getItem('stack-mode'))).toBe('easy')
-
     await toggle.getByRole('link', { name: 'Hard mode', exact: true }).click()
     await expect(page).toHaveURL(/\/stack$/)
     await expect(
@@ -60,19 +56,6 @@ test.describe('The Job Site', () => {
         .getByRole('navigation', { name: 'Choose version' })
         .getByRole('link', { name: 'Hard mode', exact: true }),
     ).toHaveAttribute('aria-current', 'page')
-    await expect.poll(() => page.evaluate(() => localStorage.getItem('stack-mode'))).toBe('hard')
-
-    await page.goto('/jobsite')
-    await expect(page).toHaveURL(/\/jobsite$/)
-    await expect.poll(() => page.evaluate(() => localStorage.getItem('stack-mode'))).toBe('easy')
-
-    await page.goto('/')
-    await page.evaluate(() => localStorage.setItem('stack-mode', 'easy'))
-    await page.reload()
-    await expect(page.getByRole('link', { name: 'How I work with AI →' })).toHaveAttribute(
-      'href',
-      '/jobsite',
-    )
   })
 
   test('uses mobile crops at 390px without horizontal overflow', async ({ page }) => {

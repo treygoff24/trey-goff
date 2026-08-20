@@ -139,7 +139,12 @@ export function GateAuthorFigure() {
   }
 
   return (
-    <div className="ga rv" ref={figRef}>
+    <div
+      className="ga rv"
+      ref={figRef}
+      onPointerDown={() => setUserRun(true)}
+      onFocusCapture={() => setUserRun(true)}
+    >
       <div className="ga-head">
         <span className="t">
           Same file · <b>same bug on line 3</b> · only the author of the test changes
@@ -149,7 +154,6 @@ export function GateAuthorFigure() {
             type="button"
             aria-pressed={author === 'impl'}
             onClick={() => {
-              setUserRun(true)
               pick('impl')
             }}
           >
@@ -159,7 +163,6 @@ export function GateAuthorFigure() {
             type="button"
             aria-pressed={author === 'fresh'}
             onClick={() => {
-              setUserRun(true)
               pick('fresh')
             }}
           >
@@ -264,7 +267,6 @@ export function GateAuthorFigure() {
           className="btn"
           type="button"
           onClick={() => {
-            setUserRun(true)
             run(author)
           }}
         >

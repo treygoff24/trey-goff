@@ -56,7 +56,7 @@
   border-radius: 999px;
   padding: 0.34rem 0.9rem;
   font-family: var(--sk-mono);
-  font-size: 0.6rem;
+  font-size: 0.68rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--sk-text-3);
@@ -87,7 +87,7 @@
   border-radius: 6px;
   padding: 0.46rem 0.6rem;
   font-family: var(--sk-mono);
-  font-size: 0.68rem;
+  font-size: 0.78rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--sk-text-3);
@@ -147,7 +147,7 @@
 #stack-root .cnc-prop-name {
   display: block;
   font-family: var(--sk-mono);
-  font-size: 0.68rem;
+  font-size: 0.78rem;
   letter-spacing: 0.1em;
   color: var(--sk-text-1);
 }
@@ -333,7 +333,7 @@
 }
 #stack-root .cnc-chip-text {
   display: block;
-  font-size: 0.6rem;
+  font-size: 0.68rem;
   line-height: 1.32;
   color: var(--sk-text-2);
 }
@@ -488,7 +488,7 @@
 }
 #stack-root .cnc-panel-name {
   font-family: var(--sk-mono);
-  font-size: 0.68rem;
+  font-size: 0.78rem;
   letter-spacing: 0.1em;
   color: var(--sk-text-1);
 }
@@ -597,7 +597,7 @@
   }
   #stack-root .cnc-step {
     flex: 1 1 5.4rem;
-    font-size: 0.68rem;
+    font-size: 0.78rem;
     letter-spacing: 0.08em;
   }
 }

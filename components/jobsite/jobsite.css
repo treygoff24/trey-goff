@@ -157,7 +157,7 @@ html:has(#jobsite-root) body > footer {
 .js-beat {
   --js-accent: var(--js-active);
   content-visibility: auto;
-  contain-intrinsic-size: 1200px;
+  contain-intrinsic-block-size: auto 1800px;
 }
 .js-scene {
   position: relative;
@@ -353,11 +353,12 @@ html:has(#jobsite-root) body > footer {
 .js-real strong:first-child {
   color: color-mix(in oklab, var(--js-accent) 76%, var(--js-text-1));
 }
-.js-deeper {
+.js-real p.js-deeper {
   color: var(--js-text-3);
   font-style: italic;
 }
 .js-deeper-link {
+  display: inline-block;
   color: var(--js-accent);
   font-style: normal;
   font-variant-numeric: tabular-nums;
@@ -365,8 +366,8 @@ html:has(#jobsite-root) body > footer {
   text-decoration-color: color-mix(in oklab, var(--js-accent) 40%, transparent);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
-  padding-inline: 0.35em;
-  margin-inline: -0.1em;
+  padding: 0.15em 0.35em;
+  margin: -0.15em -0.1em;
   transition: text-decoration-color 200ms var(--js-ease);
 }
 .js-deeper-link:hover {

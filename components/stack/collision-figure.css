@@ -113,18 +113,18 @@
 
 #stack-root .cf text {
   font-family: var(--sk-mono);
-  font-size: 9px;
+  font-size: 10.5px;
   letter-spacing: 0.05em;
   fill: var(--sk-text-2);
 }
 #stack-root .cf text.cf-hub {
   fill: var(--sk-text-1);
-  font-size: 9.5px;
+  font-size: 12px;
 }
 /* Solid fills only — stacked opacity on an already-dim token drops under 4.5:1. */
 #stack-root .cf text.cf-st {
   fill: var(--sk-text-3);
-  font-size: 7.8px;
+  font-size: 10.5px;
 }
 
 #stack-root .cf .cf-agent.live .cf-node,

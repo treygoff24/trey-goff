@@ -2,7 +2,13 @@
 
 import dynamic from 'next/dynamic'
 import { useEffect, useRef, useState } from 'react'
-import { DAY_ONE_TERM, HERO_TERM, SELF_BUILD_TERM, START_TONIGHT } from '@/components/stack/data'
+import {
+  DAY_ONE_TERM,
+  HERO_TERM,
+  SELF_BUILD_TERM,
+  START_TONIGHT,
+  TOTAL_SKILLS,
+} from '@/components/stack/data'
 import { useReducedMotion, useReveal } from '@/components/stack/hooks'
 import { RecoveryFigure } from '@/components/stack/RecoveryFigure'
 import { Terminal } from '@/components/stack/Terminal'
@@ -11,7 +17,6 @@ import { CockpitChapter } from '@/components/stack/CockpitChapter'
 import { CompactionSection } from '@/components/stack/CompactionSection'
 import { PartnershipChapter } from '@/components/stack/PartnershipChapter'
 import { RegisterSection } from '@/components/stack/RegisterSection'
-import { SkillsShowcase } from '@/components/stack/SkillsShowcase'
 import { WhyContext } from '@/components/stack/WhyPanel'
 import { WorkflowsChapter } from '@/components/stack/WorkflowsChapter'
 import { WorktreesSection } from '@/components/stack/WorktreesSection'
@@ -33,6 +38,10 @@ const ToolLineFigure = dynamic(
 )
 const ToolsShowcase = dynamic(
   () => import('@/components/stack/ToolsShowcase').then((m) => ({ default: m.ToolsShowcase })),
+  { ssr: true },
+)
+const SkillsShowcase = dynamic(
+  () => import('@/components/stack/SkillsShowcase').then((m) => ({ default: m.SkillsShowcase })),
   { ssr: true },
 )
 const CouncilFigure = dynamic(
@@ -423,8 +432,8 @@ export function StackShell() {
                 <>
                   Repeated workflows should always be skills. Skills cover what&apos;s true{' '}
                   <em>sometimes</em> — loaded only when the moment calls for them, so your context
-                  stays spent on the work. There are 307 of them on my machine. Any given session
-                  touches a handful.
+                  stays spent on the work. There are {TOTAL_SKILLS} of them on my machine. Any given
+                  session touches a handful.
                 </>
               }
             />

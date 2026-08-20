@@ -44,13 +44,13 @@ export function CopyPrompt({ text }: { text: string }) {
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const mounted = useRef(true)
 
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    mounted.current = true
+    return () => {
       mounted.current = false
       if (timer.current) clearTimeout(timer.current)
-    },
-    [],
-  )
+    }
+  }, [])
 
   const copy = async () => {
     const copied = await writeClipboard(text)
