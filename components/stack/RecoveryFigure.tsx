@@ -3,14 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import '@/components/stack/recovery-figure.css'
 import { useOnceVisible, useReducedMotion, useTimeouts } from '@/components/stack/hooks'
-import {
-  BEAT_MS,
-  LANES,
-  MAX_BEAT,
-  TALLY_LABEL,
-  tally,
-  type Lane,
-} from '@/components/stack/recovery-data'
+import { BEAT_MS, LANES, MAX_BEAT, TALLY_LABEL, tally } from '@/components/stack/recovery-data'
 
 /**
  * Ch.2 — what a written rule actually buys you.
