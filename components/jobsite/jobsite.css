@@ -488,6 +488,9 @@
   gap: 1rem;
 }
 .js-end a.js-end-home {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
   font-size: 1rem;
   color: var(--js-text-3);
 }
@@ -598,7 +601,8 @@
   }
 }
 @media (pointer: coarse) {
-  .js-home {
+  .js-home,
+  .js-end a.js-end-home {
     min-height: 44px;
   }
 }
