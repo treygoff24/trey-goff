@@ -569,6 +569,7 @@
 }
 #stack-root .cnc-still-fig {
   overflow-x: auto;
+  position: relative;
 }
 /* Measured floor, not a guess: below about 47rem of board the chip text takes
    an extra line, rows in the same column start overlapping, and the band
@@ -591,7 +592,8 @@
   #stack-root .cnc-scroll {
     overflow-x: auto;
   }
-  #stack-root .cnc-scroll .figscroll-hint {
+  #stack-root .cnc-scroll .figscroll-hint,
+  #stack-root .cnc-still-fig .figscroll-hint {
     display: block;
   }
   #stack-root .cnc-step {

@@ -41,7 +41,7 @@ export function PublicationCover({ pieces }: { pieces: PublishedPiece[] }) {
         id="publication-cover"
         className="border-b border-border-1 pb-5 font-mono text-xs uppercase tracking-[0.2em] text-text-3"
       >
-        Instrumented pieces
+        Interactive essays
       </p>
       <ol className="mt-2">
         {pieces.map((piece, index) => (
@@ -52,32 +52,31 @@ export function PublicationCover({ pieces }: { pieces: PublishedPiece[] }) {
           >
             <Link
               href={piece.href}
-              className="group grid gap-x-6 gap-y-3 px-1 py-8 transition-colors hover:bg-warm/5 sm:grid-cols-[3rem_minmax(0,1fr)]"
+              className="group block px-1 py-8 transition-colors hover:bg-warm/5"
             >
-              <span
-                aria-hidden="true"
-                className="font-mono text-sm tracking-[0.14em]"
-                style={{ color: 'var(--piece-accent)' }}
-              >
-                {ORDINALS[index] ?? index + 1}
+              <span className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-text-3">
+                <span
+                  aria-hidden="true"
+                  className="font-mono text-xs font-semibold tracking-[0.14em]"
+                  style={{ color: 'var(--piece-accent)' }}
+                >
+                  {ORDINALS[index] ?? index + 1}
+                </span>
+                <span aria-hidden="true">·</span>
+                <span>{piece.genre}</span>
               </span>
-              <span className="block">
-                <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-text-3">
-                  {piece.genre}
-                </span>
-                <h3 className="mt-2 font-newsreader text-[clamp(1.5rem,2.6vw,2.1rem)] font-normal leading-[1.15] text-text-1 transition-colors group-hover:text-warm">
-                  {piece.title}
-                </h3>
-                <span className="mt-3 block max-w-2xl text-base leading-7 text-text-2">
-                  {piece.summary}
-                </span>
-                <CoverSpectrum piece={piece} />
-                <span className="mt-4 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px] uppercase tracking-[0.14em] text-text-3">
-                  {piece.facts.map((fact) => (
-                    <span key={fact}>{fact}</span>
-                  ))}
-                  <span>{piece.readingTime} min →</span>
-                </span>
+              <h3 className="mt-2 font-newsreader text-[clamp(1.5rem,2.6vw,2.1rem)] font-normal leading-[1.15] text-text-1 transition-colors group-hover:text-warm">
+                {piece.title}
+              </h3>
+              <span className="mt-3 block max-w-2xl text-base leading-7 text-text-2">
+                {piece.summary}
+              </span>
+              <CoverSpectrum piece={piece} />
+              <span className="mt-4 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px] uppercase tracking-[0.14em] text-text-3">
+                {piece.facts.map((fact) => (
+                  <span key={fact}>{fact}</span>
+                ))}
+                <span>{piece.readingTime} min →</span>
               </span>
             </Link>
           </li>

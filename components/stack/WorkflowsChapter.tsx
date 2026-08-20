@@ -196,6 +196,9 @@ function WorkflowSpine() {
           <pre>{WORKFLOW_CODE}</pre>
         </div>
         <div className="wf-diagram">
+          <span className="figscroll-hint" aria-hidden="true">
+            swipe →
+          </span>
           <div className="wf-wide">
             <SpineSvg layout={SPINE_WIDE} />
           </div>
