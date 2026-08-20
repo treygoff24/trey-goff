@@ -39,16 +39,17 @@ const CommandDialog = ({ children, ...props }: DialogProps) => {
         <DialogDescription className="sr-only">
           Search site navigation, writing, notes, books, projects, and quick actions.
         </DialogDescription>
-        <DialogClose className="absolute right-1 top-1 z-10 flex h-11 w-11 items-center justify-center rounded-sm text-text-3 opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-warm focus:ring-offset-2 focus:ring-offset-bg-1 sm:hidden">
-          <X className="h-5 w-5" aria-hidden="true" />
-          <span className="sr-only">Close search</span>
-        </DialogClose>
         <Command
           shouldFilter={false}
           className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-text-3 [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5"
         >
           {children}
         </Command>
+        {/* After the input in DOM order so the dialog's initial focus lands on the search field, not on this button. */}
+        <DialogClose className="absolute right-1 top-1 z-10 flex h-11 w-11 items-center justify-center rounded-sm text-text-3 opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-warm focus:ring-offset-2 focus:ring-offset-bg-1 sm:hidden">
+          <X className="h-5 w-5" aria-hidden="true" />
+          <span className="sr-only">Close search</span>
+        </DialogClose>
       </DialogContent>
     </Dialog>
   )
