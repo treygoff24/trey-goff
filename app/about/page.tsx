@@ -51,7 +51,7 @@ export default function AboutPage() {
               tooling that turns those ideas into something you can touch.
             </p>
             <div className="mt-8 space-y-5 text-base leading-8 text-text-2">
-              <p>
+              <p id="prospera">
                 I was the first full-time employee at Próspera, where I now serve as chief of staff
                 and director of public affairs. The mandate is easy to state and hard to do: design
                 the institutions that let progress compound, and turn governance experiments into

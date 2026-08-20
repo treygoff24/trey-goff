@@ -6,7 +6,7 @@ import { EditorialIndexRow } from '@/components/site/EditorialIndexRow'
 import { featuredByStation, ledgerTools, stations, toolById } from '@/lib/software/tools'
 
 export const metadata = {
-  title: 'The Workshop',
+  title: 'Projects',
   description:
     'One machine, a swarm of AI agents, and the tools that keep them honest — the software behind the work.',
 }
@@ -46,7 +46,7 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
       <HashDossierOpener />
       <EditorialHeader
         eyebrow="The Workshop"
-        title="One machine, many hands"
+        title="Projects"
         standfirst="Most of this software exists so that a laptop full of AI agents can do real work without lying to their operator. Websites, command-line tools, agent infrastructure — built with the agents that now use it."
       />
 
@@ -82,14 +82,16 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
         </section>
       )}
 
-      {stations.map((station) => (
-        <WorkshopStation
-          key={station.id}
-          station={station}
-          tools={featuredByStation(station.id)}
-          openToolId={openToolId}
-        />
-      ))}
+      <div id="tools">
+        {stations.map((station) => (
+          <WorkshopStation
+            key={station.id}
+            station={station}
+            tools={featuredByStation(station.id)}
+            openToolId={openToolId}
+          />
+        ))}
+      </div>
 
       <section aria-labelledby="bench-ledger" className="mt-16">
         <div className="border-b border-border-2 px-1 pb-4">

@@ -4,6 +4,7 @@ import { allEssays, allProjects } from 'content-collections'
 import { EditorialIndexRow } from '@/components/site/EditorialIndexRow'
 import { getAllBooks } from '@/lib/books'
 import { formatDateShort } from '@/lib/utils'
+import { toolCount } from '@/lib/software/tools'
 
 export const metadata: Metadata = {
   title: 'Trey Goff — Writer, Builder, Explorer',
@@ -58,6 +59,7 @@ const fallbackWork = [
     meta: 'Institutional',
     status: 'Ongoing',
     title: 'Próspera',
+    href: '/about#prospera',
     description:
       "Public affairs and governance for the world's most ambitious charter city — from first employee to chief of staff.",
   },
@@ -65,6 +67,7 @@ const fallbackWork = [
     meta: 'Agent tooling',
     status: 'CLI',
     title: 'Harness & command-line tools',
+    href: '/projects#tools',
     description:
       "Tinkering at the frontier of what's possible with AI — harnesses and tools for working alongside agents.",
   },
@@ -72,6 +75,7 @@ const fallbackWork = [
     meta: 'Public policy',
     status: 'Initiative',
     title: 'Governance experiments',
+    href: '/writing?topic=governance',
     description:
       'Turning institutional experiments into legible, repeatable models others can adopt.',
   },
@@ -107,6 +111,7 @@ export default function HomePage() {
               featuredProject.approach ||
               featuredProject.oneLiner ||
               'An explorable index of ideas, writing, and reading.',
+            href: `/projects#${featuredProject.slug}`,
           },
         ]
       : []),
@@ -148,7 +153,7 @@ export default function HomePage() {
         <p className="border-b border-border-2 pb-4 font-mono text-xs uppercase tracking-[0.2em] text-text-3">
           Ways in
         </p>
-        {buildPaths(visibleEssays.length, selectedWork.length, getAllBooks().length).map((item) => (
+        {buildPaths(visibleEssays.length, toolCount, getAllBooks().length).map((item) => (
           <EditorialIndexRow
             key={item.href}
             href={item.href}
@@ -168,7 +173,7 @@ export default function HomePage() {
           {selectedWork.map((item) => (
             <EditorialIndexRow
               key={item.title}
-              href="/projects"
+              href={item.href}
               meta={
                 <span>
                   {item.meta}

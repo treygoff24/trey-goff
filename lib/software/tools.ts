@@ -44,6 +44,8 @@ const data = toolsData as { stations: Station[]; tools: Tool[] }
 export const stations: Station[] = data.stations
 const tools: Tool[] = data.tools
 
+export const toolCount = tools.length
+
 const featuredTools = tools.filter((t) => t.featured).sort((a, b) => a.order - b.order)
 
 export const ledgerTools = tools
