@@ -4,13 +4,12 @@
 
 .lensSwitcher {
   position: fixed;
-  bottom: 1rem;
+  bottom: 4rem;
   right: 1rem;
   left: 1rem;
   width: auto;
   max-width: none;
   justify-content: center;
-  transform: none !important;
   background: var(--color-bg-0);
 }
 
@@ -22,7 +21,6 @@
     left: auto;
     width: max-content;
     max-width: none;
-    transform: none !important;
   }
 }
 

@@ -289,7 +289,9 @@ function ConstellationLens({
     startX: number
     startY: number
     moved: boolean
+    engaged: boolean
   }>(null)
+  const holdTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const requestRender = useCallback(() => {
     if (frameRef.current) return
@@ -311,7 +313,7 @@ function ConstellationLens({
     const maxY = Math.max(...ys)
     const pad = 50
     const scale =
-      Math.min(rect.width / (maxX - minX + pad * 2), rect.height / (maxY - minY + pad * 2)) * 0.96
+      Math.min(rect.width / (maxX - minX + pad * 2), rect.height / (maxY - minY + pad * 2)) * 0.86
     cameraRef.current = {
       scale,
       x: rect.width / 2 - ((minX + maxX) / 2) * scale,
@@ -427,7 +429,7 @@ function ConstellationLens({
         <canvas
           ref={canvasRef}
           aria-label="Constellation of books linked by shared topics"
-          className="block h-full w-full cursor-grab touch-none active:cursor-grabbing"
+          className="block h-full w-full cursor-grab touch-pan-y active:cursor-grabbing"
           role="img"
           onPointerDown={(event) => {
             draggingRef.current = {
@@ -436,12 +438,33 @@ function ConstellationLens({
               startX: event.clientX,
               startY: event.clientY,
               moved: false,
+              engaged: false,
             }
-            event.currentTarget.setPointerCapture(event.pointerId)
+            const canvas = event.currentTarget
+            holdTimerRef.current = setTimeout(() => {
+              const drag = draggingRef.current
+              if (!drag) return
+              drag.engaged = true
+              canvas.style.touchAction = 'none'
+              canvas.setPointerCapture(event.pointerId)
+            }, 140)
           }}
           onPointerMove={(event) => {
             const drag = draggingRef.current
             if (!drag) return
+            if (!drag.engaged) {
+              const dx = event.clientX - drag.startX
+              const dy = event.clientY - drag.startY
+              if (Math.abs(dy) > 4 && Math.abs(dy) > Math.abs(dx)) {
+                if (holdTimerRef.current) clearTimeout(holdTimerRef.current)
+                draggingRef.current = null
+                return
+              }
+              if (Math.hypot(dx, dy) <= 4) return
+              drag.engaged = true
+              event.currentTarget.style.touchAction = 'none'
+              event.currentTarget.setPointerCapture(event.pointerId)
+            }
             const moved =
               drag.moved || Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) > 4
             cameraRef.current.x += event.clientX - drag.x
@@ -452,12 +475,15 @@ function ConstellationLens({
               startX: drag.startX,
               startY: drag.startY,
               moved,
+              engaged: true,
             }
             requestRender()
           }}
           onPointerUp={(event) => {
             const drag = draggingRef.current
+            if (holdTimerRef.current) clearTimeout(holdTimerRef.current)
             draggingRef.current = null
+            event.currentTarget.style.touchAction = 'pan-y'
             if (event.currentTarget.hasPointerCapture(event.pointerId)) {
               event.currentTarget.releasePointerCapture(event.pointerId)
             }
@@ -466,7 +492,9 @@ function ConstellationLens({
             }
           }}
           onPointerCancel={(event) => {
+            if (holdTimerRef.current) clearTimeout(holdTimerRef.current)
             draggingRef.current = null
+            event.currentTarget.style.touchAction = 'pan-y'
             if (event.currentTarget.hasPointerCapture(event.pointerId)) {
               event.currentTarget.releasePointerCapture(event.pointerId)
             }
@@ -602,8 +630,11 @@ function RiverLens({
           swipe to explore
         </span>
       </div>
-      <div className="tg-scroll overflow-x-auto bg-[radial-gradient(60%_92%_at_18%_26%,rgba(126,40,122,0.32),transparent_72%),radial-gradient(70%_80%_at_86%_28%,rgba(18,83,50,0.24),transparent_76%)] px-4 py-10 sm:px-8 lg:px-12">
-        <div className="flex min-h-[320px] items-end gap-3">
+      <p className="px-4 pb-3 font-mono text-[10.5px] leading-relaxed text-text-2/65 sm:px-8 lg:px-12">
+        year published → number of books; negative years are BCE; years are evenly spaced
+      </p>
+      <div className="tg-scroll overflow-x-auto bg-[radial-gradient(60%_92%_at_18%_26%,rgba(126,40,122,0.32),transparent_72%),radial-gradient(70%_80%_at_86%_28%,rgba(18,83,50,0.24),transparent_76%)] px-4 py-6 sm:px-8 lg:px-12">
+        <div className="flex min-h-0 items-end gap-3">
           {years.map(({ year, books: yearBooks }) => (
             <div key={year} className="flex flex-col items-center">
               <div className="flex w-[62px] flex-col-reverse gap-[3px]">
@@ -1002,6 +1033,7 @@ function DetailDrawer({
 
 export function AuroraLibrary({ books, nodes, edges, topicCount }: AuroraLibraryProps) {
   const [hydrated, setHydrated] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const [lens, setLens] = useState<Lens>('constellation')
   const [activeCategory, setActiveCategory] = useState<AuroraCategoryCode | null>(null)
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -1036,7 +1068,43 @@ export function AuroraLibrary({ books, nodes, edges, topicCount }: AuroraLibrary
 
   useEffect(() => {
     setHydrated(true)
+    const media = window.matchMedia('(max-width: 639px)')
+    const update = () => setIsMobile(media.matches)
+    update()
+    media.addEventListener('change', update)
+    return () => media.removeEventListener('change', update)
   }, [])
+
+  const lensSwitcher = (
+    <div
+      className={clsx(
+        styles.lensSwitcher,
+        'z-50 flex items-center gap-1 rounded-full border border-accent/50 bg-bg-0 p-1.5 font-mono shadow-[0_12px_40px_-8px_var(--color-bg-0)] transition duration-200 ease-out sm:relative sm:mx-auto sm:mb-6 sm:w-fit',
+      )}
+      data-testid="library-lens-switcher"
+    >
+      <span className="px-2 pl-3 text-[10px] uppercase tracking-[0.14em] text-text-2/45 max-sm:hidden">
+        Lens
+      </span>
+      {lensTabs.map((tab) => (
+        <button
+          key={tab.key}
+          type="button"
+          data-testid={`library-lens-${tab.key}`}
+          aria-pressed={lens === tab.key}
+          onClick={() => handleLensChange(tab.key)}
+          className={clsx(
+            'rounded-full px-3 py-2 text-[11px] tracking-[0.04em] transition-colors sm:px-3.5 sm:text-xs',
+            lens === tab.key
+              ? 'bg-accent text-bg-0'
+              : 'text-text-2/75 hover:bg-accent/10 hover:text-accent',
+          )}
+        >
+          {tab.label}
+        </button>
+      ))}
+    </div>
+  )
 
   return (
     <div
@@ -1076,10 +1144,10 @@ export function AuroraLibrary({ books, nodes, edges, topicCount }: AuroraLibrary
 
       <div
         ref={lensViewportRef}
-        className="mx-auto w-full min-w-0 max-w-[1240px] overflow-x-auto px-12 pb-4 sm:px-8 lg:px-12"
+        className="relative mx-auto w-full min-w-0 max-w-[1240px] max-sm:overflow-x-auto px-12 pb-4 sm:px-8 lg:px-12"
       >
         <div
-          className="flex w-max min-w-full flex-wrap gap-2 max-sm:flex-nowrap"
+          className="flex flex-wrap gap-2 max-sm:w-max max-sm:min-w-full max-sm:flex-nowrap"
           data-testid="library-category-strip"
         >
           <button
@@ -1121,36 +1189,13 @@ export function AuroraLibrary({ books, nodes, edges, topicCount }: AuroraLibrary
             </button>
           ))}
         </div>
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute right-0 top-0 h-11 w-10 bg-gradient-to-l from-bg-0 to-transparent sm:hidden"
+        />
       </div>
 
-      <div
-        className={clsx(
-          styles.lensSwitcher,
-          'z-50 flex items-center gap-1 rounded-full border border-accent/50 bg-bg-0 p-1.5 font-mono shadow-[0_12px_40px_-8px_var(--color-bg-0)] transition duration-200 ease-out sm:relative sm:mx-auto sm:mb-6 sm:w-fit',
-        )}
-        data-testid="library-lens-switcher"
-      >
-        <span className="px-2 pl-3 text-[10px] uppercase tracking-[0.14em] text-text-2/45 max-sm:hidden">
-          Lens
-        </span>
-        {lensTabs.map((tab) => (
-          <button
-            key={tab.key}
-            type="button"
-            data-testid={`library-lens-${tab.key}`}
-            aria-pressed={lens === tab.key}
-            onClick={() => handleLensChange(tab.key)}
-            className={clsx(
-              'rounded-full px-3 py-2 text-[11px] tracking-[0.04em] transition-colors sm:px-3.5 sm:text-xs',
-              lens === tab.key
-                ? 'bg-accent text-bg-0'
-                : 'text-text-2/75 hover:bg-accent/10 hover:text-accent',
-            )}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
+      {hydrated && isMobile ? createPortal(lensSwitcher, document.body) : lensSwitcher}
 
       <div ref={lensContentRef} className="scroll-mt-0">
         {lens === 'constellation' ? (
