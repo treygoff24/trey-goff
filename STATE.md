@@ -4,7 +4,7 @@
 
 ## Hooks (one line each; these must survive any truncation — detail below the fold)
 
-- **main is 71 commits ahead of origin/main, gate green, UNPUSHED — awaiting Trey's cold scroll + push word.** Contents: /stack figure build (2026-07-31) + /jobsite page + the 2026-08-20 review sweep (2 opus reviewers × 3 rounds, Luna fix lanes, opus visual-QA lane: 14 fix commits `42d3ac1..75548ab`). Detail: "Review sweep" below.
+- **All work lives on branch `feat/stack-figures-and-jobsite` (71 commits past `origin/main`); local `main` == `origin/main`. Gate green, UNPUSHED — awaiting Trey's cold scroll + push word.** Contents: /stack figure build (2026-07-31) + /jobsite page + the 2026-08-20 review sweep (2 opus reviewers × 3 rounds, Luna fix lanes, opus visual-QA lane: 14 fix commits `42d3ac1..75548ab`). Detail: "Review sweep" below.
 - **Jobsite viz (BenchViz + RunnersViz) IS merged (`8347b1e`).** Branch cleanup done 2026-08-20: 21 merged branches + 3 stale Cursor worktrees removed (diffs archived at `~/.cursor/worktrees/trey-goff-archive-2025-12.tgz`). Two branches deliberately kept, Trey's call: `worktree-agent-aa5bef5926a8d5e6b` (unlanded parallel jobsite polish, adds JobSiteProgress) and `feat/the-workshop` (July 17 desloppify, −27k lines, unmerged).
 - **`ci:quality` does NOT run Playwright** — a dead e2e test slipped past it once; run `pnpm test:e2e --project=chromium` after any jobsite/nav change (WebKit binaries don't install here). Adding it to the gate is an open call for Trey.
 - **`.beads/issues.jsonl` diff here is claude-space's `cs-*` ledger bleeding in — don't commit it from this repo.**
