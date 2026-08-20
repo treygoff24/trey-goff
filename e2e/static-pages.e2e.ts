@@ -17,7 +17,7 @@ test.describe('Static content pages', () => {
     const basePage = new BasePage(page)
     await basePage.goto('/now')
 
-    await expect(page.getByRole('heading', { name: 'Now' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: /What I was focused on as of/ })).toBeVisible()
     await expect(page.getByText(/Last updated:/i)).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Current focus' })).toBeVisible()
   })
@@ -47,7 +47,7 @@ test.describe('Static content pages', () => {
     const basePage = new BasePage(page)
     await basePage.goto('/projects')
 
-    await expect(page.getByRole('heading', { name: 'One machine, many hands' })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'Projects' })).toBeVisible()
     await expect(page.getByText(/command-line tools, agent infrastructure/i)).toBeVisible()
 
     const rows = page.locator('article')

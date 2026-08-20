@@ -3,9 +3,7 @@ import { test, expect } from '@playwright/test'
 test.describe('The Workshop', () => {
   test('renders the stations, ledger, and institutional block', async ({ page }) => {
     await page.goto('/projects')
-    await expect(
-      page.getByRole('heading', { level: 1, name: /One machine, many hands/ }),
-    ).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'Projects' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Coordination' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Verification' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Also on the bench' })).toBeVisible()
@@ -30,9 +28,7 @@ test.describe('The Workshop', () => {
 
   test('an unknown tool param renders the page with nothing open', async ({ page }) => {
     await page.goto('/projects?tool=does-not-exist')
-    await expect(
-      page.getByRole('heading', { level: 1, name: /One machine, many hands/ }),
-    ).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'Projects' })).toBeVisible()
     await expect(page.locator('details[open]')).toHaveCount(0)
   })
 })

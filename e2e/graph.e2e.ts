@@ -44,7 +44,6 @@ test.describe('Knowledge Graph Page', () => {
       await expect(graphPage.filterChip('Notes')).toBeVisible()
       await expect(graphPage.filterChip('Books')).toBeVisible()
       await expect(graphPage.filterChip('Tags')).toBeVisible()
-      await expect(graphPage.filterChip('Ideas')).toBeVisible()
       await expect(graphPage.filterChip('Transmissions')).toBeVisible()
     })
 
@@ -94,7 +93,6 @@ test.describe('Knowledge Graph Page', () => {
       await expect(graphPage.filterChip('Notes')).toBeVisible()
       await expect(graphPage.filterChip('Books')).toBeVisible()
       await expect(graphPage.filterChip('Tags')).toBeVisible()
-      await expect(graphPage.filterChip('Ideas')).toBeVisible()
       await expect(graphPage.filterChip('Transmissions')).toBeVisible()
     })
   })
@@ -169,7 +167,6 @@ test.describe('Knowledge Graph Page', () => {
       await expect(graphPage.legend.getByText('Notes', { exact: true })).toBeVisible()
       await expect(graphPage.legend.getByText('Books', { exact: true })).toBeVisible()
       await expect(graphPage.legend.getByText('Tags', { exact: true })).toBeVisible()
-      await expect(graphPage.legend.getByText('Ideas', { exact: true })).toBeVisible()
       await expect(graphPage.legend.getByText('Transmissions', { exact: true })).toBeVisible()
     })
 
@@ -179,7 +176,8 @@ test.describe('Knowledge Graph Page', () => {
       const colorIndicators = graphPage.legend.locator('.rounded-full')
 
       const count = await colorIndicators.count()
-      expect(count).toBeGreaterThanOrEqual(6)
+      // Five types carry nodes today; the Ideas row is hidden while its count is zero.
+      expect(count).toBeGreaterThanOrEqual(5)
     })
   })
 

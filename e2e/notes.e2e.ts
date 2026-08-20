@@ -15,7 +15,7 @@ test.describe('Notes Page', () => {
     })
 
     test('should display page description', async ({ page }) => {
-      await expect(page.getByText(/quick thoughts/i)).toBeVisible()
+      await expect(page.getByText(/short-form thoughts/i)).toBeVisible()
     })
 
     test('should display note cards or empty state', async () => {

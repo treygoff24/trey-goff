@@ -108,7 +108,6 @@ export class GraphPage extends BasePage {
     await expect(this.legendItems.getByText('Notes', { exact: true })).toBeVisible()
     await expect(this.legendItems.getByText('Books', { exact: true })).toBeVisible()
     await expect(this.legendItems.getByText('Tags', { exact: true })).toBeVisible()
-    await expect(this.legendItems.getByText('Ideas', { exact: true })).toBeVisible()
     await expect(this.legendItems.getByText('Transmissions', { exact: true })).toBeVisible()
   }
 
