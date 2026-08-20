@@ -235,4 +235,4 @@ Everything above compresses into one evening.
 
 That one message builds the trailer, opens the logbook, plans the first cards, starts the photo record, and, because of how it is written, hires the foreman. The rest of the site, the runners, the inspectors, the wall schedule, gets added the week each one starts to hurt, and by then the words for asking will be right there on the bench.
 
-Ready for the deep end? → Hard mode, chapter 1. / Built by the crew it describes.
+Ready for the deep end? → Hard mode, chapter 1. · Back to treygoff.com → / Built by the crew it describes.

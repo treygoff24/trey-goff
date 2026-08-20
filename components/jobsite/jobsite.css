@@ -1,7 +1,3 @@
-html:has(#jobsite-root) body > footer {
-  display: none;
-}
-
 #jobsite-root {
   --js-bg: #04130c;
   --js-bg-1: #061a10;
@@ -96,6 +92,16 @@ html:has(#jobsite-root) body > footer {
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--js-accent, var(--js-active));
+}
+.js-home {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  margin-top: 0.75rem;
+  color: var(--js-active);
+  font-size: 0.9rem;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
 .js-hero h1 {
   margin: 1.25rem auto 0;
@@ -475,6 +481,19 @@ html:has(#jobsite-root) body > footer {
 .js-end a:hover {
   background-size: 100% 1px;
 }
+.js-end-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.js-end a.js-end-home {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-size: 1rem;
+  color: var(--js-text-3);
+}
 .js-end p {
   color: var(--js-text-3);
 }
@@ -576,6 +595,15 @@ html:has(#jobsite-root) body > footer {
   }
   .js-prompt-head {
     flex-wrap: wrap;
+  }
+  .js-end-links {
+    gap: 0.75rem;
+  }
+}
+@media (pointer: coarse) {
+  .js-home,
+  .js-end a.js-end-home {
+    min-height: 44px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

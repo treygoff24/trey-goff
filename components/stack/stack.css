@@ -10,10 +10,6 @@ html:has(#stack-root) {
   scroll-behavior: smooth;
 }
 
-/* The field manual brings its own colophon; hide the site footer here. */
-html:has(#stack-root) body > footer {
-  display: none;
-}
 @media (prefers-reduced-motion: reduce) {
   html:has(#stack-root) {
     scroll-behavior: auto;
@@ -1648,6 +1644,9 @@ html:has(#stack-root) body > footer {
 
 /* ── Responsive ─────────────────────────────────────────── */
 @media (max-width: 1080px) {
+  html:has(#stack-root) body > footer {
+    padding-bottom: 4.5rem;
+  }
   #stack-root .rail {
     display: none;
   }
@@ -1698,6 +1697,14 @@ html:has(#stack-root) body > footer {
     right: -0.2rem;
   }
 }
+
+@media (min-width: 1081px) {
+  /* Mirrors --sk-rail-w, which is scoped to #stack-root and can't resolve here. */
+  html:has(#stack-root) body > footer {
+    padding-left: 16.5rem;
+  }
+}
+
 @keyframes sk-sheet {
   from {
     transform: translateY(18px);

@@ -1,6 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import {
   DAY_ONE_TERM,
@@ -894,7 +895,8 @@ export function StackShell() {
               This page was designed, written, built, and reviewed by the setup it describes.
             </div>
             <div>
-              <a href="#top">Return to the top</a> · <a href="#ch1">Start over at chapter one</a>
+              <a href="#top">Return to the top</a> · <a href="#ch1">Start over at chapter one</a> ·{' '}
+              <Link href="/">Back to treygoff.com</Link>
             </div>
           </footer>
         </div>
