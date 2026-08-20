@@ -19,7 +19,6 @@ const navItems = [
 export function TopNav() {
   const pathname = usePathname()
   const [hydrated, setHydrated] = useState(false)
-  const [hideForLibraryLens, setHideForLibraryLens] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const menuButtonRef = useRef<HTMLButtonElement>(null)
@@ -89,18 +88,6 @@ export function TopNav() {
     return () => window.removeEventListener('scroll', update)
   }, [])
 
-  useEffect(() => {
-    if (!pathname?.startsWith('/library')) {
-      setHideForLibraryLens(false)
-      return
-    }
-
-    const update = () => setHideForLibraryLens(window.scrollY > 120)
-    update()
-    window.addEventListener('scroll', update, { passive: true })
-    return () => window.removeEventListener('scroll', update)
-  }, [pathname])
-
   // /stack is an immersive field-manual route with its own chapter rail.
   if (hideNav) return null
 
@@ -109,17 +96,12 @@ export function TopNav() {
       className={cn(
         'pointer-events-none fixed inset-x-0 top-0 z-40 transition duration-300 ease-out max-md:bg-bg-0',
         scrolled &&
-          !hideForLibraryLens &&
           'border-b border-border-1 bg-bg-0/85 shadow-[0_12px_40px_color-mix(in_oklab,var(--color-bg-0)_45%,transparent)] backdrop-blur-md',
-        hideForLibraryLens && '-translate-y-8 opacity-0',
       )}
       data-top-nav-ready={hydrated ? 'true' : 'false'}
     >
       <nav
-        className={cn(
-          'mx-auto flex h-16 max-w-[92rem] items-center justify-between px-6 md:h-24 md:flex-row md:gap-8 md:px-12',
-          hideForLibraryLens ? 'pointer-events-none' : 'pointer-events-auto',
-        )}
+        className="pointer-events-auto mx-auto flex h-16 max-w-[92rem] items-center justify-between px-6 md:h-24 md:flex-row md:gap-8 md:px-12"
         aria-label="Main navigation"
       >
         <Link
