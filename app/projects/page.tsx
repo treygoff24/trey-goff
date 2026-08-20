@@ -48,7 +48,7 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
   const siteProject = [...allProjects].sort((a, b) => a.featuredRank - b.featuredRank)[0]
 
   return (
-    <div className="tg-page max-w-6xl" style={{ width: 'calc(100% - 4rem)' }}>
+    <div className="tg-page max-w-6xl">
       <HashDossierOpener />
       <EditorialHeader
         eyebrow="The Workshop"

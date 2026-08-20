@@ -42,7 +42,7 @@ export function ToolRow({ tool, open }: ToolRowProps) {
           {statusWords[tool.status]}
           <span
             aria-hidden
-            className="ml-3 inline-block text-warm transition-transform group-open:rotate-90"
+            className="ml-3 inline-block text-text-3 transition-transform group-open:rotate-90"
           >
             →
           </span>

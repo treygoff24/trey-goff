@@ -609,7 +609,7 @@ The line in question is exactly this: `` - `receipts` — source-verified answer
 
 [Interactive armory: 26 command-line tools, filterable by provenance (Mine, open source · Built here · Ecosystem) and by job (Research · Orchestration · Code & repo · Media & assets · Machine). Opening a row gives the install line and the source link.]
 
-The whole armory, honestly labelled. [Eight I wrote and open sourced, so you can install them this afternoon.](/projects) Seven exist only here, because they are wired to my machine and not ready to be anyone else's dependency. The remaining eleven are other people's work that this stack would not run without.
+The whole armory, honestly labelled. [Eight I wrote and open sourced, so you can install them this afternoon.](/projects#tools) Seven exist only here, because they are wired to my machine and not ready to be anyone else's dependency. The remaining eleven are other people's work that this stack would not run without.
 
 **Mine, open source** — *Built here, released. Take them.*
 
