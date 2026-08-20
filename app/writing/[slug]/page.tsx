@@ -139,9 +139,13 @@ export default async function EssayPage({ params }: PageProps) {
             <MobileTableOfContents contentSelector="#essay-content" sourceId={essay.slug} />
 
             {/* Content with desktop TOC */}
-            <div className="grid gap-12 lg:grid-cols-[1fr_200px]">
-              <Prose>
-                <div id="essay-content" dangerouslySetInnerHTML={{ __html: contentHtml }} />
+            <div className="grid min-w-0 gap-12 lg:grid-cols-[minmax(0,1fr)_200px]">
+              <Prose className="min-w-0">
+                <div
+                  id="essay-content"
+                  className="min-w-0"
+                  dangerouslySetInnerHTML={{ __html: contentHtml }}
+                />
               </Prose>
 
               <TableOfContents contentSelector="#essay-content" sourceId={essay.slug} />
