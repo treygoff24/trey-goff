@@ -290,8 +290,15 @@ function ConstellationLens({
     startY: number
     moved: boolean
     engaged: boolean
+    touch: boolean
   }>(null)
   const holdTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  useEffect(
+    () => () => {
+      if (holdTimerRef.current) clearTimeout(holdTimerRef.current)
+    },
+    [],
+  )
 
   const requestRender = useCallback(() => {
     if (frameRef.current) return
@@ -439,6 +446,14 @@ function ConstellationLens({
               startY: event.clientY,
               moved: false,
               engaged: false,
+              touch: event.pointerType !== 'mouse',
+            }
+            // A mouse has no page scroll to protect, so it engages at once. A finger has to
+            // hold briefly or move sideways first; a quick vertical swipe stays a page scroll.
+            if (event.pointerType === 'mouse') {
+              draggingRef.current.engaged = true
+              event.currentTarget.setPointerCapture(event.pointerId)
+              return
             }
             const canvas = event.currentTarget
             holdTimerRef.current = setTimeout(() => {
@@ -476,6 +491,7 @@ function ConstellationLens({
               startY: drag.startY,
               moved,
               engaged: true,
+              touch: drag.touch,
             }
             requestRender()
           }}
@@ -619,6 +635,24 @@ function RiverLens({
         books: [...yearBooks].sort((a, b) => b.degree - a.degree || a.title.localeCompare(b.title)),
       }))
   }, [books])
+  // The row is as tall as the busiest year, and every other column bottom-aligns to it, so
+  // an unscaled 2020s stack (~515px) opened the river on a screen of empty gradient.
+  const barScale = useMemo(() => {
+    const tallest = Math.max(
+      0,
+      ...years.map(({ books: yearBooks }) =>
+        yearBooks.reduce((sum, book) => sum + 6 + Math.min(16, book.degree) + 3, 0),
+      ),
+    )
+    return tallest > 180 ? 180 / tallest : 1
+  }, [years])
+  // Open at the modern end: the oldest years are single-book stubs, and a reader who lands at
+  // 700 BCE sees mostly gradient before anything worth tapping.
+  const scrollerRef = useRef<HTMLDivElement | null>(null)
+  useEffect(() => {
+    const scroller = scrollerRef.current
+    if (scroller) scroller.scrollLeft = scroller.scrollWidth
+  }, [years])
 
   return (
     <section className="mx-auto max-w-[1240px] pb-12">
@@ -633,7 +667,10 @@ function RiverLens({
       <p className="px-4 pb-3 font-mono text-[10.5px] leading-relaxed text-text-2/65 sm:px-8 lg:px-12">
         year published → number of books; negative years are BCE; years are evenly spaced
       </p>
-      <div className="tg-scroll overflow-x-auto bg-[radial-gradient(60%_92%_at_18%_26%,rgba(126,40,122,0.32),transparent_72%),radial-gradient(70%_80%_at_86%_28%,rgba(18,83,50,0.24),transparent_76%)] px-4 py-6 sm:px-8 lg:px-12">
+      <div
+        ref={scrollerRef}
+        className="tg-scroll overflow-x-auto bg-[radial-gradient(60%_92%_at_18%_26%,rgba(126,40,122,0.32),transparent_72%),radial-gradient(70%_80%_at_86%_28%,rgba(18,83,50,0.24),transparent_76%)] px-4 py-6 sm:px-8 lg:px-12"
+      >
         <div className="flex min-h-0 items-end gap-3">
           {years.map(({ year, books: yearBooks }) => (
             <div key={year} className="flex flex-col items-center">
@@ -653,7 +690,7 @@ function RiverLens({
                         dim && 'opacity-20',
                       )}
                       style={{
-                        height: `${6 + Math.min(16, book.degree)}px`,
+                        height: `${Math.max(3, (6 + Math.min(16, book.degree)) * barScale)}px`,
                         backgroundColor: oklchColor(book.hue, 0.56, 0.13, 1),
                       }}
                     />
@@ -1142,52 +1179,54 @@ export function AuroraLibrary({ books, nodes, edges, topicCount }: AuroraLibrary
         </div>
       </header>
 
-      <div
-        ref={lensViewportRef}
-        className="relative mx-auto w-full min-w-0 max-w-[1240px] max-sm:overflow-x-auto px-12 pb-4 sm:px-8 lg:px-12"
-      >
+      <div className="relative mx-auto w-full max-w-[1240px]">
         <div
-          className="flex flex-wrap gap-2 max-sm:w-max max-sm:min-w-full max-sm:flex-nowrap"
-          data-testid="library-category-strip"
+          ref={lensViewportRef}
+          className="min-w-0 max-sm:overflow-x-auto px-12 pb-4 sm:px-8 lg:px-12"
         >
-          <button
-            type="button"
-            data-testid="library-category-all"
-            aria-pressed={!activeCategory}
-            onClick={() => setActiveCategory(null)}
-            className={clsx(
-              'min-h-11 shrink-0 rounded-full border px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.08em] transition-colors',
-              !activeCategory
-                ? 'border-accent bg-accent text-bg-0'
-                : 'border-text-1/10 bg-bg-1/45 text-text-2 hover:border-accent/50 hover:text-accent',
-            )}
+          <div
+            className="flex flex-wrap gap-2 max-sm:w-max max-sm:min-w-full max-sm:flex-nowrap"
+            data-testid="library-category-strip"
           >
-            All · {books.length}
-          </button>
-          {Object.values(AURORA_CATEGORIES).map((category) => (
             <button
-              key={category.code}
               type="button"
-              data-testid={`library-category-${category.code}`}
-              aria-pressed={activeCategory === category.code}
-              onClick={() =>
-                setActiveCategory((current) => (current === category.code ? null : category.code))
-              }
+              data-testid="library-category-all"
+              aria-pressed={!activeCategory}
+              onClick={() => setActiveCategory(null)}
               className={clsx(
-                'inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.08em] transition-colors',
-                activeCategory === category.code
+                'min-h-11 shrink-0 rounded-full border px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.08em] transition-colors',
+                !activeCategory
                   ? 'border-accent bg-accent text-bg-0'
                   : 'border-text-1/10 bg-bg-1/45 text-text-2 hover:border-accent/50 hover:text-accent',
               )}
             >
-              <span
-                aria-hidden="true"
-                className="h-1.5 w-1.5 rounded-full"
-                style={{ backgroundColor: oklchColor(category.hue, 0.74, 0.14, 1) }}
-              />
-              {category.label} · {counts.get(category.code) ?? 0}
+              All · {books.length}
             </button>
-          ))}
+            {Object.values(AURORA_CATEGORIES).map((category) => (
+              <button
+                key={category.code}
+                type="button"
+                data-testid={`library-category-${category.code}`}
+                aria-pressed={activeCategory === category.code}
+                onClick={() =>
+                  setActiveCategory((current) => (current === category.code ? null : category.code))
+                }
+                className={clsx(
+                  'inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.08em] transition-colors',
+                  activeCategory === category.code
+                    ? 'border-accent bg-accent text-bg-0'
+                    : 'border-text-1/10 bg-bg-1/45 text-text-2 hover:border-accent/50 hover:text-accent',
+                )}
+              >
+                <span
+                  aria-hidden="true"
+                  className="h-1.5 w-1.5 rounded-full"
+                  style={{ backgroundColor: oklchColor(category.hue, 0.74, 0.14, 1) }}
+                />
+                {category.label} · {counts.get(category.code) ?? 0}
+              </button>
+            ))}
+          </div>
         </div>
         <span
           aria-hidden="true"
