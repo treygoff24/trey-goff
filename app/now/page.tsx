@@ -3,7 +3,7 @@ import { pageAlternates } from '@/lib/site-config'
 
 export const metadata = {
   title: 'Now',
-  description: "What I'm currently focused on.",
+  description: 'What I was focused on as of March 2026.',
   alternates: pageAlternates('/now', { markdownPath: '/now.md' }),
 }
 
@@ -15,11 +15,9 @@ export default function NowPage() {
       <header className="tg-rise mb-10">
         <p className="tg-eyebrow text-warm">Now</p>
         <h1 className="mt-6 font-newsreader text-[clamp(2.4rem,4.5vw,3.2rem)] font-medium leading-[1.06] tracking-[-0.02em] text-text-1">
-          What has my attention right now.
+          What I was focused on as of March 2026.
         </h1>
-        <p className="mt-4 text-lg text-text-2">
-          A living snapshot of what I am focused on right now.
-        </p>
+        <p className="mt-4 text-lg text-text-2">A snapshot of what had my focus and attention.</p>
         <p className="mt-4 font-mono text-xs uppercase tracking-[0.2em] text-text-3">
           Last updated: {lastUpdated}
         </p>

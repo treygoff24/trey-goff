@@ -5,7 +5,7 @@ import { pageAlternates } from '@/lib/site-config'
 
 export const metadata = {
   title: 'Notes',
-  description: 'Quick thoughts, dispatches, and interesting links.',
+  description: 'Short-form thoughts, occasional dispatches, and reference links.',
   alternates: pageAlternates('/notes', { markdownPath: '/notes.md' }),
 }
 
@@ -24,15 +24,16 @@ export default async function NotesPage() {
       <header className="tg-rise mb-12">
         <p className="tg-eyebrow text-warm">Notes</p>
         <h1 className="mt-6 mb-4 font-newsreader text-[clamp(2.4rem,4.5vw,3.2rem)] font-medium leading-[1.06] tracking-[-0.02em] text-text-1">
-          Field notes & dispatches
+          Notes & dispatches
         </h1>
         <p className="text-lg text-text-2">
-          Quick thoughts, dispatches from the field, and interesting links.
+          Short-form thoughts, occasional dispatches, and reference links. An archive of early
+          notes; longer-form thinking is published in Essays.
         </p>
       </header>
 
       {sortedNotes.length === 0 ? (
-        <p className="border-t border-border-1 pt-8 text-text-3">Notes coming soon.</p>
+        <p className="border-t border-border-1 pt-8 text-text-3">No notes published yet.</p>
       ) : (
         <div className="border-t border-border-2">
           {notesWithHtml.map((note) => (
