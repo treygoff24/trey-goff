@@ -231,6 +231,15 @@
   letter-spacing: 0.04em;
   text-transform: none;
 }
+/* Below this the mono size hits its 0.5rem floor and the longest job — "dug
+   the whole warehouse" — wraps to a second line, which pushes the card head
+   down onto the first row of that runner's blocks. The captions below the
+   figure and the stage's own aria-label both still say what each runner did. */
+@container (max-width: 400px) {
+  #jobsite-root .js-vfig .js-vrun-k span {
+    display: none;
+  }
+}
 
 /* The empty slots each bench is ruled into: the blocks land on these. */
 #jobsite-root .js-vslots {
