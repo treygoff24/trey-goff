@@ -36,7 +36,7 @@ export function EditorialIndexRow({
           </div>
         )}
         <div className="flex items-baseline justify-between gap-4">
-          <h2 className="font-newsreader text-2xl font-medium leading-tight text-text-1 transition-colors group-hover:text-warm">
+          <h2 className="min-w-0 font-newsreader text-2xl font-medium leading-tight text-text-1 transition-colors group-hover:text-warm">
             {title}
           </h2>
           {trailing && (
