@@ -137,6 +137,9 @@ export default function InstrumentRail({ headings }: { headings: { id: string; t
           {model && (
             <>
               <p className="tg-instrument-label mt-6">Sections</p>
+              <p className="mt-1 font-mono text-[11px] text-text-3">
+                Lettered as in the source; it has no section D.
+              </p>
               <ul className="mt-2 space-y-2">
                 {model.sections.map((section) => {
                   const anchor = sectionAnchor(section.id)
