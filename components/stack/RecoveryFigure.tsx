@@ -45,7 +45,7 @@ const TRAP: Omit<Step, 'beat'> = {
   tone: 'bad',
 }
 
-const LANES: Lane[] = [
+export const LANES: Lane[] = [
   {
     id: 'without',
     rule: 'No rule in CLAUDE.md',
@@ -126,7 +126,7 @@ const LANES: Lane[] = [
   },
 ]
 
-const MAX_BEAT = 6
+export const MAX_BEAT = 6
 /** Beat n lands at this offset once playback starts. */
 const BEAT_MS = 1150
 
@@ -135,7 +135,7 @@ const TALLY_LABEL: Record<Lane['id'], string> = {
   with: 'One beat between the error and the name for it.',
 }
 
-function tally(lane: Lane, beat: number) {
+export function tally(lane: Lane, beat: number) {
   const seen = lane.steps.filter((s) => s.beat <= beat)
   const commands = seen.filter((s) => s.cmd).length
   const dead = seen.filter((s) => s.kind === 'branch').length

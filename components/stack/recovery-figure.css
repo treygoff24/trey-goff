@@ -193,7 +193,7 @@
 /* Progressive enhancement: every step is legible on the server and if JS never
    arrives. The dimming only exists once playback has actually armed the figure. */
 #stack-root .rcv.is-armed .rcv-step {
-  opacity: 0;
+  opacity: 0.06;
   transform: translateY(3px);
 }
 #stack-root .rcv.is-armed .rcv-step.is-on {
