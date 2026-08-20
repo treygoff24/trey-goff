@@ -191,7 +191,7 @@ export const jobSiteBeats: JobSiteBeat[] = [
       },
     ],
     deeper:
-      "Going deeper: hard mode's chapters 6 and 10, and chapter 10 is where this stops being an analogy and starts looking like a small construction firm.",
+      "Going deeper: hard mode's chapters 6 and 10 cover the crews and the wall schedule, and chapter 10 is where this stops being an analogy and starts looking like a small construction firm.",
   },
   {
     id: 'the-inspector',

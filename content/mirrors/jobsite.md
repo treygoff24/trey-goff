@@ -143,7 +143,7 @@ And when the job is genuinely huge, I stop directing traffic by walkie-talkie an
 
 **The wall schedule is called a workflow:** a small script, written by the agent, that says who runs, in what order, who checks whose work, with every loop capped and certain steps frozen until you personally approve. This is the graduate course, and the practical takeaway at this altitude is simply that it exists and that you can ask for it: "this job is too big for one conversation; write a workflow that breaks it into crews and checkers, and pause for my approval before anything final." The overnight run I described was one of those. I slept; the schedule didn't.
 
-_Going deeper: hard mode's chapters 6 and 10, and chapter 10 is where this stops being an analogy and starts looking like a small construction firm._
+_Going deeper: hard mode's chapters 6 and 10 cover the crews and the wall schedule, and chapter 10 is where this stops being an analogy and starts looking like a small construction firm._
 
 ---
 
